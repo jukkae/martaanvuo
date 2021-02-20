@@ -12,7 +12,12 @@
     (super-new)
 
     (define/public (get-next-action) (error "not implemented yet!"))
-    (define/public (hit dmg) (displayln "OUCH (yes, that was you"))
+    (define/public (hit dmg)
+      (begin (set! hp (- hp dmg))
+             (if (<= hp 0)
+                 (begin (set! hp 0)
+                        'u-ded)
+                 'u-hit)))
     (define/public (get-status) (error "not implemented yet!"))))
 
 (provide (all-defined-out))

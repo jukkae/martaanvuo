@@ -32,7 +32,7 @@
   (displayln (string-append "-- Paragraph " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
   (newline)
   (when (not *in-combat*) (displayln (send *location* get-nth-description *turn*)))
-  (when *in-combat* (displayln (string-append "You are grappling with a Bloodleech. It has " (number->string (get-field hp *creatures*)) " HP."))))
+  (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
 
 
 (define (spawn-enemy)
@@ -54,15 +54,16 @@
                              "You strike."
                              "You go for a strike."
                              "You lean in to strike."))
-              " [2d6+1]: "
-              (number->string to-hit)))
+              " [2d6+1: "
+              (number->string to-hit)
+              "]"))
   (cond ((>= to-hit target)
          (displayln (take-random '("Your strike connects."
                                    "Your strike lands with a satisfying thud."
                                    "Your blade pierces the skin of the enemy.")))
          (displayln (string-append "[damage: " (number->string damage) " HP]"))
          (define result (send *creatures* hit damage))
-         (when (equal? result 'dead) (begin (displayln "The enemy is dead.")
+         (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
                                              (set! *in-combat* #f))))
         (else (displayln (string-append (get-curse) " You miss.")))))
 
@@ -90,7 +91,7 @@
                (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['inventory (print-inventory)]
     ['go-on (begin (newline)
-                   (displayln (take-random '("Better get to it, then." "You go on." "Your boots tread the ground." "You keep on walking.")))
+                   (displayln (take-random '("Better get to it, then." "You keep on walking.")))
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['strike (begin (fight)
                     (set! *time-elapsed* (add1 *time-elapsed*)))]
@@ -99,11 +100,27 @@
     [else (error "Unknown action!")]))
 
 (define (run-on-turn-actions . turn)
+  (when *in-combat*
+    (newline)
+    (displayln (string-append "The " (send *creatures* get-name) " attacks you."))
+    (define to-hit (+ (d 2 6) 1))
+    (define target 6)
+    (define damage (d 1 2))
+    (displayln (string-append "[2d6+1: " (number->string to-hit) "]"))
+    (if (> to-hit target)
+        (begin (displayln "Oof. That hurt.")
+               (send *pc* hit damage)
+               (if (<= (get-field hp *pc*) 0)
+                   (begin (displayln "You are dead.")
+                          'u-ded)
+                   (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
+        (begin (displayln "You dodge."))))
+
   (case *turn*
     [(3) (spawn-enemy)
          (set! *in-combat* true)
          (newline)
-         (displayln (string-append (get-curse) " You get attacked by a " (send *creatures* get-name) "!"))]))
+         (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))]))
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -112,9 +129,9 @@
         ((> i 9) (error "too many things to do!"))))
 
 (define (build-keys-to-options-map)
-  (define (player-has-weapons?) (filter
+  (define (player-has-weapons?) (not (empty? (filter
                                (lambda (item) (member 'strike (send item get-uses)))
-                               (get-field inventory *pc*)))
+                               (get-field inventory *pc*)))))
   (define location-options (send *location* get-interactions))
   (define next-location-choices (send *location* get-visible-exits))
   (define combat-options
