@@ -44,7 +44,7 @@
 (define (fight)
   (set! *in-combat* #t)
   (define to-hit (+ (d 2 6) *attack-skill*))
-  (define target 5)
+  (define target (get-field defense *creatures*))
   (define damage (d 1 4))
   (newline)
   (displayln (string-append
@@ -57,13 +57,14 @@
               " [2d6+1]: "
               (number->string to-hit)))
   (cond ((>= to-hit target)
-         (displayln (string-append "Your knife does " (number->string damage) " HP of damage to the Bloodleech."))
-         (send *creatures* hit damage)
-         #(set! *enemy-hp* (- *enemy-hp* damage))
-         #(when (<= *enemy-hp* 0) (begin (set! *enemy-hp* 0) (set! *in-combat* #f)))
-         #(when (= *enemy-hp* 0) (displayln "The Bloodleech is dead.")))
-        ((= to-hit target) (displayln "You barely miss."))
-        (else (displayln "You miss."))))
+         (displayln (take-random '("Your strike connects."
+                                   "Your strike lands with a satisfying thud."
+                                   "Your blade pierces the skin of the enemy.")))
+         (displayln (string-append "[damage: " (number->string damage) " HP]"))
+         (define result (send *creatures* hit damage))
+         (when (equal? result 'dead) (begin (displayln "The enemy is dead.")
+                                             (set! *in-combat* #f))))
+        (else (displayln (string-append (get-curse) " You miss.")))))
 
 (define (get-curse)
   (define index (random 2))
@@ -111,12 +112,17 @@
         ((> i 9) (error "too many things to do!"))))
 
 (define (build-keys-to-options-map)
+  (define (player-has-weapons?) (filter
+                               (lambda (item) (member 'strike (send item get-uses)))
+                               (get-field inventory *pc*)))
   (define location-options (send *location* get-interactions))
   (define next-location-choices (send *location* get-visible-exits))
   (define combat-options
     (if *in-combat*
-        (list (make-action 'strike "Strike." 1 *creatures* '(combat))
-              (make-action 'run "Run." 1 null '(combat)))
+        (if (player-has-weapons?)
+            (list (make-action 'strike "Strike." 1 *creatures* '(combat))
+                  (make-action 'run "Run." 1 null '(combat)))
+            (list (make-action 'run "Run." 1 null '(combat))))
         null))
   (define generic-options
     (if (not (empty? (get-field inventory *pc*)))
