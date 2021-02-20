@@ -4,12 +4,14 @@
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
+(require "pc.rkt")
 (require "utils.rkt")
 
 
 (define *forest* (new forest%))
 
 ; globals and state
+(define *pc* (new pc%))
 (define *location* *forest*)
 (define *in-combat* #f)
 (define *metaloop* 1)
@@ -17,14 +19,13 @@
 (define *time-elapsed* 0)
 (define *hp* 4)
 (define *attack-skill* 1)
-(define *inventory* '())
 (define *creatures* '())
 
 (define (print-inventory)
   (newline)
   (displayln "You ponder your earthly possessions.")
   (newline)
-  (displayln (string-append "In addition to clothes, you have " (get-list-inline-description *inventory*) ".")))
+  (displayln (string-append "In addition to clothes, you have " (get-list-inline-description (get-field inventory *pc*)) ".")))
 
 (define (describe-situation)
   (newline)
@@ -71,10 +72,7 @@
                      (string-append (take-random first) " and " (take-random second) "!"))
         (else (take-random '("Let everything wither!"
                              "Blight!"
-                             "Snake's poison!")))))
-
-(define *combat-options* (list (make-action 'strike "Strike. Hard." 1 *creatures* '(combat))
-                               (make-action 'run "Run. Fast." 1 null '(combat))))
+                             "Scales of a snake!")))))
 
 (define (update-state! action)
   (case (action-symbol action)
@@ -86,7 +84,7 @@
                       (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
                       (newline)
                       (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-                      (set! *inventory* (cons loot *inventory*))
+                      (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
                       ))
                (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['inventory (print-inventory)]
@@ -117,10 +115,11 @@
   (define next-location-choices (send *location* get-visible-exits))
   (define combat-options
     (if *in-combat*
-        *combat-options*
+        (list (make-action 'strike "Strike." 1 *creatures* '(combat))
+              (make-action 'run "Run." 1 null '(combat)))
         null))
   (define generic-options
-    (if (not (empty? *inventory*))
+    (if (not (empty? (get-field inventory *pc*)))
         (list (make-action 'inventory "Show inventory [free action]" 0 null '(always free)) ; tag - duration in jiffies - object - list of tags
               (make-action 'break-from-game-loop "Quit." 0 null '(always)))
         (list (make-action 'break-from-game-loop "Quit." 0 null '(always)))))

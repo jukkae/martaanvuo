@@ -3,7 +3,7 @@
 (define creature<%> (interface () get-name get-description get-next-action get-status hit))
 (define bloodleech%
   (class* object% (creature<%>)
-    (define hp 2)
+    (field [hp 2])
     (super-new)
 
     (define/public (get-name) "Bloodleech")
@@ -14,7 +14,7 @@
 
 (define blindscraper%
   (class* object% (creature<%>)
-    (define hp 1)
+    (field [hp 1])
     (super-new)
 
     (define/public (get-name) "Blindscraper")
