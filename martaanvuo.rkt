@@ -12,14 +12,13 @@
 ; globals and state
 (define *location* *forest*)
 (define *in-combat* #f)
-(define *enemy-name* "Bloodleech")
-(define *enemy-hp* 2)
 (define *metaloop* 1)
 (define *turn* 1)
 (define *time-elapsed* 0)
 (define *hp* 4)
 (define *attack-skill* 1)
 (define *inventory* '())
+(define *creatures* '())
 
 (define (print-inventory)
   (newline)
@@ -32,8 +31,14 @@
   (displayln (string-append "-- Paragraph " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
   (newline)
   (when (not *in-combat*) (displayln (send *location* get-nth-description *turn*)))
-  (when *in-combat* (displayln (string-append "You are grappling with a Bloodleech. It has " (number->string *enemy-hp*) " HP."))))
+  (when *in-combat* (displayln (string-append "You are grappling with a Bloodleech. It has " (number->string (get-field hp *creatures*)) " HP."))))
 
+
+(define (spawn-enemy)
+  (define r (random 2))
+  (define enemy (cond ((= r 0) (new bloodleech%))
+                      (else (new blindscraper%))))
+  (set! *creatures* enemy))
 
 (define (fight)
   (set! *in-combat* #t)
@@ -52,18 +57,23 @@
               (number->string to-hit)))
   (cond ((>= to-hit target)
          (displayln (string-append "Your knife does " (number->string damage) " HP of damage to the Bloodleech."))
-         (set! *enemy-hp* (- *enemy-hp* damage))
-         (when (<= *enemy-hp* 0) (begin (set! *enemy-hp* 0) (set! *in-combat* #f)))
-         (when (= *enemy-hp* 0) (displayln "The Bloodleech is dead.")))
+         (send *creatures* hit damage)
+         #(set! *enemy-hp* (- *enemy-hp* damage))
+         #(when (<= *enemy-hp* 0) (begin (set! *enemy-hp* 0) (set! *in-combat* #f)))
+         #(when (= *enemy-hp* 0) (displayln "The Bloodleech is dead.")))
         ((= to-hit target) (displayln "You barely miss."))
         (else (displayln "You miss."))))
 
 (define (get-curse)
-  (define first '("Rot" "Blight" "Pus"))
-  (define second '("decay" "corrosion" "death" "degeneration"))
-  (string-append (take-random first) " and " (take-random second) "!"))
+  (define index (random 2))
+  (cond ((= index 0) (define first '("Rot" "Blight" "Pus"))
+                     (define second '("decay" "corrosion" "death" "destruction"))
+                     (string-append (take-random first) " and " (take-random second) "!"))
+        (else (take-random '("Let everything wither!"
+                             "Blight!"
+                             "Snake's poison!")))))
 
-(define *combat-options* (list (make-action 'strike "Strike. Hard." 1 *enemy-name* '(combat))
+(define *combat-options* (list (make-action 'strike "Strike. Hard." 1 *creatures* '(combat))
                                (make-action 'run "Run. Fast." 1 null '(combat))))
 
 (define (update-state! action)
@@ -73,9 +83,9 @@
                (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
                      (else
                       (newline)
-                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a spiritstone. A gift."))
+                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
                       (newline)
-                      (displayln "You pick it up.")
+                      (displayln (string-append "You pick up the " (send loot get-short-description) "."))
                       (set! *inventory* (cons loot *inventory*))
                       ))
                (set! *time-elapsed* (add1 *time-elapsed*)))]
@@ -86,11 +96,15 @@
     ['strike (begin (fight)
                     (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
+    ['run (newline) (displayln (take-random '("You try to run.")))]
     [else (error "Unknown action!")]))
 
 (define (run-on-turn-actions . turn)
   (case *turn*
-    [(3) (set! *in-combat* true) (newline) (displayln (string-append (get-curse) " You get attacked by a " *enemy-name* "!"))]))
+    [(3) (spawn-enemy)
+         (set! *in-combat* true)
+         (newline)
+         (displayln (string-append (get-curse) " You get attacked by a " (send *creatures* get-name) "!"))]))
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))

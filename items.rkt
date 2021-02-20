@@ -2,13 +2,14 @@
 
 (define *loot* '('amulet 'knife))
 
-(define item<%> (interface () get-inline-description get-uses get-condition))
+(define item<%> (interface () get-inline-description get-short-description get-uses get-condition))
 
 (define amulet%
   (class* object% (item<%>)
     (super-new)
 
     (define/public (get-inline-description) "a crow's feather amulet")
+    (define/public (get-short-description) "crow amulet")
     (define/public (get-uses) null)
     (define/public (get-condition) 'good)))
 
@@ -17,6 +18,7 @@
     (super-new)
 
     (define/public (get-inline-description) "an obsidian cutting stone")
+    (define/public (get-short-description) "obsidian blade")
     (define/public (get-uses) null)
     (define/public (get-condition) 'good)))
 

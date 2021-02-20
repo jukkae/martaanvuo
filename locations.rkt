@@ -16,7 +16,7 @@
     (define/public (get-nth-description n)
       (cond ((= n 1) "You are walking through a dense coniferous forest. It is bitterly cold.")
             ((= n 2) "The Sun has come up a while ago. Her pale light scarcely filters through the branches of age-old pines.")
-            ((= n 3) "You notice you are walking along a path, too narrow to be human, yet sharp, intelligent.")
+            ((= n 3) "You realise you are walking along a path, too narrow to be human, yet sharp, intelligent.")
             ((= n 4) "You are walking along a forest path.")
             ((= n 5) "You are walking along a forest path. You hear a RIVER to your right.")
             ((= n 6) "You are walking along a forest path. You hear a river to your right.")
