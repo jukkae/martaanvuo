@@ -11,6 +11,7 @@
     (field [inventory null])
     (super-new)
 
+    (define/public (get-brawl-damage) (d 1 2))
     (define/public (get-next-action) (error "not implemented yet!"))
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))

@@ -16,7 +16,7 @@
     (define/public (get-nth-description n)
       (cond ((= n 1) "You are walking through a dense coniferous forest. It is bitterly cold.")
             ((= n 2) "The Sun has come up a while ago. Her pale light scarcely filters through the branches of age-old pines.")
-            ((= n 3) "You realise you are walking along a path, too narrow to be human, yet sharp, intelligent.")
+            ((= n 3) "You realise you are walking along a narrow path, too narrow to be human.")
             ((= n 4) "You are walking along a forest path.")
             ((= n 5) "You are walking along a forest path. You hear a RIVER to your right.")
             ((= n 6) "You are walking along a forest path. You hear a river to your right.")
@@ -31,13 +31,13 @@
                                           (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
     (define/public (get-visible-exits)
-      #(cond ((< times-described 5) (list (make-action 'go-on "Keep on walking." 1 null '(wilderness))))
+      #(cond ((< times-described 5) (list (make-action 'go-on "Go deeper." 1 null '(wilderness))))
              ((> times-described 4 (list (make-action "Keep on walking." 'go-on 1 null '(wilderness))
                                          (make-action "Go right." 'go-right 1 null '(wilderness)))))
              (else '()))
-      (if (< times-described 5)
-          (list (make-action 'go-on "Keep on walking." 1 null '(wilderness)))
-          (list (make-action 'go-on "Keep on walking." 1 null '(wilderness)))))
+      (if (< times-described 4)
+          (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness)))
+          (list (make-action 'go-on "Follow the path." 1 null '(wilderness)))))
 
     (define/public (search)
       

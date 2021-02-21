@@ -19,7 +19,7 @@
 
     (define/public (get-inline-description) "an obsidian cutting stone")
     (define/public (get-short-description) "obsidian blade")
-    (define/public (get-uses) '(strike))
+    (define/public (get-uses) '(stab))
     (define/public (get-condition) 'good)))
 
 

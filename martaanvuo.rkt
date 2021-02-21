@@ -29,6 +29,7 @@
 
 (define (describe-situation)
   (newline)
+  (newline)
   (displayln (string-append "-- Paragraph " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
   (newline)
   (when (not *in-combat*) (displayln (send *location* get-nth-description *turn*)))
@@ -48,31 +49,32 @@
   (define damage (d 1 4))
   (newline)
   (displayln (string-append
-              (take-random '("You go for a strike. Aim at the soft underbelly."
-                             "You lean in to strike. Put your weight behind it, pierce the scourge."
+              (take-random '("You go for a stab. Aim at the soft underbelly."
+                             "You lean in to stab. Put your weight behind it, pierce the scourge."
                              "You slash."
-                             "You strike."
-                             "You go for a strike."
-                             "You lean in to strike."))
+                             "You stab."
+                             "You go for a stab."
+                             "You lean in to stab."))
               " [2d6+1: "
               (number->string to-hit)
               "]"))
   (cond ((>= to-hit target)
-         (displayln (take-random '("Your strike connects."
-                                   "Your strike lands with a satisfying thud."
+         (displayln (take-random '("Your stab connects."
+                                   "Your stab lands with a satisfying thud."
                                    "Your blade pierces the skin of the enemy.")))
          (displayln (string-append "[damage: " (number->string damage) " HP]"))
          (define result (send *creatures* hit damage))
          (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
-                                             (set! *in-combat* #f))))
+                                            (set! *in-combat* #f))))
         (else (displayln (string-append (get-curse) " You miss.")))))
 
 (define (get-curse)
   (define index (random 2))
-  (cond ((= index 0) (define first '("Rot" "Blight" "Pus"))
-                     (define second '("decay" "corrosion" "death" "destruction"))
+  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain"))
+                     (define second '("decay" "corrosion" "death" "destruction" "sorrow"))
                      (string-append (take-random first) " and " (take-random second) "!"))
-        (else (take-random '("Let everything wither!"
+        (else (take-random '("Let it all wither!"
+                             "May it all languish!"
                              "Blight!"
                              "Scales of a snake!")))))
 
@@ -93,7 +95,7 @@
     ['go-on (begin (newline)
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
-    ['strike (begin (fight)
+    ['stab (begin (fight)
                     (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
@@ -106,9 +108,10 @@
     (define to-hit (+ (d 2 6) 1))
     (define target 6)
     (define damage (d 1 2))
-    (displayln (string-append "[2d6+1: " (number->string to-hit) "]"))
+    (displayln (string-append "[to hit: 2d6+1: " (number->string to-hit) "]"))
     (if (> to-hit target)
-        (begin (displayln "Oof. That hurt.")
+        (begin (displayln (string-append "[dmg: 1d2: " (number->string damage) "]"))
+               (displayln "Oof. That hurt.")
                (send *pc* hit damage)
                (if (<= (get-field hp *pc*) 0)
                    (begin (displayln "You are dead.")
@@ -120,7 +123,10 @@
     [(3) (spawn-enemy)
          (set! *in-combat* true)
          (newline)
-         (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))]))
+         (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))
+         (when (not (player-has-weapons?))
+           (newline)
+           (displayln (string-append "A weapon would be nice.")))]))
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -128,22 +134,25 @@
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
+(define (player-has-weapons?) (not (empty? (filter
+                                            (lambda (item) (member 'stab (send item get-uses)))
+                                            (get-field inventory *pc*)))))
+
 (define (build-keys-to-options-map)
-  (define (player-has-weapons?) (not (empty? (filter
-                               (lambda (item) (member 'strike (send item get-uses)))
-                               (get-field inventory *pc*)))))
   (define location-options (send *location* get-interactions))
   (define next-location-choices (send *location* get-visible-exits))
   (define combat-options
     (if *in-combat*
         (if (player-has-weapons?)
-            (list (make-action 'strike "Strike." 1 *creatures* '(combat))
+            (list (make-action 'stab "Stab." 1 *creatures* '(combat))
+                  (make-action 'brawl "Brawl." 1 *creatures* '(combat))
                   (make-action 'run "Run." 1 null '(combat)))
-            (list (make-action 'run "Run." 1 null '(combat))))
+            (list (make-action 'brawl "Brawl." 1 *creatures* '(combat))
+                  (make-action 'run "Run." 1 null '(combat))))
         null))
   (define generic-options
     (if (not (empty? (get-field inventory *pc*)))
-        (list (make-action 'inventory "Show inventory [free action]" 0 null '(always free)) ; tag - duration in jiffies - object - list of tags
+        (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free)) ; tag - duration in jiffies - object - list of tags
               (make-action 'break-from-game-loop "Quit." 0 null '(always)))
         (list (make-action 'break-from-game-loop "Quit." 0 null '(always)))))
 
