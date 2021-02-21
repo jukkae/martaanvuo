@@ -14,12 +14,24 @@
 (define *pc* (new pc%))
 (define *location* *forest*)
 (define *in-combat* #f)
-(define *metaloop* 1)
+(define *metaloop* 0)
 (define *turn* 1)
+(define *turns-total* 1)
 (define *time-elapsed* 0)
 (define *hp* 4)
 (define *attack-skill* 1)
 (define *creatures* '())
+
+(define (reset-meta)
+  (set! *pc* (new pc%))
+  (set! *location* *forest*)
+  (set! *in-combat* #f)
+  (set! *metaloop* (add1 *metaloop*))
+  (set! *turn* 1)
+  (set! *time-elapsed* 0)
+  (set! *hp* 4)
+  (set! *attack-skill* 1)
+  (set! *creatures* '()))
 
 (define (print-inventory)
   (newline)
@@ -78,8 +90,16 @@
                              "Blight!"
                              "Scales of a snake!")))))
 
+(define (quit)
+  (newline)
+  (displayln "You quit. For now.")
+  (newline)
+  (displayln "Your progress should be saved. It is not.")
+  (exit))
+
 (define (update-state! action)
   (case (action-symbol action)
+    ['quit (quit)]
     ['search (begin
                (define loot (send *location* search))
                (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
@@ -96,7 +116,7 @@
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['stab (begin (fight)
-                    (set! *time-elapsed* (add1 *time-elapsed*)))]
+                  (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
     [else (error "Unknown action!")]))
@@ -115,7 +135,7 @@
                (send *pc* hit damage)
                (if (<= (get-field hp *pc*) 0)
                    (begin (displayln "You are dead.")
-                          'u-ded)
+                          (end-game))
                    (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
         (begin (displayln "You dodge."))))
 
@@ -153,8 +173,8 @@
   (define generic-options
     (if (not (empty? (get-field inventory *pc*)))
         (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free)) ; tag - duration in jiffies - object - list of tags
-              (make-action 'break-from-game-loop "Quit." 0 null '(always)))
-        (list (make-action 'break-from-game-loop "Quit." 0 null '(always)))))
+              (make-action 'quit "Quit." 0 null '(always)))
+        (list (make-action 'quit "Quit." 0 null '(always)))))
 
   (define options (append location-options next-location-choices combat-options generic-options))
   (when *in-combat* (set! options (filter is-combat? options)))
@@ -165,9 +185,11 @@
     (hash-set! options-hash key (list-ref options i)))
   options-hash)
 
-(define (ask-input)
+(define (ask-input . context?)
   (newline)
-  (displayln "What do you do?")
+  (if (null? context?)
+      (displayln "What do you do?")
+      (displayln "Try again? [Q] for QUIT, anything else to continue.")) ; in meta context
   (newline)
   (read-line))
 
@@ -192,7 +214,34 @@
 
 (define (title)
   (newline)
-  (displayln "M A R T A A N V U O"))
+  (displayln "M A R T A A N V U O")
+  (displayln "==================="))
 
-(title)
-(resolve-turn)
+
+(define (end-game)
+  (define command (ask-input 'meta))
+  (if (string-ci=? "Q" command)
+      (quit)
+      'restart)
+  (meta-loop))
+
+(define (meta-loop)
+  ;begin new run
+  (reset-meta)
+  (newline)
+  (displayln "A sense of self emerges from the Dark. You arise in M A R T A A N V U O.")
+  (newline)
+  (displayln (string-append "-- Run #" (number->string *metaloop*)))
+
+  (resolve-turn)
+  (displayln "UNHANDLED"))
+
+(define (startup)
+  (title)
+  (newline)
+  (displayln "You should be able to select a previous save. You can not.")
+  (newline)
+  (displayln "Let's begin.")
+  (call/cc (end-game (meta-loop))))
+
+(startup)
