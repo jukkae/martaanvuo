@@ -262,7 +262,7 @@
   ; meta-actions
   (define meta-options (make-hash))
   (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
-  (hash-set! meta-options "R" (cons "[R]: Restart." quit))
+  (hash-set! meta-options "R" (cons "[R]: Restart." restart))
   (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
   )
 
@@ -272,7 +272,8 @@
   ;begin new run
   (reset-meta)
   (newline)
-  (displayln "A sense of self emerges from the Dark. You arise in M A R T A A N V U O.")
+  (displayln "A sense of self emerges from the Dark. You arise in")
+  (displayln "M A R T A A N V U O.")
   (newline)
   (displayln (string-append "-- Run #" (number->string *metaloop*)))
 
