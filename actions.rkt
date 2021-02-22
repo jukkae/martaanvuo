@@ -1,11 +1,11 @@
 #lang racket
 
 ; actions
-(define-struct action(symbol
-                      name
-                      duration
-                      target
-                      tags))
+(define-struct action (symbol
+                       name
+                       duration
+                       target
+                       tags))
 
 (define (is-combat? action)
   (if (or (member 'combat (action-tags action))

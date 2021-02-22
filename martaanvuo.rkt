@@ -172,9 +172,8 @@
         null))
   (define generic-options
     (if (not (empty? (get-field inventory *pc*)))
-        (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free)) ; tag - duration in jiffies - object - list of tags
-              (make-action 'quit "Quit." 0 null '(always)))
-        (list (make-action 'quit "Quit." 0 null '(always)))))
+        (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
+        '()))
 
   (define options (append location-options next-location-choices combat-options generic-options))
   (when *in-combat* (set! options (filter is-combat? options)))
@@ -187,19 +186,44 @@
 
 (define (ask-input . context?)
   (newline)
-  (if (null? context?)
-      (displayln "What do you do?")
-      (displayln "Try again? [Q] for QUIT, anything else to continue.")) ; in meta context
+  (cond [(equal? context? 'meta) (display "Try again? [Q] to quit, [R] to restart.")]
+        [(null? context?) (displayln "What do you do?")])
   (newline)
   (read-line))
 
+(define (hang-until-valid-action actions)
+  (newline)
+  (display "Unknown command. Known commands:")
+  (for ([(k v) (in-hash actions)]) (display k))
+  (display "QH") ; meta options
+  (newline)
+  (define input (read-line))
+  ; meta-actions
+  (handle-meta-actions input)
+  ; otherwise
+  (define command (hash-ref actions (string->number input) 'not-found))
+  (if (equal? command 'not-found)
+      (hang-until-valid-action actions)
+      command))
+
 (define (show-choices-and-get-action)
-  (define options (build-keys-to-options-map))  
+  (define options (build-keys-to-options-map))
   (newline)
   (for ([(k v) (in-hash options)])
     (displayln (string-append "[" (number->string k) "]: " (action-name v))))
+
+  ; display meta actions
+  (newline)
+  (displayln "[Q]uit [H]elp")
+  
   (define user-input (ask-input))
-  (define command (hash-ref options (string->number user-input)))
+
+  ; meta-actions
+  (handle-meta-actions user-input)
+  ; otherwise
+  (define command (hash-ref options (string->number user-input) 'not-found))
+  (when (equal? command 'not-found)
+    (set! command (hang-until-valid-action options)))
   command)
 
 (define (resolve-turn)
@@ -217,13 +241,20 @@
   (displayln "M A R T A A N V U O")
   (displayln "==================="))
 
+(define (handle-meta-actions input)
+  (cond ((string-ci=? "Q" input) (quit))
+        ((string-ci=? "R" input) (restart))
+        (else 'continue)))
 
 (define (end-game)
-  (define command (ask-input 'meta))
-  (if (string-ci=? "Q" command)
-      (quit)
-      'restart)
-  (meta-loop))
+  (newline)
+  (display "Do you want to try again? [Q] to quit, [R] to restart.")
+  (define user-input (ask-input 'meta))
+
+  ; meta-actions
+  (handle-meta-actions user-input))
+
+(define (restart) (meta-loop))
 
 (define (meta-loop)
   ;begin new run
