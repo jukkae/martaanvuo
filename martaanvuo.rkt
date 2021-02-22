@@ -191,19 +191,19 @@
   (newline)
   (read-line))
 
-(define (hang-until-valid-action actions)
+(define (hang-until-valid-action actions meta-actions)
   (newline)
   (display "Unknown command. Known commands: ")
   (for ([(k v) (in-hash actions)]) (display k))
-  (display "Q") ; meta options
+  (for ([(k v) (in-hash meta-actions)]) (display k))
   (newline)
   (define input (read-line))
   ; meta-actions
-  (handle-meta-actions input)
+  (handle-meta-actions input meta-actions)
   ; otherwise
   (define command (hash-ref actions (string->number input) 'not-found))
   (if (equal? command 'not-found)
-      (hang-until-valid-action actions)
+      (hang-until-valid-action actions meta-actions)
       command))
 
 (define (show-choices-and-get-action)
@@ -213,17 +213,21 @@
     (displayln (string-append "[" (number->string k) "]: " (action-name v))))
 
   ; display meta actions
+  (define meta-options (make-hash))
+  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
   (newline)
-  (displayln "[Q]: Quit.")
-  
+  (for ([(k v) (in-hash meta-options)])
+    (display (car v)))
+  (newline)
+
   (define user-input (ask-input))
 
-  ; meta-actions
-  (handle-meta-actions user-input)
-  ; otherwise
+  (handle-meta-actions user-input meta-options)
+
+  ; not handled yet
   (define command (hash-ref options (string->number user-input) 'not-found))
   (when (equal? command 'not-found)
-    (set! command (hang-until-valid-action options)))
+    (set! command (hang-until-valid-action options meta-options)))
   command)
 
 (define (resolve-turn)
@@ -241,10 +245,14 @@
   (displayln "M A R T A A N V U O")
   (displayln "==================="))
 
-(define (handle-meta-actions input)
-  (cond ((string-ci=? "Q" input) (quit))
-        ((string-ci=? "R" input) (restart))
-        (else 'continue)))
+(define (handle-meta-actions input meta-actions . hang-on-not-found?)
+  (set! input (string-upcase input))
+  (define meta-action (hash-ref meta-actions input 'not-found))
+  (if (equal? meta-action 'not-found)
+      (if (not (null? hang-on-not-found?))
+          (hang-until-valid-action (make-hash) meta-actions)
+          'continue)
+      ((cdr meta-action))))
 
 (define (end-game)
   (newline)
@@ -252,7 +260,10 @@
   (define user-input (ask-input 'meta))
 
   ; meta-actions
-  (when (equal? 'continue (handle-meta-actions user-input)) (error "UNHANDLED INPUT IN END-GAME")) ; beginnings of main menu, actually
+  (define meta-options (make-hash))
+  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
+  (hash-set! meta-options "R" (cons "[R]: Restart." quit))
+  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
   )
 
 (define (restart) (meta-loop))
