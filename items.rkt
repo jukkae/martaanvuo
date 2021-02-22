@@ -13,6 +13,15 @@
     (define/public (get-uses) null)
     (define/public (get-condition) 'good)))
 
+(define figurine%
+  (class* object% (item<%>)
+    (super-new)
+
+    (define/public (get-inline-description) "a small, heavy figurine")
+    (define/public (get-short-description) "figurine")
+    (define/public (get-uses) null)
+    (define/public (get-condition) 'good)))
+
 (define knife%
   (class* object% (item<%>)
     (super-new)

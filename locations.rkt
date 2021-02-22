@@ -46,10 +46,11 @@
       (displayln (string-append "The area looks promising, so you take a look around." "[2d6: " (number->string roll) "]" ))
       
       (set! searched? #t)
-      (define target-number 4)
+      (define target-number 6)
       (define critical 10)
       (define loot (cond ((> roll critical) (new amulet%))
                          ((> roll target-number) (new knife%))
+                         ((<= roll target-number) (new figurine%))
                          (else 'nothing)))
       loot)
     (define/public (camp)

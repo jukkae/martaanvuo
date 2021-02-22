@@ -109,6 +109,7 @@
                       (newline)
                       (displayln (string-append "You pick up the " (send loot get-short-description) "."))
                       (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
+                      (when (is-a? loot figurine%) (win))
                       ))
                (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['inventory (print-inventory)]
@@ -266,6 +267,18 @@
   (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
   )
 
+(define (win)
+  (newline)
+  (display "You found what you sought. You win the game and die of old age. [Q] to quit, [R] to restart.")
+  (define user-input (ask-input 'meta))
+
+  ; meta-actions
+  (define meta-options (make-hash))
+  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
+  (hash-set! meta-options "R" (cons "[R]: Restart." restart))
+  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
+  )
+
 (define (restart) (meta-loop))
 
 (define (meta-loop)
@@ -285,7 +298,7 @@
   (newline)
   (displayln "You should be able to select a previous save. You can not.")
   (newline)
-  (displayln "Let's begin.")
+  (displayln "A new game begins.")
   (call/cc (end-game (meta-loop))))
 
 (startup)
