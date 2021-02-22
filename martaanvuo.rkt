@@ -193,9 +193,9 @@
 
 (define (hang-until-valid-action actions)
   (newline)
-  (display "Unknown command. Known commands:")
+  (display "Unknown command. Known commands: ")
   (for ([(k v) (in-hash actions)]) (display k))
-  (display "QH") ; meta options
+  (display "Q") ; meta options
   (newline)
   (define input (read-line))
   ; meta-actions
@@ -214,7 +214,7 @@
 
   ; display meta actions
   (newline)
-  (displayln "[Q]uit [H]elp")
+  (displayln "[Q]: Quit.")
   
   (define user-input (ask-input))
 
@@ -252,7 +252,8 @@
   (define user-input (ask-input 'meta))
 
   ; meta-actions
-  (handle-meta-actions user-input))
+  (when (equal? 'continue (handle-meta-actions user-input)) (error "UNHANDLED INPUT IN END-GAME")) ; beginnings of main menu, actually
+  )
 
 (define (restart) (meta-loop))
 
