@@ -23,6 +23,8 @@
 (define *attack-skill* 1)
 (define *creatures* '())
 
+(define *show-meta-commands* #t)
+
 (define (reset-meta)
   (set! *pc* (new pc%))
   (set! *location* *forest*)
@@ -81,6 +83,35 @@
                                             (set! *in-combat* #f))))
         (else (displayln (string-append (get-curse) " You miss.")))))
 
+(define (brawl)
+  (set! *in-combat* #t)
+  (define to-hit (+ (d 2 6) *attack-skill* 2)) ; +2 to hit bonus; having +defense against this opponent would be great
+  (define target (get-field defense *creatures*))
+  (define damage (d 1 2))
+  (newline)
+  (displayln (string-append
+              (take-random '("You grapple with the enemy. Try to get it pinned."
+                             "You wrestle."
+                             "You try to get it pinned. That is the Way of the Anthead of Riverfrost."
+                             #;"You try to strangle."
+                             #;"Get it pinned, then skinned."
+                             #;"Get it pinned, then skinned. Came up with that myself."
+                             #;"Not the first neck I've broken."))
+              " [2d6+1: "
+              (number->string to-hit)
+              "]"))
+  (cond ((>= to-hit target)
+         (displayln (take-random '("Snap. You feel a crack under your fingers."
+                                   "Crunch."
+                                   "Crack."
+                                   "Cronk. You feel something thick break under your hands."
+                                   "Puff. The snow billows up as you throw down your enemy under you.")))
+         (displayln (string-append "[damage: " (number->string damage) " HP]"))
+         (define result (send *creatures* hit damage))
+         (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
+                                            (set! *in-combat* #f))))
+        (else (displayln (string-append (get-curse) " You can't get a good hold of the enemy.")))))
+
 (define (get-curse)
   (define index (random 2))
   (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain"))
@@ -119,6 +150,8 @@
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['stab (begin (fight)
                   (set! *time-elapsed* (add1 *time-elapsed*)))]
+    ['brawl (begin (brawl)
+                   (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
     ['go-to-mountains (begin (newline)
@@ -151,7 +184,7 @@
          (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))
          (when (not (player-has-weapons?))
            (newline)
-           (displayln (string-append "A weapon would be nice.")))]))
+           (displayln (string-append "A weapon would be nice. But your hands are strong, and every living thing lives the same.")))]))
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -196,6 +229,11 @@
   (newline)
   (read-line))
 
+(define (toggle-meta)
+  (set! *show-meta-commands* (not *show-meta-commands*))
+  (newline)
+  (displayln "Hid meta commands, [S] to show again."))
+
 (define (hang-until-valid-action actions meta-actions)
   (newline)
   (display "Unknown command. Known commands: ")
@@ -211,6 +249,14 @@
       (hang-until-valid-action actions meta-actions)
       command))
 
+; TODO this needs a rewrite in terms of commands.
+; Commands can either be meta commands, in which case they should get letters,
+; or regular commands, in which case they should get numbers.
+; If it's neither, then it's a special value that throws the input handler
+; into the PEBKAC loop.
+; Meta commands should be handled at this level, regular commands should be
+; passed on to "Game Manager".
+(displayln "TODO: find me and fix me")
 (define (show-choices-and-get-action)
   (define options (build-keys-to-options-map))
   (newline)
@@ -220,6 +266,7 @@
   ; display meta actions
   (define meta-options (make-hash))
   (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
+  #;(hash-set! meta-options "S" (cons "[S]: Show/hide meta commands." toggle-meta))
   (newline)
   (for ([(k v) (in-hash meta-options)])
     (display (car v)))
