@@ -9,6 +9,7 @@
 
 
 (define *forest* (new forest%))
+(define *mountains* (new mountains%))
 
 ; globals and state
 (define *pc* (new pc%))
@@ -120,6 +121,9 @@
                   (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
+    ['go-to-mountains (begin (newline)
+                             (set! *location* *mountains*)
+                             )]
     [else (error "Unknown action!")]))
 
 (define (run-on-turn-actions . turn)
