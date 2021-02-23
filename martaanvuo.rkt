@@ -1,5 +1,7 @@
 #lang racket
 
+(require roman-numeral)
+
 (require "actions.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
@@ -44,10 +46,13 @@
 
 (define (describe-situation)
   (newline)
-  (newline)
-  (displayln (string-append "-- Paragraph " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
+  (displayln (string-append "-- Turn " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
   (newline)
   (when (not *in-combat*) (displayln (send *location* get-nth-description *turn*)))
+  (when (and (not *in-combat*) (= *turn* 2))
+    (begin
+      (newline)
+      (displayln (send *pc* get-a-hunch))))
   (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
 
 
@@ -256,6 +261,10 @@
 ; into the PEBKAC loop.
 ; Meta commands should be handled at this level, regular commands should be
 ; passed on to "Game Manager".
+;
+; Are Commands and Actions the same thing? Likely not. Showing inventory
+; feels like a command that happens immediately and doesn't affect the world,
+; whereas actions are something that can be queued and that take time to resolve.
 (displayln "TODO: find me and fix me")
 (define (show-choices-and-get-action)
   (define options (build-keys-to-options-map))
@@ -336,10 +345,13 @@
   ;begin new run
   (reset-meta)
   (newline)
+  (newline)
+  (displayln (string-append "BOOK " (string-upcase (number->roman *metaloop*))))
+  (newline)
   (displayln "A sense of self emerges from the Dark. You arise in")
   (displayln "M A R T A A N V U O.")
   (newline)
-  (displayln (string-append "-- Run #" (number->string *metaloop*)))
+  
 
   (resolve-turn)
   (displayln "UNHANDLED"))

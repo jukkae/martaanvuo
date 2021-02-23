@@ -19,6 +19,9 @@
                  (begin (set! hp 0)
                         'u-ded)
                  'u-hit)))
-    (define/public (get-status) (error "not implemented yet!"))))
+    (define/public (get-status) (error "not implemented yet!"))
+    (define/public (get-a-hunch)
+      (take-random '(
+                     "You feel something is watching you.")))))
 
 (provide (all-defined-out))

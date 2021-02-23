@@ -4,8 +4,20 @@
 (require "items.rkt")
 (require "utils.rkt")
 
-; locations
-
+; Locations and routes should form a graph, so that locations may have arbitrarily
+; many neighbors of each kind, whereas routes have 1 or 2 neighbors in total.
+; This is to make it easier to write good prose for routes, as well as providing
+; easier-to-understand structure to the narrative, plus some mechanical possibilities.
+; Notably, this does require representing branches and junctions as locations.
+; This is not necessarily a bad thing.
+; Also, routes should be asymmetrical as often as possible, to make the gameplay
+; more interesting!
+; Basically, routes should have a chance of having a route event, beneficial or
+; not, at least the first time the route is traversed. Subsequent events depend on
+; situation.
+; PC is either at the beginning of the route, in the middle of one, or at the end of it.
+; Check happens when PC enters middle of one. PC should sometimes (not always) have a
+; choice of pushing on or turning back.
 (define location<%> (interface () get-description get-interactions get-visible-exits))
 (define forest%
   (class* object% (location<%>)
@@ -15,9 +27,9 @@
 
     (define/public (get-nth-description n)
       (when (< times-described n) (set! times-described n))
-      (cond ((= n 1) "You are walking through a dense coniferous forest. It is bitterly cold.")
+      (cond ((= n 1) "You are walking through a dense Blackpine forest. It is bitterly cold still. Spring is far overdue.")
             ((= n 2) (string-append "The Sun has come up a while ago. Her pale light scarcely filters through the branches of age-old pines. "
-                                    "You hear the babbling of a small CREEK flowing on your right. "
+                                    "You hear the babbling of a small CREEK flowing on your right, at the bottom of a frozen, rocky hill. "
                                     "The icy hill is steep, almost a cliff, and the rocks at the bottom look much harder and sharper than your head."))
             ((= n 3) "You are walking along a narrow path, too narrow to be human. The babbling of the creek is quieting down, but the downhill looks rather doable.")
             ((= n 4) "You are walking along a forest path. The mountains are drawing nearer.")
