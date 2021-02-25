@@ -48,7 +48,7 @@
   (newline)
   (displayln (string-append "-- Turn " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
   (newline)
-  (when (not *in-combat*) (displayln (send *location* get-nth-description *turn*)))
+  (when (not *in-combat*) (displayln (send *location* get-description)))
   (when (and (not *in-combat*) (= *turn* 2))
     (begin
       (newline)
@@ -297,7 +297,9 @@
   
   (define action (show-choices-and-get-action))
   (define result (update-state! action))
-  (when (not (is-free? action)) (set! *turn* (add1 *turn*)))
+  (when (not (is-free? action))
+    (set! *turn* (add1 *turn*))
+    (send *location* advance-to-next-description!))
   (cond ((equal? result 'u-ded) (newline) 'end-game)
         (else (resolve-turn))))
 
