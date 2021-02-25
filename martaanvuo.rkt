@@ -12,6 +12,7 @@
 
 (define *forest* (new forest%))
 (define *mountains* (new mountains%))
+(define *river* (new river%))
 
 ; globals and state
 (define *pc* (new pc%))
@@ -158,7 +159,13 @@
     ['go-to-mountains (begin (newline)
                              (set! *location* *mountains*)
                              )]
-    [else (error "Unknown action!")]))
+    ['go-to-river (begin (newline)
+                         (set! *location* *river*)
+                         )]
+    ['go-downriver (begin (newline)
+                          (displayln (take-random '("Better get to it, then." "You keep on walking.")))
+                          (set! *time-elapsed* (add1 *time-elapsed*)))]
+    [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
 (define (run-on-turn-actions . turn)
   (when *in-combat*
