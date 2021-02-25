@@ -21,8 +21,6 @@
 (define *turn* 1)
 (define *turns-total* 1)
 (define *time-elapsed* 0)
-(define *hp* 4)
-(define *attack-skill* 1)
 (define *creatures* '())
 
 (define *show-meta-commands* #t)
@@ -34,8 +32,6 @@
   (set! *metaloop* (add1 *metaloop*))
   (set! *turn* 1)
   (set! *time-elapsed* 0)
-  (set! *hp* 4)
-  (set! *attack-skill* 1)
   (set! *creatures* '()))
 
 (define (print-inventory)
@@ -64,7 +60,7 @@
 
 (define (fight)
   (set! *in-combat* #t)
-  (define to-hit (+ (d 2 6) *attack-skill*))
+  (define to-hit (+ (d 2 6) (get-field attack-skill *pc*)))
   (define target (get-field defense *creatures*))
   (define damage (d 1 4))
   (newline)
@@ -90,7 +86,7 @@
 
 (define (brawl)
   (set! *in-combat* #t)
-  (define to-hit (+ (d 2 6) *attack-skill* 2)) ; +2 to hit bonus; having +defense against this opponent would be great
+  (define to-hit (+ (d 2 6) (get-field attack-skill *pc*) 2)) ; +2 to hit bonus; having +defense against this opponent would be great
   (define target (get-field defense *creatures*))
   (define damage (d 1 2))
   (newline)
@@ -348,7 +344,7 @@
   (reset-meta)
   (newline)
   (newline)
-  (displayln (string-append "BOOK " (string-upcase (number->roman *metaloop*))))
+  (displayln (string-append "RUN " (string-upcase (number->roman *metaloop*))))
   (newline)
   (displayln "A sense of self emerges from the Dark. You arise in")
   (displayln "M A R T A A N V U O.")

@@ -8,6 +8,7 @@
 (define pc%
   (class* object% ()
     (field [hp 4])
+    (field [attack-skill 1])
     (field [inventory null])
     (super-new)
 
