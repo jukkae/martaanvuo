@@ -59,6 +59,7 @@
                (send *pc* hit damage)
                (if (<= (get-field hp *pc*) 0)
                    (begin (displayln "You are dead.")
+                          (error "run-on-turn-actions: Implement dying")
                           'u-ded) ; TODO
                    (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
         (begin (displayln "You dodge."))))

@@ -251,8 +251,7 @@
   (define meta-options (make-hash))
   (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-options "R" (cons "[R]: Restart." restart))
-  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
-  )
+  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options)))
 
 (define (win)
   (newline)
