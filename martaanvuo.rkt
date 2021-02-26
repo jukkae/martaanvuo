@@ -6,40 +6,29 @@
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
+(require "narration.rkt")
 (require "pc.rkt")
 (require "utils.rkt")
-
-
-(define *forest* (new forest%))
-(define *mountains* (new mountains%))
-(define *river* (new river%))
+(require "world.rkt")
 
 ; globals and state
 (define *pc* (new pc%))
-(define *location* *forest*)
+(define *world* (new world%))
 (define *in-combat* #f)
 (define *metaloop* 0)
 (define *turn* 1)
 (define *turns-total* 1)
 (define *time-elapsed* 0)
-(define *creatures* '())
 
 (define *show-meta-commands* #t)
 
 (define (reset-meta)
   (set! *pc* (new pc%))
-  (set! *location* *forest*)
+  (set! *world* (new world%))
   (set! *in-combat* #f)
   (set! *metaloop* (add1 *metaloop*))
   (set! *turn* 1)
-  (set! *time-elapsed* 0)
-  (set! *creatures* '()))
-
-(define (print-inventory)
-  (newline)
-  (displayln "You ponder your earthly possessions.")
-  (newline)
-  (displayln (string-append "In addition to clothes, you have " (get-list-inline-description (get-field inventory *pc*)) ".")))
+  (set! *time-elapsed* 0))
 
 (define (describe-situation)
   (newline)
@@ -51,13 +40,6 @@
       (newline)
       (displayln (send *pc* get-a-hunch))))
   (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
-
-
-(define (spawn-enemy)
-  (define r (random 2))
-  (define enemy (cond ((= r 0) (new bloodleech%))
-                      (else (new blindscraper%))))
-  (set! *creatures* enemy))
 
 (define (fight)
   (set! *in-combat* #t)
@@ -115,9 +97,9 @@
         (else (displayln (string-append (get-curse) " You can't get a good hold of the enemy.")))))
 
 (define (get-curse)
-  (define index (random 2))
-  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain"))
-                     (define second '("decay" "corrosion" "death" "destruction" "sorrow"))
+  (define index 0 #;(random 2))
+  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Snow" "Rain" "Frost"))
+                     (define second '("decay" "corrosion" "death" "destruction" "sorrow" "suffering"))
                      (string-append (take-random first) " and " (take-random second) "!"))
         (else (take-random '("Let it all wither!"
                              "May it all languish!"
@@ -146,7 +128,7 @@
                       (when (is-a? loot figurine%) (win))
                       ))
                (set! *time-elapsed* (add1 *time-elapsed*)))]
-    ['inventory (print-inventory)]
+    ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
     ['go-on (begin (newline)
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
@@ -156,15 +138,9 @@
                    (set! *time-elapsed* (add1 *time-elapsed*)))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
-    ['go-to-mountains (begin (newline)
-                             (set! *location* *mountains*)
-                             )]
-    ['go-to-river (begin (newline)
-                         (set! *location* *river*)
-                         )]
-    ['go-downriver (begin (newline)
-                          (displayln (take-random '("Better get to it, then." "You keep on walking.")))
-                          (set! *time-elapsed* (add1 *time-elapsed*)))]
+    ['go-to-mountains (error "implement go to-action")]
+    ['go-to-river (error "implement go to-action")]
+    ['go-downriver (error "implement go to-action")]
     [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
 (define (run-on-turn-actions . turn)
