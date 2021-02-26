@@ -1,7 +1,5 @@
 #lang racket
 
-(require roman-numeral)
-
 (require "actions.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
@@ -12,23 +10,16 @@
 (require "world.rkt")
 
 ; globals and state
-(define *pc* (new pc%))
 (define *world* (new world%))
-(define *in-combat* #f)
 (define *metaloop* 0)
-(define *turn* 1)
 (define *turns-total* 1)
-(define *time-elapsed* 0)
 
 (define *show-meta-commands* #t)
 
 (define (reset-meta)
-  (set! *pc* (new pc%))
+  (reset-state)
   (set! *world* (new world%))
-  (set! *in-combat* #f)
-  (set! *metaloop* (add1 *metaloop*))
-  (set! *turn* 1)
-  (set! *time-elapsed* 0))
+  (set! *metaloop* (add1 *metaloop*)))
 
 (define (describe-situation)
   (newline)
@@ -42,7 +33,7 @@
   (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
 
 (define (fight)
-  (set! *in-combat* #t)
+  (send *world* set-combat #t)
   (define to-hit (+ (d 2 6) (get-field attack-skill *pc*)))
   (define target (get-field defense *creatures*))
   (define damage (d 1 4))
@@ -64,11 +55,11 @@
          (displayln (string-append "[damage: " (number->string damage) " HP]"))
          (define result (send *creatures* hit damage))
          (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
-                                            (set! *in-combat* #f))))
+                                            (send *world* set-combat #f))))
         (else (displayln (string-append (get-curse) " You miss.")))))
 
 (define (brawl)
-  (set! *in-combat* #t)
+  (send *world* set-combat #t)
   (define to-hit (+ (d 2 6) (get-field attack-skill *pc*) 2)) ; +2 to hit bonus; having +defense against this opponent would be great
   (define target (get-field defense *creatures*))
   (define damage (d 1 2))
@@ -93,18 +84,8 @@
          (displayln (string-append "[damage: " (number->string damage) " HP]"))
          (define result (send *creatures* hit damage))
          (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
-                                            (set! *in-combat* #f))))
+                                            (send *world* set-combat #f))))
         (else (displayln (string-append (get-curse) " You can't get a good hold of the enemy.")))))
-
-(define (get-curse)
-  (define index 0 #;(random 2))
-  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Snow" "Rain" "Frost"))
-                     (define second '("decay" "corrosion" "death" "destruction" "sorrow" "suffering"))
-                     (string-append (take-random first) " and " (take-random second) "!"))
-        (else (take-random '("Let it all wither!"
-                             "May it all languish!"
-                             "Blight!"
-                             "Scales of a snake!")))))
 
 (define (quit)
   (newline)
@@ -127,15 +108,15 @@
                       (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
                       (when (is-a? loot figurine%) (win))
                       ))
-               (set! *time-elapsed* (add1 *time-elapsed*)))]
+               (send *world* advance-time))]
     ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
     ['go-on (begin (newline)
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
-                   (set! *time-elapsed* (add1 *time-elapsed*)))]
+                   (send *world* advance-time))]
     ['stab (begin (fight)
-                  (set! *time-elapsed* (add1 *time-elapsed*)))]
+                  (send *world* advance-time))]
     ['brawl (begin (brawl)
-                   (set! *time-elapsed* (add1 *time-elapsed*)))]
+                   (send *world* advance-time))]
     ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
     ['run (newline) (displayln (take-random '("You try to run.")))]
     ['go-to-mountains (error "implement go to-action")]
@@ -143,42 +124,12 @@
     ['go-downriver (error "implement go to-action")]
     [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
-(define (run-on-turn-actions . turn)
-  (when *in-combat*
-    (newline)
-    (displayln (string-append "The " (send *creatures* get-name) " attacks you."))
-    (define to-hit (+ (d 2 6) 1))
-    (define target 6)
-    (define damage (d 1 2))
-    (displayln (string-append "[to hit: 2d6+1: " (number->string to-hit) "]"))
-    (if (> to-hit target)
-        (begin (displayln (string-append "[dmg: 1d2: " (number->string damage) "]"))
-               (displayln "Oof. That hurt.")
-               (send *pc* hit damage)
-               (if (<= (get-field hp *pc*) 0)
-                   (begin (displayln "You are dead.")
-                          (end-game))
-                   (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
-        (begin (displayln "You dodge."))))
-
-  (case *turn*
-    [(3) (spawn-enemy)
-         (set! *in-combat* true)
-         (newline)
-         (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))
-         (when (not (player-has-weapons?))
-           (newline)
-           (displayln (string-append "A weapon would be nice. But your hands are strong, and every living thing lives the same.")))]))
-
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
         ((<= i 8) (add1 i))
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-(define (player-has-weapons?) (not (empty? (filter
-                                            (lambda (item) (member 'stab (send item get-uses)))
-                                            (get-field inventory *pc*)))))
 
 (define (build-keys-to-options-map)
   (define location-options (send *location* get-interactions))
@@ -277,15 +228,10 @@
   (define action (show-choices-and-get-action))
   (define result (update-state! action))
   (when (not (is-free? action))
-    (set! *turn* (add1 *turn*))
+    (send *world* advance-turn)
     (send *location* advance-to-next-description!))
   (cond ((equal? result 'u-ded) (newline) 'end-game)
         (else (resolve-turn))))
-
-(define (title)
-  (newline)
-  (displayln "M A R T A A N V U O")
-  (displayln "==================="))
 
 (define (handle-meta-actions input meta-actions . hang-on-not-found?)
   (set! input (string-upcase input))
@@ -325,24 +271,14 @@
 (define (meta-loop)
   ;begin new run
   (reset-meta)
-  (newline)
-  (newline)
-  (displayln (string-append "RUN " (string-upcase (number->roman *metaloop*))))
-  (newline)
-  (displayln "A sense of self emerges from the Dark. You arise in")
-  (displayln "M A R T A A N V U O.")
-  (newline)
-  
+  (narrate-run-number *metaloop*)
 
   (resolve-turn)
-  (displayln "UNHANDLED"))
+  (error "meta-loop: resolve-turn should not exit recursion"))
 
 (define (startup)
   (title)
-  (newline)
-  (displayln "You should be able to select a previous save. You can not.")
-  (newline)
-  (displayln "A new game begins.")
+  (narrate-startup)
   (call/cc (end-game (meta-loop))))
 
 (startup)
