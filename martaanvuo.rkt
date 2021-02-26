@@ -10,7 +10,6 @@
 (require "world.rkt")
 
 ; globals and state
-(define *world* (new world%))
 (define *metaloop* 0)
 (define *turns-total* 1)
 
@@ -18,118 +17,17 @@
 
 (define (reset-meta)
   (reset-state)
-  (set! *world* (new world%))
   (set! *metaloop* (add1 *metaloop*)))
 
-(define (describe-situation)
-  (newline)
-  (displayln (string-append "-- Turn " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
-  (newline)
-  (when (not *in-combat*) (displayln (send *location* get-description)))
-  (when (and (not *in-combat*) (= *turn* 2))
-    (begin
-      (newline)
-      (displayln (send *pc* get-a-hunch))))
-  (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
-
-(define (fight)
-  (send *world* set-combat #t)
-  (define to-hit (+ (d 2 6) (get-field attack-skill *pc*)))
-  (define target (get-field defense *creatures*))
-  (define damage (d 1 4))
-  (newline)
-  (displayln (string-append
-              (take-random '("You go for a stab. Aim at the soft underbelly."
-                             "You lean in to stab. Put your weight behind it, pierce the scourge."
-                             "You slash."
-                             "You stab."
-                             "You go for a stab."
-                             "You lean in to stab."))
-              " [2d6+1: "
-              (number->string to-hit)
-              "]"))
-  (cond ((>= to-hit target)
-         (displayln (take-random '("Your stab connects."
-                                   "Your stab lands with a satisfying thud."
-                                   "Your blade pierces the skin of the enemy.")))
-         (displayln (string-append "[damage: " (number->string damage) " HP]"))
-         (define result (send *creatures* hit damage))
-         (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
-                                            (send *world* set-combat #f))))
-        (else (displayln (string-append (get-curse) " You miss.")))))
-
-(define (brawl)
-  (send *world* set-combat #t)
-  (define to-hit (+ (d 2 6) (get-field attack-skill *pc*) 2)) ; +2 to hit bonus; having +defense against this opponent would be great
-  (define target (get-field defense *creatures*))
-  (define damage (d 1 2))
-  (newline)
-  (displayln (string-append
-              (take-random '("You grapple with the enemy. Try to get it pinned."
-                             "You wrestle."
-                             "You try to get it pinned. That is the Way of the Anthead of Riverfrost."
-                             #;"You try to strangle."
-                             #;"Get it pinned, then skinned."
-                             #;"Get it pinned, then skinned. Came up with that myself."
-                             #;"Not the first neck I've broken."))
-              " [2d6+1: "
-              (number->string to-hit)
-              "]"))
-  (cond ((>= to-hit target)
-         (displayln (take-random '("Snap. You feel a crack under your fingers."
-                                   "Crunch."
-                                   "Crack."
-                                   "Cronk. You feel something thick break under your hands."
-                                   "Puff. The snow billows up as you throw down your enemy under you.")))
-         (displayln (string-append "[damage: " (number->string damage) " HP]"))
-         (define result (send *creatures* hit damage))
-         (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
-                                            (send *world* set-combat #f))))
-        (else (displayln (string-append (get-curse) " You can't get a good hold of the enemy.")))))
-
 (define (quit)
-  (newline)
-  (displayln "You quit. For now.")
-  (newline)
-  (displayln "Your progress should be saved. It is not.")
+  (narrate-quit)
   (exit))
-
-(define (update-state! action)
-  (case (action-symbol action)
-    ['quit (quit)]
-    ['search (begin
-               (define loot (send *location* search))
-               (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
-                     (else
-                      (newline)
-                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
-                      (newline)
-                      (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-                      (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
-                      (when (is-a? loot figurine%) (win))
-                      ))
-               (send *world* advance-time))]
-    ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
-    ['go-on (begin (newline)
-                   (displayln (take-random '("Better get to it, then." "You keep on walking.")))
-                   (send *world* advance-time))]
-    ['stab (begin (fight)
-                  (send *world* advance-time))]
-    ['brawl (begin (brawl)
-                   (send *world* advance-time))]
-    ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
-    ['run (newline) (displayln (take-random '("You try to run.")))]
-    ['go-to-mountains (error "implement go to-action")]
-    ['go-to-river (error "implement go to-action")]
-    ['go-downriver (error "implement go to-action")]
-    [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
         ((<= i 8) (add1 i))
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
-
 
 (define (build-keys-to-options-map)
   (define location-options (send *location* get-interactions))
@@ -262,8 +160,7 @@
   (define meta-options (make-hash))
   (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-options "R" (cons "[R]: Restart." restart))
-  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options))
-  )
+  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options)))
 
 (define (restart) (meta-loop))
 

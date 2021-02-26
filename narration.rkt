@@ -29,6 +29,12 @@
   (newline)
   (displayln "A new game begins."))
 
+(define (narrate-quit)
+  (newline)
+  (displayln "You quit. For now.")
+  (newline)
+  (displayln "Your progress should be saved. It is not."))
+
 (define (get-curse)
   (define index 0 #;(random 2))
   (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Snow" "Rain" "Frost"))
@@ -38,5 +44,34 @@
                              "May it all languish!"
                              "Blight!"
                              "Scales of a snake!")))))
+
+(define (get-narration-for-stab)
+  (take-random '("You go for a stab. Aim at the soft underbelly."
+                 "You lean in to stab. Put your weight behind it, pierce the scourge."
+                 "You slash."
+                 "You stab."
+                 "You go for a stab."
+                 "You lean in to stab.")))
+
+(define (get-narration-for-successful-stab)
+  (take-random '("Your stab connects."
+                 "Your stab lands with a satisfying thud."
+                 "Your blade pierces the skin of the enemy.")))
+
+(define (get-narration-for-brawl)
+  (take-random '("You grapple with the enemy. Try to get it pinned."
+                 "You wrestle."
+                 "You try to get it pinned. That is the Way of the Anthead of Riverfrost."
+                 #;"You try to strangle."
+                 #;"Get it pinned, then skinned."
+                 #;"Get it pinned, then skinned. Came up with that myself."
+                 #;"Not the first neck I've broken.")))
+
+(define (get-narration-for-successful-brawl)
+  (take-random '("Snap. You feel a crack under your fingers."
+                 "Crunch."
+                 "Crack."
+                 "Cronk. You feel something thick break under your hands."
+                 "Puff. The snow billows up as you throw down your enemy under you.")))
 
 (provide (all-defined-out))
