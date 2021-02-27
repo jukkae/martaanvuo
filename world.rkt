@@ -4,6 +4,7 @@
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
+(require "minds.rkt")
 (require "narration.rkt")
 (require "utils.rkt")
 (require "pc.rkt")
@@ -13,32 +14,38 @@
 (define *river* (new river%))
 (define *location* *forest*)
 
-(define *turn* 1)
-(define *time-elapsed* 0)
-
-(define *in-combat* #f)
-
 (define *creatures* '())
 
 (define *pc* (new pc%))
 
-(define world%
-  (class* object% ()
-    (super-new)
-    (define/public (set-combat in-combat)
-      (set! *in-combat* in-combat))
-    (define/public (advance-time . jiffies)
-      (set! *time-elapsed* (add1 *time-elapsed*)))
-    (define/public (advance-turn)
-      (set! *turn* (add1 *turn*)))))
+(define *world* (make-hash))
+(hash-set! *world* 'turn 0)
+(hash-set! *world* 'in-combat #f)
+(hash-set! *world* 'elapsed-time 0)
 
-(define *world* (new world%))
+(define (make-new-world)
+  (define world (make-hash))
+  (hash-set! world 'turn 0)
+  (hash-set! world 'in-combat #f)
+  (hash-set! world 'elapsed-time 0)
+  world)
+
+    
+
+; do things like update status effects etc
+(define (begin-turn! world)
+  (hash-set! *world* 'turn (add1 (hash-ref *world* 'turn))) ; bump turn
+  (displayln (append-string "-- *world* : begin-turn!, turn " (number->string (hash-ref *world* 'turn)))))
+
+(define (resolve-actions! world actions)
+  (displayln "-- *world* : resolve-actions!"))
+
+(define (end-turn! world)
+  (displayln (append-string "-- *world* : end-turn!")))
 
 (define (reset-state)
-  (set! *world* (new world%))
-  (set! *pc* (new pc%))
-  (set! *turn* 1)
-  (set! *time-elapsed* 0))
+  (set! *world* (make-new-world))
+  (set! *pc* (new pc%)))
 
 (define (spawn-enemy)
   (define r (random 2))
@@ -50,19 +57,19 @@
                                             (lambda (item) (member 'stab (send item get-uses)))
                                             (get-field inventory *pc*)))))
 
-(define (describe-situation)
+(define (describe-situation world)
   (newline)
-  (displayln (string-append "-- Turn " (number->string *turn*) ", elapsed time: " (number->string *time-elapsed*) " jiffies"))
+  (displayln (string-append "-- Turn " (number->string (hash-ref world 'turn)) ", elapsed time: " (number->string (hash-ref world 'turn)) " jiffies"))
   (newline)
-  (when (not *in-combat*) (displayln (send *location* get-description)))
-  (when (and (not *in-combat*) (= *turn* 2))
+  #;(when (not (hash-ref world 'in-combat) (displayln (send *location* get-description))))
+  #;(when (and (not *in-combat*) (= *turn* 2))
     (begin
       (newline)
       (displayln (send *pc* get-a-hunch))))
-  (when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
+  #;(when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
 
-(define (run-on-turn-actions . turn)
-  (when *in-combat*
+#;(define (run-on-turn-actions . turn)
+  #;(when *in-combat*
     (newline)
     (displayln (string-append "The " (send *creatures* get-name) " attacks you."))
     (define to-hit (+ (d 2 6) 1))
@@ -80,7 +87,7 @@
                    (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
         (begin (displayln "You dodge."))))
 
-  (case *turn*
+  #;(case *turn*
     [(3) (spawn-enemy)
          (set! *in-combat* true)
          (newline)

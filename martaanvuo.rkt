@@ -4,6 +4,7 @@
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
+(require "minds.rkt")
 (require "narration.rkt")
 (require "pc.rkt")
 (require "utils.rkt")
@@ -32,7 +33,7 @@
 (define (build-keys-to-options-map)
   (define location-options (send *location* get-interactions))
   (define next-location-choices (send *location* get-visible-exits))
-  (define combat-options
+  #;(define combat-options
     (if *in-combat*
         (if (player-has-weapons?)
             (list (make-action 'stab "Stab." 1 *creatures* '(combat))
@@ -46,8 +47,8 @@
         (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
         '()))
 
-  (define options (append location-options next-location-choices combat-options generic-options))
-  (when *in-combat* (set! options (filter is-combat? options)))
+  (define options (append location-options next-location-choices #;combat-options generic-options))
+  #;(when *in-combat* (set! options (filter is-combat? options)))
   (define options-hash (make-hash))
 
   (for ([i (in-range (length options))])
@@ -87,13 +88,8 @@
 ; or regular commands, in which case they should get numbers.
 ; If it's neither, then it's a special value that throws the input handler
 ; into the PEBKAC loop.
-; Meta commands should be handled at this level, regular commands should be
-; passed on to "Game Manager".
-;
-; Are Commands and Actions the same thing? Likely not. Showing inventory
-; feels like a command that happens immediately and doesn't affect the world,
-; whereas actions are something that can be queued and that take time to resolve.
-(displayln "TODO: find me and fix me")
+; Meta commands will be handled in player-mind, regular commands will be translated into
+; actions and passed on to world.
 (define (show-choices-and-get-action)
   (define options (build-keys-to-options-map))
   (newline)
@@ -119,17 +115,28 @@
     (set! command (hang-until-valid-action options meta-options)))
   command)
 
+(define (get-next-action mind)
+  (displayln "-- waiting for input...")
+  (newline)
+  (define input (read-line))
+  input)
+
+
+
+
+
 (define (resolve-turn)
-  (describe-situation)
-  (run-on-turn-actions)
-  
-  (define action (show-choices-and-get-action))
-  (define result (update-state! action))
-  (when (not (is-free? action))
-    (send *world* advance-turn)
-    (send *location* advance-to-next-description!))
-  (cond ((equal? result 'u-ded) (newline) 'end-game)
-        (else (resolve-turn))))
+  (begin-turn! *world*)
+  (describe-situation *world*)
+  ; TODO sort by initiative
+  (define actions (map get-next-action *minds*))
+  (resolve-actions! *world* actions)
+  (end-turn! *world*)
+  (resolve-turn))
+
+
+
+
 
 (define (handle-meta-actions input meta-actions . hang-on-not-found?)
   (set! input (string-upcase input))
