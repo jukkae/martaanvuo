@@ -1,6 +1,6 @@
 #lang racket
 
-(require "actions.rkt")
+(require "commands.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
@@ -12,10 +12,6 @@
 
 ; globals and state
 (define *metaloop* 0)
-(define *turns-total* 1)
-
-(define *show-meta-commands* #t)
-
 (define (reset-meta)
   (reset-state)
   (set! *metaloop* (add1 *metaloop*)))
@@ -30,96 +26,24 @@
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-(define (build-keys-to-options-map)
-  (define location-options (send *location* get-interactions))
-  (define next-location-choices (send *location* get-visible-exits))
-  #;(define combat-options
-    (if *in-combat*
-        (if (player-has-weapons?)
-            (list (make-action 'stab "Stab." 1 *creatures* '(combat))
-                  (make-action 'brawl "Brawl." 1 *creatures* '(combat))
-                  (make-action 'run "Run." 1 null '(combat)))
-            (list (make-action 'brawl "Brawl." 1 *creatures* '(combat))
-                  (make-action 'run "Run." 1 null '(combat))))
-        null))
-  (define generic-options
-    (if (not (empty? (get-field inventory *pc*)))
-        (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
-        '()))
+(define (meta-command? action)
+  (eq? 'meta-command (car action)))
 
-  (define options (append location-options next-location-choices #;combat-options generic-options))
-  #;(when *in-combat* (set! options (filter is-combat? options)))
-  (define options-hash (make-hash))
-
-  (for ([i (in-range (length options))])
-    (define key (key-from-index i))
-    (hash-set! options-hash key (list-ref options i)))
-  options-hash)
-
-(define (ask-input . context?)
-  (newline)
-  (cond [(equal? context? 'meta) (display "Try again? [Q] to quit, [R] to restart.")]
-        [(null? context?) (displayln "What do you do?")])
-  (newline)
-  (read-line))
-
-(define (toggle-meta)
-  (set! *show-meta-commands* (not *show-meta-commands*))
-  (newline)
-  (displayln "Hid meta commands, [S] to show again."))
-
-(define (hang-until-valid-action actions meta-actions)
-  (newline)
-  (display "Unknown command. Known commands: ")
-  (for ([(k v) (in-hash actions)]) (display k))
-  (for ([(k v) (in-hash meta-actions)]) (display k))
-  (newline)
-  (define input (read-line))
-  ; meta-actions
-  (handle-meta-actions input meta-actions)
-  ; otherwise
-  (define command (hash-ref actions (string->number input) 'not-found))
-  (if (equal? command 'not-found)
-      (hang-until-valid-action actions meta-actions)
-      command))
-
-; TODO this needs a rewrite in terms of commands.
-; Commands can either be meta commands, in which case they should get letters,
-; or regular commands, in which case they should get numbers.
-; If it's neither, then it's a special value that throws the input handler
-; into the PEBKAC loop.
-; Meta commands will be handled in player-mind, regular commands will be translated into
-; actions and passed on to world.
-(define (show-choices-and-get-action)
-  (define options (build-keys-to-options-map))
-  (newline)
-  (for ([(k v) (in-hash options)])
-    (displayln (string-append "[" (number->string k) "]: " (action-name v))))
-
-  ; display meta actions
-  (define meta-options (make-hash))
-  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
-  #;(hash-set! meta-options "S" (cons "[S]: Show/hide meta commands." toggle-meta))
-  (newline)
-  (for ([(k v) (in-hash meta-options)])
-    (display (car v)))
-  (newline)
-
-  (define user-input (ask-input))
-
-  (handle-meta-actions user-input meta-options)
-
-  ; not handled yet
-  (define command (hash-ref options (string->number user-input) 'not-found))
-  (when (equal? command 'not-found)
-    (set! command (hang-until-valid-action options meta-options)))
-  command)
-
-(define (get-next-action mind)
-  (displayln "-- waiting for input...")
-  (newline)
-  (define input (read-line))
-  input)
+(define (get-next-action actor)
+  (when (is-a? actor player-actor%)
+    (displayln "PLAYER MIND")
+    (define world-actions (get-world-actions *world* actor))
+    (displayln "--- get possible world actions from world and actor")
+    (displayln "--- build key-to-action-map for proper actions")
+    (displayln "--- calculate relevant meta actions")
+    (displayln "--- get input")
+    (displayln "--- handle meta-actions here (-> game state stack)")
+    (displayln "--- if not meta-action, then proper action")
+    (displayln "--- treat input as action request to world and actor"))
+  (define command (send actor get-next-command *world*))
+  (if (meta-command? command)
+      (displayln "-- meta-command")
+      (displayln "-- proper action")))
 
 
 
@@ -129,7 +53,7 @@
   (begin-turn! *world*)
   (describe-situation *world*)
   ; TODO sort by initiative
-  (define actions (map get-next-action *minds*))
+  (define actions (map get-next-action *actors*))
   (resolve-actions! *world* actions)
   (end-turn! *world*)
   (resolve-turn))
@@ -137,37 +61,10 @@
 
 
 
-
-(define (handle-meta-actions input meta-actions . hang-on-not-found?)
-  (set! input (string-upcase input))
-  (define meta-action (hash-ref meta-actions input 'not-found))
-  (if (equal? meta-action 'not-found)
-      (if (not (null? hang-on-not-found?))
-          (hang-until-valid-action (make-hash) meta-actions)
-          'continue)
-      ((cdr meta-action))))
-
 (define (end-game)
   (newline)
-  (display "Do you want to try again? [Q] to quit, [R] to restart.")
-  (define user-input (ask-input 'meta))
+  (display "Do you want to try again? [Q] to quit, [R] to restart."))
 
-  ; meta-actions
-  (define meta-options (make-hash))
-  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
-  (hash-set! meta-options "R" (cons "[R]: Restart." restart))
-  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options)))
-
-(define (win)
-  (newline)
-  (display "You found what you sought. You win the game and die of old age. [Q] to quit, [R] to restart.")
-  (define user-input (ask-input 'meta))
-
-  ; meta-actions
-  (define meta-options (make-hash))
-  (hash-set! meta-options "Q" (cons "[Q]: Quit." quit))
-  (hash-set! meta-options "R" (cons "[R]: Restart." restart))
-  (when (equal? 'continue (handle-meta-actions user-input meta-options #t)) (hang-until-valid-action (make-hash) meta-options)))
 
 (define (restart) (meta-loop))
 

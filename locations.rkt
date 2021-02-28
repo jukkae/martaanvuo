@@ -1,6 +1,6 @@
 #lang racket
 
-(require "actions.rkt")
+(require "commands.rkt")
 (require "items.rkt")
 (require "utils.rkt")
 
@@ -46,20 +46,11 @@
 
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
 
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
+    (define/public (get-interactions) '())
 
     (define/public (get-visible-exits)
       (define n times-described)
-      (cond ((= n 0) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))))
-            ((= n 1) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))
-                           (make-action 'go-to-river "Try to get to the river." 1 null '(wilderness))))
-            ((= n 2) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))
-                           (make-action 'go-to-river "Try to get to the river." 1 null '(wilderness))))
-            ((= n 3) (list (make-action 'go-on "Follow the path." 1 null '(wilderness))))
-            ((= n 4) (list (make-action 'go-to-mountains "Climb the mountains." 1 null '(wilderness))))
-            (else '())))
+      '())
 
     (define/public (search)
       
@@ -91,11 +82,8 @@
 
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
 
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
-    (define/public (get-visible-exits)
-      (list (make-action 'go-on "Climb towards the summit." 1 null '(wilderness))))
+    (define/public (get-interactions) '())
+    (define/public (get-visible-exits) '())
 
     (define/public (search)
       
@@ -126,12 +114,9 @@
 
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
 
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
+    (define/public (get-interactions) '())
     (define/public (get-visible-exits)
-      (list (make-action 'go-to-forest "Try to get back to the path. It has the marks of the Spiritdrinker and I need his power." 1 null '(wilderness))
-            (make-action 'go-downriver "Go downriver." 1 null '(wilderness))))
+      '())
 
     (define/public (search)
       

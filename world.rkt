@@ -1,6 +1,6 @@
 #lang racket
 
-(require "actions.rkt")
+(require "commands.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
@@ -97,7 +97,8 @@
            (displayln (string-append "A weapon would be nice. But your hands are strong, and every living thing lives the same.")))]))
 
 (define (update-state! action)
-  (case (action-symbol action)
+  '()
+  #(case (action-symbol action)
     ['quit #;(quit) (error "world.rkt: update-state!: Reimplement quit!")]
     ['search (begin
                (define loot (send *location* search))
