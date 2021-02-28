@@ -30,7 +30,6 @@
   (displayln "A new game begins."))
 
 (define (narrate-quit)
-  (newline)
   (displayln "You quit. For now.")
   (newline)
   (displayln "Your progress should be saved. It is not."))
