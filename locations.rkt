@@ -1,6 +1,6 @@
 #lang racket
 
-(require "commands.rkt")
+(require "actions.rkt")
 (require "items.rkt")
 (require "utils.rkt")
 
@@ -46,11 +46,14 @@
 
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
 
-    (define/public (get-interactions) '())
+    (define/public (get-interactions) (if searched?
+                                          null
+                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
     (define/public (get-visible-exits)
       (define n times-described)
-      '())
+      (cond ((= n 0) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))))
+            (else '())))
 
     (define/public (search)
       

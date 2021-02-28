@@ -1,6 +1,6 @@
 #lang racket
 
-(require "commands.rkt")
+(require "actions.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
@@ -157,5 +157,17 @@
          (when (equal? result 'dead) (begin (displayln (string-append "The " (send *creatures* get-name) " is dead."))
                                             (send *world* set-combat #f))))
         (else (displayln (string-append (get-curse) " You can't get a good hold of the enemy.")))))
+
+
+
+(define (get-location-actions)
+  (define actions (send *location* get-interactions))
+  actions)
+
+(define (get-world-actions world actor)
+  (define location-actions (send *location* get-interactions))
+  (define next-location-choices (send *location* get-visible-exits))
+  (define all-actions (append location-actions next-location-choices))
+  all-actions)
 
 (provide (all-defined-out))

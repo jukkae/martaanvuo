@@ -2,7 +2,7 @@
 
 (require dyoo-while-loop)
 
-(require "commands.rkt")
+(require "actions.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
@@ -46,7 +46,7 @@
 
 (define (print-actions-with-keys actions-with-keys)
   (for ([(k v) (in-hash actions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (symbol->string v))))
+    (displayln (string-append "[" (number->string k) "]: " (action-name v))))
   (newline))
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
@@ -108,10 +108,15 @@
     (when (not handled?)
       (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
     (when (not handled?)
-      (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys)))
-    (unless handled? (error "Input not handled even in PEBKAC loop!"))
-    (newline)
-    (displayln handled?))
+      (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))
+      (newline))
+
+    ; handled? should now contain a valid action
+    (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
+    
+    (define action handled?) ; ta-dah
+    (displayln action)
+    (newline))
   #;(define command (send actor get-next-command *world*)))
 
 

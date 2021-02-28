@@ -1,6 +1,6 @@
 #lang racket
 
-(require "commands.rkt")
+(require "actions.rkt")
 (require "items.rkt")
 (require "utils.rkt")
 ; see also lazy-require and units
