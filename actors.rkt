@@ -1,13 +1,7 @@
 #lang racket
 
-
-(define player-actor%
-  (class* object% ()
-    (super-new)
-
-    (define/public (get-generic-actions world) '())
-    (define/public (get-next-command world) '())))
-
-(define *actors* (list (new player-actor%)))
+(define actor<%>
+  (interface ()
+    get-next-command))
 
 (provide (all-defined-out))

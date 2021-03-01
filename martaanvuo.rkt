@@ -90,7 +90,7 @@
   handled?)
 
 (define (get-next-action actor)
-  (cond ((is-a? actor player-actor%)
+  (cond ((is-a? actor pc%)
          (define actions (get-world-actions *world* actor))
          (define actions-with-keys (build-keys-to-actions-map actions))
          (print-actions-with-keys actions-with-keys)

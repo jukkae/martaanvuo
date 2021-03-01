@@ -176,6 +176,8 @@
                       (when (is-a? loot figurine%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
                (newline)
                (advance-time! (action-duration action)))]
+    ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
+    
     [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
 (define (add-action-to-queue *world* action actor)
