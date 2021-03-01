@@ -6,7 +6,7 @@
                        target
                        tags))
 
-(define (is-combat? action)
+(define (is-visible-in-combat? action)
   (if (or (member 'combat (action-tags action))
           (member 'always (action-tags action)))
       #t
@@ -14,6 +14,11 @@
 
 (define (is-free? action)
   (if (member 'free (action-tags action))
+      #t
+      #f))
+
+(define (resolve-instantly? action)
+  (if (not (member 'delayed-resolution (action-tags action)))
       #t
       #f))
 

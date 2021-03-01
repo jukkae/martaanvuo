@@ -9,7 +9,7 @@
   (class* object% ()
     (field [hp 4])
     (field [attack-skill 1])
-    (field [inventory null])
+    (field [inventory '(new knife%)])
     (super-new)
 
     (define/public (get-brawl-damage) (d 1 2))

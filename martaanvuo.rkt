@@ -90,34 +90,33 @@
   handled?)
 
 (define (get-next-action actor)
-  (when (is-a? actor player-actor%)
-    (define actions (get-world-actions *world* actor))
-    (define actions-with-keys (build-keys-to-actions-map actions))
-    (print-actions-with-keys actions-with-keys)
+  (cond ((is-a? actor player-actor%)
+         (define actions (get-world-actions *world* actor))
+         (define actions-with-keys (build-keys-to-actions-map actions))
+         (print-actions-with-keys actions-with-keys)
 
-    (define meta-commands-with-keys (get-meta-commands-with-keys))
-    (print-meta-commands-with-keys meta-commands-with-keys)
+         (define meta-commands-with-keys (get-meta-commands-with-keys))
+         (print-meta-commands-with-keys meta-commands-with-keys)
 
-    (displayln "What do you do?")
-    (newline)
+         (displayln "What do you do?")
+         (newline)
 
-    (define input (wait-for-input))
-    (newline)
+         (define input (wait-for-input))
+         (newline)
 
-    (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-    (when (not handled?)
-      (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
-    (when (not handled?)
-      (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))
-      (newline))
+         (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+         (when (not handled?)
+           (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
+         (when (not handled?)
+           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))
+           (newline))
 
-    ; handled? should now contain a valid action
-    (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
+         ; handled? should now contain a valid action
+         (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
     
-    (define action handled?) ; ta-dah
-    (displayln action)
-    (newline))
-  #;(define command (send actor get-next-command *world*)))
+         (define action handled?) ; ta-dah
+         action)
+        (else 'some-npc-action)))
 
 
 
@@ -127,8 +126,16 @@
   (begin-turn! *world*)
   (describe-situation *world*)
   ; TODO sort by initiative
-  (define actions (map get-next-action *actors*))
-  (resolve-actions! *world* actions)
+  (define actions '()) ; (map get-next-action *actors*))
+  (for ([i (in-range (length *actors*))])
+    (define actor (list-ref *actors* i))
+    (define action (get-next-action actor))
+    (displayln action)
+    (newline)
+    (if (resolve-instantly? action)
+        (resolve-action *world* action actor)
+        (add-action-to-queue *world* action actor)))
+  (resolve-actions! *world* *action-queue*)
   (end-turn! *world*)
   (resolve-turn))
 

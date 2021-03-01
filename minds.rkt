@@ -5,6 +5,7 @@
   (class* object% ()
     (super-new)
 
+    (define/public (get-generic-actions world) '())
     (define/public (get-next-command world) '())))
 
 (define *actors* (list (new player-actor%)))

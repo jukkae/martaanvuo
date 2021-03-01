@@ -30,7 +30,7 @@
   (hash-set! world 'elapsed-time 0)
   world)
 
-    
+(define *action-queue* '())
 
 ; do things like update status effects etc
 (define (begin-turn! world)
@@ -167,7 +167,14 @@
 (define (get-world-actions world actor)
   (define location-actions (send *location* get-interactions))
   (define next-location-choices (send *location* get-visible-exits))
-  (define all-actions (append location-actions next-location-choices))
+  (define generic-actions (send actor get-generic-actions world))
+  (define all-actions (append location-actions next-location-choices generic-actions))
   all-actions)
+
+(define (resolve-action *world* action actor)
+  (displayln "FIND ME AND FIX ME"))
+
+(define (add-action-to-queue *world* action actor)
+  (displayln "FIND ME TOO AND FIX ME TOO"))
 
 (provide (all-defined-out))
