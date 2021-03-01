@@ -32,7 +32,14 @@
                                           (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
     (define/public (get-visible-neighbors)
-      '())
+      (define actions '())
+      (map (λ (neighbor) (begin (define action (make-action 'go-to-neighboring-location
+                                         (string-append "Go to next location: " (number->string (get-field index neighbor)))
+                                         5
+                                         (car neighbors) ; yes should find the location with the correct index
+                                         (list 'wilderness)))
+                                (set! actions (cons action actions)))) neighbors)
+      actions)
 
     (define/public (search)
       

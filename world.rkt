@@ -18,12 +18,23 @@
 (hash-set! *world* 'in-combat #f)
 (hash-set! *world* 'elapsed-time 0)
 
-(define *location* (new location% [index 0]))
+(define *locations* (make-hash))
 
 (for ([i (in-range 0 10)])
   (define location (new location% [index i]))
-  (displayln location))
+  (hash-set! *locations* i location))
+(define *location* (hash-ref *locations* 0))
+(for ([i (in-range 0 10)])
+  (define location (hash-ref *locations* i))
+  (define n (random 1 4))
 
+  (for ([j (in-range 0 n)])
+    (define next-neighbor-index (random 0 10))
+    (define neighbor (hash-ref *locations* next-neighbor-index))
+    (set-field! neighbors
+                location
+                (cons neighbor (get-field neighbors
+                                          location)))))
 
 (define (make-new-world)
   (define world (make-hash))
@@ -40,8 +51,11 @@
 ; do things like update status effects etc
 (define (begin-turn! world)
   (hash-set! *world* 'turn (add1 (hash-ref *world* 'turn))) ; bump turn
-  (displayln (append-string "-- *world* : begin-turn!, turn " (number->string (hash-ref *world* 'turn))))
-  (displayln (append-string "-- location index: " (number->string(get-field index *location*)))))
+  (displayln (append-string
+              "-- *world* : begin-turn!, turn "
+              (number->string (hash-ref *world* 'turn))
+              ", location "
+              (number->string(get-field index *location*)))))
 
 (define (resolve-actions! world actions)
   (displayln "-- *world* : resolve-actions!"))
