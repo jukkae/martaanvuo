@@ -9,7 +9,9 @@
     get-description
     advance-to-next-description!
     get-interactions
-    get-visible-neighbors))
+    get-visible-neighbors
+    on-enter
+    on-exit))
 
 (define location%
   (class* object% (location<%>)
@@ -36,10 +38,17 @@
       (map (λ (neighbor) (begin (define action (make-action 'go-to-neighboring-location
                                          (string-append "Go to next location: " (number->string (get-field index neighbor)))
                                          5
-                                         (car neighbors) ; yes should find the location with the correct index
+                                         neighbor
                                          (list 'wilderness)))
                                 (set! actions (cons action actions)))) neighbors)
       actions)
+
+
+    (define/public (on-enter)
+      (displayln (string-append "Entering location " (number->string index))))
+    
+    (define/public (on-exit)
+      (displayln (string-append "Exiting location " (number->string index))))
 
     (define/public (search)
       

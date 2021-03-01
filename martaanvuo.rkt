@@ -13,9 +13,11 @@
 (require "world.rkt")
 
 ; globals and state
-(define *metaloop* 0)
+(define *world* (make-new-world))
+(define *metaloop* 1)
+
 (define (reset-meta)
-  (reset-state)
+  (reset-state *world*)
   (set! *metaloop* (add1 *metaloop*)))
 
 (define (quit)
@@ -133,7 +135,7 @@
         (add-action-to-queue *world* action actor)))
   ; TODO sort by initiative
   (resolve-actions! *world* *action-queue*)
-  
+
   (end-turn! *world*)
   (resolve-turn))
 
@@ -149,7 +151,7 @@
 
 (define (meta-loop)
   ;begin new run
-  (reset-meta)
+  ;(reset-meta)
   (narrate-run-number *metaloop*)
 
   (resolve-turn)
