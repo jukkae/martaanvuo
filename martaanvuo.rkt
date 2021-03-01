@@ -129,7 +129,7 @@
     (define actor (list-ref *actors* i))
     (define action (get-next-action actor))
     (if (resolve-instantly? action)
-        (resolve-action *world* action actor)
+        (resolve-action! *world* action actor)
         (add-action-to-queue *world* action actor)))
   ; TODO sort by initiative
   (resolve-actions! *world* *action-queue*)

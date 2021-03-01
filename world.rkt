@@ -9,10 +9,7 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
-(define *forest* (new forest%))
-(define *mountains* (new mountains%))
-(define *river* (new river%))
-(define *location* *forest*)
+(define *location* (new location%))
 
 (define *creatures* '())
 
@@ -102,7 +99,6 @@
 (define (update-state! action)
   '()
   #;(case (action-symbol action)
-    ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
     ['go-on (begin (newline)
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
                    (send *world* advance-time))]
@@ -114,8 +110,7 @@
     ['run (newline) (displayln (take-random '("You try to run.")))]
     ['go-to-mountains (error "implement go to-action")]
     ['go-to-river (error "implement go to-action")]
-    ['go-downriver (error "implement go to-action")]
-    [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
+    ['go-downriver (error "implement go to-action")]))
 
 
 ; TODO: These should be PC actions
@@ -157,12 +152,12 @@
 
 (define (get-world-actions world actor)
   (define location-actions (send *location* get-interactions))
-  (define next-location-choices (send *location* get-visible-exits))
+  (define next-location-choices (send *location* get-visible-neighbors))
   (define generic-actions (send actor get-generic-actions world))
   (define all-actions (append location-actions next-location-choices generic-actions))
   all-actions)
 
-(define (resolve-action world action actor)
+(define (resolve-action! world action actor)
   (case (action-symbol action)
     ['search (begin
                (define loot (send *location* search))
