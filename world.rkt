@@ -9,8 +9,6 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
-(define *location* (new location%))
-
 (define *creatures* '())
 
 (define *pc* (new pc%))
@@ -19,6 +17,13 @@
 (hash-set! *world* 'turn 0)
 (hash-set! *world* 'in-combat #f)
 (hash-set! *world* 'elapsed-time 0)
+
+(define *location* (new location% [index 0]))
+
+(for ([i (in-range 0 10)])
+  (define location (new location% [index i]))
+  (displayln location))
+
 
 (define (make-new-world)
   (define world (make-hash))
@@ -35,7 +40,8 @@
 ; do things like update status effects etc
 (define (begin-turn! world)
   (hash-set! *world* 'turn (add1 (hash-ref *world* 'turn))) ; bump turn
-  (displayln (append-string "-- *world* : begin-turn!, turn " (number->string (hash-ref *world* 'turn)))))
+  (displayln (append-string "-- *world* : begin-turn!, turn " (number->string (hash-ref *world* 'turn))))
+  (displayln (append-string "-- location index: " (number->string(get-field index *location*)))))
 
 (define (resolve-actions! world actions)
   (displayln "-- *world* : resolve-actions!"))
@@ -63,54 +69,54 @@
   (newline)
   #;(when (not (hash-ref world 'in-combat) (displayln (send *location* get-description))))
   #;(when (and (not *in-combat*) (= *turn* 2))
-    (begin
-      (newline)
-      (displayln (send *pc* get-a-hunch))))
+      (begin
+        (newline)
+        (displayln (send *pc* get-a-hunch))))
   #;(when *in-combat* (displayln (string-append "You are grappling with a " (send *creatures* get-name) ". [" (number->string (get-field hp *creatures*)) " HP]"))))
 
 #;(define (run-on-turn-actions . turn)
-  #;(when *in-combat*
-    (newline)
-    (displayln (string-append "The " (send *creatures* get-name) " attacks you."))
-    (define to-hit (+ (d 2 6) 1))
-    (define target 6)
-    (define damage (d 1 2))
-    (displayln (string-append "[to hit: 2d6+1: " (number->string to-hit) "]"))
-    (if (> to-hit target)
-        (begin (displayln (string-append "[dmg: 1d2: " (number->string damage) "]"))
-               (displayln "Oof. That hurt.")
-               (send *pc* hit damage)
-               (if (<= (get-field hp *pc*) 0)
-                   (begin (displayln "You are dead.")
-                          (error "run-on-turn-actions: Implement dying")
-                          'u-ded) ; TODO
-                   (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
-        (begin (displayln "You dodge."))))
+    #;(when *in-combat*
+        (newline)
+        (displayln (string-append "The " (send *creatures* get-name) " attacks you."))
+        (define to-hit (+ (d 2 6) 1))
+        (define target 6)
+        (define damage (d 1 2))
+        (displayln (string-append "[to hit: 2d6+1: " (number->string to-hit) "]"))
+        (if (> to-hit target)
+            (begin (displayln (string-append "[dmg: 1d2: " (number->string damage) "]"))
+                   (displayln "Oof. That hurt.")
+                   (send *pc* hit damage)
+                   (if (<= (get-field hp *pc*) 0)
+                       (begin (displayln "You are dead.")
+                              (error "run-on-turn-actions: Implement dying")
+                              'u-ded) ; TODO
+                       (displayln (string-append "You have " (number->string (get-field hp *pc*)) "HP."))))
+            (begin (displayln "You dodge."))))
 
-  #;(case *turn*
-    [(3) (spawn-enemy)
-         (set! *in-combat* true)
-         (newline)
-         (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))
-         (when (not (player-has-weapons?))
-           (newline)
-           (displayln (string-append "A weapon would be nice. But your hands are strong, and every living thing lives the same.")))]))
+    #;(case *turn*
+        [(3) (spawn-enemy)
+             (set! *in-combat* true)
+             (newline)
+             (displayln (string-append (get-curse) " A " (send *creatures* get-name) " crawls forth. It looks at you like you would make a tasty meal for it."))
+             (when (not (player-has-weapons?))
+               (newline)
+               (displayln (string-append "A weapon would be nice. But your hands are strong, and every living thing lives the same.")))]))
 
 (define (update-state! action)
   '()
   #;(case (action-symbol action)
-    ['go-on (begin (newline)
-                   (displayln (take-random '("Better get to it, then." "You keep on walking.")))
-                   (send *world* advance-time))]
-    ['stab (begin (fight)
-                  (send *world* advance-time))]
-    ['brawl (begin (brawl)
-                   (send *world* advance-time))]
-    ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
-    ['run (newline) (displayln (take-random '("You try to run.")))]
-    ['go-to-mountains (error "implement go to-action")]
-    ['go-to-river (error "implement go to-action")]
-    ['go-downriver (error "implement go to-action")]))
+      ['go-on (begin (newline)
+                     (displayln (take-random '("Better get to it, then." "You keep on walking.")))
+                     (send *world* advance-time))]
+      ['stab (begin (fight)
+                    (send *world* advance-time))]
+      ['brawl (begin (brawl)
+                     (send *world* advance-time))]
+      ['camp (displayln (take-random '("You are not tired." "You are barely getting started." "It is too early to camp.")))]
+      ['run (newline) (displayln (take-random '("You try to run.")))]
+      ['go-to-mountains (error "implement go to-action")]
+      ['go-to-river (error "implement go to-action")]
+      ['go-downriver (error "implement go to-action")]))
 
 
 ; TODO: These should be PC actions

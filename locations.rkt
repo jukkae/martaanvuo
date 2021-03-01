@@ -13,10 +13,14 @@
 
 (define location%
   (class* object% (location<%>)
+    (init-field index)
+    (field [descriptions (list "TODO: First description" "TODO: Second description" "TODO: Nth description")])
+    (field [neighbors '()])
+
+    
     (define times-described 0)
     (define searched? #f)
-    (field [descriptions
-            (list "TODO: First description" "TODO: Second description" "TODO: Nth description")])
+    
     (super-new)
     
     (define/public (get-description) (list-ref descriptions times-described))
