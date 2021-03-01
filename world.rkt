@@ -1,10 +1,10 @@
 #lang racket
 
 (require "actions.rkt")
+(require "actors.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
-(require "minds.rkt")
 (require "narration.rkt")
 (require "utils.rkt")
 (require "pc.rkt")
@@ -29,6 +29,9 @@
   (hash-set! world 'in-combat #f)
   (hash-set! world 'elapsed-time 0)
   world)
+
+(define (advance-time! jiffies)
+  (hash-set! *world* 'elapsed-time (+ (hash-ref *world* 'elapsed-time) jiffies)))
 
 (define *action-queue* '())
 
@@ -98,19 +101,7 @@
 
 (define (update-state! action)
   '()
-  #(case (action-symbol action)
-    ['quit #;(quit) (error "world.rkt: update-state!: Reimplement quit!")]
-    ['search (begin
-               (define loot (send *location* search))
-               (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
-                     (else
-                      (newline)
-                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
-                      (newline)
-                      (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-                      (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
-                      (when (is-a? loot figurine%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
-               (send *world* advance-time))]
+  #;(case (action-symbol action)
     ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
     ['go-on (begin (newline)
                    (displayln (take-random '("Better get to it, then." "You keep on walking.")))
@@ -171,8 +162,21 @@
   (define all-actions (append location-actions next-location-choices generic-actions))
   all-actions)
 
-(define (resolve-action *world* action actor)
-  (displayln "FIND ME AND FIX ME"))
+(define (resolve-action world action actor)
+  (case (action-symbol action)
+    ['search (begin
+               (define loot (send *location* search))
+               (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
+                     (else
+                      (newline)
+                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
+                      (newline)
+                      (displayln (string-append "You pick up the " (send loot get-short-description) "."))
+                      (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
+                      (when (is-a? loot figurine%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
+               (newline)
+               (advance-time! (action-duration action)))]
+    [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 
 (define (add-action-to-queue *world* action actor)
   (displayln "FIND ME TOO AND FIX ME TOO"))

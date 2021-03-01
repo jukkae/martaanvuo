@@ -3,10 +3,10 @@
 (require dyoo-while-loop)
 
 (require "actions.rkt")
+(require "actors.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
-(require "minds.rkt")
 (require "narration.rkt")
 (require "pc.rkt")
 (require "utils.rkt")
@@ -102,14 +102,12 @@
          (newline)
 
          (define input (wait-for-input))
-         (newline)
 
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
          (when (not handled?)
            (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
          (when (not handled?)
-           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))
-           (newline))
+           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys)))
 
          ; handled? should now contain a valid action
          (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
@@ -125,17 +123,17 @@
 (define (resolve-turn)
   (begin-turn! *world*)
   (describe-situation *world*)
-  ; TODO sort by initiative
-  (define actions '()) ; (map get-next-action *actors*))
+  
+  (define actions '())
   (for ([i (in-range (length *actors*))])
     (define actor (list-ref *actors* i))
     (define action (get-next-action actor))
-    (displayln action)
-    (newline)
     (if (resolve-instantly? action)
         (resolve-action *world* action actor)
         (add-action-to-queue *world* action actor)))
+  ; TODO sort by initiative
   (resolve-actions! *world* *action-queue*)
+  
   (end-turn! *world*)
   (resolve-turn))
 
