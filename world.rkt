@@ -91,7 +91,7 @@
   (define r (random 2))
   (define enemy (cond ((= r 0) (new bloodleech%))
                       (else (new blindscraper%))))
-  (send location add-enemy! enemy))
+  (send location add-actor! enemy))
 
 (define (player-has-weapons?) (not (empty? (filter
                                             (lambda (item) (member 'stab (send item get-uses)))

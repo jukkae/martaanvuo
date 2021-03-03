@@ -12,7 +12,7 @@
     get-visible-neighbors
     on-enter!
     on-exit!
-    add-enemy!))
+    add-actor!))
 
 (define location%
   (class* object% (location<%>)
@@ -47,17 +47,16 @@
               ((eq? biome 'larch-forest) "You are in a forest dominated by larches.")
               ((eq? biome 'scrub) "You are in a thorny scrub. The ancient bushes are gnarled and seem hostile to trespassers.")
               ((eq? biome 'dead-vegetation) "Few long-dead, dried-out trunks of trees dot the landscape. Here and there you see small tufts of dead grass.")
-              ((eq? biome 'barren) "You see nothing living.")
+              ((eq? biome 'barren) "There's nothing around but rocks and stones. There's nothing that looks remotely alive nearby.")
               ((eq? biome 'sparse) "Some branches jut from the ground, living on what? You don't know.")
               (else (error
                      (string-append
                       "locations.rkt: get-procedural-description: unknown biome: "
                       (symbol->string biome))))))
       (define topography-description
-        (cond ((eq? topography 'flat) "The terrain is flat and rather easy to traverse.")
+        (cond ((eq? topography 'flat) "")
               ((eq? topography 'cragged) "There are jagged rocks around.")
-              ((eq? topography 'highlands) "You realize you are quite far up the hills.")
-              ((eq? topography 'shore) "You are on the shore of a lake. You can barely see the opposite shore. There are several islands in the lake. You don't have a boat.")
+              ((eq? topography 'highlands) "The rolling hills make it hard to judge distances.")
               (else (error "locations.rkt: get-procedural-description: unknown topography"))))
       (define features-description
         (if (not (null? features))
@@ -123,9 +122,8 @@
     (define/public (on-exit!)
       (displayln (string-append "Exiting location " (number->string index))))
 
-    (define/public (add-enemy! enemy)
-      (displayln (string-append "ADDING ENEMY"))
-      (displayln enemy))
+    (define/public (add-actor! actor)
+      (set-field! this actors (cons actor actors)))
 
     (define/public (search)
       
@@ -166,7 +164,7 @@
 
   location)
 
-(define topographies (list 'flat 'cragged 'highlands 'shore))
+(define topographies (list 'flat 'cragged 'highlands))
 (define biomes (list 'blackpine-forest 'swamp 'spruce-forest 'larch-forest 'scrub 'sparse 'dead-vegetation 'barren))
 (define features (list 'pond 'big-tree 'spirit-rock))
 
@@ -175,7 +173,7 @@
     [(flat) (take-random (list 'swamp 'spruce-forest 'larch-forest 'scrub 'sparse))]
     [(cragged) (take-random (list 'spruce-forest 'blackpine-forest 'scrub 'sparse 'dead-vegetation 'barren))]
     [(highlands) (take-random (list 'sparse 'dead-vegetation 'barren))]
-    [(shore) (take-random (list 'swamp 'larch-forest 'sparse 'barren))]
+    [(shore) (take-random (list 'swamp 'larch-forest))]
     [else (error "locations.rkt: get-random-biome: unknown topography!")]))
 
 (provide (all-defined-out))
