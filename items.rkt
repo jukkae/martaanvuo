@@ -13,12 +13,12 @@
     (define/public (get-uses) null)
     (define/public (get-condition) 'good)))
 
-(define figurine%
+(define sapling-finger%
   (class* object% (item<%>)
     (super-new)
 
-    (define/public (get-inline-description) "a small, heavy figurine")
-    (define/public (get-short-description) "figurine")
+    (define/public (get-inline-description) "a mummified human finger")
+    (define/public (get-short-description) "a human finger")
     (define/public (get-uses) null)
     (define/public (get-condition) 'good)))
 

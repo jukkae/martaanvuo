@@ -23,23 +23,25 @@
 
     (super-new)
     (define/public (make-connections)
-      (begin (for ([i (in-range 0 10)])
-               (define location (new location% [index i]))
-               (hash-set! locations i location))
-             (for ([i (in-range 0 10)])
-               (define location (hash-ref locations i))
-               (define n (random 1 4))
+      (begin
+        (for ([i (in-range 0 10)])
+          (define location (make-location #:index i))
+          (hash-set! locations i location))
 
-               (for ([j (in-range 0 n)])
-                 (define next-neighbor-index (random 0 10))
-                 (define neighbor (hash-ref locations next-neighbor-index))
-                 (set-field! neighbors
-                             location
-                             (cons neighbor (get-field neighbors
-                                                       location)))))
-             (set-field! current-location
-                         this
-                         (hash-ref locations 0))))))
+        (for ([i (in-range 0 10)])
+          (define location (hash-ref locations i))
+          (define n (random 1 4))
+
+          (for ([j (in-range 0 n)])
+            (define next-neighbor-index (random 0 10))
+            (define neighbor (hash-ref locations next-neighbor-index))
+            (set-field! neighbors
+                        location
+                        (cons neighbor (get-field neighbors
+                                                  location)))))
+        (set-field! current-location
+                    this
+                    (hash-ref locations 0))))))
 
 (define (make-new-world)
   (define world (new world%))
@@ -90,6 +92,8 @@
                             ", "
                             "location: " (number->string (get-field index (get-field current-location world)))
                             ))
+  (newline)
+  (displayln (send (get-field current-location world) get-description))
   (newline))
 
 
@@ -113,7 +117,7 @@
                       (newline)
                       (displayln (string-append "You pick up the " (send loot get-short-description) "."))
                       (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
-                      (when (is-a? loot figurine%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
+                      (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
                (newline)
                (advance-time! world (action-duration action)))]
     ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
