@@ -43,11 +43,16 @@
       (define biome-description
         (cond ((eq? biome 'blackpine-forest) "You are in a blackpine forest.")
               ((eq? biome 'spruce-forest) "You are in a spruce forest.")
-              ((eq? biome 'swamp) "You are in a swamp.")
+              ((eq? biome 'swamp) "The soil is wet underneath your feet. The sparse reeds sway gently in the cool wind.")
               ((eq? biome 'larch-forest) "You are in a forest dominated by larches.")
               ((eq? biome 'scrub) "You are in a thorny scrub. The ancient bushes are gnarled and seem hostile to trespassers.")
-              ((eq? biome 'none) "There is nothing living here, only barren earth.")
-              (else (error "locations.rkt: get-procedural-description: unknown biome"))))
+              ((eq? biome 'dead-vegetation) "Few long-dead, dried-out trunks of trees dot the landscape. Here and there you see small tufts of dead grass.")
+              ((eq? biome 'barren) "You see nothing living.")
+              ((eq? biome 'sparse) "Some branches jut from the ground, living on what? You don't know.")
+              (else (error
+                     (string-append
+                      "locations.rkt: get-procedural-description: unknown biome: "
+                      (symbol->string biome))))))
       (define topography-description
         (cond ((eq? topography 'flat) "The terrain is flat and rather easy to traverse.")
               ((eq? topography 'cragged) "There are jagged rocks around.")
@@ -70,18 +75,45 @@
                                           null
                                           (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
+    (define/private (make-go-to-neighbor-action neighbor index)
+
+      (define direction-string
+        (case index
+          [(0) "Go east"]
+          [(1) "Go northeast"]
+          [(2) "Go southeast"]
+          [else (error "locations.rkt: direction-string: Unknown direction")]))
+      ; (define biomes (list 'blackpine-forest 'swamp 'spruce-forest 'larch-forest 'scrub 'sparse 'dead-vegetation 'barren))
+      (define (get-biome-string)
+        (define biome (get-field biome neighbor))
+        (case biome
+          ['blackpine-forest "towards a blackpine forest"]
+          ['swamp "towards a swamp"]
+          ['spruce-forest "towards a thicket of spruces"]
+          ['larch-forest "towards a larch forest"]
+          ['scrub "towards scrub"]
+          ['sparse "towards sparser vegetation"]
+          ['dead-vegetation "towards dead vegetation"]
+          ['barren "towards barren land"]
+          [else (error "locations.rkt: biome-string: Unknown biome")]))
+      (make-action 'go-to-neighboring-location
+                   (string-append direction-string
+                                  ", "
+                                  (get-biome-string)
+                                  " (location index "
+                                  (number->string (get-field index neighbor))
+                                  ")")
+                   5
+                   neighbor
+                   (list 'wilderness))
+      )
     (define/public (get-visible-neighbors)
       (define actions '())
-      (map (λ (neighbor) (begin (define action (make-action 'go-to-neighboring-location
-                                                            (string-append "Go to "
-                                                                           (symbol->string (get-field biome neighbor))
-                                                                           " (location "
-                                                                           (number->string (get-field index neighbor))
-                                                                           ")")
-                                                            5
-                                                            neighbor
-                                                            (list 'wilderness)))
-                                (set! actions (cons action actions)))) neighbors)
+      (for ([i (in-range 0 (length neighbors))])
+        (define neighbor (list-ref neighbors i))
+        (define action (make-go-to-neighbor-action neighbor i))
+        (set! actions (cons action actions)))
+        
       actions)
 
 
@@ -135,15 +167,15 @@
   location)
 
 (define topographies (list 'flat 'cragged 'highlands 'shore))
-(define biomes (list 'blackpine-forest 'swamp 'spruce-forest 'larch-forest 'scrub 'none))
+(define biomes (list 'blackpine-forest 'swamp 'spruce-forest 'larch-forest 'scrub 'sparse 'dead-vegetation 'barren))
 (define features (list 'pond 'big-tree 'spirit-rock))
 
 (define (get-random-biome topography)
   (case topography
-    [(flat) (take-random (list 'swamp 'spruce-forest 'larch-forest))]
-    [(cragged) (take-random (list 'spruce-forest 'blackpine-forest 'scrub))]
-    [(highlands) (take-random (list 'scrub 'none))]
-    [(shore) (take-random biomes)] ; anything goes
+    [(flat) (take-random (list 'swamp 'spruce-forest 'larch-forest 'scrub 'sparse))]
+    [(cragged) (take-random (list 'spruce-forest 'blackpine-forest 'scrub 'sparse 'dead-vegetation 'barren))]
+    [(highlands) (take-random (list 'sparse 'dead-vegetation 'barren))]
+    [(shore) (take-random (list 'swamp 'larch-forest 'sparse 'barren))]
     [else (error "locations.rkt: get-random-biome: unknown topography!")]))
 
 (provide (all-defined-out))
