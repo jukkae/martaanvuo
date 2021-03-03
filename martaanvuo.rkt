@@ -125,6 +125,7 @@
 (define (resolve-turn)
   (begin-turn! *world*)
   (describe-situation *world*)
+  (on-turn! *world*)
   
   (define actions '())
   (for ([i (in-range (length *actors*))])

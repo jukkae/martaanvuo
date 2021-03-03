@@ -9,17 +9,16 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
-(define *creatures* '())
-
 (define *pc* (new pc%))
 
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
     (field [in-combat #f]) ; situational
-    (field [elapsed-time 0])
+    (field [elapsed-time 0]) ; jiffies
+    (field [time-of-day 'midday])
     (field [locations (make-hash)])
-    (field [current-location '()])
+    (field [current-location '()]) ; should be defined to (send pc get-current-location)
 
     (super-new)
     (define/public (make-connections)
@@ -61,7 +60,21 @@
 (define (begin-turn! world)
   (set-field! turn
               world
-              (add1 (get-field turn world))))
+              (add1 (get-field turn world)))
+  (displayln
+   (string-append
+    "-- Turn " (number->string (get-field turn world))
+    ", "
+    "elapsed time: " (number->string (get-field elapsed-time world)) " jiffies"
+    ", "
+    "location: " (number->string (get-field index (get-field current-location world)))
+    ", "
+    "time of day: " (symbol->string (get-field time-of-day world))
+    ))
+  (newline))
+
+(define (on-turn! world)
+  (cond ((= (modulo (get-field turn world) 3) 0) (spawn-enemy world))))
 
 (define (resolve-actions! world actions)
   #;(displayln "-- *world* : resolve-actions!") '())
@@ -73,11 +86,12 @@
   (set! world (make-new-world))
   (set! *pc* (new pc%)))
 
-(define (spawn-enemy)
+(define (spawn-enemy world)
+  (define location (get-field current-location world))
   (define r (random 2))
   (define enemy (cond ((= r 0) (new bloodleech%))
                       (else (new blindscraper%))))
-  (set! *creatures* enemy))
+  (send location add-enemy! enemy))
 
 (define (player-has-weapons?) (not (empty? (filter
                                             (lambda (item) (member 'stab (send item get-uses)))
@@ -86,13 +100,6 @@
 
 
 (define (describe-situation world)
-  (displayln (string-append "-- Turn " (number->string (get-field turn world))
-                            ", "
-                            "elapsed time: " (number->string (get-field elapsed-time world)) " jiffies"
-                            ", "
-                            "location: " (number->string (get-field index (get-field current-location world)))
-                            ))
-  (newline)
   (displayln (send (get-field current-location world) get-description))
   (newline))
 
@@ -123,12 +130,12 @@
     ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
     ['go-to-neighboring-location (begin
                                    (newline) ; dunno where to put this
-                                   (send (get-field current-location world) on-exit)
+                                   (send (get-field current-location world) on-exit!)
                                    
                                    (advance-time! world  (action-duration action))
                                    
                                    (set-field! current-location world (action-target action))
-                                   (send (get-field current-location world) on-enter))]
+                                   (send (get-field current-location world) on-enter!))]
     
     [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
 

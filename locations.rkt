@@ -10,8 +10,9 @@
     advance-to-next-description!
     get-interactions
     get-visible-neighbors
-    on-enter
-    on-exit))
+    on-enter!
+    on-exit!
+    add-enemy!))
 
 (define location%
   (class* object% (location<%>)
@@ -22,6 +23,8 @@
     (field [topography null])
     (field [biome null])
     (field [features '()])
+
+    (field [actors '()])
 
     
     (define times-described 0)
@@ -82,11 +85,15 @@
       actions)
 
 
-    (define/public (on-enter)
+    (define/public (on-enter!)
       (displayln (string-append "Entering location " (number->string index))))
     
-    (define/public (on-exit)
+    (define/public (on-exit!)
       (displayln (string-append "Exiting location " (number->string index))))
+
+    (define/public (add-enemy! enemy)
+      (displayln (string-append "ADDING ENEMY"))
+      (displayln enemy))
 
     (define/public (search)
       
