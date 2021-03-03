@@ -4,62 +4,72 @@
 (require "items.rkt")
 (require "utils.rkt")
 
-; Locations and routes should form a graph, so that locations may have arbitrarily
-; many neighbors of each kind, whereas routes have 1 or 2 neighbors in total.
-; This is to make it easier to write good prose for routes, as well as providing
-; easier-to-understand structure to the narrative, plus some mechanical possibilities.
-; Notably, this does require representing branches and junctions as locations.
-; This is not necessarily a bad thing.
-; Also, routes should be asymmetrical as often as possible, to make the gameplay
-; more interesting!
-; Basically, routes should have a chance of having a route event, beneficial or
-; not, at least the first time the route is traversed. Subsequent events depend on
-; situation.
-; PC is either at the beginning of the route, in the middle of one, or at the end of it.
-; Check happens when PC enters middle of one. PC should sometimes (not always) have a
-; choice of pushing on or turning back.
 (define location<%>
   (interface ()
     get-description
     advance-to-next-description!
     get-interactions
-    get-visible-exits))
+    get-visible-neighbors
+    on-enter
+    on-exit))
 
-(define forest%
+(define location%
   (class* object% (location<%>)
+    (init-field index)
+    (field [scripted-descriptions (list "TODO: First description" "TODO: Second description" "TODO: Nth description")])
+    (field [neighbors '()])
+
+    (field [biome null])
+    (field [features '()])
+
+    
     (define times-described 0)
     (define searched? #f)
+    
     (super-new)
 
-    (define/public (get-nth-description n)
-      (when (< times-described n) (set! times-described n))
-      (cond ((= n 0) "You are walking through a dense Blackpine forest. It is bitterly cold still. Spring is far overdue.")
-            ((= n 1) (string-append "The Sun has come up a while ago. Her pale light scarcely filters through the branches of age-old pines. "
-                                    "You hear the babbling of a small CREEK flowing on your right, at the bottom of a frozen, rocky hill. "
-                                    "The icy hill is steep, almost a cliff, and the rocks at the bottom look much harder and sharper than your head."))
-            ((= n 2) "You are walking along a narrow path, too narrow to be human. The babbling of the creek is quieting down, but the downhill looks rather doable.")
-            ((= n 3) "You are walking along a forest path. The mountains are drawing nearer.")
-            ((= n 4) "You are on the foothills of the mountains.")
-            (else "You are utterly lost in the Dead Woods. Or was it the Woods of Dead? The woods seem very much alive to you.")))
-      
-    (define/public (get-description) (get-nth-description times-described))
+    (define/public (get-description)
+      (get-procedural-description))
 
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
+
+    (define/private (get-scripted-description) (list-ref scripted-descriptions times-described))
+
+    (define/private (get-procedural-description)
+      (define biome-description
+        (cond ((eq? biome 'blackpine-forest) "You are in a blackpine forest.")
+              ((eq? biome 'spruce-forest) "You are in a spruce forest.")
+              ((eq? biome 'swamp) "You are in a swamp.")
+              (else "unknown biome")))
+      (define features-description
+        (if (not (null? features))
+            (cond ((eq? (car features) 'pond) " There is a small, clear-watered pond nearby. Upon closer look, it seems to be a spring, its sandy bottom shifting and bubbling.")
+                  ((eq? (car features) 'big-tree) " You see an immense tree rising far above the rest. Most of its lower branches have fallen out, but its canopy spreads wide, casting a shadow over the lesser conifers.")
+                  ((eq? (car features) 'spirit-rock) "There's a small clearing amidst the brush. In the middle of the clearing, there's a rather peculiarly shaped boulder.")
+                  (else "unknown feature"))
+            ""))
+      (string-append biome-description features-description))
 
     (define/public (get-interactions) (if searched?
                                           null
                                           (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
-    (define/public (get-visible-exits)
-      (define n times-described)
-      (cond ((= n 0) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))))
-            ((= n 1) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))
-                           (make-action 'go-to-river "Try to get to the river." 1 null '(wilderness))))
-            ((= n 2) (list (make-action 'go-on "Go deeper into the forest." 1 null '(wilderness))
-                           (make-action 'go-to-river "Try to get to the river." 1 null '(wilderness))))
-            ((= n 3) (list (make-action 'go-on "Follow the path." 1 null '(wilderness))))
-            ((= n 4) (list (make-action 'go-to-mountains "Climb the mountains." 1 null '(wilderness))))
-            (else '())))
+    (define/public (get-visible-neighbors)
+      (define actions '())
+      (map (λ (neighbor) (begin (define action (make-action 'go-to-neighboring-location
+                                                            (string-append "Go to next location: " (number->string (get-field index neighbor)))
+                                                            5
+                                                            neighbor
+                                                            (list 'wilderness)))
+                                (set! actions (cons action actions)))) neighbors)
+      actions)
+
+
+    (define/public (on-enter)
+      (displayln (string-append "Entering location " (number->string index))))
+    
+    (define/public (on-exit)
+      (displayln (string-append "Exiting location " (number->string index))))
 
     (define/public (search)
       
@@ -73,79 +83,31 @@
       (define loot (cond ((> roll critical) (new amulet%))
                          ((> roll target-number) (new knife%))
                          (else 'nothing)))
-      loot)
-    (define/public (camp)
-      (displayln "---"))))
+      loot)))
 
-(define mountains%
-  (class* object% (location<%>)
-    (define times-described 0)
-    (define searched? #f)
-    (super-new)
+(define (make-location #:index i)
+  (define location (new location% [index i]))
+  (set-field! biome
+              location
+              (get-random-biome))
 
-    (define/public (get-nth-description n)
-      (cond ((= n 0) "You are on the foothills of the mountains.")
-            (else "The mountains are impressive.")))
+  (when (= (d 1 4) 4)
+    (define number-of-additional-features 1)
+    (for ([i (in-range 0 number-of-additional-features)])
+      (define feature (get-random-feature))
+      (set-field! features
+                  location
+                  (cons feature (get-field features
+                                           location)))))
 
-    (define/public (get-description) (get-nth-description times-described))
+  location)
 
-    (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
+(define (get-random-biome)
+  (define biomes (list 'blackpine-forest 'swamp 'spruce-forest))
+  (take-random biomes))
 
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
-    (define/public (get-visible-exits)
-      (list (make-action 'go-on "Climb towards the summit." 1 null '(wilderness))))
-
-    (define/public (search)
-      
-      (define roll (d 2 6))
-      (newline)
-      (displayln (string-append "The area looks promising, so you take a look around." "[2d6: " (number->string roll) "]" ))
-      
-      #;(set! searched? #t)
-      (define target-number 6)
-      (define critical 10)
-      (define loot (cond ((> roll critical) (new figurine%))
-                         (else 'nothing)))
-      loot)
-    (define/public (camp)
-      (displayln "---"))))
-
-(define river%
-  (class* object% (location<%>)
-    (define times-described 0)
-    (define searched? #f)
-    (super-new)
-
-    (define/public (get-nth-description n)
-      (cond ((= n 0) "You fall down the slope")
-            (else "Bruised but alive, you come to the river. Its water is refreshing.")))
-
-    (define/public (get-description) (get-nth-description times-described))
-
-    (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
-
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
-    (define/public (get-visible-exits)
-      (list (make-action 'go-to-forest "Try to get back to the path. It has the marks of the Spiritdrinker and I need his power." 1 null '(wilderness))
-            (make-action 'go-downriver "Go downriver." 1 null '(wilderness))))
-
-    (define/public (search)
-      
-      (define roll (d 2 6))
-      (newline)
-      (displayln (string-append "The area looks promising, so you take a look around." "[2d6: " (number->string roll) "]" ))
-      
-      #;(set! searched? #t)
-      (define target-number 6)
-      (define critical 10)
-      (define loot (cond ((> roll critical) (new figurine%))
-                         (else 'nothing)))
-      loot)
-    (define/public (camp)
-      (displayln "---"))))
+(define (get-random-feature)
+  (define features (list 'pond 'big-tree 'spirit-rock))
+  (take-random features))
 
 (provide (all-defined-out))

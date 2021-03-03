@@ -25,15 +25,14 @@
 
 (define (narrate-startup)
   (newline)
-  (displayln "You should be able to select a previous save. You can not.")
+  (displayln "You should be able to select a previous save. [[Not implemented yet]]")
   (newline)
   (displayln "A new game begins."))
 
 (define (narrate-quit)
-  (newline)
   (displayln "You quit. For now.")
   (newline)
-  (displayln "Your progress should be saved. It is not."))
+  (displayln "Your progress should be saved. [[Not implemented yet]]"))
 
 (define (get-curse)
   (define index 0 #;(random 2))

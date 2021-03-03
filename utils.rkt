@@ -15,4 +15,6 @@
 (define (take-random l)
   (list-ref l (random (length l))))
 
+(define append-string string-append)
+
 (provide (all-defined-out))
