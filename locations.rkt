@@ -123,7 +123,8 @@
       (displayln (string-append "Exiting location " (number->string index))))
 
     (define/public (add-actor! actor)
-      (set-field! this actors (cons actor actors)))
+      (define new-actors (cons actor actors))
+      (set! actors new-actors))
 
     (define/public (search)
       

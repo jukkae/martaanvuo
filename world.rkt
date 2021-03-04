@@ -9,8 +9,6 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
-(define *pc* (new pc%))
-
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
@@ -19,6 +17,8 @@
     (field [time-of-day 'midday])
     (field [locations (make-hash)])
     (field [current-location '()]) ; should be defined to (send pc get-current-location)
+
+    (field [pc (new pc%)])
 
     (super-new)
     (define/public (make-connections)
@@ -45,6 +45,8 @@
 (define (make-new-world)
   (define world (new world%))
   (send world make-connections)
+  (define location (get-field current-location world))
+  (send location add-actor! (get-field pc world))
   world)
 
 (define (advance-time! world jiffies)
@@ -56,11 +58,12 @@
 
 (define *action-queue* '())
 
-; update status effects etc
 (define (begin-turn! world)
   (set-field! turn
               world
               (add1 (get-field turn world)))
+
+  (newline)
   (displayln
    (string-append
     "-- Turn " (number->string (get-field turn world))
@@ -71,10 +74,17 @@
     ", "
     "time of day: " (symbol->string (get-field time-of-day world))
     ))
+  (displayln
+   (string-append
+    "In combat: " (if (get-field in-combat world)
+                      "yes"
+                      "no")
+    ))
   (newline))
 
 (define (on-turn! world)
-  (cond ((= (modulo (get-field turn world) 3) 0) (spawn-enemy world))))
+  (cond ((= (modulo (get-field turn world) 3) 0)
+         (begin (spawn-enemies world 2)))))
 
 (define (resolve-actions! world actions)
   #;(displayln "-- *world* : resolve-actions!") '())
@@ -82,20 +92,21 @@
 (define (end-turn! world)
   #;(displayln (append-string "-- *world* : end-turn!")) '())
 
-(define (reset-state world)
-  (set! world (make-new-world))
-  (set! *pc* (new pc%)))
+(define (spawn-enemies world number)
+  (for ([i (in-range 0 number)])
+    
+    (displayln "-- spawning enemy")
+    (define location (get-field current-location world))
+    (define r (random 2))
+    (define enemy (cond ((= r 0) (new bloodleech%))
+                        (else (new blindscraper%))))
+    (send location add-actor! enemy))
+  (set-field! in-combat world #t))
 
-(define (spawn-enemy world)
-  (define location (get-field current-location world))
-  (define r (random 2))
-  (define enemy (cond ((= r 0) (new bloodleech%))
-                      (else (new blindscraper%))))
-  (send location add-actor! enemy))
-
-(define (player-has-weapons?) (not (empty? (filter
-                                            (lambda (item) (member 'stab (send item get-uses)))
-                                            (get-field inventory *pc*)))))
+(define (player-has-weapons? pc)
+  (not (empty? (filter
+                (lambda (item) (member 'stab (send item get-uses)))
+                (get-field inventory pc)))))
 
 
 
@@ -123,11 +134,11 @@
                       (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
                       (newline)
                       (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-                      (set-field! inventory *pc* (cons loot (get-field inventory *pc*)))
+                      (set-field! inventory actor (cons loot (get-field inventory actor)))
                       (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
                (newline)
                (advance-time! world (action-duration action)))]
-    ['inventory (print-inventory (get-list-inline-description (get-field inventory *pc*)))]
+    ['inventory (print-inventory (get-list-inline-description (get-field inventory actor)))]
     ['go-to-neighboring-location (begin
                                    (newline) ; dunno where to put this
                                    (send (get-field current-location world) on-exit!)

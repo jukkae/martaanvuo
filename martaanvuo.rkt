@@ -13,11 +13,11 @@
 (require "world.rkt")
 
 ; globals and state
-(define *world* (make-new-world))
-(define *metaloop* 1)
+(define *world* '())
+(define *metaloop* 0)
 
 (define (reset-meta)
-  (reset-state *world*)
+  (set! *world* (make-new-world))
   (set! *metaloop* (add1 *metaloop*)))
 
 (define (quit)
@@ -112,11 +112,11 @@
            (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys)))
 
          ; handled? should now contain a valid action
-         (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
+         (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
     
          (define action handled?) ; ta-dah
          action)
-        (else 'some-npc-action)))
+        (else (error "martaanvuo.rkt: get-next-action: non-pc actor"))))
 
 
 
@@ -128,6 +128,9 @@
   (on-turn! *world*)
   
   (define actions '())
+  (define current-location (get-field current-location *world*))
+  (define actors (get-field actors current-location))
+  
   (for ([i (in-range (length *actors*))])
     (define actor (list-ref *actors* i))
     (define action (get-next-action actor))
@@ -152,7 +155,7 @@
 
 (define (meta-loop)
   ;begin new run
-  ;(reset-meta)
+  (reset-meta)
   (narrate-run-number *metaloop*)
 
   (resolve-turn)
