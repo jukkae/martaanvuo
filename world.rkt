@@ -97,7 +97,7 @@
     
     (displayln "-- spawning enemy")
     (define location (get-field current-location world))
-    (define r (random 2))
+    (define r (random 1))
     (define enemy (cond ((= r 0) (new bloodleech%))
                         (else (new blindscraper%))))
     (send location add-actor! enemy))
@@ -116,39 +116,66 @@
 
 
 (define (get-world-actions world actor)
-  (define location-actions (send (get-field current-location world)
-                                 get-interactions))
-  (define next-location-choices (send (get-field current-location world)
-                                      get-visible-neighbors))
+  (define location-actions
+    (send (get-field current-location world)
+          get-interactions))
+  (define next-location-choices
+    (if (not (get-field in-combat world))
+        (send (get-field current-location world)
+              get-visible-neighbors)
+        '()))
   (define generic-actions (send actor get-generic-actions world))
   (define all-actions (append location-actions next-location-choices generic-actions))
   all-actions)
 
-(define (resolve-action! world action actor)
+(define (resolve-player-action! world action actor)
   (case (action-symbol action)
-    ['search (begin
-               (define loot (send (get-field current-location world) search))
-               (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
-                     (else
-                      (newline)
-                      (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
-                      (newline)
-                      (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-                      (set-field! inventory actor (cons loot (get-field inventory actor)))
-                      (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
-               (newline)
-               (advance-time! world (action-duration action)))]
-    ['inventory (print-inventory (get-list-inline-description (get-field inventory actor)))]
-    ['go-to-neighboring-location (begin
-                                   (newline) ; dunno where to put this
-                                   (send (get-field current-location world) on-exit!)
+    ['search
+     (begin
+       (define loot (send (get-field current-location world) search))
+       (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
+             (else
+              (newline)
+              (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
+              (newline)
+              (displayln (string-append "You pick up the " (send loot get-short-description) "."))
+              (set-field! inventory actor (cons loot (get-field inventory actor)))
+              (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
+       (newline)
+       (advance-time! world (action-duration action)))]
+    ['inventory
+     (print-inventory
+      (get-list-inline-description
+       (get-field inventory actor)))]
+    ['go-to-neighboring-location
+     (begin
+       (newline) ; dunno where to put this
+       (send (get-field current-location world) remove-actor! actor) ; hacky
+       (send (get-field current-location world) on-exit!)
+
                                    
-                                   (advance-time! world  (action-duration action))
-                                   
-                                   (set-field! current-location world (action-target action))
-                                   (send (get-field current-location world) on-enter!))]
+       (advance-time! world  (action-duration action))
+
+       (set-field! current-location world (action-target action))
+       (send (get-field current-location world) add-actor! actor) ; ungh
+       (send (get-field current-location world) on-enter!))]
     
-    [else (error (string-append "Unknown action: " (symbol->string (action-symbol action))))]))
+    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
+
+(define (resolve-enemy-action! world action actor)
+  (case (action-symbol action)
+    ['attack (begin
+               (newline)
+               (displayln "hojo! enemy attack action!"))]
+    [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
+
+(define (resolve-action! world action actor)
+  (if (is-a? actor pc%)
+      (resolve-player-action! world action actor)
+      (resolve-enemy-action! world action actor))
+  (set! *action-queue* (if (pair? *action-queue*)
+                           (cdr *action-queue*) ; pop stack's topmost element
+                           '())))
 
 (define (add-action-to-queue *world* action actor)
   (displayln "FIND ME TOO AND FIX ME TOO"))

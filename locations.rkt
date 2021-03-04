@@ -126,6 +126,11 @@
       (define new-actors (cons actor actors))
       (set! actors new-actors))
 
+    (define/public (remove-actor! actor)
+      (define new-actors (remove actor actors))
+      (displayln "Removing actor")
+      (set! actors new-actors))
+
     (define/public (search)
       
       (define roll (d 2 6))
