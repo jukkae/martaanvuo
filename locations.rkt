@@ -128,7 +128,6 @@
 
     (define/public (remove-actor! actor)
       (define new-actors (remove actor actors))
-      (displayln "Removing actor")
       (set! actors new-actors))
 
     (define/public (search)

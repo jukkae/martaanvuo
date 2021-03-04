@@ -83,7 +83,9 @@
   (newline))
 
 (define (on-turn! world)
-  (cond ((= (modulo (get-field turn world) 3) 0)
+  (cond ((and
+          (= (modulo (get-field turn world) 3) 0)
+          (not (get-field in-combat world)))
          (begin (spawn-enemies world 2)))))
 
 (define (resolve-actions! world actions)
@@ -93,9 +95,10 @@
   #;(displayln (append-string "-- *world* : end-turn!")) '())
 
 (define (spawn-enemies world number)
+  (displayln "Blight! Enemies appear!")
+  (newline)
   (for ([i (in-range 0 number)])
     
-    (displayln "-- spawning enemy")
     (define location (get-field current-location world))
     (define r (random 1))
     (define enemy (cond ((= r 0) (new bloodleech%))
@@ -165,8 +168,8 @@
 (define (resolve-enemy-action! world action actor)
   (case (action-symbol action)
     ['attack (begin
-               (newline)
-               (displayln "hojo! enemy attack action!"))]
+               (displayln "hojo! enemy attack action!")
+               (newline))]
     [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-action! world action actor)

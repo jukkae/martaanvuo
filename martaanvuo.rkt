@@ -133,21 +133,10 @@
   (define current-location (get-field current-location *world*))
   (define actors (get-field actors current-location))
   
-  (displayln "ACTORS:")
-  (displayln (length actors))
-  (displayln actors)
-  
   (for ([i (in-range (length actors))])
     (define actor (list-ref actors i))
     (define action (get-next-action actor))
 
-    (newline)
-    (displayln "ACTOR:")
-    (displayln actor)
-    (displayln "ACTION:")
-    (displayln action)
-    (newline)
-    
     (if (resolve-instantly? action)
         (resolve-action! *world* action actor)
         (add-action-to-queue *world* action actor)))

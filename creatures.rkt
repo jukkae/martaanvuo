@@ -13,7 +13,7 @@
     (define/public (get-description) "It is about the size of your forearm. Its moist skin glistens.")
     (define/public (get-next-action)
       ; (make-action 'search "Search the surroundings." 3 null '(wilderness))
-      (make-action 'attack "Attack." 1 null '()))
+      (make-action 'attack "Attack." 1 null '(delayed-resolution)))
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
              (if (<= hp 0)
