@@ -22,11 +22,27 @@
           '()))
     
     (define/public (get-combat-actions world)
+      (define targets (send world get-current-enemies))
+      
+      (define combat-actions '())
       (if (get-field in-combat world)
-          (if (not (empty? (get-field inventory this)))
-              (list (make-action 'grapple "Grapple." 1 null '(combat)))
-              (list (make-action 'grapple "Grapple." 1 null '(combat))))
-          '()))
+          (begin
+            (for ([i (in-range 0 (length targets))])
+              (displayln i)
+              (define target (list-ref targets i))
+              (displayln target)
+              (set! combat-actions
+                    (append combat-actions
+                            (list (make-action 'brawl
+                                               (string-append "Brawl with " (send target get-name) " (number " (number->string i) ")")
+                                               1
+                                               target
+                                               '(combat))))))
+            
+            (set! combat-actions (append combat-actions (list (make-action 'run "Run." 1 null '(combat))))))
+          
+          '())
+      combat-actions)
     
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))

@@ -23,6 +23,7 @@
     (field [action-queue '()])
 
     (super-new)
+  
     (define/public (make-connections)
       (begin
         (for ([i (in-range 0 10)])
@@ -42,7 +43,12 @@
                                                   location)))))
         (set-field! current-location
                     this
-                    (hash-ref locations 0))))))
+                    (hash-ref locations 0))))
+    
+    (define/public (get-current-enemies)
+      (define all-actors (get-field actors current-location))
+      (set! all-actors (remove pc all-actors))
+      all-actors)))
 
 (define (make-new-world)
   (define world (new world%))
@@ -90,7 +96,7 @@
   (map (λ (action)
          (displayln "Resolving action:")
          (displayln action))
-         ; (resolve-action! world action)) ; TODO this needs to get access to actor somehow – store in action when creating it?
+       ; (resolve-action! world action)) ; TODO this needs to get access to actor somehow – store in action when creating it?
        (get-field action-queue world)))
 
 (define (end-turn! world)
@@ -124,13 +130,14 @@
   (define location-actions
     (if (not (get-field in-combat world))
         (send (get-field current-location world)
-          get-interactions)
+              get-interactions)
         '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
         (send (get-field current-location world)
               get-visible-neighbors)
         '()))
+
   (define combat-actions (send actor get-combat-actions world))
   (define generic-actions (send actor get-generic-actions world))
   (define all-actions (append location-actions next-location-choices combat-actions generic-actions))
