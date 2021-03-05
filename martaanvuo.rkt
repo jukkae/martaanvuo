@@ -141,7 +141,7 @@
         (resolve-action! *world* action actor)
         (add-action-to-queue *world* action actor)))
   ; TODO sort by initiative
-  (resolve-actions! *world* *action-queue*)
+  (resolve-actions! *world*)
 
   (end-turn! *world*)
   (resolve-turn))

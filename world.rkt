@@ -20,6 +20,8 @@
 
     (field [pc (new pc%)])
 
+    (field [action-queue '()])
+
     (super-new)
     (define/public (make-connections)
       (begin
@@ -56,8 +58,6 @@
               world
               new-elapsed-time))
 
-(define *action-queue* '())
-
 (define (begin-turn! world)
   (set-field! turn
               world
@@ -73,10 +73,8 @@
     "location: " (number->string (get-field index (get-field current-location world)))
     ", "
     "time of day: " (symbol->string (get-field time-of-day world))
-    ))
-  (displayln
-   (string-append
-    "In combat: " (if (get-field in-combat world)
+    ", "
+    "in combat: " (if (get-field in-combat world)
                       "yes"
                       "no")
     ))
@@ -88,8 +86,12 @@
           (not (get-field in-combat world)))
          (begin (spawn-enemies world 2)))))
 
-(define (resolve-actions! world actions)
-  #;(displayln "-- *world* : resolve-actions!") '())
+(define (resolve-actions! world)
+  (map (λ (action)
+         (displayln "Resolving action:")
+         (displayln action))
+         ; (resolve-action! world action)) ; TODO this needs to get access to actor somehow – store in action when creating it?
+       (get-field action-queue world)))
 
 (define (end-turn! world)
   #;(displayln (append-string "-- *world* : end-turn!")) '())
@@ -120,15 +122,18 @@
 
 (define (get-world-actions world actor)
   (define location-actions
-    (send (get-field current-location world)
-          get-interactions))
+    (if (not (get-field in-combat world))
+        (send (get-field current-location world)
+          get-interactions)
+        '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
         (send (get-field current-location world)
               get-visible-neighbors)
         '()))
+  (define combat-actions (send actor get-combat-actions world))
   (define generic-actions (send actor get-generic-actions world))
-  (define all-actions (append location-actions next-location-choices generic-actions))
+  (define all-actions (append location-actions next-location-choices combat-actions generic-actions))
   all-actions)
 
 (define (resolve-player-action! world action actor)
@@ -176,11 +181,17 @@
   (if (is-a? actor pc%)
       (resolve-player-action! world action actor)
       (resolve-enemy-action! world action actor))
-  (set! *action-queue* (if (pair? *action-queue*)
-                           (cdr *action-queue*) ; pop stack's topmost element
-                           '())))
+  (set-field!
+   action-queue
+   world
+   (if (pair? (get-field action-queue world))
+       (cdr (get-field action-queue world)) ; pop stack's topmost element
+       '())))
 
-(define (add-action-to-queue *world* action actor)
-  (displayln "FIND ME TOO AND FIX ME TOO"))
+(define (add-action-to-queue world action actor)
+  (define new-actions
+    (append (get-field action-queue world)
+            (list action)))
+  (set-field! action-queue world new-actions))
 
 (provide (all-defined-out))

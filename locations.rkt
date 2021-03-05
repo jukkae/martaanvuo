@@ -70,9 +70,10 @@
                      topography-description
                      features-description))
 
-    (define/public (get-interactions) (if searched?
-                                          null
-                                          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
+    (define/public (get-interactions)
+      (if searched?
+          null
+          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
 
     (define/private (make-go-to-neighbor-action neighbor index)
 

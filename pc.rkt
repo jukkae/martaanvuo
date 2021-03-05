@@ -21,6 +21,13 @@
           (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
           '()))
     
+    (define/public (get-combat-actions world)
+      (if (get-field in-combat world)
+          (if (not (empty? (get-field inventory this)))
+              (list (make-action 'grapple "Grapple." 1 null '(combat)))
+              (list (make-action 'grapple "Grapple." 1 null '(combat))))
+          '()))
+    
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
              (if (<= hp 0)
