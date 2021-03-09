@@ -9,7 +9,7 @@
     get-description
     advance-to-next-description!
     get-interaction-choices
-    get-visible-neighbors
+    get-exit-choices
     on-enter!
     on-exit!
     add-actor!))
@@ -81,7 +81,7 @@
                                                 #:target null
                                                 #:tags '(wilderness)))))))
 
-    (define/private (make-go-to-neighbor-action neighbor index)
+    (define/private (make-go-to-neighbor-choice neighbor index)
 
       (define direction-string
         (case index
@@ -102,25 +102,27 @@
           ['dead-vegetation "towards dead vegetation"]
           ['barren "towards barren land"]
           [else (error "locations.rkt: biome-string: Unknown biome")]))
-      (make-action 'go-to-neighboring-location
+      (make-choice 'go-to-neighboring-location
                    (string-append direction-string
                                   ", "
                                   (get-biome-string)
                                   " (location index "
                                   (number->string (get-field index neighbor))
                                   ")")
-                   5
-                   neighbor
-                   (list 'wilderness))
-      )
-    (define/public (get-visible-neighbors)
-      (define actions '())
+                   (λ () (make-action #:symbol 'go-to-neighboring-location
+                                      #:actor 'pc
+                                      #:duration 3
+                                      #:target neighbor
+                                      #:tags '(wilderness)))))
+
+    (define/public (get-exit-choices)
+      (define choices '())
       (for ([i (in-range 0 (length neighbors))])
         (define neighbor (list-ref neighbors i))
-        (define action (make-go-to-neighbor-action neighbor i))
-        (set! actions (cons action actions)))
+        (define choice (make-go-to-neighbor-choice neighbor i))
+        (set! choices (cons choice choices)))
         
-      actions)
+      choices)
 
 
     (define/public (on-enter!)
