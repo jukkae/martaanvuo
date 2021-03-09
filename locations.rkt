@@ -8,7 +8,7 @@
   (interface ()
     get-description
     advance-to-next-description!
-    get-interactions
+    get-interaction-choices
     get-visible-neighbors
     on-enter!
     on-exit!
@@ -70,10 +70,16 @@
                      topography-description
                      features-description))
 
-    (define/public (get-interactions)
+    (define/public (get-interaction-choices)
       (if searched?
           null
-          (list (make-action 'search "Search the surroundings." 3 null '(wilderness)))))
+          (list (make-choice 'search
+                             "Search the surroundings."
+                             (λ () (make-action #:symbol 'search
+                                                #:actor 'pc
+                                                #:duration 3
+                                                #:target null
+                                                #:tags '(wilderness)))))))
 
     (define/private (make-go-to-neighbor-action neighbor index)
 

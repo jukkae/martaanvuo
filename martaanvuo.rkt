@@ -30,12 +30,12 @@
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-(define (build-keys-to-actions-map actions)
-  (define actions-with-keys (make-hash))
-  (for ([i (in-range (length actions))])
+(define (build-keys-to-choices-map choices)
+  (define choices-with-keys (make-hash))
+  (for ([i (in-range (length choices))])
     (define key (key-from-index i))
-    (hash-set! actions-with-keys key (list-ref actions i)))
-  actions-with-keys)
+    (hash-set! choices-with-keys key (list-ref choices i)))
+  choices-with-keys)
 
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
@@ -46,9 +46,9 @@
   (define input (read-line))
   input)
 
-(define (print-actions-with-keys actions-with-keys)
-  (for ([(k v) (in-hash actions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (action-name v))))
+(define (print-choices-with-keys choices-with-keys)
+  (for ([(k v) (in-hash choices-with-keys)])
+    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
   (newline))
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
@@ -69,15 +69,15 @@
              #t)
       #f))
 
-(define (try-to-handle-as-proper-action valid-actions-with-keys input)
-  (define action (hash-ref valid-actions-with-keys (string->number input) '()))
-  (if (not (null? action))
-      action
+(define (try-to-handle-as-choice valid-choices-with-keys input)
+  (define choice (hash-ref valid-choices-with-keys (string->number input) '()))
+  (if (not (null? choice))
+      choice
       #f))
 
-(define (pebkac-loop actions-with-keys meta-commands-with-keys)
+(define (pebkac-loop choices-with-keys meta-commands-with-keys)
   (display "Unknown command. Known commands: ")
-  (for ([(k v) (in-hash actions-with-keys)]) (display k))
+  (for ([(k v) (in-hash choices-with-keys)]) (display k))
   (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
   (newline)
   
@@ -86,16 +86,18 @@
   (while (null? handled?)
          (set! handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
          (when (not handled?)
-           (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
+           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
          (when (not handled?)
-           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))))
+           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys))))
   handled?)
 
 (define (get-next-action actor)
   (cond ((is-a? actor pc%)
-         (define actions (get-world-actions *world* actor))
-         (define actions-with-keys (build-keys-to-actions-map actions))
-         (print-actions-with-keys actions-with-keys)
+         ;(displayln (syntax-source #'here))
+         ;(displayln (syntax-line #'here))
+         (define choices (get-world-choices *world* actor))
+         (define choices-with-keys (build-keys-to-choices-map choices))
+         (print-choices-with-keys choices-with-keys)
 
          (define meta-commands-with-keys (get-meta-commands-with-keys))
          (print-meta-commands-with-keys meta-commands-with-keys)
@@ -107,21 +109,21 @@
 
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
          (when (not handled?)
-           (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
+           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
          (when (not handled?)
-           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys)))
+           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
 
          ; handled? should now contain a valid action
          (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
     
-         (define action handled?) ; ta-dah
-         action)
+         (define choice handled?) ; ta-dah
+         choice ; choice is a PC-only concept, and acts as a template for an action
+         (define action (make-action-from-choice *world* choice))
+         action
+         )
         (else
          (define action (send actor get-next-action))
          action)))
-
-
-
 
 
 (define (resolve-turn)

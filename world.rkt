@@ -125,23 +125,26 @@
   (displayln (send (get-field current-location world) get-description))
   (newline))
 
+(define (make-action-from-choice world choice)
+  (define action ((choice-resolution-effect choice))) ; check actor
+  action)
 
-(define (get-world-actions world actor)
-  (define location-actions
+(define (get-world-choices world actor)
+  (define location-choices
     (if (not (get-field in-combat world))
         (send (get-field current-location world)
-              get-interactions)
+              get-interaction-choices)
         '()))
-  (define next-location-choices
+  #;(define next-location-choices
     (if (not (get-field in-combat world))
         (send (get-field current-location world)
               get-visible-neighbors)
         '()))
 
-  (define combat-actions (send actor get-combat-actions world))
-  (define generic-actions (send actor get-generic-actions world))
-  (define all-actions (append location-actions next-location-choices combat-actions generic-actions))
-  all-actions)
+  #;(define combat-choices (send actor get-combat-actions world))
+  #;(define generic-choices (send actor get-generic-actions world))
+  (define all-choices (append location-choices '()#;next-location-choices #;combat-choices #;generic-choices))
+  all-choices)
 
 (define (resolve-player-action! world action actor)
   (case (action-symbol action)
