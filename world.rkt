@@ -94,7 +94,7 @@
 
 (define (resolve-actions! world)
   (map (λ (action)
-         (displayln "Resolving action:")
+         (displayln "TODO: Resolving action:")
          (displayln action))
        ; (resolve-action! world action)) ; TODO this needs to get access to actor somehow – store in action when creating it?
        (get-field action-queue world)))
@@ -155,9 +155,9 @@
               get-exit-choices)
         '()))
 
-  #;(define combat-choices (send actor get-combat-actions world))
+  (define combat-choices (send actor get-combat-choices world))
   #;(define generic-choices (send actor get-generic-actions world))
-  (define all-choices (append location-choices next-location-choices #;combat-choices #;generic-choices))
+  (define all-choices (append location-choices next-location-choices combat-choices #;generic-choices))
   all-choices)
 
 (define (resolve-player-action! world action actor)

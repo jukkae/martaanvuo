@@ -4,8 +4,9 @@
 (require "utils.rkt")
 
 (define (paragraph . args)
-  (newline)
-  (displayln (string-append* args)))
+  (newline) ; TODO either newline's got to go
+  (displayln (string-append* args))
+  (newline))
 
 (define (title)
   (newline)
@@ -44,7 +45,7 @@
                      (define second '("decay" "corrosion" "death" "destruction" "sorrow" "suffering"))
                      (string-append (take-random first) " and " (take-random second) "!"))
         (else (take-random '("Let it all wither!"
-                             "May it all languish!"
+                             "Let it all languish!"
                              "Blight!"
                              "Scales of a snake!")))))
 

@@ -21,28 +21,33 @@
           (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
           '()))
     
-    (define/public (get-combat-actions world)
+    (define/public (get-combat-choices world)
       (define targets (send world get-current-enemies))
-      
-      (define combat-actions '())
+      (define combat-choices '())
       (if (get-field in-combat world)
           (begin
             (for ([i (in-range 0 (length targets))])
-              (displayln i)
               (define target (list-ref targets i))
-              (displayln target)
-              (set! combat-actions
-                    (append combat-actions
-                            (list (make-action 'brawl
+              (set! combat-choices
+                    (append combat-choices
+                            (list (make-choice 'brawl
                                                (string-append "Brawl with " (send target get-name) " (number " (number->string i) ")")
-                                               1
-                                               target
-                                               '(combat))))))
-            
-            (set! combat-actions (append combat-actions (list (make-action 'run "Run." 1 null '(combat))))))
-          
+                                               (λ () (make-action #:symbol 'brawl
+                                                                  #:actor 'pc
+                                                                  #:duration 1
+                                                                  #:target target
+                                                                  #:tags '(combat))))))))
+            (set! combat-choices
+                  (append combat-choices
+                          (list (make-choice 'run
+                                             "Run."
+                                             (λ () (make-action #:symbol 'run
+                                                                #:actor 'pc
+                                                                #:duration 1
+                                                                #:target null
+                                                                #:tags '(combat))))))))
           '())
-      combat-actions)
+      combat-choices)
     
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
