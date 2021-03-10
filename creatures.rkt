@@ -2,7 +2,7 @@
 
 (require "actions.rkt")
 
-(define creature<%> (interface () get-name get-description get-next-action get-status hit))
+(define creature<%> (interface () get-name get-name-with-article get-description get-next-action get-status hit))
 (define bloodleech%
   (class* object% (creature<%>)
     (field [hp 2])
@@ -10,10 +10,15 @@
     (super-new)
 
     (define/public (get-name) "Bloodleech")
+    (define/public (get-name-with-article) "a Bloodleech")
     (define/public (get-description) "It is about the size of your forearm. Its moist skin glistens.")
     (define/public (get-next-action)
       ; (make-action 'search "Search the surroundings." 3 null '(wilderness))
-      (make-action 'attack "Attack." 1 null '(delayed-resolution)))
+      (make-action #:symbol 'attack
+                   #:actor this
+                   #:duration 1
+                   #:target 'pc
+                   #:tags '(delayed-resolution)))
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
              (if (<= hp 0)
@@ -29,6 +34,7 @@
     (super-new)
 
     (define/public (get-name) "Blindscraper")
+    (define/public (get-name-with-article) "a Blindscraper")
     (define/public (get-description) "You do not know why it is called a Blindscraper. You do not want to know.")
     (define/public (get-next-action) (error "creatures.rkt: blindscraper%: get-next-action not implemented yet!"))
     (define/public (hit dmg)

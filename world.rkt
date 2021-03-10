@@ -102,16 +102,30 @@
 (define (end-turn! world)
   #;(displayln (append-string "-- *world* : end-turn!")) '())
 
+
+
+; This should be reimplemented in terms of describable<%> or something
+; see also very similar code in items.rkt
+(define (get-enemies-description enemies)
+  (if (empty? list)
+      "no enemies"
+      (string-append (send (car enemies) get-name)
+                     (cond ((= (length enemies) 1) " appear!")
+                           ((= (length enemies) 2) (string-append " and " (get-enemies-description (cdr enemies))))
+                           (else (string-append ", " (get-enemies-description (cdr enemies))))))))
+
 (define (spawn-enemies world number)
-  (displayln "Blight! Enemies appear!")
-  (newline)
+  (define added-enemies '())
   (for ([i (in-range 0 number)])
     
     (define location (get-field current-location world))
     (define r (random 1))
     (define enemy (cond ((= r 0) (new bloodleech%))
                         (else (new blindscraper%))))
+    (set! added-enemies (cons enemy added-enemies))
     (send location add-actor! enemy))
+  (define enemies-description (get-enemies-description added-enemies))
+  (paragraph (get-curse) " " enemies-description)
   (set-field! in-combat world #t))
 
 (define (player-has-weapons? pc)

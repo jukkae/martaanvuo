@@ -1,7 +1,11 @@
-#lang racket/base
+#lang racket
 
 (require roman-numeral)
 (require "utils.rkt")
+
+(define (paragraph . args)
+  (newline)
+  (displayln (string-append* args)))
 
 (define (title)
   (newline)
@@ -35,8 +39,8 @@
   (displayln "Your progress should be saved. [[Not implemented yet]]"))
 
 (define (get-curse)
-  (define index 0 #;(random 2))
-  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Snow" "Rain" "Frost"))
+  (define index (random 2))
+  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Ice" "Rain" "Frost"))
                      (define second '("decay" "corrosion" "death" "destruction" "sorrow" "suffering"))
                      (string-append (take-random first) " and " (take-random second) "!"))
         (else (take-random '("Let it all wither!"
