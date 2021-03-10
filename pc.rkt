@@ -16,9 +16,15 @@
 
     (define/public (get-brawl-damage) (d 1 2))
     (define/public (get-next-command world) '())
-    (define/public (get-generic-actions world)
+    (define/public (get-generic-choices world)
       (if (not (empty? (get-field inventory this)))
-          (list (make-action 'inventory "Show inventory. [free action]" 0 null '(always free))) ; tag - duration in jiffies - object - list of tags
+          (list (make-choice 'inventory
+                             "Show inventory. [free action]"
+                             (λ () (make-action #:symbol 'inventory
+                                                #:actor 'pc
+                                                #:duration 0
+                                                #:target null
+                                                #:tags '(always free)))))
           '()))
     
     (define/public (get-combat-choices world)

@@ -156,8 +156,8 @@
         '()))
 
   (define combat-choices (send actor get-combat-choices world))
-  #;(define generic-choices (send actor get-generic-actions world))
-  (define all-choices (append location-choices next-location-choices combat-choices #;generic-choices))
+  (define generic-choices (send actor get-generic-choices world))
+  (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
 (define (resolve-player-action! world action actor)
