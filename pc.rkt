@@ -45,6 +45,17 @@
                                                                   #:tags '(combat))))))))
             (set! combat-choices
                   (append combat-choices
+                          (list (make-choice 'parry
+                                             "Parry."
+                                             (λ () (begin
+                                                     (displayln "Should set temporary defense bonus!")
+                                                     (make-action #:symbol 'parry
+                                                                  #:actor 'pc
+                                                                  #:duration 1
+                                                                  #:target null
+                                                                  #:tags '(combat))))))))
+            (set! combat-choices
+                  (append combat-choices
                           (list (make-choice 'run
                                              "Run."
                                              (λ () (make-action #:symbol 'run
