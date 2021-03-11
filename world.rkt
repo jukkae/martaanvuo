@@ -90,7 +90,7 @@
   (cond ((and
           (= (modulo (get-field turn world) 3) 0)
           (not (get-field in-combat world)))
-         (begin (spawn-enemies world 2)))))
+         (begin (spawn-enemies world 3)))))
 
 (define (resolve-actions! world)
   (map (λ (action)
@@ -105,24 +105,34 @@
 
 
 ; This should be reimplemented in terms of describable<%> or something
-; see also very similar code in items.rkt
 (define (get-enemies-description enemies)
-  (if (empty? list)
-      "no enemies"
-      (string-append (send (car enemies) get-name)
-                     (cond ((= (length enemies) 1) " appear!")
-                           ((= (length enemies) 2) (string-append " and " (get-enemies-description (cdr enemies))))
-                           (else (string-append ", " (get-enemies-description (cdr enemies))))))))
+  (define enemies-in-bins (make-hash))
+  (for ([i (in-range 0 (length enemies))])
+    (define enemy (list-ref enemies i))
+    (define key (send enemy get-name))
+
+    (define similar-enemies (hash-ref enemies-in-bins key '()))
+    
+    (set! similar-enemies (cons enemy similar-enemies))
+    (hash-set! enemies-in-bins key similar-enemies))
+  
+  (define number-of-keys (length (hash-keys enemies-in-bins)))
+  (for ([i (in-range 0 number-of-keys)])
+    (define key (list-ref (hash-keys enemies-in-bins) i))
+    (define enemies-in-bin (hash-ref enemies-in-bins key))
+    (displayln (string-append "Enemy type:" (send (car enemies-in-bin) get-name)))
+    (displayln (string-append "Number:" (number->string (length enemies-in-bin)))))
+  
+  "enemies description")
 
 (define (spawn-enemies world number)
+  (define location (get-field current-location world))
   (define added-enemies '())
   (for ([i (in-range 0 number)])
-    
-    (define location (get-field current-location world))
-    (define r (random 1))
-    (define enemy (cond ((= r 0) (new bloodleech%))
-                        (else (new blindscraper%))))
+    (define enemy (cond ((= i 1) (new blindscraper%))
+                        (else (new bloodleech%))))
     (set! added-enemies (cons enemy added-enemies))
+    
     (send location add-actor! enemy))
   (define enemies-description (get-enemies-description added-enemies))
   (paragraph (get-curse) " " enemies-description)
