@@ -42,7 +42,7 @@
                                                                   #:actor 'pc
                                                                   #:duration 1
                                                                   #:target target
-                                                                  #:tags '(combat))))))))
+                                                                  #:tags '(combat delayed-resolution))))))))
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'parry
@@ -53,7 +53,7 @@
                                                                   #:actor 'pc
                                                                   #:duration 1
                                                                   #:target null
-                                                                  #:tags '(combat))))))))
+                                                                  #:tags '(combat delayed-resolution))))))))
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'run
@@ -73,6 +73,7 @@
                         'u-ded)
                  'u-hit)))
     (define/public (get-status) (error "not implemented yet!"))
+    (define/public (get-name) "You.")
     (define/public (get-a-hunch)
       (take-random '(
                      "You feel something is watching you.")))))

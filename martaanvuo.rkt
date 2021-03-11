@@ -140,9 +140,9 @@
     (define action (get-next-action actor))
 
     (if (resolve-instantly? action)
-        (resolve-action! *world* action actor)
-        (add-action-to-queue *world* action actor)))
-  ; TODO sort by initiative
+        (resolve-action! *world* action)
+        (add-action-to-queue *world* action)))
+
   (resolve-actions! *world*)
 
   (end-turn! *world*)

@@ -94,9 +94,7 @@
 
 (define (resolve-actions! world)
   (map (λ (action)
-         (displayln "TODO: Resolving action:")
-         (displayln action))
-       ; (resolve-action! world action)) ; TODO this needs to get access to actor somehow – store in action when creating it?
+         (resolve-action! world action))
        (get-field action-queue world)))
 
 (define (end-turn! world)
@@ -175,8 +173,6 @@
                 (lambda (item) (member 'stab (send item get-uses)))
                 (get-field inventory pc)))))
 
-
-
 (define (describe-situation world)
   (displayln (send (get-field current-location world) get-description))
   (newline))
@@ -202,7 +198,8 @@
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
-(define (resolve-player-action! world action actor)
+(define (resolve-player-action! world action)
+  (define actor (get-field pc world)) ; dirty
   (case (action-symbol action)
     ['search
      (begin
@@ -233,28 +230,64 @@
        (set-field! current-location world (action-target action))
        (send (get-field current-location world) add-actor! actor) ; ungh
        (send (get-field current-location world) on-enter!))]
+    ['parry
+     (displayln "TODO implement this action")]
+    ['brawl
+     (define target (action-target action))
+     (define target-defense (get-field defense target))
+     (define attack-roll (d 2 6))
+     (define damage (d 1 2))
+     (define successful? (>= attack-roll target-defense))
+                         
+     (displayln (string-append
+                 "-- Brawl action: "
+                 "Attack roll: 2d6 + skill = "
+                 (number->string attack-roll)
+                 " against target defense: "
+                 (number->string target-defense)
+                 ))
+     (when successful?
+       (begin
+         (displayln (string-append
+                     "Success, damage: "
+                     (number->string damage)
+                     " HP"))
+         (send target hit damage)
+         (displayln (string-append
+                     "Enemy has "
+                     (number->string (get-field hp target))
+                     " HP"))))
+     
+     ]
     
     [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
 
-(define (resolve-enemy-action! world action actor)
+(define (resolve-enemy-action! world action)
   (case (action-symbol action)
     ['attack (begin
                (displayln "hojo! enemy attack action!")
                (newline))]
     [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
 
-(define (resolve-action! world action actor)
+(define (resolve-action! world action)
+  (define actor
+    (if (eq? (action-actor action) 'pc)
+        (get-field pc world)
+        (action-actor action)))
+  
   (if (is-a? actor pc%)
-      (resolve-player-action! world action actor)
-      (resolve-enemy-action! world action actor))
+      (resolve-player-action! world action)
+      (resolve-enemy-action! world action))
   (set-field!
    action-queue
    world
    (if (pair? (get-field action-queue world))
        (cdr (get-field action-queue world)) ; pop stack's topmost element
-       '())))
+       '()))
+  #;(displayln "ACTION RESOLVED")
+  #;(displayln (get-field action-queue world)))
 
-(define (add-action-to-queue world action actor)
+(define (add-action-to-queue world action)
   (define new-actions
     (append (get-field action-queue world)
             (list action)))
