@@ -8,6 +8,23 @@
   (displayln (string-append* args))
   (newline))
 
+; TODO: define in terms of describable<%>
+(define (get-list-inline-description list)
+  (if (empty? list)
+      "nothing"
+      (string-append (send (car list) get-inline-description)
+                     (cond ((= (length list) 1) "")
+                           ((= (length list) 2) (string-append " and " (get-list-inline-description (cdr list))))
+                           (else (string-append ", " (get-list-inline-description (cdr list))))))))
+
+(define (get-string-list-inline-description list)
+  (if (empty? list)
+      "nothing"
+      (string-append (car list)
+                     (cond ((= (length list) 1) "")
+                           ((= (length list) 2) (string-append " and " (get-string-list-inline-description (cdr list))))
+                           (else (string-append ", " (get-string-list-inline-description (cdr list))))))))
+
 (define (title)
   (newline)
   (displayln "M A R T A A N V U O")
@@ -40,14 +57,9 @@
   (displayln "Your progress should be saved. [[Not implemented yet]]"))
 
 (define (get-curse)
-  (define index (random 2))
-  (cond ((= index 0) (define first '("Rot" "Blight" "Pus" "Pain" "Ice" "Rain" "Frost"))
-                     (define second '("decay" "corrosion" "death" "destruction" "sorrow" "suffering"))
-                     (string-append (take-random first) " and " (take-random second) "!"))
-        (else (take-random '("Let it all wither!"
-                             "Let it all languish!"
-                             "Blight!"
-                             "Scales of a snake!")))))
+  (take-random '("Death and decay!!"
+                 "Pain and suffering"
+                 "Rot and corrosion!")))
 
 (define (get-narration-for-stab)
   (take-random '("You go for a stab. Aim at the soft underbelly."

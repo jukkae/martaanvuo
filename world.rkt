@@ -117,13 +117,46 @@
     (hash-set! enemies-in-bins key similar-enemies))
   
   (define number-of-keys (length (hash-keys enemies-in-bins)))
+
+  (define (describe-group number-of-enemies name)
+    (define name-length (length (string->list name)))
+    (define first-character (substring name 0 1))
+    (define last-character (substring name (- name-length 2) (- name-length 1)))
+
+    (define (get-indefinite-article name)
+      (match first-character
+        [(regexp #rx"[aeiouyAEIOUY]") "an"]
+        [_ "a"]))
+    (define numeral
+      (cond ((= number-of-enemies 1) (get-indefinite-article name))
+            ((= number-of-enemies 2) "Two")
+            ((= number-of-enemies 3) "Three")
+            (else "Some")))
+    (define inflected-name
+      (cond ((= number-of-enemies 1) name)
+            (else (match last-character
+                    [(regexp #rx"[aeiouyAEIOUY]") (string-append name "s")]
+                    [_ (string-append name "es")]))))
+    (string-append numeral " " inflected-name))
+
+  (define group-descriptions '())
   (for ([i (in-range 0 number-of-keys)])
     (define key (list-ref (hash-keys enemies-in-bins) i))
     (define enemies-in-bin (hash-ref enemies-in-bins key))
-    (displayln (string-append "Enemy type:" (send (car enemies-in-bin) get-name)))
-    (displayln (string-append "Number:" (number->string (length enemies-in-bin)))))
+    
+    (define number-of-enemies-in-bin (length enemies-in-bin))
+    (define group-description (describe-group number-of-enemies-in-bin key))
+    (set! group-descriptions (cons group-description group-descriptions)))
+  (define enemies-description (get-string-list-inline-description group-descriptions))
   
-  "enemies description")
+  enemies-description)
+
+(define (get-enemies-on-spawn-message enemies)
+  (define enemies-list-description (get-enemies-description enemies))
+  (define on-spawn-message
+    (string-append (get-curse) "! " enemies-list-description " suddenly appear!"))
+  on-spawn-message)
+  
 
 (define (spawn-enemies world number)
   (define location (get-field current-location world))
@@ -134,8 +167,7 @@
     (set! added-enemies (cons enemy added-enemies))
     
     (send location add-actor! enemy))
-  (define enemies-description (get-enemies-description added-enemies))
-  (paragraph (get-curse) " " enemies-description)
+  (paragraph (get-enemies-on-spawn-message added-enemies))
   (set-field! in-combat world #t))
 
 (define (player-has-weapons? pc)
