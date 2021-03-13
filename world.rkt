@@ -181,12 +181,20 @@
      ))
   (displayln description))
 
+(define (enemy? actor) ; TODO move elsewhere
+  (not (is-a? actor pc%)))
+
 (define (describe-situation-post-on-turn world)
   (cond ((get-field in-combat world)
-         (displayln "You are in combat.")
+         (define pc (get-field pc world))
+         (displayln (string-append "You are in combat."
+                                   " ("
+                                   (number->string (get-field hp pc))
+                                   " HP)"))
+         (newline)
          (define current-location (get-field current-location world))
          (define all-actors (get-field actors current-location))
-         (define enemies all-actors)
+         (define enemies (filter enemy? all-actors))
          (map (λ (enemy) (describe-actor enemy))
               enemies)
          (newline))))
@@ -215,18 +223,27 @@
 (define (resolve-attack-action! world action)
   (define actor (action-actor action))
   (define target (action-target action))
-  (when (eq? target 'pc) (set! target (get-field pc world)))
+  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
+  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
   (define attack-skill 1)
   (define target-defense 6)
   (define attack-roll (+ (d 2 6) 1))
   (define successful? (>= attack-roll target-defense))
+  (define attacker-name (send actor get-name))
+  (define target-name (send target get-name))
+
   (displayln
    (string-append
     "-- Attack action: "
+    attacker-name
+    " attacks "
+    target-name))
+  (displayln
+   (string-append
     "Attack roll: "
     (number->string attack-roll)
     " "
-    "Defense: "
+    "against Defense: "
     (number->string target-defense)))
   (cond (successful?
          (define damage (d 1 2))

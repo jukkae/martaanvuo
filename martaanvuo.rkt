@@ -116,11 +116,16 @@
 
          ; handled? should now contain a valid action
          (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
-    
+
          (define choice handled?) ; ta-dah
-         choice ; choice is a PC-only concept, and acts as a template for an action
+
          (define action (make-action-from-choice *world* choice))
-         action
+         (cond ((is-free? action)
+                (resolve-action! *world* action)
+                (newline)
+                (get-next-action actor)
+                )
+               (else action))
          )
         (else
          (define action (send actor get-next-action))
@@ -148,6 +153,8 @@
   (define pc (get-field pc *world*))
   (define pc-alive? (> (get-field hp pc) 0))
   (cond ((not pc-alive?)
+         (newline)
+         (newline)
          (displayln "YOU ARE DEAD.")
          (end-game)))
 
@@ -158,15 +165,15 @@
 
 
 (define (end-game)
-  (newline)
-  (displayln "Do you want to try again? [Q] to quit, [R] to restart.")
   (define choices-with-keys (make-hash)) ; TODO not needed
   (define meta-commands-with-keys (make-hash))
   (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
-  (print-meta-commands-with-keys meta-commands-with-keys)
+  ;(print-meta-commands-with-keys meta-commands-with-keys)
 
-  (displayln "What do you do?")
+  (newline)
+  (displayln "Do you want to try again? [Q] to quit, [R] to restart.")
+
   (newline)
 
   (define input (wait-for-input))
