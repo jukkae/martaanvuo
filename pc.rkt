@@ -83,7 +83,7 @@
       (take-random '(
                      "You feel something is watching you.")))
     (define/public (get-status)
-      (cond ((> hp 2) "You have nicks and bruises. Flesh wounds.")
+      (cond ((> hp 2) "You have nicks and bruises.")
             ((= hp 2) "You have broken bones, but you're still holding on.")
             ((= hp 1) "You are badly hurt, but still breathing.")
             ((= hp 0) "It's a miracle you're still alive.")

@@ -52,6 +52,9 @@
       (set! all-actors (remove pc all-actors))
       all-actors)
 
+    (define/public (clean-up-bodies!) (displayln "todo: end of round stuff"))
+      
+
     (define/public (sort-actions!)
       (set! action-queue (sort
                           action-queue
@@ -99,10 +102,13 @@
   (cond ((and
           (= (modulo (get-field turn world) 3) 0)
           (not (get-field in-combat world)))
-         (begin (spawn-enemies world 2)))))
+         (begin (spawn-enemies world 1)))))
 
 (define (end-turn! world)
-  #;(displayln (append-string "-- *world* : end-turn!")) '())
+  (displayln (append-string "-- *world* : end-turn!"))
+  (send world clean-up-bodies!)
+  ; if no enemies alive -> set in-combat to false
+  '())
 
 
 
@@ -164,7 +170,8 @@
   (define location (get-field current-location world))
   (define added-enemies '())
   (for ([i (in-range 0 number)])
-    (define enemy (cond ((= i 0) (new blindscraper%))
+    (define r (d 1 2))
+    (define enemy (cond ((= r 2) (new blindscraper%))
                         (else (new bloodleech%))))
     (set! added-enemies (cons enemy added-enemies))
     
@@ -327,13 +334,17 @@
     [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-enemy-action! world action)
-  (case (action-symbol action)
-    ['attack
-     ; Resolve as attack action
-     (define result (resolve-attack-action! world action))
-     result
-     ]
-    [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
+  (define actor (action-actor action))
+  (define actor-alive? (> (get-field hp actor) 0))
+  (cond ((not actor-alive?) 'not-active)
+        (else
+         (case (action-symbol action)
+           ['attack
+            ; Resolve as attack action
+            (define result (resolve-attack-action! world action))
+            result
+            ]
+           [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
 
 (define (resolve-action! world action)
   (define actor
@@ -359,9 +370,10 @@
   (define turn-exit-status 'ok)
   (while (not (empty? (get-field action-queue world)))
          (define action (car (get-field action-queue world)))
+         
          (define result (resolve-action! world action))
-
-         (wait-for-confirm)
+         (when (not (eq? result 'not-active))
+           (wait-for-confirm))
 
          (cond ((eq? result 'u-ded)
                 (displayln "You die.")
