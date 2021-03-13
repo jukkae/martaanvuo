@@ -79,10 +79,6 @@
     "location: " (number->string (get-field index (get-field current-location world)))
     ", "
     "time of day: " (symbol->string (get-field time-of-day world))
-    ", "
-    "in combat: " (if (get-field in-combat world)
-                      "yes"
-                      "no")
     ))
   (newline))
 
@@ -160,7 +156,7 @@
   (define location (get-field current-location world))
   (define added-enemies '())
   (for ([i (in-range 0 number)])
-    (define enemy (cond ((= i 1) (new blindscraper%))
+    (define enemy (cond ((= i 2) (new blindscraper%))
                         (else (new bloodleech%))))
     (set! added-enemies (cons enemy added-enemies))
     
@@ -176,6 +172,27 @@
 (define (describe-situation world)
   (displayln (send (get-field current-location world) get-description))
   (newline))
+
+(define (describe-actor actor)
+  (define
+    description
+    (string-append
+     (send actor get-name)
+     ": "
+     (number->string (get-field hp actor))
+     " HP."
+     ))
+  (displayln description))
+
+(define (describe-situation-post-on-turn world)
+  (cond ((get-field in-combat world)
+         (displayln "You are in combat.")
+         (define current-location (get-field current-location world))
+         (define all-actors (get-field actors current-location))
+         (define enemies all-actors)
+         (map (λ (enemy) (describe-actor enemy))
+              enemies)
+         (newline))))
 
 (define (make-action-from-choice world choice)
   (define action ((choice-resolution-effect choice))) ; check actor
@@ -197,6 +214,12 @@
   (define generic-choices (send actor get-generic-choices world))
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
+
+(define (resolve-attack-action! world action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  "not implemented")
+  
 
 (define (resolve-player-action! world action)
   (define actor (get-field pc world)) ; dirty
@@ -233,17 +256,28 @@
     ['parry
      (displayln "TODO implement this action")]
     ['brawl
-     (define target (action-target action))
-     (define target-defense (get-field defense target))
-     (define attack-roll (d 2 6))
+     ; Resolve as attack action
+     (define result (resolve-attack-action! world action))
+     (displayln "brawl result:")
+     (displayln result)
+    ]
+    
+    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
+
+(define (resolve-enemy-action! world action)
+  (case (action-symbol action)
+    ['attack
+     (define target (get-field pc world))
+     (define target-defense 6) ; TODO: think! skills etc!
+     (define attack-roll (d 2 6)) ; TODO think! what do the enemies actually attack as?
      (define damage (d 1 2))
      (define successful? (>= attack-roll target-defense))
-                         
+
      (displayln (string-append
-                 "-- Brawl action: "
+                 "-- Enemy attack action: "
                  "Attack roll: 2d6 + skill = "
                  (number->string attack-roll)
-                 " against target defense: "
+                 " against PC defense: "
                  (number->string target-defense)
                  ))
      (when successful?
@@ -252,21 +286,12 @@
                      "Success, damage: "
                      (number->string damage)
                      " HP"))
-         (send target hit damage)
+         (define attack-action-result (send target hit damage))
+         (displayln attack-action-result)
          (displayln (string-append
-                     "Enemy has "
+                     "PC has "
                      (number->string (get-field hp target))
-                     " HP"))))
-     
-     ]
-    
-    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
-
-(define (resolve-enemy-action! world action)
-  (case (action-symbol action)
-    ['attack (begin
-               (displayln "hojo! enemy attack action!")
-               (newline))]
+                     " HP"))))]
     [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-action! world action)

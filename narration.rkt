@@ -57,9 +57,9 @@
   (displayln "Your progress should be saved. [[Not implemented yet]]"))
 
 (define (get-curse)
-  (take-random '("Death and decay!!"
+  (take-random '("Death and decay"
                  "Pain and suffering"
-                 "Rot and corrosion!")))
+                 "Rot and corrosion")))
 
 (define (get-narration-for-stab)
   (take-random '("You go for a stab. Aim at the soft underbelly."

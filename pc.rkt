@@ -37,7 +37,7 @@
               (set! combat-choices
                     (append combat-choices
                             (list (make-choice 'brawl
-                                               (string-append "Brawl with " (send target get-name) " (number " (number->string i) ")")
+                                               (string-append "Brawl with " (send target get-name) " (enemy #" (number->string i) ")")
                                                (λ () (make-action #:symbol 'brawl
                                                                   #:actor 'pc
                                                                   #:duration 1
@@ -46,7 +46,7 @@
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'parry
-                                             "Parry."
+                                             "Wait for an opening."
                                              (λ () (begin
                                                      (displayln "Should set temporary defense bonus!")
                                                      (make-action #:symbol 'parry
@@ -73,7 +73,7 @@
                         'u-ded)
                  'u-hit)))
     (define/public (get-status) (error "not implemented yet!"))
-    (define/public (get-name) "You.")
+    (define/public (get-name) "You")
     (define/public (get-a-hunch)
       (take-random '(
                      "You feel something is watching you.")))))

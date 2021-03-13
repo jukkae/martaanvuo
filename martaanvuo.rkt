@@ -130,7 +130,7 @@
   (begin-turn! *world*)
   (describe-situation *world*)
   (on-turn! *world*)
-  
+  (describe-situation-post-on-turn *world*)
   (define actions '())
   (define current-location (get-field current-location *world*))
   (define actors (get-field actors current-location))
