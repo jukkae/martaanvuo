@@ -21,8 +21,15 @@
   (set! *metaloop* (add1 *metaloop*)))
 
 (define (quit)
-  (narrate-quit)
-  (exit))
+  (newline)
+  (displayln "Really quit? [Q] to quit, anything else to continue.")
+  (define input (wait-for-input))
+  (newline)
+  (set! input (string-upcase input))
+  (cond ((eq? input "Q")
+         (narrate-quit)
+         (exit))
+        (else #t))) ; mark input as handled
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -43,6 +50,7 @@
   meta-commands)
 
 (define (wait-for-input)
+  (newline)
   (define input (read-line))
   input)
 
@@ -94,8 +102,6 @@
 
 (define (get-next-action actor)
   (cond ((is-a? actor pc%)
-         ;(displayln (syntax-source #'here))
-         ;(displayln (syntax-line #'here))
          (define choices (get-world-choices *world* actor))
          (define choices-with-keys (build-keys-to-choices-map choices))
          (print-choices-with-keys choices-with-keys)
@@ -104,28 +110,31 @@
          (print-meta-commands-with-keys meta-commands-with-keys)
 
          (displayln "What do you do?")
-         (newline)
 
          (define input (wait-for-input))
 
+         ; Actually, this should be a while loop:
+         ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-         (when (not handled?)
-           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
-         (when (not handled?)
-           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+         (cond (handled? (get-next-action actor))
+               (else
+                (when (not handled?)
+                  (set! handled? (try-to-handle-as-choice choices-with-keys input)))
+                (when (not handled?)
+                  (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
 
-         ; handled? should now contain a valid action
-         (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
+                ; handled? should now contain a valid action
+                (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
 
-         (define choice handled?) ; ta-dah
+                (define choice handled?) ; ta-dah
 
-         (define action (make-action-from-choice *world* choice))
-         (cond ((is-free? action)
-                (resolve-action! *world* action)
-                (newline)
-                (get-next-action actor)
-                )
-               (else action))
+                (define action (make-action-from-choice *world* choice))
+                (cond ((is-free? action)
+                       (resolve-action! *world* action)
+                       (newline)
+                       (get-next-action actor)
+                       )
+                      (else action))))
          )
         (else
          (define action (send actor get-next-action))
@@ -156,6 +165,7 @@
          (newline)
          (newline)
          (displayln "YOU ARE DEAD.")
+         (displayln "[[summary goes here]]")
          (end-game)))
 
   (end-turn! *world*)
