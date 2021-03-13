@@ -11,6 +11,7 @@
     (field [hp 4])
     (field [attack-skill 1])
     (field [inventory (list (new twine%))])
+    (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
 
     (super-new)
 
@@ -69,8 +70,12 @@
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
              (if (<= hp 0)
-                 (begin (set! hp 0)
-                        'u-ded)
+                 (if (= last-breaths-amount 0)
+                     (begin (set! hp 0)
+                            'u-ded)
+                     (begin (set! hp 0)
+                            (set! last-breaths-amount 0)
+                            'last-breath))
                  'u-hit)))
 
     (define/public (get-name) "You")

@@ -348,18 +348,34 @@
   
   result)
 
+(define (wait-for-confirm)
+  (newline)
+  (displayln "[Enter]")
+  (newline)
+  (define input (read-line))
+  input)
+
 (define (resolve-actions! world)
+  (define turn-exit-status 'ok)
   (while (not (empty? (get-field action-queue world)))
          (define action (car (get-field action-queue world)))
          (define result (resolve-action! world action))
 
+         (wait-for-confirm)
+
          (cond ((eq? result 'u-ded)
                 (displayln "You die.")
+                (set! turn-exit-status 'pc-dead)
+                (break))
+               ((eq? result 'last-breath)
+                (displayln "You are one hair's breadth from becoming void.")
+                (set! turn-exit-status 'last-breath)
                 (break)))
          (set-field! action-queue world
                      (if (pair? (get-field action-queue world))
                          (cdr (get-field action-queue world)) ; pop stack's topmost element
-                         '()))))
+                         '())))
+  turn-exit-status)
 
 (define (sort-actions! world)
   (send world sort-actions!))
