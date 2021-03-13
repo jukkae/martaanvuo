@@ -3,10 +3,10 @@
 ; goto
 (define-syntax label
   (syntax-rules ()
-           ((_ name)
-        (begin
-          (define name)
-          (call/cc (lambda (c) (set! name c)))))))
+    ((_ name)
+     (begin
+       (define name)
+       (call/cc (lambda (c) (set! name c)))))))
 
 (define (goto label) (label))
 

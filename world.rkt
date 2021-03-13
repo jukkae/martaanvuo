@@ -1,5 +1,7 @@
 #lang racket
 
+(require dyoo-while-loop)
+
 (require "actions.rkt")
 (require "actors.rkt")
 (require "creatures.rkt")
@@ -87,11 +89,6 @@
           (= (modulo (get-field turn world) 3) 0)
           (not (get-field in-combat world)))
          (begin (spawn-enemies world 3)))))
-
-(define (resolve-actions! world)
-  (map (λ (action)
-         (resolve-action! world action))
-       (get-field action-queue world)))
 
 (define (end-turn! world)
   #;(displayln (append-string "-- *world* : end-turn!")) '())
@@ -218,7 +215,34 @@
 (define (resolve-attack-action! world action)
   (define actor (action-actor action))
   (define target (action-target action))
-  "not implemented")
+  (when (eq? target 'pc) (set! target (get-field pc world)))
+  (define attack-skill 1)
+  (define target-defense 6)
+  (define attack-roll (+ (d 2 6) 1))
+  (define successful? (>= attack-roll target-defense))
+  (displayln
+   (string-append
+    "-- Attack action: "
+    "Attack roll: "
+    (number->string attack-roll)
+    " "
+    "Defense: "
+    (number->string target-defense)))
+  (cond (successful?
+         (define damage (d 1 2))
+         (displayln
+          (string-append
+           "Success, damage: "
+           (number->string damage)))
+         (define result (send target hit damage))
+         (displayln
+          (string-append
+           "Result: "
+           (symbol->string result)))
+         result)
+        (else
+         (displayln "Attack was unsuccessful.")
+         'failure)))
   
 
 (define (resolve-player-action! world action)
@@ -258,40 +282,18 @@
     ['brawl
      ; Resolve as attack action
      (define result (resolve-attack-action! world action))
-     (displayln "brawl result:")
-     (displayln result)
-    ]
+     result
+     ]
     
     [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-enemy-action! world action)
   (case (action-symbol action)
     ['attack
-     (define target (get-field pc world))
-     (define target-defense 6) ; TODO: think! skills etc!
-     (define attack-roll (d 2 6)) ; TODO think! what do the enemies actually attack as?
-     (define damage (d 1 2))
-     (define successful? (>= attack-roll target-defense))
-
-     (displayln (string-append
-                 "-- Enemy attack action: "
-                 "Attack roll: 2d6 + skill = "
-                 (number->string attack-roll)
-                 " against PC defense: "
-                 (number->string target-defense)
-                 ))
-     (when successful?
-       (begin
-         (displayln (string-append
-                     "Success, damage: "
-                     (number->string damage)
-                     " HP"))
-         (define attack-action-result (send target hit damage))
-         (displayln attack-action-result)
-         (displayln (string-append
-                     "PC has "
-                     (number->string (get-field hp target))
-                     " HP"))))]
+     ; Resolve as attack action
+     (define result (resolve-attack-action! world action))
+     result
+     ]
     [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-action! world action)
@@ -300,17 +302,25 @@
         (get-field pc world)
         (action-actor action)))
   
-  (if (is-a? actor pc%)
-      (resolve-player-action! world action)
-      (resolve-enemy-action! world action))
-  (set-field!
-   action-queue
-   world
-   (if (pair? (get-field action-queue world))
-       (cdr (get-field action-queue world)) ; pop stack's topmost element
-       '()))
-  #;(displayln "ACTION RESOLVED")
-  #;(displayln (get-field action-queue world)))
+  (define result
+    (if (is-a? actor pc%)
+        (resolve-player-action! world action)
+        (resolve-enemy-action! world action)))
+  
+  result)
+
+(define (resolve-actions! world)
+  (while (not (empty? (get-field action-queue world)))
+         (define action (car (get-field action-queue world)))
+         (define result (resolve-action! world action))
+
+         (cond ((eq? result 'u-ded)
+                (displayln "You die.")
+                (break)))
+         (set-field! action-queue world
+                    (if (pair? (get-field action-queue world))
+                        (cdr (get-field action-queue world)) ; pop stack's topmost element
+                        '()))))
 
 (define (add-action-to-queue world action)
   (define new-actions
