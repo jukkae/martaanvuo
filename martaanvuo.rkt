@@ -53,7 +53,8 @@
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v)))
+    (display (car v))
+    (display " "))
   (newline)
   (newline))
 
@@ -144,6 +145,11 @@
         (add-action-to-queue *world* action)))
 
   (resolve-actions! *world*)
+  (define pc (get-field pc *world*))
+  (define pc-alive? (> (get-field hp pc) 0))
+  (cond ((not pc-alive?)
+         (displayln "YOU ARE DEAD.")
+         (end-game)))
 
   (end-turn! *world*)
   (resolve-turn))
@@ -153,7 +159,22 @@
 
 (define (end-game)
   (newline)
-  (display "Do you want to try again? [Q] to quit, [R] to restart."))
+  (displayln "Do you want to try again? [Q] to quit, [R] to restart.")
+  (define choices-with-keys (make-hash)) ; TODO not needed
+  (define meta-commands-with-keys (make-hash))
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit))
+  (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
+  (print-meta-commands-with-keys meta-commands-with-keys)
+
+  (displayln "What do you do?")
+  (newline)
+
+  (define input (wait-for-input))
+
+  (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+  (when (not handled?)
+    (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+  )
 
 
 (define (restart) (meta-loop))
