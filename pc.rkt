@@ -83,10 +83,11 @@
       (take-random '(
                      "You feel something is watching you.")))
     (define/public (get-status)
-      (cond ((> hp 2) "")
+      (cond ((> hp 2) "You have nicks and bruises. Flesh wounds.")
             ((= hp 2) "You have broken bones, but you're still holding on.")
-            ((= hp 1) "You are badly hurt, but still breathing. Barely.")
-            ((= hp 0) "There is nothing but void. A thing that once was alive is no more.")))))
+            ((= hp 1) "You are badly hurt, but still breathing.")
+            ((= hp 0) "It's a miracle you're still alive.")
+            ((< hp 0) "There is nothing but the Dark. A thing that once was alive is no more.")))))
 
 
 (define *actors* (list (new pc%)))
