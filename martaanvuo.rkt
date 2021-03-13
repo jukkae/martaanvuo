@@ -158,6 +158,7 @@
         (resolve-action! *world* action)
         (add-action-to-queue *world* action)))
 
+  (sort-actions! *world*)
   (resolve-actions! *world*)
   (define pc (get-field pc *world*))
   (define pc-alive? (> (get-field hp pc) 0))

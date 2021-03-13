@@ -50,7 +50,18 @@
     (define/public (get-current-enemies)
       (define all-actors (get-field actors current-location))
       (set! all-actors (remove pc all-actors))
-      all-actors)))
+      all-actors)
+
+    (define/public (sort-actions!)
+      (set! action-queue (sort
+                          action-queue
+                          action-faster-than)))
+
+    ; return true if first is less, ie., sorted earlier, than second
+    ; ie., #t = action1 is faster than action2
+    (define (action-faster-than action1 action2)
+      (cond ((eq? (action-actor action1) 'pc) #t)
+            ((eq? (action-actor action2) 'pc) #f)))))
 
 (define (make-new-world)
   (define world (new world%))
@@ -349,6 +360,9 @@
                      (if (pair? (get-field action-queue world))
                          (cdr (get-field action-queue world)) ; pop stack's topmost element
                          '()))))
+
+(define (sort-actions! world)
+  (send world sort-actions!))
 
 (define (add-action-to-queue world action)
   (define new-actions

@@ -42,18 +42,18 @@
                                                                   #:actor 'pc
                                                                   #:duration 1
                                                                   #:target target
-                                                                  #:tags '(combat delayed-resolution))))))))
+                                                                  #:tags '(combat fast delayed-resolution))))))))
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'parry
-                                             "Wait for an opening and try to react."
+                                             "Wait for an opening, then strike."
                                              (λ () (begin
                                                      (displayln "Should set temporary defense bonus!")
                                                      (make-action #:symbol 'parry
                                                                   #:actor 'pc
                                                                   #:duration 1
                                                                   #:target null
-                                                                  #:tags '(combat delayed-resolution))))))))
+                                                                  #:tags '(combat slow delayed-resolution))))))))
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'run
