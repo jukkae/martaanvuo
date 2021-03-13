@@ -26,7 +26,7 @@
   (define input (wait-for-input))
   (newline)
   (set! input (string-upcase input))
-  (cond ((eq? input "Q")
+  (cond ((equal? input "Q")
          (narrate-quit)
          (exit))
         (else #t))) ; mark input as handled
@@ -165,6 +165,7 @@
          (newline)
          (newline)
          (displayln "YOU ARE DEAD.")
+         (displayln "TODO: last chances for the player if multiple hits come through in the same turn")
          (displayln "[[summary goes here]]")
          (end-game)))
 
@@ -182,9 +183,8 @@
   ;(print-meta-commands-with-keys meta-commands-with-keys)
 
   (newline)
-  (displayln "Do you want to try again? [Q] to quit, [R] to restart.")
+  (displayln "[Q] to quit, [R] to restart.")
 
-  (newline)
 
   (define input (wait-for-input))
 

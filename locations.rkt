@@ -7,6 +7,7 @@
 (define location<%>
   (interface ()
     get-description
+    get-combat-summary
     advance-to-next-description!
     get-interaction-choices
     get-exit-choices
@@ -35,6 +36,9 @@
     (define/public (get-description)
       (get-procedural-description))
 
+    (define/public (get-combat-summary)
+      "TODO: Location combat summary")
+
     (define/public (advance-to-next-description!) (set! times-described (add1 times-described)))
 
     (define/private (get-scripted-description) (list-ref scripted-descriptions times-described))
@@ -43,12 +47,12 @@
       (define biome-description
         (cond ((eq? biome 'blackpine-forest) "You are in a blackpine forest.")
               ((eq? biome 'spruce-forest) "You are in a spruce forest.")
-              ((eq? biome 'swamp) "The soil is wet underneath your feet. The sparse reeds sway gently in the cool wind.")
+              ((eq? biome 'swamp) "The soil is wet and it's difficult to walk. The sparse reeds sway gently in the cool wind.")
               ((eq? biome 'larch-forest) "You are in a forest dominated by larches.")
               ((eq? biome 'scrub) "You are in a thorny scrub. The ancient bushes are gnarled and seem hostile to trespassers.")
               ((eq? biome 'dead-vegetation) "Few long-dead, dried-out trunks of trees dot the landscape. Here and there you see small tufts of dead grass.")
-              ((eq? biome 'barren) "There's nothing around but rocks and stones. There's nothing that looks remotely alive nearby.")
-              ((eq? biome 'sparse) "Some branches jut from the ground, living on what? You don't know.")
+              ((eq? biome 'barren) "There's nothing around but rocks and stones.")
+              ((eq? biome 'sparse) "Some branches jut from the ground.")
               (else (error
                      (string-append
                       "locations.rkt: get-procedural-description: unknown biome: "
@@ -56,7 +60,7 @@
       (define topography-description
         (cond ((eq? topography 'flat) "")
               ((eq? topography 'cragged) "There are jagged rocks around.")
-              ((eq? topography 'highlands) "The rolling hills make it hard to judge distances.")
+              ((eq? topography 'highlands) "It is hilly.")
               (else (error "locations.rkt: get-procedural-description: unknown topography"))))
       (define features-description
         (if (not (null? features))

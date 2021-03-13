@@ -88,7 +88,7 @@
   (cond ((and
           (= (modulo (get-field turn world) 3) 0)
           (not (get-field in-combat world)))
-         (begin (spawn-enemies world 3)))))
+         (begin (spawn-enemies world 2)))))
 
 (define (end-turn! world)
   #;(displayln (append-string "-- *world* : end-turn!")) '())
@@ -153,7 +153,7 @@
   (define location (get-field current-location world))
   (define added-enemies '())
   (for ([i (in-range 0 number)])
-    (define enemy (cond ((= i 2) (new blindscraper%))
+    (define enemy (cond ((= i 0) (new blindscraper%))
                         (else (new bloodleech%))))
     (set! added-enemies (cons enemy added-enemies))
     
@@ -167,13 +167,21 @@
                 (get-field inventory pc)))))
 
 (define (describe-situation world)
-  (displayln (send (get-field current-location world) get-description))
-  (newline))
+  (define in-combat (get-field in-combat world))
+  (cond ((not in-combat)
+         (displayln (send (get-field current-location world) get-description))
+         (newline))
+        (in-combat
+         (displayln (send (get-field current-location world) get-combat-summary))
+         (newline))))
 
-(define (describe-actor actor)
+(define (describe-enemy actor index)
   (define
     description
     (string-append
+     "#"
+     (number->string (add1 index))
+     ": "
      (send actor get-name)
      ": "
      (number->string (get-field hp actor))
@@ -188,6 +196,8 @@
   (cond ((get-field in-combat world)
          (define pc (get-field pc world))
          (displayln (string-append "You are in combat."
+                                   " "
+                                   (send pc get-status)
                                    " ("
                                    (number->string (get-field hp pc))
                                    " HP)"))
@@ -195,8 +205,9 @@
          (define current-location (get-field current-location world))
          (define all-actors (get-field actors current-location))
          (define enemies (filter enemy? all-actors))
-         (map (λ (enemy) (describe-actor enemy))
-              enemies)
+         (for ([i (in-range 0 (length enemies))])
+           (define enemy (list-ref enemies i))
+           (describe-enemy enemy i))
          (newline))))
 
 (define (make-action-from-choice world choice)
@@ -335,9 +346,9 @@
                 (displayln "You die.")
                 (break)))
          (set-field! action-queue world
-                    (if (pair? (get-field action-queue world))
-                        (cdr (get-field action-queue world)) ; pop stack's topmost element
-                        '()))))
+                     (if (pair? (get-field action-queue world))
+                         (cdr (get-field action-queue world)) ; pop stack's topmost element
+                         '()))))
 
 (define (add-action-to-queue world action)
   (define new-actions
