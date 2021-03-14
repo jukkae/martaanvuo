@@ -14,9 +14,9 @@
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
-    (field [in-combat #f]) ; situational
-    (field [elapsed-time 0]) ; jiffies
-    (field [time-of-day 'midday])
+    (field [in-combat #f]) ; situational - move outside of class, this is an interpret-the-situation type of function
+    (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. Relevant to times to around couple hours or so. Then ->
+    (field [time-of-day 'midday]) ; -> for longer periods of time, track days
     (field [locations (make-hash)])
     (field [current-location '()]) ; should be defined to (send pc get-current-location)
 
@@ -51,8 +51,6 @@
       (define all-actors (get-field actors current-location))
       (set! all-actors (remove pc all-actors))
       all-actors)
-
-    (define/public (clean-up-bodies!) (displayln "todo: end of round stuff"))
       
 
     (define/public (sort-actions!)
@@ -105,9 +103,9 @@
          (begin (spawn-enemies world 1)))))
 
 (define (end-turn! world)
-  (displayln (append-string "-- *world* : end-turn!"))
-  (send world clean-up-bodies!)
-  ; if no enemies alive -> set in-combat to false
+  (define enemies (send world get-current-enemies))
+  (when (= (length enemies) 0)
+    (set-field! in-combat world #f))
   '())
 
 
@@ -252,6 +250,7 @@
 (define (resolve-attack-action! world action)
   (define actor (action-actor action))
   (define target (action-target action))
+  (define location (get-field current-location world))
   (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
   (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
   (define attack-skill 1)
@@ -285,6 +284,11 @@
           (string-append
            "Result: "
            (symbol->string result)))
+         (cond ((eq? result 'dead)
+                (displayln "ENEMY DEAD")
+                (send location remove-actor! target)
+                ; TODO: Add enemy corpse
+                ))
          result)
         (else
          (displayln "Attack was unsuccessful.")
