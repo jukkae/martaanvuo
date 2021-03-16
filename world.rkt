@@ -103,7 +103,9 @@
   (cond ((and
           (= (modulo (get-field turn world) 3) 0)
           (not (get-field in-combat world)))
-         (begin (spawn-enemies world 1)))))
+         (begin
+           (define challenge-rating (d 1 2))
+           (spawn-enemies world challenge-rating)))))
 
 (define (end-turn! world)
   (define pc (get-field pc world))
@@ -170,8 +172,9 @@
   on-spawn-message)
   
 
-(define (spawn-enemies world number)
+(define (spawn-enemies world challenge-rating)
   (define location (get-field current-location world))
+  (define number challenge-rating)
   (define added-enemies '())
   (for ([i (in-range 0 number)])
     (define r (d 1 2))
@@ -257,8 +260,12 @@
   (define actor (action-actor action))
   (define target (action-target action))
   (define location (get-field current-location world))
+  (define enemies (send world get-current-enemies))
+  
   (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
+  (when (eq? target 'random) (set! target (take-random enemies)))
   (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
+
   (define attack-skill 1)
   (define target-defense (send target get-current-defense))
   (define attack-roll (+ (d 2 6) 0))
