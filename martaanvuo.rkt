@@ -219,7 +219,7 @@
 
   (game-ended-loop))
 
-(define (restart) (meta-loop))
+(define (restart) (meta-loop)) ; Dirty, should implement state-machine-like interface for global state transitions
 
 (define (meta-loop)
   ;begin new run

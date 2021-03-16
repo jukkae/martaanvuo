@@ -104,6 +104,9 @@
          (begin (spawn-enemies world 1)))))
 
 (define (end-turn! world)
+  (define pc (get-field pc world))
+  (send pc clear-statuses!)
+
   (define enemies (send world get-current-enemies))
   (when (= (length enemies) 0)
     (set-field! in-combat world #f))
@@ -255,7 +258,7 @@
   (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
   (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
   (define attack-skill 1)
-  (define target-defense 6)
+  (define target-defense (send target get-current-defense))
   (define attack-roll (+ (d 2 6) 1))
   (define successful? (>= attack-roll target-defense))
   (define attacker-name (send actor get-name))

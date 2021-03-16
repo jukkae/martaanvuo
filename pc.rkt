@@ -8,13 +8,29 @@
 
 (define pc%
   (class* object% (actor<%>)
+    (field [max-hp 4])
     (field [hp 4])
+    (field [base-defense 6])
     (field [attack-skill 1])
     (field [inventory (list (new twine%))])
     (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
+    (field [current-statuses '()])
 
     (super-new)
 
+    (define/public (get-current-defense)
+      (cond ((memq 'parrying current-statuses)
+             (add1 base-defense))
+            (else base-defense)))
+
+    (define/public (add-status! status)
+      (set! current-statuses (cons status current-statuses)))
+    (define/public (remove-status! status)
+      (set! current-statuses status))
+    (define/public (clear-statuses!)
+      (set! current-statuses '()))
+
+      
     (define/public (get-brawl-damage) (d 1 2))
     (define/public (get-next-command world) '())
     (define/public (get-generic-choices world)
@@ -49,7 +65,8 @@
                           (list (make-choice 'parry
                                              "Wait for an opening, then strike."
                                              (λ () (begin
-                                                     (displayln "Should set temporary defense bonus!")
+                                                     (displayln "Setting temporary defense bonus.")
+                                                     (add-status! 'parrying)
                                                      (make-action #:symbol 'parry
                                                                   #:actor 'pc
                                                                   #:duration 1
