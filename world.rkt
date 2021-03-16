@@ -58,6 +58,8 @@
       (set! action-queue (sort
                           action-queue
                           action-faster-than)))
+    (define/public (clear-action-queue!)
+      (set! action-queue '()))
 
     ; return true if first is less, ie., sorted earlier, than second
     ; ie., #t = action1 is faster than action2
@@ -438,7 +440,7 @@
                ((eq? result 'last-breath)
                 (displayln "You are one hair's breadth from becoming one with the Dark.")
                 (set! turn-exit-status 'last-breath)
-                ; TODO: Action queue handling?
+                (send world clear-action-queue!)
                 (break)))
          (set-field! action-queue world
                      (if (pair? (get-field action-queue world))
