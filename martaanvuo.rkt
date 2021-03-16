@@ -24,12 +24,13 @@
   (newline)
   (displayln "Really quit? [Q] to quit, anything else to continue.")
   (define input (wait-for-input))
-  (newline)
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
          (narrate-quit)
          (exit))
-        (else #t))) ; mark input as handled
+        (else
+         (newline)
+         #t))) ; mark input as handled
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -142,36 +143,40 @@
 
 
 (define (resolve-turn)
-  (begin-turn! *world*)
-  (describe-situation *world*)
-  (on-turn! *world*)
-  (describe-situation-post-on-turn *world*)
-  (define actions '())
-  (define current-location (get-field current-location *world*))
-  (define actors (get-field actors current-location))
+  (cond ((eq? (get-field status *world*) 'active)
+         (begin-turn! *world*)
+         (describe-situation *world*)
+         (on-turn! *world*)
+         (describe-situation-post-on-turn *world*)
+         (define actions '())
+         (define current-location (get-field current-location *world*))
+         (define actors (get-field actors current-location))
   
-  (for ([i (in-range (length actors))])
-    (define actor (list-ref actors i))
-    (define action (get-next-action actor))
+         (for ([i (in-range (length actors))])
+           (define actor (list-ref actors i))
+           (define action (get-next-action actor))
 
-    (if (resolve-instantly? action)
-        (resolve-action! *world* action)
-        (add-action-to-queue *world* action)))
+           (if (resolve-instantly? action)
+               (resolve-action! *world* action)
+               (add-action-to-queue *world* action)))
 
-  (sort-actions! *world*)
-  (define turn-exit-status (resolve-actions! *world*))
-  (cond ((eq? turn-exit-status 'last-chance)
-         (displayln "LAST CHANCE")
-         (displayln "(w/ a hidden saving throw, naturally, but not until when resolving the choice)"))
-        ((eq? turn-exit-status 'pc-dead)
-         (newline)
-         (newline)
-         (displayln "YOU ARE DEAD.")
-         (displayln "[[summary goes here]]")
-         (end-game)))
+         (sort-actions! *world*)
+         (define turn-exit-status (resolve-actions! *world*))
+         (cond ((eq? turn-exit-status 'last-chance)
+                (displayln "LAST CHANCE")
+                (displayln "(w/ a hidden saving throw, naturally, but not until when resolving the choice)"))
+               ((eq? turn-exit-status 'pc-dead)
+                (set-field! status *world* 'ended)
+                (newline)
+                (newline)
+                (displayln "YOU ARE DEAD.")
+                (displayln "[[summary goes here]]")
+                (end-game)))
 
-  (end-turn! *world*)
-  (resolve-turn))
+         (end-turn! *world*)
+         (resolve-turn))
+        ((eq? (get-field status *world*) 'ended)
+         (game-ended-loop))))
 
 
 
@@ -179,7 +184,7 @@
 (define (end-game)
   (define choices-with-keys (make-hash)) ; TODO not needed
   (define meta-commands-with-keys (make-hash))
-  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit))
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
   (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
   ;(print-meta-commands-with-keys meta-commands-with-keys)
 
@@ -195,6 +200,25 @@
   )
 
 
+(define (game-ended-loop)
+  (define choices-with-keys (make-hash)) ; TODO not needed
+  (define meta-commands-with-keys (make-hash))
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
+  (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
+  ;(print-meta-commands-with-keys meta-commands-with-keys)
+
+  (newline)
+  (displayln "[Q] to quit, [R] to restart.")
+
+
+  (define input (wait-for-input))
+
+  (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+  (when (not handled?)
+    (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+
+  (game-ended-loop))
+
 (define (restart) (meta-loop))
 
 (define (meta-loop)
@@ -203,6 +227,7 @@
   (narrate-run-number *metaloop*)
 
   (resolve-turn)
+
   (error "meta-loop: resolve-turn should not exit recursion"))
 
 (define (startup)

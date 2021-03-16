@@ -52,6 +52,7 @@
   (displayln "A new game begins."))
 
 (define (narrate-quit)
+  (newline)
   (displayln "You quit.")
   (newline)
   (displayln "Your progress should be saved. [[Not implemented yet]]"))

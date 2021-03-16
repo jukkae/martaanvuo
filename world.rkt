@@ -14,6 +14,7 @@
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
+    (field [status 'active]) ; meta - possible values currently 'active and 'ended
     (field [in-combat #f]) ; situational - move outside of class, this is an interpret-the-situation type of function
     (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. Relevant to times to around couple hours or so. Then ->
     (field [time-of-day 'midday]) ; -> for longer periods of time, track days
@@ -384,8 +385,9 @@
                 (set! turn-exit-status 'pc-dead)
                 (break))
                ((eq? result 'last-breath)
-                (displayln "You are one hair's breadth from becoming void.")
+                (displayln "You are one hair's breadth from becoming one with the Dark.")
                 (set! turn-exit-status 'last-breath)
+                ; TODO: Action queue handling?
                 (break)))
          (set-field! action-queue world
                      (if (pair? (get-field action-queue world))
