@@ -64,9 +64,8 @@
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'parry
-                                             (string-append "Wait for an opening, then strike whomever you can.")
+                                             (string-append "Wait for an opening.")
                                              (λ () (begin
-                                                     (displayln "Setting temporary defense bonus.")
                                                      (add-status! 'parrying)
                                                      (make-action #:symbol 'defensive-strike
                                                                   #:actor 'pc

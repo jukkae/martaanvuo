@@ -1,6 +1,7 @@
 #lang racket
 
 (require "actions.rkt")
+(require "utils.rkt")
 
 (define creature<%> (interface () get-name get-name-with-article get-description get-next-action get-status hit))
 (define bloodleech%
@@ -40,11 +41,20 @@
     (define/public (get-name-with-article) "a Blindscraper")
     (define/public (get-description) "It looks vaguely insect-like, a tangly mess of appendages. At the end of each of its fingers there's a claw.")
     (define/public (get-next-action)
-      (make-action #:symbol 'attack
-                   #:actor this
-                   #:duration 1
-                   #:target 'pc
-                   #:tags '(delayed-resolution)))
+      (define roll (d 1 2))
+      (cond ((= roll 1)
+             (make-action #:symbol 'wait
+                          #:actor this
+                          #:duration 1
+                          #:target null
+                          #:tags '(delayed-resolution))
+             )
+            ((= roll 2)
+             (make-action #:symbol 'attack
+                          #:actor this
+                          #:duration 1
+                          #:target 'pc
+                          #:tags '(delayed-resolution)))))
     (define/public (hit dmg)
       (begin (set! hp (- hp dmg))
              (if (<= hp 0)

@@ -411,6 +411,11 @@
             (define result (resolve-attack-action! world action))
             result
             ]
+           ['wait
+            (define result null)
+            (displayln "It doesn't do anything.")
+            result
+            ]
            [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
 
 (define (resolve-action! world action)
