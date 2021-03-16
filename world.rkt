@@ -251,6 +251,53 @@
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
+(define (resolve-defensive-attack-action! world action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define location (get-field current-location world))
+  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
+  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
+  (define attack-skill 1)
+  (define target-defense (send target get-current-defense))
+  (define attack-roll (+ (d 2 6) 0))
+  (define successful? (>= attack-roll target-defense))
+  (define attacker-name (send actor get-name))
+  (define target-name (send target get-name))
+
+  (displayln
+   (string-append
+    "-- Defensive attack action: "
+    attacker-name
+    " attacks "
+    target-name))
+  (displayln
+   (string-append
+    "Attack roll: "
+    (number->string attack-roll)
+    " "
+    "against Defense: "
+    (number->string target-defense)))
+  (cond (successful?
+         (define damage (d 1 1))
+         (displayln
+          (string-append
+           "Success, damage: "
+           (number->string damage)))
+         (define result (send target hit damage))
+         (displayln
+          (string-append
+           "Result: "
+           (symbol->string result)))
+         (cond ((eq? result 'dead)
+                (displayln "ENEMY DEAD")
+                (send location remove-actor! target)
+                ; TODO: Add enemy corpse
+                ))
+         result)
+        (else
+         (displayln "Attack was unsuccessful.")
+         'failure)))
+
 (define (resolve-attack-action! world action)
   (define actor (action-actor action))
   (define target (action-target action))
@@ -331,8 +378,9 @@
        (set-field! current-location world (action-target action))
        (send (get-field current-location world) add-actor! actor) ; ungh
        (send (get-field current-location world) on-enter!))]
-    ['parry
-     (displayln "TODO implement this action")]
+    ['defensive-strike
+     (define result (resolve-defensive-attack-action! world action))
+     result]
     ['brawl
      ; Resolve as attack action
      (define result (resolve-attack-action! world action))

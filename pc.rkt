@@ -59,19 +59,19 @@
                                                                   #:actor 'pc
                                                                   #:duration 1
                                                                   #:target target
-                                                                  #:tags '(combat fast delayed-resolution))))))))
-            (set! combat-choices
+                                                                  #:tags '(combat fast delayed-resolution)))))))
+              (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'parry
-                                             "Wait for an opening, then strike."
+                                             (string-append "Wait for an opening, then strike the " (send target get-name) " (enemy #" (number->string (add1 i)) ")")
                                              (λ () (begin
                                                      (displayln "Setting temporary defense bonus.")
                                                      (add-status! 'parrying)
-                                                     (make-action #:symbol 'parry
+                                                     (make-action #:symbol 'defensive-strike
                                                                   #:actor 'pc
                                                                   #:duration 1
-                                                                  #:target null
-                                                                  #:tags '(combat slow delayed-resolution))))))))
+                                                                  #:target target ; TODO this should rather have target null and resolve it to attacker
+                                                                  #:tags '(combat slow delayed-resolution)))))))))
             (set! combat-choices
                   (append combat-choices
                           (list (make-choice 'run
