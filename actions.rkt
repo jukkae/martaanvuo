@@ -37,5 +37,8 @@
       #t
       #f))
 
+(define (has-tag? action tag)
+  (memq tag (action-tags action)))
+
 
 (provide (all-defined-out))

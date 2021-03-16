@@ -64,7 +64,9 @@
     ; return true if first is less, ie., sorted earlier, than second
     ; ie., #t = action1 is faster than action2
     (define (action-faster-than action1 action2)
-      (cond ((eq? (action-actor action1) 'pc) #t)
+      (cond ((has-tag? action1 'slow) #f)
+            ((has-tag? action1 'slow) #t)
+            ((eq? (action-actor action1) 'pc) #t)
             ((eq? (action-actor action2) 'pc) #f)))))
 
 (define (make-new-world)
