@@ -88,11 +88,11 @@
   world)
 
 (define (advance-time! world jiffies)
-  (define new-elapsed-time (+ (get-field elapsed-time world)
-                              jiffies))
-  (set-field! elapsed-time
-              world
-              new-elapsed-time))
+  (for ([t jiffies])
+    (define new-elapsed-time (add1 (get-field elapsed-time world)))
+    (set-field! elapsed-time
+                world
+                new-elapsed-time)))
 
 (define (begin-turn! world)
   (set-field! turn
