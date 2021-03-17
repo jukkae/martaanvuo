@@ -184,7 +184,7 @@
 (define (end-game)
   (define choices-with-keys (make-hash)) ; TODO not needed
   (define meta-commands-with-keys (make-hash))
-  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
   ;(print-meta-commands-with-keys meta-commands-with-keys)
 
@@ -203,7 +203,7 @@
 (define (game-ended-loop)
   (define choices-with-keys (make-hash)) ; TODO not needed
   (define meta-commands-with-keys (make-hash))
-  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
   ;(print-meta-commands-with-keys meta-commands-with-keys)
 

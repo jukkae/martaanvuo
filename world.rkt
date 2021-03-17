@@ -363,14 +363,14 @@
     ['search
      (begin
        (define loot (send (get-field current-location world) search))
-       (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
+       (cond ((eq? loot '()) (displayln "You find nothing of interest."))
              (else
               (newline)
               (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
               (newline)
               (displayln (string-append "You pick up the " (send loot get-short-description) "."))
               (set-field! inventory actor (cons loot (get-field inventory actor)))
-              (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
+              #;(when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
        (newline)
        (advance-time! world (action-duration action)))]
     ['forage

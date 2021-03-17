@@ -12,7 +12,7 @@
     (field [hp 4])
     (field [base-defense 6])
     (field [attack-skill 1])
-    (field [inventory (list (new twine%))])
+    (field [inventory '()])
     (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
     (field [current-statuses '()])
 

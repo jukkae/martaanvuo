@@ -159,10 +159,8 @@
       (set! searched? #t)
       (define target-number 6)
       (define critical 10)
-      (define loot (cond ((> roll critical) (new amulet%))
-                         ((> roll target-number) (new knife%))
-                         (else 'nothing)))
-      loot)))
+      
+      '())))
 
 (define (make-location #:index i)
   (define location (new location% [index i]))
