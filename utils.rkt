@@ -1,5 +1,15 @@
 #lang racket
 
+; goto
+(define-syntax label
+  (syntax-rules ()
+    ((_ name)
+     (begin
+       (define name)
+       (call/cc (lambda (c) (set! name c)))))))
+
+(define (goto label) (label))
+
 ; dice shorthand
 (define (d n sides)
   (for/sum ([i n])

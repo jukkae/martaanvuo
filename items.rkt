@@ -41,15 +41,5 @@
     (define/public (get-condition) 'good)))
 
 
-; TODO: define in terms of describable<%>
-(define (get-list-inline-description list)
-  (if (empty? list)
-      "nothing"
-      (string-append (send (car list) get-inline-description)
-                     (cond ((= (length list) 1) "")
-                           ((= (length list) 2) (string-append " and " (get-list-inline-description (cdr list))))
-                           (else (string-append ", " (get-list-inline-description (cdr list))))))))
-
-
 (provide (all-defined-out))
 

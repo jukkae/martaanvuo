@@ -13,16 +13,24 @@
 (require "world.rkt")
 
 ; globals and state
-(define *world* (make-new-world))
-(define *metaloop* 1)
+(define *world* '())
+(define *metaloop* 0)
 
 (define (reset-meta)
-  (reset-state *world*)
+  (set! *world* (make-new-world))
   (set! *metaloop* (add1 *metaloop*)))
 
 (define (quit)
-  (narrate-quit)
-  (exit))
+  (newline)
+  (displayln "Really quit? [Q] to quit, anything else to continue.")
+  (define input (wait-for-input))
+  (set! input (string-upcase input))
+  (cond ((equal? input "Q")
+         (narrate-quit)
+         (exit))
+        (else
+         (newline)
+         #t))) ; mark input as handled
 
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
@@ -30,12 +38,12 @@
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-(define (build-keys-to-actions-map actions)
-  (define actions-with-keys (make-hash))
-  (for ([i (in-range (length actions))])
+(define (build-keys-to-choices-map choices)
+  (define choices-with-keys (make-hash))
+  (for ([i (in-range (length choices))])
     (define key (key-from-index i))
-    (hash-set! actions-with-keys key (list-ref actions i)))
-  actions-with-keys)
+    (hash-set! choices-with-keys key (list-ref choices i)))
+  choices-with-keys)
 
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
@@ -43,17 +51,19 @@
   meta-commands)
 
 (define (wait-for-input)
+  (newline)
   (define input (read-line))
   input)
 
-(define (print-actions-with-keys actions-with-keys)
-  (for ([(k v) (in-hash actions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (action-name v))))
+(define (print-choices-with-keys choices-with-keys)
+  (for ([(k v) (in-hash choices-with-keys)])
+    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
   (newline))
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v)))
+    (display (car v))
+    (display " "))
   (newline)
   (newline))
 
@@ -69,15 +79,15 @@
              #t)
       #f))
 
-(define (try-to-handle-as-proper-action valid-actions-with-keys input)
-  (define action (hash-ref valid-actions-with-keys (string->number input) '()))
-  (if (not (null? action))
-      action
+(define (try-to-handle-as-choice valid-choices-with-keys input)
+  (define choice (hash-ref valid-choices-with-keys (string->number input) '()))
+  (if (not (null? choice))
+      choice
       #f))
 
-(define (pebkac-loop actions-with-keys meta-commands-with-keys)
+(define (pebkac-loop choices-with-keys meta-commands-with-keys)
   (display "Unknown command. Known commands: ")
-  (for ([(k v) (in-hash actions-with-keys)]) (display k))
+  (for ([(k v) (in-hash choices-with-keys)]) (display k))
   (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
   (newline)
   
@@ -86,75 +96,138 @@
   (while (null? handled?)
          (set! handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
          (when (not handled?)
-           (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
+           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
          (when (not handled?)
-           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys))))
+           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys))))
   handled?)
 
 (define (get-next-action actor)
   (cond ((is-a? actor pc%)
-         (define actions (get-world-actions *world* actor))
-         (define actions-with-keys (build-keys-to-actions-map actions))
-         (print-actions-with-keys actions-with-keys)
+         (define choices (get-world-choices *world* actor))
+         (define choices-with-keys (build-keys-to-choices-map choices))
+         (print-choices-with-keys choices-with-keys)
 
          (define meta-commands-with-keys (get-meta-commands-with-keys))
          (print-meta-commands-with-keys meta-commands-with-keys)
 
          (displayln "What do you do?")
-         (newline)
 
          (define input (wait-for-input))
 
+         ; Actually, this should be a while loop:
+         ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-         (when (not handled?)
-           (set! handled? (try-to-handle-as-proper-action actions-with-keys input)))
-         (when (not handled?)
-           (set! handled? (pebkac-loop actions-with-keys meta-commands-with-keys)))
+         (cond (handled? (get-next-action actor))
+               (else
+                (when (not handled?)
+                  (set! handled? (try-to-handle-as-choice choices-with-keys input)))
+                (when (not handled?)
+                  (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
 
-         ; handled? should now contain a valid action
-         (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy
-    
-         (define action handled?) ; ta-dah
-         action)
-        (else 'some-npc-action)))
+                ; handled? should now contain a valid action
+                (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
 
+                (define choice handled?) ; ta-dah
 
-
+                (define action (make-action-from-choice *world* choice))
+                (cond ((is-free? action)
+                       (resolve-action! *world* action)
+                       (newline)
+                       (get-next-action actor)
+                       )
+                      (else action))))
+         )
+        (else
+         (define action (send actor get-next-action))
+         action)))
 
 
 (define (resolve-turn)
-  (begin-turn! *world*)
-  (describe-situation *world*)
+  (cond ((eq? (get-field status *world*) 'active)
+         (begin-turn! *world*)
+         (describe-situation *world*)
+         (on-turn! *world*)
+         (describe-situation-post-on-turn *world*)
+         (define actions '())
+         (define current-location (get-field current-location *world*))
+         (define actors (get-field actors current-location))
   
-  (define actions '())
-  (for ([i (in-range (length *actors*))])
-    (define actor (list-ref *actors* i))
-    (define action (get-next-action actor))
-    (if (resolve-instantly? action)
-        (resolve-action! *world* action actor)
-        (add-action-to-queue *world* action actor)))
-  ; TODO sort by initiative
-  (resolve-actions! *world* *action-queue*)
+         (for ([i (in-range (length actors))])
+           (define actor (list-ref actors i))
+           (define action (get-next-action actor))
 
-  (end-turn! *world*)
-  (resolve-turn))
+           (if (resolve-instantly? action)
+               (resolve-action! *world* action)
+               (add-action-to-queue *world* action)))
+
+         (sort-actions! *world*)
+         (define turn-exit-status (resolve-actions! *world*))
+         (cond ((eq? turn-exit-status 'last-chance)
+                (displayln "LAST CHANCE")
+                (displayln "(w/ a hidden saving throw, naturally, but not until when resolving the choice)"))
+               ((eq? turn-exit-status 'pc-dead)
+                (set-field! status *world* 'ended)
+                (newline)
+                (newline)
+                (displayln "YOU ARE DEAD.")
+                (displayln "[[summary goes here]]")
+                (end-game)))
+
+         (end-turn! *world*)
+         (resolve-turn))
+        ((eq? (get-field status *world*) 'ended)
+         (game-ended-loop))))
 
 
 
 
 (define (end-game)
+  (define choices-with-keys (make-hash)) ; TODO not needed
+  (define meta-commands-with-keys (make-hash))
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
+  (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
+  ;(print-meta-commands-with-keys meta-commands-with-keys)
+
   (newline)
-  (display "Do you want to try again? [Q] to quit, [R] to restart."))
+  (displayln "[Q] to quit, [R] to restart.")
 
 
-(define (restart) (meta-loop))
+  (define input (wait-for-input))
+
+  (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+  (when (not handled?)
+    (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+  )
+
+
+(define (game-ended-loop)
+  (define choices-with-keys (make-hash)) ; TODO not needed
+  (define meta-commands-with-keys (make-hash))
+  (hash-set! meta-commands-with-keys "Q" (cons "[Q]: Quit." quit)) ; TODO can cancel from here back to game
+  (hash-set! meta-commands-with-keys "R" (cons "[R]: Restart." restart))
+  ;(print-meta-commands-with-keys meta-commands-with-keys)
+
+  (newline)
+  (displayln "[Q] to quit, [R] to restart.")
+
+
+  (define input (wait-for-input))
+
+  (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+  (when (not handled?)
+    (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+
+  (game-ended-loop))
+
+(define (restart) (meta-loop)) ; Dirty, should implement state-machine-like interface for global state transitions
 
 (define (meta-loop)
   ;begin new run
-  ;(reset-meta)
+  (reset-meta)
   (narrate-run-number *metaloop*)
 
   (resolve-turn)
+
   (error "meta-loop: resolve-turn should not exit recursion"))
 
 (define (startup)
