@@ -33,8 +33,7 @@
     
     (super-new)
 
-    (define/public (get-description)
-      (get-procedural-description))
+    (define/public (get-description) (string-append (symbol->string biome) ", " (symbol->string topography)))
 
     (define/public (get-combat-summary)
       "TODO: Location combat summary")
@@ -43,54 +42,8 @@
 
     (define/private (get-scripted-description) (list-ref scripted-descriptions times-described))
 
-    (define/private (get-procedural-description)
-      (define biome-description
-        (cond ((eq? biome 'blackpine-forest) "You are in a blackpine forest.")
-              ((eq? biome 'spruce-forest) "You are in a spruce forest.")
-              ((eq? biome 'swamp) "The soil is wet and it's difficult to walk. The sparse reeds sway gently in the cool wind.")
-              ((eq? biome 'larch-forest) "You are in a forest dominated by larches.")
-              ((eq? biome 'scrub) "You are in a thorny scrub. The ancient bushes are gnarled and seem hostile to trespassers.")
-              ((eq? biome 'dead-vegetation) "Few long-dead, dried-out trunks of trees dot the landscape. Here and there you see small tufts of dead grass.")
-              ((eq? biome 'barren) "There's nothing around but rocks and stones.")
-              ((eq? biome 'sparse) "Some branches jut from the ground.")
-              (else (error
-                     (string-append
-                      "locations.rkt: get-procedural-description: unknown biome: "
-                      (symbol->string biome))))))
-      (define topography-description
-        (cond ((eq? topography 'flat) "")
-              ((eq? topography 'cragged) "There are jagged rocks around.")
-              ((eq? topography 'highlands) "It is hilly.")
-              (else (error "locations.rkt: get-procedural-description: unknown topography"))))
-      (define features-description
-        (if (not (null? features))
-            (cond ((eq? (car features) 'pond) " There is a small, clear-watered pond nearby. Upon closer look, it seems to be a spring, its sandy bottom shifting and bubbling.")
-                  ((eq? (car features) 'big-tree) " You see an immense tree rising far above the rest. Most of its lower branches have fallen out, but its canopy spreads wide, casting a shadow over the lesser conifers.")
-                  ((eq? (car features) 'spirit-rock) " There's a small clearing amidst the brush. In the middle of the clearing, there's a rather peculiarly shaped boulder.")
-                  (else (error "locations.rkt: get-procedural-description: unknown feature")))
-            ""))
-      (string-append biome-description
-                     " "
-                     topography-description
-                     features-description))
-
     (define/public (get-interaction-choices)
-      (if searched?
-          null
-          (list (make-choice 'search
-                             "Search the surroundings."
-                             (λ () (make-action #:symbol 'search
-                                                #:actor 'pc
-                                                #:duration 3
-                                                #:target null
-                                                #:tags '(wilderness))))
-                (make-choice 'forage
-                             "Forage."
-                             (λ () (make-action #:symbol 'forage
-                                                #:actor 'pc
-                                                #:duration 6 ; TODO think of these! this should be a half-day action, or so
-                                                #:target null
-                                                #:tags '(wilderness)))))))
+      '())
 
     (define/private (make-go-to-neighbor-choice neighbor index)
 

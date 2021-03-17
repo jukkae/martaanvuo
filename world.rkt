@@ -16,8 +16,19 @@
     (field [turn 0]) ; meta
     (field [status 'active]) ; meta - possible values currently 'active and 'ended
     (field [in-combat #f]) ; situational - move outside of class, this is an interpret-the-situation type of function
-    (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. Relevant to times to around couple hours or so. Then ->
-    (field [time-of-day 'midday]) ; -> for longer periods of time, track days
+    (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. For downtime, 100 jiffies = 1 TOD
+
+    ; underground: let jiffies drift off from physical needs!
+
+    (define times-of-day '(morning afternoon evening night))
+    (define (get-next-time-of-day time-of-day)
+      (cond ((eq? time-of-day 'morning) 'afternoon)
+            ((eq? time-of-day 'afternoon) 'evening)
+            ((eq? time-of-day 'evening) 'night)
+            ((eq? time-of-day 'night) 'morning)
+            (else error "get-next-time-of-day: not time of day")))
+
+    (field [time-of-day 'midday])
     (field [locations (make-hash)])
     (field [current-location '()]) ; should be defined to (send pc get-current-location)
 
@@ -382,7 +393,7 @@
               (displayln "You found some food!"))
              (else
               (newline)
-              (displayln "Looks like you'll sleep hungry tonight.")))
+              (displayln "You found nothing edible.")))
        (newline)
        (advance-time! world (action-duration action)))]
     ['inventory
