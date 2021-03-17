@@ -8,7 +8,7 @@
   (class* object% (creature<%>)
     (field [max-hp 1])
     (field [hp 1])
-    (field [defense 5])
+    (field [defense 6])
     (super-new)
 
     (define/public (get-current-defense) defense)

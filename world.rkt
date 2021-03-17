@@ -373,6 +373,18 @@
               (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
        (newline)
        (advance-time! world (action-duration action)))]
+    ['forage
+     (begin
+       (define roll (d 2 6))
+       (define target 8) ; for woodlands
+       (cond ((>= roll target)
+              (newline)
+              (displayln "You found some food!"))
+             (else
+              (newline)
+              (displayln "Looks like you'll sleep hungry tonight.")))
+       (newline)
+       (advance-time! world (action-duration action)))]
     ['inventory
      (print-inventory
       (get-list-inline-description

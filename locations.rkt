@@ -83,6 +83,13 @@
                                                 #:actor 'pc
                                                 #:duration 3
                                                 #:target null
+                                                #:tags '(wilderness))))
+                (make-choice 'forage
+                             "Forage."
+                             (λ () (make-action #:symbol 'forage
+                                                #:actor 'pc
+                                                #:duration 6 ; TODO think of these! this should be a half-day action, or so
+                                                #:target null
                                                 #:tags '(wilderness)))))))
 
     (define/private (make-go-to-neighbor-choice neighbor index)
