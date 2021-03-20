@@ -24,7 +24,7 @@
   (class* object% ()
     (field [turn 0]) ; meta
     (field [status 'active]) ; meta - possible values currently 'active and 'ended
-    (field [in-combat #f]) ; situational - move outside of class, this is an interpret-the-situation type of function
+    (field [in-combat #f]) ; meta - situational
     (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. For downtime, 100 jiffies = 1 TOD
 
     ; underground: let jiffies drift off from physical needs!
@@ -33,40 +33,13 @@
 
     (field [time-of-day 'morning])
     (field [locations (make-hash)])
-    (field [current-location '()]) ; should be defined to (send pc get-current-location)
+    (field [current-location '()]) ; meta
 
-    (field [pc (new pc%)])
+    (field [pc (new pc%)]) ; meta
 
     (field [action-queue '()])
 
     (super-new)
-  
-    (define/public (make-connections)
-      (begin
-        (for ([i (in-range 0 10)])
-          (define location (make-location #:index i))
-          (hash-set! locations i location))
-
-        (for ([i (in-range 0 10)])
-          (define location (hash-ref locations i))
-          (define n (random 1 4))
-
-          (for ([j (in-range 0 n)])
-            (define next-neighbor-index (random 0 10))
-            (define neighbor (hash-ref locations next-neighbor-index))
-            (set-field! neighbors
-                        location
-                        (cons neighbor (get-field neighbors
-                                                  location)))))
-        (set-field! current-location
-                    this
-                    (hash-ref locations 0))))
-    
-    (define/public (get-current-enemies)
-      (define all-actors (get-field actors current-location))
-      (set! all-actors (remove pc all-actors))
-      all-actors)
-      
 
     (define/public (sort-actions!)
       (set! action-queue (sort
@@ -74,6 +47,15 @@
                           action-faster-than)))
     (define/public (clear-action-queue!)
       (set! action-queue '()))
+
+    (define/public (add-location index location)
+      (hash-set! locations index location))
+
+
+    (define/public (get-current-enemies)
+      (define all-actors (location-actors current-location))
+      (set! all-actors (remove pc all-actors))
+      all-actors)
 
     ; return true if first is less, ie., sorted earlier, than second
     ; ie., #t = action1 is faster than action2
@@ -83,11 +65,22 @@
             ((eq? (action-actor action1) 'pc) #t)
             ((eq? (action-actor action2) 'pc) #f)))))
 
+
+
 (define (make-new-world)
   (define world (new world%))
-  (send world make-connections)
-  (define location (get-field current-location world))
-  (send location add-actor! (get-field pc world))
+  (define pc (get-field pc world))
+  (define location
+    (make-location
+     #:actors (list pc)
+     #:features '()
+     #:id 0
+     #:items '()
+     #:neighbors '()
+     #:tags '()
+     #:type 'swamp))
+  (send world add-location 0 location)
+  (set-field! current-location world location)
   world)
 
 (define (advance-time! world jiffies)
@@ -125,7 +118,7 @@
     ", "
     "elapsed time: " (number->string (get-field elapsed-time world)) " jiffies"
     ", "
-    "location: " (number->string (get-field index (get-field current-location world)))
+    "location: " (number->string (location-id (get-field current-location world)))
     ", "
     "time of day: " (symbol->string (get-field time-of-day world))
     ))
@@ -134,11 +127,11 @@
 (define (on-turn! world)
   '()
   #;(cond ((and
-          (= (modulo (get-field turn world) 3) 0)
-          (not (get-field in-combat world)))
-         (begin
-           (define challenge-rating (d 1 2))
-           (spawn-enemies world challenge-rating)))))
+            (= (modulo (get-field turn world) 3) 0)
+            (not (get-field in-combat world)))
+           (begin
+             (define challenge-rating (d 1 2))
+             (spawn-enemies world challenge-rating)))))
 
 (define (end-turn! world)
   (define pc (get-field pc world))
@@ -227,7 +220,7 @@
 (define (describe-situation world)
   (define in-combat (get-field in-combat world))
   (cond ((not in-combat)
-         (displayln (send (get-field current-location world) get-description))
+         (displayln "TODO: Location description")
          (newline))
         (in-combat
          (displayln (send (get-field current-location world) get-combat-summary))
@@ -275,13 +268,13 @@
 (define (get-world-choices world actor)
   (define location-choices
     (if (not (get-field in-combat world))
-        (send (get-field current-location world)
-              get-interaction-choices)
+        '()#;(send (get-field current-location world)
+                   get-interaction-choices)
         '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
-        (send (get-field current-location world)
-              get-exit-choices)
+        '()#;(send (get-field current-location world)
+                   get-exit-choices)
         '()))
 
   (define combat-choices (send actor get-combat-choices world))

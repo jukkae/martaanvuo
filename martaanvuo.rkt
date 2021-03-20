@@ -150,7 +150,7 @@
          (describe-situation-post-on-turn *world*)
          (define actions '())
          (define current-location (get-field current-location *world*))
-         (define actors (get-field actors current-location))
+         (define actors (location-actors current-location))
   
          (for ([i (in-range (length actors))])
            (define actor (list-ref actors i))
@@ -392,7 +392,7 @@
             ]
            ['wait
             (define result null)
-            (displayln "It doesn't do anything.")
+            (displayln "The enemy doesn't do anything.")
             result
             ]
            [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
@@ -412,7 +412,6 @@
 
 (define (resolve-action-instantly! world action)
   ;a useful place to hack in random events specifically when nothing else is happening
-  ;(displayln "ACTION")
   ;(displayln (action-symbol action))
   (resolve-action! world action))
 

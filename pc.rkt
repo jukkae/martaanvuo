@@ -52,6 +52,7 @@
                                              #:duration 10
                                              #:target null
                                              #:tags '(wilderness downtime))))
+             ; craft only when sufficient light
              (make-choice 'search
                           "Craft."
                           (λ () (make-action #:symbol 'craft
