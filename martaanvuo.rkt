@@ -157,10 +157,11 @@
            (define action (get-next-action actor))
 
            (if (resolve-instantly? action)
-               (resolve-action! *world* action)
+               (resolve-action-instantly! *world* action)
                (add-action-to-queue *world* action)))
 
          (sort-actions! *world*)
+         
          (define turn-exit-status (resolve-actions! *world*))
          (cond ((eq? turn-exit-status 'last-chance)
                 (displayln "LAST CHANCE")
@@ -177,6 +178,243 @@
          (resolve-turn))
         ((eq? (get-field status *world*) 'ended)
          (game-ended-loop))))
+
+
+
+(define (resolve-actions! world)
+  (define turn-exit-status 'ok)
+  (while (not (empty? (get-field action-queue world)))
+         (define action (car (get-field action-queue world)))
+         
+         (define result (resolve-action! world action))
+         (when (not (eq? result 'not-active))
+           (wait-for-confirm))
+
+         (cond ((eq? result 'u-ded)
+                (displayln "You die.")
+                (set! turn-exit-status 'pc-dead)
+                (break))
+               ((eq? result 'last-breath)
+                (displayln "You are one hair's breadth from becoming one with the Dark.")
+                (set! turn-exit-status 'last-breath)
+                (send world clear-action-queue!)
+                (break)))
+         (set-field! action-queue world
+                     (if (pair? (get-field action-queue world))
+                         (cdr (get-field action-queue world)) ; pop stack's topmost element
+                         '())))
+  turn-exit-status)
+
+
+
+
+(define (sort-actions! world)
+  (send world sort-actions!))
+
+(define (add-action-to-queue world action)
+  (define new-actions
+    (append (get-field action-queue world)
+            (list action)))
+  (set-field! action-queue world new-actions))
+
+
+
+(define (resolve-defensive-attack-action! world action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define location (get-field current-location world))
+  (define enemies (send world get-current-enemies))
+  
+  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
+  (when (eq? target 'random) (set! target (take-random enemies)))
+  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
+
+  (define attack-skill 1)
+  (define target-defense (send target get-current-defense))
+  (define attack-roll (+ (d 2 6) 0))
+  (define successful? (>= attack-roll target-defense))
+  (define attacker-name (send actor get-name))
+  (define target-name (send target get-name))
+
+  (displayln
+   (string-append
+    "-- Defensive attack action: "
+    attacker-name
+    " attacks "
+    target-name))
+  (displayln
+   (string-append
+    "Attack roll: "
+    (number->string attack-roll)
+    " "
+    "against Defense: "
+    (number->string target-defense)))
+  (cond (successful?
+         (define damage (d 1 1))
+         (displayln
+          (string-append
+           "Success, damage: "
+           (number->string damage)))
+         (define result (send target hit damage))
+         (displayln
+          (string-append
+           "Result: "
+           (symbol->string result)))
+         (cond ((eq? result 'dead)
+                (displayln "ENEMY DEAD")
+                (send location remove-actor! target)
+                ; TODO: Add enemy corpse
+                ))
+         result)
+        (else
+         (displayln "Attack was unsuccessful.")
+         'failure)))
+
+(define (resolve-attack-action! world action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define location (get-field current-location world))
+  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
+  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
+  (define attack-skill 1)
+  (define target-defense (send target get-current-defense))
+  (define attack-roll (+ (d 2 6) 1))
+  (define successful? (>= attack-roll target-defense))
+  (define attacker-name (send actor get-name))
+  (define target-name (send target get-name))
+
+  (displayln
+   (string-append
+    "-- Attack action: "
+    attacker-name
+    " attacks "
+    target-name))
+  (displayln
+   (string-append
+    "Attack roll: "
+    (number->string attack-roll)
+    " "
+    "against Defense: "
+    (number->string target-defense)))
+  (cond (successful?
+         (define damage (d 1 2))
+         (displayln
+          (string-append
+           "Success, damage: "
+           (number->string damage)))
+         (define result (send target hit damage))
+         (displayln
+          (string-append
+           "Result: "
+           (symbol->string result)))
+         (cond ((eq? result 'dead)
+                (displayln "ENEMY DEAD")
+                (send location remove-actor! target)
+                ; TODO: Add enemy corpse
+                ))
+         result)
+        (else
+         (displayln "Attack was unsuccessful.")
+         'failure)))
+  
+
+(define (resolve-player-action! world action)
+  (define actor (get-field pc world)) ; dirty
+  (case (action-symbol action)
+    ['search
+     (begin
+       (define roll (d 2 6)) ; "charisma" in the sense of favour of powers would make sense
+       (define target 7)
+       (when (>= roll target)
+         (define loot 'knife)
+         (cond ((eq? loot '()) (displayln "You find nothing of interest."))
+               (else
+                (newline)
+                (displayln (string-append "Ah ha! You find a " (symbol->string loot) " sitting on the hand of a corpse. How auspicious!"))
+                (newline)
+                (displayln (string-append "You pick up the " (symbol->string loot) "."))
+                (set-field! inventory actor (cons loot (get-field inventory actor)))
+                (when (eq? loot 'sapling-finger) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
+         (newline))
+       (advance-time! world (action-duration action)))]
+    ['forage
+     (begin
+       (define roll (d 2 6))
+       (define target 8) ; for woodlands
+       (cond ((>= roll target)
+              (define amount (d 1 4))
+              (newline)
+              (displayln (string-append "You found some food: " (number->string amount) " meals")))
+             (else
+              (newline)
+              (displayln "You found nothing edible.")))
+       (newline)
+       (advance-time! world (action-duration action)))]
+    ['inventory
+     (newline)
+     (displayln (get-field inventory actor))
+     #;(print-inventory
+      (get-list-inline-description
+       (get-field inventory actor)))]
+    ['go-to-neighboring-location
+     (begin
+       (newline) ; dunno where to put this
+       (send (get-field current-location world) remove-actor! actor) ; hacky
+       (send (get-field current-location world) on-exit!)
+
+       ; advance-time! should be something like skip-to-the-action!, ie. advance time until something interesting happens, and then bail
+       (advance-time! world  (action-duration action))
+
+       (set-field! current-location world (action-target action))
+       (send (get-field current-location world) add-actor! actor) ; ungh
+       (send (get-field current-location world) on-enter!))]
+    ['defensive-strike
+     (define result (resolve-defensive-attack-action! world action))
+     result]
+    ['brawl
+     ; Resolve as attack action
+     (define result (resolve-attack-action! world action))
+     result
+     ]
+    
+    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
+
+(define (resolve-enemy-action! world action)
+  (define actor (action-actor action))
+  (define actor-alive? (> (get-field hp actor) 0))
+  (cond ((not actor-alive?) 'not-active)
+        (else
+         (case (action-symbol action)
+           ['attack
+            ; Resolve as attack action
+            (define result (resolve-attack-action! world action))
+            result
+            ]
+           ['wait
+            (define result null)
+            (displayln "It doesn't do anything.")
+            result
+            ]
+           [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
+
+(define (resolve-action! world action)
+  (define actor
+    (if (eq? (action-actor action) 'pc)
+        (get-field pc world)
+        (action-actor action)))
+  
+  (define result
+    (if (is-a? actor pc%)
+        (resolve-player-action! world action)
+        (resolve-enemy-action! world action)))
+  
+  result)
+
+(define (resolve-action-instantly! world action)
+  ;a useful place to hack in random events specifically when nothing else is happening
+  ;(displayln "ACTION")
+  ;(displayln (action-symbol action))
+  (resolve-action! world action))
 
 
 
@@ -198,6 +436,13 @@
   (when (not handled?)
     (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
   )
+
+(define (wait-for-confirm)
+  (newline)
+  (displayln "[Enter]")
+  (newline)
+  (define input (read-line))
+  input)
 
 
 (define (game-ended-loop)

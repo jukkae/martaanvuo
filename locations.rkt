@@ -75,7 +75,7 @@
                                   ")")
                    (λ () (make-action #:symbol 'go-to-neighboring-location
                                       #:actor 'pc
-                                      #:duration 3
+                                      #:duration (* (+ (d 1 6) 7) 10) ; 7+1d6 -> range of 80-130 jiffies
                                       #:target neighbor
                                       #:tags '(wilderness)))))
 
