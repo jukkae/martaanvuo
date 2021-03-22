@@ -114,6 +114,8 @@
 
          (define input (wait-for-input))
 
+         (newline)
+
          ; Actually, this should be a while loop:
          ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
@@ -161,6 +163,10 @@
                (add-action-to-queue *world* action)))
 
          (sort-actions! *world*)
+
+         (displayln "Action queue:")
+         (displayln (get-field action-queue *world*))
+         (displayln "--")
          
          (define turn-exit-status (resolve-actions! *world*))
          (cond ((eq? turn-exit-status 'last-chance)
@@ -412,7 +418,8 @@
 
 (define (resolve-action-instantly! world action)
   ;a useful place to hack in random events specifically when nothing else is happening
-  ;(displayln (action-symbol action))
+  (displayln "Instantly resolving action:")
+  (displayln action)
   (resolve-action! world action))
 
 
