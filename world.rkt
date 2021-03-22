@@ -220,7 +220,8 @@
 (define (describe-situation world)
   (define in-combat (get-field in-combat world))
   (cond ((not in-combat)
-         (displayln "TODO: Location description")
+         (displayln "Current location:")
+         (displayln (get-field current-location world))
          (newline))
         (in-combat
          (displayln (send (get-field current-location world) get-combat-summary))

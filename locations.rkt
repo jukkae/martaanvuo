@@ -1,5 +1,6 @@
 #lang racket
 
+(require racket/struct)
 (require "actions.rkt")
 (require "items.rkt")
 (require "utils.rkt")
@@ -12,7 +13,29 @@
    actors
    items
    tags)
-  #:constructor-name location*)
+  #:transparent
+  #:constructor-name location*
+
+  #:methods gen:custom-write
+  [(define write-proc
+     (make-constructor-style-printer
+      (lambda (obj) 'location)
+      (lambda (obj)
+        (list (unquoted-printing-string "id: ")
+              (location-id obj)
+              (unquoted-printing-string "neighbors: ")
+              (location-neighbors obj)
+              (unquoted-printing-string "type: ")
+              (location-type obj)
+              (unquoted-printing-string "features: ")
+              (location-features obj)
+              (unquoted-printing-string "actors: ")
+              (location-actors obj)
+              (unquoted-printing-string "items: ")
+              (location-items obj)
+              (unquoted-printing-string "tags: ")
+              (location-tags obj)
+              ))))])
 
 (define (make-location
          #:id id
