@@ -309,7 +309,7 @@
            (symbol->string result)))
          (cond ((eq? result 'dead)
                 (displayln "ENEMY DEAD")
-                (send location remove-actor! target)
+                (remove-actor-from-location! location target)
                 ; TODO: Add enemy corpse
                 ))
          result)

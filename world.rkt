@@ -206,9 +206,9 @@
     (define r (d 1 2))
     (define enemy (cond ((= r 2) (new blindscraper%))
                         (else (new bloodleech%))))
-    (set! added-enemies (cons enemy added-enemies))
-    
-    (send location add-actor! enemy))
+
+    (add-actor-to-location! location enemy)
+    (set! added-enemies (cons enemy added-enemies)))
   (paragraph (get-enemies-on-spawn-message added-enemies))
   (set-field! in-combat world #t))
 
@@ -219,13 +219,9 @@
 
 (define (describe-situation world)
   (define in-combat (get-field in-combat world))
-  (cond ((not in-combat)
-         (displayln "Current location:")
-         (displayln (get-field current-location world))
-         (newline))
-        (in-combat
-         (displayln (send (get-field current-location world) get-combat-summary))
-         (newline))))
+  (displayln "Current location:")
+  (displayln (get-field current-location world))
+  (newline))
 
 (define (describe-enemy actor index)
   (define
@@ -255,7 +251,7 @@
                                    " HP)"))
          (newline)
          (define current-location (get-field current-location world))
-         (define all-actors (get-field actors current-location))
+         (define all-actors (location-actors current-location))
          (define enemies (filter enemy? all-actors))
          (for ([i (in-range 0 (length enemies))])
            (define enemy (list-ref enemies i))

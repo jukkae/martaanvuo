@@ -10,7 +10,7 @@
    neighbors
    type
    features
-   actors
+   [actors #:mutable]
    items
    tags)
   #:transparent
@@ -46,5 +46,11 @@
          #:items items
          #:tags tags)
   (location* id neighbors type features actors items tags))
+
+(define (add-actor-to-location! location actor)
+  (set-location-actors! location (cons actor (location-actors location))))
+
+(define (remove-actor-from-location! location actor)
+  (set-location-actors! location (remove actor (location-actors location))))
 
 (provide (all-defined-out))
