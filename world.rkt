@@ -72,16 +72,40 @@
   (define pc (get-field pc world))
   (define location
     (make-location
-     #:actors (list pc)
+     #:actors '()
      #:features '()
-     #:id 0
      #:items '()
      #:neighbors '()
      #:tags '()
      #:type 'swamp))
   (send world add-location 0 location)
-  (set-field! current-location world location)
+
+  (set-pc-location! world pc location)
   world)
+
+(define (make-neighbors location)
+  (define number (d 1 3))
+  (for/list ([i number])
+    (define new-location
+      (make-location
+       #:actors '()
+       #:features '()
+       #:items '()
+       #:neighbors '()
+       #:tags '()
+       #:type 'land))
+    (set-location-neighbors! location (cons new-location (location-neighbors location)))
+    ; routes are bidirectional
+    (set-location-neighbors! new-location (cons location (location-neighbors new-location))))
+  )
+
+(define (set-pc-location! world pc location)
+  (when (not (location-visited location))
+    (make-neighbors location)
+    )
+  (set-field! current-location world location)
+  (add-actor-to-location! location pc)
+  (set-location-visited! location #t))
 
 (define (advance-time! world jiffies)
   (for ([t jiffies])
@@ -263,6 +287,7 @@
   action)
 
 (define (get-world-choices world actor)
+  (define current-location (get-field current-location world))
   (define location-choices
     (if (not (get-field in-combat world))
         '()#;(send (get-field current-location world)
@@ -270,8 +295,7 @@
         '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
-        '()#;(send (get-field current-location world)
-                   get-exit-choices)
+        (make-go-to-neighbor-choices current-location)
         '()))
 
   (define combat-choices (send actor get-combat-choices world))

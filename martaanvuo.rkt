@@ -362,18 +362,19 @@
      #;(print-inventory
       (get-list-inline-description
        (get-field inventory actor)))]
+    
     ['go-to-neighboring-location
      (begin
-       (newline) ; dunno where to put this
-       (send (get-field current-location world) remove-actor! actor) ; hacky
-       (send (get-field current-location world) on-exit!)
+       (define current-location (get-field current-location world))
+       (remove-actor-from-location! current-location actor)
 
        ; advance-time! should be something like skip-to-the-action!, ie. advance time until something interesting happens, and then bail
        (advance-time! world  (action-duration action))
 
-       (set-field! current-location world (action-target action))
-       (send (get-field current-location world) add-actor! actor) ; ungh
-       (send (get-field current-location world) on-enter!))]
+       (set-pc-location! world actor (action-target action))
+
+       )]
+    
     ['defensive-strike
      (define result (resolve-defensive-attack-action! world action))
      result]
