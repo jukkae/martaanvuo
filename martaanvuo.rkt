@@ -167,10 +167,6 @@
 
          (sort-actions! *world*)
 
-         (displayln "Action queue:")
-         (displayln (get-field action-queue *world*))
-         (displayln "--")
-         
          (define turn-exit-status (resolve-actions! *world*))
          (cond ((eq? turn-exit-status 'last-chance)
                 (displayln "LAST CHANCE")
