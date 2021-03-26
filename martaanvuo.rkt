@@ -116,6 +116,8 @@
 
          (newline)
 
+         ; TODO: Confirm choice?
+
          ; Actually, this should be a while loop:
          ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
@@ -341,8 +343,7 @@
                 (displayln (string-append "You pick up the " (symbol->string loot) "."))
                 (set-field! inventory actor (cons loot (get-field inventory actor)))
                 (when (eq? loot 'sapling-finger) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
-         (newline))
-       (advance-time! world (action-duration action)))]
+         (newline)))]
     ['forage
      (begin
        (define roll (d 2 6))
@@ -354,22 +355,18 @@
              (else
               (newline)
               (displayln "You found nothing edible.")))
-       (newline)
-       (advance-time! world (action-duration action)))]
+       (newline))]
     ['inventory
      (newline)
      (displayln (get-field inventory actor))
      #;(print-inventory
-      (get-list-inline-description
-       (get-field inventory actor)))]
-    
+        (get-list-inline-description
+         (get-field inventory actor)))]
+
     ['go-to-neighboring-location
      (begin
        (define current-location (get-field current-location world))
        (remove-actor-from-location! current-location actor)
-
-       ; advance-time! should be something like skip-to-the-action!, ie. advance time until something interesting happens, and then bail
-       (advance-time! world  (action-duration action))
 
        (set-pc-location! world actor (action-target action))
 
@@ -421,7 +418,13 @@
   ;a useful place to hack in random events specifically when nothing else is happening
   (displayln "Instantly resolving action:")
   (displayln action)
-  (resolve-action! world action))
+  
+  (define next-event (advance-time-until-next-interesting-event! world (action-duration action)))
+  (displayln "Next event:")
+  (displayln next-event)
+  (if (not (eq? next-event '()))
+      (displayln "TODO: EVENT SHOULD MAKE YOUR ACTION PEND")
+      (resolve-action! world action)))
 
 
 

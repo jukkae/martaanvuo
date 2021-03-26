@@ -107,28 +107,37 @@
   (add-actor-to-location! location pc)
   (set-location-visited! location #t))
 
-(define (advance-time! world jiffies)
-  (for ([t jiffies])
-    (define new-elapsed-time (add1 (get-field elapsed-time world)))
-    (set-field! elapsed-time
-                world
-                new-elapsed-time)
+(define (advance-time-by-a-jiffy! world)
+  (define events '())
+  (define new-elapsed-time (add1 (get-field elapsed-time world)))
+  (set-field! elapsed-time
+              world
+              new-elapsed-time)
     
-    (when (= (modulo (get-field elapsed-time world) 100) 0)
-      (set-field! time-of-day
-                  world
-                  (get-next-time-of-day
-                   (get-field time-of-day world)))
-      (displayln (string-append "It is now " (symbol->string (get-field time-of-day world)) ".")))
+  (when (= (modulo (get-field elapsed-time world) 100) 0)
+    (set-field! time-of-day
+                world
+                (get-next-time-of-day
+                 (get-field time-of-day world)))
+    (displayln (string-append "It is now " (symbol->string (get-field time-of-day world)) ".")))
 
-    (when (= (modulo (get-field elapsed-time world) 150) 130)
-      (define roll (d 1 4))
-      (if (= roll 1)
-          (spawn-enemies world 2)
-          (displayln "It's quiet. Lucky."))
-      )
+  (when (= (modulo (get-field elapsed-time world) 150) 130)
+    (define roll (d 1 4))
+    (cond ((= roll 1)
+           (spawn-enemies world 2)
+           (set! events (cons 'enemies-spawned events)))
+          (else
+           (displayln "It's eerily quiet."))))
+  events
+  )
 
-    ))
+(define (advance-time-until-next-interesting-event! world jiffies)
+  (let/ec return
+    (for ([t jiffies])
+      (define event (advance-time-by-a-jiffy! world))
+      (when (not (eq? event '()))
+        (return event)))
+    '()))
 
 (define (begin-turn! world)
   (set-field! turn
@@ -300,6 +309,8 @@
 
   (define combat-choices (send actor get-combat-choices world))
   (define generic-choices (send actor get-generic-choices world))
+  (displayln "find me and fix pending action choices")
+  (define pending-action-choices '())
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
