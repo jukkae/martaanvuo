@@ -1,17 +1,37 @@
 #lang racket
 
+(require racket/struct)
+(require lens)
+
 (define-struct choice
   (symbol
    name
    resolution-effect))
 
-(define-struct action
+(struct/lens action
   (symbol
    actor
    duration
    target
    tags)
-  #:constructor-name action*)
+  #:constructor-name action*
+
+  #:methods gen:custom-write
+  [(define write-proc
+     (make-constructor-style-printer
+      (lambda (obj) 'action)
+      (lambda (obj)
+        (list (unquoted-printing-string "symbol: ")
+              (action-symbol obj)
+              (unquoted-printing-string "actor: ")
+              (action-actor obj)
+              (unquoted-printing-string "duration: ")
+              (action-duration obj)
+              (unquoted-printing-string "target: ")
+              (action-target obj)
+              (unquoted-printing-string "tags: ")
+              (action-tags obj)
+              ))))])
 
 (define (make-action
          #:symbol symbol

@@ -12,7 +12,7 @@
     (field [hp 4])
     (field [base-defense 6])
     (field [attack-skill 1])
-    (field [inventory (list (new twine%))])
+    (field [inventory '()])
     (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
     (field [current-statuses '()])
 
@@ -34,15 +34,43 @@
     (define/public (get-brawl-damage) (d 1 2))
     (define/public (get-next-command world) '())
     (define/public (get-generic-choices world)
-      (if (not (empty? (get-field inventory this)))
-          (list (make-choice 'inventory
-                             "Show inventory. [free action]"
-                             (λ () (make-action #:symbol 'inventory
-                                                #:actor 'pc
-                                                #:duration 0
-                                                #:target null
-                                                #:tags '(always free)))))
-          '()))
+      (define downtime-choices ; dumbass implementation
+        (if (get-field in-combat world)
+            '()
+            (list
+             (make-choice 'forage
+                          "Forage."
+                          (λ () (make-action #:symbol 'forage
+                                             #:actor 'pc
+                                             #:duration 100 ; 100 jiffies - half-a-day -> action economy: get better -> slightly better actions
+                                             #:target null
+                                             #:tags '(wilderness downtime))))
+             (make-choice 'search
+                          "Search."
+                          (λ () (make-action #:symbol 'search
+                                             #:actor 'pc
+                                             #:duration 100
+                                             #:target null
+                                             #:tags '(wilderness downtime))))
+             ; craft only when sufficient light
+             (make-choice 'search
+                          "Craft."
+                          (λ () (make-action #:symbol 'craft
+                                             #:actor 'pc
+                                             #:duration 50
+                                             #:target null
+                                             #:tags '(wilderness downtime)))))))
+      (define free-choices
+        (list (make-choice 'inventory
+                           "Show inventory. [free action]"
+                           (λ () (make-action #:symbol 'inventory
+                                              #:actor 'pc
+                                              #:duration 0
+                                              #:target null
+                                              #:tags '(always free))))))
+
+      (append downtime-choices free-choices))
+          
     
     (define/public (get-combat-choices world)
       (define targets (send world get-current-enemies))
@@ -100,7 +128,7 @@
       (take-random '(
                      "You feel something is watching you.")))
     (define/public (get-status)
-      (cond ((> hp 2) "You have nicks and bruises.")
+      (cond ((> hp 2) "")
             ((= hp 2) "You have broken bones, but you're still holding on.")
             ((= hp 1) "You are badly hurt, but still breathing.")
             ((= hp 0) "It's a miracle you're still alive.")

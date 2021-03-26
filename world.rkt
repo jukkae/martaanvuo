@@ -11,48 +11,36 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
+
+(define times-of-day '(morning afternoon evening night))
+(define (get-next-time-of-day time-of-day)
+  (cond ((eq? time-of-day 'morning) 'afternoon)
+        ((eq? time-of-day 'afternoon) 'evening)
+        ((eq? time-of-day 'evening) 'night)
+        ((eq? time-of-day 'night) 'morning)
+        (else error "get-next-time-of-day: not time of day")))
+
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
     (field [status 'active]) ; meta - possible values currently 'active and 'ended
-    (field [in-combat #f]) ; situational - move outside of class, this is an interpret-the-situation type of function
-    (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. Relevant to times to around couple hours or so. Then ->
-    (field [time-of-day 'midday]) ; -> for longer periods of time, track days
-    (field [locations (make-hash)])
-    (field [current-location '()]) ; should be defined to (send pc get-current-location)
+    (field [in-combat #f]) ; meta - situational
+    (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. For downtime, 100 jiffies = 1 TOD
 
-    (field [pc (new pc%)])
+    ; underground: let jiffies drift off from physical needs!
+
+    
+
+    (field [time-of-day 'morning])
+    (field [locations (make-hash)])
+    (field [current-location '()]) ; meta
+
+    (field [pc (new pc%)]) ; meta
 
     (field [action-queue '()])
+    (field [pending-actions '()])
 
     (super-new)
-  
-    (define/public (make-connections)
-      (begin
-        (for ([i (in-range 0 10)])
-          (define location (make-location #:index i))
-          (hash-set! locations i location))
-
-        (for ([i (in-range 0 10)])
-          (define location (hash-ref locations i))
-          (define n (random 1 4))
-
-          (for ([j (in-range 0 n)])
-            (define next-neighbor-index (random 0 10))
-            (define neighbor (hash-ref locations next-neighbor-index))
-            (set-field! neighbors
-                        location
-                        (cons neighbor (get-field neighbors
-                                                  location)))))
-        (set-field! current-location
-                    this
-                    (hash-ref locations 0))))
-    
-    (define/public (get-current-enemies)
-      (define all-actors (get-field actors current-location))
-      (set! all-actors (remove pc all-actors))
-      all-actors)
-      
 
     (define/public (sort-actions!)
       (set! action-queue (sort
@@ -60,6 +48,15 @@
                           action-faster-than)))
     (define/public (clear-action-queue!)
       (set! action-queue '()))
+
+    (define/public (add-location index location)
+      (hash-set! locations index location))
+
+
+    (define/public (get-current-enemies)
+      (define all-actors (location-actors current-location))
+      (set! all-actors (remove pc all-actors))
+      all-actors)
 
     ; return true if first is less, ie., sorted earlier, than second
     ; ie., #t = action1 is faster than action2
@@ -69,19 +66,83 @@
             ((eq? (action-actor action1) 'pc) #t)
             ((eq? (action-actor action2) 'pc) #f)))))
 
+
+
 (define (make-new-world)
   (define world (new world%))
-  (send world make-connections)
-  (define location (get-field current-location world))
-  (send location add-actor! (get-field pc world))
+  (define pc (get-field pc world))
+  (define location
+    (make-location
+     #:actors '()
+     #:features '()
+     #:items '()
+     #:neighbors '()
+     #:tags '()
+     #:type 'swamp))
+  (send world add-location 0 location)
+
+  (set-pc-location! world pc location)
   world)
 
-(define (advance-time! world jiffies)
-  (define new-elapsed-time (+ (get-field elapsed-time world)
-                              jiffies))
+(define (make-neighbors location)
+  (define number (d 1 3))
+  (for/list ([i number])
+    (define new-location
+      (make-location
+       #:actors '()
+       #:features '()
+       #:items '()
+       #:neighbors '()
+       #:tags '()
+       #:type 'land))
+    (set-location-neighbors! location (cons new-location (location-neighbors location)))
+    ; routes are bidirectional
+    (set-location-neighbors! new-location (cons location (location-neighbors new-location))))
+  )
+
+(define (set-pc-location! world pc location)
+  ; exit location tasks
+  (set-field! pending-actions world '())
+  
+  (when (not (location-visited location))
+    (make-neighbors location)
+    )
+  (set-field! current-location world location)
+  (add-actor-to-location! location pc)
+  (set-location-visited! location #t)
+  )
+
+(define (advance-time-by-a-jiffy! world)
+  (define events '())
+  (define new-elapsed-time (add1 (get-field elapsed-time world)))
   (set-field! elapsed-time
               world
-              new-elapsed-time))
+              new-elapsed-time)
+    
+  (when (= (modulo (get-field elapsed-time world) 100) 0)
+    (set-field! time-of-day
+                world
+                (get-next-time-of-day
+                 (get-field time-of-day world)))
+    (displayln (string-append "It is now " (symbol->string (get-field time-of-day world)) ".")))
+
+  (when (= (modulo (get-field elapsed-time world) 150) 130)
+    (define roll (d 1 4))
+    (cond ((= roll 1)
+           (spawn-enemies world 2)
+           (set! events (cons 'enemies-spawned events)))
+          (else
+           (displayln "It's eerily quiet."))))
+  events
+  )
+
+(define (advance-time-until-next-interesting-event! world jiffies)
+  (let/ec return
+    (for ([t jiffies])
+      (define event (advance-time-by-a-jiffy! world))
+      (when (not (eq? event '()))
+        (return (cons event t))))
+    (cons '() jiffies)))
 
 (define (begin-turn! world)
   (set-field! turn
@@ -95,19 +156,20 @@
     ", "
     "elapsed time: " (number->string (get-field elapsed-time world)) " jiffies"
     ", "
-    "location: " (number->string (get-field index (get-field current-location world)))
+    "location: " (number->string (location-id (get-field current-location world)))
     ", "
     "time of day: " (symbol->string (get-field time-of-day world))
     ))
   (newline))
 
 (define (on-turn! world)
-  (cond ((and
-          (= (modulo (get-field turn world) 3) 0)
-          (not (get-field in-combat world)))
-         (begin
-           (define challenge-rating (d 1 2))
-           (spawn-enemies world challenge-rating)))))
+  '()
+  #;(cond ((and
+            (= (modulo (get-field turn world) 3) 0)
+            (not (get-field in-combat world)))
+           (begin
+             (define challenge-rating (d 1 2))
+             (spawn-enemies world challenge-rating)))))
 
 (define (end-turn! world)
   (define pc (get-field pc world))
@@ -182,9 +244,9 @@
     (define r (d 1 2))
     (define enemy (cond ((= r 2) (new blindscraper%))
                         (else (new bloodleech%))))
-    (set! added-enemies (cons enemy added-enemies))
-    
-    (send location add-actor! enemy))
+
+    (add-actor-to-location! location enemy)
+    (set! added-enemies (cons enemy added-enemies)))
   (paragraph (get-enemies-on-spawn-message added-enemies))
   (set-field! in-combat world #t))
 
@@ -195,12 +257,9 @@
 
 (define (describe-situation world)
   (define in-combat (get-field in-combat world))
-  (cond ((not in-combat)
-         (displayln (send (get-field current-location world) get-description))
-         (newline))
-        (in-combat
-         (displayln (send (get-field current-location world) get-combat-summary))
-         (newline))))
+  (displayln "Current location:")
+  (displayln (get-field current-location world))
+  (newline))
 
 (define (describe-enemy actor index)
   (define
@@ -230,7 +289,7 @@
                                    " HP)"))
          (newline)
          (define current-location (get-field current-location world))
-         (define all-actors (get-field actors current-location))
+         (define all-actors (location-actors current-location))
          (define enemies (filter enemy? all-actors))
          (for ([i (in-range 0 (length enemies))])
            (define enemy (list-ref enemies i))
@@ -242,245 +301,23 @@
   action)
 
 (define (get-world-choices world actor)
+  ; Should check for matches in pending actions, and name choices accordingly
+  (define current-location (get-field current-location world))
   (define location-choices
     (if (not (get-field in-combat world))
-        (send (get-field current-location world)
-              get-interaction-choices)
+        '()#;(send (get-field current-location world)
+                   get-interaction-choices)
         '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
-        (send (get-field current-location world)
-              get-exit-choices)
+        (make-go-to-neighbor-choices current-location)
         '()))
 
   (define combat-choices (send actor get-combat-choices world))
   (define generic-choices (send actor get-generic-choices world))
+  
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
-(define (resolve-defensive-attack-action! world action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  (define location (get-field current-location world))
-  (define enemies (send world get-current-enemies))
-  
-  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
-  (when (eq? target 'random) (set! target (take-random enemies)))
-  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
-
-  (define attack-skill 1)
-  (define target-defense (send target get-current-defense))
-  (define attack-roll (+ (d 2 6) 0))
-  (define successful? (>= attack-roll target-defense))
-  (define attacker-name (send actor get-name))
-  (define target-name (send target get-name))
-
-  (displayln
-   (string-append
-    "-- Defensive attack action: "
-    attacker-name
-    " attacks "
-    target-name))
-  (displayln
-   (string-append
-    "Attack roll: "
-    (number->string attack-roll)
-    " "
-    "against Defense: "
-    (number->string target-defense)))
-  (cond (successful?
-         (define damage (d 1 1))
-         (displayln
-          (string-append
-           "Success, damage: "
-           (number->string damage)))
-         (define result (send target hit damage))
-         (displayln
-          (string-append
-           "Result: "
-           (symbol->string result)))
-         (cond ((eq? result 'dead)
-                (displayln "ENEMY DEAD")
-                (send location remove-actor! target)
-                ; TODO: Add enemy corpse
-                ))
-         result)
-        (else
-         (displayln "Attack was unsuccessful.")
-         'failure)))
-
-(define (resolve-attack-action! world action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  (define location (get-field current-location world))
-  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
-  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
-  (define attack-skill 1)
-  (define target-defense (send target get-current-defense))
-  (define attack-roll (+ (d 2 6) 1))
-  (define successful? (>= attack-roll target-defense))
-  (define attacker-name (send actor get-name))
-  (define target-name (send target get-name))
-
-  (displayln
-   (string-append
-    "-- Attack action: "
-    attacker-name
-    " attacks "
-    target-name))
-  (displayln
-   (string-append
-    "Attack roll: "
-    (number->string attack-roll)
-    " "
-    "against Defense: "
-    (number->string target-defense)))
-  (cond (successful?
-         (define damage (d 1 2))
-         (displayln
-          (string-append
-           "Success, damage: "
-           (number->string damage)))
-         (define result (send target hit damage))
-         (displayln
-          (string-append
-           "Result: "
-           (symbol->string result)))
-         (cond ((eq? result 'dead)
-                (displayln "ENEMY DEAD")
-                (send location remove-actor! target)
-                ; TODO: Add enemy corpse
-                ))
-         result)
-        (else
-         (displayln "Attack was unsuccessful.")
-         'failure)))
-  
-
-(define (resolve-player-action! world action)
-  (define actor (get-field pc world)) ; dirty
-  (case (action-symbol action)
-    ['search
-     (begin
-       (define loot (send (get-field current-location world) search))
-       (cond ((eq? loot 'nothing) (displayln "You find nothing of interest."))
-             (else
-              (newline)
-              (displayln (string-append "Ah ha! You find " (send loot get-inline-description) " half buried under a rock. A gift."))
-              (newline)
-              (displayln (string-append "You pick up the " (send loot get-short-description) "."))
-              (set-field! inventory actor (cons loot (get-field inventory actor)))
-              (when (is-a? loot sapling-finger%) #;(win) (error "world.rkt: update-state!: Reimplement win!"))))
-       (newline)
-       (advance-time! world (action-duration action)))]
-    ['forage
-     (begin
-       (define roll (d 2 6))
-       (define target 8) ; for woodlands
-       (cond ((>= roll target)
-              (newline)
-              (displayln "You found some food!"))
-             (else
-              (newline)
-              (displayln "Looks like you'll sleep hungry tonight.")))
-       (newline)
-       (advance-time! world (action-duration action)))]
-    ['inventory
-     (print-inventory
-      (get-list-inline-description
-       (get-field inventory actor)))]
-    ['go-to-neighboring-location
-     (begin
-       (newline) ; dunno where to put this
-       (send (get-field current-location world) remove-actor! actor) ; hacky
-       (send (get-field current-location world) on-exit!)
-
-                                   
-       (advance-time! world  (action-duration action))
-
-       (set-field! current-location world (action-target action))
-       (send (get-field current-location world) add-actor! actor) ; ungh
-       (send (get-field current-location world) on-enter!))]
-    ['defensive-strike
-     (define result (resolve-defensive-attack-action! world action))
-     result]
-    ['brawl
-     ; Resolve as attack action
-     (define result (resolve-attack-action! world action))
-     result
-     ]
-    
-    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
-
-(define (resolve-enemy-action! world action)
-  (define actor (action-actor action))
-  (define actor-alive? (> (get-field hp actor) 0))
-  (cond ((not actor-alive?) 'not-active)
-        (else
-         (case (action-symbol action)
-           ['attack
-            ; Resolve as attack action
-            (define result (resolve-attack-action! world action))
-            result
-            ]
-           ['wait
-            (define result null)
-            (displayln "It doesn't do anything.")
-            result
-            ]
-           [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
-
-(define (resolve-action! world action)
-  (define actor
-    (if (eq? (action-actor action) 'pc)
-        (get-field pc world)
-        (action-actor action)))
-  
-  (define result
-    (if (is-a? actor pc%)
-        (resolve-player-action! world action)
-        (resolve-enemy-action! world action)))
-  
-  result)
-
-(define (wait-for-confirm)
-  (newline)
-  (displayln "[Enter]")
-  (newline)
-  (define input (read-line))
-  input)
-
-(define (resolve-actions! world)
-  (define turn-exit-status 'ok)
-  (while (not (empty? (get-field action-queue world)))
-         (define action (car (get-field action-queue world)))
-         
-         (define result (resolve-action! world action))
-         (when (not (eq? result 'not-active))
-           (wait-for-confirm))
-
-         (cond ((eq? result 'u-ded)
-                (displayln "You die.")
-                (set! turn-exit-status 'pc-dead)
-                (break))
-               ((eq? result 'last-breath)
-                (displayln "You are one hair's breadth from becoming one with the Dark.")
-                (set! turn-exit-status 'last-breath)
-                (send world clear-action-queue!)
-                (break)))
-         (set-field! action-queue world
-                     (if (pair? (get-field action-queue world))
-                         (cdr (get-field action-queue world)) ; pop stack's topmost element
-                         '())))
-  turn-exit-status)
-
-(define (sort-actions! world)
-  (send world sort-actions!))
-
-(define (add-action-to-queue world action)
-  (define new-actions
-    (append (get-field action-queue world)
-            (list action)))
-  (set-field! action-queue world new-actions))
 
 (provide (all-defined-out))
