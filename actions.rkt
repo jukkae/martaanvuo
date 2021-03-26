@@ -1,17 +1,17 @@
 #lang racket
 
 (require racket/struct)
+(require lens)
 
 (define-struct choice
   (symbol
    name
    resolution-effect))
 
-(define-struct action
+(struct/lens action
   (symbol
    actor
    duration
-   elapsed
    target
    tags)
   #:constructor-name action*
@@ -27,8 +27,6 @@
               (action-actor obj)
               (unquoted-printing-string "duration: ")
               (action-duration obj)
-              (unquoted-printing-string "elapsed: ")
-              (action-elapsed obj)
               (unquoted-printing-string "target: ")
               (action-target obj)
               (unquoted-printing-string "tags: ")
@@ -41,7 +39,7 @@
          #:duration duration
          #:target target
          #:tags tags)
-  (action* symbol actor duration 0 target tags))
+  (action* symbol actor duration target tags))
 
 (define (is-visible-in-combat? action)
   (if (or (member 'combat (action-tags action))

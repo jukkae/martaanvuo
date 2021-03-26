@@ -38,6 +38,7 @@
     (field [pc (new pc%)]) ; meta
 
     (field [action-queue '()])
+    (field [pending-actions '()])
 
     (super-new)
 
@@ -100,12 +101,16 @@
   )
 
 (define (set-pc-location! world pc location)
+  ; exit location tasks
+  (set-field! pending-actions world '())
+  
   (when (not (location-visited location))
     (make-neighbors location)
     )
   (set-field! current-location world location)
   (add-actor-to-location! location pc)
-  (set-location-visited! location #t))
+  (set-location-visited! location #t)
+  )
 
 (define (advance-time-by-a-jiffy! world)
   (define events '())
@@ -136,8 +141,8 @@
     (for ([t jiffies])
       (define event (advance-time-by-a-jiffy! world))
       (when (not (eq? event '()))
-        (return event)))
-    '()))
+        (return (cons event t))))
+    (cons '() jiffies)))
 
 (define (begin-turn! world)
   (set-field! turn
@@ -296,6 +301,7 @@
   action)
 
 (define (get-world-choices world actor)
+  ; Should check for matches in pending actions, and name choices accordingly
   (define current-location (get-field current-location world))
   (define location-choices
     (if (not (get-field in-combat world))
@@ -309,8 +315,7 @@
 
   (define combat-choices (send actor get-combat-choices world))
   (define generic-choices (send actor get-generic-choices world))
-  (displayln "find me and fix pending action choices")
-  (define pending-action-choices '())
+  
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 

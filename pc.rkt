@@ -49,7 +49,7 @@
                           "Search."
                           (λ () (make-action #:symbol 'search
                                              #:actor 'pc
-                                             #:duration 10
+                                             #:duration 100
                                              #:target null
                                              #:tags '(wilderness downtime))))
              ; craft only when sufficient light

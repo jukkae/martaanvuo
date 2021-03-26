@@ -1,6 +1,7 @@
 #lang racket
 
 (require dyoo-while-loop)
+(require lens)
 
 (require "actions.rkt")
 (require "actors.rkt")
@@ -104,7 +105,7 @@
 (define (get-next-action actor)
   (cond ((is-a? actor pc%)
          (define choices (get-world-choices *world* actor))
-         (define choices-with-keys (build-keys-to-choices-map choices))
+         (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
          (print-choices-with-keys choices-with-keys)
 
          (define meta-commands-with-keys (get-meta-commands-with-keys))
@@ -225,6 +226,13 @@
             (list action)))
   (set-field! action-queue world new-actions))
 
+(define (add-pending-action world action elapsed-jiffies)
+  (define pending-action (cons (action-symbol action) elapsed-jiffies))
+  (define new-pending-actions
+    (append (get-field pending-actions world)
+            (list pending-action)))
+  (set-field! pending-actions world new-pending-actions))
+
 
 
 (define (resolve-defensive-attack-action! world action)
@@ -284,9 +292,9 @@
   (define location (get-field current-location world))
   (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
   (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
-  (define attack-skill 1)
+  (define attack-skill 4)
   (define target-defense (send target get-current-defense))
-  (define attack-roll (+ (d 2 6) 1))
+  (define attack-roll (+ (d 2 6) attack-skill))
   (define successful? (>= attack-roll target-defense))
   (define attacker-name (send actor get-name))
   (define target-name (send target get-name))
@@ -305,7 +313,7 @@
     "against Defense: "
     (number->string target-defense)))
   (cond (successful?
-         (define damage (d 1 2))
+         (define damage (d 1 3))
          (displayln
           (string-append
            "Success, damage: "
@@ -415,15 +423,28 @@
   result)
 
 (define (resolve-action-instantly! world action)
-  ;a useful place to hack in random events specifically when nothing else is happening
-  (displayln "Instantly resolving action:")
-  (displayln action)
-  
-  (define next-event (advance-time-until-next-interesting-event! world (action-duration action)))
-  (displayln "Next event:")
-  (displayln next-event)
+  ; a useful place to hack in random events specifically when nothing else is happening
+  ; actually, this should be something like "start resolving immediately"
+  ; because this is more about queueing
+
+
+  (define pending-actions (get-field pending-actions world))
+  (define match (filter (λ (pending-action)
+                          (eq? (car pending-action)
+                               (action-symbol action)))
+                        pending-actions))
+  (when (not (eq? '() match))
+    (define new-time-left (cdar match))
+    (set! action (lens-set action-duration-lens action new-time-left)))
+      
+  (define next-event-and-elapsed-time (advance-time-until-next-interesting-event! world (action-duration action)))
+  (define next-event (car next-event-and-elapsed-time))
+  (define elapsed-time (cdr next-event-and-elapsed-time))
+  (define time-left (- (action-duration action) elapsed-time))
+  (when (< time-left 0) (error "Error: Time left before action resolved is negative!"))
+
   (if (not (eq? next-event '()))
-      (displayln "TODO: EVENT SHOULD MAKE YOUR ACTION PEND")
+      (add-pending-action world action time-left)
       (resolve-action! world action)))
 
 
