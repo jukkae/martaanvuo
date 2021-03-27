@@ -16,6 +16,8 @@
     (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
     (field [current-statuses '()])
 
+    (field [current-location '()]) ; convenience
+
     (super-new)
 
     (define/public (get-current-defense)

@@ -59,18 +59,4 @@
 (define (remove-actor-from-location! location actor)
   (set-location-actors! location (remove actor (location-actors location))))
 
-(define (make-go-to-neighbor-choices location)
-  (for/list ([neighbor (location-neighbors location)])
-    (make-choice 'go-to-neighboring-location
-                 (string-append "Go to "
-                                (symbol->string (location-type neighbor))
-                                " [id: "
-                                (number->string (location-id neighbor))
-                                "]")
-                 (λ () (make-action #:symbol 'go-to-neighboring-location
-                                    #:actor 'pc
-                                    #:duration 100 ; 100 jiffies - half-a-day -> action economy: get better -> slightly better actions
-                                    #:target neighbor
-                                    #:tags '(wilderness downtime))))))
-
 (provide (all-defined-out))

@@ -28,13 +28,11 @@
     (field [elapsed-time 0]) ; jiffies - jiffy is a relative unit that progresses during and between scenes. For downtime, 100 jiffies = 1 TOD
 
     ; underground: let jiffies drift off from physical needs!
-
-    
-
     (field [time-of-day 'morning])
     (field [locations (make-hash)])
+    
     (field [current-location '()]) ; meta
-
+    (field [previous-location '()]) ; meta
     (field [pc (new pc%)]) ; meta
 
     (field [action-queue '()])
@@ -105,10 +103,12 @@
   (set-field! pending-actions world '())
   
   (when (not (location-visited location))
-    (make-neighbors location)
-    )
+    (make-neighbors location))
+  
+  (set-field! previous-location world (get-field current-location world))
   (set-field! current-location world location)
   (add-actor-to-location! location pc)
+  (set-field! current-location pc location)
   (set-location-visited! location #t)
   )
 
@@ -310,7 +310,7 @@
         '()))
   (define next-location-choices
     (if (not (get-field in-combat world))
-        (make-go-to-neighbor-choices current-location)
+        (make-go-to-neighbor-choices world current-location)
         '()))
 
   (define combat-choices (send actor get-combat-choices world))
@@ -318,6 +318,23 @@
   
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
+
+(define (make-go-to-neighbor-choices world location)
+  (for/list ([neighbor (location-neighbors location)])
+    (make-choice
+     'go-to-neighboring-location
+     (string-append (if (eq? neighbor (get-field previous-location world))
+                        "Go back to "
+                        "Go towards ")
+                    (symbol->string (location-type neighbor))
+                    " [id: "
+                    (number->string (location-id neighbor))
+                    "]")
+     (λ () (make-action #:symbol 'go-to-neighboring-location
+                        #:actor 'pc
+                        #:duration 100 ; 100 jiffies - half-a-day -> action economy: get better -> slightly better actions
+                        #:target neighbor
+                        #:tags '(wilderness downtime))))))
 
 
 (provide (all-defined-out))
