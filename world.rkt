@@ -82,6 +82,9 @@
   (set-pc-location! world pc location)
   world)
 
+(define location-types
+  '(swamp forest dry-land))
+
 (define (make-neighbors location)
   (define number (d 1 3))
   (for/list ([i number])
@@ -92,7 +95,7 @@
        #:items '()
        #:neighbors '()
        #:tags '()
-       #:type 'land))
+       #:type (take-random location-types)))
     (set-location-neighbors! location (cons new-location (location-neighbors location)))
     ; routes are bidirectional
     (set-location-neighbors! new-location (cons location (location-neighbors new-location))))
