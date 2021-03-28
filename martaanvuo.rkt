@@ -424,14 +424,13 @@
   ; actually, this should be something like "start resolving immediately"
   ; because this is more about queueing
 
-
   (define pending-actions (get-field pending-actions world))
   (define match (filter (λ (pending-action)
                           (eq? (car pending-action)
                                (action-symbol action)))
                         pending-actions))
   (when (not (eq? '() match))
-    (define new-time-left (cdar match))
+    (define new-time-left (- (cdar match) 1))
     (set! action (lens-set action-duration-lens action new-time-left)))
       
   (define next-event-and-elapsed-time (advance-time-until-next-interesting-event! world (action-duration action)))
