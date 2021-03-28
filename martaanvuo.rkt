@@ -209,7 +209,7 @@
                      (if (pair? (get-field action-queue world))
                          (cdr (get-field action-queue world)) ; pop stack's topmost element
                          '())))
-  (when (get-field in-combat world)
+  (when (in-combat? world)
     (advance-time-by-a-jiffy! world)) ; DIRTY HACK but it works for now, eventually consolidate actions and events and turns and jiffies
   turn-exit-status)
 

@@ -36,6 +36,14 @@
                                      #:duration 100
                                      #:target null
                                      #:tags '(wilderness downtime))))]
+    ['inventory
+     (make-choice 'inventory
+                  "Show inventory. [free action]"
+                  (λ () (make-action #:symbol 'inventory
+                                     #:actor 'pc
+                                     #:duration 0
+                                     #:target null
+                                     #:tags '(always free))))]
     ))
 
 (define (get-downtime-choices world pc)
@@ -49,12 +57,10 @@
             )))
 
 (define (get-free-choices world pc)
-  (list (make-choice 'inventory
-                     "Show inventory. [free action]"
-                     (λ () (make-action #:symbol 'inventory
-                                        #:actor 'pc
-                                        #:duration 0
-                                        #:target null
-                                        #:tags '(always free))))))
+  (list (choice-from-symbol world pc 'inventory)))
+
+(define (get-choices world pc)
+  (append (get-downtime-choices world pc)
+          (get-free-choices world pc)))
 
 (provide (all-defined-out))

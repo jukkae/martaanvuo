@@ -11,6 +11,8 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
+(define location-types
+  '(swamp forest dry-land ruins tunnel))
 
 (define times-of-day '(morning afternoon evening night))
 (define (get-next-time-of-day time-of-day)
@@ -20,6 +22,22 @@
         ((eq? time-of-day 'night) 'morning)
         (else error "get-next-time-of-day: not time of day")))
 
+;; Situation interpretation
+(define (in-combat? world)
+  ; TODO: better logic
+  (if (get-field in-combat world)
+      #t
+      #f))
+
+(define (in-wilderness? world)
+  (define location (get-field current-location world))
+  (define type (get-field type location))
+  (case type
+    ['swamp #t]
+    ['forest #t]
+    [else #f]))
+
+;; World
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
@@ -81,9 +99,6 @@
 
   (set-pc-location! world pc location)
   world)
-
-(define location-types
-  '(swamp forest dry-land ruins tunnel))
 
 (define (make-neighbors location)
   (define number (d 1 3))
