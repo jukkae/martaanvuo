@@ -121,7 +121,7 @@
   (set-field! elapsed-time
               world
               new-elapsed-time)
-    
+
   (when (= (modulo (get-field elapsed-time world) 100) 0)
     (set-field! time-of-day
                 world
@@ -129,13 +129,14 @@
                  (get-field time-of-day world)))
     (displayln (string-append "It is now " (symbol->string (get-field time-of-day world)) ".")))
 
-  (when (= (modulo (get-field elapsed-time world) 150) 130)
-    (define roll (d 1 4))
-    (cond ((= roll 1)
-           (spawn-enemies world 2)
-           (set! events (cons 'enemies-spawned events)))
-          (else
-           (displayln "It's eerily quiet."))))
+  (when (not (get-field in-combat world))
+    (when (= (modulo (get-field elapsed-time world) 150) 130)
+      (define roll (d 1 4))
+      (cond ((= roll 1)
+             (spawn-enemies world 2)
+             (set! events (cons 'enemies-spawned events)))
+            (else
+             (displayln "It's eerily quiet.")))))
   events
   )
 
