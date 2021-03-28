@@ -3,7 +3,7 @@
 (require dyoo-while-loop)
 (require lens)
 
-(require "actions.rkt")
+(require "action.rkt")
 (require "actors.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
@@ -57,6 +57,7 @@
   input)
 
 (define (print-choices-with-keys choices-with-keys)
+  ; TODO: Should order here based on key
   (for ([(k v) (in-hash choices-with-keys)])
     (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
   (newline))

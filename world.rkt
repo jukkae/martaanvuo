@@ -2,7 +2,7 @@
 
 (require dyoo-while-loop)
 
-(require "actions.rkt")
+(require "action.rkt")
 (require "actors.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
@@ -83,7 +83,7 @@
   world)
 
 (define location-types
-  '(swamp forest dry-land))
+  '(swamp forest dry-land ruins tunnel))
 
 (define (make-neighbors location)
   (define number (d 1 3))
@@ -328,7 +328,7 @@
      'go-to-neighboring-location
      (string-append (if (eq? neighbor (get-field previous-location world))
                         "Go back to "
-                        "Go towards ")
+                        "Go to ")
                     (symbol->string (location-type neighbor))
                     " [id: "
                     (number->string (location-id neighbor))

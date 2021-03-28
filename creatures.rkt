@@ -1,6 +1,6 @@
 #lang racket
 
-(require "actions.rkt")
+(require "action.rkt")
 (require "utils.rkt")
 
 (define creature<%> (interface () get-name get-name-with-article get-description get-next-action get-status hit))
@@ -14,7 +14,7 @@
     (define/public (get-current-defense) defense)
     (define/public (get-name) "Bloodleech")
     (define/public (get-name-with-article) "a Bloodleech")
-    (define/public (get-description) "It is about the size of your forearm. Its moist skin glistens.")
+    (define/public (get-description) "It's a muscular worm about the size of your forearm. Its moist skin glistens.")
     (define/public (get-next-action)
       (make-action #:symbol 'attack
                    #:actor this
@@ -39,7 +39,7 @@
     (define/public (get-current-defense) defense)
     (define/public (get-name) "Blindscraper")
     (define/public (get-name-with-article) "a Blindscraper")
-    (define/public (get-description) "It looks vaguely insect-like, a tangly mess of appendages. At the end of each of its fingers there's a claw.")
+    (define/public (get-description) "It's vaguely insect-like, a tangly mess of appendages. At the end of each of its seven fingers there's a claw.")
     (define/public (get-next-action)
       (define roll (d 1 2))
       (cond ((= roll 1)

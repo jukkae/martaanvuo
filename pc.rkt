@@ -1,6 +1,6 @@
 #lang racket
 
-(require "actions.rkt")
+(require "action.rkt")
 (require "actors.rkt")
 (require "items.rkt")
 (require "utils.rkt")

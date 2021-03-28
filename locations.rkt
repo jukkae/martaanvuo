@@ -1,7 +1,7 @@
 #lang racket
 
 (require racket/struct)
-(require "actions.rkt")
+(require "action.rkt")
 (require "items.rkt")
 (require "utils.rkt")
 
