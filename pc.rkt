@@ -3,6 +3,7 @@
 (require "action.rkt")
 (require "actors.rkt")
 (require "items.rkt")
+(require "skills.rkt")
 (require "utils.rkt")
 ; see also lazy-require and units
 
@@ -35,41 +36,11 @@
       
     (define/public (get-brawl-damage) (d 1 2))
     (define/public (get-next-command world) '())
+
     (define/public (get-generic-choices world)
       (define downtime-choices ; dumbass implementation
-        (if (get-field in-combat world)
-            '()
-            (list
-             (make-choice 'forage
-                          "Forage."
-                          (λ () (make-action #:symbol 'forage
-                                             #:actor 'pc
-                                             #:duration 100 ; 100 jiffies - half-a-day -> action economy: get better -> slightly better actions
-                                             #:target null
-                                             #:tags '(wilderness downtime))))
-             (make-choice 'search
-                          "Search."
-                          (λ () (make-action #:symbol 'search
-                                             #:actor 'pc
-                                             #:duration 100
-                                             #:target null
-                                             #:tags '(wilderness downtime))))
-             ; craft only when sufficient light
-             (make-choice 'search
-                          "Craft."
-                          (λ () (make-action #:symbol 'craft
-                                             #:actor 'pc
-                                             #:duration 50
-                                             #:target null
-                                             #:tags '(wilderness downtime)))))))
-      (define free-choices
-        (list (make-choice 'inventory
-                           "Show inventory. [free action]"
-                           (λ () (make-action #:symbol 'inventory
-                                              #:actor 'pc
-                                              #:duration 0
-                                              #:target null
-                                              #:tags '(always free))))))
+        (get-downtime-choices world this))
+      (define free-choices (get-free-choices world this))
 
       (append downtime-choices free-choices))
           
