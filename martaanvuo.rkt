@@ -305,11 +305,15 @@
     ['forage
      (begin
        (define roll (d 2 6))
-       (define target 8) ; for woodlands
+       (define target 8)
        (cond ((>= roll target)
-              (define amount (d 1 4))
+              (define amount (d 1 4)) ; portions = days of survival
               (newline)
-              (displayln (string-append "You found some food: " (number->string amount) " meals")))
+              (displayln (string-append "You found some edible fruits and roots. (" (number->string amount) " meals)"))
+              (newline)
+              
+              (define loot (make-list amount 'food))
+              (set-field! inventory actor (append loot (get-field inventory actor))))
              (else
               (newline)
               (displayln "You found nothing edible.")))
