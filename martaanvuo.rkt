@@ -10,6 +10,7 @@
 (require "locations.rkt")
 (require "narration.rkt")
 (require "pc.rkt")
+(require "ui.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -20,54 +21,6 @@
 (define (reset-meta)
   (set! *world* (make-new-world))
   (set! *metaloop* (add1 *metaloop*)))
-
-(define (quit)
-  (newline)
-  (displayln "Really quit? [Q] to quit, anything else to continue.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "Q")
-         (narrate-quit)
-         (exit))
-        (else
-         (newline)
-         #t))) ; mark input as handled
-
-(define (key-from-index i)
-  (cond ((< i 0) (error "negative index!"))
-        ((<= i 8) (add1 i))
-        ((= i 9) 0)
-        ((> i 9) (error "too many things to do!"))))
-
-(define (build-keys-to-choices-map choices)
-  (define choices-with-keys (make-hash))
-  (for ([i (in-range (length choices))])
-    (define key (key-from-index i))
-    (hash-set! choices-with-keys key (list-ref choices i)))
-  choices-with-keys)
-
-(define (get-meta-commands-with-keys)
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-  meta-commands)
-
-(define (wait-for-input)
-  (newline)
-  (define input (read-line))
-  input)
-
-(define (print-choices-with-keys choices-with-keys)
-  ; TODO: Should order here based on key
-  (for ([(k v) (in-hash choices-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
-  (newline))
-
-(define (print-meta-commands-with-keys meta-commands-with-keys)
-  (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline))
 
 (define (run-meta-command meta-command-with-key)
   (define meta-command (cdr meta-command-with-key))
@@ -118,8 +71,6 @@
 
          (newline)
 
-         ; TODO: Confirm choice?
-
          ; Actually, this should be a while loop:
          ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
@@ -131,12 +82,12 @@
                   (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
 
                 ; handled? should now contain a valid action
-                (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
+                (unless handled? (error "Input not handled even in PEBKAC loop!"))
 
                 (define choice handled?) ; ta-dah
 
                 (define action (make-action-from-choice *world* choice))
-                (cond ((is-free? action)
+                (cond ((free? action)
                        (resolve-action! *world* action)
                        (newline)
                        (get-next-action actor)
@@ -465,14 +416,6 @@
   (when (not handled?)
     (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
   )
-
-(define (wait-for-confirm)
-  (newline)
-  (displayln "[Enter]")
-  (newline)
-  (define input (read-line))
-  input)
-
 
 (define (game-ended-loop)
   (define choices-with-keys (make-hash)) ; TODO not needed

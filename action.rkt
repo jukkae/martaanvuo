@@ -43,13 +43,13 @@
          #:tags tags)
   (action* symbol actor duration target tags))
 
-(define (is-visible-in-combat? action)
+(define (visible-in-combat? action)
   (if (or (member 'combat (action-tags action))
           (member 'always (action-tags action)))
       #t
       #f))
 
-(define (is-free? action)
+(define (free? action)
   (if (member 'free (action-tags action))
       #t
       #f))
