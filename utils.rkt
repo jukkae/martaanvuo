@@ -1,14 +1,6 @@
 #lang racket
 
-; goto
-(define-syntax label
-  (syntax-rules ()
-    ((_ name)
-     (begin
-       (define name)
-       (call/cc (lambda (c) (set! name c)))))))
-
-(define (goto label) (label))
+(provide (all-defined-out))
 
 ; dice shorthand
 (define (d n sides)
@@ -27,4 +19,10 @@
 
 (define append-string string-append)
 
-(provide (all-defined-out))
+; various container stuff
+(define (collect-similar lst)
+  (hash->list
+   (foldl (lambda (key ht)
+            (hash-update ht key add1 0))
+          '#hash()
+          lst)))

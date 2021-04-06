@@ -282,7 +282,6 @@
         (else
          (displayln "Attack was unsuccessful.")
          'failure)))
-  
 
 (define (resolve-player-action! world action)
   (define actor (get-field pc world)) ; dirty
@@ -320,10 +319,8 @@
        (newline))]
     ['inventory
      (newline)
-     (displayln (get-field inventory actor))
-     #;(print-inventory
-        (get-list-inline-description
-         (get-field inventory actor)))]
+     (print-inventory (get-field inventory actor))
+     ]
 
     ['go-to-neighboring-location
      (begin

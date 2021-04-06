@@ -25,16 +25,19 @@
                            ((= (length list) 2) (string-append " and " (get-string-list-inline-description (cdr list))))
                            (else (string-append ", " (get-string-list-inline-description (cdr list))))))))
 
-(define (title)
-  (newline)
-  (displayln "M A R T A A N V U O")
-  (displayln "==================="))
-
 (define (print-inventory inventory)
   (newline)
   (displayln "You ponder your earthly possessions.")
   (newline)
-  (displayln (string-append "In addition to clothes, you have " inventory ".")))
+  (cond ((eq? inventory '()) (displayln "Or, you would, if you actually possessed anything."))
+        (else
+         (define sorted (collect-similar inventory))
+         (displayln sorted))))
+
+(define (title)
+  (newline)
+  (displayln "M A R T A A N V U O")
+  (displayln "==================="))
 
 (define (narrate-run-number number)
   (newline)
