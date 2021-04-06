@@ -10,6 +10,7 @@
 (require "locations.rkt")
 (require "narration.rkt")
 (require "pc.rkt")
+(require "ui.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -20,54 +21,6 @@
 (define (reset-meta)
   (set! *world* (make-new-world))
   (set! *metaloop* (add1 *metaloop*)))
-
-(define (quit)
-  (newline)
-  (displayln "Really quit? [Q] to quit, anything else to continue.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "Q")
-         (narrate-quit)
-         (exit))
-        (else
-         (newline)
-         #t))) ; mark input as handled
-
-(define (key-from-index i)
-  (cond ((< i 0) (error "negative index!"))
-        ((<= i 8) (add1 i))
-        ((= i 9) 0)
-        ((> i 9) (error "too many things to do!"))))
-
-(define (build-keys-to-choices-map choices)
-  (define choices-with-keys (make-hash))
-  (for ([i (in-range (length choices))])
-    (define key (key-from-index i))
-    (hash-set! choices-with-keys key (list-ref choices i)))
-  choices-with-keys)
-
-(define (get-meta-commands-with-keys)
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-  meta-commands)
-
-(define (wait-for-input)
-  (newline)
-  (define input (read-line))
-  input)
-
-(define (print-choices-with-keys choices-with-keys)
-  ; TODO: Should order here based on key
-  (for ([(k v) (in-hash choices-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
-  (newline))
-
-(define (print-meta-commands-with-keys meta-commands-with-keys)
-  (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline))
 
 (define (run-meta-command meta-command-with-key)
   (define meta-command (cdr meta-command-with-key))
@@ -118,8 +71,6 @@
 
          (newline)
 
-         ; TODO: Confirm choice?
-
          ; Actually, this should be a while loop:
          ; something like "until-valid-action (get-next-action)"
          (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
@@ -131,12 +82,12 @@
                   (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
 
                 ; handled? should now contain a valid action
-                (unless handled? (error "Input not handled even in PEBKAC loop!")) ; assert that handled? is truthy - TODO implement assert!
+                (unless handled? (error "Input not handled even in PEBKAC loop!"))
 
                 (define choice handled?) ; ta-dah
 
                 (define action (make-action-from-choice *world* choice))
-                (cond ((is-free? action)
+                (cond ((free? action)
                        (resolve-action! *world* action)
                        (newline)
                        (get-next-action actor)
@@ -209,7 +160,7 @@
                      (if (pair? (get-field action-queue world))
                          (cdr (get-field action-queue world)) ; pop stack's topmost element
                          '())))
-  (when (get-field in-combat world)
+  (when (in-combat? world)
     (advance-time-by-a-jiffy! world)) ; DIRTY HACK but it works for now, eventually consolidate actions and events and turns and jiffies
   turn-exit-status)
 
@@ -331,7 +282,6 @@
         (else
          (displayln "Attack was unsuccessful.")
          'failure)))
-  
 
 (define (resolve-player-action! world action)
   (define actor (get-field pc world)) ; dirty
@@ -354,21 +304,23 @@
     ['forage
      (begin
        (define roll (d 2 6))
-       (define target 8) ; for woodlands
+       (define target 8)
        (cond ((>= roll target)
-              (define amount (d 1 4))
+              (define amount (d 1 4)) ; portions = days of survival
               (newline)
-              (displayln (string-append "You found some food: " (number->string amount) " meals")))
+              (displayln (string-append "You found some edible fruits and roots. (" (number->string amount) " meals)"))
+              (newline)
+              
+              (define loot (make-list amount 'food))
+              (set-field! inventory actor (append loot (get-field inventory actor))))
              (else
               (newline)
               (displayln "You found nothing edible.")))
        (newline))]
     ['inventory
      (newline)
-     (displayln (get-field inventory actor))
-     #;(print-inventory
-        (get-list-inline-description
-         (get-field inventory actor)))]
+     (print-inventory (get-field inventory actor))
+     ]
 
     ['go-to-neighboring-location
      (begin
@@ -465,14 +417,6 @@
   (when (not handled?)
     (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
   )
-
-(define (wait-for-confirm)
-  (newline)
-  (displayln "[Enter]")
-  (newline)
-  (define input (read-line))
-  input)
-
 
 (define (game-ended-loop)
   (define choices-with-keys (make-hash)) ; TODO not needed

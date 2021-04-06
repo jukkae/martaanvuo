@@ -11,6 +11,8 @@
 (require "utils.rkt")
 (require "pc.rkt")
 
+(define location-types
+  '(swamp forest dry-land ruins tunnel))
 
 (define times-of-day '(morning afternoon evening night))
 (define (get-next-time-of-day time-of-day)
@@ -20,6 +22,23 @@
         ((eq? time-of-day 'night) 'morning)
         (else error "get-next-time-of-day: not time of day")))
 
+;; Situational things
+(define (in-combat? world)
+  ; TODO: better logic
+  (if (get-field in-combat world)
+      #t
+      #f))
+
+(define (in-wilderness? world)
+  (define location (get-field current-location world))
+  (define type (get-field type location))
+  (case type
+    ['swamp #t]
+    ['forest #t]
+    [else #f]))
+
+
+;; World
 (define world%
   (class* object% ()
     (field [turn 0]) ; meta
@@ -43,7 +62,7 @@
     (define/public (sort-actions!)
       (set! action-queue (sort
                           action-queue
-                          action-faster-than)))
+                          action-faster-than?)))
     (define/public (clear-action-queue!)
       (set! action-queue '()))
 
@@ -54,15 +73,7 @@
     (define/public (get-current-enemies)
       (define all-actors (location-actors current-location))
       (set! all-actors (remove pc all-actors))
-      all-actors)
-
-    ; return true if first is less, ie., sorted earlier, than second
-    ; ie., #t = action1 is faster than action2
-    (define (action-faster-than action1 action2)
-      (cond ((has-tag? action1 'slow) #f)
-            ((has-tag? action1 'slow) #t)
-            ((eq? (action-actor action1) 'pc) #t)
-            ((eq? (action-actor action2) 'pc) #f)))))
+      all-actors)))
 
 
 
@@ -81,9 +92,6 @@
 
   (set-pc-location! world pc location)
   world)
-
-(define location-types
-  '(swamp forest dry-land ruins tunnel))
 
 (define (make-neighbors location)
   (define number (d 1 3))

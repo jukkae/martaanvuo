@@ -38,11 +38,7 @@
     (define/public (get-next-command world) '())
 
     (define/public (get-generic-choices world)
-      (define downtime-choices ; dumbass implementation
-        (get-downtime-choices world this))
-      (define free-choices (get-free-choices world this))
-
-      (append downtime-choices free-choices))
+      (get-choices world this))
           
     
     (define/public (get-combat-choices world)
