@@ -321,6 +321,13 @@
      (newline)
      (print-inventory (get-field inventory actor))
      ]
+    ['eat
+     (newline)
+     (displayln "You eat. You are not hungry anymore.")
+     (send actor remove-condition! 'hungry)
+     (set-field! hunger-counter actor 0)
+     (set-field! inventory actor (remove 'food (get-field inventory actor)))
+     ]
 
     ['go-to-neighboring-location
      (begin
@@ -340,7 +347,7 @@
      result
      ]
     
-    [else (error (string-append "Unknown player action: " (symbol->string (action-symbol action))))]))
+    [else (error (string-append "martaanvuo.rkt: Unknown player action: " (symbol->string (action-symbol action))))]))
 
 (define (resolve-enemy-action! world action)
   (define actor (action-actor action))
@@ -451,6 +458,6 @@
 (define (startup)
   (title)
   (narrate-startup)
-  (call/cc (end-game (meta-loop))))
+  (call/ec (end-game (meta-loop))))
 
 (startup)

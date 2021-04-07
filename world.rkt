@@ -124,6 +124,8 @@
   )
 
 (define (advance-time-by-a-jiffy! world)
+  (define pc (get-field pc world))
+  (send pc advance-time-by-a-jiffy!)
   (define events '())
   (define new-elapsed-time (add1 (get-field elapsed-time world)))
   (set-field! elapsed-time
@@ -271,7 +273,17 @@
   (define in-combat (get-field in-combat world))
   (displayln "Current location:")
   (displayln (get-field current-location world))
-  (newline))
+  (newline)
+  (displayln "Current statuses:")
+  (displayln (get-field statuses (get-field pc world)))
+  (newline)
+  (displayln "Current conditions:")
+  (displayln (get-field conditions (get-field pc world)))
+  (newline)
+  (displayln "Hunger")
+  (displayln (get-field hunger-counter (get-field pc world)))
+  (newline)
+  )
 
 (define (describe-enemy actor index)
   (define

@@ -20,6 +20,14 @@
                                      #:duration 50
                                      #:target null
                                      #:tags '(wilderness downtime))))]
+    ['eat
+     (make-choice 'eat
+                  "Eat."
+                  (λ () (make-action #:symbol 'eat
+                                     #:actor 'pc
+                                     #:duration 10
+                                     #:target null
+                                     #:tags '(wilderness downtime))))]
     ['forage
      (make-choice 'forage
                   "Forage."
@@ -47,14 +55,21 @@
     ))
 
 (define (get-downtime-choices world pc)
-  (if (get-field in-combat world)
-      '()
-      (list (choice-from-symbol world pc 'forage)
-            (choice-from-symbol world pc 'search)
-            (if (not (eq? (get-field time-of-day world) 'night))
-                (choice-from-symbol world pc 'craft)
-                (choice-from-symbol world pc 'sleep))
-            )))
+  (define choices '())
+  (cond
+    ((not (get-field in-combat world))
+     (set! choices (cons (choice-from-symbol world pc 'forage) choices)) ; eurgh
+     (set! choices (cons (choice-from-symbol world pc 'search) choices))
+     (cond ((and (memq 'hungry (get-field conditions pc))
+                 (memq 'food (get-field inventory pc)))
+            (set! choices (cons (choice-from-symbol world pc 'eat) choices))))
+     (cond ((not (eq? (get-field time-of-day world) 'night))
+            (set! choices (cons (choice-from-symbol world pc 'craft) choices))))
+     (cond ((or (eq? (get-field time-of-day world) 'night)
+                (eq? (get-field time-of-day world) 'evening))
+            (set! choices (cons (choice-from-symbol world pc 'sleep) choices))))
+     ))
+  choices)
 
 (define (get-free-choices world pc)
   (list (choice-from-symbol world pc 'inventory)))

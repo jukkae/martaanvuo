@@ -15,23 +15,50 @@
     (field [attack-skill 1])
     (field [inventory '()])
     (field [last-breaths-amount 1]) ; require time to pass in game world, do not measure turns or locations -> different "layer" of abstraction
-    (field [current-statuses '()])
+    (field [statuses '()]) ; combat
+    (field [conditions '()]) ; non-combat
+    (field [hunger-counter 0])
 
     (field [current-location '()]) ; convenience
 
     (super-new)
 
     (define/public (get-current-defense)
-      (cond ((memq 'parrying current-statuses)
+      (cond ((memq 'parrying statuses)
              (add1 base-defense))
             (else base-defense)))
 
     (define/public (add-status! status)
-      (set! current-statuses (cons status current-statuses)))
+      (set! statuses (cons status statuses)))
     (define/public (remove-status! status)
-      (set! current-statuses status))
+      (set! statuses (remove status statuses)))
     (define/public (clear-statuses!)
-      (set! current-statuses '()))
+      (set! statuses '()))
+
+    (define/public (add-condition! condition)
+      (set! conditions (cons condition conditions)))
+    (define/public (remove-condition! condition)
+      (set! conditions (remove condition conditions)))
+    (define/public (clear-conditions!)
+      (set! conditions '()))
+
+    (define/public (advance-time-by-a-jiffy!)
+      (define previous-hunger hunger-counter)
+      (set! hunger-counter (add1 hunger-counter))
+      (when (and
+             (< previous-hunger 400)
+             (>= hunger-counter 400))
+        (displayln "You are hungry.") ; TODO confirm this
+        (add-condition! 'hungry))
+      (when (and
+             (< previous-hunger 800)
+             (>= hunger-counter 800))
+        (displayln "You are really hungry."))
+      (when (and
+             (< previous-hunger 1200)
+             (>= hunger-counter 1200))
+        (displayln "You are starving.")
+        (set! hp (- hp 1)))) ; TODO use (hit) or something similar instead of just directly mutating the value
 
       
     (define/public (get-brawl-damage) (d 1 2))
