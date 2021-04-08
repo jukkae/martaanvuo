@@ -375,7 +375,9 @@
   
   (define result
     (if (is-a? actor pc%)
-        (resolve-player-action! world action)
+        (begin
+          (resolve-player-action! world action)
+          (wait-for-confirm))
         (resolve-enemy-action! world action)))
   
   result)

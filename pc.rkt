@@ -4,6 +4,7 @@
 (require "actors.rkt")
 (require "items.rkt")
 (require "skills.rkt")
+(require "ui.rkt")
 (require "utils.rkt")
 ; see also lazy-require and units
 
@@ -49,16 +50,19 @@
              (< previous-hunger 400)
              (>= hunger-counter 400))
         (displayln "You are hungry.") ; TODO confirm this
+        (wait-for-confirm)
         (add-condition! 'hungry))
       (when (and
              (< previous-hunger 800)
              (>= hunger-counter 800))
-        (displayln "You are really hungry."))
+        (displayln "You are really hungry.")
+        (wait-for-confirm))
       (when (and
              (< previous-hunger 1200)
              (>= hunger-counter 1200))
         (displayln "You are starving.")
-        (set! hp (- hp 1)))) ; TODO use (hit) or something similar instead of just directly mutating the value
+        (set! hp (- hp 1))
+        (wait-for-confirm))) ; TODO use (hit) or something similar instead of just directly mutating the value
 
       
     (define/public (get-brawl-damage) (d 1 2))

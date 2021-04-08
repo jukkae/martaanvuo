@@ -8,6 +8,7 @@
 (require "items.rkt")
 (require "locations.rkt")
 (require "narration.rkt")
+(require "ui.rkt")
 (require "utils.rkt")
 (require "pc.rkt")
 
@@ -139,14 +140,25 @@
                  (get-field time-of-day world)))
     (displayln (string-append "It is now " (symbol->string (get-field time-of-day world)) ".")))
 
+  (define current-time-of-day (get-field time-of-day world))
   (when (not (get-field in-combat world))
-    (when (= (modulo (get-field elapsed-time world) 150) 130)
-      (define roll (d 1 4))
-      (cond ((= roll 1)
-             (spawn-enemies world 2)
-             (set! events (cons 'enemies-spawned events)))
-            (else
-             (displayln "It's eerily quiet.")))))
+    (cond ((not (eq? current-time-of-day 'night))
+           (define roll (d 1 200))
+           (cond ((= roll 1)
+                  (spawn-enemies world 2)
+                  (wait-for-confirm)
+                  (set! events (cons 'enemies-spawned events)))))
+          ((eq? current-time-of-day 'night)
+           (define dice-sides (if (or (eq? (get-field current-location world) 'tunnel)
+                                      (eq? (get-field current-location world) 'ruins))
+                                  1000 ; indoors locations are safer
+                                  100))
+           (define roll (d 1 dice-sides))
+           (cond ((= roll 1)
+                  (spawn-enemies world 3)
+                  (wait-for-confirm)
+                  (set! events (cons 'enemies-spawned events))))
+           )))
   events
   )
 
@@ -177,13 +189,7 @@
   (newline))
 
 (define (on-turn! world)
-  '()
-  #;(cond ((and
-            (= (modulo (get-field turn world) 3) 0)
-            (not (get-field in-combat world)))
-           (begin
-             (define challenge-rating (d 1 2))
-             (spawn-enemies world challenge-rating)))))
+  '())
 
 (define (end-turn! world)
   (define pc (get-field pc world))
