@@ -22,24 +22,42 @@
      (make-constructor-style-printer
       (lambda (obj) 'location)
       (lambda (obj)
-        (list (unquoted-printing-string "id: ")
-              (location-id obj)
-              (unquoted-printing-string "number of neighbors: ")
-              #;(location-neighbors obj)
-              (length (location-neighbors obj))
-              (unquoted-printing-string "type: ")
-              (location-type obj)
-              (unquoted-printing-string "features: ")
-              (location-features obj)
-              (unquoted-printing-string "actors: ")
-              (location-actors obj)
-              (unquoted-printing-string "visited: ")
-              (location-visited obj)
-              (unquoted-printing-string "items: ")
-              (location-items obj)
-              (unquoted-printing-string "tags: ")
-              (location-tags obj)
-              ))))])
+        (list
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "id: ")
+         (location-id obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "number of neighbors: ")
+         #;(location-neighbors obj)
+         (length (location-neighbors obj))
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "type: ")
+         (location-type obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "features: ")
+         (location-features obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "actors: ")
+         (location-actors obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "visited: ")
+         (location-visited obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "items: ")
+         (location-items obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "tags: ")
+         (location-tags obj)
+
+         (unquoted-printing-string "\n")
+         ))))])
 
 (define *number-of-locations* 0)
 
