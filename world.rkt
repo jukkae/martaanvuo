@@ -36,6 +36,7 @@
   (case type
     ['swamp #t]
     ['forest #t]
+    ['dry-land #t]
     [else #f]))
 
 
@@ -118,10 +119,11 @@
     (make-neighbors location))
   
   (set-field! previous-location world (get-field current-location world))
+  (when (not (eq? '() (get-field previous-location world)))
+    (set-location-visited! (get-field previous-location world) #t))
   (set-field! current-location world location)
   (add-actor-to-location! location pc)
   (set-field! current-location pc location)
-  (set-location-visited! location #t)
   )
 
 (define (advance-time-by-a-jiffy! world)
@@ -349,8 +351,24 @@
   (define all-choices (append location-choices next-location-choices combat-choices generic-choices))
   all-choices)
 
+(define (get-movement-cost location-type)
+  (case location-type
+    ['swamp 50]
+    ['forest 40]
+    ['dry-land 20]
+    ['ruins 10]
+    ['tunnel 5]
+    [else 20]))
+
 (define (make-go-to-neighbor-choices world location)
   (for/list ([neighbor (location-neighbors location)])
+    (define current-type (location-type (get-field current-location world)))
+    (define neighbor-type (location-type neighbor))
+    (define cost1 (get-movement-cost current-type))
+    (define cost2 (get-movement-cost neighbor-type))
+    #;(define movement-cost (+ cost1 cost2))
+    (define movement-cost cost2)
+    
     (make-choice
      'go-to-neighboring-location
      (string-append (if (eq? neighbor (get-field previous-location world))
@@ -362,7 +380,7 @@
                     "]")
      (λ () (make-action #:symbol 'go-to-neighboring-location
                         #:actor 'pc
-                        #:duration 100 ; 100 jiffies - half-a-day -> action economy: get better -> slightly better actions
+                        #:duration movement-cost
                         #:target neighbor
                         #:tags '(wilderness downtime))))))
 
