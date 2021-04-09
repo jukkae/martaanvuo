@@ -240,9 +240,13 @@
   (define actor (action-actor action))
   (define target (action-target action))
   (define location (get-field current-location world))
-  (when (eq? target 'pc) (set! target (get-field pc world))) ; dirty
-  (when (eq? actor 'pc) (set! actor (get-field pc world))) ; dirty
-  (define attack-skill 4)
+
+  (when (eq? target 'pc)
+    (set! target (get-field pc world)))
+  (when (eq? actor 'pc)
+    (set! actor (get-field pc world)))
+
+  (define attack-skill (get-field attack-skill actor))
   (define target-defense (send target get-current-defense))
   (define attack-roll (+ (d 2 6) attack-skill))
   (define successful? (>= attack-roll target-defense))
@@ -263,7 +267,7 @@
     "against Defense: "
     (number->string target-defense)))
   (cond (successful?
-         (define damage (d 1 3))
+         (define damage (send actor get-brawl-damage))
          (displayln
           (string-append
            "Success, damage: "

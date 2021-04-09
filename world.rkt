@@ -263,8 +263,9 @@
   (define number challenge-rating)
   (define added-enemies '())
   (for ([i (in-range 0 number)])
-    (define r (d 1 2))
-    (define enemy (cond ((= r 2) (new blindscraper%))
+    (define r (d 1 3))
+    (define enemy (cond ((= r 3) (new grabberkin%))
+                        ((= r 2) (new blindscraper%))
                         (else (new bloodleech%))))
 
     (add-actor-to-location! location enemy)
