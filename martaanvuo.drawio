@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-04-10T15:46:34.673Z" agent="5.0 (Macintosh)" etag="m49D9blj-V52RyYI_DrH" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-10T16:26:36.152Z" agent="5.0 (Macintosh)" etag="e2EFPICxyA7RbVL2C3R6" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
-    <mxGraphModel dx="1188" dy="772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -134,7 +134,7 @@
           <mxGeometry x="1895" y="400" width="10" height="20" as="geometry" />
         </mxCell>
         <mxCell id="uS2b5ykc9f4V-rk9ps5i-62" value="&lt;div&gt;Location types:&lt;br&gt;Swamp&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; | Just dangerous&lt;br&gt;Forest&amp;nbsp;&amp;nbsp;&amp;nbsp; | Foraging, but dangerous&lt;br&gt;Dry land&amp;nbsp; | &lt;br&gt;Ruins&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; | Indoors, relatively safe&lt;/div&gt;&lt;div&gt;Tunnel&amp;nbsp;&amp;nbsp;&amp;nbsp; | Indoors, dangerous&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="1840" y="710" width="310" height="145" as="geometry" />
+          <mxGeometry x="1865" y="155" width="310" height="145" as="geometry" />
         </mxCell>
         <mxCell id="s21wqiSacWzXnnwVVLs9-32" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="s21wqiSacWzXnnwVVLs9-2" target="s21wqiSacWzXnnwVVLs9-27" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -342,71 +342,91 @@
           <mxGeometry x="1950" y="880" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-19" value="Immediate" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-17" target="Mjj1QeHVWUKomglfDfad-18">
-          <mxGeometry x="-0.1583" y="-1" relative="1" as="geometry">
+          <mxGeometry x="0.1912" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-21" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-17" target="Mjj1QeHVWUKomglfDfad-20">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-22" value="Delayed" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="Mjj1QeHVWUKomglfDfad-21">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-22" value="Initiative-based" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="Mjj1QeHVWUKomglfDfad-21">
           <mxGeometry x="0.145" y="-2" relative="1" as="geometry">
-            <mxPoint x="-5" y="-8" as="offset" />
+            <mxPoint x="7" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-17" value="Action type" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-17" value="Resolve&lt;br&gt;type" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
           <mxGeometry x="1975" y="1040" width="60" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-24" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-18" target="Mjj1QeHVWUKomglfDfad-23">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-18" value="Resolve player action" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="1850" y="1120" width="110" height="40" as="geometry" />
+          <mxGeometry x="1850.3600000000001" y="1140" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-36" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-20" target="Mjj1QeHVWUKomglfDfad-29">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-20" value="Add action to queue" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2050" y="1120" width="110" height="40" as="geometry" />
+          <mxGeometry x="2060.36" y="1140" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-25" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-23" target="Mjj1QeHVWUKomglfDfad-2">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1565" y="1220" />
+              <mxPoint x="1565" y="1238" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-26" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="Mjj1QeHVWUKomglfDfad-25">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-26" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="Mjj1QeHVWUKomglfDfad-25">
           <mxGeometry x="-0.1283" relative="1" as="geometry">
             <mxPoint x="180" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-42" value="No" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-23" target="Mjj1QeHVWUKomglfDfad-29">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-74" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-23" target="Mjj1QeHVWUKomglfDfad-73">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-23" value="Instant?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1875" y="1190" width="60" height="60" as="geometry" />
+        <mxCell id="Mjj1QeHVWUKomglfDfad-76" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="Mjj1QeHVWUKomglfDfad-74">
+          <mxGeometry x="-0.4197" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-23" value="Takes time?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1875.3600000000001" y="1210" width="60" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-38" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-29" target="Mjj1QeHVWUKomglfDfad-37">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-29" value="Sort action queue" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2050" y="1200" width="110" height="40" as="geometry" />
+          <mxGeometry x="2150" y="1230" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-33" value="Enqueue NPC actions" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1360" y="960" width="110" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-41" value="No" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;startArrow=none;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-56" target="Mjj1QeHVWUKomglfDfad-40">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-66" value="In combat" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-37" target="Mjj1QeHVWUKomglfDfad-59">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-68" value="Not in combat" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-37" target="Mjj1QeHVWUKomglfDfad-40">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2310.36" y="1405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-71" value="Early end turn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;entryX=1;entryY=0.5;entryDx=0;entryDy=0;curved=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-37" target="Mjj1QeHVWUKomglfDfad-40">
+          <mxGeometry x="-0.3722" y="-10" relative="1" as="geometry">
+            <mxPoint x="2405.3599999999997" y="1325" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2360" y="1325" />
+              <mxPoint x="2360" y="1525" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-37" value="Resolve all actions" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2050" y="1280" width="110" height="40" as="geometry" />
+          <mxGeometry x="2150" y="1305" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-63" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-40" target="Mjj1QeHVWUKomglfDfad-62">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-40" value="&lt;div&gt;End turn&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2050.17" y="1500" width="110" height="40" as="geometry" />
+          <mxGeometry x="2150" y="1505" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-51" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-48" target="Mjj1QeHVWUKomglfDfad-50">
           <mxGeometry relative="1" as="geometry" />
@@ -423,28 +443,23 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-50" value="Finally provide choice" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1700" y="1080" width="110" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-58" value="Yes" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-56">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2229.9999999999995" y="1390" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-56" value="In combat?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2075" y="1360" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-57" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=none;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-37" target="Mjj1QeHVWUKomglfDfad-56">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2105.0154545454543" y="1320" as="sourcePoint" />
-            <mxPoint x="2105.1545454545458" y="1500" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-60" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-59" target="Mjj1QeHVWUKomglfDfad-40">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-59" value="Advance time by a jiffy" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2231" y="1370" width="110" height="40" as="geometry" />
+          <mxGeometry x="2035.0000000000002" y="1390" width="110" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-62" value="Turn exit status:&lt;br&gt;&#39;ok | &#39;dead" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="2050.17" y="1560" width="110" height="70" as="geometry" />
+        <mxCell id="Mjj1QeHVWUKomglfDfad-62" value="Turn exit status:&lt;br&gt;&lt;div align=&quot;left&quot;&gt;| &#39;ok | &#39;dead&lt;br&gt;| &#39;last-breath&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2150" y="1570" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-65" value="-&amp;gt; All &quot;normal&quot; combat actions take a jiffy, and happen roughly simultaneously" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="2260" y="1110" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-75" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-73" target="Mjj1QeHVWUKomglfDfad-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mjj1QeHVWUKomglfDfad-73" value="&lt;div&gt;Advance time until something interesting happens&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1850.3600000000001" y="1495" width="110" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
