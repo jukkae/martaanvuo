@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-11T11:52:46.286Z" agent="5.0 (Macintosh)" etag="Z2YXTlIHw6dMP-tzrYZd" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-11T11:53:27.428Z" agent="5.0 (Macintosh)" etag="-3cYMtnz7yuBne0sw7Uz" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -226,7 +226,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-2" value="Describe situation" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="1760" y="975" width="110" height="40" as="geometry" />
+          <mxGeometry x="1866" y="975" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-3" target="Mjj1QeHVWUKomglfDfad-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -456,12 +456,12 @@
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-60" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;fontFamily=Courier New;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="1920" y="1170" as="sourcePoint" />
-            <mxPoint x="1920" y="860" as="targetPoint" />
+            <mxPoint x="1799" y="1170" as="sourcePoint" />
+            <mxPoint x="1799" y="860" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-61" value="Serialization time" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="1856" y="820" width="130" height="50" as="geometry" />
+          <mxGeometry x="1735" y="820" width="130" height="50" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-63" value="ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1720" y="1365" width="80" height="40" as="geometry" />
