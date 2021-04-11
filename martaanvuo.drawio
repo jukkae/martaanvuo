@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-11T11:14:15.941Z" agent="5.0 (Macintosh)" etag="MTcfzJ-bvtuq7yBcN0dl" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-11T11:49:26.394Z" agent="5.0 (Macintosh)" etag="w5rkVnG0Q0tIDoI5AQx8" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1188" dy="772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -176,7 +176,7 @@
         <mxCell id="s21wqiSacWzXnnwVVLs9-26" value="&lt;div&gt;&lt;font&gt;PC data&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hunger&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- skills&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- perks&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;- visited&lt;br&gt;&amp;nbsp; locations&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="1400" y="1495" width="90" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="s21wqiSacWzXnnwVVLs9-27" value="&lt;font&gt;Actor data&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hp / max hp&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- atk&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- dmg&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- def&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- inventory&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- statuses&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- conditions&lt;br&gt;&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;font&gt;- AI&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;font&gt;&lt;/font&gt;&lt;br&gt;- current&lt;br&gt;&amp;nbsp; location&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
+        <mxCell id="s21wqiSacWzXnnwVVLs9-27" value="&lt;font&gt;Actor data&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hp / max hp&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- atk&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- dmg&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- def&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- inventory&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- statuses&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- conditions&lt;br&gt;&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;font&gt;- AI&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;font&gt;&lt;/font&gt;&lt;br&gt;- (current&lt;br&gt;&amp;nbsp; location)&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="1400" y="1240" width="110" height="220" as="geometry" />
         </mxCell>
         <mxCell id="s21wqiSacWzXnnwVVLs9-1" value="&lt;div&gt;Actor&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
@@ -481,8 +481,8 @@
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-66" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1840" y="1440" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-71" value="&lt;div&gt;AI is a function:&lt;/div&gt;&lt;div&gt;(get-next-action this-actor world-state)&lt;br&gt;-&amp;gt; action&lt;br&gt; &lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="1585" y="1270" width="390" height="110" as="geometry" />
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-71" value="&lt;div&gt;AI is a function:&lt;/div&gt;&lt;div&gt;(get-next-action this-actor world-state)&lt;br&gt;-&amp;gt; action&lt;br&gt; &lt;/div&gt;&lt;br&gt;- AI is NOT a type, it&#39;s just a function value&lt;br&gt;&amp;nbsp; stored in an actor!" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="1255" width="390" height="110" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
