@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-11T14:31:02.150Z" agent="5.0 (Macintosh)" etag="fh4OoGwnI45zz9EHmubZ" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-11T14:35:12.124Z" agent="5.0 (Macintosh)" etag="0g5ugs2_bFI_CYGfuiMQ" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -511,6 +511,9 @@
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-9" value="(Consider rounds vs turns)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="1830" y="770" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="fIGCcyKUM6D2oCtiyjVn-10" value="(= end turn, but not end round)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="2686" y="1545" width="240" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
