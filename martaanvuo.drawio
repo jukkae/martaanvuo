@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-11T10:31:56.041Z" agent="5.0 (Macintosh)" etag="yE-ceVmdBbtiiJTMo4tw" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-11T11:14:15.941Z" agent="5.0 (Macintosh)" etag="MTcfzJ-bvtuq7yBcN0dl" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1188" dy="772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -433,13 +433,13 @@
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-47" value="Action queue and event queue are separate things" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="2516" y="1155" width="210" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-48" value="Actor" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-48" value="actor" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1240" y="1360" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-54" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-49" target="GtMXS8k0hl24dT_Wd-_N-48">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-49" value="PC" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-49" value="pc" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1240" y="1440" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-51" value="Subtyping" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
@@ -459,6 +459,30 @@
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-61" value="Serialization time" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="1856" y="820" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-63" value="ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="1365" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-67" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-64" target="GtMXS8k0hl24dT_Wd-_N-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-64" value="enemy-ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="1440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-68" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-65" target="GtMXS8k0hl24dT_Wd-_N-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-65" value="pc-ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="1440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-69" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-66" target="GtMXS8k0hl24dT_Wd-_N-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-66" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="1440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-71" value="&lt;div&gt;AI is a function:&lt;/div&gt;&lt;div&gt;(get-next-action this-actor world-state)&lt;br&gt;-&amp;gt; action&lt;br&gt; &lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1585" y="1270" width="390" height="110" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
