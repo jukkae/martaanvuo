@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-11T14:13:29.879Z" agent="5.0 (Macintosh)" etag="LjtcELvUteB3SqaLQMaO" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-11T14:31:02.150Z" agent="5.0 (Macintosh)" etag="fh4OoGwnI45zz9EHmubZ" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -219,7 +219,7 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-35" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-1" target="Mjj1QeHVWUKomglfDfad-33" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-1" value="&lt;div&gt;Begin turn&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-1" value="&lt;div&gt;Begin round&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1450" y="975" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-2" target="Mjj1QeHVWUKomglfDfad-3" edge="1">
@@ -330,7 +330,7 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-63" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-40" target="Mjj1QeHVWUKomglfDfad-62" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-40" value="&lt;div&gt;End turn&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-40" value="&lt;div&gt;End round&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2476" y="1640" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-26" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-48" target="Mjj1QeHVWUKomglfDfad-50" edge="1">
@@ -356,7 +356,7 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-59" value="Advance time" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2766" y="1297.5" width="110" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-62" value="Turn exit status:&lt;br&gt;&lt;div align=&quot;left&quot;&gt;| &#39;ok | &#39;dead&lt;br&gt;| &#39;last-breath&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="Mjj1QeHVWUKomglfDfad-62" value="Round exit status:&lt;br&gt;&lt;div align=&quot;left&quot;&gt;| &#39;ok | &#39;dead&lt;br&gt;| &#39;last-breath&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2476" y="1705" width="110" height="70" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-65" value="&lt;div&gt;Actions&lt;/div&gt;&lt;div&gt;- Combat actions: 1 jiffy&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
@@ -443,7 +443,7 @@
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-42" value="Handle event" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2296.36" y="1745" width="110" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-47" value="&lt;div&gt;Action queue only persists for a turn&lt;/div&gt;&lt;div&gt;Event queue is based on time progressing&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-47" value="&lt;div&gt;Action queue only persists for a round&lt;/div&gt;&lt;div&gt;Event queue is based on time progressing&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="2540" y="1155" width="324" height="50" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-48" value="actor" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
@@ -505,6 +505,12 @@
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-5" value="&quot;What do you do?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="2741" y="1495" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fIGCcyKUM6D2oCtiyjVn-7" value="Action - reaction = turn" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="2851" y="1440" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="fIGCcyKUM6D2oCtiyjVn-9" value="(Consider rounds vs turns)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1830" y="770" width="130" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
