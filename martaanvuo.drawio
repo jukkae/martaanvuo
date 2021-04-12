@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-12T17:55:49.605Z" agent="5.0 (Macintosh)" etag="CWAAh0Ez38ZKUDrT_lob" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-12T18:49:17.076Z" agent="5.0 (Macintosh)" etag="OSEN-3131dMnthHRnbfX" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -532,6 +532,9 @@
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-17" value="Serialization time" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="2864" y="1600" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="gbILwj0ovBhhdUd5rJjH-3" value="&lt;div&gt;Action&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- symbol&lt;/div&gt;&lt;div&gt;- actor&lt;/div&gt;&lt;div&gt;- duration&lt;/div&gt;&lt;div&gt;- target&lt;/div&gt;&lt;div&gt;- tags&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="1609" width="90" height="118" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
