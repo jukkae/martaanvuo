@@ -1,7 +1,7 @@
 #lang racket
 
 (require "action.rkt")
-(require "actors.rkt")
+(require "actor.rkt")
 (require "items.rkt")
 (require "skills.rkt")
 (require "ui.rkt")

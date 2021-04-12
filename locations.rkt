@@ -1,11 +1,13 @@
 #lang racket
 
 (require racket/struct)
+(require racket/serialize)
+
 (require "action.rkt")
 (require "items.rkt")
 (require "utils.rkt")
 
-(define-struct location
+(serializable-struct location
   (id
    [neighbors #:mutable]
    type

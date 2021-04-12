@@ -3,7 +3,7 @@
 (require dyoo-while-loop)
 
 (require "action.rkt")
-(require "actors.rkt")
+(require "actor.rkt")
 (require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
@@ -278,7 +278,7 @@
                 (lambda (item) (member 'stab (send item get-uses)))
                 (get-field inventory pc)))))
 
-(define (describe-situation world)
+#;(define (describe-situation world)
   (define in-combat (get-field in-combat world))
   (displayln "Current location:")
   (displayln (get-field current-location world))

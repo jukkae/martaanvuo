@@ -3,6 +3,18 @@
 (require "action.rkt")
 (require "utils.rkt")
 
+(define-struct actor
+  (symbol
+   name
+   max-hp
+   hp
+   defense
+   attack-skill
+   damage
+   inventory
+   statuses
+   conditions))
+
 (define creature<%> (interface () get-name get-name-with-article get-description get-next-action get-status hit))
 (define bloodleech%
   (class* object% (creature<%>)
