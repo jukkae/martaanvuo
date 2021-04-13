@@ -482,7 +482,8 @@
 
 (serializable-struct
  actor
- (hp
+ (name
+  hp
   max-hp
   attack-skill
   attack-damage
@@ -490,7 +491,6 @@
   inventory
   statuses
   conditions
-  get-next-action
   [current-location #:mutable]))
 
 (serializable-struct
@@ -522,6 +522,7 @@
 
 (define *pc*
   (pc-actor
+   "You"
    4
    4
    0
@@ -530,7 +531,6 @@
    '()
    '()
    '()
-   (λ () (displayln "PC get-next-action function called"))
    '()
    4
    4
@@ -541,6 +541,7 @@
 
 (define *enemy*
   (actor
+   "Blindscraper"
    4
    4
    0
@@ -549,8 +550,21 @@
    '()
    '()
    '()
-   (λ () 'attack-action)
    '()))
+
+(define (get-next-npc-action actor)
+  (make-action #:symbol 'attack
+               #:actor actor
+               #:duration 1
+               #:target 'pc
+               #:tags '(delayed-resolution))
+  )
+
+
+(define (get-next-action actor)
+  (cond ((not (pc-actor? actor)) (get-next-npc-action actor)) ; = what do you do?
+        (else (displayln "get-next-action // PC actor")))
+  )
 
 (define (remove-actor-from-its-current-location! actor)
   (define current-location (actor-current-location actor))
@@ -569,6 +583,50 @@
   (set-location-neighbors! location-2 (list location-1))
   )
 
+(define (get-current-enemies)
+  (filter
+   (λ (actor) (not (pc-actor? actor)))
+   (location-actors (current-location))))
+
+(define (get-world-choices world actor)
+  (define combat-choices '())
+  (define targets (get-current-enemies))
+  (for ([i (in-range 0 (length targets))])
+    (define target (list-ref targets i))
+    (set! combat-choices
+          (append combat-choices
+                  (list
+                   (make-choice
+                    'brawl
+                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    (λ () (make-action
+                           #:symbol 'brawl
+                           #:actor 'pc
+                           #:duration 1
+                           #:target target
+                           #:tags '(combat fast delayed-resolution))))
+                   (make-choice
+                    'brawl
+                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    (λ () (make-action
+                           #:symbol 'brawl
+                           #:actor 'pc
+                           #:duration 1
+                           #:target target
+                           #:tags '(combat fast delayed-resolution))))
+                   (make-choice
+                    'brawl
+                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    (λ () (make-action
+                           #:symbol 'brawl
+                           #:actor 'pc
+                           #:duration 1
+                           #:target target
+                           #:tags '(combat fast delayed-resolution)))))))
+    )
+  combat-choices
+  )
+
 (define action-queue '())
 (define (on-begin-round)
   (displayln "on-begin-round")
@@ -580,9 +638,9 @@
   (define actors (location-actors (current-location)))
   (for ([actor actors])
     (when (not (pc-actor? actor))
-      (define next-action ((actor-get-next-action actor)))
-      (displayln next-action)
-      (displayln actor)))
+      (define next-action (get-next-action actor))
+      (set! action-queue (cons next-action action-queue))
+      (displayln next-action)))
   )
 
 (define (serialize-state)
@@ -593,8 +651,42 @@
   (displayln "describe-situation")
   )
 
-(define (what-do-you-do?)
-  (displayln "what-do-you-do?")
+(define (get-next-pc-action)
+  (paragraph "What do you do?")
+  (define actor *pc*)
+  (define choices (get-world-choices *world* actor))
+  (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
+  (print-choices-with-keys choices-with-keys)
+
+  (define meta-commands-with-keys (get-meta-commands-with-keys))
+  (print-meta-commands-with-keys meta-commands-with-keys)
+
+  (paragraph "What do you do?")
+
+  (define input (wait-for-input))
+
+  (newline)
+
+  (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
+  (cond (handled? (get-next-action actor))
+        (else
+         (when (not handled?)
+           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
+         (when (not handled?)
+           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
+
+         (unless handled? (error "Input not handled even in PEBKAC loop!"))
+
+         (define choice handled?) ; ta-dah
+
+         (define action (make-action-from-choice *world* choice))
+         
+         (cond ((free? action)
+                (resolve-action! *world* action)
+                (get-next-action actor))
+               (else action))
+               
+         ))
   )
 
 (define (resolve-round)
@@ -602,7 +694,7 @@
   (enqueue-npc-actions)
   (serialize-state)
   (describe-situation)
-  (what-do-you-do?)
+  (get-next-pc-action)
   )
 
 (define (begin-game)

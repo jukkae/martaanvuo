@@ -54,7 +54,7 @@
       #t
       #f))
 
-(define (resolve-instantly? action)
+(define (immediate-resolution? action)
   (if (not (member 'delayed-resolution (action-tags action)))
       #t
       #f))

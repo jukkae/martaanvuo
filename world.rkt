@@ -333,7 +333,7 @@
   (define action ((choice-resolution-effect choice))) ; check actor
   action)
 
-(define (get-world-choices world actor)
+#;(define (get-world-choices world actor)
   ; Should check for matches in pending actions, and name choices accordingly
   (define current-location (get-field current-location world))
   (define location-choices
