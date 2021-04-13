@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-12T18:49:17.076Z" agent="5.0 (Macintosh)" etag="OSEN-3131dMnthHRnbfX" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-13T18:03:32.748Z" agent="5.0 (Macintosh)" etag="dogwxzodnpPfDku6u0kI" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="926" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -176,8 +176,8 @@
         <mxCell id="s21wqiSacWzXnnwVVLs9-26" value="&lt;div&gt;&lt;font&gt;PC data&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- lp&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- xp total&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- available xp&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hunger&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- skills&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- perks&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;- visited&lt;br&gt;&amp;nbsp; locations&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="1400" y="1495" width="120" height="175" as="geometry" />
         </mxCell>
-        <mxCell id="s21wqiSacWzXnnwVVLs9-27" value="&lt;font&gt;Actor data&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hp / max hp&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- atk&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- dmg&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- def&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- inventory&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- statuses&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- conditions&lt;br&gt;&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;font&gt;- AI&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;&lt;font&gt;&lt;/font&gt;&lt;br&gt;- (current&lt;br&gt;&amp;nbsp; location)&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="1400" y="1240" width="110" height="220" as="geometry" />
+        <mxCell id="s21wqiSacWzXnnwVVLs9-27" value="&lt;font&gt;Actor data&lt;/font&gt;&lt;br&gt;&lt;font&gt;&lt;/font&gt;&lt;div&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- hp / max hp&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- atk&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- dmg&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- def&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- inventory&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- statuses&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font&gt;- conditions&lt;br&gt;&lt;/font&gt;&lt;font&gt;- (current&lt;br&gt;&amp;nbsp; location)&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;align=left;verticalAlign=top;fontFamily=Courier New;" parent="1" vertex="1">
+          <mxGeometry x="1400" y="1240" width="110" height="180" as="geometry" />
         </mxCell>
         <mxCell id="s21wqiSacWzXnnwVVLs9-1" value="&lt;div&gt;Actor&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="580" y="1370" width="80" height="40" as="geometry" />
@@ -473,28 +473,28 @@
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-61" value="Serialization time" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="1735" y="820" width="130" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-63" value="ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="1720" y="1365" width="80" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-67" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-64" target="GtMXS8k0hl24dT_Wd-_N-63" edge="1">
+        <mxCell id="gbILwj0ovBhhdUd5rJjH-4" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-63" target="GtMXS8k0hl24dT_Wd-_N-64">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gbILwj0ovBhhdUd5rJjH-5" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-63" target="GtMXS8k0hl24dT_Wd-_N-65">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gbILwj0ovBhhdUd5rJjH-6" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="GtMXS8k0hl24dT_Wd-_N-63" target="GtMXS8k0hl24dT_Wd-_N-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-63" value="get-next-action" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="1700" y="1360" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-64" value="enemy-ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1600" y="1440" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-68" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-65" target="GtMXS8k0hl24dT_Wd-_N-63" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-65" value="pc-ai" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1720" y="1440" width="80" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-69" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-66" target="GtMXS8k0hl24dT_Wd-_N-63" edge="1">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-66" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="1840" y="1440" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-71" value="&lt;div&gt;AI is a function:&lt;/div&gt;&lt;div&gt;(get-next-action this-actor world-state)&lt;br&gt;-&amp;gt; action&lt;br&gt; &lt;/div&gt;&lt;br&gt;- AI is NOT a type, it&#39;s just a function value&lt;br&gt;&amp;nbsp; stored in an actor!" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" parent="1" vertex="1">
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-71" value="AI is a free function that *operates* on actors" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="1585" y="1255" width="390" height="110" as="geometry" />
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-6" value="Yes" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="fIGCcyKUM6D2oCtiyjVn-4" target="fIGCcyKUM6D2oCtiyjVn-5" edge="1">
