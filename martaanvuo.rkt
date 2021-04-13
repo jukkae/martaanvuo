@@ -490,7 +490,7 @@
   inventory
   statuses
   conditions
-  ai
+  get-next-action
   [current-location #:mutable]))
 
 (serializable-struct
@@ -530,7 +530,7 @@
    '()
    '()
    '()
-   (λ () (displayln "PC AI function called"))
+   (λ () (displayln "PC get-next-action function called"))
    '()
    4
    4
@@ -549,23 +549,40 @@
    '()
    '()
    '()
-   (λ () (displayln "PC AI function called"))
+   (λ () 'attack-action)
    '()))
-   
+
+(define (remove-actor-from-its-current-location! actor)
+  (define current-location (actor-current-location actor))
+  (when (not (eq? '() current-location))
+    (remove-actor-from-location! current-location actor)))
+
+(define (move-actor-to-location! actor location)
+  (remove-actor-from-its-current-location! actor)
+  (set-actor-current-location! actor location)
+  (add-actor-to-location! location actor))
 
 (define (setup-world)
-  (set-actor-current-location! *pc* location-1)
-  (set-actor-current-location! *enemy* location-1)
+  (move-actor-to-location! *pc* location-1)
+  (move-actor-to-location! *enemy* location-1)
   (set-location-neighbors! location-1 (list location-2))
   (set-location-neighbors! location-2 (list location-1))
   )
 
+(define action-queue '())
 (define (on-begin-round)
   (displayln "on-begin-round")
+  (set! action-queue '())
   )
 
 (define (enqueue-npc-actions)
   (displayln "enqueue-npc-actions")
+  (define actors (location-actors (current-location)))
+  (for ([actor actors])
+    (when (not (pc-actor? actor))
+      (define next-action ((actor-get-next-action actor)))
+      (displayln next-action)
+      (displayln actor)))
   )
 
 (define (serialize-state)
