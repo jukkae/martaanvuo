@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-04-13T19:19:28.432Z" agent="5.0 (Macintosh)" etag="rHwK2h2jM3rwZkmdV0fO" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-13T19:20:50.436Z" agent="5.0 (Macintosh)" etag="qpKyU2xIQLBiLsjQcJmF" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
-    <mxGraphModel dx="1904" dy="1219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="925" dy="592" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -391,7 +391,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-11" value="Result early exit?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" parent="1" vertex="1">
-          <mxGeometry x="3169.64" y="1627" width="60" height="60" as="geometry" />
+          <mxGeometry x="3230" y="1690" width="60" height="60" as="geometry" />
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-32" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-30" target="Mjj1QeHVWUKomglfDfad-37" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -412,8 +412,12 @@
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-30" value="Trigger event?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" parent="1" vertex="1">
           <mxGeometry x="3509.64" y="1427" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GtMXS8k0hl24dT_Wd-_N-36" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-34" target="Mjj1QeHVWUKomglfDfad-40" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="GtMXS8k0hl24dT_Wd-_N-36" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="GtMXS8k0hl24dT_Wd-_N-34" target="GtMXS8k0hl24dT_Wd-_N-11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3685" y="1720" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-37" value="Early exit" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" parent="GtMXS8k0hl24dT_Wd-_N-36" vertex="1" connectable="0">
           <mxGeometry x="-0.9007" y="-4" relative="1" as="geometry">
@@ -518,7 +522,7 @@
           <mxGeometry x="1830" y="770" width="130" height="50" as="geometry" />
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-10" value="(= end turn, but not end round)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="3269.64" y="1677" width="240" height="30" as="geometry" />
+          <mxGeometry x="3290" y="1727" width="240" height="30" as="geometry" />
         </mxCell>
         <mxCell id="fIGCcyKUM6D2oCtiyjVn-15" value="Resolve all turns" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="3690" y="1235" width="134" height="30" as="geometry" />
