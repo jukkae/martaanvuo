@@ -668,41 +668,84 @@
   (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")
   )
 
+(define (meta-command-valid? meta-commands-with-keys input)
+  (set! input (string-upcase input))
+  (define meta-command (hash-ref meta-commands-with-keys input '()))
+  (if (not (null? meta-command))
+      meta-command
+      #f))
+
+(define (choice-valid? choices-with-keys input)
+  (define choice (hash-ref choices-with-keys (string->number input) '()))
+  (if (not (null? choice))
+      choice
+      #f))
+
+(define (choice-as-action input)
+  (displayln "yah"))
+  
+
 ;; this is broken
 (define (get-next-pc-action)
-  (let loop ()
-    (paragraph "What do you do?")
-    (define actor *pc*)
-    (define choices (get-world-choices *world* actor))
-    (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
-    (print-choices-with-keys choices-with-keys)
+  (let/ec produce-action
+    (define (handle-meta-command meta-commands-with-keys input)
+      (displayln "yea"))
+    (let loop ()
+      (paragraph "What do you do?")
+      (define actor *pc*)
 
-    (define meta-commands-with-keys (get-meta-commands-with-keys))
-    (print-meta-commands-with-keys meta-commands-with-keys)
+      (define choices (get-world-choices *world* actor))
+      (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
+      (define meta-commands-with-keys (get-meta-commands-with-keys))
+      (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys 'verbose)
+      (define input (wait-for-input))
+
+      (newline)
+
+      (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
+            ((choice-valid? choices-with-keys input) (choice-as-action input))
+            (else (loop)))
+
+      
+      (produce-action 'action)
+      )
+    #;(let loop ()
+        (paragraph "What do you do?")
+        (define actor *pc*)
+
+        (define choices (get-world-choices *world* actor))
+        (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
+        (define meta-commands-with-keys (get-meta-commands-with-keys))
 
 
-    (define input (wait-for-input))
+        (print-choices-with-keys choices-with-keys)
 
-    (newline)
+    
+        (print-meta-commands-with-keys meta-commands-with-keys)
 
-    (define handled '())
-    (while (null? handled)
-           (set! handled (try-to-handle-as-meta-command meta-commands-with-keys input))
-           (when (not handled)
-             (set! handled (try-to-handle-as-choice choices-with-keys input)))
-           (when (not handled)
-             (set! handled (pebkac-loop choices-with-keys meta-commands-with-keys))))
 
-    (when (eq? handled #t) (loop))
-    (define choice handled) ; ta-dah
-    (displayln "CHOICE:")
-    (displayln choice)
+        (define input (wait-for-input))
 
-    (define action (make-action-from-choice *world* choice))
-    (cond ((free? action)
-           (resolve-action! *world* action)
-           (get-next-action actor))
-          (else action))))
+        (newline)
+
+        (define handled '())
+        (while (null? handled)
+               (set! handled (try-to-handle-as-meta-command meta-commands-with-keys input))
+               (when (not handled)
+                 (set! handled (try-to-handle-as-choice choices-with-keys input)))
+               (when (not handled)
+                 (set! handled (pebkac-loop choices-with-keys meta-commands-with-keys))))
+
+        (when (eq? handled #t) (loop))
+        (define choice handled) ; ta-dah
+        (displayln "CHOICE:")
+        (displayln choice)
+
+        (define action (make-action-from-choice *world* choice))
+        (cond ((free? action)
+               (resolve-action! *world* action)
+               (get-next-action actor))
+              (else action)))))
 
 ;(define handled? '())
 ;  (while (null? handled?)
@@ -798,6 +841,14 @@
 (define (run-meta-command meta-command-with-key)
   (define meta-command (cdr meta-command-with-key))
   (meta-command))
+
+(define (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys . verbosity)
+  (cond ((eq? verbosity 'abbreviated)
+         '()
+         )
+        (else
+         (print-choices-with-keys choices-with-keys)
+         (print-meta-commands-with-keys meta-commands-with-keys))))
 
 (define (try-to-handle-as-meta-command valid-meta-commands-with-keys input)
   (set! input (string-upcase input))
