@@ -4,7 +4,6 @@
 (require "utils.rkt")
 
 (define (paragraph . args)
-  (newline) ; TODO either newline's got to go
   (displayln (string-append* args))
   (newline))
 

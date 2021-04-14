@@ -541,7 +541,7 @@
 
 (define *enemy*
   (actor
-   "Blindscraper"
+   "woman"
    4
    4
    0
@@ -553,11 +553,12 @@
    '()))
 
 (define (get-next-npc-action actor)
-  (make-action #:symbol 'attack
-               #:actor actor
-               #:duration 1
-               #:target 'pc
-               #:tags '(delayed-resolution))
+  '()
+  #;(make-action #:symbol 'attack
+                 #:actor actor
+                 #:duration 1
+                 #:target 'pc
+                 #:tags '(delayed-resolution))
   )
 
 
@@ -597,28 +598,46 @@
           (append combat-choices
                   (list
                    (make-choice
-                    'brawl
-                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    'shoot
+                    (string-append "Shoot the " (actor-name target) ". (enemy #" (number->string (add1 i)) ")")
                     (λ () (make-action
-                           #:symbol 'brawl
+                           #:symbol 'shoot
                            #:actor 'pc
                            #:duration 1
                            #:target target
                            #:tags '(combat fast delayed-resolution))))
                    (make-choice
-                    'brawl
-                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    'get-closer
+                    (string-append "Get closer.")
                     (λ () (make-action
-                           #:symbol 'brawl
+                           #:symbol 'get-closer
                            #:actor 'pc
                            #:duration 1
                            #:target target
                            #:tags '(combat fast delayed-resolution))))
                    (make-choice
-                    'brawl
-                    (string-append "Attack the " (actor-name target) " (enemy #" (number->string (add1 i)) ")")
+                    'explain
+                    (string-append "\"I'm just passing through.\"")
                     (λ () (make-action
-                           #:symbol 'brawl
+                           #:symbol 'explain
+                           #:actor 'pc
+                           #:duration 0
+                           #:target target
+                           #:tags '(dialogue fast delayed-resolution))))
+                   (make-choice
+                    'barter
+                    (string-append "\"I want to barter.\"")
+                    (λ () (make-action
+                           #:symbol 'barter
+                           #:actor 'pc
+                           #:duration 0
+                           #:target target
+                           #:tags '(dialogue fast delayed-resolution))))
+                   (make-choice
+                    'back-off
+                    (string-append "Back off.")
+                    (λ () (make-action
+                           #:symbol 'back-off
                            #:actor 'pc
                            #:duration 1
                            #:target target
@@ -647,8 +666,13 @@
   (displayln "serialize-state")
   )
 
+(define encounter 'scavenger)
 (define (describe-situation)
   (displayln "describe-situation")
+  (newline)
+  (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
+  (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. She's aiming a hunting rifle at you.")
+  (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")
   )
 
 (define (get-next-pc-action)
