@@ -679,6 +679,7 @@
 
 (define (resolve-turns!)
   (displayln "resolve-turns!")
+  (newline)
   (for ([action action-queue])
     (resolve-turn! world action))
   )
