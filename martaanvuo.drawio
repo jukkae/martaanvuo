@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T17:31:59.275Z" agent="5.0 (Macintosh)" etag="2NejHA_XIIr5lAgTEtCX" version="14.6.0" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-14T18:48:41.934Z" agent="5.0 (Macintosh)" etag="ArI1v0AlmFyPrBj7gGY_" version="14.6.0" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1618" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -663,6 +663,61 @@
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-36" value="NPCs might react" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="3110.0000000000005" y="1150" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-5" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-2" target="YugrOfWrAMtGJ8in59au-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-2" value="&quot;What do you do?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="2040" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-3" value="&lt;div align=&quot;left&quot;&gt;get-next-pc-action&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;eventually produces a choice&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;or exits game&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1340" y="1940" width="360" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-7" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-4" target="YugrOfWrAMtGJ8in59au-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-4" value="input" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="2040" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-10" value="&#39;handled" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-6" target="YugrOfWrAMtGJ8in59au-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-12" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-6" target="YugrOfWrAMtGJ8in59au-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-13" value="&#39;not-handled" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="YugrOfWrAMtGJ8in59au-12">
+          <mxGeometry x="-0.175" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-6" value="try to handle as meta command" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="2040" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-9" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="2160" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-15" value="&#39;choice" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-11" target="YugrOfWrAMtGJ8in59au-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-17" value="&#39;not-handled" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-11" target="YugrOfWrAMtGJ8in59au-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-11" value="try to handle as choice" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2000" y="2040" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-14" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2000" y="1920" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-16" value="pebkac-loop" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2270" y="2040" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-18" value="&#39;choice" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" target="YugrOfWrAMtGJ8in59au-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2330" y="2040" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YugrOfWrAMtGJ8in59au-19" value="..." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2270" y="1920" width="120" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
