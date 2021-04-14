@@ -601,7 +601,7 @@
                     (string-append "Shoot the " (actor-name target) ". (enemy #" (number->string (add1 i)) ")")
                     (λ () (make-action
                            #:symbol 'shoot
-                           #:actor 'pc
+                           #:actor *pc*
                            #:duration 1
                            #:target target
                            #:tags '(combat delayed-resolution))))
@@ -610,7 +610,7 @@
                     (string-append "Get closer.")
                     (λ () (make-action
                            #:symbol 'get-closer
-                           #:actor 'pc
+                           #:actor *pc*
                            #:duration 1
                            #:target target
                            #:tags '())))
@@ -619,7 +619,7 @@
                     (string-append "\"I'm just passing through.\"")
                     (λ () (make-action
                            #:symbol 'explain
-                           #:actor 'pc
+                           #:actor *pc*
                            #:duration 0
                            #:target target
                            #:tags '(dialogue fast))))
@@ -628,7 +628,7 @@
                     (string-append "\"I want to barter.\"")
                     (λ () (make-action
                            #:symbol 'barter
-                           #:actor 'pc
+                           #:actor *pc*
                            #:duration 0
                            #:target target
                            #:tags '(dialogue fast))))
@@ -637,7 +637,7 @@
                     (string-append "Back off.")
                     (λ () (make-action
                            #:symbol 'back-off
-                           #:actor 'pc
+                           #:actor *pc*
                            #:duration 1
                            #:target target
                            #:tags '()))))))
@@ -653,8 +653,12 @@
 
 (define (add-to-action-queue action)
   (set! action-queue (cons action action-queue)))
+(define (remove-from-action-queue actions)
+  (set! action-queue (remq* actions action-queue)))
 
-(define (sort-action-queue) '())
+(define (sort-action-queue)
+  (displayln "sort-action-queue")
+  )
 
 (define (enqueue-npc-actions)
   (displayln "enqueue-npc-actions")
@@ -665,10 +669,24 @@
       (add-to-action-queue next-action)
       (displayln next-action))))
 
-(define (update-npc-reactions)
+(define (update-npc-reactions pc-action)
   (displayln "update-npc-reactions")
-  (for ([action action-queue])
-    (displayln action))
+  (when (aggressive? pc-action)
+    ; remove own actions from queue
+    (for ([actor (get-current-enemies)])
+      (define actions (filter
+                       (λ (action) (eq? actor (action-actor action)))
+                       action-queue))
+      (remove-from-action-queue actions))
+    ; blam blam
+    (define action (make-action
+                    #:symbol 'shoot
+                    #:actor actor
+                    #:duration 1
+                    #:target *pc*
+                    #:tags '(combat delayed-resolution)))
+    (add-to-action-queue action)
+    )
   )
 
 (define (serialize-state)
@@ -718,11 +736,31 @@
                 (get-next-action actor))
                (else action)))))
 
-(define (resolve-turns!)
-  (displayln "resolve-turns!"))
-
-(define (resolve-action! world action)
+(define (resolve-action! action)
   (displayln "resolve-action!"))
+
+(define (resolve-pc-action! action)
+  (displayln "resolve-pc-action!")
+  (resolve-action! action))
+
+(define (resolve-npc-action! action)
+  (displayln "resolve-npc-action!")
+  (resolve-action! action))
+
+(define (resolve-turns!)
+  (displayln "resolve-turns!")
+  (for ([action action-queue])
+    (resolve-turn! world action))
+  )
+
+(define (resolve-turn! world action)
+  (displayln "resolve-turn!")
+  (displayln action)
+  (if (pc-actor? (action-actor action))
+      (resolve-pc-action! action)
+      (resolve-npc-action! action))
+  (newline)
+  )
 
 (define (resolve-round)
   (on-begin-round)
@@ -734,7 +772,7 @@
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
-         (update-npc-reactions)
+         (update-npc-reactions pc-action)
          (sort-action-queue)
          (resolve-turns!))
         (else

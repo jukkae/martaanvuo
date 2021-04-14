@@ -64,6 +64,11 @@
       #t
       #f))
 
+(define (aggressive? action)
+  (if (eq? (action-symbol action) 'shoot)
+      #t
+      #f))
+
 (define (has-tag? action tag)
   (memq tag (action-tags action)))
 
