@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T04:41:21.554Z" agent="5.0 (Macintosh)" etag="ugn7TZ_gUIGtI2giCx-N" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-14T04:43:57.287Z" agent="5.0 (Macintosh)" etag="NoKo2deBYqYtXxWESe7R" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1904" dy="1219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -295,11 +295,11 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-18" value="Begin resolve player action" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2760" y="1265" width="110" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Mjj1QeHVWUKomglfDfad-36" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-20" target="Mjj1QeHVWUKomglfDfad-29" edge="1">
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-37" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-20" target="tiqr8W6lq2PpIhoyLO2V-36">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-20" value="Add action to queue" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="3054" y="1140" width="110" height="40" as="geometry" />
+          <mxGeometry x="2943.6400000000003" y="1150" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-74" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="Mjj1QeHVWUKomglfDfad-18" target="Mjj1QeHVWUKomglfDfad-73" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -315,7 +315,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-29" value="Sort action queue" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="3053.64" y="1230" width="110" height="40" as="geometry" />
+          <mxGeometry x="3020" y="1240" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-33" value="Enqueue NPC actions" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1610" y="975" width="110" height="40" as="geometry" />
@@ -552,7 +552,7 @@
           <mxGeometry x="2254" y="1110" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-4" value="Resolve&lt;br&gt;type" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2894.64" y="1075" width="60" height="60" as="geometry" />
+          <mxGeometry x="2820" y="1055" width="60" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-6" value="" style="endArrow=none;html=1;fontFamily=Courier New;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -652,6 +652,12 @@
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-31" value="Barter" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="390" y="2690" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-38" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-36" target="Mjj1QeHVWUKomglfDfad-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-36" value="NPCs might react" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="3110.0000000000005" y="1150" width="110" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
