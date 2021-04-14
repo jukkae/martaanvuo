@@ -140,31 +140,31 @@
 
 
 
-(define (resolve-actions! world)
-  (define turn-exit-status 'ok)
-  (while (not (empty? (get-field action-queue world)))
-         (define action (car (get-field action-queue world)))
+#;(define (resolve-actions! world)
+    (define turn-exit-status 'ok)
+    (while (not (empty? (get-field action-queue world)))
+           (define action (car (get-field action-queue world)))
          
-         (define result (resolve-action! world action))
-         (when (not (eq? result 'not-active))
-           (wait-for-confirm))
+           (define result (resolve-action! world action))
+           (when (not (eq? result 'not-active))
+             (wait-for-confirm))
 
-         (cond ((eq? result 'u-ded)
-                (displayln "You die.")
-                (set! turn-exit-status 'pc-dead)
-                (break))
-               ((eq? result 'last-breath)
-                (displayln "You are one hair's breadth from becoming one with the Dark.")
-                (set! turn-exit-status 'last-breath)
-                (send world clear-action-queue!)
-                (break)))
-         (set-field! action-queue world
-                     (if (pair? (get-field action-queue world))
-                         (cdr (get-field action-queue world)) ; pop stack's topmost element
-                         '())))
-  (when (in-combat? world)
-    (advance-time-by-a-jiffy! world)) ; DIRTY HACK but it works for now, eventually consolidate actions and events and turns and jiffies
-  turn-exit-status)
+           (cond ((eq? result 'u-ded)
+                  (displayln "You die.")
+                  (set! turn-exit-status 'pc-dead)
+                  (break))
+                 ((eq? result 'last-breath)
+                  (displayln "You are one hair's breadth from becoming one with the Dark.")
+                  (set! turn-exit-status 'last-breath)
+                  (send world clear-action-queue!)
+                  (break)))
+           (set-field! action-queue world
+                       (if (pair? (get-field action-queue world))
+                           (cdr (get-field action-queue world)) ; pop stack's topmost element
+                           '())))
+    (when (in-combat? world)
+      (advance-time-by-a-jiffy! world)) ; DIRTY HACK but it works for now, eventually consolidate actions and events and turns and jiffies
+    turn-exit-status)
 
 
 
@@ -373,44 +373,44 @@
             ]
            [else (error (string-append "Unknown enemy action: " (symbol->string (action-symbol action))))]))))
 
-(define (resolve-action! world action)
-  (define actor
-    (if (eq? (action-actor action) 'pc)
-        (get-field pc world)
-        (action-actor action)))
+#;(define (resolve-action! world action)
+    (define actor
+      (if (eq? (action-actor action) 'pc)
+          (get-field pc world)
+          (action-actor action)))
   
-  (define result
-    (if (is-a? actor pc%)
-        (begin
-          (resolve-player-action! world action)
-          (wait-for-confirm))
-        (resolve-enemy-action! world action)))
+    (define result
+      (if (is-a? actor pc%)
+          (begin
+            (resolve-player-action! world action)
+            (wait-for-confirm))
+          (resolve-enemy-action! world action)))
   
-  result)
+    result)
 
-(define (resolve-action-instantly! world action)
-  ; a useful place to hack in random events specifically when nothing else is happening
-  ; actually, this should be something like "start resolving immediately"
-  ; because this is more about queueing
+#;(define (resolve-action-instantly! world action)
+    ; a useful place to hack in random events specifically when nothing else is happening
+    ; actually, this should be something like "start resolving immediately"
+    ; because this is more about queueing
 
-  (define pending-actions (get-field pending-actions world))
-  (define match (filter (λ (pending-action)
-                          (eq? (car pending-action)
-                               (action-symbol action)))
-                        pending-actions))
-  (when (not (eq? '() match))
-    (define new-time-left (- (cdar match) 1))
-    (set! action (lens-set action-duration-lens action new-time-left)))
+    (define pending-actions (get-field pending-actions world))
+    (define match (filter (λ (pending-action)
+                            (eq? (car pending-action)
+                                 (action-symbol action)))
+                          pending-actions))
+    (when (not (eq? '() match))
+      (define new-time-left (- (cdar match) 1))
+      (set! action (lens-set action-duration-lens action new-time-left)))
       
-  (define next-event-and-elapsed-time (advance-time-until-next-interesting-event! world (action-duration action)))
-  (define next-event (car next-event-and-elapsed-time))
-  (define elapsed-time (cdr next-event-and-elapsed-time))
-  (define time-left (- (action-duration action) elapsed-time))
-  (when (< time-left 0) (error "Error: Time left before action resolved is negative!"))
+    (define next-event-and-elapsed-time (advance-time-until-next-interesting-event! world (action-duration action)))
+    (define next-event (car next-event-and-elapsed-time))
+    (define elapsed-time (cdr next-event-and-elapsed-time))
+    (define time-left (- (action-duration action) elapsed-time))
+    (when (< time-left 0) (error "Error: Time left before action resolved is negative!"))
 
-  (if (not (eq? next-event '()))
-      (add-pending-action world action time-left)
-      (resolve-action! world action)))
+    (if (not (eq? next-event '()))
+        (add-pending-action world action time-left)
+        (resolve-action! world action)))
 
 
 
@@ -553,12 +553,11 @@
    '()))
 
 (define (get-next-npc-action actor)
-  '()
-  #;(make-action #:symbol 'attack
-                 #:actor actor
-                 #:duration 1
-                 #:target 'pc
-                 #:tags '(delayed-resolution))
+  (make-action #:symbol 'hold-at-gunpoint
+               #:actor actor
+               #:duration 1
+               #:target 'pc
+               #:tags '(delayed-resolution))
   )
 
 
@@ -605,7 +604,7 @@
                            #:actor 'pc
                            #:duration 1
                            #:target target
-                           #:tags '(combat fast delayed-resolution))))
+                           #:tags '(combat delayed-resolution))))
                    (make-choice
                     'get-closer
                     (string-append "Get closer.")
@@ -614,7 +613,7 @@
                            #:actor 'pc
                            #:duration 1
                            #:target target
-                           #:tags '(combat fast delayed-resolution))))
+                           #:tags '())))
                    (make-choice
                     'explain
                     (string-append "\"I'm just passing through.\"")
@@ -623,7 +622,7 @@
                            #:actor 'pc
                            #:duration 0
                            #:target target
-                           #:tags '(dialogue fast delayed-resolution))))
+                           #:tags '(dialogue fast))))
                    (make-choice
                     'barter
                     (string-append "\"I want to barter.\"")
@@ -632,7 +631,7 @@
                            #:actor 'pc
                            #:duration 0
                            #:target target
-                           #:tags '(dialogue fast delayed-resolution))))
+                           #:tags '(dialogue fast))))
                    (make-choice
                     'back-off
                     (string-append "Back off.")
@@ -641,7 +640,7 @@
                            #:actor 'pc
                            #:duration 1
                            #:target target
-                           #:tags '(combat fast delayed-resolution)))))))
+                           #:tags '()))))))
     )
   combat-choices
   )
@@ -652,14 +651,24 @@
   (set! action-queue '())
   )
 
+(define (add-to-action-queue action)
+  (set! action-queue (cons action action-queue)))
+
+(define (sort-action-queue) '())
+
 (define (enqueue-npc-actions)
   (displayln "enqueue-npc-actions")
   (define actors (location-actors (current-location)))
   (for ([actor actors])
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
-      (set! action-queue (cons next-action action-queue))
-      (displayln next-action)))
+      (add-to-action-queue next-action)
+      (displayln next-action))))
+
+(define (update-npc-reactions)
+  (displayln "update-npc-reactions")
+  (for ([action action-queue])
+    (displayln action))
   )
 
 (define (serialize-state)
@@ -685,7 +694,6 @@
   (define meta-commands-with-keys (get-meta-commands-with-keys))
   (print-meta-commands-with-keys meta-commands-with-keys)
 
-  (paragraph "What do you do?")
 
   (define input (wait-for-input))
 
@@ -708,18 +716,29 @@
          (cond ((free? action)
                 (resolve-action! *world* action)
                 (get-next-action actor))
-               (else action))
-               
-         ))
-  )
+               (else action)))))
+
+(define (resolve-turns!)
+  (displayln "resolve-turns!"))
+
+(define (resolve-action! world action)
+  (displayln "resolve-action!"))
 
 (define (resolve-round)
   (on-begin-round)
   (enqueue-npc-actions)
   (serialize-state)
   (describe-situation)
-  (get-next-pc-action)
-  )
+
+  (define pc-action (get-next-pc-action))
+
+  (cond ((initiative-based-resolution? pc-action)
+         (add-to-action-queue pc-action)
+         (update-npc-reactions)
+         (sort-action-queue)
+         (resolve-turns!))
+        (else
+         (resolve-action! *world* pc-action))))
 
 (define (begin-game)
   (title)

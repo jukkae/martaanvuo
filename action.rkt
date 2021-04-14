@@ -59,6 +59,11 @@
       #t
       #f))
 
+(define (initiative-based-resolution? action)
+  (if (member 'delayed-resolution (action-tags action))
+      #t
+      #f))
+
 (define (has-tag? action tag)
   (memq tag (action-tags action)))
 
