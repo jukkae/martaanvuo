@@ -690,7 +690,11 @@
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
       (define (handle-meta-command meta-commands-with-keys input)
-        (displayln "yea"))
+        (set! input (string-upcase input))
+        (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+        (define meta-command (cdr meta-command-with-key))
+        (meta-command)
+        (what-do-you-do 'verbose))
       (define actor *pc*)
 
       (define choices (get-world-choices *world* actor))
