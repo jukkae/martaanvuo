@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-04-13T19:22:17.831Z" agent="5.0 (Macintosh)" etag="yWh53uz-UI_aPyaE4CpL" version="14.5.10" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-14T04:16:20.704Z" agent="5.0 (Macintosh)" etag="U75qgm0ZMlR2O9M0kpdw" version="14.5.10" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
-    <mxGraphModel dx="925" dy="592" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="1904" dy="1219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -577,6 +577,51 @@
             <mxPoint x="2920" y="1760" as="sourcePoint" />
             <mxPoint x="3880" y="1760" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-12" value="Shoot" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-17" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-18" value="Make a run for it" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="tiqr8W6lq2PpIhoyLO2V-17">
+          <mxGeometry x="0.1988" y="1" relative="1" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-19" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-20" value="Back off" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="tiqr8W6lq2PpIhoyLO2V-19">
+          <mxGeometry x="-0.3658" y="6" relative="1" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-22" value="Get closer" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-10" value="&quot;Stop. Not an inch closer.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="230" y="2075" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-11" value="Combat starts" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="680" y="2120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-13" value="&quot;Good. Who are you and what do you want?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="390" y="2380" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-23" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-21" target="tiqr8W6lq2PpIhoyLO2V-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-24" value="Get closer" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="tiqr8W6lq2PpIhoyLO2V-23">
+          <mxGeometry x="-0.2408" y="-3" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-25" value="Back off" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-21" target="tiqr8W6lq2PpIhoyLO2V-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tiqr8W6lq2PpIhoyLO2V-21" value="&quot;I said, not an inch closer. This is your final warning.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="640" y="2280" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
