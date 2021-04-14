@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T19:11:21.040Z" agent="5.0 (Macintosh)" etag="PY_ifRc2l-788O957WYg" version="14.6.0" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-14T19:12:19.312Z" agent="5.0 (Macintosh)" etag="Qy8t7OYVtMT3BN_oUnfj" version="14.6.0" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1618" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -741,11 +741,11 @@
         <mxCell id="YugrOfWrAMtGJ8in59au-11" value="try to handle as choice" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1990" y="2200" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-47" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-14" target="YugrOfWrAMtGJ8in59au-46">
+        <mxCell id="YugrOfWrAMtGJ8in59au-47" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-14" target="YugrOfWrAMtGJ8in59au-46">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-14" value="&lt;div&gt;choice-&amp;gt;action&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="2080" y="2310" width="120" height="40" as="geometry" />
+          <mxGeometry x="1990" y="2310" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-21" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-20" target="YugrOfWrAMtGJ8in59au-2">
           <mxGeometry relative="1" as="geometry" />
@@ -816,22 +816,22 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-46" value="free action?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2254" y="2380" width="60" height="60" as="geometry" />
+          <mxGeometry x="2020" y="2420" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-52" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-48" target="YugrOfWrAMtGJ8in59au-20">
+        <mxCell id="YugrOfWrAMtGJ8in59au-52" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-48" target="YugrOfWrAMtGJ8in59au-20">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1180" y="2350" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2115" y="2650" />
-              <mxPoint x="1140" y="2650" />
+              <mxPoint x="1870" y="2710" />
+              <mxPoint x="1140" y="2710" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-48" value="resolve action&lt;br&gt;(no reaction by definition)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="2055" y="2540" width="120" height="70" as="geometry" />
+          <mxGeometry x="1810" y="2540" width="120" height="70" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-54" value="&lt;div&gt;...&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="2444" y="2390" width="120" height="40" as="geometry" />
+          <mxGeometry x="2214" y="2430" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-56" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-55" target="YugrOfWrAMtGJ8in59au-20">
           <mxGeometry relative="1" as="geometry" />
@@ -841,8 +841,8 @@
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-59" value="" style="endArrow=none;html=1;fontFamily=Courier New;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="2400" y="2600" as="sourcePoint" />
-            <mxPoint x="2400" y="2120" as="targetPoint" />
+            <mxPoint x="2160" y="2660" as="sourcePoint" />
+            <mxPoint x="2160" y="2180" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-60" value="" style="endArrow=none;html=1;fontFamily=Courier New;" edge="1" parent="1">
