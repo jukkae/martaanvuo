@@ -681,16 +681,16 @@
       choice
       #f))
 
-(define (choice-as-action input)
-  (displayln "yah"))
+(define (choice-as-action choices-with-keys input)
+  ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
   
 
 ;; this is broken
 (define (get-next-pc-action)
   (let/ec produce-action
-    (define (handle-meta-command meta-commands-with-keys input)
-      (displayln "yea"))
-    (let loop ()
+    (let what-do-you-do ()
+      (define (handle-meta-command meta-commands-with-keys input)
+        (displayln "yea"))
       (paragraph "What do you do?")
       (define actor *pc*)
 
@@ -703,11 +703,11 @@
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((choice-valid? choices-with-keys input) (choice-as-action input))
-            (else (loop)))
+            ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
+            (else (what-do-you-do)))
 
       
-      (produce-action 'action)
+      
       )
     #;(let loop ()
         (paragraph "What do you do?")
