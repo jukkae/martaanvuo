@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T19:12:30.252Z" agent="5.0 (Macintosh)" etag="fFuadFiynQY828VSdPLa" version="14.6.0" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-14T19:13:04.876Z" agent="5.0 (Macintosh)" etag="4cdHKrnM3Jy9sq3z177d" version="14.6.0" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1618" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -667,7 +667,7 @@
         <mxCell id="YugrOfWrAMtGJ8in59au-5" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="YugrOfWrAMtGJ8in59au-2" target="YugrOfWrAMtGJ8in59au-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-2" value="&quot;What do you do?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="YugrOfWrAMtGJ8in59au-2" value="options + &quot;What do you do?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1310" y="2200" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-3" value="&lt;div align=&quot;left&quot;&gt;get-next-pc-action&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;eventually produces a choice&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;or exits game&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
