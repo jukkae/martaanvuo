@@ -688,26 +688,22 @@
 ;; this is broken
 (define (get-next-pc-action)
   (let/ec produce-action
-    (let what-do-you-do ()
+    (let what-do-you-do ([verbosity 'verbose])
       (define (handle-meta-command meta-commands-with-keys input)
         (displayln "yea"))
-      (paragraph "What do you do?")
       (define actor *pc*)
 
       (define choices (get-world-choices *world* actor))
       (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
-      (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys 'verbose)
+      (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
 
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
-            (else (what-do-you-do)))
-
-      
-      
+            (else (what-do-you-do 'abbreviated)))
       )
     #;(let loop ()
         (paragraph "What do you do?")
@@ -842,11 +838,15 @@
   (define meta-command (cdr meta-command-with-key))
   (meta-command))
 
-(define (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys . verbosity)
+(define (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
-         '()
+         (display "Unknown command. Known commands: ")
+         (for ([(k v) (in-hash choices-with-keys)]) (display k))
+         (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
+         (newline)
          )
         (else
+         (paragraph "What do you do?")
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
@@ -864,21 +864,6 @@
       choice
       #f))
 
-(define (pebkac-loop choices-with-keys meta-commands-with-keys)
-  (display "Unknown command. Known commands: ")
-  (for ([(k v) (in-hash choices-with-keys)]) (display k))
-  (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
-  (newline)
-  
-  (define input (wait-for-input))
-  (define handled? '())
-  (while (null? handled?)
-         (set! handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-         (when (not handled?)
-           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
-         (when (not handled?)
-           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys))))
-  handled?)
 
 (define (game-loop)
   (let loop ()
