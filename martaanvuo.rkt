@@ -24,48 +24,6 @@
     (set! *world* (make-new-world))
     (set! *metaloop* (add1 *metaloop*)))
 
-#;(define (get-next-action actor)
-    (cond ((is-a? actor pc%)
-           (define choices (get-world-choices *world* actor))
-           (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
-           (print-choices-with-keys choices-with-keys)
-
-           (define meta-commands-with-keys (get-meta-commands-with-keys))
-           (print-meta-commands-with-keys meta-commands-with-keys)
-
-           (displayln "What do you do?")
-
-           (define input (wait-for-input))
-
-           (newline)
-
-           ; Actually, this should be a while loop:
-           ; something like "until-valid-action (get-next-action)"
-           (define handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-           (cond (handled? (get-next-action actor))
-                 (else
-                  (when (not handled?)
-                    (set! handled? (try-to-handle-as-choice choices-with-keys input)))
-                  (when (not handled?)
-                    (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys)))
-
-                  ; handled? should now contain a valid action
-                  (unless handled? (error "Input not handled even in PEBKAC loop!"))
-
-                  (define choice handled?) ; ta-dah
-
-                  (define action (make-action-from-choice *world* choice))
-                  (cond ((free? action)
-                         (resolve-action! *world* action)
-                         (newline)
-                         (get-next-action actor)
-                         )
-                        (else action))))
-           )
-          (else
-           (define action (send actor get-next-action))
-           action)))
-
 
 #;(define (resolve-turn)
     (cond ((eq? (get-field status *world*) 'active)
@@ -683,9 +641,7 @@
 
 (define (choice-as-action choices-with-keys input)
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
-  
 
-;; this is broken
 (define (get-next-pc-action)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
@@ -707,55 +663,7 @@
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
-            (else (what-do-you-do 'abbreviated)))
-      )
-    #;(let loop ()
-        (paragraph "What do you do?")
-        (define actor *pc*)
-
-        (define choices (get-world-choices *world* actor))
-        (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
-        (define meta-commands-with-keys (get-meta-commands-with-keys))
-
-
-        (print-choices-with-keys choices-with-keys)
-
-    
-        (print-meta-commands-with-keys meta-commands-with-keys)
-
-
-        (define input (wait-for-input))
-
-        (newline)
-
-        (define handled '())
-        (while (null? handled)
-               (set! handled (try-to-handle-as-meta-command meta-commands-with-keys input))
-               (when (not handled)
-                 (set! handled (try-to-handle-as-choice choices-with-keys input)))
-               (when (not handled)
-                 (set! handled (pebkac-loop choices-with-keys meta-commands-with-keys))))
-
-        (when (eq? handled #t) (loop))
-        (define choice handled) ; ta-dah
-        (displayln "CHOICE:")
-        (displayln choice)
-
-        (define action (make-action-from-choice *world* choice))
-        (cond ((free? action)
-               (resolve-action! *world* action)
-               (get-next-action actor))
-              (else action)))))
-
-;(define handled? '())
-;  (while (null? handled?)
-;         (set! handled? (try-to-handle-as-meta-command meta-commands-with-keys input))
-;         (when (not handled?)
-;           (set! handled? (try-to-handle-as-choice choices-with-keys input)))
-;         (when (not handled?)
-;           (set! handled? (pebkac-loop choices-with-keys meta-commands-with-keys))))
-;  handled?
-
+            (else (what-do-you-do 'abbreviated))))))
 
 
 (define (resolve-action! action)
@@ -838,9 +746,6 @@
   (newline)
   (newline))
 
-(define (run-meta-command meta-command-with-key)
-  (define meta-command (cdr meta-command-with-key))
-  (meta-command))
 
 (define (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
@@ -853,21 +758,6 @@
          (paragraph "What do you do?")
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
-
-(define (try-to-handle-as-meta-command valid-meta-commands-with-keys input)
-  (set! input (string-upcase input))
-  (define meta-command (hash-ref valid-meta-commands-with-keys input '()))
-  (if (not (null? meta-command))
-      (begin (run-meta-command meta-command)
-             #t)
-      #f))
-
-(define (try-to-handle-as-choice valid-choices-with-keys input)
-  (define choice (hash-ref valid-choices-with-keys (string->number input) '()))
-  (if (not (null? choice))
-      choice
-      #f))
-
 
 (define (game-loop)
   (let loop ()
