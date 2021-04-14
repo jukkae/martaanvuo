@@ -5,27 +5,7 @@
 (require "action.rkt")
 (require "narration.rkt")
 
-(define (quit)
-  (newline)
-  (displayln "Really quit? [Q] to quit, anything else to continue.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "Q")
-         (narrate-quit)
-         (exit))
-        (else
-         (newline)
-         #t))) ; mark input as handled
 
-(define (wait-for-input)
-  (newline)
-  (define input (read-line))
-  input)
-
-(define (get-meta-commands-with-keys)
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-  meta-commands)
 
 (define (print-choices-with-keys choices-with-keys)
   ; TODO: Should order here based on key
@@ -45,13 +25,6 @@
     (define key (key-from-index i))
     (hash-set! choices-with-keys key (list-ref choices i)))
   choices-with-keys)
-
-(define (print-meta-commands-with-keys meta-commands-with-keys)
-  (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline))
 
 (define (wait-for-confirm)
   (newline)
