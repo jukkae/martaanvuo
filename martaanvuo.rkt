@@ -762,6 +762,9 @@
   (newline)
   )
 
+(define (on-end-round)
+  (displayln "on-end-round"))
+
 (define (resolve-round)
   (on-begin-round)
   (enqueue-npc-actions)
@@ -776,7 +779,8 @@
          (sort-action-queue)
          (resolve-turns!))
         (else
-         (resolve-action! *world* pc-action))))
+         (resolve-action! *world* pc-action)))
+  (on-end-round))
 
 (define (begin-game)
   (title)
