@@ -61,12 +61,8 @@
 
     (super-new)
 
-    (define/public (sort-actions!)
-      (set! action-queue (sort
-                          action-queue
-                          action-faster-than?)))
-    (define/public (clear-action-queue!)
-      (set! action-queue '()))
+    
+    
 
     (define/public (add-location index location)
       (hash-set! locations index location))

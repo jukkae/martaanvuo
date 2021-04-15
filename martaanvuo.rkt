@@ -412,6 +412,7 @@
   attack-skill
   attack-damage
   defense-number
+  dexterity
   inventory
   statuses
   conditions
@@ -452,6 +453,7 @@
    0
    (λ () (d 1 2))
    6
+   13
    '()
    '()
    '()
@@ -465,12 +467,13 @@
 
 (define *enemy*
   (actor
-   "woman"
+   "scavenger"
    4
    4
    0
-   (λ () (d 1 2))
+   (λ () (d 1 3))
    6
+   7
    '()
    '()
    '()
@@ -582,6 +585,10 @@
 
 (define (sort-action-queue)
   (displayln "sort-action-queue")
+  (set! action-queue (sort
+                      action-queue
+                      action-faster-than?))
+  
   )
 
 (define (enqueue-npc-actions)
@@ -595,21 +602,22 @@
 
 (define (update-npc-reactions pc-action)
   (displayln "update-npc-reactions")
+  (define npcs (get-current-enemies))
   (when (aggressive? pc-action)
     ; remove own actions from queue
-    (for ([actor (get-current-enemies)])
+    (for ([actor npcs])
       (define actions (filter
                        (λ (action) (eq? actor (action-actor action)))
                        action-queue))
-      (remove-from-action-queue actions))
-    ; blam blam
-    (define action (make-action
-                    #:symbol 'shoot
-                    #:actor actor
-                    #:duration 1
-                    #:target *pc*
-                    #:tags '(combat delayed-resolution)))
-    (add-to-action-queue action)
+      (remove-from-action-queue actions)
+      ; blam blam
+      (define action (make-action
+                      #:symbol 'shoot
+                      #:actor actor
+                      #:duration 1
+                      #:target *pc*
+                      #:tags '(combat delayed-resolution)))
+      (add-to-action-queue action))
     )
   )
 
@@ -622,7 +630,7 @@
   (displayln "describe-situation")
   (newline)
   (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
-  (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. She's aiming a hunting rifle at you.")
+  (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
   (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")
   )
 
@@ -666,15 +674,23 @@
             (else (what-do-you-do 'abbreviated))))))
 
 
+(define (resolve-shoot-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define attack-roll (+ (d 2 6) (actor-attack-skill actor)))
+  (define target-number (actor-defense-number target))
+  (define damage-roll ((actor-attack-damage actor)))
+  (paragraph "2d6+" (number->string (actor-attack-skill actor)) " against TN " (number->string target-number))
+  (displayln "shoot!")
+  )
 (define (resolve-action! action)
-  (displayln "resolve-action!"))
+  (cond ((eq? (action-symbol action) 'shoot)
+         (resolve-shoot-action! action))))
 
 (define (resolve-pc-action! action)
-  (displayln "resolve-pc-action!")
   (resolve-action! action))
 
 (define (resolve-npc-action! action)
-  (displayln "resolve-npc-action!")
   (resolve-action! action))
 
 (define (resolve-turns!)
@@ -703,6 +719,7 @@
   (describe-situation)
 
   (define pc-action (get-next-pc-action))
+  (cond ((eq? 'shoot (action-symbol pc-action)) (paragraph "With a swift motion, you pull out your gun.")))
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
