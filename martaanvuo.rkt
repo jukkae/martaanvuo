@@ -407,7 +407,7 @@
 (serializable-struct
  actor
  (name
-  hp
+  [hp #:mutable]
   max-hp
   attack-skill
   attack-damage
@@ -452,7 +452,7 @@
    4
    0
    (λ () (d 1 2))
-   6
+   8
    13
    '()
    '()
@@ -472,12 +472,21 @@
    4
    0
    (λ () (d 1 3))
-   6
+   8
    7
    '()
    '()
    '()
    '()))
+
+(define (take-damage actor damage)
+  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+  (define new-hp (- (actor-hp actor) damage))
+  (when (< new-hp 0) (set! new-hp 0))
+  (set-actor-hp! actor new-hp)
+  (if (= 0 (actor-hp actor))
+      'dead
+      'hit))
 
 (define (get-next-npc-action actor)
   (make-action #:symbol 'hold-at-gunpoint
@@ -677,11 +686,39 @@
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
-  (define attack-roll (+ (d 2 6) (actor-attack-skill actor)))
+  (define attack-roll (d 2 6))
+  (define attack-roll-total (+ attack-roll (actor-attack-skill actor)))
   (define target-number (actor-defense-number target))
+  (define success? (>= attack-roll-total target-number))
   (define damage-roll ((actor-attack-damage actor)))
-  (paragraph "2d6+" (number->string (actor-attack-skill actor)) " against TN " (number->string target-number))
-  (displayln "shoot!")
+  
+  (paragraph "2d6 + atk "
+             "["
+             (number->string attack-roll)
+             " + "
+             (number->string (actor-attack-skill actor))
+             " = "
+             (number->string attack-roll-total)
+             "]"
+             " against TN "
+             (number->string target-number)
+             ": "
+             (if success? "successful, " "failure")
+             (if success?
+                 (string-append "damage: " (number->string damage-roll))
+                 ""))
+
+  (define action-result 'ok)
+  (when success? (set! action-result (take-damage target damage-roll)))
+  (displayln action-result)
+  (displayln
+   (string-append
+   (actor-name target)
+   ": "
+   (number->string (actor-hp target))
+   "/"
+   (number->string (actor-max-hp target))
+   " hp"))
   )
 (define (resolve-action! action)
   (cond ((eq? (action-symbol action) 'shoot)
