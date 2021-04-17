@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-04-17T14:20:17.528Z" agent="5.0 (Macintosh)" etag="ztWWzvl06f7crDVPBmpR" version="14.6.0" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-17T14:21:04.553Z" agent="5.0 (Macintosh)" etag="3bQKdxLe-HGUqETnL4nA" version="14.6.0" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
-    <mxGraphModel dx="5393" dy="3453" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="1904" dy="1219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -616,7 +616,7 @@
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-10" value="&quot;Stop. Not an inch closer.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
           <mxGeometry x="240" y="1920" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-65" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-11" target="YugrOfWrAMtGJ8in59au-62">
+        <mxCell id="YugrOfWrAMtGJ8in59au-65" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-11" target="YugrOfWrAMtGJ8in59au-62">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-11" value="Combat starts" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
@@ -639,7 +639,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-13" value="&quot;Good. Who are you and what do you want?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="610" y="2105" width="120" height="80" as="geometry" />
+          <mxGeometry x="540" y="2075" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-23" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-21" target="tiqr8W6lq2PpIhoyLO2V-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -653,15 +653,15 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-21" value="&quot;I said, not an inch closer. This is your final warning.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="740" y="1995" width="120" height="80" as="geometry" />
+          <mxGeometry x="690" y="1900" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-64" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-26" target="YugrOfWrAMtGJ8in59au-62">
+        <mxCell id="YugrOfWrAMtGJ8in59au-64" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-26" target="YugrOfWrAMtGJ8in59au-62">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-26" value="&quot;Just keep your distance and we&#39;re cool.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="660" y="2400" width="120" height="80" as="geometry" />
+          <mxGeometry x="580" y="2340" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="YugrOfWrAMtGJ8in59au-63" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-31" target="YugrOfWrAMtGJ8in59au-62">
+        <mxCell id="YugrOfWrAMtGJ8in59au-63" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-31" target="YugrOfWrAMtGJ8in59au-62">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-31" value="Barter" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
