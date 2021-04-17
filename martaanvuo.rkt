@@ -173,31 +173,31 @@
                            #:tags '(combat delayed-resolution))))
                    (make-choice
                     'get-closer
-                    (string-append "Get closer.")
+                    (string-append "Take a step closer.")
                     (λ () (make-action
                            #:symbol 'get-closer
                            #:actor *pc*
                            #:duration 1
                            #:target target
                            #:tags '())))
-                   (make-choice
-                    'explain
-                    (string-append "\"I'm just passing through.\"")
-                    (λ () (make-action
-                           #:symbol 'explain
-                           #:actor *pc*
-                           #:duration 0
-                           #:target target
-                           #:tags '(dialogue fast))))
-                   (make-choice
-                    'barter
-                    (string-append "\"I want to barter.\"")
-                    (λ () (make-action
-                           #:symbol 'barter
-                           #:actor *pc*
-                           #:duration 0
-                           #:target target
-                           #:tags '(dialogue fast))))
+                   #;(make-choice
+                      'explain
+                      (string-append "\"I'm just passing through.\"")
+                      (λ () (make-action
+                             #:symbol 'explain
+                             #:actor *pc*
+                             #:duration 0
+                             #:target target
+                             #:tags '(dialogue fast))))
+                   #;(make-choice
+                      'barter
+                      (string-append "\"I want to barter.\"")
+                      (λ () (make-action
+                             #:symbol 'barter
+                             #:actor *pc*
+                             #:duration 0
+                             #:target target
+                             #:tags '(dialogue fast))))
                    (make-choice
                     'back-off
                     (string-append "Back off.")
@@ -205,7 +205,7 @@
                            #:symbol 'back-off
                            #:actor *pc*
                            #:duration 1
-                           #:target target
+                           #:target 'none
                            #:tags '()))))))
     )
   combat-choices
@@ -449,7 +449,10 @@
                  (paragraph "The " (actor-name (action-target action)) " is dead.")
                  (begin
                    (paragraph "You are dead.")
-                   'pc-dead)))))))
+                   'pc-dead))))
+          ((eq? (action-symbol action) 'back-off)
+           'ok
+           ))))
 
 (define (resolve-pc-action! action)
   (resolve-action! action))
@@ -493,7 +496,10 @@
   (cond ((eq? 'shoot (action-symbol pc-action))
          (set! current-encounter-node combat-node)
          (set! in-combat? #t)
-         (paragraph "With a swift motion, you pull out your gun.")))
+         (paragraph "With a swift motion, you pull out your gun."))
+        ((eq? 'back-off (action-symbol pc-action))
+         (set! current-encounter-node who-are-you-node)
+         (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\"")))
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
@@ -501,7 +507,7 @@
          (sort-action-queue)
          (resolve-turns!))
         (else
-         (resolve-action! *world* pc-action)))
+         (resolve-action! pc-action)))
   (on-end-round)
   (define round-exit-status 'ok)
   (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
