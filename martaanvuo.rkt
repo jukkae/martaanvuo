@@ -150,7 +150,8 @@
 
 (define (get-current-enemies)
   (filter
-   (λ (actor) (not (pc-actor? actor)))
+   (λ (actor) (and (alive? actor)
+                   (not (pc-actor? actor))))
    (location-actors (current-location))))
 
 (define (get-world-choices world actor)
@@ -337,8 +338,12 @@
      encounter-symbol
      encounter-nodes)))
 
+(define in-combat? #f)
 (define (describe-situation)
   (displayln "describe-situation")
+  (if in-combat?
+      (displayln "in combat")
+      (displayln "not in combat"))
   (displayln
    (string-append
     "current encounter node: "
@@ -352,6 +357,8 @@
      (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
     ['combat
      (paragraph "You are in combat with a scavenger.")]
+    ['end
+     (paragraph "That was that.")]
     )
   )
 
@@ -469,7 +476,12 @@
   )
 
 (define (on-end-round)
-  (displayln "on-end-round"))
+  (displayln "on-end-round")
+  (define current-enemies (get-current-enemies))
+  (when (= (length current-enemies) 0)
+    (set! current-encounter-node end-encounter-node)
+    (set! in-combat? #f))
+  )
 
 (define (resolve-round)
   (on-begin-round)
@@ -480,6 +492,7 @@
   (define pc-action (get-next-pc-action))
   (cond ((eq? 'shoot (action-symbol pc-action))
          (set! current-encounter-node combat-node)
+         (set! in-combat? #t)
          (paragraph "With a swift motion, you pull out your gun.")))
 
   (cond ((initiative-based-resolution? pc-action)
