@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-17T14:21:04.553Z" agent="5.0 (Macintosh)" etag="3bQKdxLe-HGUqETnL4nA" version="14.6.0" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-17T14:37:34.439Z" agent="5.0 (Macintosh)" etag="VvwLiUOQcyFvzR2QbG9u" version="14.6.0" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1904" dy="1219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -597,14 +597,6 @@
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-22" value="Get closer" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="tiqr8W6lq2PpIhoyLO2V-27" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-26" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="tiqr8W6lq2PpIhoyLO2V-28" value="&quot;Just passing through.&quot;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" parent="tiqr8W6lq2PpIhoyLO2V-27" vertex="1" connectable="0">
-          <mxGeometry x="0.4154" y="2" relative="1" as="geometry">
-            <mxPoint x="-141" y="-151" as="offset" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-33" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-10" target="tiqr8W6lq2PpIhoyLO2V-31" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -627,7 +619,7 @@
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-30" value="&quot;Just passing through.&quot;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" parent="tiqr8W6lq2PpIhoyLO2V-29" vertex="1" connectable="0">
           <mxGeometry x="-0.4034" y="1" relative="1" as="geometry">
-            <mxPoint x="11" y="41" as="offset" />
+            <mxPoint x="28" y="21" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-32" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-13" target="tiqr8W6lq2PpIhoyLO2V-31" edge="1">
@@ -635,11 +627,11 @@
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-34" value="&quot;I want to barter.&quot;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" parent="tiqr8W6lq2PpIhoyLO2V-32" vertex="1" connectable="0">
           <mxGeometry x="-0.3812" y="-2" relative="1" as="geometry">
-            <mxPoint x="58" y="-73" as="offset" />
+            <mxPoint x="-26" y="50" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-13" value="&quot;Good. Who are you and what do you want?&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="540" y="2075" width="120" height="80" as="geometry" />
+          <mxGeometry x="450" y="2100" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-23" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-21" target="tiqr8W6lq2PpIhoyLO2V-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -659,7 +651,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-26" value="&quot;Just keep your distance and we&#39;re cool.&quot;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" parent="1" vertex="1">
-          <mxGeometry x="580" y="2340" width="120" height="80" as="geometry" />
+          <mxGeometry x="660" y="2280" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="YugrOfWrAMtGJ8in59au-63" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" edge="1" parent="1" source="tiqr8W6lq2PpIhoyLO2V-31" target="YugrOfWrAMtGJ8in59au-62">
           <mxGeometry relative="1" as="geometry" />
