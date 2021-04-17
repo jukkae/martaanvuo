@@ -488,6 +488,9 @@
       'dead
       'hit))
 
+(define (alive? actor)
+  (> (actor-hp actor) 0))
+
 (define (get-next-npc-action actor)
   (make-action #:symbol 'hold-at-gunpoint
                #:actor actor
@@ -710,19 +713,27 @@
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll)))
-  (displayln action-result)
   (displayln
    (string-append
-   (actor-name target)
-   ": "
-   (number->string (actor-hp target))
-   "/"
-   (number->string (actor-max-hp target))
-   " hp"))
+    (actor-name target)
+    ": "
+    (number->string (actor-hp target))
+    "/"
+    (number->string (actor-max-hp target))
+    " hp"))
+  action-result
   )
+
 (define (resolve-action! action)
-  (cond ((eq? (action-symbol action) 'shoot)
-         (resolve-shoot-action! action))))
+  (when (alive? (action-actor action))
+    (cond ((eq? (action-symbol action) 'shoot)
+           (define result (resolve-shoot-action! action))
+           (when (eq? result 'dead)
+             (if (not (pc-actor? (action-target action)))
+                 (paragraph "The " (actor-name (action-target action)) " is dead.")
+                 (begin
+                   (paragraph "You are dead.")
+                   'pc-dead)))))))
 
 (define (resolve-pc-action! action)
   (resolve-action! action))
