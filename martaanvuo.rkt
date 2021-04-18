@@ -265,69 +265,15 @@
   )
 
 
-(serializable-struct
- encounter-node
- (name
-  (connections #:mutable)))
-
-(define begin-encounter-node
-  (encounter-node
-   'begin
-   '()))
-
-(define barter-node
-  (encounter-node
-   'barter
-   '()))
-
-(define who-are-you-node
-  (encounter-node
-   'who-are-you
-   '()))
-
-(define we-cool-node
-  (encounter-node
-   'we-cool
-   '()))
-
-(define final-warning-node
-  (encounter-node
-   'final-warning
-   '()))
-
-(define combat-node
-  (encounter-node
-   'combat
-   '()))
-
-(define end-encounter-node
-  (encounter-node
-   'end
-   '()))
-
-(define (fix-encounter-adjacencies)
-  (set-encounter-node-connections!
-   begin-encounter-node
-   (list who-are-you-node final-warning-node combat-node))
-  (set-encounter-node-connections!
-   barter-node
-   (list end-encounter-node))
-  (set-encounter-node-connections!
-   who-are-you-node
-   (list barter-node we-cool-node))
-  (set-encounter-node-connections!
-   we-cool-node
-   (list end-encounter-node))
-  (set-encounter-node-connections!
-   final-warning-node
-   (list who-are-you-node combat-node))
-  (set-encounter-node-connections!
-   combat-node
-   (list end-encounter-node))
-  )
+(define begin-encounter-node 'begin)
+(define barter-node 'barter)
+(define who-are-you-node 'who-are-you)
+(define we-cool-node 'we-cool)
+(define final-warning-node 'final-warning)
+(define combat-node 'combat)
+(define end-encounter-node 'end)
 
 
-(fix-encounter-adjacencies)
 
 (define current-encounter-node begin-encounter-node)
 
@@ -347,10 +293,10 @@
   (displayln
    (string-append
     "current encounter node: "
-    (symbol->string (encounter-node-name current-encounter-node))))
+    (symbol->string current-encounter-node)))
   (newline)
 
-  (case (encounter-node-name current-encounter-node)
+  (case current-encounter-node
     ['begin
      (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
      (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
