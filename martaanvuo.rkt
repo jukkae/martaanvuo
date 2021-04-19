@@ -266,19 +266,8 @@
   (displayln "serialize-state")
   )
 
-
-(define begin-encounter-node 'begin)
-(define barter-node 'barter)
-(define who-are-you-node 'who-are-you)
-(define we-cool-node 'we-cool)
-(define final-warning-node 'final-warning)
-(define combat-node 'combat)
-(define end-encounter-node 'end)
-
-(define current-encounter-node begin-encounter-node)
-
 (define encounter<%>
-  (interface () on-begin-round on-end-round before-resolve-action after-resolve-action))
+  (interface () on-begin-round on-end-round on-get-pc-action))
 
 (define scavenger-encounter%
   (class* object% (encounter<%>)
@@ -289,14 +278,22 @@
     (define/public (on-begin-round)
       (displayln "--scavenger-encounter on-begin-round")
       '())
+
     (define/public (on-end-round)
       (displayln "--scavenger-encounter on-end-round")
-      '())
-    (define/public (before-resolve-action)
-      (displayln "--scavenger-encounter before-resolve-action")
-      '())
-    (define/public (after-resolve-action)
-      (displayln "--scavenger-encounter after-resolve-action")
+      (define current-enemies (get-current-enemies))
+      (when (= (length current-enemies) 0)
+        'exit-encounter))
+
+    (define/public (on-get-pc-action pc-action)
+      (displayln "--scavenger-encounter on-get-pc-action")
+      (cond ((eq? 'shoot (action-symbol pc-action))
+             (set! current-node 'combat)
+             (set! in-combat? #t)
+             (paragraph "With a swift motion, you pull out your gun."))
+            ((eq? 'back-off (action-symbol pc-action))
+             (set! current-node 'who-are-you)
+             (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\"")))
       '())
     ))
 
@@ -308,22 +305,22 @@
   (if in-combat?
       (displayln "in combat")
       (displayln "not in combat"))
-  (displayln
-   (string-append
-    "current encounter node: "
-    (symbol->string current-encounter-node)))
-  (newline)
+  (when (not (eq? '() current-encounter))
+    (displayln
+     (string-append
+      "current encounter node: "
+      (symbol->string (get-field current-node current-encounter))))
+    (newline))
 
-  (case current-encounter-node
-    ['begin
-     (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
-     (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
-     (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
-    ['combat
-     (paragraph "You are in combat with a scavenger.")]
-    #;['end
-     (paragraph "That was that.")]
-    )
+  (when (not (eq? '() current-encounter))
+    (case (get-field current-node current-encounter)
+      ['begin
+       (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
+       (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
+       (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
+      ['combat
+       (paragraph "You are in combat with a scavenger.")]
+      ))
   )
 
 (define (meta-command-valid? meta-commands-with-keys input)
@@ -446,8 +443,12 @@
   (displayln "on-end-round")
   (define current-enemies (get-current-enemies))
   (when (= (length current-enemies) 0)
-    (set! current-encounter-node end-encounter-node)
     (set! in-combat? #f))
+  (when (not (eq? '() current-encounter))
+    (define encounter-status (send current-encounter on-end-round))
+    (when (eq? 'exit-encounter encounter-status)
+      (displayln "encounter finished!")
+      (set! current-encounter '())))
   )
 
 (define (resolve-round)
@@ -457,13 +458,7 @@
   (describe-situation)
 
   (define pc-action (get-next-pc-action))
-  (cond ((eq? 'shoot (action-symbol pc-action))
-         (set! current-encounter-node combat-node)
-         (set! in-combat? #t)
-         (paragraph "With a swift motion, you pull out your gun."))
-        ((eq? 'back-off (action-symbol pc-action))
-         (set! current-encounter-node who-are-you-node)
-         (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\"")))
+  (when (not (eq? '() current-encounter)) (send current-encounter on-get-pc-action pc-action))
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
