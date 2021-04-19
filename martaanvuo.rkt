@@ -215,6 +215,8 @@
 (define (on-begin-round)
   (displayln "on-begin-round")
   (set! action-queue '())
+
+  (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
   )
 
 (define (add-to-action-queue action)
@@ -273,16 +275,32 @@
 (define combat-node 'combat)
 (define end-encounter-node 'end)
 
-
-
 (define current-encounter-node begin-encounter-node)
 
-(define current-encounter
-  (let ([encounter-symbol 'scavenger]
-        [encounter-nodes '()])
-    (cons
-     encounter-symbol
-     encounter-nodes)))
+(define encounter<%>
+  (interface () on-begin-round on-end-round before-resolve-action after-resolve-action))
+
+(define scavenger-encounter%
+  (class* object% (encounter<%>)
+    (field [encounter-nodes '(begin barter who-are-you we-cool final-warning combat)])
+    (field [current-node (car encounter-nodes)])
+    (super-new)
+
+    (define/public (on-begin-round)
+      (displayln "--scavenger-encounter on-begin-round")
+      '())
+    (define/public (on-end-round)
+      (displayln "--scavenger-encounter on-end-round")
+      '())
+    (define/public (before-resolve-action)
+      (displayln "--scavenger-encounter before-resolve-action")
+      '())
+    (define/public (after-resolve-action)
+      (displayln "--scavenger-encounter after-resolve-action")
+      '())
+    ))
+
+(define current-encounter (new scavenger-encounter%))
 
 (define in-combat? #f)
 (define (describe-situation)
@@ -303,7 +321,7 @@
      (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
     ['combat
      (paragraph "You are in combat with a scavenger.")]
-    ['end
+    #;['end
      (paragraph "That was that.")]
     )
   )
