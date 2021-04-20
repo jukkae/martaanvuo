@@ -170,43 +170,7 @@
                            #:actor *pc*
                            #:duration 1
                            #:target target
-                           #:tags '(combat delayed-resolution))))
-                   (make-choice
-                    'get-closer
-                    (string-append "Take a step closer.")
-                    (λ () (make-action
-                           #:symbol 'get-closer
-                           #:actor *pc*
-                           #:duration 1
-                           #:target target
-                           #:tags '())))
-                   #;(make-choice
-                      'explain
-                      (string-append "\"I'm just passing through.\"")
-                      (λ () (make-action
-                             #:symbol 'explain
-                             #:actor *pc*
-                             #:duration 0
-                             #:target target
-                             #:tags '(dialogue fast))))
-                   #;(make-choice
-                      'barter
-                      (string-append "\"I want to barter.\"")
-                      (λ () (make-action
-                             #:symbol 'barter
-                             #:actor *pc*
-                             #:duration 0
-                             #:target target
-                             #:tags '(dialogue fast))))
-                   (make-choice
-                    'back-off
-                    (string-append "Back off.")
-                    (λ () (make-action
-                           #:symbol 'back-off
-                           #:actor *pc*
-                           #:duration 1
-                           #:target 'none
-                           #:tags '()))))))
+                           #:tags '(combat delayed-resolution)))))))
     )
   combat-choices
   )
@@ -267,7 +231,7 @@
   )
 
 (define encounter<%>
-  (interface () on-begin-round on-end-round on-get-pc-action))
+  (interface () on-begin-round on-end-round on-get-pc-action get-encounter-choices))
 
 (define scavenger-encounter%
   (class* object% (encounter<%>)
@@ -291,10 +255,91 @@
              (set! current-node 'combat)
              (set! in-combat? #t)
              (paragraph "With a swift motion, you pull out your gun."))
+            ((eq? 'get-closer (action-symbol pc-action))
+             (cond ((eq? 'final-warning current-node)
+                    (set! current-node 'combat)
+                    (paragraph "You take another step."))
+                   ((eq? 'begin current-node)
+                    (set! current-node 'final-warning)
+                    (paragraph "You take a step closer."))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
              (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\"")))
       '())
+
+    (define/public (get-encounter-choices)
+      (displayln "--scavenger-encounter get-encounter-choices")
+      
+      (case current-node
+        ['begin
+         (list
+          (make-choice
+           'get-closer
+           (string-append "Take a step closer.")
+           (λ () (make-action
+                  #:symbol 'get-closer
+                  #:actor *pc*
+                  #:duration 1
+                  #:target '()
+                  #:tags '())))
+          (make-choice
+           'back-off
+           (string-append "Back off.")
+           (λ () (make-action
+                  #:symbol 'back-off
+                  #:actor *pc*
+                  #:duration 1
+                  #:target 'none
+                  #:tags '()))))]
+        ['barter
+         '()
+         ]
+        ['combat
+         '()]
+        ['who-are-you
+         (list
+          (make-choice
+           'explain
+           (string-append "\"I'm just passing through.\"")
+           (λ () (make-action
+                  #:symbol 'explain
+                  #:actor *pc*
+                  #:duration 0
+                  #:target '()
+                  #:tags '(dialogue fast))))
+          (make-choice
+           'barter
+           (string-append "\"I want to barter.\"")
+           (λ () (make-action
+                  #:symbol 'barter
+                  #:actor *pc*
+                  #:duration 0
+                  #:target '()
+                  #:tags '(dialogue fast)))))]
+        ['we-cool
+         '()]
+        ['final-warning
+         (list
+          (make-choice
+           'get-closer
+           (string-append "Take another step closer.")
+           (λ () (make-action
+                  #:symbol 'get-closer
+                  #:actor *pc*
+                  #:duration 1
+                  #:target '()
+                  #:tags '())))
+          (make-choice
+           'back-off
+           (string-append "Back off.")
+           (λ () (make-action
+                  #:symbol 'back-off
+                  #:actor *pc*
+                  #:duration 1
+                  #:target 'none
+                  #:tags '()))))]
+        
+        ))
     ))
 
 (define current-encounter (new scavenger-encounter%))
@@ -318,8 +363,17 @@
        (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
        (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
        (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
+      ['barter
+       (paragraph "\"You wanna trade? Okay. Let's see what you have, then.\"")
+       ]
       ['combat
        (paragraph "You are in combat with a scavenger.")]
+      ['who-are-you
+       (paragraph "\"Good. Now, what do you want?\"")]
+      ['we-cool
+       (paragraph "\"Just passing through, huh? Where to, that ain't my problem unless you make it mine. Got that? So just keep your distance and we're cool.\"")]
+      ['final-warning
+       (paragraph "\"I said, not one fucking step closer. You've been warned.\"")]
       ))
   )
 
@@ -350,7 +404,14 @@
         (what-do-you-do 'verbose))
       (define actor *pc*)
 
-      (define choices (get-world-choices *world* actor))
+      
+      (define world-choices (get-world-choices *world* actor))
+      (define encounter-choices (if (eq? current-encounter '())
+                                    '()
+                                    (send current-encounter get-encounter-choices)))
+      (displayln current-encounter)
+      (define choices (append world-choices encounter-choices))
+      
       (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
