@@ -264,8 +264,10 @@
                     (paragraph "You take a step closer."))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
-             (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\"")))
-      '())
+             (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\""))
+            ((eq? 'ask-info (action-symbol pc-action))
+             (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
+             'exit-encounter)))
 
     (define/public (get-encounter-choices)
       (displayln "--scavenger-encounter get-encounter-choices")
@@ -300,9 +302,9 @@
          (list
           (make-choice
            'explain
-           (string-append "\"I'm just passing through.\"")
+           (string-append "\"I seek the Anthead Girl of the Riverbank. What can you tell me of the mires ahead?\"")
            (λ () (make-action
-                  #:symbol 'explain
+                  #:symbol 'ask-info
                   #:actor *pc*
                   #:duration 0
                   #:target '()
@@ -519,7 +521,11 @@
   (describe-situation)
 
   (define pc-action (get-next-pc-action))
-  (when (not (eq? '() current-encounter)) (send current-encounter on-get-pc-action pc-action))
+  (when (not (eq? '() current-encounter))
+    (define encounter-status (send current-encounter on-get-pc-action pc-action))
+    (when (eq? 'exit-encounter encounter-status)
+      (displayln "encounter finished!")
+      (set! current-encounter '())))
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
