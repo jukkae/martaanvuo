@@ -260,8 +260,16 @@
                     (set! current-node 'combat)
                     (paragraph "You take another step."))
                    ((eq? 'begin current-node)
-                    (set! current-node 'final-warning)
-                    (paragraph "You take a step closer."))))
+                    (define roll (d 1 4))
+                    (if (= roll 1)
+                        (begin
+                          (paragraph "You take a step. She wasn't kidding.")
+                          (set! current-node 'combat)
+                          )
+                        (begin
+                          (paragraph "You take a step closer.")
+                          (set! current-node 'final-warning)
+                          )))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
              (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\""))
@@ -375,7 +383,7 @@
       ['we-cool
        (paragraph "\"Just passing through, huh? Where to, that ain't my problem unless you make it mine. Got that? So just keep your distance and we're cool.\"")]
       ['final-warning
-       (paragraph "\"I said, not one fucking step closer. You've been warned.\"")]
+       (paragraph "\"I said, not one fucking step closer.\"")]
       ))
   )
 
