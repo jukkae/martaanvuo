@@ -177,7 +177,6 @@
 
 (define action-queue '())
 (define (on-begin-round)
-  (displayln "on-begin-round")
   (set! action-queue '())
 
   (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
@@ -189,7 +188,6 @@
   (set! action-queue (remq* actions action-queue)))
 
 (define (sort-action-queue)
-  (displayln "sort-action-queue")
   (set! action-queue (sort
                       action-queue
                       action-faster-than?))
@@ -197,16 +195,22 @@
   )
 
 (define (enqueue-npc-actions)
-  (displayln "enqueue-npc-actions")
   (define actors (location-actors (current-location)))
   (for ([actor actors])
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
-      (add-to-action-queue next-action)
-      (displayln next-action))))
+      (add-to-action-queue next-action))))
+
+
+(define (replace-own-action-in-action-queue-with-new-action action)
+  (define actions (filter
+                   (λ (action) (eq? actor (action-actor action)))
+                   action-queue))
+  (remove-from-action-queue actions)
+  (add-to-action-queue action)
+  )
 
 (define (update-npc-reactions pc-action)
-  (displayln "update-npc-reactions")
   (define npcs (get-current-enemies))
   (when (aggressive? pc-action)
     ; remove own actions from queue
@@ -216,18 +220,23 @@
                        action-queue))
       (remove-from-action-queue actions)
       ; blam blam
-      (define action (make-action
+      (define action (make-shoot-action actor))
+      (add-to-action-queue action))
+    )
+  )
+
+(define (make-shoot-action actor)
+  (define action (make-action
                       #:symbol 'shoot
                       #:actor actor
                       #:duration 1
                       #:target *pc*
                       #:tags '(combat delayed-resolution)))
-      (add-to-action-queue action))
-    )
-  )
+  action)
 
 (define (serialize-state)
-  (displayln "serialize-state")
+
+  '()
   )
 
 (define encounter<%>
@@ -240,17 +249,15 @@
     (super-new)
 
     (define/public (on-begin-round)
-      (displayln "--scavenger-encounter on-begin-round")
       '())
 
     (define/public (on-end-round)
-      (displayln "--scavenger-encounter on-end-round")
       (define current-enemies (get-current-enemies))
-      (when (= (length current-enemies) 0)
-        'exit-encounter))
+      (if (= (length current-enemies) 0)
+          'exit-encounter
+          '()))
 
     (define/public (on-get-pc-action pc-action)
-      (displayln "--scavenger-encounter on-get-pc-action")
       (cond ((eq? 'shoot (action-symbol pc-action))
              (set! current-node 'combat)
              (set! in-combat? #t)
@@ -263,8 +270,11 @@
                     (define roll (d 1 4))
                     (if (= roll 1)
                         (begin
-                          (paragraph "You take a step. She wasn't kidding.")
+                          (paragraph "You take a step. A loud crack pierces the air.")
+                          (set! in-combat? #t)
                           (set! current-node 'combat)
+                          (update-npc-reactions pc-action)
+                          (resolve-turns!)
                           )
                         (begin
                           (paragraph "You take a step closer.")
@@ -278,8 +288,6 @@
              'exit-encounter)))
 
     (define/public (get-encounter-choices)
-      (displayln "--scavenger-encounter get-encounter-choices")
-      
       (case current-node
         ['begin
          (list
@@ -291,7 +299,7 @@
                   #:actor *pc*
                   #:duration 1
                   #:target '()
-                  #:tags '())))
+                  #:tags '(aggressive))))
           (make-choice
            'back-off
            (string-append "Back off.")
@@ -356,15 +364,15 @@
 
 (define in-combat? #f)
 (define (describe-situation)
-  (displayln "describe-situation")
   (if in-combat?
-      (displayln "in combat")
-      (displayln "not in combat"))
+      (displayln "[in combat]")
+      (displayln "[not in combat]"))
   (when (not (eq? '() current-encounter))
     (displayln
      (string-append
-      "current encounter node: "
-      (symbol->string (get-field current-node current-encounter))))
+      "[current encounter node: "
+      (symbol->string (get-field current-node current-encounter))
+      "]"))
     (newline))
 
   (when (not (eq? '() current-encounter))
@@ -419,7 +427,7 @@
       (define encounter-choices (if (eq? current-encounter '())
                                     '()
                                     (send current-encounter get-encounter-choices)))
-      (displayln current-encounter)
+      
       (define choices (append world-choices encounter-choices))
       
       (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
@@ -511,7 +519,6 @@
   )
 
 (define (on-end-round)
-  (displayln "on-end-round")
   (define current-enemies (get-current-enemies))
   (when (= (length current-enemies) 0)
     (set! in-combat? #f))
