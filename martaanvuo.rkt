@@ -227,11 +227,11 @@
 
 (define (make-shoot-action actor)
   (define action (make-action
-                      #:symbol 'shoot
-                      #:actor actor
-                      #:duration 1
-                      #:target *pc*
-                      #:tags '(combat delayed-resolution)))
+                  #:symbol 'shoot
+                  #:actor actor
+                  #:duration 1
+                  #:target *pc*
+                  #:tags '(combat delayed-resolution)))
   action)
 
 (define (serialize-state)
@@ -265,19 +265,23 @@
             ((eq? 'get-closer (action-symbol pc-action))
              (cond ((eq? 'final-warning current-node)
                     (set! current-node 'combat)
-                    (paragraph "You take another step."))
+                    (paragraph "You take another step. She pulls the trigger.")
+                    (set! in-combat? #t)
+                    (set! current-node 'combat)
+                    (update-npc-reactions pc-action)
+                    (resolve-turns!))
                    ((eq? 'begin current-node)
                     (define roll (d 1 4))
                     (if (= roll 1)
                         (begin
-                          (paragraph "You take a step. A loud crack pierces the air.")
+                          (paragraph "You take a step, and she pulls the trigger.")
                           (set! in-combat? #t)
                           (set! current-node 'combat)
                           (update-npc-reactions pc-action)
                           (resolve-turns!)
                           )
                         (begin
-                          (paragraph "You take a step closer.")
+                          (paragraph "You take a step. She waves her rifle.")
                           (set! current-node 'final-warning)
                           )))))
             ((eq? 'back-off (action-symbol pc-action))
@@ -346,7 +350,7 @@
                   #:actor *pc*
                   #:duration 1
                   #:target '()
-                  #:tags '())))
+                  #:tags '(aggressive))))
           (make-choice
            'back-off
            (string-append "Back off.")
@@ -501,8 +505,6 @@
   (resolve-action! action))
 
 (define (resolve-turns!)
-  (displayln "resolve-turns!")
-  (newline)
   (let/ec end-round-early
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
@@ -511,8 +513,6 @@
     ))
 
 (define (resolve-turn! world action)
-  (displayln "resolve-turn!")
-  (displayln action)
   (if (pc-actor? (action-actor action))
       (resolve-pc-action! action)
       (resolve-npc-action! action))
