@@ -74,7 +74,7 @@
 
 (define *pc*
   (pc-actor
-   "You"
+   "PC"
    4
    4
    0
@@ -468,7 +468,11 @@
   (displayln "Resolving attack roll:")
   (print-table
    (list
-    (list " 2d6 + ab " " vs " " defense ")
+    (list
+     (string-append " " (actor-name actor) " ")
+     " vs "
+     (string-append " " (actor-name target) " "))
+    (list " 2d6 + ab " " >= " " defense ")
     (list
      (string-append
       " "
@@ -503,14 +507,22 @@
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll)))
-  (displayln
-   (string-append
-    (actor-name target)
-    ": "
-    (number->string (actor-hp target))
-    "/"
-    (number->string (actor-max-hp target))
-    " hp"))
+
+  (displayln "Target:")
+  (print-table
+   (list
+    (list
+     (string-append " " (actor-name target) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp target))
+      "/"
+      (number->string (actor-max-hp target))
+      " "))))
+
   action-result
   )
 
