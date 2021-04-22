@@ -4,6 +4,7 @@
 
 (require dyoo-while-loop)
 (require lens)
+(require text-table)
 
 (require "action.rkt")
 (require "actor.rkt")
@@ -446,30 +447,59 @@
             (else (what-do-you-do 'abbreviated))))))
 
 
+(define (info-card . args)
+  (print-table '((a b) (c d)))
+  (displayln (string-append* args))
+  (newline))
+
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
-  (define attack-roll (d 2 6))
-  (define attack-roll-total (+ attack-roll (actor-attack-skill actor)))
+  (define first-d (d 1 6))
+  (define second-d (d 1 6))
+  (define attack-bonus (actor-attack-skill actor))
+  (define attack-roll (+ first-d second-d))
+  (define attack-roll-total (+ first-d second-d attack-bonus))
   (define target-number (actor-defense-number target))
   (define success? (>= attack-roll-total target-number))
+  (define success-string (if success? "successful" "failure"))
   (define damage-roll ((actor-attack-damage actor)))
-  
-  (paragraph "2d6 + atk "
-             "["
-             (number->string attack-roll)
-             " + "
-             (number->string (actor-attack-skill actor))
-             " = "
-             (number->string attack-roll-total)
-             "]"
-             " against TN "
-             (number->string target-number)
-             ": "
-             (if success? "successful, " "failure")
-             (if success?
-                 (string-append "damage: " (number->string damage-roll))
-                 ""))
+
+  (displayln "Resolving attack roll:")
+  (print-table
+   (list
+    (list " 2d6 + ab " " vs " " defense ")
+    (list
+     (string-append
+      " "
+      (number->string first-d)
+      "+"
+      (number->string second-d)
+      "+"
+      (number->string (actor-attack-skill actor))
+      " = "
+      (number->string attack-roll-total)
+      " "
+      )
+     " >= "
+     (string-append
+      " "
+      (number->string target-number)
+      ", "
+      success-string
+      " "
+      ))))
+  (when success?
+    (displayln "Attack successful, HP damage roll:")
+    (print-table
+     (list
+      (list " damage roll formula " " result ")
+      (list
+       " <introspect on actor> "
+       (string-append
+        " "
+        (number->string damage-roll))
+       ))))
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll)))
