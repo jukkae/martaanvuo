@@ -173,7 +173,22 @@
                            #:target target
                            #:tags '(combat delayed-resolution)))))))
     )
-  combat-choices
+
+  (define change-location-choices '())
+  (when (not in-combat?)
+    (set! change-location-choices
+          (append change-location-choices
+                  (list
+                   (make-choice
+                    'shoot
+                    (string-append "Go to next location.")
+                    (λ () (make-action
+                           #:symbol 'shoot
+                           #:actor *pc*
+                           #:duration 1
+                           #:target '()
+                           #:tags '(combat delayed-resolution))))))))
+  (append combat-choices change-location-choices)
   )
 
 (define action-queue '())
@@ -275,7 +290,7 @@
                     (define roll (d 1 4))
                     (if (= roll 1)
                         (begin
-                          (paragraph "You take a step, and she pulls the trigger.")
+                          (paragraph "You take a step. She pulls the trigger.")
                           (set! in-combat? #t)
                           (set! current-node 'combat)
                           (update-npc-reactions pc-action)
@@ -287,7 +302,7 @@
                           )))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
-             (paragraph "You raise your hands above your head. \"No need to get all angry-like. Ain't mean no harm, miss.\""))
+             (paragraph "You raise your hands above your head. \"I won't shoot.\""))
             ((eq? 'ask-info (action-symbol pc-action))
              (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
              'exit-encounter)))
@@ -298,7 +313,7 @@
          (list
           (make-choice
            'get-closer
-           (string-append "Take a step closer.")
+           (string-append "Take a step forward.")
            (λ () (make-action
                   #:symbol 'get-closer
                   #:actor *pc*
@@ -345,7 +360,7 @@
          (list
           (make-choice
            'get-closer
-           (string-append "Take another step closer.")
+           (string-append "Take another step forward.")
            (λ () (make-action
                   #:symbol 'get-closer
                   #:actor *pc*
@@ -369,10 +384,10 @@
 
 (define in-combat? #f)
 (define (describe-situation)
-  (if in-combat?
+  #;(if in-combat?
       (displayln "[in combat]")
       (displayln "[not in combat]"))
-  (when (not (eq? '() current-encounter))
+  #;(when (not (eq? '() current-encounter))
     (displayln
      (string-append
       "[current encounter node: "
@@ -385,7 +400,7 @@
       ['begin
        (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
        (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
-       (paragraph "Your revolver is in its holster. You might be able to pull it out in time.")]
+       (paragraph "Your revolver is in its holster. You're fast, but you don't think you're that fast")]
       ['barter
        (paragraph "\"You wanna trade? Okay. Let's see what you have, then.\"")
        ]
@@ -499,7 +514,7 @@
      (list
       (list " damage roll formula " " result ")
       (list
-       " <introspect on actor> "
+       " < see actor > "
        (string-append
         " "
         (number->string damage-roll))
@@ -522,6 +537,7 @@
       "/"
       (number->string (actor-max-hp target))
       " "))))
+  (newline)
 
   action-result
   )
@@ -567,7 +583,8 @@
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-end-round))
     (when (eq? 'exit-encounter encounter-status)
-      (displayln "encounter finished!")
+      (displayln "The scavenger disappears.")
+      (newline)
       (set! current-encounter '())))
   )
 
@@ -581,7 +598,8 @@
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-get-pc-action pc-action))
     (when (eq? 'exit-encounter encounter-status)
-      (displayln "encounter finished!")
+      (displayln "The scavenger disappears.")
+      (newline)
       (set! current-encounter '())))
 
   (cond ((initiative-based-resolution? pc-action)
