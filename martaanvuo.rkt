@@ -632,7 +632,7 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (narrate-quit)
+         (paragraph "You quit.")
          (exit))
         (else
          (newline)
