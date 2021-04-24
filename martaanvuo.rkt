@@ -8,20 +8,14 @@
 
 (require "action.rkt")
 (require "actor.rkt")
-(require "creatures.rkt")
-(require "items.rkt")
-(require "locations.rkt")
+(require "location.rkt")
 (require "narration.rkt")
 (require "pc.rkt")
 (require "ui.rkt")
 (require "utils.rkt")
-(require "world.rkt")
 
 (define *run* 0)
 (define *round* 0)
-
-
-
 
 
 (serializable-struct

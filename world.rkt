@@ -4,7 +4,6 @@
 
 (require "action.rkt")
 (require "actor.rkt")
-(require "creatures.rkt")
 (require "items.rkt")
 (require "locations.rkt")
 (require "narration.rkt")
@@ -260,9 +259,7 @@
   (define added-enemies '())
   (for ([i (in-range 0 number)])
     (define r (d 1 3))
-    (define enemy (cond ((= r 3) (new grabberkin%))
-                        ((= r 2) (new blindscraper%))
-                        (else (new bloodleech%))))
+    (define enemy '())
 
     (add-actor-to-location! location enemy)
     (set! added-enemies (cons enemy added-enemies)))
