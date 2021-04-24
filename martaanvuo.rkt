@@ -327,7 +327,7 @@
              (paragraph "You raise your hands above your head. \"I won't shoot.\""))
             ((eq? 'ask-info (action-symbol pc-action))
              (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
-             'exit-encounter)))
+             (exit-encounter))))
 
     (define/public (get-encounter-choices)
       (case current-node
