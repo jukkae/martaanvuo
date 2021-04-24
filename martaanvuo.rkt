@@ -10,7 +10,6 @@
 (require "actor.rkt")
 (require "location.rkt")
 (require "narration.rkt")
-(require "pc.rkt")
 (require "ui.rkt")
 (require "utils.rkt")
 
@@ -178,7 +177,13 @@
            (string-append
             " "
             (number->string *round*)
-            " "))))
+            " "))
+     (list " location "
+           (string-append
+            " "
+            (symbol->string (location-type (current-location)))
+            " "))
+     ))
   (print-table round-summary)
   (when (and (eq? '() current-encounter)
              (= *round* 2))
