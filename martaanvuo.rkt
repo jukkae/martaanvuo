@@ -42,8 +42,26 @@
    #:tags '()
    #:type 'swamp))
 
+(define location-3
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
+   #:type 'swamp))
+
+(define location-4
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
+   #:type 'ruins))
+
 (define *world*
-  (world (list location-1 location-2) 0 0))
+  (world (list location-1 location-2 location-3 location-4) 0 0))
 
 (define *pc*
   (pc-actor
@@ -104,7 +122,9 @@
 (define (setup-world)
   (move-actor-to-location! *pc* location-1)
   (set-location-neighbors! location-1 (list location-2))
-  (set-location-neighbors! location-2 (list location-1))
+  (set-location-neighbors! location-2 (list location-1 location-3))
+  (set-location-neighbors! location-3 (list location-2 location-4))
+  (set-location-neighbors! location-4 (list location-3))
   )
 
 (define (get-current-enemies)
@@ -142,13 +162,13 @@
           (append change-location-choices
                   (list
                    (make-choice
-                    'go-to-next-location
+                    'go-to-location
                     (string-append "Go to next location.")
                     (λ () (make-action
-                           #:symbol 'go-to-next-location
+                           #:symbol 'go-to-location
                            #:actor *pc*
                            #:duration 100
-                           #:target '()
+                           #:target neighbor
                            #:tags '(downtime)))))))))
   (append combat-choices change-location-choices)
   )
@@ -568,6 +588,13 @@
            ))))
 
 (define (resolve-pc-action! action)
+  (cond ((eq? (action-symbol action) 'go-to-location)
+         (define next-location (action-target action))
+         (remove-actor-from-location! (current-location) *pc*)
+         (set-actor-current-location! *pc* next-location)
+         #;(set! (actor-current-location *pc*) next-location)
+         (add-actor-to-location! next-location *pc*)
+         ))
   (resolve-action! action))
 
 (define (resolve-npc-action! action)
@@ -606,6 +633,7 @@
   (describe-situation)
 
   (define pc-action (get-next-pc-action))
+  
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-get-pc-action pc-action))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
@@ -616,7 +644,7 @@
          (sort-action-queue)
          (resolve-turns!))
         (else
-         (resolve-action! pc-action)))
+         (resolve-pc-action! pc-action)))
   (on-end-round)
   (define round-exit-status 'ok)
   (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
