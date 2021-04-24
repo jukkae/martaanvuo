@@ -40,7 +40,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'swamp))
+   #:type 'ruins))
 
 (define location-3
   (make-location
@@ -49,7 +49,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'swamp))
+   #:type 'riverbank))
 
 (define location-4
   (make-location
@@ -58,7 +58,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'ruins))
+   #:type 'anthill))
 
 (define *world*
   (world (list location-1 location-2 location-3 location-4) 0 0))
@@ -106,7 +106,9 @@
 
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor)) ; = what do you do?
-        (else (get-next-pc-action)))
+        (else
+         (serialize-state)
+         (get-next-pc-action)))
   )
 
 (define (remove-actor-from-its-current-location! actor)
@@ -163,7 +165,7 @@
                   (list
                    (make-choice
                     'go-to-location
-                    (string-append "Go to next location.")
+                    (string-append "Go to: " (symbol->string (location-type neighbor)))
                     (λ () (make-action
                            #:symbol 'go-to-location
                            #:actor *pc*
@@ -194,7 +196,7 @@
             (number->string (location-id (current-location)))
             " "))
      ))
-  (print-table round-summary)
+  (info-card round-summary)
   (when (and (eq? '() current-encounter)
              (= *round* 2))
     (begin
@@ -258,9 +260,10 @@
   action)
 
 (define (serialize-state)
+  '())
 
-  '()
-  )
+(define (serialize-input)
+  '())
 
 (define encounter<%>
   (interface () on-begin-round on-end-round on-get-pc-action get-encounter-choices))
@@ -414,7 +417,16 @@
 (define current-encounter '())
 
 (define in-combat? #f)
+
+(define (get-next-flavor-text) '())
 (define (describe-situation)
+  (case *round*
+    [(1) (paragraph "Otava comes to. The heat is sweltering. Heavy clouds hang low in the dreary sky over her head. It's so misty she's not quite sure it's not raining.")])
+
+
+
+
+  
   #;(if in-combat?
         (displayln "[in combat]")
         (displayln "[not in combat]"))
@@ -463,6 +475,7 @@
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
 
 (define (get-next-pc-action)
+  (serialize-state)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
       (define (handle-meta-command meta-commands-with-keys input)
@@ -485,6 +498,7 @@
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
+      (serialize-input)
 
       (newline)
 
@@ -493,9 +507,9 @@
             (else (what-do-you-do 'abbreviated))))))
 
 
-(define (info-card . args)
-  (print-table '((a b) (c d)))
-  (displayln (string-append* args))
+(define (info-card content . title)
+  (when (not (null? title)) (displayln title))
+  (print-table content #:row-sep? #f)
   (newline))
 
 (define (resolve-shoot-action! action)
@@ -512,7 +526,7 @@
   (define damage-roll ((actor-attack-damage actor)))
 
   (displayln "Resolving attack roll:")
-  (print-table
+  (info-card
    (list
     (list
      (string-append " " (actor-name actor) " ")
@@ -541,7 +555,7 @@
       ))))
   (when success?
     (displayln "Attack successful, HP damage roll:")
-    (print-table
+    (info-card
      (list
       (list " damage roll formula " " result ")
       (list
@@ -555,7 +569,7 @@
   (when success? (set! action-result (take-damage target damage-roll)))
 
   (displayln "Target:")
-  (print-table
+  (info-card
    (list
     (list
      (string-append " " (actor-name target) " ")
@@ -592,7 +606,6 @@
          (define next-location (action-target action))
          (remove-actor-from-location! (current-location) *pc*)
          (set-actor-current-location! *pc* next-location)
-         #;(set! (actor-current-location *pc*) next-location)
          (add-actor-to-location! next-location *pc*)
          ))
   (resolve-action! action))
@@ -629,9 +642,9 @@
 (define (resolve-round)
   (on-begin-round)
   (enqueue-npc-actions)
-  (serialize-state)
   (describe-situation)
-
+  
+  (serialize-state)
   (define pc-action (get-next-pc-action))
   
   (when (not (eq? '() current-encounter))

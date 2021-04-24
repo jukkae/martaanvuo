@@ -36,7 +36,8 @@
 (define (title)
   (newline)
   (displayln "M A R T A A N V U O")
-  (displayln "==================="))
+  (displayln "===================")
+  (newline))
 
 
 
