@@ -17,9 +17,8 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-; globals and state
-;(define *world* '())
-(define *metaloop* 0)
+(define *run* 0)
+(define *round* 0)
 
 
 
@@ -92,20 +91,6 @@
 (define (current-location)
   (actor-current-location *pc*))
 
-(define *enemy*
-  (actor
-   "scavenger"
-   4
-   4
-   2
-   (λ () (d 1 3))
-   8
-   7
-   '()
-   '()
-   '()
-   '()))
-
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
@@ -144,7 +129,6 @@
 
 (define (setup-world)
   (move-actor-to-location! *pc* location-1)
-  (move-actor-to-location! *enemy* location-1)
   (set-location-neighbors! location-1 (list location-2))
   (set-location-neighbors! location-2 (list location-1))
   )
@@ -180,21 +164,35 @@
           (append change-location-choices
                   (list
                    (make-choice
-                    'shoot
+                    'go-to-next-location
                     (string-append "Go to next location.")
                     (λ () (make-action
-                           #:symbol 'shoot
+                           #:symbol 'go-to-next-location
                            #:actor *pc*
-                           #:duration 1
+                           #:duration 100
                            #:target '()
-                           #:tags '(combat delayed-resolution))))))))
+                           #:tags '(downtime))))))))
   (append combat-choices change-location-choices)
   )
 
 (define action-queue '())
 (define (on-begin-round)
+  (set! *round* (add1 *round*))
+  (define round-summary
+    (list
+     (list " round "
+           (string-append
+            " "
+            (number->string *round*)
+            " "))))
+  (print-table round-summary)
+  (when (and (eq? '() current-encounter)
+             (= *round* 2))
+    (begin
+      (set! current-encounter (new scavenger-encounter%))
+      (send current-encounter begin-encounter)
+      ))
   (set! action-queue '())
-
   (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
   )
 
@@ -264,13 +262,37 @@
     (field [current-node (car encounter-nodes)])
     (super-new)
 
+    (define scavenger
+      (actor
+       "scavenger"
+       4
+       4
+       2
+       (λ () (d 1 3))
+       8
+       7
+       '()
+       '()
+       '()
+       '()))
+      
+    
+    (define/private (exit-encounter)
+      (displayln "The scavenger disappears.")
+      (newline)
+      (remove-actor-from-its-current-location! scavenger)
+      'exit-encounter)
+
+    (define/public (begin-encounter)
+      (move-actor-to-location! scavenger (current-location)))
+
     (define/public (on-begin-round)
       '())
 
     (define/public (on-end-round)
       (define current-enemies (get-current-enemies))
       (if (= (length current-enemies) 0)
-          'exit-encounter
+          (exit-encounter)
           '()))
 
     (define/public (on-get-pc-action pc-action)
@@ -380,20 +402,20 @@
         ))
     ))
 
-(define current-encounter (new scavenger-encounter%))
+(define current-encounter '())
 
 (define in-combat? #f)
 (define (describe-situation)
   #;(if in-combat?
-      (displayln "[in combat]")
-      (displayln "[not in combat]"))
+        (displayln "[in combat]")
+        (displayln "[not in combat]"))
   #;(when (not (eq? '() current-encounter))
-    (displayln
-     (string-append
-      "[current encounter node: "
-      (symbol->string (get-field current-node current-encounter))
-      "]"))
-    (newline))
+      (displayln
+       (string-append
+        "[current encounter node: "
+        (symbol->string (get-field current-node current-encounter))
+        "]"))
+      (newline))
 
   (when (not (eq? '() current-encounter))
     (case (get-field current-node current-encounter)
@@ -576,17 +598,17 @@
       (resolve-npc-action! action))
   )
 
+(define (end-encounter)
+  (set! current-encounter '()))
+
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
   (when (= (length current-enemies) 0)
     (set! in-combat? #f))
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-end-round))
-    (when (eq? 'exit-encounter encounter-status)
-      (displayln "The scavenger disappears.")
-      (newline)
-      (set! current-encounter '())))
-  )
+    (when (eq? 'exit-encounter encounter-status) (end-encounter))))
+
 
 (define (resolve-round)
   (on-begin-round)
@@ -597,10 +619,7 @@
   (define pc-action (get-next-pc-action))
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-get-pc-action pc-action))
-    (when (eq? 'exit-encounter encounter-status)
-      (displayln "The scavenger disappears.")
-      (newline)
-      (set! current-encounter '())))
+    (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
