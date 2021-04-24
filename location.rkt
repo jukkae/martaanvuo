@@ -4,7 +4,6 @@
 (require racket/serialize)
 
 (require "action.rkt")
-(require "items.rkt")
 (require "utils.rkt")
 
 (serializable-struct location
