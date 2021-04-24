@@ -134,7 +134,11 @@
 
   (define change-location-choices '())
   (when (not in-combat?)
-    (set! change-location-choices
+    (define neighbors
+      (location-neighbors (current-location)))
+    (for ([i (in-range 0 (length neighbors))])
+      (define neighbor (list-ref neighbors i))
+      (set! change-location-choices
           (append change-location-choices
                   (list
                    (make-choice
@@ -145,7 +149,7 @@
                            #:actor *pc*
                            #:duration 100
                            #:target '()
-                           #:tags '(downtime))))))))
+                           #:tags '(downtime)))))))))
   (append combat-choices change-location-choices)
   )
 
@@ -159,10 +163,15 @@
             " "
             (number->string *round*)
             " "))
-     (list " location "
+     (list " current location "
            (string-append
             " "
             (symbol->string (location-type (current-location)))
+            " "))
+     (list " current location id "
+           (string-append
+            " "
+            (number->string (location-id (current-location)))
             " "))
      ))
   (print-table round-summary)
