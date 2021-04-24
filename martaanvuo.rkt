@@ -1,5 +1,6 @@
 #lang racket
 
+(require racket/generator)
 (require racket/serialize)
 
 (require dyoo-while-loop)
@@ -155,24 +156,41 @@
     )
 
   (define change-location-choices '())
-  (when (not in-combat?)
+  (define downtime-choices '())
+  (when (and (not in-combat?)
+             (null? current-encounter))
     (define neighbors
       (location-neighbors (current-location)))
     (for ([i (in-range 0 (length neighbors))])
       (define neighbor (list-ref neighbors i))
       (set! change-location-choices
-          (append change-location-choices
-                  (list
-                   (make-choice
-                    'go-to-location
-                    (string-append "Go to: " (symbol->string (location-type neighbor)))
-                    (λ () (make-action
-                           #:symbol 'go-to-location
-                           #:actor *pc*
-                           #:duration 100
-                           #:target neighbor
-                           #:tags '(downtime)))))))))
-  (append combat-choices change-location-choices)
+            (append change-location-choices
+                    (list
+                     (make-choice
+                      'go-to-location
+                      (string-append "Go to: " (symbol->string (location-type neighbor)))
+                      (λ () (make-action
+                             #:symbol 'go-to-location
+                             #:actor *pc*
+                             #:duration 100
+                             #:target neighbor
+                             #:tags '(downtime))))))))
+
+    (set! downtime-choices
+          (list
+           (make-choice
+            'forage
+            (string-append "Forage.")
+            (λ () (make-action
+                   #:symbol 'forage
+                   #:actor *pc*
+                   #:duration 100
+                   #:target '()
+                   #:tags '(downtime))))))
+
+
+    )
+  (append combat-choices change-location-choices downtime-choices)
   )
 
 (define action-queue '())
@@ -197,12 +215,13 @@
             " "))
      ))
   (info-card round-summary)
-  (when (and (eq? '() current-encounter)
-             (= *round* 2))
-    (begin
-      (set! current-encounter (new scavenger-encounter%))
-      (send current-encounter begin-encounter)
-      ))
+  ; create an encounter
+  #;(when (and (eq? '() current-encounter)
+               (= *round* 2))
+      (begin
+        (set! current-encounter (new scavenger-encounter%))
+        (send current-encounter begin-encounter)
+        ))
   (set! action-queue '())
   (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
   )
@@ -418,25 +437,18 @@
 
 (define in-combat? #f)
 
-(define (get-next-flavor-text) '())
+(define get-next-flavor-text
+  (generator ()
+             (yield "Otava is plodding through a swamp in a sweltering heat. Heavy clouds hang low in the dreary sky over her head. She's sullen")
+             (yield "It's so misty that she's not quite sure it's not raining. It's gloomy like at nightfall, but she thinks it should be around midday.")
+             "It is stiflingly hot."
+             ))
+
 (define (describe-situation)
-  (case *round*
-    [(1) (paragraph "Otava comes to. The heat is sweltering. Heavy clouds hang low in the dreary sky over her head. It's so misty she's not quite sure it's not raining.")])
-
-
-
-
-  
-  #;(if in-combat?
-        (displayln "[in combat]")
-        (displayln "[not in combat]"))
-  #;(when (not (eq? '() current-encounter))
-      (displayln
-       (string-append
-        "[current encounter node: "
-        (symbol->string (get-field current-node current-encounter))
-        "]"))
-      (newline))
+  (when (and (not in-combat?)
+             (null? current-encounter))
+    (define flavor-text (get-next-flavor-text))
+    (when (not (null? flavor-text)) (paragraph flavor-text)))
 
   (when (not (eq? '() current-encounter))
     (case (get-field current-node current-encounter)
@@ -457,6 +469,11 @@
        (paragraph "\"I said, not one fucking step closer.\"")]
       ))
   )
+
+(define (describe-pc-intention pc-action)
+  (case (action-symbol pc-action)
+    ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+    [else (paragraph "TBD")]))
 
 (define (meta-command-valid? meta-commands-with-keys input)
   (set! input (string-upcase input))
@@ -597,10 +614,28 @@
                  (begin
                    (paragraph "You are dead.")
                    'pc-dead))))
+          ((eq? (action-symbol action) 'forage)
+           (begin
+             (define roll (d 2 6))
+             (define target 8)
+             (info-card
+              (list
+               (list " 2d6 + skill " " >= " " location TN ")
+               (list (string-append " " (number->string roll))
+                     " >= "
+                     " 8 "))
+              "Forage skill check")
+             (cond ((>= roll target)
+                    (define amount (d 1 4)) ; portions = days of survival
+                    (paragraph "After some time, Otava finds some edible fruits and roots. " (number->string amount) " meals"))
+                   (else
+                    (paragraph "Despite spending a while, Otava can't find anything to eat.")))
+             ))
           ((eq? (action-symbol action) 'back-off)
            'ok
            ))))
 
+; TODO: think a bit about how this and resolve-action! work together
 (define (resolve-pc-action! action)
   (cond ((eq? (action-symbol action) 'go-to-location)
          (define next-location (action-target action))
@@ -646,6 +681,8 @@
   
   (serialize-state)
   (define pc-action (get-next-pc-action))
+
+  (describe-pc-intention pc-action)
   
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-get-pc-action pc-action))
@@ -679,8 +716,8 @@
   #t)
 
 (define (wait-for-input)
-  (newline)
   (define input (read-line))
+  (newline)
   input)
 
 (define (get-meta-commands-with-keys)
@@ -706,6 +743,7 @@
          (newline)
          )
         (else
+         (newline) ; This is extra spacing, should pass a param to paragraph
          (paragraph "What do you do?")
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
