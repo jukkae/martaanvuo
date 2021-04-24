@@ -59,10 +59,19 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:type 'cache))
+
+(define location-5
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
    #:type 'anthill))
 
 (define *world*
-  (world (list location-1 location-2 location-3 location-4) 0 0))
+  (world (list location-1 location-2 location-3 location-4 location-5) 0 0))
 
 (define *pc*
   (pc-actor
@@ -126,8 +135,9 @@
   (move-actor-to-location! *pc* location-1)
   (set-location-neighbors! location-1 (list location-2))
   (set-location-neighbors! location-2 (list location-1 location-3))
-  (set-location-neighbors! location-3 (list location-2 location-4))
+  (set-location-neighbors! location-3 (list location-2 location-4 location-5))
   (set-location-neighbors! location-4 (list location-3))
+  (set-location-neighbors! location-5 (list location-3))
   )
 
 (define (get-current-enemies)
@@ -135,6 +145,11 @@
    (λ (actor) (and (alive? actor)
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
+
+(define (get-go-to-text-from-location-to-another from-type to-type)
+  (case to-type
+    ['ruins "Go to the ruins."]
+    [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
   (define combat-choices '())
@@ -168,7 +183,7 @@
                     (list
                      (make-choice
                       'go-to-location
-                      (string-append "Go to: " (symbol->string (location-type neighbor)))
+                      (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
                       (λ () (make-action
                              #:symbol 'go-to-location
                              #:actor *pc*
@@ -439,7 +454,7 @@
 
 (define get-next-flavor-text
   (generator ()
-             (yield "Otava is plodding through a swamp in a sweltering heat. Heavy clouds hang low in the dreary sky over her head. She's sullen")
+             (yield "Otava is plodding through a swamp in a sweltering heat. Heavy clouds hang low in the dreary sky over her head.")
              (yield "It's so misty that she's not quite sure it's not raining. It's gloomy like at nightfall, but she thinks it should be around midday.")
              "It is stiflingly hot."
              ))
@@ -448,7 +463,15 @@
   (when (and (not in-combat?)
              (null? current-encounter))
     (define flavor-text (get-next-flavor-text))
-    (when (not (null? flavor-text)) (paragraph flavor-text)))
+    (when (not (null? flavor-text)) (paragraph flavor-text))
+
+    (cond ((eq? (location-type (current-location)) 'swamp)
+           (paragraph "The whining of mosquitoes is incessant, and the stunted trees have a bare minimum of leaves on them. "
+                      "The wet ground wants your feet to stick to the ground.")
+           (paragraph "Up ahead to the east, on top of a small hill, there are some ruins from before the Rains.")
+           (paragraph "With some luck, Otava might find some berries around here.")))
+
+    )
 
   (when (not (eq? '() current-encounter))
     (case (get-field current-node current-encounter)
@@ -627,7 +650,7 @@
               "Forage skill check")
              (cond ((>= roll target)
                     (define amount (d 1 4)) ; portions = days of survival
-                    (paragraph "After some time, Otava finds some edible fruits and roots. " (number->string amount) " meals"))
+                    (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)"))
                    (else
                     (paragraph "Despite spending a while, Otava can't find anything to eat.")))
              ))
