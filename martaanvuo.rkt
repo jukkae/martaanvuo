@@ -22,7 +22,7 @@
  world
  (locations
   day
-  time-of-day))
+  [elapsed-time #:mutable]))
 
 
 (define location-1
@@ -73,9 +73,13 @@
 (define *world*
   (world (list location-1 location-2 location-3 location-4 location-5) 0 0))
 
+; TODO advance-time-until-next-interesting-event
+(define (elapse-time duration)
+  (set-world-elapsed-time! *world* (+ (world-elapsed-time *world*) duration)))
+
 (define *pc*
   (pc-actor
-   "PC"
+   "Otava"
    4
    4
    0
@@ -89,6 +93,22 @@
    4
    4
    ))
+
+(define (character-sheet)
+  (define actor *pc*)
+  (define sheet
+    (list
+     (list " Name " (string-append " " (actor-name actor) " "))
+     (list " HP " (string-append " " (number->string (actor-hp actor)) "/" (number->string (actor-max-hp actor)) " "))
+     (list " Dexterity " (string-append " " (number->string (actor-dexterity actor)) " "))
+     (list " Attack skill " (string-append " " (number->string (actor-attack-skill actor)) " "))
+     ))
+  (info-card
+   sheet
+   "Character sheet"
+   )
+  #t
+  )
 
 (define (current-location)
   (actor-current-location *pc*))
@@ -148,7 +168,7 @@
 
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
-    ['ruins "Go to the ruins."]
+    ['ruins "Climb the hill to the ruins."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -228,8 +248,9 @@
             " "
             (number->string (location-id (current-location)))
             " "))
+     (list " elapsed time " (string-append " "(number->string (world-elapsed-time *world*))))
      ))
-  (info-card round-summary)
+  (info-card round-summary (string-append "Begin round " (number->string *round*)))
   ; create an encounter
   #;(when (and (eq? '() current-encounter)
                (= *round* 2))
@@ -454,8 +475,22 @@
 
 (define get-next-flavor-text
   (generator ()
-             (yield "Otava is plodding through a swamp in a sweltering heat. Heavy clouds hang low in the dreary sky over her head.")
-             (yield "It's so misty that she's not quite sure it's not raining. It's gloomy like at nightfall, but she thinks it should be around midday.")
+             (yield "Otava is plodding through a swamp in a sweltering heat in search of anything valuable. The Collector is due for another visit in a couple of days, and Otava better have something good for him. Heavy clouds hang low in the dreary sky over her head.")
+             (yield "Otava hasn't ventured this far into the swamps before. But the drier areas, the areas free of Corruption, it's all scoured. Scavenged. Picked clean. Nothing to be found anymore. And there's still the rest of the debt to be paid to the Collector.")
+             "It is stiflingly hot."
+             ))
+
+(define get-next-swamp-description-text
+  (generator ()
+             (yield
+              (string-append
+               "The whining of mosquitoes is incessant. The stunted, skeletonlike trees have a bare minimum of leaves on them. "
+               "Still, with some luck, Otava might find some berries here, be able to make it a couple days longer. "
+               "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
+             (yield
+              (string-append
+               "The swamps smell like decay. Blighted trees in various stages of rot. Buzzing of flies. Even here, life finds a way. But so does death. "
+               "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
              "It is stiflingly hot."
              ))
 
@@ -466,17 +501,15 @@
     (when (not (null? flavor-text)) (paragraph flavor-text))
 
     (cond ((eq? (location-type (current-location)) 'swamp)
-           (paragraph "The whining of mosquitoes is incessant, and the stunted trees have a bare minimum of leaves on them. "
-                      "The wet ground wants your feet to stick to the ground.")
-           (paragraph "Up ahead to the east, on top of a small hill, there are some ruins from before the Rains.")
-           (paragraph "With some luck, Otava might find some berries around here.")))
+           (define description-text (get-next-swamp-description-text))
+           (paragraph description-text)))
 
     )
 
   (when (not (eq? '() current-encounter))
     (case (get-field current-node current-encounter)
       ['begin
-       (paragraph "\"Stop.\" You hear a harsh voice. \"Not one step closer.\"")
+       (paragraph "\"Stop.\" Otava hears a harsh voice. \"Not one step closer.\"")
        (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
        (paragraph "Your revolver is in its holster. You're fast, but you don't think you're that fast")]
       ['barter
@@ -496,7 +529,7 @@
 (define (describe-pc-intention pc-action)
   (case (action-symbol pc-action)
     ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
-    [else (paragraph "TBD")]))
+    #;[else (paragraph "TBD")]))
 
 (define (meta-command-valid? meta-commands-with-keys input)
   (set! input (string-upcase input))
@@ -547,8 +580,8 @@
             (else (what-do-you-do 'abbreviated))))))
 
 
-(define (info-card content . title)
-  (when (not (null? title)) (displayln title))
+(define (info-card content title)
+  (when (not (null? title)) (displayln (string-append "[" title "]")))
   (print-table content #:row-sep? #f)
   (newline))
 
@@ -639,17 +672,51 @@
                    'pc-dead))))
           ((eq? (action-symbol action) 'forage)
            (begin
-             (define roll (d 2 6))
+             (define first-d (d 1 6))
+             (define second-d (d 1 6))
+             (define skill 0)
+             (define roll-total (+ first-d second-d skill))
              (define target 8)
+             (define successful? (>= roll-total target))
+             (define success-string
+               (if successful?
+                   ", success"
+                   ", failure"))
+
+             (define results
+               (list
+                (list " 2d6 + skill " " >= " " location TN ")
+                (list
+                 (string-append
+                  " "
+                  (number->string first-d)
+                  "+"
+                  (number->string second-d)
+                  "+"
+                  (number->string skill)
+                  " = "
+                  (number->string roll-total))
+                 " >= "
+                 (string-append " " "8" success-string " "))))
+               
              (info-card
-              (list
-               (list " 2d6 + skill " " >= " " location TN ")
-               (list (string-append " " (number->string roll))
-                     " >= "
-                     " 8 "))
+              results
               "Forage skill check")
-             (cond ((>= roll target)
+             (cond (successful?
                     (define amount (d 1 4)) ; portions = days of survival
+                    (define amount-string
+                      (if (= amount 1)
+                          (string-append (number->string amount) " meal")
+                          (string-append (number->string amount) " meals")))
+
+                    (info-card
+                     (list
+                      (list
+                       " 1d4 "
+                       " = "
+                       (string-append " " amount-string " "))
+                      )
+                     "Forage results roll")
                     (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)"))
                    (else
                     (paragraph "Despite spending a while, Otava can't find anything to eat.")))
@@ -666,7 +733,9 @@
          (set-actor-current-location! *pc* next-location)
          (add-actor-to-location! next-location *pc*)
          ))
-  (resolve-action! action))
+  (resolve-action! action)
+  (elapse-time (action-duration action))
+  )
 
 (define (resolve-npc-action! action)
   (resolve-action! action))
@@ -748,6 +817,7 @@
   (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
   (hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
+  (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   meta-commands)
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
