@@ -4,6 +4,7 @@
 
 (require racket/serialize)
 
+;; types
 (serializable-struct
  actor
  (name
@@ -23,3 +24,9 @@
  (lp
   max-lp)
  #:super struct:actor)
+
+;; operations
+(define (add-item-to-inventory! actor item)
+  (set-actor-inventory! actor
+   (append (actor-inventory actor)
+           (list item))))

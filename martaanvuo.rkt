@@ -378,7 +378,7 @@
       (cond ((eq? 'shoot (action-symbol pc-action))
              (set! current-node 'combat)
              (set! in-combat? #t)
-             (paragraph "With a swift motion, you pull out your gun."))
+             (paragraph "With a swift motion, you grab your bolt cutters and go for a swing."))
             ((eq? 'get-closer (action-symbol pc-action))
              (cond ((eq? 'final-warning current-node)
                     (set! current-node 'combat)
@@ -403,7 +403,7 @@
                           )))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
-             (paragraph "You raise your hands above your head. \"I won't shoot.\""))
+             (paragraph "You raise your hands above your head. \"I'm unarmed.\""))
             ((eq? 'ask-info (action-symbol pc-action))
              (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
              (exit-encounter))))
@@ -485,11 +485,11 @@
 
 (define in-combat? #f)
 
-(define get-next-flavor-text
+(define get-next-story-text
   (generator ()
              (yield "Otava is plodding through a swamp in a sweltering heat in search of anything valuable. The Collector is due for another visit in a couple of days, and Otava better have something good for him. Heavy clouds hang low in the dreary sky over her head.")
              (yield "Otava hasn't ventured this far into the swamps before. But the drier areas, the areas free of Corruption, it's all scoured. Scavenged. Picked clean. Nothing to be found anymore. And there's still the rest of the debt to be paid to the Collector.")
-             "It is stiflingly hot."
+             '()
              ))
 
 (define get-next-swamp-description-text
@@ -503,14 +503,16 @@
               (string-append
                "The swamps smell like decay. Blighted trees in various stages of rot. Buzzing of flies. Even here, life finds a way. But so does death. "
                "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
-             "It is stiflingly hot."
+             (take-random
+              (list
+               "It is stiflingly hot."))
              ))
 
 (define (describe-situation)
   (when (and (not in-combat?)
              (null? current-encounter))
-    (define flavor-text (get-next-flavor-text))
-    (when (not (null? flavor-text)) (paragraph flavor-text))
+    (define story-text (get-next-story-text))
+    (when (not (null? story-text)) (paragraph story-text))
 
     (cond ((eq? (location-type (current-location)) 'swamp)
            (define description-text (get-next-swamp-description-text))
@@ -522,13 +524,13 @@
     (case (get-field current-node current-encounter)
       ['begin
        (paragraph "\"Stop.\" Otava hears a harsh voice. \"Not one step closer.\"")
-       (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at you.")
-       (paragraph "Your revolver is in its holster. You're fast, but you don't think you're that fast")]
+       (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at Otava.")
+       (paragraph "Otava's bolt cutters are hanging from her belt. She's fast, but not that fast. But maybe if she got a bit closer...")]
       ['barter
        (paragraph "\"You wanna trade? Okay. Let's see what you have, then.\"")
        ]
       ['combat
-       (paragraph "You are in combat with a scavenger.")]
+       (paragraph "Otava is fighting a scavenger.")]
       ['who-are-you
        (paragraph "\"Good. Now, what do you want?\"")]
       ['we-cool
@@ -542,6 +544,11 @@
   (case (action-symbol pc-action)
     ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
     #;[else (paragraph "TBD")]))
+
+(define (describe-go-to-action action)
+  (cond ((eq? 'ruins (location-type (action-target action)))
+         "The hillside is steep and slippery. Otava slips a couple of times on her way up, but eventually gets to the top.")
+        ("[[go-to description not written yet]")))
 
 (define (meta-command-valid? meta-commands-with-keys input)
   (set! input (string-upcase input))
@@ -610,7 +617,6 @@
   (define success-string (if success? "successful" "failure"))
   (define damage-roll ((actor-attack-damage actor)))
 
-  (displayln "Resolving attack roll:")
   (info-card
    (list
     (list
@@ -637,9 +643,9 @@
       ", "
       success-string
       " "
-      ))))
+      )))
+   "Attack roll")
   (when success?
-    (displayln "Attack successful, HP damage roll:")
     (info-card
      (list
       (list " damage roll formula " " result ")
@@ -648,12 +654,12 @@
        (string-append
         " "
         (number->string damage-roll))
-       ))))
+       ))
+     "HP damage roll"))
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll)))
 
-  (displayln "Target:")
   (info-card
    (list
     (list
@@ -666,7 +672,8 @@
       (number->string (actor-hp target))
       "/"
       (number->string (actor-max-hp target))
-      " "))))
+      " ")))
+   "Target")
   (newline)
 
   action-result
@@ -680,7 +687,7 @@
              (if (not (pc-actor? (action-target action)))
                  (paragraph "The " (actor-name (action-target action)) " is dead.")
                  (begin
-                   (paragraph "You are dead.")
+                   (paragraph "Otava is dead.")
                    'pc-dead))))
           ((eq? (action-symbol action) 'forage)
            (begin
@@ -730,8 +737,8 @@
                       )
                      "Forage results roll")
                     (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                    (set-actor-inventory! (action-actor action)
-                                          (append (actor-inventory (action-actor action)) (list (list 'food (list amount)))))
+                    (define item (list 'food (list amount)))
+                    (add-item-to-inventory! *pc* item)
                     )
                    (else
                     (paragraph "Despite spending a while, Otava can't find anything to eat.")))
@@ -756,6 +763,7 @@
          (add-actor-to-location! next-location *pc*)
          (when (eq? (location-type (current-location)) 'ruins)
            (spawn-encounter))
+         (paragraph (describe-go-to-action action))
          ))
   (resolve-action! action)
   (elapse-time (action-duration action))
@@ -787,7 +795,10 @@
     (set! in-combat? #f))
   (when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-end-round))
-    (when (eq? 'exit-encounter encounter-status) (end-encounter))))
+    (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+
+  (newline) ; This is the "extra" newline that separates rounds
+  )
 
 
 (define (resolve-round)
@@ -821,7 +832,7 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (paragraph "You quit.")
+         (paragraph "Game closed.")
          (exit))
         (else
          (newline)
