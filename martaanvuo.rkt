@@ -251,13 +251,7 @@
      (list " elapsed time " (string-append " "(number->string (world-elapsed-time *world*))))
      ))
   (info-card round-summary (string-append "Begin round " (number->string *round*)))
-  ; create an encounter
-  #;(when (and (eq? '() current-encounter)
-               (= *round* 2))
-      (begin
-        (set! current-encounter (new scavenger-encounter%))
-        (send current-encounter begin-encounter)
-        ))
+  
   (set! action-queue '())
   (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
   )
@@ -725,6 +719,13 @@
            'ok
            ))))
 
+(define (spawn-encounter)
+  (when (eq? '() current-encounter)
+    (begin
+      (set! current-encounter (new scavenger-encounter%))
+      (send current-encounter begin-encounter)
+      )))
+
 ; TODO: think a bit about how this and resolve-action! work together
 (define (resolve-pc-action! action)
   (cond ((eq? (action-symbol action) 'go-to-location)
@@ -732,6 +733,8 @@
          (remove-actor-from-location! (current-location) *pc*)
          (set-actor-current-location! *pc* next-location)
          (add-actor-to-location! next-location *pc*)
+         (when (eq? (location-type (current-location)) 'ruins)
+           (spawn-encounter))
          ))
   (resolve-action! action)
   (elapse-time (action-duration action))
