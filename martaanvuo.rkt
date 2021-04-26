@@ -71,9 +71,45 @@
 (define *world*
   (world (list location-1 location-2 location-3 location-4 location-5) 0 0))
 
-; TODO advance-time-until-next-interesting-event
-(define (elapse-time duration)
-  (set-world-elapsed-time! *world* (+ (world-elapsed-time *world*) duration)))
+(define (advance-time-by-a-jiffy!)
+  (define events '())
+  (define new-elapsed-time (add1 (world-elapsed-time *world*)))
+  (set-world-elapsed-time!
+   *world*
+   new-elapsed-time)
+
+  (when (= (modulo (world-elapsed-time *world*) 100) 0)
+    (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time *world*))) ".")))
+  #;(when (not in-combat?)
+    (cond ((not (eq? current-time-of-day 'night))
+           (define roll (d 1 200))
+           (cond ((= roll 1)
+                  (spawn-enemies world 2)
+                  (wait-for-confirm)
+                  (set! events (cons 'enemies-spawned events)))))
+          ((eq? current-time-of-day 'night)
+           (define dice-sides (if (or (eq? (get-field current-location world) 'tunnel)
+                                      (eq? (get-field current-location world) 'ruins))
+                                  1000 ; indoors locations are safer
+                                  100))
+           (define roll (d 1 dice-sides))
+           (cond ((= roll 1)
+                  (spawn-enemies world 3)
+                  (wait-for-confirm)
+                  (set! events (cons 'enemies-spawned events))))
+           )))
+  events
+  )
+
+
+(define (advance-time-until-next-interesting-event! jiffies)
+  (let/ec return
+    (for ([t jiffies])
+      (define event (advance-time-by-a-jiffy!))
+      (when (not (eq? event '()))
+        (return (cons event t))))
+    (cons '() jiffies)))
+
 
 (define starting-inventory
   (list
@@ -258,7 +294,7 @@
   (define jiffies-of-current-day (remainder jiffies 400))
   (define time-of-day
     (cond ((< jiffies-of-current-day 100) 'morning)
-          ((< jiffies-of-current-day 200) 'midday)
+          ((< jiffies-of-current-day 200) 'afternoon)
           ((< jiffies-of-current-day 300) 'evening)
           ((< jiffies-of-current-day 400) 'night)))
   time-of-day
@@ -823,7 +859,7 @@
          (paragraph (describe-go-to-action action))
          ))
   (resolve-action! action)
-  (elapse-time (action-duration action))
+  (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
   )
 
 (define (resolve-npc-action! action)
