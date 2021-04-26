@@ -254,6 +254,16 @@
   (append combat-choices change-location-choices downtime-choices)
   )
 
+(define (time-of-day-from-jiffies jiffies)
+  (define jiffies-of-current-day (remainder jiffies 400))
+  (define time-of-day
+    (cond ((< jiffies-of-current-day 100) 'morning)
+          ((< jiffies-of-current-day 200) 'midday)
+          ((< jiffies-of-current-day 300) 'evening)
+          ((< jiffies-of-current-day 400) 'night)))
+  time-of-day
+  )
+
 (define action-queue '())
 (define (on-begin-round)
   (set! *round* (add1 *round*))
@@ -274,7 +284,8 @@
             " "
             (number->string (location-id (current-location)))
             " "))
-     (list " elapsed time " (string-append " "(number->string (world-elapsed-time *world*))))
+     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time *world*))) " "))
+     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time *world*)) " "))
      ))
   (info-card round-summary (string-append "Begin round " (number->string *round*)))
   
