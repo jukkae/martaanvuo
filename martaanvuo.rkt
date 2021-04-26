@@ -143,17 +143,21 @@
 (define (alive? actor)
   (> (actor-hp actor) 0))
 
+; TODO shit
 (define (get-next-npc-action actor)
-  (make-action #:symbol 'hold-at-gunpoint
-               #:actor actor
-               #:duration 1
-               #:target 'pc
-               #:tags '(delayed-resolution))
+  (if (not in-combat?)
+      (make-action #:symbol 'hold-at-gunpoint
+                   #:actor actor
+                   #:duration 1
+                   #:target 'pc
+                   #:tags '(delayed-resolution))
+      (make-shoot-action actor))
+  
   )
 
 
 (define (get-next-action actor)
-  (cond ((not (pc-actor? actor)) (get-next-npc-action actor)) ; = what do you do?
+  (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
          (serialize-state)
          (get-next-pc-action)))
@@ -184,6 +188,11 @@
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
+(define (in-range? target attack-mode)
+  (case attack-mode
+    ['melee #t]
+    [else (displayln "in-range? not implemented yet for this attack mode")]))
+
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
     ['ruins "Climb the hill to the ruins."]
@@ -194,18 +203,19 @@
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (set! combat-choices
-          (append combat-choices
-                  (list
-                   (make-choice
-                    'shoot
-                    (string-append "Shoot the " (actor-name target) ". (enemy #" (number->string (add1 i)) ")")
-                    (λ () (make-action
-                           #:symbol 'shoot
-                           #:actor *pc*
-                           #:duration 1
-                           #:target target
-                           #:tags '(combat delayed-resolution)))))))
+    (when *hacky-in-range?*
+      (set! combat-choices
+            (append combat-choices
+                    (list
+                     (make-choice
+                      'melee
+                      (string-append "Hit the " (actor-name target) " with bolt cutters. (enemy #" (number->string (add1 i)) ")")
+                      (λ () (make-action
+                             #:symbol 'melee
+                             #:actor *pc*
+                             #:duration 1
+                             #:target target
+                             #:tags '(combat delayed-resolution))))))))
     )
 
   (define change-location-choices '())
@@ -335,6 +345,7 @@
 (define encounter<%>
   (interface () on-begin-round on-end-round on-get-pc-action get-encounter-choices))
 
+(define *hacky-in-range?* #f)
 (define scavenger-encounter%
   (class* object% (encounter<%>)
     (field [encounter-nodes '(begin barter who-are-you we-cool final-warning combat)])
@@ -375,14 +386,15 @@
           '()))
 
     (define/public (on-get-pc-action pc-action)
-      (cond ((eq? 'shoot (action-symbol pc-action))
+      (cond ((eq? 'melee (action-symbol pc-action))
              (set! current-node 'combat)
              (set! in-combat? #t)
-             (paragraph "With a swift motion, you grab your bolt cutters and go for a swing."))
+             (paragraph "With a swift motion, Otava grabs her bolt cutters and goes for a swing."))
             ((eq? 'get-closer (action-symbol pc-action))
+             (set! *hacky-in-range?* #t)
              (cond ((eq? 'final-warning current-node)
                     (set! current-node 'combat)
-                    (paragraph "You take another step. She pulls the trigger.")
+                    (paragraph "Otava takes another step. The scavenger squeezes the trigger.")
                     (set! in-combat? #t)
                     (set! current-node 'combat)
                     (update-npc-reactions pc-action)
@@ -391,19 +403,19 @@
                     (define roll (d 1 4))
                     (if (= roll 1)
                         (begin
-                          (paragraph "You take a step. She pulls the trigger.")
+                          (paragraph "Otava takes a step. The scavenger squeezes the trigger.")
                           (set! in-combat? #t)
                           (set! current-node 'combat)
                           (update-npc-reactions pc-action)
                           (resolve-turns!)
                           )
                         (begin
-                          (paragraph "You take a step. She waves her rifle.")
+                          (paragraph "Otava takes a step. The scavenger waves her rifle.")
                           (set! current-node 'final-warning)
                           )))))
             ((eq? 'back-off (action-symbol pc-action))
              (set! current-node 'who-are-you)
-             (paragraph "You raise your hands above your head. \"I'm unarmed.\""))
+             (paragraph "Otava raises her hands above her head. \"I'm unarmed.\""))
             ((eq? 'ask-info (action-symbol pc-action))
              (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
              (exit-encounter))))
@@ -681,7 +693,8 @@
 
 (define (resolve-action! action)
   (when (alive? (action-actor action))
-    (cond ((eq? (action-symbol action) 'shoot)
+    (cond ((or (eq? (action-symbol action) 'shoot)
+               (eq? (action-symbol action) 'melee))
            (define result (resolve-shoot-action! action))
            (when (eq? result 'dead)
              (if (not (pc-actor? (action-target action)))

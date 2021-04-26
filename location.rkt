@@ -3,6 +3,7 @@
 (require racket/struct)
 (require racket/serialize)
 
+(require "actor.rkt")
 (require "action.rkt")
 (require "utils.rkt")
 
@@ -73,9 +74,11 @@
   (location* *number-of-locations* neighbors type features actors #f items tags))
 
 (define (add-actor-to-location! location actor)
-  (set-location-actors! location (cons actor (location-actors location))))
+  (set-location-actors! location (cons actor (location-actors location)))
+  )
 
 (define (remove-actor-from-location! location actor)
   (set-location-actors! location (remove actor (location-actors location))))
+
 
 (provide (all-defined-out))
