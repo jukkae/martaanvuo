@@ -77,6 +77,9 @@
 (define (elapse-time duration)
   (set-world-elapsed-time! *world* (+ (world-elapsed-time *world*) duration)))
 
+(define starting-inventory
+  (list
+   (list 'bolt-cutters (list 'melee-weapon 'tool))))
 (define *pc*
   (pc-actor
    "Otava"
@@ -86,7 +89,7 @@
    (λ () (d 1 2))
    8
    13
-   '()
+   starting-inventory
    '()
    '()
    '()
@@ -106,6 +109,21 @@
   (info-card
    sheet
    "Character sheet"
+   )
+  #t
+  )
+
+(define (inventory)
+  (define actor *pc*)
+  
+  (define sheet
+    (append
+     (list
+      (list " Item " " Notes "))
+     (actor-inventory actor)))
+  (info-card
+   sheet
+   "Inventory"
    )
   #t
   )
@@ -711,7 +729,10 @@
                        (string-append " " amount-string " "))
                       )
                      "Forage results roll")
-                    (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)"))
+                    (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+                    (set-actor-inventory! (action-actor action)
+                                          (append (actor-inventory (action-actor action)) (list (list 'food (list amount)))))
+                    )
                    (else
                     (paragraph "Despite spending a while, Otava can't find anything to eat.")))
              ))
@@ -821,6 +842,7 @@
   (hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
+  (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
   meta-commands)
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)

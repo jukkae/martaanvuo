@@ -13,7 +13,7 @@
   attack-damage
   defense-number
   dexterity
-  inventory
+  [inventory #:mutable]
   statuses
   conditions
   [current-location #:mutable]))
