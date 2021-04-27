@@ -975,20 +975,32 @@
   (paragraph "[" "Begin run number " (number->string *run*) "]")
   (paragraph "After a couple of soulsucking, but mostly uneventful days of hiking straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo proper."))
 
-(define (play-a-life)
-  (set! *run* (add1 *run*))
-  (narrate-begin-run)
+(define (campaign-won)
+  (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
 
-  (let/ec pc-dead
+(define (play-a-life)
+  (let/ec end-life
+    (set! *life* (add1 *life*))
+    (paragraph "[" "Begin life number " (number->string *life*) "]")
+    
+    (set! *run* (add1 *run*))
+    (narrate-begin-run)
     (let loop ()
       (define round-exit-status (resolve-round))
-      (when (eq? round-exit-status 'pc-dead) (pc-dead))
+      (when (eq? round-exit-status 'pc-dead) (end-life 'pc-dead))
+      (when (eq? round-exit-status 'campaign-won) (end-life 'campaign-won))
       (loop))))
 
 (define (begin-game)
   (title)
   (setup-world)
-  (play-a-life)
+  (let/ec campaign-won
+    (paragraph "[" "Begin a Story" "]")
+    (let loop ()
+      (define pc-life-end-status (play-a-life))
+      (when (eq? pc-life-end-status 'pc-dead) (loop)) ; TODO here ask for restart
+      (when (eq? pc-life-end-status 'campaign-won) (campaign-won))))
+  (campaign-won)
   )
 
 (begin-game)
