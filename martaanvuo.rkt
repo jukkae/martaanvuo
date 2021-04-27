@@ -12,6 +12,7 @@
 (require "location.rkt")
 (require "utils.rkt")
 
+(define *life* 0)
 (define *run* 0)
 (define *round* 0)
 
@@ -81,23 +82,23 @@
   (when (= (modulo (world-elapsed-time *world*) 100) 0)
     (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time *world*))) ".")))
   #;(when (not in-combat?)
-    (cond ((not (eq? current-time-of-day 'night))
-           (define roll (d 1 200))
-           (cond ((= roll 1)
-                  (spawn-enemies world 2)
-                  (wait-for-confirm)
-                  (set! events (cons 'enemies-spawned events)))))
-          ((eq? current-time-of-day 'night)
-           (define dice-sides (if (or (eq? (get-field current-location world) 'tunnel)
-                                      (eq? (get-field current-location world) 'ruins))
-                                  1000 ; indoors locations are safer
-                                  100))
-           (define roll (d 1 dice-sides))
-           (cond ((= roll 1)
-                  (spawn-enemies world 3)
-                  (wait-for-confirm)
-                  (set! events (cons 'enemies-spawned events))))
-           )))
+      (cond ((not (eq? current-time-of-day 'night))
+             (define roll (d 1 200))
+             (cond ((= roll 1)
+                    (spawn-enemies world 2)
+                    (wait-for-confirm)
+                    (set! events (cons 'enemies-spawned events)))))
+            ((eq? current-time-of-day 'night)
+             (define dice-sides (if (or (eq? (get-field current-location world) 'tunnel)
+                                        (eq? (get-field current-location world) 'ruins))
+                                    1000 ; indoors locations are safer
+                                    100))
+             (define roll (d 1 dice-sides))
+             (cond ((= roll 1)
+                    (spawn-enemies world 3)
+                    (wait-for-confirm)
+                    (set! events (cons 'enemies-spawned events))))
+             )))
   events
   )
 
@@ -970,18 +971,24 @@
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
-(define (game-loop)
+(define (narrate-begin-run)
+  (paragraph "[" "Begin run number " (number->string *run*) "]")
+  (paragraph "After a couple of soulsucking, but mostly uneventful days of hiking straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo proper."))
+
+(define (play-a-life)
+  (set! *run* (add1 *run*))
+  (narrate-begin-run)
+
   (let/ec pc-dead
     (let loop ()
       (define round-exit-status (resolve-round))
       (when (eq? round-exit-status 'pc-dead) (pc-dead))
-      (loop)))
-  (displayln "End of game."))
+      (loop))))
 
 (define (begin-game)
   (title)
   (setup-world)
-  (game-loop)
+  (play-a-life)
   )
 
 (begin-game)
