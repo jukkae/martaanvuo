@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-27T17:10:40.597Z" agent="5.0 (Macintosh)" etag="VvN2C58xwLKuRPUokYwO" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-27T17:20:16.822Z" agent="5.0 (Macintosh)" etag="RIbnlfpotF6st0En_OkW" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1618" dy="1036" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -895,13 +895,8 @@
             <mxPoint x="-140" y="-42" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="VtJOc1jhrBRUda-8Q_qS-21" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-16" target="VtJOc1jhrBRUda-8Q_qS-20">
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-21" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=0;exitDx=0;exitDy=0;startArrow=none;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-33" target="VtJOc1jhrBRUda-8Q_qS-20">
           <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="VtJOc1jhrBRUda-8Q_qS-27" value="Die" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="VtJOc1jhrBRUda-8Q_qS-21">
-          <mxGeometry x="-0.5082" y="8" relative="1" as="geometry">
-            <mxPoint x="1" y="40" as="offset" />
-          </mxGeometry>
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-16" value="Survive or die on run?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="2000" y="305" width="80" height="80" as="geometry" />
@@ -910,7 +905,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-20" value="Rebirth" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="1790" y="130" width="100" height="40" as="geometry" />
+          <mxGeometry x="1500" y="140" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-23" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;fontFamily=Courier New;" edge="1" parent="1" source="uS2b5ykc9f4V-rk9ps5i-47" target="uS2b5ykc9f4V-rk9ps5i-47">
           <mxGeometry relative="1" as="geometry">
@@ -934,6 +929,35 @@
               <mxPoint x="2390" y="590" />
               <mxPoint x="2390" y="590" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-29" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-28" target="VtJOc1jhrBRUda-8Q_qS-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-28" value="Begin first life" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1683" y="255" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-30" value="Die" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1818" y="170" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-31" value="" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=classic;endFill=1;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-16" target="VtJOc1jhrBRUda-8Q_qS-30">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2040" y="305" as="sourcePoint" />
+            <mxPoint x="1890" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-32" value="Die" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="VtJOc1jhrBRUda-8Q_qS-31">
+          <mxGeometry x="-0.5082" y="8" relative="1" as="geometry">
+            <mxPoint x="1" y="40" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-33" value="Randomize world" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1680" y="100" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-34" value="" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;exitX=0.5;exitY=0;exitDx=0;exitDy=0;startArrow=none;endArrow=classic;endFill=1;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-30" target="VtJOc1jhrBRUda-8Q_qS-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1868" y="170" as="sourcePoint" />
+            <mxPoint x="1600" y="160" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
