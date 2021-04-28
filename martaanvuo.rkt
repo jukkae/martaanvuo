@@ -919,6 +919,8 @@
   (on-end-round)
   (define round-exit-status 'ok)
   (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
+  ; to implement win:
+  ; (set! round-exit-status 'campaign-won)
   round-exit-status)
 
 (define (quit)
@@ -991,16 +993,38 @@
       (when (eq? round-exit-status 'campaign-won) (end-life 'campaign-won))
       (loop))))
 
-(define (begin-game)
+(define (begin-story)
   (title)
   (setup-world)
   (let/ec campaign-won
     (paragraph "[" "Begin a Story" "]")
-    (let loop ()
+    (let begin-new-life ()
       (define pc-life-end-status (play-a-life))
-      (when (eq? pc-life-end-status 'pc-dead) (loop)) ; TODO here ask for restart
+      (when (eq? pc-life-end-status 'pc-dead)
+
+        (let end-of-life-menu ([verbosity 'verbose])
+          (define (handle-meta-command meta-commands-with-keys input)
+            (set! input (string-upcase input))
+            (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+            (define meta-command (cdr meta-command-with-key))
+            (meta-command)
+            (end-of-life-menu 'verbose))
+
+          (define meta-commands (make-hash))
+          (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
+          (hash-set! meta-commands "R" (cons "[R]: Restart." begin-new-life)) ; TODO: change prompt dynamically based on meta-progress
+
+          (paragraph "Go again?")
+          (print-meta-commands-with-keys meta-commands)
+          (define input (wait-for-input))
+          (serialize-input)
+
+          (newline)
+
+          (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
+                (else (end-of-life-menu 'abbreviated)))))
       (when (eq? pc-life-end-status 'campaign-won) (campaign-won))))
   (campaign-won)
   )
 
-(begin-game)
+(begin-story)
