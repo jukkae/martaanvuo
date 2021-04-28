@@ -24,7 +24,7 @@
   [elapsed-time #:mutable]))
 
 
-(define location-1
+(define edges
   (make-location
    #:actors '()
    #:features '()
@@ -32,9 +32,9 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'the-edges))
+   #:type 'edges))
 
-(define location-2
+(define crematory
   (make-location
    #:actors '()
    #:features '()
@@ -42,9 +42,9 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'swamp))
+   #:type 'crematory))
 
-(define location-3
+(define ruins
   (make-location
    #:actors '()
    #:features '()
@@ -54,7 +54,7 @@
    #:actions-provided '()
    #:type 'ruins))
 
-(define location-4
+(define sewers
   (make-location
    #:actors '()
    #:features '()
@@ -62,9 +62,9 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'riverbank))
+   #:type 'sewers))
 
-(define location-5
+(define cache
   (make-location
    #:actors '()
    #:features '()
@@ -74,7 +74,7 @@
    #:actions-provided '()
    #:type 'cache))
 
-(define location-6
+(define workshop
   (make-location
    #:actors '()
    #:features '()
@@ -82,9 +82,9 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'anthill))
+   #:type 'workshop))
 
-(define location-7
+(define the-spring
   (make-location
    #:actors '()
    #:features '()
@@ -94,9 +94,18 @@
    #:actions-provided '()
    #:type 'martaanvuo-spring))
 
+(define (setup-world)
+  (set-location-neighbors! edges (list crematory ruins))
+  (set-location-neighbors! crematory (list edges ruins))
+  (set-location-neighbors! ruins (list edges crematory sewers cache))
+  (set-location-neighbors! sewers (list ruins workshop))
+  (set-location-neighbors! cache (list ruins))
+  (set-location-neighbors! workshop (list sewers the-spring))
+  (set-location-neighbors! the-spring (list workshop))
+  )
 
 (define *world*
-  (world (list location-1 location-2 location-3 location-4 location-5) 0 0))
+  (world (list edges crematory ruins sewers cache workshop the-spring) 0 0))
 
 (define (advance-time-by-a-jiffy!)
   (define events '())
@@ -219,16 +228,6 @@
   (set-actor-current-location! actor location)
   (add-actor-to-location! location actor))
 
-(define (setup-world)
-  (set-location-neighbors! location-1 (list location-2))
-  (set-location-neighbors! location-2 (list location-1 location-3))
-  (set-location-neighbors! location-3 (list location-2 location-4 location-5))
-  (set-location-neighbors! location-4 (list location-3 location-6))
-  (set-location-neighbors! location-5 (list location-3))
-  (set-location-neighbors! location-6 (list location-4 location-7))
-  (set-location-neighbors! location-7 (list location-6))
-  )
-
 (define (get-current-enemies)
   (filter
    (λ (actor) (and (alive? actor)
@@ -305,7 +304,7 @@
           ))
 
   (define end-run-choices '()) ; poor name
-  (when (eq? (location-type (current-location)) 'the-edges)
+  (when (eq? (location-type (current-location)) 'edges)
     (set! end-run-choices
           (list
            (make-choice
@@ -587,12 +586,12 @@
 
 (define get-next-story-text
   (generator ()
-             (yield "The heat in the lowlands is sweltering, and the rumors have made her less than eager to venture here, but Otava is out of choices: The Collector is due for another visit in a couple of days, and the highlands have already been picked clean. Heavy clouds hang low in the dreary sky over Otava's head.")
-             (yield "Otava finds the lack of a proper name for the swamps a bit worrisome: She might very well be the first human to venture here. Or, the first one after the Rains, at any rate. But on the other hand, there's bound to be something good here, something to settle the debt.")
+             (yield "The Collector is due for another visit in a couple of days. Heavy clouds hang low in the dreary sky over Otava's head.")
+             (yield "Otava might very well be the first human to venture here. Or, the first one after the Rains, at any rate. But on the other hand, there's bound to be something good here, something to settle the debt.")
              '()
              ))
 
-(define get-next-the-edges-description-text
+(define get-next-edges-description-text
   (generator ()
              (yield
               (string-append
@@ -627,8 +626,8 @@
     (define story-text (get-next-story-text))
     (when (not (null? story-text)) (paragraph story-text))
 
-    (cond ((eq? (location-type (current-location)) 'the-edges)
-           (define description-text (get-next-the-edges-description-text))
+    (cond ((eq? (location-type (current-location)) 'edges)
+           (define description-text (get-next-edges-description-text))
            (paragraph description-text)))
     (cond ((eq? (location-type (current-location)) 'swamp)
            (define description-text (get-next-swamp-description-text))
@@ -1038,7 +1037,10 @@
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
 (define (narrate-begin-run)
-  (paragraph "[" "Begin run number " (number->string *run*) "]")
+  (info-card
+   (list
+    (list " run " (string-append " " (number->string *run*) " ")))
+   (string-append "Begin run number " (number->string *run*)))
   (case *run*
     [(1)
      (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
@@ -1049,7 +1051,7 @@
 (define (on-begin-run)
   (set! *run* (add1 *run*))
   (set! *round* 0)
-  (move-actor-to-location! *pc* location-1)
+  (move-actor-to-location! *pc* edges)
   (narrate-begin-run))
 
 (define (resolve-a-run)
@@ -1100,7 +1102,7 @@
      (list " life " (string-append " " (number->string *life*) " "))
      ))
      
-  (info-card life-info (string-append "Begin life number " (string-append " " (number->string *life*))))
+  (info-card life-info (string-append "Begin life number " (number->string *life*)))
   )
 
 (define (on-begin-story)
