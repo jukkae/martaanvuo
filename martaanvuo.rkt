@@ -304,7 +304,7 @@
 
           ))
 
-  (define end-run-choices '())
+  (define end-run-choices '()) ; poor name
   (when (eq? (location-type (current-location)) 'the-edges)
     (set! end-run-choices
           (list
@@ -317,6 +317,19 @@
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
+  (when (eq? (location-type (current-location)) 'martaanvuo-spring)
+    (set! end-run-choices
+          (list
+           (make-choice
+            'step-in-the-spring
+            "Step in the Martaanvuo spring."
+            (λ () (make-action
+                   #:symbol 'win-game
+                   #:actor *pc*
+                   #:duration 0
+                   #:target '()
+                   #:tags '(downtime)))))))
+
   (append combat-choices change-location-choices downtime-choices end-run-choices)
   )
 
@@ -906,7 +919,9 @@
            (paragraph (describe-go-to-action action))
            )
           ((eq? (action-symbol action) 'end-run)
-           (return 'end-run)))
+           (return 'end-run))
+          ((eq? (action-symbol action) 'win-game)
+           (return 'win-game)))
     (resolve-action! action)
     (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
     )
@@ -966,11 +981,10 @@
          (resolve-turns!))
         (else
          (define pc-action-result (resolve-pc-action! pc-action))
-         (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))))
+         (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+         (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
   (on-end-round)
   (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
-  ; to implement win:
-  ; (set! round-exit-status 'campaign-won)
   round-exit-status)
 
 (define (quit)
@@ -978,7 +992,7 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (paragraph "Game closed.")
+         (paragraph "Game exited.")
          (exit))
         (else
          (newline)
@@ -1031,8 +1045,6 @@
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
-(define (campaign-won)
-  (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
 
 (define (on-begin-run)
   (set! *run* (add1 *run*))
@@ -1046,7 +1058,7 @@
     (let loop ()
       (define round-exit-status (resolve-round))
       (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
-      (when (eq? round-exit-status 'campaign-won) (end-run 'campaign-won))
+      (when (eq? round-exit-status 'win-game) (end-run 'win-game))
       (when (eq? round-exit-status 'end-run) (end-run 'end-run))
       (loop))
     ))
@@ -1057,7 +1069,7 @@
     (let loop ()
       (define run-exit-status (resolve-a-run))
       (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
-      (when (eq? run-exit-status 'campaign-won) (end-life 'campaign-won))
+      (when (eq? run-exit-status 'win-game) (end-life 'win-game))
       (when (eq? run-exit-status 'end-run)
         (displayln "TODO: END RUN")
         (loop)))
@@ -1099,7 +1111,7 @@
 (define (begin-game)
   (title)
   (on-begin-story)
-  (let/ec campaign-won
+  (let/ec win-game
     (let begin-new-life ()
       (define pc-life-end-status (resolve-a-life))
       (when (eq? pc-life-end-status 'pc-dead)
@@ -1125,8 +1137,14 @@
 
           (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
                 (else (end-of-life-menu 'abbreviated)))))
-      (when (eq? pc-life-end-status 'campaign-won) (campaign-won))))
-  (campaign-won)
+      (when (eq? pc-life-end-status 'win-game) (win-game))))
+  (win-game)
+  
   )
+
+(define (win-game)
+  (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist.")
+  (wait-for-input)
+  (exit))
 
 (begin-game)

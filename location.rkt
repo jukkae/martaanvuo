@@ -74,9 +74,10 @@
          #:features features
          #:actors actors
          #:items items
+         #:actions-provided actions-provided
          #:tags tags)
   (set! *number-of-locations* (add1 *number-of-locations*))
-  (location* *number-of-locations* neighbors type features actors #f items tags))
+  (location* *number-of-locations* neighbors type features actors #f items actions-provided tags))
 
 (define (add-actor-to-location! location actor)
   (set-location-actors! location (cons actor (location-actors location)))
