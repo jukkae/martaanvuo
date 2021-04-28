@@ -302,7 +302,21 @@
 
 
           ))
-  (append combat-choices change-location-choices downtime-choices)
+
+  (define end-run-choices '())
+  (when (eq? (location-type (current-location)) 'the-edges)
+    (set! end-run-choices
+          (list
+           (make-choice
+            'go-back-to-the-shack
+            "Head back to the shack."
+            (λ () (make-action
+                   #:symbol 'end-run
+                   #:actor *pc*
+                   #:duration 0
+                   #:target '()
+                   #:tags '(downtime)))))))
+  (append combat-choices change-location-choices downtime-choices end-run-choices)
   )
 
 (define (time-of-day-from-jiffies jiffies)
@@ -880,17 +894,22 @@
 
 ; TODO: think a bit about how this and resolve-action! work together
 (define (resolve-pc-action! action)
-  (cond ((eq? (action-symbol action) 'go-to-location)
-         (define next-location (action-target action))
-         (remove-actor-from-location! (current-location) *pc*)
-         (set-actor-current-location! *pc* next-location)
-         (add-actor-to-location! next-location *pc*)
-         (when (eq? (location-type (current-location)) 'ruins)
-           (spawn-encounter))
-         (paragraph (describe-go-to-action action))
-         ))
-  (resolve-action! action)
-  (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
+  (let/ec return
+    (cond ((eq? (action-symbol action) 'go-to-location)
+           (define next-location (action-target action))
+           (remove-actor-from-location! (current-location) *pc*)
+           (set-actor-current-location! *pc* next-location)
+           (add-actor-to-location! next-location *pc*)
+           (when (eq? (location-type (current-location)) 'ruins)
+             (spawn-encounter))
+           (paragraph (describe-go-to-action action))
+           )
+          ((eq? (action-symbol action) 'end-run)
+           return))
+    (resolve-action! action)
+    (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
+    )
+  'end-run
   )
 
 (define (resolve-npc-action! action)
@@ -939,15 +958,16 @@
     (define encounter-status (send current-encounter on-get-pc-action pc-action))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
+  (define round-exit-status 'ok)
   (cond ((initiative-based-resolution? pc-action)
          (add-to-action-queue pc-action)
          (update-npc-reactions pc-action)
          (sort-action-queue)
          (resolve-turns!))
         (else
-         (resolve-pc-action! pc-action)))
+         (define pc-action-result (resolve-pc-action! pc-action))
+         (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))))
   (on-end-round)
-  (define round-exit-status 'ok)
   (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
   ; to implement win:
   ; (set! round-exit-status 'campaign-won)
@@ -1010,10 +1030,11 @@
 (define (campaign-won)
   (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
 
-(define (play-a-life)
+(define (resolve-a-life)
   (let/ec end-life
     (set! *life* (add1 *life*))
     (paragraph "[" "Begin life number " (number->string *life*) "]")
+
     
     (set! *run* (add1 *run*))
     (narrate-begin-run)
@@ -1021,7 +1042,9 @@
       (define round-exit-status (resolve-round))
       (when (eq? round-exit-status 'pc-dead) (end-life 'pc-dead))
       (when (eq? round-exit-status 'campaign-won) (end-life 'campaign-won))
-      (loop))))
+      (when (eq? round-exit-status 'end-run) (displayln "END RUN")#;(end-run 'end-run))
+      (loop))
+    ))
 
 (define (begin-story)
   (title)
@@ -1029,7 +1052,7 @@
   (let/ec campaign-won
     (paragraph "[" "Begin a story" "]")
     (let begin-new-life ()
-      (define pc-life-end-status (play-a-life))
+      (define pc-life-end-status (resolve-a-life))
       (when (eq? pc-life-end-status 'pc-dead)
 
         (let end-of-life-menu ([verbosity 'verbose])
