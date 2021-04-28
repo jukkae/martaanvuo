@@ -31,7 +31,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'swamp))
+   #:type 'the-edges))
 
 (define location-2
   (make-location
@@ -40,7 +40,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'ruins))
+   #:type 'swamp))
 
 (define location-3
   (make-location
@@ -49,7 +49,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'riverbank))
+   #:type 'ruins))
 
 (define location-4
   (make-location
@@ -58,7 +58,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:type 'cache))
+   #:type 'riverbank))
 
 (define location-5
   (make-location
@@ -67,7 +67,17 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:type 'cache))
+
+(define location-6
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
    #:type 'anthill))
+
 
 (define *world*
   (world (list location-1 location-2 location-3 location-4 location-5) 0 0))
@@ -213,8 +223,9 @@
   (set-location-neighbors! location-1 (list location-2))
   (set-location-neighbors! location-2 (list location-1 location-3))
   (set-location-neighbors! location-3 (list location-2 location-4 location-5))
-  (set-location-neighbors! location-4 (list location-3))
+  (set-location-neighbors! location-4 (list location-3 location-6))
   (set-location-neighbors! location-5 (list location-3))
+  (set-location-neighbors! location-6 (list location-4))
   )
 
 (define (get-current-enemies)
@@ -231,6 +242,7 @@
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
     ['ruins "Climb the hill to the ruins."]
+    ['swamp "Enter the swamp."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -275,19 +287,21 @@
                              #:tags '(downtime))))))))
 
     (set! downtime-choices
-          (list
-           (make-choice
-            'forage
-            (string-append "Forage.")
-            (λ () (make-action
-                   #:symbol 'forage
-                   #:actor *pc*
-                   #:duration 100
-                   #:target '()
-                   #:tags '(downtime))))))
+          (if (eq? (location-type (current-location)) 'swamp)
+              (list
+               (make-choice
+                'forage
+                (string-append "Forage.")
+                (λ () (make-action
+                       #:symbol 'forage
+                       #:actor *pc*
+                       #:duration 100
+                       #:target '()
+                       #:tags '(downtime)))))
+              '())
 
 
-    )
+          ))
   (append combat-choices change-location-choices downtime-choices)
   )
 
@@ -545,9 +559,22 @@
 
 (define get-next-story-text
   (generator ()
-             (yield "Otava is plodding through a swamp in a sweltering heat in search of anything valuable. The Collector is due for another visit in a couple of days, and Otava better have something good for him. Heavy clouds hang low in the dreary sky over her head.")
-             (yield "Otava hasn't ventured this far into the swamps before. But the drier areas, the areas free of Corruption, it's all scoured. Scavenged. Picked clean. Nothing to be found anymore. And there's still the rest of the debt to be paid to the Collector.")
+             (yield "The heat in the lowlands is sweltering, and the rumors have made her less than eager to venture here, but Otava is out of choices: The Collector is due for another visit in a couple of days, and the highlands have already been picked clean. Heavy clouds hang low in the dreary sky over Otava's head.")
+             (yield "Otava finds the lack of a proper name for the swamps a bit worrisome: She might very well be the first human to venture here. Or, the first one after the Rains, at any rate. But on the other hand, there's bound to be something good here, something to settle the debt.")
              '()
+             ))
+
+(define get-next-the-edges-description-text
+  (generator ()
+             (yield
+              (string-append
+               "The ground turns wetter with each step as Otava descends towards the swamps. The air is at a standstill, and a musty scent, a wet smell of blooming flowers and rotting wood creeps up her nostrils. The remains of the old blacktop road she's been following disappear, swallowed by the undergrowth. If she's going to go any further, well, this is where she'll step off the road and have to find her own path."))
+             (yield
+              (string-append
+               ""))
+             (take-random
+              (list
+               ""))
              ))
 
 (define get-next-swamp-description-text
@@ -572,6 +599,9 @@
     (define story-text (get-next-story-text))
     (when (not (null? story-text)) (paragraph story-text))
 
+    (cond ((eq? (location-type (current-location)) 'the-edges)
+           (define description-text (get-next-the-edges-description-text))
+           (paragraph description-text)))
     (cond ((eq? (location-type (current-location)) 'swamp)
            (define description-text (get-next-swamp-description-text))
            (paragraph description-text)))
@@ -975,7 +1005,7 @@
 
 (define (narrate-begin-run)
   (paragraph "[" "Begin run number " (number->string *run*) "]")
-  (paragraph "After a couple of soulsucking, but mostly uneventful days of hiking straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo proper."))
+  (paragraph "After a couple of soulsucking, but mostly uneventful days of hiking straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo."))
 
 (define (campaign-won)
   (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
@@ -997,7 +1027,7 @@
   (title)
   (setup-world)
   (let/ec campaign-won
-    (paragraph "[" "Begin a Story" "]")
+    (paragraph "[" "Begin a story" "]")
     (let begin-new-life ()
       (define pc-life-end-status (play-a-life))
       (when (eq? pc-life-end-status 'pc-dead)
