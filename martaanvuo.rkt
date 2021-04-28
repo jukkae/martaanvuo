@@ -905,11 +905,10 @@
            (paragraph (describe-go-to-action action))
            )
           ((eq? (action-symbol action) 'end-run)
-           return))
+           (return 'end-run)))
     (resolve-action! action)
     (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
     )
-  'end-run
   )
 
 (define (resolve-npc-action! action)
@@ -1030,20 +1029,30 @@
 (define (campaign-won)
   (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
 
+(define (resolve-a-run)
+  (let/ec end-run
+    (set! *run* (add1 *run*))
+    (narrate-begin-run)
+    (let loop ()
+      (define round-exit-status (resolve-round))
+      (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
+      (when (eq? round-exit-status 'campaign-won) (end-run 'campaign-won))
+      (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+      (loop))
+    ))
+
 (define (resolve-a-life)
   (let/ec end-life
     (set! *life* (add1 *life*))
     (paragraph "[" "Begin life number " (number->string *life*) "]")
 
-    
-    (set! *run* (add1 *run*))
-    (narrate-begin-run)
     (let loop ()
-      (define round-exit-status (resolve-round))
-      (when (eq? round-exit-status 'pc-dead) (end-life 'pc-dead))
-      (when (eq? round-exit-status 'campaign-won) (end-life 'campaign-won))
-      (when (eq? round-exit-status 'end-run) (displayln "END RUN")#;(end-run 'end-run))
-      (loop))
+      (define run-exit-status (resolve-a-run))
+      (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
+      (when (eq? run-exit-status 'campaign-won) (end-life 'campaign-won))
+      (when (eq? run-exit-status 'end-run)
+        (displayln "TODO: END RUN")
+        (loop)))
     ))
 
 (define (begin-story)
