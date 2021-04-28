@@ -31,6 +31,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'the-edges))
 
 (define location-2
@@ -40,6 +41,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'swamp))
 
 (define location-3
@@ -49,6 +51,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'ruins))
 
 (define location-4
@@ -58,6 +61,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'riverbank))
 
 (define location-5
@@ -67,6 +71,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'cache))
 
 (define location-6
@@ -76,7 +81,18 @@
    #:items '()
    #:neighbors '()
    #:tags '()
+   #:actions-provided '()
    #:type 'anthill))
+
+(define location-7
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
+   #:actions-provided '()
+   #:type 'martaanvuo-spring))
 
 
 (define *world*
@@ -209,7 +225,8 @@
   (set-location-neighbors! location-3 (list location-2 location-4 location-5))
   (set-location-neighbors! location-4 (list location-3 location-6))
   (set-location-neighbors! location-5 (list location-3))
-  (set-location-neighbors! location-6 (list location-4))
+  (set-location-neighbors! location-6 (list location-4 location-7))
+  (set-location-neighbors! location-7 (list location-6))
   )
 
 (define (get-current-enemies)
@@ -1010,9 +1027,9 @@
   (paragraph "[" "Begin run number " (number->string *run*) "]")
   (case *run*
     [(1)
-     (paragraph "After a couple of soulsucking, but mostly uneventful days of following an old blacktop road straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
+     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
     [(2)
-     (paragraph "The hike from the shack to The Edges is a tedious couple of days, but the road is in a good shape, and late summer's sun brings just the right amount of warmth to the highlands. When the road starts inclining down towards the swamps, though, temperature starts climbing, and Otava soon finds herself drenched in sweat.")]))
+     (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
 (define (campaign-won)
   (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
@@ -1064,13 +1081,18 @@
    ))
 
 (define (on-begin-life)
-  (displayln "[on-begin-life]")
   (set! *life* (add1 *life*))
   (set! *pc* (make-new-pc))
-  (paragraph "[" "Begin life number " (number->string *life*) "]"))
+  (define life-info
+    (list
+     (list " life " (string-append " " (number->string *life*) " "))
+     ))
+     
+  (info-card life-info (string-append "Begin life number " (string-append " " (number->string *life*))))
+  )
 
 (define (on-begin-story)
-  (paragraph "[" "Begin a story" "]")
+  ;(paragraph "[" "Begin a story" "]")
   (setup-world)
   )
 

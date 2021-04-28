@@ -15,6 +15,7 @@
    [actors #:mutable]
    [visited #:mutable]
    items
+   [actions-provided #:mutable]
    tags)
 
   #:constructor-name location*
@@ -53,6 +54,10 @@
          (unquoted-printing-string "\n")
          (unquoted-printing-string "items: ")
          (location-items obj)
+
+         (unquoted-printing-string "\n")
+         (unquoted-printing-string "actions-provided: ")
+         (location-actions-provided obj)
 
          (unquoted-printing-string "\n")
          (unquoted-printing-string "tags: ")
