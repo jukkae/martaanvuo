@@ -125,22 +125,7 @@
 (define starting-inventory
   (list
    (list 'bolt-cutters (list 'melee-weapon 'tool))))
-(define *pc*
-  (pc-actor
-   "Otava"
-   4
-   4
-   0
-   (λ () (d 1 2))
-   8
-   13
-   starting-inventory
-   '()
-   '()
-   '()
-   4
-   4
-   ))
+(define *pc* '())
 
 (define (character-sheet)
   (define actor *pc*)
@@ -219,7 +204,6 @@
   (add-actor-to-location! location actor))
 
 (define (setup-world)
-  (move-actor-to-location! *pc* location-1)
   (set-location-neighbors! location-1 (list location-2))
   (set-location-neighbors! location-2 (list location-1 location-3))
   (set-location-neighbors! location-3 (list location-2 location-4 location-5))
@@ -1024,15 +1008,24 @@
 
 (define (narrate-begin-run)
   (paragraph "[" "Begin run number " (number->string *run*) "]")
-  (paragraph "After a couple of soulsucking, but mostly uneventful days of hiking straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo."))
+  (case *run*
+    [(1)
+     (paragraph "After a couple of soulsucking, but mostly uneventful days of following an old blacktop road straight east from her shack, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
+    [(2)
+     (paragraph "The hike from the shack to The Edges is a tedious couple of days, but the road is in a good shape, and late summer's sun brings just the right amount of warmth to the highlands. When the road starts inclining down towards the swamps, though, temperature starts climbing, and Otava soon finds herself drenched in sweat.")]))
 
 (define (campaign-won)
   (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist."))
 
+(define (on-begin-run)
+  (set! *run* (add1 *run*))
+  (set! *round* 0)
+  (move-actor-to-location! *pc* location-1)
+  (narrate-begin-run))
+
 (define (resolve-a-run)
+  (on-begin-run)
   (let/ec end-run
-    (set! *run* (add1 *run*))
-    (narrate-begin-run)
     (let loop ()
       (define round-exit-status (resolve-round))
       (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
@@ -1042,10 +1035,8 @@
     ))
 
 (define (resolve-a-life)
+  (on-begin-life)
   (let/ec end-life
-    (set! *life* (add1 *life*))
-    (paragraph "[" "Begin life number " (number->string *life*) "]")
-
     (let loop ()
       (define run-exit-status (resolve-a-run))
       (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
@@ -1055,11 +1046,38 @@
         (loop)))
     ))
 
-(define (begin-story)
-  (title)
+(define (make-new-pc)
+  (pc-actor
+   "Otava"
+   4
+   4
+   0
+   (λ () (d 1 2))
+   8
+   13
+   starting-inventory
+   '()
+   '()
+   '()
+   4
+   4
+   ))
+
+(define (on-begin-life)
+  (displayln "[on-begin-life]")
+  (set! *life* (add1 *life*))
+  (set! *pc* (make-new-pc))
+  (paragraph "[" "Begin life number " (number->string *life*) "]"))
+
+(define (on-begin-story)
+  (paragraph "[" "Begin a story" "]")
   (setup-world)
+  )
+
+(define (begin-game)
+  (title)
+  (on-begin-story)
   (let/ec campaign-won
-    (paragraph "[" "Begin a story" "]")
     (let begin-new-life ()
       (define pc-life-end-status (resolve-a-life))
       (when (eq? pc-life-end-status 'pc-dead)
@@ -1089,4 +1107,4 @@
   (campaign-won)
   )
 
-(begin-story)
+(begin-game)
