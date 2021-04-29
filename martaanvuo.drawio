@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-29T10:18:19.745Z" agent="5.0 (Macintosh)" etag="TAfOHCRBn3yE4_QUWwVz" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-29T10:23:32.354Z" agent="5.0 (Macintosh)" etag="t51NIl_mKB3rAXI5_37c" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1348" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -6,8 +6,8 @@
         <mxCell id="1" parent="0" />
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-65" value="" style="endArrow=none;dashed=1;html=1;fontFamily=Courier New;strokeColor=#000000;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="1900" y="800" as="sourcePoint" />
-            <mxPoint x="2470" y="250" as="targetPoint" />
+            <mxPoint x="1920" y="800" as="sourcePoint" />
+            <mxPoint x="2490" y="250" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="GtMXS8k0hl24dT_Wd-_N-23" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-6" target="gbILwj0ovBhhdUd5rJjH-7" edge="1">
@@ -1015,10 +1015,13 @@
           <mxGeometry x="2341" y="110" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-91" value="Beast" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2083" y="515" width="30" height="60" as="geometry" />
+          <mxGeometry x="2093" y="510" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="VtJOc1jhrBRUda-8Q_qS-94" value="The collector" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-94" value="The Collector" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
           <mxGeometry x="1355" y="155" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-95" value="The Witch" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="620" width="30" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
