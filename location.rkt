@@ -86,5 +86,8 @@
 (define (remove-actor-from-location! location actor)
   (set-location-actors! location (remove actor (location-actors location))))
 
+(define (location-has-tag? location tag)
+  (memq tag (location-tags location)))
+
 
 (provide (all-defined-out))

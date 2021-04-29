@@ -279,7 +279,8 @@
   (define change-location-choices '())
   (define downtime-choices '())
   (when (and (not in-combat?)
-             (null? current-encounter))
+             (null? current-encounter)
+             (not (location-has-tag? (current-location) 'forbid-simple-exit)))
     (define neighbors
       (location-neighbors (current-location)))
     (for ([i (in-range 0 (length neighbors))])
@@ -339,6 +340,28 @@
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
+
+  (when (and (eq? (location-type (current-location)) 'swamp)
+             (not in-combat?)
+             (null? current-encounter)
+             )
+    (define neighbors
+      (location-neighbors (current-location)))
+    (for ([i (in-range 0 (length neighbors))])
+      (define neighbor (list-ref neighbors i))
+      (set! change-location-choices
+            (append change-location-choices
+                    (list
+                     (make-choice
+                      'search-for-paths
+                      "Search the wetlands for paths."
+                      (λ () (make-action
+                             #:symbol 'search-for-paths
+                             #:actor *pc*
+                             #:duration 100
+                             #:target neighbor
+                             #:tags '(downtime)))))))
+      ))
 
   (append combat-choices change-location-choices downtime-choices end-run-choices)
   )
