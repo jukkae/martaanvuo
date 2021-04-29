@@ -34,6 +34,16 @@
    #:actions-provided '()
    #:type 'edges))
 
+(define swamp
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '(forbid-simple-exit)
+   #:actions-provided '(search-for-paths)
+   #:type 'swamp))
+
 (define crematory
   (make-location
    #:actors '()
@@ -84,28 +94,29 @@
    #:actions-provided '()
    #:type 'workshop))
 
-(define the-spring
+(define the-cataract
   (make-location
    #:actors '()
    #:features '()
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:actions-provided '()
-   #:type 'martaanvuo-spring))
+   #:actions-provided '(step-under-the-waterfall)
+   #:type 'the-cataract))
 
 (define (setup-world)
-  (set-location-neighbors! edges (list crematory ruins))
-  (set-location-neighbors! crematory (list edges ruins))
-  (set-location-neighbors! ruins (list edges crematory sewers cache))
+  (set-location-neighbors! edges (list swamp))
+  (set-location-neighbors! swamp (list edges crematory ruins))
+  (set-location-neighbors! crematory (list swamp))
+  (set-location-neighbors! ruins (list swamp sewers cache))
   (set-location-neighbors! sewers (list ruins workshop))
   (set-location-neighbors! cache (list ruins))
-  (set-location-neighbors! workshop (list sewers the-spring))
-  (set-location-neighbors! the-spring (list workshop))
+  (set-location-neighbors! workshop (list sewers the-cataract))
+  (set-location-neighbors! the-cataract (list workshop))
   )
 
 (define *world*
-  (world (list edges crematory ruins sewers cache workshop the-spring) 0 0))
+  (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0))
 
 (define (advance-time-by-a-jiffy!)
   (define events '())
@@ -316,12 +327,12 @@
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
-  (when (eq? (location-type (current-location)) 'martaanvuo-spring)
+  (when (eq? (location-type (current-location)) 'the-cataract)
     (set! end-run-choices
           (list
            (make-choice
-            'step-in-the-spring
-            "Step in the Martaanvuo spring."
+            'step-under-the-waterfall
+            "Step under Martaanvuo Cataract."
             (λ () (make-action
                    #:symbol 'win-game
                    #:actor *pc*
@@ -1145,7 +1156,7 @@
   )
 
 (define (win-game)
-  (paragraph "Otava steps into Martaanvuo spring and forever ceases to exist.")
+  (paragraph "Otava steps under the roaring waters of Martaanvuo Cataract and forever ceases to exist.")
   (wait-for-input)
   (exit))
 
