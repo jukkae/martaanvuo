@@ -78,7 +78,7 @@
   (make-location
    #:actors '()
    #:features '()
-   #:items '()
+   #:items '(veilbreaker-staff)
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
@@ -261,25 +261,12 @@
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (when *hacky-in-range?*
-      (set! combat-choices
-            (append combat-choices
-                    (list
-                     (make-choice
-                      'melee
-                      (string-append "Hit the " (actor-name target) " with bolt cutters. (enemy #" (number->string (add1 i)) ")")
-                      (λ () (make-action
-                             #:symbol 'melee
-                             #:actor *pc*
-                             #:duration 1
-                             #:target target
-                             #:tags '(combat delayed-resolution))))))))
+    '()
     )
 
   (define change-location-choices '())
   (define downtime-choices '())
   (when (and (not in-combat?)
-             (null? current-encounter)
              (not (location-has-tag? (current-location) 'forbid-simple-exit)))
     (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time *world*)) 'night)
            '()))
@@ -391,7 +378,7 @@
   (info-card round-summary (string-append "Begin round " (number->string *round*)))
   
   (set! action-queue '())
-  (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round))
+  (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
   )
 
 (define (add-to-action-queue action)
@@ -453,13 +440,12 @@
   '())
 
 (define encounter<%>
-  (interface () on-begin-round on-end-round on-get-pc-action get-encounter-choices))
+  (interface () on-begin-round! on-end-round! on-get-pc-action! get-encounter-choices))
 
-(define *hacky-in-range?* #f)
 (define scavenger-encounter%
   (class* object% (encounter<%>)
-    (field [encounter-nodes '(begin barter who-are-you we-cool final-warning combat)])
-    (field [current-node (car encounter-nodes)])
+    (field [encounter-nodes '()])
+    (field [current-node '()#;(car encounter-nodes)])
     (super-new)
 
     (define scavenger
@@ -477,130 +463,29 @@
        '()))
       
     
-    (define/private (exit-encounter)
+    (define/private (exit-encounter!)
       (displayln "The scavenger disappears.")
       (newline)
       (remove-actor-from-its-current-location! scavenger)
       'exit-encounter)
 
-    (define/public (begin-encounter)
+    (define/public (begin-encounter!)
       (move-actor-to-location! scavenger (current-location)))
 
-    (define/public (on-begin-round)
+    (define/public (on-begin-round!)
       '())
 
-    (define/public (on-end-round)
+    (define/public (on-end-round!)
       (define current-enemies (get-current-enemies))
       (if (= (length current-enemies) 0)
-          (exit-encounter)
+          (exit-encounter!)
           '()))
 
-    (define/public (on-get-pc-action pc-action)
-      (cond ((eq? 'melee (action-symbol pc-action))
-             (set! current-node 'combat)
-             (set! in-combat? #t)
-             (paragraph "With a swift motion, Otava grabs her bolt cutters and goes for a swing."))
-            ((eq? 'get-closer (action-symbol pc-action))
-             (set! *hacky-in-range?* #t)
-             (cond ((eq? 'final-warning current-node)
-                    (set! current-node 'combat)
-                    (paragraph "Otava takes another step. The scavenger squeezes the trigger.")
-                    (set! in-combat? #t)
-                    (set! current-node 'combat)
-                    (update-npc-reactions pc-action)
-                    (resolve-turns!))
-                   ((eq? 'begin current-node)
-                    (define roll (d 1 4))
-                    (if (= roll 1)
-                        (begin
-                          (paragraph "Otava takes a step. The scavenger squeezes the trigger.")
-                          (set! in-combat? #t)
-                          (set! current-node 'combat)
-                          (update-npc-reactions pc-action)
-                          (resolve-turns!)
-                          )
-                        (begin
-                          (paragraph "Otava takes a step. The scavenger waves her rifle.")
-                          (set! current-node 'final-warning)
-                          )))))
-            ((eq? 'back-off (action-symbol pc-action))
-             (set! current-node 'who-are-you)
-             (paragraph "Otava raises her hands above her head. \"I'm unarmed.\""))
-            ((eq? 'ask-info (action-symbol pc-action))
-             (paragraph "\"You are about three-four days out from Martaanvuo still. There are some caches along the way, if you're lookign to restock. The Anthead Girl is hungry this time of the year.\"")
-             (exit-encounter))))
+    (define/public (on-get-pc-action! pc-action)
+      '())
 
     (define/public (get-encounter-choices)
-      (case current-node
-        ['begin
-         (list
-          (make-choice
-           'get-closer
-           (string-append "Take a step forward.")
-           (λ () (make-action
-                  #:symbol 'get-closer
-                  #:actor *pc*
-                  #:duration 1
-                  #:target '()
-                  #:tags '(aggressive))))
-          (make-choice
-           'back-off
-           (string-append "Back off.")
-           (λ () (make-action
-                  #:symbol 'back-off
-                  #:actor *pc*
-                  #:duration 1
-                  #:target 'none
-                  #:tags '()))))]
-        ['barter
-         '()
-         ]
-        ['combat
-         '()]
-        ['who-are-you
-         (list
-          (make-choice
-           'explain
-           (string-append "\"I seek the Anthead Girl of the Riverbank. What can you tell me of the mires ahead?\"")
-           (λ () (make-action
-                  #:symbol 'ask-info
-                  #:actor *pc*
-                  #:duration 0
-                  #:target '()
-                  #:tags '(dialogue fast))))
-          (make-choice
-           'barter
-           (string-append "\"I want to barter.\"")
-           (λ () (make-action
-                  #:symbol 'barter
-                  #:actor *pc*
-                  #:duration 0
-                  #:target '()
-                  #:tags '(dialogue fast)))))]
-        ['we-cool
-         '()]
-        ['final-warning
-         (list
-          (make-choice
-           'get-closer
-           (string-append "Take another step forward.")
-           (λ () (make-action
-                  #:symbol 'get-closer
-                  #:actor *pc*
-                  #:duration 1
-                  #:target '()
-                  #:tags '(aggressive))))
-          (make-choice
-           'back-off
-           (string-append "Back off.")
-           (λ () (make-action
-                  #:symbol 'back-off
-                  #:actor *pc*
-                  #:duration 1
-                  #:target 'none
-                  #:tags '()))))]
-        
-        ))
+      '())
     ))
 
 (define current-encounter '())
@@ -660,6 +545,13 @@
            (paragraph description-text)))
     (cond ((eq? (location-type (current-location)) 'swamp)
            (define description-text (get-next-swamp-description-text))
+           (paragraph description-text)))
+    (cond ((eq? (location-type (current-location)) 'cache)
+           (displayln (location-items (current-location)))
+           (define description-text
+             (cond ((not (null? (location-items (current-location))))
+                    "There is a Veilbreaker staff here. Pick it up?")
+                   (else "There's nothing more to take.")))
            (paragraph description-text)))
 
     )
@@ -920,7 +812,7 @@
   (when (eq? '() current-encounter)
     (begin
       (set! current-encounter (new scavenger-encounter%))
-      (send current-encounter begin-encounter)
+      (send current-encounter begin-encounter!)
       )))
 
 ; TODO: think a bit about how this and resolve-action! work together
@@ -969,7 +861,7 @@
   (when (= (length current-enemies) 0)
     (set! in-combat? #f))
   (when (not (eq? '() current-encounter))
-    (define encounter-status (send current-encounter on-end-round))
+    (define encounter-status (send current-encounter on-end-round!))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
   (newline) ; This is the "extra" newline that separates rounds
@@ -987,7 +879,7 @@
   (describe-pc-intention pc-action)
   
   (when (not (eq? '() current-encounter))
-    (define encounter-status (send current-encounter on-get-pc-action pc-action))
+    (define encounter-status (send current-encounter on-get-pc-action! pc-action))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
   (define round-exit-status 'ok)
@@ -1129,6 +1021,7 @@
   )
 
 (define (begin-game)
+  #; (random-seed 13)
   (title)
   (on-begin-playthrough)
   (let/ec win-game
