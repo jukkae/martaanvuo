@@ -54,10 +54,21 @@
       #t
       #f))
 
-(define (resolve-instantly? action)
+(define (immediate-resolution? action)
   (if (not (member 'delayed-resolution (action-tags action)))
       #t
       #f))
+
+(define (initiative-based-resolution? action)
+  (if (member 'delayed-resolution (action-tags action))
+      #t
+      #f))
+
+(define (aggressive? action)
+  (cond ((eq? (action-symbol action) 'shoot) #t)
+        ((eq? (action-symbol action) 'melee) #t)
+        ((has-tag? action 'aggressive) #t)
+        (else #f)))
 
 (define (has-tag? action tag)
   (memq tag (action-tags action)))
