@@ -40,7 +40,7 @@
    #:features '()
    #:items '()
    #:neighbors '()
-   #:tags '(forbid-simple-exit)
+   #:tags '()#;'(forbid-simple-exit)
    #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
@@ -629,7 +629,7 @@
   (generator ()
              (yield
               (string-append
-               "The ground turns wetter with each step as Otava descends towards the swamps. The air is at a standstill, and a musty scent, a wet smell of blooming flowers and rotting wood creeps up her nostrils. The remains of the old blacktop road she's been following disappear, swallowed by the undergrowth. If she's going to go any further, well, this is where she'll step off the road and have to find her own path."))
+               "The ground turns wetter with each step as Otava descends towards the swamps. The air is at a standstill. The remains of the old blacktop road she's been following disappear, swallowed by the undergrowth. If she's going to go any further, well, this is where she'll step off the road and have to find her own path."))
              (yield
               (string-append
                ""))
@@ -642,9 +642,15 @@
   (generator ()
              (yield
               (string-append
-               "The whining of mosquitoes is incessant. The stunted, skeletonlike trees have a bare minimum of leaves on them. "
-               "Still, with some luck, Otava might find some berries here, be able to make it a couple days longer. "
-               "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
+               "A thick fog envelops the gnarled, almost leafless skeletonlike trees that jut from the muddy ground. There's an acrid, smoky, chemical-like smell in the air that seems to get stronger towards what Otava assumes to be southeast."
+               " "
+               "Otava hears the caw of a crow from somewhere to the left from the source of the acrid smell."
+               " "
+               "The areas around the route she's taken thus far look like there might be some berries to be found, make it a couple of days longer.")
+              #;(string-append
+                 "The whining of mosquitoes is incessant. The stunted, skeletonlike trees have a bare minimum of leaves on them. "
+                 "Still, with some luck, Otava might find some berries here, be able to make it a couple days longer. "
+                 "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
              (yield
               (string-append
                "The swamps smell like decay. Blighted trees in various stages of rot. Buzzing of flies. Even here, life finds a way. But so does death. "
@@ -863,6 +869,37 @@
   action-result
   )
 
+(define (skill-check title bonus target-number)
+  (define first-d (d 1 6))
+  (define second-d (d 1 6))
+  (define roll-total (+ first-d second-d bonus))
+  (define successful? (>= roll-total target-number))
+  (define success-string
+    (if successful?
+        ", success"
+        ", failure"))
+  (define results
+    (list
+     (list " 2d6 + skill " " >= " " location TN ")
+     (list
+      (string-append
+       " "
+       (number->string first-d)
+       "+"
+       (number->string second-d)
+       "+"
+       (number->string bonus)
+       " = "
+       (number->string roll-total))
+      " >= "
+      (string-append " " "8" success-string " "))))
+               
+  (info-card
+   results
+   (string-append "Skill check: " title))
+
+  successful?)
+
 (define (resolve-action! action)
   (when (alive? (action-actor action))
     (cond ((or (eq? (action-symbol action) 'shoot)
@@ -876,36 +913,12 @@
                    'pc-dead))))
           ((eq? (action-symbol action) 'forage)
            (begin
-             (define first-d (d 1 6))
-             (define second-d (d 1 6))
              (define skill 0)
-             (define roll-total (+ first-d second-d skill))
              (define target 8)
-             (define successful? (>= roll-total target))
-             (define success-string
-               (if successful?
-                   ", success"
-                   ", failure"))
-
-             (define results
-               (list
-                (list " 2d6 + skill " " >= " " location TN ")
-                (list
-                 (string-append
-                  " "
-                  (number->string first-d)
-                  "+"
-                  (number->string second-d)
-                  "+"
-                  (number->string skill)
-                  " = "
-                  (number->string roll-total))
-                 " >= "
-                 (string-append " " "8" success-string " "))))
-               
-             (info-card
-              results
-              "Forage skill check")
+             
+             (define successful? (skill-check "Forage" skill target))
+             
+             
              (cond (successful?
                     (define amount (d 1 4)) ; portions = days of survival
                     (define amount-string
