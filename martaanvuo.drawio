@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-29T15:43:42.860Z" agent="5.0 (Macintosh)" etag="Vml8Y51sy1M5yhQPvWgx" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-30T14:09:20.305Z" agent="5.0 (Macintosh)" etag="c6hYt4MHKk0Xt0lhnUO-" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1348" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -1010,9 +1010,6 @@
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-82" value="The Swamp" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1740" y="600" width="90" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="VtJOc1jhrBRUda-8Q_qS-86" value="The Gatekeeper" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1620" y="620" width="30" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-87" value="Scavenger" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
           <mxGeometry x="2020" y="350" width="30" height="60" as="geometry" />
         </mxCell>
@@ -1022,14 +1019,11 @@
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-90" value="Aberration" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
           <mxGeometry x="2341" y="110" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="VtJOc1jhrBRUda-8Q_qS-91" value="Beast" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="2093" y="510" width="30" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-94" value="The Collector" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
           <mxGeometry x="1355" y="155" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-95" value="The Witch" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1950" y="620" width="30" height="60" as="geometry" />
+          <mxGeometry x="1920" y="630" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-105" value="&lt;div align=&quot;left&quot;&gt;Route:&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;left&quot;&gt;swamp-ruins&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=left;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1828" y="480" width="90" height="55" as="geometry" />
