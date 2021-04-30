@@ -826,17 +826,29 @@
 
   successful?)
 
+(define (actor-status-card actor title)
+  (info-card
+   (list
+    (list
+     (string-append " " (actor-name actor) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp actor))
+      "/"
+      (number->string (actor-max-hp actor))
+      " ")))
+   title))
+
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
-  (define first-d (d 1 6))
-  (define second-d (d 1 6))
-  (define attack-bonus (actor-attack-skill actor))
-  (define attack-roll (+ first-d second-d))
-  (define attack-roll-total (+ first-d second-d attack-bonus))
+  
   (define target-number (actor-defense-number target))
   
-  (define success? (skill-check "Shoot" attack-bonus target-number))
+  (define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
   (define damage-roll ((actor-attack-damage actor)))
 
   (when success?
@@ -854,20 +866,7 @@
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll)))
 
-  (info-card
-   (list
-    (list
-     (string-append " " (actor-name target) " ")
-     "")
-    (list
-     " hp: "
-     (string-append
-      " "
-      (number->string (actor-hp target))
-      "/"
-      (number->string (actor-max-hp target))
-      " ")))
-   "Target")
+  (actor-status-card target (actor-name target))
   (newline)
 
   action-result
