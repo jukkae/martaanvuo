@@ -41,7 +41,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()#;'(forbid-simple-exit)
-   #:actions-provided '(search-for-paths)
+   #:actions-provided '()#;'(search-for-paths)
    #:type 'swamp))
 
 (define crematory
@@ -253,7 +253,7 @@
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
     ['ruins "Climb the hill to the ruins."]
-    ['swamp "Enter the swamp."]
+    ['swamp "Enter the swamps."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -281,6 +281,8 @@
   (when (and (not in-combat?)
              (null? current-encounter)
              (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+    (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time *world*)) 'night)
+           '()))
     (define neighbors
       (location-neighbors (current-location)))
     (for ([i (in-range 0 (length neighbors))])
@@ -347,21 +349,8 @@
              )
     (define neighbors
       (location-neighbors (current-location)))
-    (for ([i (in-range 0 (length neighbors))])
-      (define neighbor (list-ref neighbors i))
-      (set! change-location-choices
-            (append change-location-choices
-                    (list
-                     (make-choice
-                      'search-for-paths
-                      "Search the wetlands for paths."
-                      (λ () (make-action
-                             #:symbol 'search-for-paths
-                             #:actor *pc*
-                             #:duration 100
-                             #:target neighbor
-                             #:tags '(downtime)))))))
-      ))
+    '()
+    )
 
   (append combat-choices change-location-choices downtime-choices end-run-choices)
   )
@@ -911,7 +900,17 @@
                     (add-item-to-inventory! *pc* item)
                     )
                    (else
-                    (paragraph "Despite spending a while, Otava can't find anything to eat.")))
+                    (begin
+                      (paragraph "Despite spending a while, Otava can't find anything to eat.")
+                      (define luck-roll (d 1 20))
+                      (info-card
+                       (list
+                        (list
+                         " 1d20 "
+                         " = "
+                         (string-append " " (number->string luck-roll) " " )))
+                       "Luck roll")
+                      )))
              ))
           ((eq? (action-symbol action) 'back-off)
            'ok
@@ -1124,14 +1123,14 @@
   (info-card life-info (string-append "Begin life number " (number->string *life*)))
   )
 
-(define (on-begin-story)
+(define (on-begin-playthrough)
   ;(paragraph "[" "Begin a story" "]")
   (setup-world)
   )
 
 (define (begin-game)
   (title)
-  (on-begin-story)
+  (on-begin-playthrough)
   (let/ec win-game
     (let begin-new-life ()
       (define pc-life-end-status (resolve-a-life))
