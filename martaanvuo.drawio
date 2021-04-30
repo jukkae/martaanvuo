@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-30T14:09:20.305Z" agent="5.0 (Macintosh)" etag="c6hYt4MHKk0Xt0lhnUO-" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-30T15:21:20.418Z" agent="5.0 (Macintosh)" etag="xWDYLqWKwBGcj_3bXJEW" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1348" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -1045,6 +1045,9 @@
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-110" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Courier New;endArrow=none;endFill=0;strokeColor=#000000;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-107" target="VtJOc1jhrBRUda-8Q_qS-107">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-115" value="&quot;Ah, you are looking for Veilbreaker Staffs?&quot;&lt;br&gt;&amp;nbsp; &quot;Who are you?&quot;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; &quot;You are not ready yet. Go, get out of my sight!&quot;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1742" width="467" height="258" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
