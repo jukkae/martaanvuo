@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-30T21:48:15.059Z" agent="5.0 (Macintosh)" etag="FUV3WVm3ktQECq1Bsdmo" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-30T21:48:59.692Z" agent="5.0 (Macintosh)" etag="Cyvv-d6u6BUfGyx5TuSh" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1348" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -244,7 +244,7 @@
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-118" value="Scene decision" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="VtJOc1jhrBRUda-8Q_qS-117">
           <mxGeometry x="0.1973" y="23" relative="1" as="geometry">
-            <mxPoint x="-2" y="60" as="offset" />
+            <mxPoint x="13" y="-34" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-5" value="Interpret choice" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
@@ -541,7 +541,7 @@
           <mxGeometry x="3004" y="815" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gbILwj0ovBhhdUd5rJjH-15" value="get-next-pc-action" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="2896" y="655" width="204" height="20" as="geometry" />
+          <mxGeometry x="2910" y="752.5" width="204" height="20" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.855;entryY=0.875;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-2" target="Mjj1QeHVWUKomglfDfad-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -1061,16 +1061,16 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-116" value="Handle scene decision" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="3250" y="980" width="110" height="40" as="geometry" />
+          <mxGeometry x="3260" y="793.75" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-123" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=classic;endFill=1;strokeColor=#000000;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-119" target="VtJOc1jhrBRUda-8Q_qS-122">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-119" value="Do scene-specific stuff" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="3250" y="890" width="110" height="40" as="geometry" />
+          <mxGeometry x="3260" y="703.75" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-122" value="&lt;div&gt;End round&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="3250" y="802.5" width="110" height="40" as="geometry" />
+          <mxGeometry x="3260" y="616.25" width="110" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
