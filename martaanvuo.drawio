@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-30T15:21:20.418Z" agent="5.0 (Macintosh)" etag="xWDYLqWKwBGcj_3bXJEW" version="14.6.6" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-04-30T21:48:15.059Z" agent="5.0 (Macintosh)" etag="FUV3WVm3ktQECq1Bsdmo" version="14.6.6" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1348" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -237,6 +237,14 @@
         <mxCell id="Mjj1QeHVWUKomglfDfad-15" value="Action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;" parent="1" source="Mjj1QeHVWUKomglfDfad-5" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="3155" y="1059.9999999999998" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-117" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=classic;endFill=1;strokeColor=#000000;" edge="1" parent="1" source="Mjj1QeHVWUKomglfDfad-5" target="VtJOc1jhrBRUda-8Q_qS-116">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-118" value="Scene decision" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;" vertex="1" connectable="0" parent="VtJOc1jhrBRUda-8Q_qS-117">
+          <mxGeometry x="0.1973" y="23" relative="1" as="geometry">
+            <mxPoint x="-2" y="60" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Mjj1QeHVWUKomglfDfad-5" value="Interpret choice" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
@@ -533,7 +541,7 @@
           <mxGeometry x="3004" y="815" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="gbILwj0ovBhhdUd5rJjH-15" value="get-next-pc-action" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Courier New;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="2896" y="715" width="204" height="20" as="geometry" />
+          <mxGeometry x="2896" y="655" width="204" height="20" as="geometry" />
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.855;entryY=0.875;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" parent="1" source="tiqr8W6lq2PpIhoyLO2V-2" target="Mjj1QeHVWUKomglfDfad-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -552,8 +560,8 @@
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-7" value="" style="endArrow=none;html=1;fontFamily=Courier New;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="3310" y="1245" as="sourcePoint" />
-            <mxPoint x="3310" y="765" as="targetPoint" />
+            <mxPoint x="3409.58" y="1270" as="sourcePoint" />
+            <mxPoint x="3409.58" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="tiqr8W6lq2PpIhoyLO2V-8" value="" style="endArrow=none;html=1;fontFamily=Courier New;" parent="1" edge="1">
@@ -1048,6 +1056,21 @@
         </mxCell>
         <mxCell id="VtJOc1jhrBRUda-8Q_qS-115" value="&quot;Ah, you are looking for Veilbreaker Staffs?&quot;&lt;br&gt;&amp;nbsp; &quot;Who are you?&quot;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; &quot;You are not ready yet. Go, get out of my sight!&quot;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Courier New;" vertex="1" parent="1">
           <mxGeometry x="1473" y="1742" width="467" height="258" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-120" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=classic;endFill=1;strokeColor=#000000;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-116" target="VtJOc1jhrBRUda-8Q_qS-119">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-116" value="Handle scene decision" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="3250" y="980" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-123" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=classic;endFill=1;strokeColor=#000000;" edge="1" parent="1" source="VtJOc1jhrBRUda-8Q_qS-119" target="VtJOc1jhrBRUda-8Q_qS-122">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-119" value="Do scene-specific stuff" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="3250" y="890" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VtJOc1jhrBRUda-8Q_qS-122" value="&lt;div&gt;End round&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="3250" y="802.5" width="110" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
