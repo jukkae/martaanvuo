@@ -794,6 +794,38 @@
   (print-table content #:row-sep? #f)
   (newline))
 
+
+(define (skill-check title bonus target-number)
+  (define first-d (d 1 6))
+  (define second-d (d 1 6))
+  (define roll-total (+ first-d second-d bonus))
+  (define successful? (>= roll-total target-number))
+  (define success-string
+    (if successful?
+        ", success"
+        ", failure"))
+  (define results
+    (list
+     (list " 2d6 + skill " " >= " " location TN ")
+     (list
+      (string-append
+       " "
+       (number->string first-d)
+       "+"
+       (number->string second-d)
+       "+"
+       (number->string bonus)
+       " = "
+       (number->string roll-total))
+      " >= "
+      (string-append " " "8" success-string " "))))
+               
+  (info-card
+   results
+   (string-append "Skill check: " title))
+
+  successful?)
+
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
@@ -803,38 +835,10 @@
   (define attack-roll (+ first-d second-d))
   (define attack-roll-total (+ first-d second-d attack-bonus))
   (define target-number (actor-defense-number target))
-  (define success? (>= attack-roll-total target-number))
-  (define success-string (if success? "successful" "failure"))
+  
+  (define success? (skill-check "Shoot" attack-bonus target-number))
   (define damage-roll ((actor-attack-damage actor)))
 
-  (info-card
-   (list
-    (list
-     (string-append " " (actor-name actor) " ")
-     " vs "
-     (string-append " " (actor-name target) " "))
-    (list " 2d6 + ab " " >= " " defense ")
-    (list
-     (string-append
-      " "
-      (number->string first-d)
-      "+"
-      (number->string second-d)
-      "+"
-      (number->string (actor-attack-skill actor))
-      " = "
-      (number->string attack-roll-total)
-      " "
-      )
-     " >= "
-     (string-append
-      " "
-      (number->string target-number)
-      ", "
-      success-string
-      " "
-      )))
-   "Attack roll")
   (when success?
     (info-card
      (list
@@ -868,37 +872,6 @@
 
   action-result
   )
-
-(define (skill-check title bonus target-number)
-  (define first-d (d 1 6))
-  (define second-d (d 1 6))
-  (define roll-total (+ first-d second-d bonus))
-  (define successful? (>= roll-total target-number))
-  (define success-string
-    (if successful?
-        ", success"
-        ", failure"))
-  (define results
-    (list
-     (list " 2d6 + skill " " >= " " location TN ")
-     (list
-      (string-append
-       " "
-       (number->string first-d)
-       "+"
-       (number->string second-d)
-       "+"
-       (number->string bonus)
-       " = "
-       (number->string roll-total))
-      " >= "
-      (string-append " " "8" success-string " "))))
-               
-  (info-card
-   results
-   (string-append "Skill check: " title))
-
-  successful?)
 
 (define (resolve-action! action)
   (when (alive? (action-actor action))
