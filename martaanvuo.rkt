@@ -118,6 +118,10 @@
 (define *world*
   (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0))
 
+(define (in-combat?)
+  (displayln "TODO: Fix in-combat?")
+  #f)
+
 (define (advance-time-by-a-jiffy!)
   (define events '())
   (define new-elapsed-time (add1 (world-elapsed-time *world*)))
@@ -127,7 +131,7 @@
 
   (when (= (modulo (world-elapsed-time *world*) 100) 0)
     (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time *world*))) ".")))
-  #;(when (not in-combat?)
+  #;(when (not (in-combat?))
       (cond ((not (eq? current-time-of-day 'night))
              (define roll (d 1 200))
              (cond ((= roll 1)
@@ -211,7 +215,7 @@
 
 ; TODO shit
 (define (get-next-npc-action actor)
-  (if (not in-combat?)
+  (if (not (in-combat?))
       (make-action #:symbol 'hold-at-gunpoint
                    #:actor actor
                    #:duration 1
@@ -266,7 +270,7 @@
 
   (define change-location-choices '())
   (define downtime-choices '())
-  (when (and (not in-combat?)
+  (when (and (not (in-combat?))
              (not (location-has-tag? (current-location) 'forbid-simple-exit)))
     (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time *world*)) 'night)
            '()))
@@ -331,8 +335,7 @@
                    #:tags '(downtime)))))))
 
   (when (and (eq? (location-type (current-location)) 'swamp)
-             (not in-combat?)
-             (null? current-encounter)
+             (not (in-combat?))
              )
     (define neighbors
       (location-neighbors (current-location)))
@@ -378,7 +381,7 @@
   (info-card round-summary (string-append "Begin round " (number->string *round*)))
   
   (set! action-queue '())
-  (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
+  #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
   )
 
 (define (add-to-action-queue action)
@@ -488,92 +491,8 @@
       '())
     ))
 
-(define current-encounter '())
-
-(define in-combat? #f)
-
-(define get-next-story-text
-  (generator ()
-             (yield "The Collector is due for another visit in a couple of days. Heavy clouds hang low in the dreary sky over Otava's head.")
-             (yield "Otava might very well be the first human to venture here. Or, the first one after the Rains, at any rate. But on the other hand, there's bound to be something good here, something to settle the debt.")
-             '()
-             ))
-
-(define get-next-edges-description-text
-  (generator ()
-             (yield
-              (string-append
-               "The ground turns wetter with each step as Otava descends towards the swamps. The air is at a standstill. The remains of the old blacktop road she's been following disappear, swallowed by the undergrowth. If she's going to go any further, well, this is where she'll step off the road and have to find her own path."))
-             (yield
-              (string-append
-               ""))
-             (take-random
-              (list
-               ""))
-             ))
-
-(define get-next-swamp-description-text
-  (generator ()
-             (yield
-              (string-append
-               "A thick fog envelops the gnarled, almost leafless skeletonlike trees that jut from the muddy ground. There's an acrid, smoky, chemical-like smell in the air that seems to get stronger towards what Otava assumes to be southeast."
-               " "
-               "Otava hears the caw of a crow from somewhere to the left from the source of the acrid smell."
-               " "
-               "The areas around the route she's taken thus far look like there might be some berries to be found, make it a couple of days longer.")
-              #;(string-append
-                 "The whining of mosquitoes is incessant. The stunted, skeletonlike trees have a bare minimum of leaves on them. "
-                 "Still, with some luck, Otava might find some berries here, be able to make it a couple days longer. "
-                 "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
-             (yield
-              (string-append
-               "The swamps smell like decay. Blighted trees in various stages of rot. Buzzing of flies. Even here, life finds a way. But so does death. "
-               "Up ahead to the east, on top of a desolate hill, there's a column of smoke rising from some ruins from before the Rains. It's an arduous climb, maybe half a day to get there."))
-             (take-random
-              (list
-               "It is stiflingly hot."))
-             ))
-
 (define (describe-situation)
-  (when (and (not in-combat?)
-             (null? current-encounter))
-    (define story-text (get-next-story-text))
-    (when (not (null? story-text)) (paragraph story-text))
-
-    (cond ((eq? (location-type (current-location)) 'edges)
-           (define description-text (get-next-edges-description-text))
-           (paragraph description-text)))
-    (cond ((eq? (location-type (current-location)) 'swamp)
-           (define description-text (get-next-swamp-description-text))
-           (paragraph description-text)))
-    (cond ((eq? (location-type (current-location)) 'cache)
-           (displayln (location-items (current-location)))
-           (define description-text
-             (cond ((not (null? (location-items (current-location))))
-                    "There is a Veilbreaker staff here. Pick it up?")
-                   (else "There's nothing more to take.")))
-           (paragraph description-text)))
-
-    )
-
-  (when (not (eq? '() current-encounter))
-    (case (get-field current-node current-encounter)
-      ['begin
-       (paragraph "\"Stop.\" Otava hears a harsh voice. \"Not one step closer.\"")
-       (paragraph "The voice belongs to a scavenger, looks to be in her forties, gaunt face and tattered clothes. There's a slight limp in her step. She's aiming a hunting rifle at Otava.")
-       (paragraph "Otava's bolt cutters are hanging from her belt. She's fast, but not that fast. But maybe if she got a bit closer...")]
-      ['barter
-       (paragraph "\"You wanna trade? Okay. Let's see what you have, then.\"")
-       ]
-      ['combat
-       (paragraph "Otava is fighting a scavenger.")]
-      ['who-are-you
-       (paragraph "\"Good. Now, what do you want?\"")]
-      ['we-cool
-       (paragraph "\"Just passing through, huh? Where to, that ain't my problem unless you make it mine. Got that? So just keep your distance and we're cool.\"")]
-      ['final-warning
-       (paragraph "\"I said, not one fucking step closer.\"")]
-      ))
+  '()
   )
 
 (define (describe-pc-intention pc-action)
@@ -616,13 +535,15 @@
 
       
       (define world-choices (get-world-choices *world* actor))
-      (define encounter-choices (if (eq? current-encounter '())
+      #;(define encounter-choices (if (null? current-encounter)
                                     '()
                                     (send current-encounter get-encounter-choices)))
       
-      (define choices (append world-choices encounter-choices))
-      
+      #;(define choices (append world-choices encounter-choices))
+      (define choices world-choices)
+
       (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
+      ; 
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
@@ -809,7 +730,8 @@
            ))))
 
 (define (spawn-encounter)
-  (when (eq? '() current-encounter)
+  (displayln "-- spawn-encounter disabled")
+  #;(when (eq? '() current-encounter)
     (begin
       (set! current-encounter (new scavenger-encounter%))
       (send current-encounter begin-encounter!)
@@ -854,13 +776,15 @@
   )
 
 (define (end-encounter)
-  (set! current-encounter '()))
+  (displayln "-- end-encounter disabled")
+  #;(set! current-encounter '()))
 
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
   (when (= (length current-enemies) 0)
-    (set! in-combat? #f))
-  (when (not (eq? '() current-encounter))
+    (displayln "-- on-end-round: fix (in-combat?)")
+    #;(set! in-combat? #f))
+  #;(when (not (eq? '() current-encounter))
     (define encounter-status (send current-encounter on-end-round!))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
@@ -878,7 +802,7 @@
 
   (describe-pc-intention pc-action)
   
-  (when (not (eq? '() current-encounter))
+  #;(when (not (null? current-encounter))
     (define encounter-status (send current-encounter on-get-pc-action! pc-action))
     (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
