@@ -131,7 +131,7 @@
    ))
 
 (serializable-struct
- game-state
+ situation
  (world
   [pc #:mutable]
   [life #:mutable]
@@ -140,10 +140,10 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]))
 
-(define *game-state*
+(define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (game-state new-world pc 0 0 0 0 #f)))
+    (situation new-world pc 0 0 0 0 #f)))
 
 (define (in-combat?)
   (displayln "TODO: Fix in-combat?")
@@ -151,13 +151,13 @@
 
 (define (advance-time-by-a-jiffy!)
   (define events '())
-  (define new-elapsed-time (add1 (world-elapsed-time (game-state-world *game-state*))))
+  (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
   (set-world-elapsed-time!
-   (game-state-world *game-state*)
+   (situation-world *situation*)
    new-elapsed-time)
 
-  (when (= (modulo (world-elapsed-time (game-state-world *game-state*)) 100) 0)
-    (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (game-state-world *game-state*)))) ".")))
+  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
+    (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) ".")))
   #;(when (not (in-combat?))
       (cond ((not (eq? current-time-of-day 'night))
              (define roll (d 1 200))
@@ -190,7 +190,7 @@
 
 
 (define (character-sheet)
-  (define actor (game-state-pc *game-state*))
+  (define actor (situation-pc *situation*))
   (define sheet
     (list
      (list " Name " (string-append " " (actor-name actor) " "))
@@ -206,7 +206,7 @@
   )
 
 (define (inventory)
-  (define actor (game-state-pc *game-state*))
+  (define actor (situation-pc *situation*))
   
   (define sheet
     (append
@@ -221,8 +221,8 @@
   )
 
 (define (current-location)
-  #;(displayln "-- current-location: TODO move to game-state")
-  (actor-current-location (game-state-pc *game-state*)))
+  #;(displayln "-- current-location: TODO move to situation")
+  (actor-current-location (situation-pc *situation*)))
 
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
@@ -295,7 +295,7 @@
   (define downtime-choices '())
   (when (and (not (in-combat?))
              (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-    (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (game-state-world *game-state*))) 'night)
+    (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
            '()))
     (define neighbors
       (location-neighbors (current-location)))
@@ -309,7 +309,7 @@
                       (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
                       (λ () (make-action
                              #:symbol 'go-to-location
-                             #:actor (game-state-pc *game-state*)
+                             #:actor (situation-pc *situation*)
                              #:duration 100
                              #:target neighbor
                              #:tags '(downtime))))))))
@@ -322,7 +322,7 @@
                 (string-append "Forage.")
                 (λ () (make-action
                        #:symbol 'forage
-                       #:actor (game-state-pc *game-state*)
+                       #:actor (situation-pc *situation*)
                        #:duration 100
                        #:target '()
                        #:tags '(downtime)))))
@@ -340,7 +340,7 @@
             "Head back to the shack."
             (λ () (make-action
                    #:symbol 'end-run
-                   #:actor (game-state-pc *game-state*)
+                   #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
@@ -352,7 +352,7 @@
             "Step under Martaanvuo Cataract."
             (λ () (make-action
                    #:symbol 'win-game
-                   #:actor (game-state-pc *game-state*)
+                   #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
@@ -380,13 +380,13 @@
 
 (define action-queue '())
 (define (on-begin-round)
-  (set-game-state-round! *game-state* (add1 (game-state-round *game-state*)))
+  (set-situation-round! *situation* (add1 (situation-round *situation*)))
   (define round-summary
     (list
      (list " round "
            (string-append
             " "
-            (number->string (game-state-round *game-state*))
+            (number->string (situation-round *situation*))
             " "))
      (list " current location "
            (string-append
@@ -398,10 +398,10 @@
             " "
             (number->string (location-id (current-location)))
             " "))
-     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (game-state-world *game-state*)))) " "))
-     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (game-state-world *game-state*))) " "))
+     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
+     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  (info-card round-summary (string-append "Begin round " (number->string (game-state-round *game-state*))))
+  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
@@ -455,7 +455,7 @@
                   #:symbol 'shoot
                   #:actor actor
                   #:duration 1
-                  #:target (game-state-pc *game-state*)
+                  #:target (situation-pc *situation*)
                   #:tags '(combat delayed-resolution)))
   action)
 
@@ -554,10 +554,10 @@
         (define meta-command (cdr meta-command-with-key))
         (meta-command)
         (what-do-you-do 'verbose))
-      (define actor (game-state-pc *game-state*))
+      (define actor (situation-pc *situation*))
 
       
-      (define world-choices (get-world-choices (game-state-world *game-state*) actor))
+      (define world-choices (get-world-choices (situation-world *situation*) actor))
       #;(define encounter-choices (if (null? current-encounter)
                                     '()
                                     (send current-encounter get-encounter-choices)))
@@ -733,7 +733,7 @@
                      "Forage results roll")
                     (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
                     (define item (list 'food (list amount)))
-                    (add-item-to-inventory! (game-state-pc *game-state*) item)
+                    (add-item-to-inventory! (situation-pc *situation*) item)
                     )
                    (else
                     (begin
@@ -765,9 +765,9 @@
   (let/ec return
     (cond ((eq? (action-symbol action) 'go-to-location)
            (define next-location (action-target action))
-           (remove-actor-from-location! (current-location) (game-state-pc *game-state*))
-           (set-actor-current-location! (game-state-pc *game-state*) next-location)
-           (add-actor-to-location! next-location (game-state-pc *game-state*))
+           (remove-actor-from-location! (current-location) (situation-pc *situation*))
+           (set-actor-current-location! (situation-pc *situation*) next-location)
+           (add-actor-to-location! next-location (situation-pc *situation*))
            (when (eq? (location-type (current-location)) 'ruins)
              (spawn-encounter))
            (paragraph (describe-go-to-action action))
@@ -840,7 +840,7 @@
          (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
          (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
   (on-end-round)
-  (when (not (alive? (game-state-pc *game-state*))) (set! round-exit-status 'pc-dead))
+  (when (not (alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
   round-exit-status)
 
 (define (quit)
@@ -896,9 +896,9 @@
 (define (narrate-begin-run)
   (info-card
    (list
-    (list " run " (string-append " " (number->string (game-state-run *game-state*)) " ")))
-   (string-append "Begin run number " (number->string (game-state-run *game-state*))))
-  (case (game-state-run *game-state*)
+    (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+   (string-append "Begin run number " (number->string (situation-run *situation*))))
+  (case (situation-run *situation*)
     [(1)
      (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
     [(2)
@@ -906,9 +906,9 @@
 
 
 (define (on-begin-run)
-  (set-game-state-run! *game-state* (add1 (game-state-run *game-state*)))
-  (set-game-state-round! *game-state* 0)
-  (move-actor-to-location! (game-state-pc *game-state*) edges)
+  (set-situation-run! *situation* (add1 (situation-run *situation*)))
+  (set-situation-round! *situation* 0)
+  (move-actor-to-location! (situation-pc *situation*) edges)
   (narrate-begin-run))
 
 (define (resolve-a-run)
@@ -935,14 +935,14 @@
     ))
 
 (define (on-begin-life)
-  (set-game-state-life! *game-state* (add1 (game-state-life *game-state*)))
-  (set-game-state-pc! *game-state* (make-new-pc))
+  (set-situation-life! *situation* (add1 (situation-life *situation*)))
+  (set-situation-pc! *situation* (make-new-pc))
   (define life-info
     (list
-     (list " life " (string-append " " (number->string (game-state-life *game-state*)) " "))
+     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
      ))
      
-  (info-card life-info (string-append "Begin life number " (number->string (game-state-life *game-state*))))
+  (info-card life-info (string-append "Begin life number " (number->string (situation-life *situation*))))
   )
 
 (define (on-begin-playthrough)
