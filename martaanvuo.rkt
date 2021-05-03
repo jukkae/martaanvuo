@@ -109,10 +109,31 @@
   (set-location-neighbors! the-cataract (list workshop))
   )
 
+(define starting-inventory
+  (list
+   (list 'bolt-cutters (list 'melee-weapon 'tool))))
+
+(define (make-new-pc)
+  (pc-actor
+   "Otava"
+   4
+   4
+   0
+   (λ () (d 1 2))
+   8
+   13
+   starting-inventory
+   '()
+   '()
+   '()
+   4
+   4
+   ))
 
 (serializable-struct
  game-state
  (world
+  [pc #:mutable]
   [life #:mutable]
   [run #:mutable]
   [round #:mutable]
@@ -120,8 +141,9 @@
   [in-combat? #:mutable]))
 
 (define *game-state*
-  (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)])
-    (game-state new-world 0 0 0 0 #f)))
+  (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
+        [pc (make-new-pc)])
+    (game-state new-world pc 0 0 0 0 #f)))
 
 (define (in-combat?)
   (displayln "TODO: Fix in-combat?")
@@ -167,13 +189,8 @@
     (cons '() jiffies)))
 
 
-(define starting-inventory
-  (list
-   (list 'bolt-cutters (list 'melee-weapon 'tool))))
-(define *pc* '())
-
 (define (character-sheet)
-  (define actor *pc*)
+  (define actor (game-state-pc *game-state*))
   (define sheet
     (list
      (list " Name " (string-append " " (actor-name actor) " "))
@@ -189,7 +206,7 @@
   )
 
 (define (inventory)
-  (define actor *pc*)
+  (define actor (game-state-pc *game-state*))
   
   (define sheet
     (append
@@ -204,7 +221,8 @@
   )
 
 (define (current-location)
-  (actor-current-location *pc*))
+  #;(displayln "-- current-location: TODO move to game-state")
+  (actor-current-location (game-state-pc *game-state*)))
 
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
@@ -291,7 +309,7 @@
                       (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
                       (λ () (make-action
                              #:symbol 'go-to-location
-                             #:actor *pc*
+                             #:actor (game-state-pc *game-state*)
                              #:duration 100
                              #:target neighbor
                              #:tags '(downtime))))))))
@@ -304,7 +322,7 @@
                 (string-append "Forage.")
                 (λ () (make-action
                        #:symbol 'forage
-                       #:actor *pc*
+                       #:actor (game-state-pc *game-state*)
                        #:duration 100
                        #:target '()
                        #:tags '(downtime)))))
@@ -322,7 +340,7 @@
             "Head back to the shack."
             (λ () (make-action
                    #:symbol 'end-run
-                   #:actor *pc*
+                   #:actor (game-state-pc *game-state*)
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
@@ -334,7 +352,7 @@
             "Step under Martaanvuo Cataract."
             (λ () (make-action
                    #:symbol 'win-game
-                   #:actor *pc*
+                   #:actor (game-state-pc *game-state*)
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
@@ -437,7 +455,7 @@
                   #:symbol 'shoot
                   #:actor actor
                   #:duration 1
-                  #:target *pc*
+                  #:target (game-state-pc *game-state*)
                   #:tags '(combat delayed-resolution)))
   action)
 
@@ -536,7 +554,7 @@
         (define meta-command (cdr meta-command-with-key))
         (meta-command)
         (what-do-you-do 'verbose))
-      (define actor *pc*)
+      (define actor (game-state-pc *game-state*))
 
       
       (define world-choices (get-world-choices (game-state-world *game-state*) actor))
@@ -715,7 +733,7 @@
                      "Forage results roll")
                     (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
                     (define item (list 'food (list amount)))
-                    (add-item-to-inventory! *pc* item)
+                    (add-item-to-inventory! (game-state-pc *game-state*) item)
                     )
                    (else
                     (begin
@@ -747,9 +765,9 @@
   (let/ec return
     (cond ((eq? (action-symbol action) 'go-to-location)
            (define next-location (action-target action))
-           (remove-actor-from-location! (current-location) *pc*)
-           (set-actor-current-location! *pc* next-location)
-           (add-actor-to-location! next-location *pc*)
+           (remove-actor-from-location! (current-location) (game-state-pc *game-state*))
+           (set-actor-current-location! (game-state-pc *game-state*) next-location)
+           (add-actor-to-location! next-location (game-state-pc *game-state*))
            (when (eq? (location-type (current-location)) 'ruins)
              (spawn-encounter))
            (paragraph (describe-go-to-action action))
@@ -822,7 +840,7 @@
          (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
          (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
   (on-end-round)
-  (when (not (alive? *pc*)) (set! round-exit-status 'pc-dead))
+  (when (not (alive? (game-state-pc *game-state*))) (set! round-exit-status 'pc-dead))
   round-exit-status)
 
 (define (quit)
@@ -890,7 +908,7 @@
 (define (on-begin-run)
   (set-game-state-run! *game-state* (add1 (game-state-run *game-state*)))
   (set-game-state-round! *game-state* 0)
-  (move-actor-to-location! *pc* edges)
+  (move-actor-to-location! (game-state-pc *game-state*) edges)
   (narrate-begin-run))
 
 (define (resolve-a-run)
@@ -916,26 +934,9 @@
         (loop)))
     ))
 
-(define (make-new-pc)
-  (pc-actor
-   "Otava"
-   4
-   4
-   0
-   (λ () (d 1 2))
-   8
-   13
-   starting-inventory
-   '()
-   '()
-   '()
-   4
-   4
-   ))
-
 (define (on-begin-life)
   (set-game-state-life! *game-state* (add1 (game-state-life *game-state*)))
-  (set! *pc* (make-new-pc))
+  (set-game-state-pc! *game-state* (make-new-pc))
   (define life-info
     (list
      (list " life " (string-append " " (number->string (game-state-life *game-state*)) " "))
