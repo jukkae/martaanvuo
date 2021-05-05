@@ -437,6 +437,8 @@
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
+  (when (not (null? (situation-current-scene *situation*)))
+    (send (situation-current-scene *situation*) on-begin-round!))
   )
 
 (define (add-to-action-queue action)
@@ -865,6 +867,8 @@
   (when (= (length current-enemies) 0)
     (displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
+  (when (not (null? (situation-current-scene *situation*)))
+    (send (situation-current-scene *situation*) on-end-round!))
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
       (when (eq? 'exit-encounter encounter-status) (end-encounter)))
