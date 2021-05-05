@@ -144,14 +144,20 @@
    )
 
 (define scene<%>
-  (interface () get-scene-choices))
+  (interface () on-begin-round! get-scene-decisions handle-scene-decision! on-end-round!))
 
 (define opening-scene%
   (class* object% (scene<%>)
     (super-new)
-    (define/public (get-scene-choices)
-      (displayln "-- (get-scene-choices): TODO")
-      (list (make-choice 'test "scene choice name name" '())))))
+    (define/public (on-begin-round!)
+      (displayln "-- (on-begin-round!)"))
+    (define/public (get-scene-decisions)
+      (displayln "-- (get-scene-decisions): TODO")
+      (list (make-choice 'test "scene decision name" '())))
+    (define/public (handle-scene-decision! scene-decision)
+      (displayln "-- (handle-scene-decision!)"))
+    (define/public (on-end-round!)
+      (displayln "-- (on-end-round!)"))))
 
 (define opening-scene (new opening-scene%))
 
@@ -577,7 +583,9 @@
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
 
 (define (handle-scene-decision scene-decisions-with-keys input)
-  (displayln "-- handle-scene-decision: TODO"))
+  (displayln "-- handle-scene-decision: TODO")
+  (define decision (hash-ref scene-decisions-with-keys (string->number input)))
+  (send (situation-current-scene *situation*) handle-scene-decision! decision))
 
 (define (get-next-pc-action)
   (serialize-state)
@@ -589,12 +597,13 @@
         (define meta-command (cdr meta-command-with-key))
         (meta-command)
         (what-do-you-do 'verbose))
+      
       (define actor (situation-pc *situation*))
 
 
       (define scene-decisions (if (null? (situation-current-scene *situation*))
-                                '()
-                                (send (situation-current-scene *situation*) get-scene-choices)))
+                                  '()
+                                  (send (situation-current-scene *situation*) get-scene-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       #;(define encounter-choices (if (null? current-encounter)
                                       '()
@@ -614,7 +623,10 @@
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((scene-decision-valid? scene-decisions-with-keys input) (handle-scene-decision scene-decisions-with-keys input))
+            ((scene-decision-valid? scene-decisions-with-keys input)
+             (begin
+               (handle-scene-decision scene-decisions-with-keys input)
+               produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 
@@ -867,27 +879,32 @@
   (describe-situation)
   
   (serialize-state)
-  (define pc-action (get-next-pc-action))
+  (let/ec end-round-early-with-round-status
+    (define pc-action (get-next-pc-action))
+    (cond ((eq? pc-action 'end-round-early)
+           (end-round-early-with-round-status 'ok))
+          (else
 
-  (describe-pc-intention pc-action)
+           (describe-pc-intention pc-action)
   
-  #;(when (not (null? current-encounter))
-      (define encounter-status (send current-encounter on-get-pc-action! pc-action))
-      (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+           #;(when (not (null? current-encounter))
+               (define encounter-status (send current-encounter on-get-pc-action! pc-action))
+               (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
-  (define round-exit-status 'ok)
-  (cond ((initiative-based-resolution? pc-action)
-         (add-to-action-queue pc-action)
-         (update-npc-reactions pc-action)
-         (sort-action-queue)
-         (resolve-turns!))
-        (else
-         (define pc-action-result (resolve-pc-action! pc-action))
-         (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
-         (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
-  (on-end-round)
-  (when (not (alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
-  round-exit-status)
+           (define round-exit-status 'ok)
+           (cond ((initiative-based-resolution? pc-action)
+                  (add-to-action-queue pc-action)
+                  (update-npc-reactions pc-action)
+                  (sort-action-queue)
+                  (resolve-turns!))
+                 (else
+                  (define pc-action-result (resolve-pc-action! pc-action))
+                  (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+                  (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+           (on-end-round)
+           (when (not (alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
+           round-exit-status
+           ))))
 
 (define (quit)
   (displayln "Really quit? [Q] to quit, anything else to continue.")
