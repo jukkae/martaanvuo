@@ -3,7 +3,6 @@
 (require racket/generator)
 (require racket/serialize)
 
-(require dyoo-while-loop)
 (require lens)
 (require text-table)
 
