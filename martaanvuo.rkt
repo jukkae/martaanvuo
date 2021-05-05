@@ -130,6 +130,32 @@
    4
    ))
 
+#;(scene
+   (node 1 "Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'."
+         (decision "Yarn of the what?" (go-to-node 2))
+         )
+   
+   (node 2 "'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?"
+         (decision "Yeah, sounds like a great opportunity actually." (go-to-node 3))
+         (decision "'Us'? Who's us?" (go-to-node 4))
+         (decision #:condition (charisma-check?) "Don't you typically pay someone to do a job for you?" (go-to-node 5))
+         (decision "Not interested." (end-scene)))
+   
+   (node 3 "Great! So, ... – he tells you the route: down the path, right from the rock, climb the hill, on the other side there's a fence. I'll meet you here tomorrow." (add-quest 'fetch-the-book) (end-scene))
+   )
+
+(define scene<%>
+  (interface () get-scene-choices))
+
+(define opening-scene%
+  (class* object% (scene<%>)
+    (super-new)
+    (define/public (get-scene-choices)
+      (displayln "-- (get-scene-choices): TODO")
+      (list (make-choice 'test "scene choice name name" '())))))
+
+(define opening-scene (new opening-scene%))
+
 (serializable-struct
  situation
  (world
@@ -138,16 +164,17 @@
   [run #:mutable]
   [round #:mutable]
   [elapsed-time #:mutable]
-  [in-combat? #:mutable]))
+  [in-combat? #:mutable]
+  [current-scene #:mutable]))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f)))
+    (situation new-world pc 0 0 0 0 #f opening-scene)))
 
 (define (in-combat?)
-  (displayln "TODO: Fix in-combat?")
-  #f)
+  (displayln "-- in-combat? TODO fix")
+  (situation-in-combat? *situation*))
 
 (define (advance-time-by-a-jiffy!)
   (define events '())
@@ -541,8 +568,17 @@
       choice
       #f))
 
+(define (scene-decision-valid? decisions-with-keys input)
+  (define decision (hash-ref decisions-with-keys (string->number input) '()))
+  (if (not (null? decision))
+      decision
+      #f))
+
 (define (choice-as-action choices-with-keys input)
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
+
+(define (handle-scene-decision scene-decisions-with-keys input)
+  (displayln "-- handle-scene-decision: TODO"))
 
 (define (get-next-pc-action)
   (serialize-state)
@@ -556,25 +592,30 @@
         (what-do-you-do 'verbose))
       (define actor (situation-pc *situation*))
 
-      
+
+      (define scene-decisions (if (null? (situation-current-scene *situation*))
+                                '()
+                                (send (situation-current-scene *situation*) get-scene-choices)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       #;(define encounter-choices (if (null? current-encounter)
-                                    '()
-                                    (send current-encounter get-encounter-choices)))
-      
+                                      '()
+                                      (send current-encounter get-encounter-choices)))
       #;(define choices (append world-choices encounter-choices))
       (define choices world-choices)
 
-      (define choices-with-keys (build-keys-to-choices-map choices)) ; should check for pending actions and name choices accordingly
-      ; 
+      (define scene-decisions-with-keys (build-keys-to-choices-map scene-decisions 1))
+      (define first-non-scene-index (add1 (length scene-decisions)))
+      (define choices-with-keys (build-keys-to-choices-map choices first-non-scene-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
-      (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
+      
+      (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
       (serialize-input)
 
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
+            ((scene-decision-valid? scene-decisions-with-keys input) (handle-scene-decision scene-decisions-with-keys input))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 
@@ -594,16 +635,22 @@
     (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
   (newline))
 
+(define (print-decisions-with-keys decisions-with-keys)
+  (for ([(k v) (in-hash decisions-with-keys)])
+    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
+  (newline))
+  
+
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
         ((<= i 8) (add1 i))
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-(define (build-keys-to-choices-map choices)
+(define (build-keys-to-choices-map choices first-index)
   (define choices-with-keys (make-hash))
   (for ([i (in-range (length choices))])
-    (define key (key-from-index i))
+    (define key (key-from-index (+ first-index i -1)))
     (hash-set! choices-with-keys key (list-ref choices i)))
   choices-with-keys)
 
@@ -755,10 +802,10 @@
 (define (spawn-encounter)
   (displayln "-- spawn-encounter disabled")
   #;(when (eq? '() current-encounter)
-    (begin
-      (set! current-encounter (new scavenger-encounter%))
-      (send current-encounter begin-encounter!)
-      )))
+      (begin
+        (set! current-encounter (new scavenger-encounter%))
+        (send current-encounter begin-encounter!)
+        )))
 
 ; TODO: think a bit about how this and resolve-action! work together
 (define (resolve-pc-action! action)
@@ -808,8 +855,8 @@
     (displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
   #;(when (not (eq? '() current-encounter))
-    (define encounter-status (send current-encounter on-end-round!))
-    (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+      (define encounter-status (send current-encounter on-end-round!))
+      (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
   (newline) ; This is the "extra" newline that separates rounds
   )
@@ -826,8 +873,8 @@
   (describe-pc-intention pc-action)
   
   #;(when (not (null? current-encounter))
-    (define encounter-status (send current-encounter on-get-pc-action! pc-action))
-    (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+      (define encounter-status (send current-encounter on-get-pc-action! pc-action))
+      (when (eq? 'exit-encounter encounter-status) (end-encounter)))
 
   (define round-exit-status 'ok)
   (cond ((initiative-based-resolution? pc-action)
@@ -880,7 +927,7 @@
   (newline))
 
 
-(define (print-choices-and-meta-commands-with-keys choices-with-keys meta-commands-with-keys verbosity)
+(define (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
          (display "Unknown command. Known commands: ")
          (for ([(k v) (in-hash choices-with-keys)]) (display k))
@@ -890,6 +937,7 @@
         (else
          (newline) ; This is extra spacing, should pass a param to paragraph
          (paragraph "What do you do?")
+         (print-decisions-with-keys scene-decisions-with-keys)
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
