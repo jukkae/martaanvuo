@@ -882,6 +882,7 @@
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     (cond ((eq? pc-action 'end-round-early)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
           (else
 
