@@ -146,14 +146,44 @@
 (define scene<%>
   (interface () on-begin-round! get-scene-decisions handle-scene-decision! on-end-round!))
 
+(serializable-struct ; this is going to carry some state, likely
+ scene-node
+ (id
+  description
+  decisions))
+
+(serializable-struct
+ scene-decision
+ (title
+  description
+  next-node))
+
+(define node-1
+  (scene-node
+   1
+   "\"Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'.\""
+   (list (scene-decision "Ask about the Yarn." "\"The Yarn of the what?\"" 2))))
+
+(define node-2
+  (scene-node
+   2
+   "'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?"
+   (list (scene-decision "Agree." "\"Yeah, sounds like a great opportunity actually.\"" 'create-quest-and-exit)
+         (scene-decision "Decline." "\"Not interested.\"" 'exit))))
+ 
+
 (define opening-scene%
   (class* object% (scene<%>)
+    (field [current-node node-1])
     (super-new)
     (define/public (on-begin-round!)
-      (displayln "-- (on-begin-round!)"))
+      (displayln "-- (on-begin-round!)")
+      (paragraph (scene-node-description current-node))
+      )
     (define/public (get-scene-decisions)
-      (displayln "-- (get-scene-decisions): TODO")
-      (list (make-choice 'test "scene decision name" '())))
+      (displayln "-- (get-scene-decisions):")
+      (scene-node-decisions current-node)
+      )
     (define/public (handle-scene-decision! scene-decision)
       (displayln "-- (handle-scene-decision!)"))
     (define/public (on-end-round!)
@@ -650,8 +680,8 @@
 
 (define (print-decisions-with-keys decisions-with-keys)
   (for ([(k v) (in-hash decisions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
-  (newline))
+    (displayln (string-append "[" (number->string k) "]: " (scene-decision-title v))))
+  #;(newline))
   
 
 (define (key-from-index i)
