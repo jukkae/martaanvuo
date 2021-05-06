@@ -146,11 +146,25 @@
 (define scene<%>
   (interface () on-begin-round! get-scene-decisions handle-scene-decision! on-end-round!))
 
+(define *scene-nodes* (make-hash))
+
 (serializable-struct ; this is going to carry some state, likely
  scene-node
  (id
   description
   decisions))
+
+; calling this a scene is a misnomer, but feels like it could work, temporarily at least
+(define (scene id description decisions)
+  (define node
+    (scene-node
+     id
+     description
+     decisions))
+  (hash-set! *scene-nodes* id node))
+
+(define (get-scene-by-id id)
+  (hash-ref *scene-nodes* id))
 
 (serializable-struct
  scene-decision
@@ -158,38 +172,38 @@
   description
   next-node))
 
-(define node-1
-  (scene-node
-   1
-   "\"Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'.\""
-   (list (scene-decision "Ask about the Yarn." "\"The Yarn of the what?\"" 2))))
+(scene
+ 1
+ "\"Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'.\""
+ (list (scene-decision "Ask about the Yarn." "\"The Yarn of the what?\"" 2)))
 
-(define node-2
-  (scene-node
-   2
-   "'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?"
-   (list (scene-decision "Agree." "\"Yeah, sounds like a great opportunity actually.\"" 'create-quest-and-exit)
-         (scene-decision "Decline." "\"Not interested.\"" 'exit))))
- 
+(scene
+ 2
+ "\"'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
+ (list (scene-decision "Agree." "\"Yeah, sounds like a great opportunity actually.\"" 'create-quest-and-exit)
+       (scene-decision "Decline." "\"Not interested.\"" 'exit)))
 
-(define opening-scene%
-  (class* object% (scene<%>)
-    (field [current-node node-1])
-    (super-new)
-    (define/public (on-begin-round!)
-      (displayln "-- (on-begin-round!)")
-      (paragraph (scene-node-description current-node))
-      )
-    (define/public (get-scene-decisions)
-      (displayln "-- (get-scene-decisions):")
-      (scene-node-decisions current-node)
-      )
-    (define/public (handle-scene-decision! scene-decision)
-      (displayln "-- (handle-scene-decision!)"))
-    (define/public (on-end-round!)
-      (displayln "-- (on-end-round!)"))))
+(define *current-scene* (get-scene-by-id 1))
 
-(define opening-scene (new opening-scene%))
+(define (current-scene-on-begin-round!)
+  (paragraph (scene-node-description *current-scene*))
+  )
+(define (current-scene-get-scene-decisions)
+  (scene-node-decisions *current-scene*)
+  )
+
+(define (current-scene-handle-scene-decision! scene-decision)
+
+  (paragraph (scene-decision-description scene-decision))
+  (cond ((number? (scene-decision-next-node scene-decision))
+         (set! *current-scene* (get-scene-by-id (scene-decision-next-node scene-decision))))
+        ((eq? 'exit (scene-decision-next-node scene-decision))
+         (set! *current-scene* '())))
+  )
+(define (current-scene-on-end-round!)
+  '()
+  )
+
 
 (serializable-struct
  situation
@@ -200,12 +214,12 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-scene #:mutable]))
+  #;[current-scene #:mutable]))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f opening-scene)))
+    (situation new-world pc 0 0 0 0 #f)))
 
 (define (in-combat?)
   (displayln "-- in-combat? TODO fix")
@@ -467,8 +481,8 @@
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
-  (when (not (null? (situation-current-scene *situation*)))
-    (send (situation-current-scene *situation*) on-begin-round!))
+  (when (not (null? *current-scene*))
+    (current-scene-on-begin-round!))
   )
 
 (define (add-to-action-queue action)
@@ -617,7 +631,7 @@
 (define (handle-scene-decision scene-decisions-with-keys input)
   (displayln "-- handle-scene-decision: TODO")
   (define decision (hash-ref scene-decisions-with-keys (string->number input)))
-  (send (situation-current-scene *situation*) handle-scene-decision! decision))
+  (current-scene-handle-scene-decision! decision))
 
 (define (get-next-pc-action)
   (serialize-state)
@@ -633,9 +647,9 @@
       (define actor (situation-pc *situation*))
 
 
-      (define scene-decisions (if (null? (situation-current-scene *situation*))
+      (define scene-decisions (if (null? *current-scene*)
                                   '()
-                                  (send (situation-current-scene *situation*) get-scene-decisions)))
+                                  (current-scene-get-scene-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       #;(define encounter-choices (if (null? current-encounter)
                                       '()
@@ -897,8 +911,8 @@
   (when (= (length current-enemies) 0)
     (displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
-  (when (not (null? (situation-current-scene *situation*)))
-    (send (situation-current-scene *situation*) on-end-round!))
+  (when (not (null? *current-scene*))
+    (current-scene-on-end-round!))
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
       (when (eq? 'exit-encounter encounter-status) (end-encounter)))
