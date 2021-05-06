@@ -189,13 +189,15 @@
   (story-fragment-decisions (situation-current-fragment *situation*))
   )
 
-(define (current-scene-handle-scene-decision! decision)
+(define (current-fragment-handle-decision! decision)
 
   (paragraph (decision-description decision))
-  (cond ((number? (decision-next-fragment decision))
-         (set-situation-current-fragment! *situation* (get-fragment (decision-next-fragment decision))))
-        ((eq? 'exit (decision-next-fragment decision))
-         (set-situation-current-fragment! *situation* '())))
+  (define next-fragment (decision-next-fragment decision))
+  (cond ((number? next-fragment)
+         (set-situation-current-fragment! *situation* (get-fragment next-fragment)))
+        ((eq? 'exit next-fragment)
+         (set-situation-current-fragment! *situation* '()))
+        (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
 (define (current-scene-on-end-round!)
   '()
@@ -292,6 +294,9 @@
    )
   #t
   )
+
+(define (goals)
+  (displayln "-- goals: TODO"))
 
 (define (current-location)
   #;(displayln "-- current-location: TODO move to situation")
@@ -625,9 +630,9 @@
 (define (choice-as-action choices-with-keys input)
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
 
-(define (handle-scene-decision scene-decisions-with-keys input)
-  (define decision (hash-ref scene-decisions-with-keys (string->number input)))
-  (current-scene-handle-scene-decision! decision))
+(define (handle-fragment-decision decisions-with-keys input)
+  (define decision (hash-ref decisions-with-keys (string->number input)))
+  (current-fragment-handle-decision! decision))
 
 (define (get-next-pc-action)
   (serialize-state)
@@ -667,7 +672,7 @@
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
             ((scene-decision-valid? scene-decisions-with-keys input)
              (begin
-               (handle-scene-decision scene-decisions-with-keys input)
+               (handle-fragment-decision scene-decisions-with-keys input)
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
@@ -979,6 +984,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
+  (hash-set! meta-commands "G" (cons "[G]: Goals." goals))
   meta-commands)
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
