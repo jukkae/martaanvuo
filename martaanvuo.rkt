@@ -146,57 +146,56 @@
 (define scene<%>
   (interface () on-begin-round! get-scene-decisions handle-scene-decision! on-end-round!))
 
-(define *scene-nodes* (make-hash))
+(define *story-fragments* (make-hash))
 
 (serializable-struct ; this is going to carry some state, likely
- scene-node
+ story-fragment
  (id
   description
   decisions))
 
-; calling this a scene is a misnomer, but feels like it could work, temporarily at least
-(define (scene id description decisions)
-  (define node
-    (scene-node
+(define (fragment id description decisions)
+  (define frag
+    (story-fragment
      id
      description
      decisions))
-  (hash-set! *scene-nodes* id node))
+  (hash-set! *story-fragments* id frag))
 
-(define (get-scene-by-id id)
-  (hash-ref *scene-nodes* id))
+(define (get-fragment id)
+  (hash-ref *story-fragments* id))
 
 (serializable-struct
  decision
  (title
   description
-  next-node))
+  next-fragment))
 
-(scene
+(fragment
  1
  "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
  (list (decision "Ask about the Yarn." "\"Yarn of the what?\"" 2)))
 
-(scene
+(fragment
  2
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
  (list (decision "Agree." "Directions to an untouched Cache? Otava's day just got better. \"Sure, let's hear what you know thus far about the Cache.\"" 'create-quest-and-exit)
        (decision "Decline." "\"I'll find the Cache myself.\"" 'exit)))
 
-(define (current-scene-on-begin-round!)
-  (paragraph (scene-node-description (situation-current-scene *situation*)))
+(define (current-fragment-on-begin-round!)
+  (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
-(define (current-scene-get-scene-decisions)
-  (scene-node-decisions (situation-current-scene *situation*))
+(define (current-fragment-get-decisions)
+  (story-fragment-decisions (situation-current-fragment *situation*))
   )
 
 (define (current-scene-handle-scene-decision! decision)
 
   (paragraph (decision-description decision))
-  (cond ((number? (decision-next-node decision))
-         (set-situation-current-scene! *situation* (get-scene-by-id (decision-next-node decision))))
-        ((eq? 'exit (decision-next-node decision))
-         (set-situation-current-scene! *situation* '())))
+  (cond ((number? (decision-next-fragment decision))
+         (set-situation-current-fragment! *situation* (get-fragment (decision-next-fragment decision))))
+        ((eq? 'exit (decision-next-fragment decision))
+         (set-situation-current-fragment! *situation* '())))
   )
 (define (current-scene-on-end-round!)
   '()
@@ -212,12 +211,12 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-scene #:mutable]))
+  [current-fragment #:mutable]))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f (get-scene-by-id 1))))
+    (situation new-world pc 0 0 0 0 #f (get-fragment 1))))
 
 (define (in-combat?)
   ;(displayln "-- in-combat? TODO fix")
@@ -479,8 +478,8 @@
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
-  (when (not (null? (situation-current-scene *situation*)))
-    (current-scene-on-begin-round!))
+  (when (not (null? (situation-current-fragment *situation*)))
+    (current-fragment-on-begin-round!))
   )
 
 (define (add-to-action-queue action)
@@ -644,9 +643,9 @@
       (define actor (situation-pc *situation*))
 
 
-      (define scene-decisions (if (null? (situation-current-scene *situation*))
+      (define scene-decisions (if (null? (situation-current-fragment *situation*))
                                   '()
-                                  (current-scene-get-scene-decisions)))
+                                  (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       #;(define encounter-choices (if (null? current-encounter)
                                       '()
@@ -909,7 +908,7 @@
     '()
     #;(displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
-  (when (not (null? (situation-current-scene *situation*)))
+  (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!))
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
