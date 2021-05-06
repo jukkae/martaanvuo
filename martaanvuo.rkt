@@ -183,22 +183,20 @@
  (list (scene-decision "Agree." "\"Yeah, sounds like a great opportunity actually.\"" 'create-quest-and-exit)
        (scene-decision "Decline." "\"Not interested.\"" 'exit)))
 
-(define *current-scene* (get-scene-by-id 1))
-
 (define (current-scene-on-begin-round!)
-  (paragraph (scene-node-description *current-scene*))
+  (paragraph (scene-node-description (situation-current-scene *situation*)))
   )
 (define (current-scene-get-scene-decisions)
-  (scene-node-decisions *current-scene*)
+  (scene-node-decisions (situation-current-scene *situation*))
   )
 
 (define (current-scene-handle-scene-decision! scene-decision)
 
   (paragraph (scene-decision-description scene-decision))
   (cond ((number? (scene-decision-next-node scene-decision))
-         (set! *current-scene* (get-scene-by-id (scene-decision-next-node scene-decision))))
+         (set-situation-current-scene! *situation* (get-scene-by-id (scene-decision-next-node scene-decision))))
         ((eq? 'exit (scene-decision-next-node scene-decision))
-         (set! *current-scene* '())))
+         (set-situation-current-scene! *situation* '())))
   )
 (define (current-scene-on-end-round!)
   '()
@@ -214,12 +212,12 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  #;[current-scene #:mutable]))
+  [current-scene #:mutable]))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f)))
+    (situation new-world pc 0 0 0 0 #f (get-scene-by-id 1))))
 
 (define (in-combat?)
   (displayln "-- in-combat? TODO fix")
@@ -481,7 +479,7 @@
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
-  (when (not (null? *current-scene*))
+  (when (not (null? (situation-current-scene *situation*)))
     (current-scene-on-begin-round!))
   )
 
@@ -647,7 +645,7 @@
       (define actor (situation-pc *situation*))
 
 
-      (define scene-decisions (if (null? *current-scene*)
+      (define scene-decisions (if (null? (situation-current-scene *situation*))
                                   '()
                                   (current-scene-get-scene-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
@@ -911,7 +909,7 @@
   (when (= (length current-enemies) 0)
     (displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
-  (when (not (null? *current-scene*))
+  (when (not (null? (situation-current-scene *situation*)))
     (current-scene-on-end-round!))
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
