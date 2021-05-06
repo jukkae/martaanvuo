@@ -167,21 +167,21 @@
   (hash-ref *scene-nodes* id))
 
 (serializable-struct
- scene-decision
+ decision
  (title
   description
   next-node))
 
 (scene
  1
- "\"Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'.\""
- (list (scene-decision "Ask about the Yarn." "\"The Yarn of the what?\"" 2)))
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
+ (list (decision "Ask about the Yarn." "\"Yarn of the what?\"" 2)))
 
 (scene
  2
- "\"'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
- (list (scene-decision "Agree." "\"Yeah, sounds like a great opportunity actually.\"" 'create-quest-and-exit)
-       (scene-decision "Decline." "\"Not interested.\"" 'exit)))
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
+ (list (decision "Agree." "Directions to an untouched Cache? Otava's day just got better. \"Sure, let's hear what you know thus far about the Cache.\"" 'create-quest-and-exit)
+       (decision "Decline." "\"I'll find the Cache myself.\"" 'exit)))
 
 (define (current-scene-on-begin-round!)
   (paragraph (scene-node-description (situation-current-scene *situation*)))
@@ -190,12 +190,12 @@
   (scene-node-decisions (situation-current-scene *situation*))
   )
 
-(define (current-scene-handle-scene-decision! scene-decision)
+(define (current-scene-handle-scene-decision! decision)
 
-  (paragraph (scene-decision-description scene-decision))
-  (cond ((number? (scene-decision-next-node scene-decision))
-         (set-situation-current-scene! *situation* (get-scene-by-id (scene-decision-next-node scene-decision))))
-        ((eq? 'exit (scene-decision-next-node scene-decision))
+  (paragraph (decision-description decision))
+  (cond ((number? (decision-next-node decision))
+         (set-situation-current-scene! *situation* (get-scene-by-id (decision-next-node decision))))
+        ((eq? 'exit (decision-next-node decision))
          (set-situation-current-scene! *situation* '())))
   )
 (define (current-scene-on-end-round!)
@@ -220,7 +220,7 @@
     (situation new-world pc 0 0 0 0 #f (get-scene-by-id 1))))
 
 (define (in-combat?)
-  (displayln "-- in-combat? TODO fix")
+  ;(displayln "-- in-combat? TODO fix")
   (situation-in-combat? *situation*))
 
 (define (advance-time-by-a-jiffy!)
@@ -627,7 +627,6 @@
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
 
 (define (handle-scene-decision scene-decisions-with-keys input)
-  (displayln "-- handle-scene-decision: TODO")
   (define decision (hash-ref scene-decisions-with-keys (string->number input)))
   (current-scene-handle-scene-decision! decision))
 
@@ -692,7 +691,7 @@
 
 (define (print-decisions-with-keys decisions-with-keys)
   (for ([(k v) (in-hash decisions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (scene-decision-title v))))
+    (displayln (string-append "[" (number->string k) "]: " (decision-title v))))
   #;(newline))
   
 
@@ -907,7 +906,8 @@
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
   (when (= (length current-enemies) 0)
-    (displayln "-- on-end-round: fix (in-combat?)")
+    '()
+    #;(displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
   (when (not (null? (situation-current-scene *situation*)))
     (current-scene-on-end-round!))
