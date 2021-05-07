@@ -129,22 +129,6 @@
    4
    ))
 
-#;(scene
-   (node 1 "Those bolt cutters of yours, looking for some work for them? There's a small cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the Devourer of All Things'."
-         (decision "Yarn of the what?" (go-to-node 2))
-         )
-   
-   (node 2 "'Yarn of the Devourer of All Things'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?"
-         (decision "Yeah, sounds like a great opportunity actually." (go-to-node 3))
-         (decision "'Us'? Who's us?" (go-to-node 4))
-         (decision #:condition (charisma-check?) "Don't you typically pay someone to do a job for you?" (go-to-node 5))
-         (decision "Not interested." (end-scene)))
-   
-   (node 3 "Great! So, ... – he tells you the route: down the path, right from the rock, climb the hill, on the other side there's a fence. I'll meet you here tomorrow." (add-quest 'fetch-the-book) (end-scene))
-   )
-
-(define scene<%>
-  (interface () on-begin-round! get-scene-decisions handle-scene-decision! on-end-round!))
 
 (define *story-fragments* (make-hash))
 
@@ -154,6 +138,7 @@
   description
   decisions))
 
+; add on-enter, perhaps on-exit too?
 (define (fragment id description decisions)
   (define frag
     (story-fragment
@@ -165,6 +150,8 @@
 (define (get-fragment id)
   (hash-ref *story-fragments* id))
 
+; add on-decide / on-resolve / whatever it should be called
+; add conditions
 (serializable-struct
  decision
  (title
