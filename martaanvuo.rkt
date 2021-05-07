@@ -540,6 +540,8 @@
   action)
 
 (define (serialize-state)
+  ; prng can be stored as vector:
+  ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
   '())
 
 (define (serialize-input)
