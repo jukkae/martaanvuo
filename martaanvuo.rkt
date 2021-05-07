@@ -652,11 +652,10 @@
                                   '()
                                   (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
-      #;(define encounter-choices (if (null? current-encounter)
-                                      '()
-                                      (send current-encounter get-encounter-choices)))
-      #;(define choices (append world-choices encounter-choices))
-      (define choices world-choices)
+      
+      (define choices (if (null? (situation-current-fragment *situation*))
+                          world-choices
+                          '()))
 
       (define scene-decisions-with-keys (build-keys-to-choices-map scene-decisions 1))
       (define first-non-scene-index (add1 (length scene-decisions)))
