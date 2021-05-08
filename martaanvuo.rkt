@@ -122,7 +122,7 @@
         ((= attribute 18) 3)))
 
 (define pc-dex 13)
-(define pc-cha 13)
+(define pc-cha 14)
 (define (make-new-pc)
   (pc-actor
    "Otava"
@@ -186,6 +186,11 @@
              requirement
              on-resolve!))
 
+(define (get-modifier-string modifier)
+  (cond ((negative? modifier) (number->string modifier))
+        ((= 0 modifier) (number->string modifier))
+        ((positive? modifier) (string-append "+" (number->string modifier)))))
+
 (define (passive-check type comparator target-number)
   (define text "")
   (case type
@@ -201,8 +206,10 @@
                      " failure "))
   (define sheet
     (list
-     (list (string-append " " text " ") (string-append ""))
-     (list (string-append " " (number->string attribute-value) ", mod " (number->string modifier) " ") (string-append " " result " "))
+     (list (string-append " " text " ")
+           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
+           (string-append " " result " "))
+     
      ))
   (info-card
    sheet
