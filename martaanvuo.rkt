@@ -219,7 +219,7 @@
 
 (fragment
  1
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Pay you in bullets, how's 11 rounds sound?\""
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
@@ -227,9 +227,9 @@
                                               2)))
    
    (set! decisions (append-element decisions (make-decision
-                                              "Inquire about 'us'."
+                                              "Ask who's 'us'."
                                               "\"'Us'? Who's 'us'?\""
-                                              2
+                                              4
                                               (λ () (passive-check 'charisma-mod '> 0)
                                                 ))))
    decisions)
@@ -237,9 +237,33 @@
 
 (fragment
  2
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
- (list (make-decision "Agree." "Directions to an untouched Cache? Otava's day just got better. \"Sure, let's hear what you know thus far about the Cache.\"" 'create-quest-and-exit)
-       (make-decision "Decline." "\"I'll find the Cache myself.\"" 'exit)))
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring me the book, 11 bullets could save your life 11 times. What do you say?\""
+ (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit)
+       (make-decision "It's more valuable than 11 bullets. Decline." "\"Not interested, but thanks for the chat.\"" 'exit)))
+
+(fragment
+ 4
+ ; urgh
+ (string-append
+  "\"It's... ah, wouldn't make sense to you. Look, will you bring us the book or not?\""
+  "\n\n\""
+  "Hold on. The Yarn of the what?\""
+  "\n\n\""
+  "'Yarn of the World-Gorger'. It's, uh, it's a mythological book, I don't think you'd care much.\""
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Agree to bring the book."
+                                              "\"Okay, so tell me what you know about the laboratory.\""
+                                              'create-quest-and-exit)))
+   
+   (set! decisions (append-element decisions (make-decision
+                                              "The book sounds more valuable than 11 bullets. Decline and keep the book to yourself."
+                                              "\"Not interested, but thanks for the chat.\""
+                                              'exit)))
+   decisions)
+ )
 
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
@@ -1077,7 +1101,7 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo.")]
+     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. She's to break in and bring back what tec salvage she can.")]
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
