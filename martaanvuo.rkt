@@ -121,8 +121,11 @@
         ((<= 16 attribute 17)  2)
         ((= attribute 18) 3)))
 
+(define pc-con 13)
+(define pc-str 13)
 (define pc-dex 13)
 (define pc-cha 14)
+(define pc-int 13)
 (define (make-new-pc)
   (pc-actor
    "Otava"
@@ -131,8 +134,11 @@
    0
    (λ () (d 1 2))
    8
+   pc-con
+   pc-str
    pc-dex
    pc-cha
+   pc-int
    starting-inventory
    '()
    '()
@@ -144,7 +150,8 @@
 
 (define *story-fragments* (make-hash))
 
-(serializable-struct ; this is going to carry some state, likely
+; store a list of closed paths / trees separately instead of storing that in the fragments themselves
+(serializable-struct
  story-fragment
  (id
   description
@@ -195,7 +202,7 @@
   (define text "")
   (case type
     ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
-    ['charisma-mod-fail (set! text (string-append "fail charisma mod > " (number->string target-number)))]
+    ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
     [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
 
   (define attribute-value (actor-charisma (situation-pc *situation*)))
@@ -204,12 +211,12 @@
 
   ; dirty but eh: for failures, flip successful here
   (case type
-    ['charisma-mod-fail (set! successful? (not successful?))]
+    ['fail-charisma-mod (set! successful? (not successful?))]
     )
   
   (define result (if successful?
-                     " success "
-                     " failure "))
+                     "check passed"
+                     "check failed"))
   (define sheet
     (list
      (list (string-append " " text " ")
@@ -224,43 +231,63 @@
      ))
   successful?)
 
+; This should happen on the beginning of a life
+; and with runs, you select the loadout
 (fragment
  1
+ "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Because she's desperate."
+                                              "This is the last chance. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
+                                              'exit-and-set-build-desperate
+                                              )))
+   
+   (set! decisions (append-element decisions (make-decision
+                                              "Because she punches really hard."
+                                              "She can crack a jawbone with her bare hands. That should keep her alive."
+                                              'exit-and-set-build-bruiser
+                                              ;(λ () (passive-check 'luck))
+                                              )))
+   decisions))
+
+(fragment
+ 11
  "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
                                               "\"Yarn of the what?\""
-                                              2
-                                              (λ () (passive-check 'charisma-mod-fail '> 0 'silent)
+                                              12
+                                              (λ () (passive-check 'fail-charisma-mod '> 0 'silent)
                                                 ))))
    
    (set! decisions (append-element decisions (make-decision
                                               "Ask who's 'us'."
                                               "\"'Us'? Who's 'us'?\""
-                                              4
+                                              14
                                               (λ () (passive-check 'charisma-mod '> 0)
                                                 ))))
    decisions)
  )
 
 (fragment
- 2
+ 12
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
  (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
        (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
 
 (fragment
- 4
+ 14
  (string-append
-  "\"It's... ah, wouldn't make sense to you. Look, will you bring us the book or not?\""
-  )
+  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek council of the Anthead. Look, will you bring us the book or not?\""
+  ) ; and drop some meta-visible info or something somewhere
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
-                                              "Ask about the Yarn."
-                                              "\"Yarn of the what?\""
-                                              2)))
+                                              "Ask about the book."
+                                              "\"The book, Yarn of the what?\""
+                                              12)))
    decisions)
  )
 
@@ -279,6 +306,14 @@
   (cond ((number? next-fragment)
          (set-situation-current-fragment! *situation* (get-fragment next-fragment)))
         ((eq? 'exit next-fragment)
+         (set-situation-current-fragment! *situation* '()))
+        ((eq? 'exit-and-set-build-desperate next-fragment)
+         (displayln "-- fragment - handle-decision: Set build to 'desperate")
+         (set-actor-constitution! (situation-pc *situation*) 16)
+         (set-situation-current-fragment! *situation* '()))
+        ((eq? 'exit-and-set-build-bruiser next-fragment)
+         (displayln "-- fragment - handle-decision: Set build to 'bruiser")
+         
          (set-situation-current-fragment! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
@@ -441,7 +476,7 @@
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
     ['ruins "Climb the hill to the ruins."]
-    ['swamp "Enter the swamps."]
+    ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)

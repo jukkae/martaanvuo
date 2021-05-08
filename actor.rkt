@@ -5,6 +5,9 @@
 (require racket/serialize)
 
 ;; types
+;; TODO: This is unwieldy, separate attributes etc to something like a (define checkables (make-hash))
+;; because not everything will always have all of these
+;; or, of course, look into composition
 (serializable-struct
  actor
  (name
@@ -13,8 +16,11 @@
   attack-skill
   attack-damage
   defense-number
-  dexterity
-  charisma
+  [constitution #:mutable]
+  [strength #:mutable]
+  [dexterity #:mutable]
+  [charisma #:mutable]
+  [intelligence #:mutable]
   [inventory #:mutable]
   statuses
   conditions
