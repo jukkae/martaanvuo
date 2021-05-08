@@ -186,6 +186,30 @@
              requirement
              on-resolve!))
 
+(define (passive-check type comparator target-number)
+  (define text "")
+  (case type
+    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
+    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
+
+  (define attribute-value (actor-charisma (situation-pc *situation*)))
+  (define modifier (get-attribute-modifier-for attribute-value))
+  (define successful? (> modifier target-number))
+  
+  (define result (if successful?
+                     " success "
+                     " failure "))
+  (define sheet
+    (list
+     (list (string-append " " text " ") (string-append ""))
+     (list (string-append " " (number->string attribute-value) ", mod " (number->string modifier) " ") (string-append " " result " "))
+     ))
+  (info-card
+   sheet
+   "Passive check"
+   )
+  successful?)
+
 (fragment
  1
  "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
@@ -199,7 +223,8 @@
                                               "Inquire about 'us'."
                                               "\"'Us'? Who's 'us'?\""
                                               2
-                                              (λ () (> (get-attribute-modifier-for (actor-charisma (situation-pc *situation*))) 0)))))
+                                              (λ () (passive-check 'charisma-mod '> 0)
+                                                ))))
    decisions)
  )
 
