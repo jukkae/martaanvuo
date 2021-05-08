@@ -219,7 +219,7 @@
 
 (fragment
  1
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Pay you in bullets, how's 11 rounds sound?\""
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
@@ -237,31 +237,21 @@
 
 (fragment
  2
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring me the book, 11 bullets could save your life 11 times. What do you say?\""
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring me the book. 11 bullets could save your life 11 times. What do you say?\""
  (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit)
        (make-decision "It's more valuable than 11 bullets. Decline." "\"Not interested, but thanks for the chat.\"" 'exit)))
 
 (fragment
  4
- ; urgh
  (string-append
   "\"It's... ah, wouldn't make sense to you. Look, will you bring us the book or not?\""
-  "\n\n\""
-  "Hold on. The Yarn of the what?\""
-  "\n\n\""
-  "'Yarn of the World-Gorger'. It's, uh, it's a mythological book, I don't think you'd care much.\""
   )
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
-                                              "Agree to bring the book."
-                                              "\"Okay, so tell me what you know about the laboratory.\""
-                                              'create-quest-and-exit)))
-   
-   (set! decisions (append-element decisions (make-decision
-                                              "The book sounds more valuable than 11 bullets. Decline and keep the book to yourself."
-                                              "\"Not interested, but thanks for the chat.\""
-                                              'exit)))
+                                              "Ask about the Yarn."
+                                              "\"Yarn of the what?\""
+                                              2)))
    decisions)
  )
 
@@ -1089,7 +1079,7 @@
          )
         (else
          (newline) ; This is extra spacing, should pass a param to paragraph
-         (paragraph "What do you do?")
+         #;(paragraph "What do you do?")
          (print-decisions-with-keys scene-decisions-with-keys)
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
