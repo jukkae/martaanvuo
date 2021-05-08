@@ -121,29 +121,10 @@
         ((<= 16 attribute 17)  2)
         ((= attribute 18) 3)))
 
-(define pc-con 13)
-(define pc-str 13)
-(define pc-dex 13)
-(define pc-cha 14)
-(define pc-int 13)
 (define (make-new-pc)
-  (pc-actor
+  (make-pc-actor
    "Otava"
-   4
-   4
-   0
-   (λ () (d 1 2))
-   8
-   pc-con
-   pc-str
-   pc-dex
-   pc-cha
-   pc-int
-   starting-inventory
-   '()
-   '()
-   '()
-   4
+   3
    4
    ))
 
@@ -205,7 +186,7 @@
     ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
     [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
 
-  (define attribute-value (actor-charisma (situation-pc *situation*)))
+  (define attribute-value (hash-ref (actor-traits (situation-pc *situation*) "charisma")))
   (define modifier (get-attribute-modifier-for attribute-value))
   (define successful? (> modifier target-number))
 
@@ -309,7 +290,6 @@
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-desperate next-fragment)
          (displayln "-- fragment - handle-decision: Set build to 'desperate")
-         (set-actor-constitution! (situation-pc *situation*) 16)
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-bruiser next-fragment)
          (displayln "-- fragment - handle-decision: Set build to 'bruiser")
@@ -384,12 +364,12 @@
 
 (define (character-sheet)
   (define actor (situation-pc *situation*))
+  (displayln "character-sheet: TODO")
   (define sheet
     (list
      (list " Name " (string-append " " (actor-name actor) " "))
      (list " HP " (string-append " " (number->string (actor-hp actor)) "/" (number->string (actor-max-hp actor)) " "))
-     (list " Dexterity " (string-append " " (number->string (actor-dexterity actor)) " "))
-     (list " Attack skill " (string-append " " (number->string (actor-attack-skill actor)) " "))
+     
      ))
   (info-card
    sheet
@@ -625,13 +605,6 @@
       (add-to-action-queue next-action))))
 
 
-(define (replace-own-action-in-action-queue-with-new-action action)
-  (define actions (filter
-                   (λ (action) (eq? actor (action-actor action)))
-                   action-queue))
-  (remove-from-action-queue actions)
-  (add-to-action-queue action)
-  )
 
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
@@ -675,17 +648,9 @@
     (super-new)
 
     (define scavenger
-      (actor
+      (make-actor
        "scavenger"
        4
-       4
-       2
-       (λ () (d 1 3))
-       8
-       7
-       '()
-       '()
-       '()
        '()))
       
     
@@ -895,10 +860,14 @@
   (define actor (action-actor action))
   (define target (action-target action))
   
-  (define target-number (actor-defense-number target))
+  #;(define target-number (actor-defense-number target))
+  (displayln "resolve-shoot-action!: TODO reimplement")
+  (define target-number 7)
   
-  (define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
-  (define damage-roll ((actor-attack-damage actor)))
+  #;(define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
+  #;(define damage-roll ((actor-attack-damage actor)))
+  (define success? #t)
+  (define damage-roll 2)
 
   (when success?
     (info-card

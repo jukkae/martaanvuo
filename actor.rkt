@@ -13,27 +13,44 @@
  (name
   [hp #:mutable]
   max-hp
-  attack-skill
-  attack-damage
-  defense-number
-  [constitution #:mutable]
-  [strength #:mutable]
-  [dexterity #:mutable]
-  [charisma #:mutable]
-  [intelligence #:mutable]
-  [inventory #:mutable]
+  traits
   statuses
   conditions
-  [current-location #:mutable]))
+  [inventory #:mutable]
+  [current-location #:mutable])
+ #:constructor-name actor*)
+
+(define (make-actor
+         name
+         max-hp)
+  (actor* name max-hp max-hp (make-hash) '() '() '() '()))
+
+;;some common traits
+#;(list attack-skill
+      attack-damage
+      defense-number
+      [constitution #:mutable]
+      [strength #:mutable]
+      [dexterity #:mutable]
+      [charisma #:mutable]
+      [intelligence #:mutable]
+      )
 
 (serializable-struct
  pc-actor
  (lp
   max-lp)
- #:super struct:actor)
+ #:super struct:actor
+ #:constructor-name pc-actor*)
+
+(define (make-pc-actor
+         name
+         max-hp
+         max-lp)
+  (pc-actor* name max-hp max-hp (make-hash) '() '() '() '() max-lp max-lp))
 
 ;; operations
 (define (add-item-to-inventory! actor item)
   (set-actor-inventory! actor
-   (append (actor-inventory actor)
-           (list item))))
+                        (append (actor-inventory actor)
+                                (list item))))
