@@ -191,15 +191,21 @@
         ((= 0 modifier) (number->string modifier))
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
-(define (passive-check type comparator target-number)
+(define (passive-check type comparator target-number . silent)
   (define text "")
   (case type
     ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
+    ['charisma-mod-fail (set! text (string-append "fail charisma mod > " (number->string target-number)))]
     [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
 
   (define attribute-value (actor-charisma (situation-pc *situation*)))
   (define modifier (get-attribute-modifier-for attribute-value))
   (define successful? (> modifier target-number))
+
+  ; dirty but eh: for failures, flip successful here
+  (case type
+    ['charisma-mod-fail (set! successful? (not successful?))]
+    )
   
   (define result (if successful?
                      " success "
@@ -211,10 +217,11 @@
            (string-append " " result " "))
      
      ))
-  (info-card
-   sheet
-   "Passive check"
-   )
+  (when (null? silent)
+    (info-card
+     sheet
+     "Passive check"
+     ))
   successful?)
 
 (fragment
@@ -224,7 +231,9 @@
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
                                               "\"Yarn of the what?\""
-                                              2)))
+                                              2
+                                              (λ () (passive-check 'charisma-mod-fail '> 0 'silent)
+                                                ))))
    
    (set! decisions (append-element decisions (make-decision
                                               "Ask who's 'us'."
@@ -238,8 +247,8 @@
 (fragment
  2
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit)
-       (make-decision "It's more valuable than 11 bullets. Decline." "\"Not interested, but thanks for the chat.\"" 'exit)))
+ (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
+       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
 
 (fragment
  4
@@ -989,7 +998,7 @@
     #;(displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
   (when (not (null? (situation-current-fragment *situation*)))
-    (current-scene-on-end-round!))
+    (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
       (when (eq? 'exit-encounter encounter-status) (end-encounter)))
