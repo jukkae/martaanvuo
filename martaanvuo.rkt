@@ -237,7 +237,7 @@
 
 (fragment
  2
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring me the book. 11 bullets could save your life 11 times. What do you say?\""
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
  (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit)
        (make-decision "It's more valuable than 11 bullets. Decline." "\"Not interested, but thanks for the chat.\"" 'exit)))
 
