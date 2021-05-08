@@ -19,6 +19,9 @@
 
 (define append-string string-append)
 
+(define (append-element lst elem)
+  (append lst (list elem)))
+
 ; various container stuff
 (define (collect-similar lst)
   (hash->list

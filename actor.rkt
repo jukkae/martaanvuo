@@ -14,6 +14,7 @@
   attack-damage
   defense-number
   dexterity
+  charisma
   [inventory #:mutable]
   statuses
   conditions

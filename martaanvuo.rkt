@@ -112,6 +112,17 @@
   (list
    (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
+(define (get-attribute-modifier-for attribute)
+  (cond ((= attribute 3) -3)
+        ((<= 4  attribute  5) -2)
+        ((<= 6  attribute  8) -1)
+        ((<= 9  attribute 12)  0)
+        ((<= 13 attribute 15)  1)
+        ((<= 16 attribute 17)  2)
+        ((= attribute 18) 3)))
+
+(define pc-dex 13)
+(define pc-cha 13)
 (define (make-new-pc)
   (pc-actor
    "Otava"
@@ -120,7 +131,8 @@
    0
    (λ () (d 1 2))
    8
-   13
+   pc-dex
+   pc-cha
    starting-inventory
    '()
    '()
@@ -150,31 +162,60 @@
 (define (get-fragment id)
   (hash-ref *story-fragments* id))
 
-; add on-decide / on-resolve / whatever it should be called
-; add conditions
+; requirement is a lambda that's run on fragment's on-enter!
+; on-resolve! is a lambda that's run when the decision is resolved
 (serializable-struct
  decision
  (title
   description
-  next-fragment))
+  next-fragment
+  requirement
+  on-resolve!)
+ #:constructor-name decision*)
+
+(define (make-decision
+         title
+         description
+         next-fragment
+         [requirement (λ () '())]
+         [on-resolve! (λ () '())])
+  
+  (decision* title
+             description
+             next-fragment
+             requirement
+             on-resolve!))
 
 (fragment
  1
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring me one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
- (list (decision "Ask about the Yarn." "\"Yarn of the what?\"" 2)))
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work for them? There's a small Cache half a day from here, never touched. Break in, loot all you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'.\""
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Ask about the Yarn."
+                                              "\"Yarn of the what?\""
+                                              2)))
+   
+   (set! decisions (append-element decisions (make-decision
+                                              "Inquire about 'us'."
+                                              "\"'Us'? Who's 'us'?\""
+                                              2
+                                              (λ () (> (get-attribute-modifier-for (actor-charisma (situation-pc *situation*))) 0)))))
+   decisions)
+ )
 
 (fragment
  2
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book, worthless really, but of historical interest to us. To me. Walk in, walk out, you get to keep whatever you find, except for the book. What do you say?\""
- (list (decision "Agree." "Directions to an untouched Cache? Otava's day just got better. \"Sure, let's hear what you know thus far about the Cache.\"" 'create-quest-and-exit)
-       (decision "Decline." "\"I'll find the Cache myself.\"" 'exit)))
+ (list (make-decision "Agree." "Directions to an untouched Cache? Otava's day just got better. \"Sure, let's hear what you know thus far about the Cache.\"" 'create-quest-and-exit)
+       (make-decision "Decline." "\"I'll find the Cache myself.\"" 'exit)))
 
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
 (define (current-fragment-get-decisions)
-  (story-fragment-decisions (situation-current-fragment *situation*))
-  )
+  (filter (lambda (potential-decision)
+            ((decision-requirement potential-decision)))
+          (story-fragment-decisions (situation-current-fragment *situation*))))
 
 (define (current-fragment-handle-decision! decision)
 
