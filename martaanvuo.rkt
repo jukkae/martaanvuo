@@ -1086,6 +1086,7 @@
 (define (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
          (display "Unknown command. Known commands: ")
+         (for ([(k v) (in-hash scene-decisions-with-keys)]) (display k))
          (for ([(k v) (in-hash choices-with-keys)]) (display k))
          (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
          (newline)
