@@ -108,10 +108,6 @@
   (set-location-neighbors! the-cataract (list workshop))
   )
 
-(define starting-inventory
-  (list
-   (list 'bolt-cutters (list 'melee-weapon 'tool))))
-
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
         ((<= 4  attribute  5) -2)
@@ -130,11 +126,22 @@
 
 (define (set-build! build)
   ; for desperate build, also set a time limit (or whatever other complication)
+
+  (define starting-inventory
+    (list
+     (list 'bolt-cutters (list 'melee-weapon 'tool))))
+
   (case build
-    ['desperate (set-trait! (situation-pc *situation*) "charisma" 15)]
-    ['bruiser (set-trait! (situation-pc *situation*) "charisma" 12)]
+    ['desperate (set-trait! (situation-pc *situation*) "charisma" 15)
+                (set-trait! (situation-pc *situation*) "strength" 12)]
+    ['bruiser (set-trait! (situation-pc *situation*) "charisma" 12)
+              (set-trait! (situation-pc *situation*) "strength" 15)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
+
+  (set-actor-inventory! (situation-pc *situation*) starting-inventory)
+
+  
   (define table
     (list
      (list " talents " " last-breath ")
@@ -388,13 +395,16 @@
 
 (define (character-sheet)
   (define actor (situation-pc *situation*))
-  (displayln "character-sheet: TODO")
+  (define traits (actor-traits actor))
+  (define traits-list (for/list ([(k v) (in-hash traits)])
+                        (list (string-append " " k " ") (string-append " " (number->string v) " "))))
+  
   (define sheet
     (list
      (list " Name " (string-append " " (actor-name actor) " "))
      (list " HP " (string-append " " (number->string (actor-hp actor)) "/" (number->string (actor-max-hp actor)) " "))
-     
      ))
+  (set! sheet (append sheet traits-list))
   (info-card
    sheet
    "Character sheet"
