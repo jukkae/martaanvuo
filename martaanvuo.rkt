@@ -132,10 +132,14 @@
      (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
   (case build
-    ['desperate (set-trait! (situation-pc *situation*) "charisma" 15)
-                (set-trait! (situation-pc *situation*) "strength" 12)]
-    ['bruiser (set-trait! (situation-pc *situation*) "charisma" 12)
-              (set-trait! (situation-pc *situation*) "strength" 15)]
+    ['desperate (set-trait! (situation-pc *situation*) "constitution" 10)
+                (set-actor-max-hp! (situation-pc *situation*) 4)
+                (set-actor-hp! (situation-pc *situation*) 4)
+                (set-trait! (situation-pc *situation*) "charisma" 10)
+                (set-trait! (situation-pc *situation*) "strength" 7)]
+    ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
+              (set-trait! (situation-pc *situation*) "charisma" 7)
+              (set-trait! (situation-pc *situation*) "strength" 10)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
@@ -267,14 +271,14 @@
                                               "Ask about the Yarn."
                                               "\"Yarn of the what?\""
                                               12
-                                              (λ () (passive-check 'fail-charisma-mod '> 0 'silent)
+                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent)
                                                 ))))
    
    (set! decisions (append-element decisions (make-decision
                                               "Ask who's 'us'."
                                               "\"'Us'? Who's 'us'?\""
                                               14
-                                              (λ () (passive-check 'charisma-mod '> 0)
+                                              (λ () (passive-check 'charisma-mod '> -1)
                                                 ))))
    decisions)
  )
@@ -289,7 +293,7 @@
  14
  (string-append
   "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek council of the Anthead. Look, will you bring us the book or not?\""
-  ) ; and drop some meta-visible info or something somewhere
+  ) ; and drop some meta-visible info or something somewhere; create a goal?
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision

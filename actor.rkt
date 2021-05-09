@@ -12,7 +12,7 @@
  actor
  (name
   [hp #:mutable]
-  max-hp
+  [max-hp #:mutable]
   traits
   statuses
   conditions
