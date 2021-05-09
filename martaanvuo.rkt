@@ -144,6 +144,7 @@
     )
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
+  (displayln "[Build set]")
   (character-sheet)
   )
 
@@ -277,7 +278,7 @@
 
 (fragment
  12
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
  (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
        (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))
  (λ () '())
@@ -286,7 +287,7 @@
 (fragment
  14
  (string-append
-  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Council of the Anthead. Look, will you bring us the book or not?\""
+  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
   ) ; and drop some meta-visible info or something somewhere; create a goal?
 
  (let ([decisions '()])
@@ -295,7 +296,34 @@
                                               "\"The book, Yarn of the what?\""
                                               12)))
    decisions)
- (λ () (create-goal 'council-of-the-anthead))
+ (λ () (create-goal 'the-anthead))
+ )
+
+(fragment
+ 50
+ (string-append
+  "\"Otava, what kind of a name is that anyway? What does it mean?\""
+  )
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "A bear."
+                                              "\"It means a bear. The keeper of the forest.\""
+                                              51
+                                              (λ () (passive-check 'strength-mod '> -1))
+                                              )))
+   (set! decisions (append-element decisions (make-decision
+                                              "Northstar."
+                                              "\"Northstar.\""
+                                              52
+                                              (λ () (passive-check 'intelligence-mod '> -1))
+                                              )))
+
+   (set! decisions (append-element decisions (make-decision
+                                              "Don't know."
+                                              "\"Don't know.\""
+                                              53)))
+   decisions)
+ (λ () '())
  )
 
 (define (current-fragment-on-begin-round!)
@@ -398,7 +426,18 @@
   (define actor (situation-pc *situation*))
   (define traits (actor-traits actor))
   (define traits-list (for/list ([(k v) (in-hash traits)])
-                        (list (string-append " " k " ") (string-append " " (number->string v) " "))))
+                        (if (or (eq? k "strength")
+                                (eq? k "charisma")
+                                (eq? k "constitution")
+                                (eq? k "intelligence")
+                                (eq? k "dexterity"))
+                            (list (string-append " " k " ")
+                                  (string-append " "
+                                                 (number->string v)
+                                                 " "
+                                                 "[" (get-modifier-string (get-attribute-modifier-for v)) "]"
+                                                 " "))
+                            (list (string-append " " k " ") (string-append " " (number->string v) " ")))))
   
   (define sheet
     (list
@@ -440,8 +479,8 @@
        (list " pay off the debt to the Collector "
              " in progress "
              " unsettled: 4,328 grams of U-235 ")]
-      ['council-of-the-anthead
-       (list " seek the Council of the Anthead "
+      ['the-anthead
+       (list " seek the Anthead Girl "
              " not started "
              " \"not ready yet\" ")]))
   (set! *goals*
@@ -1030,7 +1069,7 @@
            (remove-actor-from-location! (current-location) (situation-pc *situation*))
            (set-actor-current-location! (situation-pc *situation*) next-location)
            (add-actor-to-location! next-location (situation-pc *situation*))
-           (when (eq? (location-type (current-location)) 'ruins)
+           (when (eq? (location-type (current-location)) 'crematory)
              (go-to-story-fragment 11)
              #;(spawn-encounter))
            (paragraph (describe-go-to-action action))
