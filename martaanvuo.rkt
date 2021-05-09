@@ -33,8 +33,8 @@
    #:features '()
    #:items '()
    #:neighbors '()
-   #:tags '()#;'(forbid-simple-exit)
-   #:actions-provided '()#;'(search-for-paths)
+   #:tags '(forbid-simple-exit)
+   #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
 (define crematory
@@ -641,8 +641,29 @@
                    #:target '()
                    #:tags '(downtime)))))))
 
+  ; should test for '(search-for-paths), but eh
   (when (and (eq? (location-type (current-location)) 'swamp)
              (not (in-combat?))
+             (set! change-location-choices
+                   (list
+                    (make-choice
+                     'search-lowlands
+                     "Search lowlands, try to follow riverbanks."
+                     (λ () (make-action
+                            #:symbol 'search-lowlands
+                            #:actor (situation-pc *situation*)
+                            #:duration 100
+                            #:target '()
+                            #:tags '(downtime))))
+                    (make-choice
+                     'search-highlands
+                     "Keep to hills and highlands."
+                     (λ () (make-action
+                            #:symbol 'search-highlands
+                            #:actor (situation-pc *situation*)
+                            #:duration 100
+                            #:target '()
+                            #:tags '(downtime))))))
              )
     (define neighbors
       (location-neighbors (current-location)))
@@ -799,6 +820,8 @@
 (define (describe-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "The hillside is steep and slippery. Otava slips a couple of times on her way up, but eventually gets to the top.")
+        ((eq? 'swamp (location-type (action-target action)))
+         "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Otava is looking for access to the service tunnels or sewer systems, so any sign of civilization would be great.")
         ("[[go-to description not written yet]")))
 
 (define (meta-command-valid? meta-commands-with-keys input)
