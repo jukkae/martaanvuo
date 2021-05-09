@@ -36,6 +36,11 @@
       [intelligence #:mutable]
       )
 
+(define (set-trait! actor trait-name trait-value)
+  (hash-set! (actor-traits actor) trait-name trait-value))
+(define (get-trait actor trait-name)
+  (hash-ref (actor-traits actor) trait-name))
+
 (serializable-struct
  pc-actor
  (lp

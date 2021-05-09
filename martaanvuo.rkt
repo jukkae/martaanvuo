@@ -129,7 +129,12 @@
    ))
 
 (define (set-build! build)
-  ; for desperate build, also set a time limit?
+  ; for desperate build, also set a time limit (or whatever other complication)
+  (case build
+    ['desperate (set-trait! (situation-pc *situation*) "charisma" 15)]
+    ['bruiser (set-trait! (situation-pc *situation*) "charisma" 12)]
+    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
+    )
   (define table
     (list
      (list " talents " " last-breath ")
@@ -201,7 +206,7 @@
     ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
     [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
 
-  (define attribute-value (hash-ref (actor-traits (situation-pc *situation*) "charisma")))
+  (define attribute-value (get-trait (situation-pc *situation*) "charisma"))
   (define modifier (get-attribute-modifier-for attribute-value))
   (define successful? (> modifier target-number))
 
@@ -307,14 +312,16 @@
          (set-build! 'desperate)
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-bruiser next-fragment)
-         (displayln "-- fragment - handle-decision: Set build to 'bruiser")
-         
+         (set-build! 'bruiser)
          (set-situation-current-fragment! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
 (define (current-scene-on-end-round!)
   '()
   )
+
+(define (go-to-story-fragment id)
+  (set-situation-current-fragment! *situation* (get-fragment id)))
 
 
 (serializable-struct
@@ -537,7 +544,7 @@
           (list
            (make-choice
             'go-back-to-the-shack
-            "Head back to the shack."
+            "Head back to The Shack."
             (λ () (make-action
                    #:symbol 'end-run
                    #:actor (situation-pc *situation*)
@@ -986,7 +993,8 @@
            (set-actor-current-location! (situation-pc *situation*) next-location)
            (add-actor-to-location! next-location (situation-pc *situation*))
            (when (eq? (location-type (current-location)) 'ruins)
-             (spawn-encounter))
+             (go-to-story-fragment 11)
+             #;(spawn-encounter))
            (paragraph (describe-go-to-action action))
            )
           ((eq? (action-symbol action) 'end-run)
