@@ -128,6 +128,21 @@
    4
    ))
 
+(define (set-build! build)
+  ; for desperate build, also set a time limit?
+  (define table
+    (list
+     (list " talents " " last-breath ")
+     (list " bonuses " " con+1 ")
+     (list " hp " " 3 ")
+     (list " expert? " " no ")
+     )
+    )
+  (info-card
+   table
+   "Character sheet")
+  )
+
 
 (define *story-fragments* (make-hash))
 
@@ -220,7 +235,7 @@
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Because she's desperate."
-                                              "This is the last chance. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
+                                              "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
                                               'exit-and-set-build-desperate
                                               )))
    
@@ -289,7 +304,7 @@
         ((eq? 'exit next-fragment)
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-desperate next-fragment)
-         (displayln "-- fragment - handle-decision: Set build to 'desperate")
+         (set-build! 'desperate)
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-bruiser next-fragment)
          (displayln "-- fragment - handle-decision: Set build to 'bruiser")
@@ -311,12 +326,14 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-fragment #:mutable]))
+  [current-fragment #:mutable]
+  [goals #:mutable]
+  ))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f (get-fragment 1))))
+    (situation new-world pc 0 0 0 0 #f (get-fragment 1) '())))
 
 (define (in-combat?)
   ;(displayln "-- in-combat? TODO fix")
@@ -394,7 +411,14 @@
   )
 
 (define (goals)
-  (displayln "-- goals: TODO"))
+  (define sheet
+    (list
+     (list " goal " " status " " notes ")
+     (list " pay off the debt to the Collector " " in progress " " unsettled: 4,328 grams of U-235 ")))
+  (info-card
+   sheet
+   "Goals")
+  )
 
 (define (current-location)
   #;(displayln "-- current-location: TODO move to situation")
@@ -577,7 +601,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
@@ -1105,7 +1129,7 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. She's to break in and bring back what tec salvage she can.")]
+     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. Rumor has it, there's a small reactor in the sub-basement, and with luck, Otava will find enough U-235 to settle her debt to the Collector.")]
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
