@@ -144,19 +144,7 @@
     )
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
-
-  
-  (define table
-    (list
-     (list " talents " " last-breath ")
-     (list " bonuses " " con+1 ")
-     (list " hp " " 3 ")
-     (list " expert? " " no ")
-     )
-    )
-  (info-card
-   table
-   "Character sheet")
+  (character-sheet)
   )
 
 
@@ -167,15 +155,16 @@
  story-fragment
  (id
   description
-  decisions))
+  decisions
+  on-enter!))
 
-; add on-enter, perhaps on-exit too?
-(define (fragment id description decisions)
+(define (fragment id description decisions on-enter!)
   (define frag
     (story-fragment
      id
      description
-     decisions))
+     decisions
+     on-enter!))
   (hash-set! *story-fragments* id frag))
 
 (define (get-fragment id)
@@ -261,38 +250,43 @@
                                               'exit-and-set-build-bruiser
                                               ;(λ () (passive-check 'luck))
                                               )))
-   decisions))
+   decisions)
+ (λ () (create-goal 'pay-off-debt))
+ )
 
 (fragment
  11
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
                                               "\"Yarn of the what?\""
                                               12
-                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent)
-                                                ))))
+                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
+                                              )))
    
    (set! decisions (append-element decisions (make-decision
                                               "Ask who's 'us'."
                                               "\"'Us'? Who's 'us'?\""
                                               14
-                                              (λ () (passive-check 'charisma-mod '> -1)
-                                                ))))
+                                              (λ () (passive-check 'charisma-mod '> -1))
+                                              )))
    decisions)
+ (λ () '())
  )
 
 (fragment
  12
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
  (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
-       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
+       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))
+ (λ () '())
+ ) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
 
 (fragment
  14
  (string-append
-  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek council of the Anthead. Look, will you bring us the book or not?\""
+  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Council of the Anthead. Look, will you bring us the book or not?\""
   ) ; and drop some meta-visible info or something somewhere; create a goal?
 
  (let ([decisions '()])
@@ -301,6 +295,7 @@
                                               "\"The book, Yarn of the what?\""
                                               12)))
    decisions)
+ (λ () (create-goal 'council-of-the-anthead))
  )
 
 (define (current-fragment-on-begin-round!)
@@ -316,7 +311,8 @@
   (paragraph (decision-description decision))
   (define next-fragment (decision-next-fragment decision))
   (cond ((number? next-fragment)
-         (set-situation-current-fragment! *situation* (get-fragment next-fragment)))
+         (go-to-story-fragment next-fragment)
+         )
         ((eq? 'exit next-fragment)
          (set-situation-current-fragment! *situation* '()))
         ((eq? 'exit-and-set-build-desperate next-fragment)
@@ -332,7 +328,8 @@
   )
 
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment! *situation* (get-fragment id)))
+  (set-situation-current-fragment! *situation* (get-fragment id))
+  ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
 
 (serializable-struct
@@ -351,7 +348,7 @@
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f (get-fragment 1) '())))
+    (situation new-world pc 0 0 0 0 #f '() '())))
 
 (define (in-combat?)
   ;(displayln "-- in-combat? TODO fix")
@@ -431,11 +428,38 @@
   #t
   )
 
+; TODO move to state
+; currently: goal - status - notes
+; and table-display formatted
+(define *goals* '())
+
+(define (create-goal goal-symbol)
+  (define goal
+    (case goal-symbol
+      ['pay-off-debt
+       (list " pay off the debt to the Collector "
+             " in progress "
+             " unsettled: 4,328 grams of U-235 ")]
+      ['council-of-the-anthead
+       (list " seek the Council of the Anthead "
+             " not started "
+             " \"not ready yet\" ")]))
+  (set! *goals*
+        (append-element *goals* goal))
+
+  (info-card
+   (list goal)
+   "New goal")
+  )
+
 (define (goals)
   (define sheet
-    (list
-     (list " goal " " status " " notes ")
-     (list " pay off the debt to the Collector " " in progress " " unsettled: 4,328 grams of U-235 ")))
+    (append
+     (list
+      (list " goal " " status " " notes ")
+      )
+     *goals*
+     ))
   (info-card
    sheet
    "Goals")
@@ -1160,7 +1184,9 @@
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
   (move-actor-to-location! (situation-pc *situation*) edges)
-  (narrate-begin-run))
+  (narrate-begin-run)
+  (go-to-story-fragment 1)
+  )
 
 (define (resolve-a-run)
   (on-begin-run)
