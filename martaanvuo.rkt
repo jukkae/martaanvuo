@@ -661,7 +661,7 @@
                      (λ () (make-action
                             #:symbol 'search-highlands
                             #:actor (situation-pc *situation*)
-                            #:duration 100
+                            #:duration 70
                             #:target '()
                             #:tags '(downtime))))))
              )
