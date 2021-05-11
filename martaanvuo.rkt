@@ -200,39 +200,6 @@
         ((= 0 modifier) (number->string modifier))
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
-(define (passive-check type comparator target-number . silent)
-  (define text "")
-  (case type
-    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
-    ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
-    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
-
-  (define attribute-value (get-trait (situation-pc *situation*) "charisma"))
-  (define modifier (get-attribute-modifier-for attribute-value))
-  (define successful? (> modifier target-number))
-
-  ; dirty but eh: for failures, flip successful here
-  (case type
-    ['fail-charisma-mod (set! successful? (not successful?))]
-    )
-  
-  (define result (if successful?
-                     "check passed"
-                     "check failed"))
-  (define sheet
-    (list
-     (list (string-append " " text " ")
-           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
-           (string-append " " result " "))
-     
-     ))
-  (when (null? silent)
-    (info-card
-     sheet
-     "Passive check"
-     ))
-  successful?)
-
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
 (fragment
@@ -311,7 +278,7 @@
                                               "Otava decides to stay to the hills where possible."
                                               (λ () (let ([forage-skill 1]
                                                           [target-number 8])
-                                                      (if (skill-check "Forage" 1 8)
+                                                      (if (luck-check)
                                                         21
                                                         22))))))
    (set! decisions (append-element decisions (make-decision
@@ -998,6 +965,84 @@
   (print-table content #:row-sep? #f)
   (newline))
 
+(define (actor-status-card actor title)
+  (info-card
+   (list
+    (list
+     (string-append " " (actor-name actor) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp actor))
+      "/"
+      (number->string (actor-max-hp actor))
+      " ")))
+   title))
+
+(define (luck-check)
+  (define wangernumbs
+    (list
+     "i"
+     "8-4"
+     "21.3"
+     ".01"
+     "41"
+     "9Ɛ"
+     "12"
+     "70"
+     "26"
+     "2"
+     "-3"
+     "±6"))
+  (define wanger-index (random (length wangernumbs)))
+  (define result (if (< wanger-index (/ (length wangernumbs) 2))
+                     #t
+                     #f))
+  (define result-text (if result
+                          " success "
+                          " failure "))
+  (define wangernumb (list-ref wangernumbs wanger-index))
+  (info-card
+   (list
+    (list " luck " (string-append " " wangernumb " "))
+    (list " " result-text))
+   "Luck check")
+  result)
+
+(define (passive-check type comparator target-number . silent)
+  (define text "")
+  (case type
+    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
+    ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
+    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
+
+  (define attribute-value (get-trait (situation-pc *situation*) "charisma"))
+  (define modifier (get-attribute-modifier-for attribute-value))
+  (define successful? (> modifier target-number))
+
+  ; dirty but eh: for failures, flip successful here
+  (case type
+    ['fail-charisma-mod (set! successful? (not successful?))]
+    )
+  
+  (define result (if successful?
+                     "check passed"
+                     "check failed"))
+  (define sheet
+    (list
+     (list (string-append " " text " ")
+           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
+           (string-append " " result " "))
+     
+     ))
+  (when (null? silent)
+    (info-card
+     sheet
+     "Passive check"
+     ))
+  successful?)
 
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
@@ -1029,22 +1074,6 @@
    (string-append "Skill check: " title))
 
   successful?)
-
-(define (actor-status-card actor title)
-  (info-card
-   (list
-    (list
-     (string-append " " (actor-name actor) " ")
-     "")
-    (list
-     " hp: "
-     (string-append
-      " "
-      (number->string (actor-hp actor))
-      "/"
-      (number->string (actor-max-hp actor))
-      " ")))
-   title))
 
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
