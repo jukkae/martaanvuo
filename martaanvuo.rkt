@@ -300,6 +300,61 @@
  )
 
 (fragment
+ 20
+ (string-append
+  "Search the highlands or lowlands?"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Highlands."
+                                              "Otava decides to stay to the hills where possible."
+                                              (λ () (let ([forage-skill 1]
+                                                          [target-number 8])
+                                                      (if (skill-check "Forage" 1 8)
+                                                        21
+                                                        22))))))
+   (set! decisions (append-element decisions (make-decision
+                                              "Lowlands."
+                                              "Otava decides to stay to the hills where possible."
+                                              (λ () (if (skill-check 'forage)
+                                                        23
+                                                        24)))))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 21
+ (string-append
+  "Success!"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Nice."
+                                              "Nice."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 22
+ (string-append
+  "Fail!"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Nice."
+                                              "Nice."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
  50
  (string-append
   "\"Otava, what kind of a name is that anyway? What does it mean?\""
@@ -338,6 +393,10 @@
 
   (paragraph (decision-description decision))
   (define next-fragment (decision-next-fragment decision))
+
+  ; brilliant idea x dirty hack
+  (when (procedure? next-fragment)
+    (set! next-fragment (next-fragment)))
   (cond ((number? next-fragment)
          (go-to-story-fragment next-fragment)
          )
@@ -821,7 +880,7 @@
   (cond ((eq? 'ruins (location-type (action-target action)))
          "The hillside is steep and slippery. Otava slips a couple of times on her way up, but eventually gets to the top.")
         ((eq? 'swamp (location-type (action-target action)))
-         "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Otava is looking for access to the service tunnels or sewer systems, so any sign of civilization would be great.")
+         "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Here and there are palm-sized patches of asphalt sticking through, fighting overgrown mosses.")
         ("[[go-to description not written yet]")))
 
 (define (meta-command-valid? meta-commands-with-keys input)
@@ -1094,6 +1153,9 @@
            (add-actor-to-location! next-location (situation-pc *situation*))
            (when (eq? (location-type (current-location)) 'crematory)
              (go-to-story-fragment 11)
+             #;(spawn-encounter))
+           (when (eq? (location-type (current-location)) 'swamp)
+             (go-to-story-fragment 20)
              #;(spawn-encounter))
            (paragraph (describe-go-to-action action))
            )
