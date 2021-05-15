@@ -33,8 +33,8 @@
    #:features '()
    #:items '()
    #:neighbors '()
-   #:tags '()#;'(forbid-simple-exit)
-   #:actions-provided '()#;'(search-for-paths)
+   #:tags '(forbid-simple-exit)
+   #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
 (define crematory
@@ -108,10 +108,6 @@
   (set-location-neighbors! the-cataract (list workshop))
   )
 
-(define starting-inventory
-  (list
-   (list 'bolt-cutters (list 'melee-weapon 'tool))))
-
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
         ((<= 4  attribute  5) -2)
@@ -121,42 +117,55 @@
         ((<= 16 attribute 17)  2)
         ((= attribute 18) 3)))
 
-(define pc-dex 13)
-(define pc-cha 14)
 (define (make-new-pc)
-  (pc-actor
+  (make-pc-actor
    "Otava"
-   4
-   4
-   0
-   (λ () (d 1 2))
-   8
-   pc-dex
-   pc-cha
-   starting-inventory
-   '()
-   '()
-   '()
-   4
+   3
    4
    ))
+
+(define (set-build! build)
+  ; for desperate build, also set a time limit (or whatever other complication)
+
+  (define starting-inventory
+    (list
+     (list 'bolt-cutters (list 'melee-weapon 'tool))))
+
+  (case build
+    ['desperate (set-trait! (situation-pc *situation*) "constitution" 10)
+                (set-actor-max-hp! (situation-pc *situation*) 4)
+                (set-actor-hp! (situation-pc *situation*) 4)
+                (set-trait! (situation-pc *situation*) "charisma" 10)
+                (set-trait! (situation-pc *situation*) "strength" 7)]
+    ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
+              (set-trait! (situation-pc *situation*) "charisma" 7)
+              (set-trait! (situation-pc *situation*) "strength" 10)]
+    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
+    )
+
+  (set-actor-inventory! (situation-pc *situation*) starting-inventory)
+  (displayln "[Build set]")
+  (character-sheet)
+  )
 
 
 (define *story-fragments* (make-hash))
 
-(serializable-struct ; this is going to carry some state, likely
+; store a list of closed paths / trees separately instead of storing that in the fragments themselves
+(serializable-struct
  story-fragment
  (id
   description
-  decisions))
+  decisions
+  on-enter!))
 
-; add on-enter, perhaps on-exit too?
-(define (fragment id description decisions)
+(define (fragment id description decisions on-enter!)
   (define frag
     (story-fragment
      id
      description
-     decisions))
+     decisions
+     on-enter!))
   (hash-set! *story-fragments* id frag))
 
 (define (get-fragment id)
@@ -191,68 +200,152 @@
         ((= 0 modifier) (number->string modifier))
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
-(define (passive-check type comparator target-number)
-  (define text "")
-  (case type
-    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
-    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
-
-  (define attribute-value (actor-charisma (situation-pc *situation*)))
-  (define modifier (get-attribute-modifier-for attribute-value))
-  (define successful? (> modifier target-number))
-  
-  (define result (if successful?
-                     " success "
-                     " failure "))
-  (define sheet
-    (list
-     (list (string-append " " text " ")
-           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
-           (string-append " " result " "))
-     
-     ))
-  (info-card
-   sheet
-   "Passive check"
-   )
-  successful?)
-
+; This should happen on the beginning of a life
+; and with runs, you select the loadout
 (fragment
  1
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned AI/neurotec lab half a day from here. Break in, take what tec you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
+ "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Because she's desperate."
+                                              "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
+                                              'exit-and-set-build-desperate
+                                              )))
+   
+   (set! decisions (append-element decisions (make-decision
+                                              "Because she punches really hard."
+                                              "She can crack a jawbone with her bare hands. That should keep her alive."
+                                              'exit-and-set-build-bruiser
+                                              ;(λ () (passive-check 'luck))
+                                              )))
+   decisions)
+ (λ () (create-goal 'pay-off-debt))
+ )
+
+(fragment
+ 11
+ "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
                                               "Ask about the Yarn."
                                               "\"Yarn of the what?\""
-                                              2)))
+                                              12
+                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
+                                              )))
    
    (set! decisions (append-element decisions (make-decision
                                               "Ask who's 'us'."
                                               "\"'Us'? Who's 'us'?\""
-                                              4
-                                              (λ () (passive-check 'charisma-mod '> 0)
-                                                ))))
+                                              14
+                                              (λ () (passive-check 'charisma-mod '> -1))
+                                              )))
    decisions)
+ (λ () '())
  )
 
 (fragment
- 2
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Walk in, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit)
-       (make-decision "It's more valuable than 11 bullets. Decline." "\"Not interested, but thanks for the chat.\"" 'exit)))
+ 12
+ "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
+ (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
+       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))
+ (λ () '())
+ ) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
 
 (fragment
- 4
+ 14
  (string-append
-  "\"It's... ah, wouldn't make sense to you. Look, will you bring us the book or not?\""
+  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
+  ) ; and drop some meta-visible info or something somewhere; create a goal?
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Ask about the book."
+                                              "\"The book, Yarn of the what?\""
+                                              12)))
+   decisions)
+ (λ () (create-goal 'the-anthead))
+ )
+
+(fragment
+ 20
+ (string-append
+  "Search the highlands or lowlands?"
   )
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
-                                              "Ask about the Yarn."
-                                              "\"Yarn of the what?\""
-                                              2)))
+                                              "Highlands."
+                                              "Otava decides to stay to the hills where possible."
+                                              (λ () (let ([forage-skill 1]
+                                                          [target-number 8])
+                                                      (if (luck-check)
+                                                        21
+                                                        22))))))
+   (set! decisions (append-element decisions (make-decision
+                                              "Lowlands."
+                                              "Otava decides to stay to the hills where possible."
+                                              (λ () (if (skill-check 'forage)
+                                                        23
+                                                        24)))))
    decisions)
+ (λ () '())
+ )
+
+(fragment
+ 21
+ (string-append
+  "Success!"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Nice."
+                                              "Nice."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 22
+ (string-append
+  "Fail!"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Oof."
+                                              "Oof."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 50
+ (string-append
+  "\"Otava, what kind of a name is that anyway? What does it mean?\""
+  )
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "A bear."
+                                              "\"It means a bear. The keeper of the forest.\""
+                                              51
+                                              (λ () (passive-check 'strength-mod '> -1))
+                                              )))
+   (set! decisions (append-element decisions (make-decision
+                                              "Northstar."
+                                              "\"Northstar.\""
+                                              52
+                                              (λ () (passive-check 'intelligence-mod '> -1))
+                                              )))
+
+   (set! decisions (append-element decisions (make-decision
+                                              "Don't know."
+                                              "\"Don't know.\""
+                                              53)))
+   decisions)
+ (λ () '())
  )
 
 (define (current-fragment-on-begin-round!)
@@ -267,15 +360,30 @@
 
   (paragraph (decision-description decision))
   (define next-fragment (decision-next-fragment decision))
+
+  ; brilliant idea x dirty hack
+  (when (procedure? next-fragment)
+    (set! next-fragment (next-fragment)))
   (cond ((number? next-fragment)
-         (set-situation-current-fragment! *situation* (get-fragment next-fragment)))
+         (go-to-story-fragment next-fragment)
+         )
         ((eq? 'exit next-fragment)
+         (set-situation-current-fragment! *situation* '()))
+        ((eq? 'exit-and-set-build-desperate next-fragment)
+         (set-build! 'desperate)
+         (set-situation-current-fragment! *situation* '()))
+        ((eq? 'exit-and-set-build-bruiser next-fragment)
+         (set-build! 'bruiser)
          (set-situation-current-fragment! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
 (define (current-scene-on-end-round!)
   '()
   )
+
+(define (go-to-story-fragment id)
+  (set-situation-current-fragment! *situation* (get-fragment id))
+  ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
 
 (serializable-struct
@@ -287,12 +395,14 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-fragment #:mutable]))
+  [current-fragment #:mutable]
+  [goals #:mutable]
+  ))
 
 (define *situation*
   (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
         [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f (get-fragment 1))))
+    (situation new-world pc 0 0 0 0 #f '() '())))
 
 (define (in-combat?)
   ;(displayln "-- in-combat? TODO fix")
@@ -340,13 +450,27 @@
 
 (define (character-sheet)
   (define actor (situation-pc *situation*))
+  (define traits (actor-traits actor))
+  (define traits-list (for/list ([(k v) (in-hash traits)])
+                        (if (or (eq? k "strength")
+                                (eq? k "charisma")
+                                (eq? k "constitution")
+                                (eq? k "intelligence")
+                                (eq? k "dexterity"))
+                            (list (string-append " " k " ")
+                                  (string-append " "
+                                                 (number->string v)
+                                                 " "
+                                                 "[" (get-modifier-string (get-attribute-modifier-for v)) "]"
+                                                 " "))
+                            (list (string-append " " k " ") (string-append " " (number->string v) " ")))))
+  
   (define sheet
     (list
      (list " Name " (string-append " " (actor-name actor) " "))
      (list " HP " (string-append " " (number->string (actor-hp actor)) "/" (number->string (actor-max-hp actor)) " "))
-     (list " Dexterity " (string-append " " (number->string (actor-dexterity actor)) " "))
-     (list " Attack skill " (string-append " " (number->string (actor-attack-skill actor)) " "))
      ))
+  (set! sheet (append sheet traits-list))
   (info-card
    sheet
    "Character sheet"
@@ -369,8 +493,42 @@
   #t
   )
 
+; TODO move to state
+; currently: goal - status - notes
+; and table-display formatted
+(define *goals* '())
+
+(define (create-goal goal-symbol)
+  (define goal
+    (case goal-symbol
+      ['pay-off-debt
+       (list " pay off the debt to the Collector "
+             " in progress "
+             " unsettled: 4,328 grams of U-235 ")]
+      ['the-anthead
+       (list " seek the Anthead Girl "
+             " not started "
+             " \"not ready yet\" ")]))
+  (set! *goals*
+        (append-element *goals* goal))
+
+  (info-card
+   (list goal)
+   "New goal")
+  )
+
 (define (goals)
-  (displayln "-- goals: TODO"))
+  (define sheet
+    (append
+     (list
+      (list " goal " " status " " notes ")
+      )
+     *goals*
+     ))
+  (info-card
+   sheet
+   "Goals")
+  )
 
 (define (current-location)
   #;(displayln "-- current-location: TODO move to situation")
@@ -432,7 +590,7 @@
 (define (get-go-to-text-from-location-to-another from-type to-type)
   (case to-type
     ['ruins "Climb the hill to the ruins."]
-    ['swamp "Enter the swamps."]
+    ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -489,7 +647,7 @@
           (list
            (make-choice
             'go-back-to-the-shack
-            "Head back to the shack."
+            "Head back to The Shack."
             (λ () (make-action
                    #:symbol 'end-run
                    #:actor (situation-pc *situation*)
@@ -509,8 +667,29 @@
                    #:target '()
                    #:tags '(downtime)))))))
 
+  ; should test for '(search-for-paths), but eh
   (when (and (eq? (location-type (current-location)) 'swamp)
              (not (in-combat?))
+             (set! change-location-choices
+                   (list
+                    (make-choice
+                     'search-lowlands
+                     "Search lowlands, try to follow riverbanks."
+                     (λ () (make-action
+                            #:symbol 'search-lowlands
+                            #:actor (situation-pc *situation*)
+                            #:duration 100
+                            #:target '()
+                            #:tags '(downtime))))
+                    (make-choice
+                     'search-highlands
+                     "Keep to hills and highlands."
+                     (λ () (make-action
+                            #:symbol 'search-highlands
+                            #:actor (situation-pc *situation*)
+                            #:duration 70
+                            #:target '()
+                            #:tags '(downtime))))))
              )
     (define neighbors
       (location-neighbors (current-location)))
@@ -553,7 +732,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
@@ -581,13 +760,6 @@
       (add-to-action-queue next-action))))
 
 
-(define (replace-own-action-in-action-queue-with-new-action action)
-  (define actions (filter
-                   (λ (action) (eq? actor (action-actor action)))
-                   action-queue))
-  (remove-from-action-queue actions)
-  (add-to-action-queue action)
-  )
 
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
@@ -631,17 +803,9 @@
     (super-new)
 
     (define scavenger
-      (actor
+      (make-actor
        "scavenger"
        4
-       4
-       2
-       (λ () (d 1 3))
-       8
-       7
-       '()
-       '()
-       '()
        '()))
       
     
@@ -682,6 +846,8 @@
 (define (describe-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "The hillside is steep and slippery. Otava slips a couple of times on her way up, but eventually gets to the top.")
+        ((eq? 'swamp (location-type (action-target action)))
+         "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Here and there are palm-sized patches of asphalt sticking through, fighting overgrown mosses.")
         ("[[go-to description not written yet]")))
 
 (define (meta-command-valid? meta-commands-with-keys input)
@@ -799,6 +965,84 @@
   (print-table content #:row-sep? #f)
   (newline))
 
+(define (actor-status-card actor title)
+  (info-card
+   (list
+    (list
+     (string-append " " (actor-name actor) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp actor))
+      "/"
+      (number->string (actor-max-hp actor))
+      " ")))
+   title))
+
+(define (luck-check)
+  (define wangernumbs
+    (list
+     "i"
+     "8-4"
+     "21.3"
+     ".01"
+     "41"
+     "9Ɛ"
+     "12"
+     "70"
+     "26"
+     "2"
+     "-3"
+     "±6"))
+  (define wanger-index (random (length wangernumbs)))
+  (define result (if (< wanger-index (/ (length wangernumbs) 2))
+                     #t
+                     #f))
+  (define result-text (if result
+                          " success "
+                          " failure "))
+  (define wangernumb (list-ref wangernumbs wanger-index))
+  (info-card
+   (list
+    (list " luck " (string-append " " wangernumb " "))
+    (list " " result-text))
+   "Luck check")
+  result)
+
+(define (passive-check type comparator target-number . silent)
+  (define text "")
+  (case type
+    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
+    ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
+    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
+
+  (define attribute-value (get-trait (situation-pc *situation*) "charisma"))
+  (define modifier (get-attribute-modifier-for attribute-value))
+  (define successful? (> modifier target-number))
+
+  ; dirty but eh: for failures, flip successful here
+  (case type
+    ['fail-charisma-mod (set! successful? (not successful?))]
+    )
+  
+  (define result (if successful?
+                     "check passed"
+                     "check failed"))
+  (define sheet
+    (list
+     (list (string-append " " text " ")
+           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
+           (string-append " " result " "))
+     
+     ))
+  (when (null? silent)
+    (info-card
+     sheet
+     "Passive check"
+     ))
+  successful?)
 
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
@@ -831,30 +1075,18 @@
 
   successful?)
 
-(define (actor-status-card actor title)
-  (info-card
-   (list
-    (list
-     (string-append " " (actor-name actor) " ")
-     "")
-    (list
-     " hp: "
-     (string-append
-      " "
-      (number->string (actor-hp actor))
-      "/"
-      (number->string (actor-max-hp actor))
-      " ")))
-   title))
-
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
   
-  (define target-number (actor-defense-number target))
+  #;(define target-number (actor-defense-number target))
+  (displayln "resolve-shoot-action!: TODO reimplement")
+  (define target-number 7)
   
-  (define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
-  (define damage-roll ((actor-attack-damage actor)))
+  #;(define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
+  #;(define damage-roll ((actor-attack-damage actor)))
+  (define success? #t)
+  (define damage-roll 2)
 
   (when success?
     (info-card
@@ -948,8 +1180,12 @@
            (remove-actor-from-location! (current-location) (situation-pc *situation*))
            (set-actor-current-location! (situation-pc *situation*) next-location)
            (add-actor-to-location! next-location (situation-pc *situation*))
-           (when (eq? (location-type (current-location)) 'ruins)
-             (spawn-encounter))
+           (when (eq? (location-type (current-location)) 'crematory)
+             (go-to-story-fragment 11)
+             #;(spawn-encounter))
+           (when (eq? (location-type (current-location)) 'swamp)
+             (go-to-story-fragment 20)
+             #;(spawn-encounter))
            (paragraph (describe-go-to-action action))
            )
           ((eq? (action-symbol action) 'end-run)
@@ -989,7 +1225,7 @@
     #;(displayln "-- on-end-round: fix (in-combat?)")
     #;(set! in-combat? #f))
   (when (not (null? (situation-current-fragment *situation*)))
-    (current-scene-on-end-round!))
+    (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
   #;(when (not (eq? '() current-encounter))
       (define encounter-status (send current-encounter on-end-round!))
       (when (eq? 'exit-encounter encounter-status) (end-encounter)))
@@ -1073,6 +1309,7 @@
 (define (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
          (display "Unknown command. Known commands: ")
+         (for ([(k v) (in-hash scene-decisions-with-keys)]) (display k))
          (for ([(k v) (in-hash choices-with-keys)]) (display k))
          (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
          (newline)
@@ -1091,7 +1328,7 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. She's to break in and bring back what tec salvage she can.")]
+     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. Rumor has it, there's a small reactor in the sub-basement, and with luck, Otava will find enough U-235 to settle her debt to the Collector.")]
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
@@ -1100,7 +1337,9 @@
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
   (move-actor-to-location! (situation-pc *situation*) edges)
-  (narrate-begin-run))
+  (narrate-begin-run)
+  (go-to-story-fragment 1)
+  )
 
 (define (resolve-a-run)
   (on-begin-run)
