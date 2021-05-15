@@ -277,7 +277,7 @@
                                               "Follow the ridges."
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ () (let ([exploration-skill 0]
-                                                          [target-number 9])
+                                                          [target-number 8])
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           (begin
                                                             (set-location-neighbors!
@@ -1072,7 +1072,7 @@
        " = "
        (number->string roll-total))
       " >= "
-      (string-append " " "8" success-string " "))))
+      (string-append " " (number->string target-number) success-string " "))))
                
   (info-card
    results
