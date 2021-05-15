@@ -314,8 +314,8 @@
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
-                                              "Nice."
-                                              "Nice."
+                                              "Oof."
+                                              "Oof."
                                               'exit)))
    decisions)
  (λ () '())
