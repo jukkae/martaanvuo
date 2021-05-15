@@ -33,7 +33,7 @@
    #:features '()
    #:items '()
    #:neighbors '()
-   #:tags '(forbid-simple-exit)
+   #:tags '()
    #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
@@ -99,7 +99,7 @@
 
 (define (setup-world)
   (set-location-neighbors! edges (list swamp))
-  (set-location-neighbors! swamp (list edges crematory ruins))
+  (set-location-neighbors! swamp (list edges))
   (set-location-neighbors! crematory (list swamp))
   (set-location-neighbors! ruins (list swamp sewers cache))
   (set-location-neighbors! sewers (list ruins workshop))
@@ -269,30 +269,68 @@
 (fragment
  20
  (string-append
-  "Search the highlands or lowlands?"
+  "Otava is unsure whether to climb the ridges or head lower and try to follow the valleys. The ridges would perhaps mean drier feet, faster progress, and eventually better visibility if the fog dissipates. On the other hand, the laboratory ultimately lies on the banks of Martaanvuo river, and she's pretty sure that all the hollows here ultimately lead to Martaanvuo."
   )
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
-                                              "Highlands."
-                                              "Otava decides to stay to the hills where possible."
+                                              "Follow the ridges."
+                                              "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ () (let ([forage-skill 1]
                                                           [target-number 8])
                                                       (if (luck-check)
-                                                        21
-                                                        22))))))
+                                                          (begin
+                                                            (set-location-neighbors!
+                                                             swamp
+                                                             (append-element
+                                                              (location-neighbors swamp)
+                                                              ruins))
+                                                            21)
+                                                          22))))))
    (set! decisions (append-element decisions (make-decision
-                                              "Lowlands."
-                                              "Otava decides to stay to the hills where possible."
-                                              (λ () (if (skill-check 'forage)
-                                                        23
-                                                        24)))))
+                                              "Follow the valleys."
+                                              "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
+                                              (λ () (let ([exploration-skill 1]
+                                                          [target-number 8])
+                                                      (if (skill-check "Exploration" exploration-skill target-number)
+                                                          23
+                                                          24))))))
    decisions)
  (λ () '())
  )
 
 (fragment
  21
+ (string-append
+  "After half a day of making her way eastward on the rolling ridges, Otava comes upon a hill that's steeper and taller than what she's seen thus far. The silhouettes of ruined buildings against the gray sky look drawn, menacing, alien. There's a small pillar of smoke rising from the hilltop: She's got company."
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Nice."
+                                              "Nice."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 22
+ (string-append
+  "Fail!"
+  )
+
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Oof."
+                                              "Oof."
+                                              'exit)))
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 23
  (string-append
   "Success!"
   )
@@ -307,7 +345,7 @@
  )
 
 (fragment
- 22
+ 24
  (string-append
   "Fail!"
   )
@@ -667,35 +705,13 @@
                    #:target '()
                    #:tags '(downtime)))))))
 
-  ; should test for '(search-for-paths), but eh
-  (when (and (eq? (location-type (current-location)) 'swamp)
-             (not (in-combat?))
-             (set! change-location-choices
-                   (list
-                    (make-choice
-                     'search-lowlands
-                     "Search lowlands, try to follow riverbanks."
-                     (λ () (make-action
-                            #:symbol 'search-lowlands
-                            #:actor (situation-pc *situation*)
-                            #:duration 100
-                            #:target '()
-                            #:tags '(downtime))))
-                    (make-choice
-                     'search-highlands
-                     "Keep to hills and highlands."
-                     (λ () (make-action
-                            #:symbol 'search-highlands
-                            #:actor (situation-pc *situation*)
-                            #:duration 70
-                            #:target '()
-                            #:tags '(downtime))))))
-             )
-    (define neighbors
-      (location-neighbors (current-location)))
-    '()
-    )
+  
+  (define neighbors
+    (location-neighbors (current-location)))
 
+  (define location-provided-actions '())
+  (when (not (null? (location-actions-provided (current-location))))
+    (displayln "todo: add location-provided-actions"))
   (append combat-choices change-location-choices downtime-choices end-run-choices)
   )
 
