@@ -500,28 +500,6 @@
   events
   )
 
-; breaks on first action-suspending event
-; and finishes after duration of jiffies,
-; returns a list of events that occurred
-(define (advance-time-until-next-interesting-event! jiffies)
-
-  (define events '())
-  (let/ec break
-    (for ([t jiffies])
-      (define possible-events-at-t (advance-time-by-a-jiffy!))
-      (define events-at-t possible-events-at-t) ; they are real events
-      (set! events (append events events-at-t))
-        
-      ; If any of the events suspends action, then return early
-      (define contains-action-suspending-event?
-        (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
-
-      ; early-exit
-      (when contains-action-suspending-event? (break))
-      ))
-  events)
-
-
 (define (character-sheet)
   (define actor (situation-pc *situation*))
   (define traits (actor-traits actor))
@@ -1252,6 +1230,34 @@
         (send current-encounter begin-encounter!)
         )))
 
+(serializable-struct
+ timeline
+ (metadata
+  events))
+ 
+; breaks on first action-suspending event
+; and finishes after duration of jiffies,
+; returns a timeline of events that occurred with metadata
+(define (advance-time-until-next-interesting-event! jiffies)
+  (define metadata '())
+  (define events '())
+  (let/ec break
+    (for ([t jiffies])
+      (define possible-events-at-t (advance-time-by-a-jiffy!))
+      (define events-at-t possible-events-at-t) ; they are real events
+      (set! events (append events events-at-t))
+        
+      ; If any of the events suspends action, then return early
+      (define contains-action-suspending-event?
+        (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
+
+      ; early-exit
+      (when contains-action-suspending-event?
+        (set! metadata 'suspended)
+        (break))
+      ))
+  (timeline metadata events))
+
 ; may return:
 ; void
 ; 'successful
@@ -1276,12 +1282,12 @@
           (string-append " " (symbol->string (event-type event)) " ")
           (string-append " " (~s (event-details event)) " ")
           ))
-       events))
+       (timeline-events events)))
     (info-card
      (append
       (list (list " at " " type " " details "))
       displayable-events)
-     "Time passes")
+     "Timeline")
     
     
     ; should check results
