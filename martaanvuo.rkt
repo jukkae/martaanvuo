@@ -513,7 +513,7 @@
                  (string-append " "
                                 (if (event-suspends-action? event)
                                         "suspends action"
-                                        "")
+                                        "doesn't suspend action")
                                 " ")
                  )))
             (info-card
@@ -524,7 +524,9 @@
 
             ; If any of the events suspends action, then return early
             (define contains-action-suspending-event?
-              (reduce events (λ (event) (event-suspends-action?))))
+              (memf (λ (event) (event-suspends-action? event)) events))
+            (displayln "CASE:")
+            (displayln contains-action-suspending-event?)
             (when contains-action-suspending-event?
               (return (cons events t))))
           
