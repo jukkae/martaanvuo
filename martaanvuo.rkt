@@ -695,7 +695,11 @@
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "Continue towards "
-          (get-location-name-from-location-type (location-type (action-target pending-action)))))
+          (get-location-name-from-location-type (location-type (action-target pending-action)))
+          "."))
+        ((eq? (action-symbol pending-action) 'search-for-paths)
+         (string-append
+          "Keep on searching for paths."))
         (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 ; This should be refactored
@@ -973,7 +977,7 @@
   (cond ((eq? 'ruins (location-type (action-target action)))
          "Eventually, Otava gets to the top.")
         ((eq? 'swamp (location-type (action-target action)))
-         "Otava is in the middle of the swamps. Through the heavy fog, the bushes swaying in the wind look like evil beast-shadows.")
+         "After a while, Otava finds herself in the middle of the swamps. Through the heavy fog, the bushes swaying in the wind look like evil beast-shadows.")
         ("[[finish-go-to description not written yet]")))
 
 (define (meta-command-valid? meta-commands-with-keys input)
@@ -1347,7 +1351,8 @@
   (timeline metadata events counter))
 
 (define (move-pc-to-location! location)
-  (displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
+  ; TODO: location on-exit / on-enter triggers here
+  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
   (remove-actor-from-location! (current-location) (situation-pc *situation*))
   (set-actor-current-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*)))
