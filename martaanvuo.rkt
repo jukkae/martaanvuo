@@ -37,6 +37,16 @@
    #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
+(define ridges
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
+   #:actions-provided '(search-for-paths)
+   #:type 'ridges))
+
 (define crematory
   (make-location
    #:actors '()
@@ -277,8 +287,11 @@
                                               "Follow the ridges."
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ ()
+                                                
                                                 (let ([exploration-skill 1]
                                                       [target-number 5])
+
+                                                  (move-pc-to-location! ridges)
 
                                                   (define action (make-action
                                                                   #:symbol 'search-for-paths
@@ -1333,6 +1346,12 @@
       ))
   (timeline metadata events counter))
 
+(define (move-pc-to-location! location)
+  (displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
+  (remove-actor-from-location! (current-location) (situation-pc *situation*))
+  (set-actor-current-location! (situation-pc *situation*) location)
+  (add-actor-to-location! location (situation-pc *situation*)))
+
 (define *pending-action* '())
 
 
@@ -1394,9 +1413,7 @@
                    ; do these AFTER action resolution
                    (cond ((eq? (action-symbol action) 'go-to-location)
                           (define next-location (action-target action))
-                          (remove-actor-from-location! (current-location) (situation-pc *situation*))
-                          (set-actor-current-location! (situation-pc *situation*) next-location)
-                          (add-actor-to-location! next-location (situation-pc *situation*))
+                          (move-pc-to-location! next-location)
                           (when (eq? (location-type (current-location)) 'crematory)
                             (go-to-story-fragment 11))
                           (when (eq? (location-type (current-location)) 'swamp)
