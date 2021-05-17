@@ -305,7 +305,7 @@
 (fragment
  21
  (string-append
-  "After half a day of making her way eastward on the rolling ridges, Otava comes upon a hill that's steeper and taller than what she's seen thus far. The silhouettes of ruined buildings against the gray sky look drawn, menacing, alien. There's a small pillar of smoke rising from the hilltop: She's got company."
+  "After half a day of making her way eastward on the rolling ridges, Otava comes upon a hill that's steeper and taller than any thus far. The jagged silhouettes of ruined buildings looming against the gray sky look menacing, alien. There's a small pillar of smoke rising from the hilltop."
   )
 
  (let ([decisions '()])
@@ -618,6 +618,7 @@
   (case to-type
     ['ruins "Climb the hill to the ruins."]
     ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
+    ['edges "Exit the swamps."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
