@@ -276,8 +276,8 @@
    (set! decisions (append-element decisions (make-decision
                                               "Follow the ridges."
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-                                              (λ () (let ([exploration-skill 0]
-                                                          [target-number 5])
+                                              (λ () (let ([exploration-skill 1]
+                                                          [target-number 8])
 
                                                       (define action (make-action
                                                                       #:symbol 'search-for-paths
@@ -304,8 +304,8 @@
    (set! decisions (append-element decisions (make-decision
                                               "Follow the valleys."
                                               "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-                                              (λ () (let ([exploration-skill 0]
-                                                          [target-number 5])
+                                              (λ () (let ([exploration-skill 1]
+                                                          [target-number 8])
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           23
                                                           24))))))
@@ -441,6 +441,8 @@
   ;(displayln "-- in-combat? TODO fix")
   (situation-in-combat? *situation*))
 
+; increment world time
+; return a list of events that occur at new timestamp
 (define (advance-time-by-a-jiffy!)
   (define events '())
   (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
@@ -449,7 +451,9 @@
    new-elapsed-time)
 
   (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
-    (paragraph (string-append "It is now " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) ".")))
+    (set! events (cons (cons 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) events)))
+
+  
   #;(when (not (in-combat?))
       (cond ((not (eq? current-time-of-day 'night))
              (define roll (d 1 200))
@@ -472,13 +476,20 @@
   )
 
 
+; returns a pair (maybe-event jiffies), where
+; maybe-event is either event or '(), and
+; jiffies is time at which the event occurred, or length of time period if there was no event
 (define (advance-time-until-next-interesting-event! jiffies)
-  (let/ec return
+  (define next-event (let/ec return
     (for ([t jiffies])
       (define event (advance-time-by-a-jiffy!))
       (when (not (eq? event '()))
         (return (cons event t))))
     (cons '() jiffies)))
+  (info-card
+   (list (list next-event))
+   " Time passes ")
+  next-event)
 
 
 (define (character-sheet)
