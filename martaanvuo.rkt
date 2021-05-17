@@ -278,6 +278,17 @@
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ () (let ([exploration-skill 0]
                                                           [target-number 5])
+
+                                                      (displayln "TODO HERE")
+                                                      ;(resolve-pc-action!)
+                                                      (define action (make-action
+                                                                      #:symbol 'search-for-paths
+                                                                      #:actor (situation-pc *situation*)
+                                                                      #:duration 100
+                                                                      #:target '()
+                                                                      #:tags '(downtime)))
+                                                      (define action-result (resolve-pc-action! action))
+                                                      (displayln action-result)
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           (begin
                                                             (set-location-neighbors!
@@ -704,7 +715,7 @@
           (λ () (make-action
                  #:symbol 'search-for-paths
                  #:actor (situation-pc *situation*)
-                 #:duration 0
+                 #:duration 100
                  #:target '()
                  #:tags '(downtime))))])))
   (append combat-choices change-location-choices downtime-choices location-specific-choices)
@@ -1173,7 +1184,8 @@
              ))
           ((eq? (action-symbol action) 'back-off)
            'ok
-           ))))
+           )
+          (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 (define (spawn-encounter)
   (displayln "-- spawn-encounter disabled")
