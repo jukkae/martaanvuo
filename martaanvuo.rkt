@@ -279,18 +279,17 @@
                                               (λ () (let ([exploration-skill 0]
                                                           [target-number 5])
 
-                                                      (displayln "TODO FIND ME")
-                                                      ;(resolve-pc-action!)
                                                       (define action (make-action
                                                                       #:symbol 'search-for-paths
                                                                       #:actor (situation-pc *situation*)
                                                                       #:duration 100
                                                                       #:target '()
                                                                       #:tags '(downtime)))
+
+                                                      ; 'successful or 'failure
                                                       (define action-result (resolve-pc-action! action))
-                                                      (displayln "ACTION RESULT:")
-                                                      (displayln action-result)
-                                                      (if (skill-check "Exploration" exploration-skill target-number)
+                                                      
+                                                      (if (eq? action-result 'successful)
                                                           (begin
                                                             (set-location-neighbors!
                                                              swamp
@@ -300,8 +299,8 @@
                                                             21)
                                                           (begin
                                                             (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                                            'exit)
-                                                          ))))))
+                                                            'exit)))))))
+   
    (set! decisions (append-element decisions (make-decision
                                               "Follow the valleys."
                                               "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
@@ -1067,6 +1066,7 @@
      ))
   successful?)
 
+; returns boolean
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
   (define second-d (d 1 6))
@@ -1133,9 +1133,9 @@
   )
 
 ; can return:
-; '()       when the action resolution should be skipped
 ; 'pc-dead  when the pc is dead as a consequence of this action
-; 'ok       when the action is completely resolved and successful
+; 'ok       when the action is completely resolved and not explicitly successful or failed
+; 'success  when the action is completely resolved and explicitly successful
 ; 'failed   when the action is completely resolved and fails
 (define (resolve-action! action)
   (when (alive? (action-actor action))
@@ -1198,9 +1198,9 @@
            (define exploration-skill 3)
            (define target-number 5)
            (define skill-check-result (skill-check "Exploration" exploration-skill target-number))
-           (displayln "ACTION RESULT:") (displayln skill-check-result)
-           (displayln "TODO HERE 2")
-           )
+           (if skill-check-result
+               'successful
+               'failure))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 (define (spawn-encounter)
@@ -1211,6 +1211,10 @@
         (send current-encounter begin-encounter!)
         )))
 
+; may return:
+; void
+; 'successful
+; 'failure
 (define (resolve-pc-action! action)
   (let/ec return
     ; do these BEFORE action resolution
@@ -1220,8 +1224,10 @@
            (return 'win-game)))
     ; begin advancing time
     (advance-time-until-next-interesting-event! (action-duration action))
+
     ; should check results
-    (resolve-action! action)
+    (define action-result (resolve-action! action))
+
     ; do these AFTER action resolution
     (cond ((eq? (action-symbol action) 'go-to-location)
            (define next-location (action-target action))
@@ -1235,6 +1241,9 @@
              (go-to-story-fragment 20)
              #;(spawn-encounter))
            (paragraph (describe-go-to-action action))))
+    (when (or (eq? action-result 'successful)
+              (eq? action-result 'failure))
+      action-result)
     )
   )
 
