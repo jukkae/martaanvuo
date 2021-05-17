@@ -676,14 +676,14 @@
 
 (define (get-location-name-from-location-type location-type)
   (cond ((eq? location-type 'swamp) "the swamps")
-        (else "get-location-name-from-location-type: unknown location type")))
+        (else (string-append "get-location-name-from-location-type: unknown location type: " (symbol->string location-type)))))
 
 (define (get-continue-pending-action-name pending-action)
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "Continue towards "
           (get-location-name-from-location-type (location-type (action-target pending-action)))))
-        (else "")))
+        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 ; This should be refactored
 ; - a big question is, where does much of this logic
