@@ -759,7 +759,7 @@
                  #:duration 100
                  #:target '()
                  #:tags '(downtime))))])))
-  (append change-location-choices downtime-choices location-specific-choices))
+  (append change-location-choices downtime-choices end-run-choices location-specific-choices))
 
 (define (time-of-day-from-jiffies jiffies)
   (define jiffies-of-current-day (remainder jiffies 400))
