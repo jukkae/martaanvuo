@@ -774,7 +774,24 @@
                  #:duration 100
                  #:target '()
                  #:tags '(downtime))))])))
-  (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
+  (define choices-before-pruning
+    (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
+
+  ; name is poor, but eh
+  (define (choice-symbol-not-eq-to-pending? choice)
+    (cond ((not (null? pending-choices))
+           #f)
+          (else
+           #t)))
+  
+  (define
+    pruned-choices
+    (filter
+     choice-symbol-not-eq-to-pending?
+     choices-before-pruning))
+  (define all-choices
+    (append pending-choices pruned-choices))
+  all-choices)
 
 (define (time-of-day-from-jiffies jiffies)
   (define jiffies-of-current-day (remainder jiffies 400))
