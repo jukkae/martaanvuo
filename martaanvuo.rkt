@@ -672,6 +672,9 @@
   (displayln "get-night-time-choices: TODO not implemented yet")
   '())
 
+; This should be refactored
+; - a big question is, where does much of this logic
+; best fit? locations?
 (define (get-downtime-choices world actor)
   (define change-location-choices '())
   (define downtime-choices '())
