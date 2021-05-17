@@ -71,7 +71,7 @@
   (make-location
    #:actors '()
    #:features '()
-   #:items '(veilbreaker-staff)
+   #:items '(u-235 veilbreaker-staff)
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
@@ -278,7 +278,7 @@
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ ()
                                                 (let ([exploration-skill 1]
-                                                      [target-number 8])
+                                                      [target-number 5])
 
                                                   (define action (make-action
                                                                   #:symbol 'search-for-paths
@@ -649,7 +649,7 @@
   (case to-type
     ['ruins "Climb the hill to the ruins."]
     ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
-    ['edges "Exit the swamps."]
+    ['edges "Go back to Edgeflats."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -697,7 +697,10 @@
       (make-choice
        'go-to-location
        (get-continue-pending-action-name *pending-action*)
-       (λ () *pending-action*)))))
+       (λ ()
+         (begin0
+           *pending-action*
+           (set! *pending-action* '())))))))
   ;(displayln "PC-not-null")
 
   
@@ -1345,6 +1348,10 @@
   (define result (let/ec return
                    ; do these BEFORE action resolution
                    (cond ((eq? (action-symbol action) 'end-run)
+                          (define inventory
+                            (actor-inventory (situation-pc *situation*)))
+                          (displayln inventory)
+                          (paragraph "Otava's seen enough.")
                           (return 'end-run))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
@@ -1550,7 +1557,7 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of following a winding path through Fangforest, Otava reaches The Edges – the vast swamplands surrounding Martaanvuo. The Collector gave her the directions to a pre-Rains laboratory, apparently abandoned and forgotten. Rumor has it, there's a small reactor in the sub-basement, and with luck, Otava will find enough U-235 to settle her debt to the Collector.")]
+     (paragraph "After a couple of days of following an old blacktop road, Otava reaches the end of Edgeflats. Before her lie the vast swamplands surrounding Martaanvuo. The Collector told her of a pre-Rains laboratory, abandoned and forgotten. Rumor has it, there's a small reactor in the sub-basement, and with luck, Otava will find enough U-235 to settle her debt to the Collector.")]
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
