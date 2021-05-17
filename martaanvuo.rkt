@@ -478,9 +478,9 @@
               (define roll (d 1 dice-sides))
 
               #;(define roll
-                (if (= (world-elapsed-time (situation-world *situation*)) 45)
-                    1
-                    2))
+                  (if (= (world-elapsed-time (situation-world *situation*)) 45)
+                      1
+                      2))
               (cond ((= roll 1)
                      (define title "Luck roll failure")
                      (info-card
@@ -500,45 +500,25 @@
   events
   )
 
-; returns a pair (maybe-events jiffies), where
-; maybe-event is a list of events, and
-; jiffies is either the elapsed time after which the events occurred, or length of time period if there was no event
+; breaks on first action-suspending event
+; and finishes after duration of jiffies,
+; returns a list of events that occurred
 (define (advance-time-until-next-interesting-event! jiffies)
 
   (define events '())
   (let/ec break
     (for ([t jiffies])
       (define possible-events-at-t (advance-time-by-a-jiffy!))
-        (define events-at-t possible-events-at-t) ; they are real events
-        (set! events (append events events-at-t))
+      (define events-at-t possible-events-at-t) ; they are real events
+      (set! events (append events events-at-t))
         
-        ; If any of the events suspends action, then return early
-        (define contains-action-suspending-event?
-          (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
+      ; If any of the events suspends action, then return early
+      (define contains-action-suspending-event?
+        (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
 
-        ; early-exit
-        (when contains-action-suspending-event? (break))
-        ))
-    
-  (displayln "EVENTS:")
-  (displayln events)
-  (define
-    displayable-events
-    (map
-     (λ (event)
-       (list
-        (string-append " " (number->string (event-at event)) " ")
-        (string-append " " (symbol->string (event-type event)) " ")
-        (string-append " " (~s (event-details event)) " ")
-        ))
-     events))
-  (info-card
-   (append
-    (list (list " at " " type " " details "))
-    displayable-events)
-   "Time passes")
-  (displayln "Elapsed time:")
-  (displayln (world-elapsed-time (situation-world *situation*)))
+      ; early-exit
+      (when contains-action-suspending-event? (break))
+      ))
   events)
 
 
@@ -1284,11 +1264,26 @@
           ((eq? (action-symbol action) 'win-game)
            (return 'win-game)))
     ; begin advancing time
-    (define next-events (advance-time-until-next-interesting-event! (action-duration action)))
-    (displayln "Next events:")
-    (displayln next-events)
-    
+    (define events (advance-time-until-next-interesting-event! (action-duration action)))
 
+    ; display events
+    (define
+      displayable-events
+      (map
+       (λ (event)
+         (list
+          (string-append " " (number->string (event-at event)) " ")
+          (string-append " " (symbol->string (event-type event)) " ")
+          (string-append " " (~s (event-details event)) " ")
+          ))
+       events))
+    (info-card
+     (append
+      (list (list " at " " type " " details "))
+      displayable-events)
+     "Time passes")
+    
+    
     ; should check results
     (define action-result (resolve-action! action))
 
