@@ -22,6 +22,12 @@
 (define (append-element lst elem)
   (append lst (list elem)))
 
+(define (reduce lst func)
+  (when (null? lst) (error "reduce: lst cannot be '()"))
+  (if (null? (cdr lst))
+      (car lst)
+      (func (car lst) (reduce (cdr lst) func ))))
+
 ; various container stuff
 (define (collect-similar lst)
   (hash->list

@@ -440,6 +440,13 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
+
+(serializable-struct event
+                     (type
+                      details
+                      suspends-action?))
+   
+
 ; increment world time
 ; return a list of events that occur at new timestamp
 (define (advance-time-by-a-jiffy!)
@@ -450,7 +457,8 @@
    new-elapsed-time)
 
   (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
-    (set! events (cons (cons 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) events)))
+    (define new-tod-event (event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
+    (set! events (cons new-tod-event events)))
 
 
   (when (not (in-combat?))
@@ -470,7 +478,11 @@
                       title)
                      #;(spawn-enemies world 3)
                      #;(wait-for-confirm)
-                     (set! events (cons 'enemies-spawned events))))
+                     (define enemies-spawned-event
+                       (event 'enemies-spawned
+                              '() ; pack info about enemies here
+                              #t))
+                     (set! events (cons enemies-spawned-event events))))
               )))
   events
   )
@@ -480,12 +492,28 @@
 ; maybe-event is a list of events, and
 ; jiffies is either the elapsed time after which the events occurred, or length of time period if there was no event
 (define (advance-time-until-next-interesting-event! jiffies)
-  (define next-events (let/ec return
-                        (for ([t jiffies])
-                          (define events (advance-time-by-a-jiffy!))
-                          (when (not (eq? events '()))
-                            (return (cons events t))))
-                        (cons '() jiffies)))
+  (define next-events
+    (let/ec return
+      (define events
+        (for/list ([t jiffies])
+          (define events (advance-time-by-a-jiffy!))
+          (for ([event events])
+            (displayln "EVENT:")
+            (displayln (event-type event))
+            (displayln (event-details event))
+            (displayln (event-suspends-action? event))
+            ;suspends-action?
+            )
+          (when (not (null? events))
+            (displayln "EVENTS:")
+            (displayln events)
+            ; If any of the events suspends action, then return early
+            (when (reduce events (λ (event) (event-suspends-action?)))
+              (return (cons events t))))
+          
+          events))
+      (cons '() jiffies)))
+  
   (info-card
    (list (list next-events))
    "Time passes")
