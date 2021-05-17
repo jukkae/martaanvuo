@@ -1233,7 +1233,8 @@
 (serializable-struct
  timeline
  (metadata
-  events))
+  events
+  duration))
  
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,
@@ -1241,8 +1242,10 @@
 (define (advance-time-until-next-interesting-event! jiffies)
   (define metadata '())
   (define events '())
+  (define counter 0)
   (let/ec break
     (for ([t jiffies])
+      (set! counter (add1 counter))
       (define possible-events-at-t (advance-time-by-a-jiffy!))
       (define events-at-t possible-events-at-t) ; they are real events
       (set! events (append events events-at-t))
@@ -1256,7 +1259,7 @@
         (set! metadata 'suspended)
         (break))
       ))
-  (timeline metadata events))
+  (timeline metadata events counter))
 
 ; may return:
 ; void
@@ -1270,7 +1273,7 @@
           ((eq? (action-symbol action) 'win-game)
            (return 'win-game)))
     ; begin advancing time
-    (define events (advance-time-until-next-interesting-event! (action-duration action)))
+    (define timeline (advance-time-until-next-interesting-event! (action-duration action)))
 
     ; display events
     (define
@@ -1282,12 +1285,12 @@
           (string-append " " (symbol->string (event-type event)) " ")
           (string-append " " (~s (event-details event)) " ")
           ))
-       (timeline-events events)))
+       (timeline-events timeline)))
     (info-card
      (append
       (list (list " at " " type " " details "))
       displayable-events)
-     "Timeline")
+     (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
     
     
     ; should check results
