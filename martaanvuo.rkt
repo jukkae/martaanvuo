@@ -698,10 +698,20 @@
   (define neighbors
     (location-neighbors (current-location)))
 
-  (define location-provided-actions '())
-  (when (not (null? (location-actions-provided (current-location))))
-    (displayln "todo: add location-provided-actions"))
-  (append combat-choices change-location-choices downtime-choices end-run-choices)
+  (define location-specific-choices
+    (for/list ([action (location-actions-provided (current-location))])
+      (case action
+        ['search-for-paths
+         (make-choice
+          'search-for-paths
+          "Search for paths."
+          (λ () (make-action
+                 #:symbol 'search-for-paths
+                 #:actor (situation-pc *situation*)
+                 #:duration 0
+                 #:target '()
+                 #:tags '(downtime))))])))
+  (append combat-choices change-location-choices downtime-choices location-specific-choices)
   )
 
 (define (time-of-day-from-jiffies jiffies)
