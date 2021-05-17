@@ -438,7 +438,6 @@
     (situation new-world pc 0 0 0 0 #f '() '())))
 
 (define (in-combat?)
-  ;(displayln "-- in-combat? TODO fix")
   (situation-in-combat? *situation*))
 
 ; increment world time
@@ -453,42 +452,45 @@
   (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
     (set! events (cons (cons 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) events)))
 
-  
-  #;(when (not (in-combat?))
-      (cond ((not (eq? current-time-of-day 'night))
-             (define roll (d 1 200))
-             (cond ((= roll 1)
-                    (spawn-enemies world 2)
-                    (wait-for-confirm)
-                    (set! events (cons 'enemies-spawned events)))))
-            ((eq? current-time-of-day 'night)
-             (define dice-sides (if (or (eq? (get-field current-location world) 'tunnel)
-                                        (eq? (get-field current-location world) 'ruins))
-                                    1000 ; indoors locations are safer
-                                    100))
-             (define roll (d 1 dice-sides))
-             (cond ((= roll 1)
-                    (spawn-enemies world 3)
-                    (wait-for-confirm)
-                    (set! events (cons 'enemies-spawned events))))
-             )))
+
+  (when (not (in-combat?))
+    (cond (#t #;(eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+              (define dice-sides (if (or (eq? (current-location) 'tunnel)
+                                         (eq? (current-location) 'ruins))
+                                     1000 ; indoors locations are safer from random encounters
+                                     100))
+              (define roll (d 1 dice-sides))
+              (cond ((= roll 1)
+                     (define title "Luck roll failure")
+                     (info-card
+                      (list (list
+                             (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
+                             (string-append " 1d" (number->string dice-sides) " = 1 ")
+                             " failure: hostile encounter, spawning enemies "))
+                      title)
+                     #;(spawn-enemies world 3)
+                     #;(wait-for-confirm)
+                     (set! events (cons 'enemies-spawned events))))
+              )))
   events
   )
 
 
 ; returns a pair (maybe-events jiffies), where
 ; maybe-event is a list of events, and
-; jiffies is either the time at which the events occurred, or length of time period if there was no event
+; jiffies is either the elapsed time after which the events occurred, or length of time period if there was no event
 (define (advance-time-until-next-interesting-event! jiffies)
   (define next-events (let/ec return
-    (for ([t jiffies])
-      (define events (advance-time-by-a-jiffy!))
-      (when (not (eq? events '()))
-        (return (cons events t))))
-    (cons '() jiffies)))
+                        (for ([t jiffies])
+                          (define events (advance-time-by-a-jiffy!))
+                          (when (not (eq? events '()))
+                            (return (cons events t))))
+                        (cons '() jiffies)))
   (info-card
    (list (list next-events))
    "Time passes")
+  (displayln "Elapsed time:")
+  (displayln (world-elapsed-time (situation-world *situation*)))
   next-events)
 
 
@@ -1234,7 +1236,10 @@
           ((eq? (action-symbol action) 'win-game)
            (return 'win-game)))
     ; begin advancing time
-    (advance-time-until-next-interesting-event! (action-duration action))
+    (define next-events (advance-time-until-next-interesting-event! (action-duration action)))
+    (displayln "Next events:")
+    (displayln next-events)
+    
 
     ; should check results
     (define action-result (resolve-action! action))
