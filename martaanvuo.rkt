@@ -285,54 +285,60 @@
   )
 
  (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Follow the ridges."
-                                              "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-                                              (λ ()
-                                                
-                                                (let ([exploration-skill 1]
-                                                      [target-number 5])
+   (set! decisions
+         (append-element
+          decisions
+          (make-decision
+           "Follow the ridges."
+           "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
+           (λ ()
+             (let ([exploration-skill (get-trait (situation-pc *situation*) "exploration-skill")]
+                   [target-number 5])
 
-                                                  (move-pc-to-location! ridges)
+               (move-pc-to-location! ridges)
 
-                                                  (define action (make-action
-                                                                  #:symbol 'search-for-paths
-                                                                  #:actor (situation-pc *situation*)
-                                                                  #:duration 100
-                                                                  #:target '()
-                                                                  #:tags '(downtime)))
+               (define action (make-action
+                               #:symbol 'search-for-paths
+                               #:actor (situation-pc *situation*)
+                               #:duration 100
+                               #:target '()
+                               #:tags '(downtime)))
 
-                                                  ; 'success, 'failure or 'suspended
-                                                  (define
-                                                    action-result
-                                                    (resolve-pc-action! action))
+               ; 'success, 'failure or 'suspended
+               (define
+                 action-result
+                 (resolve-pc-action! action))
                                                   
-                                                  (cond ((eq? action-result 'success)
-                                                         (begin
-                                                           (set-location-neighbors!
-                                                            swamp
-                                                            (append-element
-                                                             (location-neighbors swamp)
-                                                             ruins))
-                                                           21))
-                                                        ((eq? action-result 'interrupted)
-                                                         (begin
-                                                           (displayln "--interrupted")
-                                                           'exit
-                                                         ))
-                                                        (else
-                                                         (begin
-                                                           (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                                           'exit))))))))
+               (cond ((eq? action-result 'success)
+                      (begin
+                        (set-location-neighbors!
+                         swamp
+                         (append-element
+                          (location-neighbors swamp)
+                          ruins))
+                        21))
+                     ((eq? action-result 'interrupted)
+                      (begin
+                        (displayln "--interrupted")
+                        'exit
+                        ))
+                     (else
+                      (begin
+                        (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                        'exit))))))))
    
-   (set! decisions (append-element decisions (make-decision
-                                              "Follow the valleys."
-                                              "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-                                              (λ () (let ([exploration-skill 1]
-                                                          [target-number 8])
-                                                      (if (skill-check "Exploration" exploration-skill target-number)
-                                                          23
-                                                          24))))))
+   (set! decisions
+         (append-element decisions
+                         (make-decision
+                          "Follow the valleys."
+                          "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
+                          (λ () (let ([exploration-skill
+                                       (get-trait (situation-pc *situation*) "exploration-skill")]
+                                      [target-number 8])
+                                                      
+                                  (if (skill-check "Exploration" exploration-skill target-number)
+                                      23
+                                      24))))))
    decisions)
  (λ () '())
  )
@@ -1320,8 +1326,7 @@
            'ok
            )
           ((eq? (action-symbol action) 'search-for-paths)
-           
-           (define exploration-skill 0)
+           (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
            (handle-exploration-check-result! exploration-check-result))
