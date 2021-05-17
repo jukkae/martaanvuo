@@ -279,7 +279,7 @@
                                               (λ () (let ([exploration-skill 0]
                                                           [target-number 5])
 
-                                                      (displayln "TODO HERE")
+                                                      (displayln "TODO FIND ME")
                                                       ;(resolve-pc-action!)
                                                       (define action (make-action
                                                                       #:symbol 'search-for-paths
@@ -288,6 +288,7 @@
                                                                       #:target '()
                                                                       #:tags '(downtime)))
                                                       (define action-result (resolve-pc-action! action))
+                                                      (displayln "ACTION RESULT:")
                                                       (displayln action-result)
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           (begin
@@ -1131,6 +1132,11 @@
   action-result
   )
 
+; can return:
+; '()       when the action resolution should be skipped
+; 'pc-dead  when the pc is dead as a consequence of this action
+; 'ok       when the action is completely resolved and successful
+; 'failed   when the action is completely resolved and fails
 (define (resolve-action! action)
   (when (alive? (action-actor action))
     (cond ((or (eq? (action-symbol action) 'shoot)
@@ -1185,6 +1191,16 @@
           ((eq? (action-symbol action) 'back-off)
            'ok
            )
+          ((eq? (action-symbol action) 'go-to-location)
+           'ok
+           )
+          ((eq? (action-symbol action) 'search-for-paths)
+           (define exploration-skill 3)
+           (define target-number 5)
+           (define skill-check-result (skill-check "Exploration" exploration-skill target-number))
+           (displayln "ACTION RESULT:") (displayln skill-check-result)
+           (displayln "TODO HERE 2")
+           )
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 (define (spawn-encounter)
@@ -1195,9 +1211,18 @@
         (send current-encounter begin-encounter!)
         )))
 
-; TODO: think a bit about how this and resolve-action! work together
 (define (resolve-pc-action! action)
   (let/ec return
+    ; do these BEFORE action resolution
+    (cond ((eq? (action-symbol action) 'end-run)
+           (return 'end-run))
+          ((eq? (action-symbol action) 'win-game)
+           (return 'win-game)))
+    ; begin advancing time
+    (advance-time-until-next-interesting-event! (action-duration action))
+    ; should check results
+    (resolve-action! action)
+    ; do these AFTER action resolution
     (cond ((eq? (action-symbol action) 'go-to-location)
            (define next-location (action-target action))
            (remove-actor-from-location! (current-location) (situation-pc *situation*))
@@ -1209,14 +1234,7 @@
            (when (eq? (location-type (current-location)) 'swamp)
              (go-to-story-fragment 20)
              #;(spawn-encounter))
-           (paragraph (describe-go-to-action action))
-           )
-          ((eq? (action-symbol action) 'end-run)
-           (return 'end-run))
-          ((eq? (action-symbol action) 'win-game)
-           (return 'win-game)))
-    (resolve-action! action)
-    (advance-time-until-next-interesting-event! (action-duration action)) ; TODO note that this might return an event
+           (paragraph (describe-go-to-action action))))
     )
   )
 
