@@ -276,31 +276,33 @@
    (set! decisions (append-element decisions (make-decision
                                               "Follow the ridges."
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-                                              (λ () (let ([exploration-skill 1]
-                                                          [target-number 8])
+                                              (λ ()
+                                                (let ([exploration-skill 1]
+                                                      [target-number 8])
 
-                                                      (define action (make-action
-                                                                      #:symbol 'search-for-paths
-                                                                      #:actor (situation-pc *situation*)
-                                                                      #:duration 100
-                                                                      #:target '()
-                                                                      #:tags '(downtime)))
+                                                  (define action (make-action
+                                                                  #:symbol 'search-for-paths
+                                                                  #:actor (situation-pc *situation*)
+                                                                  #:duration 100
+                                                                  #:target '()
+                                                                  #:tags '(downtime)))
 
-                                                      ; 'success, 'failure or 'suspended
-                                                      (define action-result (resolve-pc-action! action))
-                                                      
-                                                      (cond ((eq? action-result 'success)
-                                                             (begin
-                                                               (set-location-neighbors!
-                                                                swamp
-                                                                (append-element
-                                                                 (location-neighbors swamp)
-                                                                 ruins))
-                                                               21))
-                                                            (else
-                                                             (begin
-                                                               (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                                               'exit))))))))
+                                                  ; 'success, 'failure or 'suspended
+                                                  (define
+                                                    action-result
+                                                    (resolve-pc-action! action))
+                                                  (cond ((eq? action-result 'success)
+                                                         (begin
+                                                           (set-location-neighbors!
+                                                            swamp
+                                                            (append-element
+                                                             (location-neighbors swamp)
+                                                             ruins))
+                                                           21))
+                                                        (else
+                                                         (begin
+                                                           (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                                           'exit))))))))
    
    (set! decisions (append-element decisions (make-decision
                                               "Follow the valleys."
@@ -676,6 +678,19 @@
 ; - a big question is, where does much of this logic
 ; best fit? locations?
 (define (get-downtime-choices world actor)
+  (define pending-choices '())
+  (when (not (null? *pending-action*))
+    (set!
+     pending-choices
+     (list
+      (make-choice
+       'go-to-location
+       "GOTO"
+       #;(get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+       (λ () (pending-action-action *pending-action*))))))
+  ;(displayln "PC-not-null")
+
+  
   (define change-location-choices '())
   (define downtime-choices '())
   (when (and (not (in-combat?))
@@ -759,7 +774,7 @@
                  #:duration 100
                  #:target '()
                  #:tags '(downtime))))])))
-  (append change-location-choices downtime-choices end-run-choices location-specific-choices))
+  (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
 
 (define (time-of-day-from-jiffies jiffies)
   (define jiffies-of-current-day (remainder jiffies 400))
@@ -1289,6 +1304,12 @@
       ))
   (timeline metadata events counter))
 
+(define *pending-action* '())
+(serializable-struct
+ pending-action
+ (action
+  time-left))
+
 ; may return:
 ; void
 ; 'end-run
@@ -1297,61 +1318,81 @@
 ; 'success
 ; 'failure
 (define (resolve-pc-action! action)
-  (let/ec return
-    ; do these BEFORE action resolution
-    (cond ((eq? (action-symbol action) 'end-run)
-           (return 'end-run))
-          ((eq? (action-symbol action) 'win-game)
-           (return 'win-game))
-          ((eq? (action-symbol action) 'go-to-location)
-           (paragraph (describe-begin-go-to-action action))))
-    ; begin advancing time
-    (define timeline (advance-time-until-next-interesting-event! (action-duration action)))
+  (define elapsed-time 0)
+  (define result (let/ec return
+                   ; do these BEFORE action resolution
+                   (cond ((eq? (action-symbol action) 'end-run)
+                          (return 'end-run))
+                         ((eq? (action-symbol action) 'win-game)
+                          (return 'win-game))
+                         ((eq? (action-symbol action) 'go-to-location)
+                          (paragraph (describe-begin-go-to-action action))))
+                   ; begin advancing time
+                   (define timeline
+                     (advance-time-until-next-interesting-event! (action-duration action)))
+                   (set! elapsed-time (timeline-duration timeline))
 
-    ; display events
-    (define
-      displayable-events
-      (map
-       (λ (event)
-         (list
-          (string-append " " (number->string (event-at event)) " ")
-          (string-append " " (symbol->string (event-type event)) " ")
-          (string-append " " (~s (event-details event)) " ")
-          (string-append " "
-                         (if (event-suspends-action? event)
-                             "yes"
-                             "no")
-                         " ")
-          ))
-       (timeline-events timeline)))
+                   ; display events
+                   (define
+                     displayable-events
+                     (map
+                      (λ (event)
+                        (list
+                         (string-append " " (number->string (event-at event)) " ")
+                         (string-append " " (symbol->string (event-type event)) " ")
+                         (string-append " " (~s (event-details event)) " ")
+                         (string-append " "
+                                        (if (event-suspends-action? event)
+                                            "yes"
+                                            "no")
+                                        " ")
+                         ))
+                      (timeline-events timeline)))
+                   (info-card
+                    (append
+                     (list (list " at " " type " " details " " interrupts action? "))
+                     displayable-events)
+                    (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+
+                   (when (eq? (timeline-metadata timeline) 'interrupted)
+                     (return 'interrupted))
+    
+    
+                   ; should check results
+                   (define action-result (resolve-action! action))
+
+                   ; do these AFTER action resolution
+                   (cond ((eq? (action-symbol action) 'go-to-location)
+                          (define next-location (action-target action))
+                          (remove-actor-from-location! (current-location) (situation-pc *situation*))
+                          (set-actor-current-location! (situation-pc *situation*) next-location)
+                          (add-actor-to-location! next-location (situation-pc *situation*))
+                          (when (eq? (location-type (current-location)) 'crematory)
+                            (go-to-story-fragment 11))
+                          (when (eq? (location-type (current-location)) 'swamp)
+                            (go-to-story-fragment 20))
+                          (paragraph (describe-finish-go-to-action action))))
+                   (when (or (eq? action-result 'successful)
+                             (eq? action-result 'failure))
+                     action-result)
+                   ))
+
+  ; do the state management mutation stuff
+  (when (eq? 'interrupted result)
+    (define time-left (- (action-duration action) elapsed-time))
+    (set! *pending-action* (pending-action action time-left))
     (info-card
-     (append
-      (list (list " at " " type " " details " " interrupts action? "))
-      displayable-events)
-     (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
-
-    (when (eq? (timeline-metadata timeline) 'interrupted)
-      (return 'interrupted))
-    
-    
-    ; should check results
-    (define action-result (resolve-action! action))
-
-    ; do these AFTER action resolution
-    (cond ((eq? (action-symbol action) 'go-to-location)
-           (define next-location (action-target action))
-           (remove-actor-from-location! (current-location) (situation-pc *situation*))
-           (set-actor-current-location! (situation-pc *situation*) next-location)
-           (add-actor-to-location! next-location (situation-pc *situation*))
-           (when (eq? (location-type (current-location)) 'crematory)
-             (go-to-story-fragment 11))
-           (when (eq? (location-type (current-location)) 'swamp)
-             (go-to-story-fragment 20))
-           (paragraph (describe-finish-go-to-action action))))
-    (when (or (eq? action-result 'successful)
-              (eq? action-result 'failure))
-      action-result)
-    )
+     (list
+      (list
+       (string-append " "
+                      (symbol->string (action-symbol (pending-action-action *pending-action*)))
+                      " ")
+       (string-append " "
+                      "time left: "
+                      (number->string (pending-action-time-left *pending-action*))
+                      " ")))
+     "Pending action"))
+  result
   )
 
 (define (resolve-npc-action! action)
