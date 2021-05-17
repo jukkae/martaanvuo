@@ -466,7 +466,10 @@
    new-elapsed-time)
 
   (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
+    (define suspend-action?
+      (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+           'night))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) suspend-action?))
     (set! events (append-element events ev)))
 
 
@@ -1297,11 +1300,16 @@
           (string-append " " (number->string (event-at event)) " ")
           (string-append " " (symbol->string (event-type event)) " ")
           (string-append " " (~s (event-details event)) " ")
+          (string-append " "
+                         (if (event-suspends-action? event)
+                             "yes"
+                             "no")
+                         " ")
           ))
        (timeline-events timeline)))
     (info-card
      (append
-      (list (list " at " " type " " details "))
+      (list (list " at " " type " " details " " interrupts action? "))
       displayable-events)
      (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
 
