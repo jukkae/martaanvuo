@@ -444,7 +444,15 @@
 (serializable-struct event
                      (type
                       details
-                      suspends-action?))
+                      suspends-action?
+                      at)
+                     #:constructor-name event*)
+
+(define (make-event
+         type
+         details
+         suspends-action?)
+  (event* type details suspends-action? (world-elapsed-time (situation-world *situation*))))
    
 
 ; increment world time
@@ -457,8 +465,8 @@
    new-elapsed-time)
 
   (when (= (modulo (world-elapsed-time (situation-world *situation*)) 10) 0)
-    (define new-tod-event (event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
-    (set! events (cons new-tod-event events)))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
+    (set! events (append-element events ev)))
 
 
   (when (not (in-combat?))
@@ -467,7 +475,12 @@
                                          (eq? (current-location) 'ruins))
                                      1000 ; indoors locations are safer from random encounters
                                      100))
-              (define roll (d 1 dice-sides))
+              #;(define roll (d 1 dice-sides))
+
+              (define roll
+                (if (= (world-elapsed-time (situation-world *situation*)) 45)
+                    1
+                    2))
               (cond ((= roll 1)
                      (define title "Luck roll failure")
                      (info-card
@@ -478,67 +491,54 @@
                       title)
                      #;(spawn-enemies world 3)
                      #;(wait-for-confirm)
-                     (define enemies-spawned-event
-                       (event 'enemies-spawned
-                              '() ; pack info about enemies here
-                              #t))
-                     (set! events (cons enemies-spawned-event events))))
+                     (define ev
+                       (make-event 'enemies-spawned
+                                   '() ; pack info about enemies here
+                                   #t))
+                     (set! events (append-element events ev))))
               )))
   events
   )
-
 
 ; returns a pair (maybe-events jiffies), where
 ; maybe-event is a list of events, and
 ; jiffies is either the elapsed time after which the events occurred, or length of time period if there was no event
 (define (advance-time-until-next-interesting-event! jiffies)
-  (define next-events
-    (let/ec return
-      (define events
-        (for/list ([t jiffies])
-          (define events (advance-time-by-a-jiffy!))
-          (for ([event events])
-            (displayln "EVENT:")
-            (displayln (event-type event))
-            (displayln (event-details event))
-            (displayln (event-suspends-action? event))
-            ;suspends-action?
-            )
-          (when (not (null? events))
-            (define body
-              (for/list ([event events])
-                (list
-                 (string-append " " (symbol->string (event-type event)) " ")
-                 (string-append " " (~v (event-details event)) " ")
-                 (string-append " "
-                                (if (event-suspends-action? event)
-                                        "suspends action"
-                                        "doesn't suspend action")
-                                " ")
-                 )))
-            (info-card
-             body
-             "Events")
-            (displayln "EVENTS:")
-            (displayln events)
 
-            ; If any of the events suspends action, then return early
-            (define contains-action-suspending-event?
-              (memf (λ (event) (event-suspends-action? event)) events))
-            (displayln "CASE:")
-            (displayln contains-action-suspending-event?)
-            (when contains-action-suspending-event?
-              (return (cons events t))))
-          
-          events))
-      (cons '() jiffies)))
-  
+  (define events '())
+  (let/ec break
+    (for ([t jiffies])
+      (define possible-events-at-t (advance-time-by-a-jiffy!))
+        (define events-at-t possible-events-at-t) ; they are real events
+        (set! events (append events events-at-t))
+        
+        ; If any of the events suspends action, then return early
+        (define contains-action-suspending-event?
+          (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
+
+        ; early-exit
+        (when contains-action-suspending-event? (break))
+        ))
+    
+  (displayln "EVENTS:")
+  (displayln events)
+  (define
+    displayable-events
+    (map
+     (λ (event)
+       (list
+        (string-append " " (number->string (event-at event)) " ")
+        (string-append " " (symbol->string (event-type event)) " ")
+        ))
+     events))
   (info-card
-   (list (list next-events))
+   (append
+    (list (list " at " " type "))
+    displayable-events)
    "Time passes")
   (displayln "Elapsed time:")
   (displayln (world-elapsed-time (situation-world *situation*)))
-  next-events)
+  events)
 
 
 (define (character-sheet)
