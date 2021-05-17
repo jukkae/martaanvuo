@@ -674,6 +674,17 @@
   (displayln "get-night-time-choices: TODO not implemented yet")
   '())
 
+(define (get-location-name-from-location-type location-type)
+  (cond ((eq? location-type 'swamp) "the swamps")
+        (else "get-location-name-from-location-type: unknown location type")))
+
+(define (get-continue-pending-action-name pending-action)
+  (cond ((eq? (action-symbol pending-action) 'go-to-location)
+         (string-append
+          "Continue towards "
+          (get-location-name-from-location-type (location-type (action-target pending-action)))))
+        (else "")))
+
 ; This should be refactored
 ; - a big question is, where does much of this logic
 ; best fit? locations?
@@ -685,8 +696,7 @@
      (list
       (make-choice
        'go-to-location
-       "CONTINUE"
-       #;(get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+       (get-continue-pending-action-name *pending-action*)
        (λ () *pending-action*)))))
   ;(displayln "PC-not-null")
 
@@ -777,8 +787,7 @@
   (define choices-before-pruning
     (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
 
-  ; name is poor, but eh
-  (define (choice-symbol-not-eq-to-pending? choice)
+  (define (show-choice-based-on-pending-choice? choice)
     (cond ((not (null? pending-choices))
            #f)
           (else
@@ -787,7 +796,7 @@
   (define
     pruned-choices
     (filter
-     choice-symbol-not-eq-to-pending?
+     show-choice-based-on-pending-choice?
      choices-before-pruning))
   (define all-choices
     (append pending-choices pruned-choices))
