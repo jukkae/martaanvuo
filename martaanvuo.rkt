@@ -476,20 +476,20 @@
   )
 
 
-; returns a pair (maybe-event jiffies), where
-; maybe-event is either event or '(), and
-; jiffies is time at which the event occurred, or length of time period if there was no event
+; returns a pair (maybe-events jiffies), where
+; maybe-event is a list of events, and
+; jiffies is either the time at which the events occurred, or length of time period if there was no event
 (define (advance-time-until-next-interesting-event! jiffies)
-  (define next-event (let/ec return
+  (define next-events (let/ec return
     (for ([t jiffies])
-      (define event (advance-time-by-a-jiffy!))
-      (when (not (eq? event '()))
-        (return (cons event t))))
+      (define events (advance-time-by-a-jiffy!))
+      (when (not (eq? events '()))
+        (return (cons events t))))
     (cons '() jiffies)))
   (info-card
-   (list (list next-event))
-   " Time passes ")
-  next-event)
+   (list (list next-events))
+   "Time passes")
+  next-events)
 
 
 (define (character-sheet)
