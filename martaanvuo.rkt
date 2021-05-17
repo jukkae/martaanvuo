@@ -286,20 +286,21 @@
                                                                       #:target '()
                                                                       #:tags '(downtime)))
 
-                                                      ; 'successful or 'failure
+                                                      ; 'success, 'failure or 'suspended
                                                       (define action-result (resolve-pc-action! action))
                                                       
-                                                      (if (eq? action-result 'successful)
-                                                          (begin
-                                                            (set-location-neighbors!
-                                                             swamp
-                                                             (append-element
-                                                              (location-neighbors swamp)
-                                                              ruins))
-                                                            21)
-                                                          (begin
-                                                            (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                                            'exit)))))))
+                                                      (cond ((eq? action-result 'success)
+                                                             (begin
+                                                               (set-location-neighbors!
+                                                                swamp
+                                                                (append-element
+                                                                 (location-neighbors swamp)
+                                                                 ruins))
+                                                               21))
+                                                            (else
+                                                             (begin
+                                                               (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                                               'exit))))))))
    
    (set! decisions (append-element decisions (make-decision
                                               "Follow the valleys."
@@ -1256,14 +1257,17 @@
 
       ; early-exit
       (when contains-action-suspending-event?
-        (set! metadata 'suspended)
+        (set! metadata 'interrupted)
         (break))
       ))
   (timeline metadata events counter))
 
 ; may return:
 ; void
-; 'successful
+; 'end-run
+; 'win-game
+; 'interrupted
+; 'success
 ; 'failure
 (define (resolve-pc-action! action)
   (let/ec return
@@ -1291,6 +1295,9 @@
       (list (list " at " " type " " details "))
       displayable-events)
      (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+
+    (when (eq? (timeline-metadata timeline) 'interrupted)
+      (return 'interrupted))
     
     
     ; should check results
