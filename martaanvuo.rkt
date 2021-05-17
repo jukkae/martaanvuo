@@ -685,9 +685,9 @@
      (list
       (make-choice
        'go-to-location
-       "GOTO"
+       "CONTINUE"
        #;(get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
-       (λ () (pending-action-action *pending-action*))))))
+       (λ () *pending-action*)))))
   ;(displayln "PC-not-null")
 
   
@@ -1305,10 +1305,7 @@
   (timeline metadata events counter))
 
 (define *pending-action* '())
-(serializable-struct
- pending-action
- (action
-  time-left))
+
 
 ; may return:
 ; void
@@ -1380,16 +1377,17 @@
   ; do the state management mutation stuff
   (when (eq? 'interrupted result)
     (define time-left (- (action-duration action) elapsed-time))
-    (set! *pending-action* (pending-action action time-left))
+    (set! *pending-action* (lens-set action-duration-lens action time-left)
+          #;(pending-action action time-left))
     (info-card
      (list
       (list
        (string-append " "
-                      (symbol->string (action-symbol (pending-action-action *pending-action*)))
+                      (symbol->string (action-symbol *pending-action*))
                       " ")
        (string-append " "
                       "time left: "
-                      (number->string (pending-action-time-left *pending-action*))
+                      (number->string (action-duration *pending-action*))
                       " ")))
      "Pending action"))
   result
