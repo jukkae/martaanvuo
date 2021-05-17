@@ -456,7 +456,7 @@
    (situation-world *situation*)
    new-elapsed-time)
 
-  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
+  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 10) 0)
     (define new-tod-event (event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
     (set! events (cons new-tod-event events)))
 
@@ -505,10 +505,27 @@
             ;suspends-action?
             )
           (when (not (null? events))
+            (define body
+              (for/list ([event events])
+                (list
+                 (string-append " " (symbol->string (event-type event)) " ")
+                 (string-append " " (~v (event-details event)) " ")
+                 (string-append " "
+                                (if (event-suspends-action? event)
+                                        "suspends action"
+                                        "")
+                                " ")
+                 )))
+            (info-card
+             body
+             "Events")
             (displayln "EVENTS:")
             (displayln events)
+
             ; If any of the events suspends action, then return early
-            (when (reduce events (λ (event) (event-suspends-action?)))
+            (define contains-action-suspending-event?
+              (reduce events (λ (event) (event-suspends-action?))))
+            (when contains-action-suspending-event?
               (return (cons events t))))
           
           events))
