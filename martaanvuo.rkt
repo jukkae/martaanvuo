@@ -277,7 +277,7 @@
                                               "Follow the ridges."
                                               "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
                                               (λ () (let ([exploration-skill 0]
-                                                          [target-number 8])
+                                                          [target-number 5])
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           (begin
                                                             (set-location-neighbors!
@@ -294,7 +294,7 @@
                                               "Follow the valleys."
                                               "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
                                               (λ () (let ([exploration-skill 0]
-                                                          [target-number 9])
+                                                          [target-number 5])
                                                       (if (skill-check "Exploration" exploration-skill target-number)
                                                           23
                                                           24))))))
@@ -308,12 +308,7 @@
   "After half a day of making her way eastward on the rolling ridges, Otava comes upon a hill that's steeper and taller than any thus far. The jagged silhouettes of ruined buildings looming against the gray sky look menacing, alien. There's a small pillar of smoke rising from the hilltop."
   )
 
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Nice."
-                                              "Nice."
-                                              'exit)))
-   decisions)
+ '()
  (λ () '())
  )
 
@@ -911,7 +906,7 @@
                                   (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       
-      (define choices (if (null? (situation-current-fragment *situation*))
+      (define choices (if (null? scene-decisions)
                           world-choices
                           '()))
 
