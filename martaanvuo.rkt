@@ -651,13 +651,28 @@
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
+  (cond ((in-combat?)
+         (get-combat-choices world actor))
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+         (get-nighttime-choices world actor))
+        (else (get-downtime-choices world actor))))
+
+(define (get-combat-choices world actor)
   (define combat-choices '())
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
     '()
     )
+  (displayln "get-combat-choices: TODO not implemented yet")
+  combat-choices
+  )
 
+(define (get-nighttime-choices world actor)
+  (displayln "get-night-time-choices: TODO not implemented yet")
+  '())
+
+(define (get-downtime-choices world actor)
   (define change-location-choices '())
   (define downtime-choices '())
   (when (and (not (in-combat?))
@@ -741,8 +756,7 @@
                  #:duration 100
                  #:target '()
                  #:tags '(downtime))))])))
-  (append combat-choices change-location-choices downtime-choices location-specific-choices)
-  )
+  (append change-location-choices downtime-choices location-specific-choices))
 
 (define (time-of-day-from-jiffies jiffies)
   (define jiffies-of-current-day (remainder jiffies 400))
