@@ -464,7 +464,7 @@
    (situation-world *situation*)
    new-elapsed-time)
 
-  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 10) 0)
+  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
     (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) #f))
     (set! events (append-element events ev)))
 
@@ -475,9 +475,9 @@
                                          (eq? (current-location) 'ruins))
                                      1000 ; indoors locations are safer from random encounters
                                      100))
-              #;(define roll (d 1 dice-sides))
+              (define roll (d 1 dice-sides))
 
-              (define roll
+              #;(define roll
                 (if (= (world-elapsed-time (situation-world *situation*)) 45)
                     1
                     2))
@@ -529,11 +529,12 @@
        (list
         (string-append " " (number->string (event-at event)) " ")
         (string-append " " (symbol->string (event-type event)) " ")
+        (string-append " " (~s (event-details event)) " ")
         ))
      events))
   (info-card
    (append
-    (list (list " at " " type "))
+    (list (list " at " " type " " details "))
     displayable-events)
    "Time passes")
   (displayln "Elapsed time:")
