@@ -153,6 +153,8 @@
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
+  (set-trait! (situation-pc *situation*) "exploration-skill" 1)
+
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
   (displayln "[Build set]")
   (character-sheet)
@@ -304,6 +306,7 @@
                                                   (define
                                                     action-result
                                                     (resolve-pc-action! action))
+                                                  
                                                   (cond ((eq? action-result 'success)
                                                          (begin
                                                            (set-location-neighbors!
@@ -312,6 +315,11 @@
                                                              (location-neighbors swamp)
                                                              ruins))
                                                            21))
+                                                        ((eq? action-result 'interrupted)
+                                                         (begin
+                                                           (displayln "--interrupted")
+                                                           'exit
+                                                         ))
                                                         (else
                                                          (begin
                                                            (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
@@ -1240,6 +1248,15 @@
   action-result
   )
 
+(define (handle-exploration-check-result! result)
+  (if result
+      (begin
+        (displayln "EXPLORATION SUCCESS")
+        'successful)
+      (begin
+        (displayln "EXPLORATION FAILURE")
+        'failure)))
+
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
 ; 'ok       when the action is completely resolved and not explicitly successful or failed
@@ -1303,12 +1320,11 @@
            'ok
            )
           ((eq? (action-symbol action) 'search-for-paths)
-           (define exploration-skill 3)
-           (define target-number 5)
-           (define skill-check-result (skill-check "Exploration" exploration-skill target-number))
-           (if skill-check-result
-               'successful
-               'failure))
+           
+           (define exploration-skill 0)
+           (define target-number 9)
+           (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
+           (handle-exploration-check-result! exploration-check-result))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 (define (spawn-encounter)
