@@ -17,7 +17,7 @@
   day
   [elapsed-time #:mutable]))
 
-(define edges
+(define edgeflats
   (make-location
    #:actors '()
    #:features '()
@@ -25,7 +25,7 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'edges))
+   #:type 'edgeflats))
 
 (define swamp
   (make-location
@@ -118,8 +118,8 @@
    #:type 'spring))
 
 (define (setup-world)
-  (set-location-neighbors! edges (list swamp))
-  (set-location-neighbors! swamp (list edges ridges valleys))
+  (set-location-neighbors! edgeflats (list swamp))
+  (set-location-neighbors! swamp (list edgeflats ridges valleys))
   (set-location-neighbors! ridges (list swamp))
   (set-location-neighbors! valleys (list swamp))
   (set-location-neighbors! crematory (list valleys))
@@ -498,7 +498,7 @@
   ))
 
 (define *situation*
-  (let ([new-world (world (list edges swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
+  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)])
     (situation new-world pc 0 0 0 0 #f '() '())))
 
@@ -717,7 +717,7 @@
   (case to-type
     ['ruins "Climb the hill to the ruins."]
     ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
-    ['edges "Go back to Edgeflats."]
+    ['edgeflats "Go back to Edgeflats."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -841,7 +841,7 @@
           ))
 
   (define end-run-choices '()) ; poor name
-  (when (eq? (location-type (current-location)) 'edges)
+  (when (eq? (location-type (current-location)) 'edgeflats)
     (set! end-run-choices
           (list
            (make-choice
@@ -925,11 +925,6 @@
            (string-append
             " "
             (symbol->string (location-type (current-location)))
-            " "))
-     (list " current location id "
-           (string-append
-            " "
-            (number->string (location-id (current-location)))
             " "))
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
@@ -1047,7 +1042,7 @@
      (string-append " "
                     (get-trait actor "size")
                     " "
-      ))
+                    ))
     (list
      " location "
      (string-append " " (stance-location stance) " "))
@@ -1062,7 +1057,7 @@
                     "/"
                     (number->string (actor-max-hp actor))
                     " "
-      )))
+                    )))
    name)
   )
 
@@ -1497,7 +1492,7 @@
        ('night (paragraph "Night falls. Brutal, pitch-black night."))
        ('morning (paragraph "It is morning."))
        ))
-     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
+    ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
     (else (displayln (string-append "narrate-event: unknown event type "
                                     (symbol->string (event-type event)))))))
@@ -1591,37 +1586,30 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A long, many-jointed finger extends from behind a tree trunk. The finger is followed by another finger, then a tangled, gnarly mass of stick-like appendages. The mass splits in two.")
+         (paragraph "A long, many-jointed fingerlike appendage extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a tangled, gnarly mass of bony limbs. The mass splits in two.")
 
          (set-situation-in-combat?! *situation* #t)
 
-         (define enemy-1 (make-actor "Blindscraper" 4))
-         (set-trait! enemy-1 "defense" 1)
-         (set-trait! enemy-1 "melee-attack-skill" 1)
-         (set-trait! enemy-1 "melee-attack-damage" 1)
-         (set-trait! enemy-1 "size" "small")
-         (displayln "enemy 1:")
-         (displayln (actor-name enemy-1))
-         (move-actor-to-location! enemy-1 (current-location))
-         (define stance-1
-           (stance "α" 'close "right"))
-         (hash-set! *enemy-stances* enemy-1 stance-1)
-         
-
-         (define enemy-2 (make-actor "Blindscraper" 4))
-         (set-trait! enemy-2 "defense" 1)
-         (set-trait! enemy-2 "melee-attack-skill" 1)
-         (set-trait! enemy-2 "melee-attack-damage" 1)
-         (set-trait! enemy-2 "size" "small")
-         (displayln "enemy 2:")
-         (displayln (actor-name enemy-2))
-         (move-actor-to-location! enemy-2 (current-location))
-         (define stance-2
-           (stance "β" 'close "left"))
-         (hash-set! *enemy-stances* enemy-2 stance-2)
-
-         
-         
+         (for ([i 2])
+           (define enemy (make-actor "Blindscraper" 4))
+           (set-trait! enemy "defense" 1)
+           (set-trait! enemy "melee-attack-skill" 1)
+           (set-trait! enemy "melee-attack-damage" 1)
+           (set-trait! enemy "size" "small")
+           (move-actor-to-location! enemy (current-location))
+           (define index
+             (case i
+               [(0) "α"]
+               [(1) "β"]))
+           (define location
+             (case i
+               [(0) "right"]
+               [(1) "left"]))
+           (define enemy-stance
+             (stance index 'close location))
+           
+           (hash-set! *enemy-stances* enemy enemy-stance)
+           )  
          )
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
@@ -1737,7 +1725,7 @@
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-  (hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
+  #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
@@ -1782,7 +1770,7 @@
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
-  (move-actor-to-location! (situation-pc *situation*) edges)
+  (move-actor-to-location! (situation-pc *situation*) edgeflats)
   (narrate-begin-run)
   (go-to-story-fragment 1)
   )
