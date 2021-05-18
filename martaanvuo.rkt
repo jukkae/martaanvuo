@@ -503,15 +503,15 @@
 (serializable-struct event
                      (type
                       details
-                      suspends-action?
+                      interrupting?
                       at)
                      #:constructor-name event*)
 
 (define (make-event
          type
          details
-         suspends-action?)
-  (event* type details suspends-action? (world-elapsed-time (situation-world *situation*))))
+         interrupting?)
+  (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
    
 
 ; increment world time
@@ -536,7 +536,7 @@
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
                  'night))
-       (define dice-sides 1000) ; tweak on a per-location basis
+       (define dice-sides 100) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
        (cond ((= roll 1)
@@ -1397,7 +1397,7 @@
         
       ; If any of the events suspends action, then return early
       (define contains-action-suspending-event?
-        (memf (λ (event) (event-suspends-action? event)) possible-events-at-t))
+        (memf (λ (event) (event-interrupting? event)) possible-events-at-t))
 
       ; early-exit
       (when contains-action-suspending-event?
@@ -1465,7 +1465,7 @@
                          (string-append " " (symbol->string (event-type event)) " ")
                          (string-append " " (~s (event-details event)) " ")
                          (string-append " "
-                                        (if (event-suspends-action? event)
+                                        (if (event-interrupting? event)
                                             "yes"
                                             "no")
                                         " ")
@@ -1480,6 +1480,7 @@
                      (narrate-event event))
 
                    (when (eq? (timeline-metadata timeline) 'interrupted)
+                     (handle-pc-action-interrupted! timeline)
                      (return 'interrupted))
     
     
@@ -1517,6 +1518,31 @@
                       " ")))
      "Pending action"))
   result
+  )
+
+(define (handle-interrupting-event! event)
+  (cond ((eq? (event-type event) 'spawn-enemies)
+         (displayln "SPAWNING ENEMIES"))
+        (else
+         (displayln "handle-interrupting-event!: unknown event type")))
+  '())
+
+(define (handle-pc-action-interrupted! timeline)
+  (define interrupting-events
+    (filter
+     (λ (event) (event-interrupting? event))
+     (timeline-events timeline)))
+  
+  (cond ((eq? (length interrupting-events) 1)
+         (define event (car interrupting-events))
+         (displayln "EVENT (type details at):")
+         (displayln (event-type event))
+         (displayln (event-details event))
+         (displayln (event-at event))
+         (handle-interrupting-event! event)
+         )
+        (else
+         (displayln "handle-pc-action-interrupted!: unexpected amount of interrupting events")))
   )
 
 (define (resolve-npc-action! action)
