@@ -118,6 +118,9 @@
   (set-location-neighbors! the-cataract (list workshop))
   )
 
+(define (expose-neighbor! location)
+  (displayln "TEST"))
+
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
         ((<= 4  attribute  5) -2)
@@ -507,7 +510,7 @@
               (define dice-sides (if (or (eq? (current-location) 'tunnel)
                                          (eq? (current-location) 'ruins))
                                      1000 ; indoors locations are safer from random encounters
-                                     100))
+                                     1000))
               (define roll (d 1 dice-sides))
 
               #;(define roll
@@ -699,7 +702,16 @@
 
 (define (get-nighttime-choices world actor)
   (displayln "get-night-time-choices: TODO not implemented yet")
-  '())
+  (list
+   (make-choice
+    'sleep
+    "Sleep." 
+    (λ () (make-action
+           #:symbol 'sleep
+           #:actor (situation-pc *situation*)
+           #:duration 100
+           #:target '()
+           #:tags '())))))
 
 (define (get-location-name-from-location-type location-type)
   (cond ((eq? location-type 'swamp) "the swamps")
@@ -1258,6 +1270,7 @@
   (if result
       (begin
         (displayln "EXPLORATION SUCCESS")
+        (expose-neighbor! (current-location))
         'successful)
       (begin
         (displayln "EXPLORATION FAILURE")
@@ -1330,6 +1343,9 @@
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
            (handle-exploration-check-result! exploration-check-result))
+          ((eq? (action-symbol action) 'sleep)
+           (paragraph "Otava turns in for the night. Get some rest.")
+           'ok)
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 (define (spawn-encounter)
