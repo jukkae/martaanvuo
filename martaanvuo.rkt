@@ -714,9 +714,19 @@
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    '()
-    )
-  (displayln "get-combat-choices: TODO not implemented yet")
+    (define choice
+      (make-choice
+       'attack
+       "Attack." 
+       (λ () (make-action
+              #:symbol 'attack
+              #:actor (situation-pc *situation*)
+              #:duration 1
+              #:target target
+              #:tags '()))))
+    (set! combat-choices
+          (cons choice combat-choices)))
+  
   combat-choices
   )
 
