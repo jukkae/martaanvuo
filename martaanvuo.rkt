@@ -665,7 +665,6 @@
     (["Blindscraper"]
      (if (in-combat?)
          (begin
-           (displayln "in combat")
            (make-action
             #:symbol 'melee
             #:actor actor
@@ -723,8 +722,7 @@
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (displayln (string-append "target number " (number->string i)))
-    (displayln (actor-name target))
+    
     (define choice
       (make-choice
        'attack
@@ -1274,18 +1272,10 @@
   successful?)
 
 (define (resolve-melee-action! action)
-  (displayln "resolve-melee-action!: TODO")
-  
   (define actor (action-actor action))
   (define target (action-target action))
-
-  (displayln "TARGET:")
-  (displayln (actor-name target))
   
   (define target-defense (get-trait target "defense"))
-  (displayln "Target trait: \"defense\":")
-  (displayln target-defense)
-  
 
   (define skill (get-trait actor "melee-attack-skill"))
   (define action-target-number 7)
@@ -1643,13 +1633,11 @@
 
            (define round-exit-status 'ok)
            (cond ((initiative-based-resolution? pc-action)
-                  (displayln "PC ACTION: initiative-based")
                   (add-to-action-queue pc-action)
                   (update-npc-reactions pc-action)
                   (sort-action-queue)
                   (resolve-turns!))
                  (else
-                  (displayln "PC ACTION: not initiative-based")
                   (define pc-action-result (resolve-pc-action! pc-action))
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
