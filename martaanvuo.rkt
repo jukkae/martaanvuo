@@ -1545,13 +1545,16 @@
 
          (define enemy-1 (make-actor "Blindscraper" 4))
          (set-trait! enemy-1 "defense" 1)
-         ;(set-trait! enemy-1 "melee-attack-damage" 1)
+         (set-trait! enemy-1 "melee-attack-skill" 1)
+         (set-trait! enemy-1 "melee-attack-damage" 1)
          (displayln "enemy 1:")
          (displayln (actor-name enemy-1))
          (move-actor-to-location! enemy-1 (current-location))
 
          (define enemy-2 (make-actor "Blindscraper" 4))
-         (set-trait! enemy-1 "defense" 1)
+         (set-trait! enemy-2 "defense" 1)
+         (set-trait! enemy-2 "melee-attack-skill" 1)
+         (set-trait! enemy-2 "melee-attack-damage" 1)
          (displayln "enemy 2:")
          (displayln (actor-name enemy-2))
          (move-actor-to-location! enemy-2 (current-location))
