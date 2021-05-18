@@ -649,7 +649,8 @@
   (actor-current-location (situation-pc *situation*)))
 
 (define (clean-up-dead-actor! actor)
-  (displayln "clean-up-dead-actor!: todo")
+  (hash-remove! *enemy-stances* actor)
+  (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln (actor-name actor)))
 
 (define (take-damage actor damage)
@@ -1031,8 +1032,39 @@
       '())
     ))
 
+(define (display-combatant-info actor stance)
+  (define name (actor-name actor))
+    
+  (info-card
+   (list
+    (list
+     " location "
+     (string-append " " (stance-location stance) " "))
+    (list
+     " range "
+     (string-append " " (symbol->string (stance-range stance)) " "))
+    (list
+     " HP: "
+     (string-append " "
+                    (number->string (actor-hp actor))
+                    "/"
+                    (number->string (actor-max-hp actor))
+                    " "
+      )))
+   (string-append name " #" (number->string (stance-index stance))))
+  )
+
+(define (describe-combat-situation)
+  (paragraph "Otava is in combat.")
+  (for ([enemy (get-current-enemies)])
+    (define stance (hash-ref! *enemy-stances* enemy '()))
+    (display-combatant-info enemy stance)
+    
+    ))
+
 (define (describe-situation)
-  '()
+  (cond
+    ((in-combat?) (describe-combat-situation)))
   )
 
 (define (describe-pc-intention pc-action)
@@ -1539,8 +1571,9 @@
 ; TODO move to situation
 (serializable-struct
  stance
- (range
-  description))
+ (index
+  range
+  location))
 (define *enemy-stances* (make-hash))
 
 (define (handle-interrupting-event! event)
@@ -1557,7 +1590,7 @@
          (displayln (actor-name enemy-1))
          (move-actor-to-location! enemy-1 (current-location))
          (define stance-1
-           (stance 'close 'right))
+           (stance 1 'close "right"))
          (hash-set! *enemy-stances* enemy-1 stance-1)
          
 
@@ -1569,7 +1602,7 @@
          (displayln (actor-name enemy-2))
          (move-actor-to-location! enemy-2 (current-location))
          (define stance-2
-           (stance 'close 'left))
+           (stance 2 'close "left"))
          (hash-set! *enemy-stances* enemy-2 stance-2)
 
          
