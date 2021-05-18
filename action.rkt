@@ -60,7 +60,7 @@
       #f))
 
 (define (initiative-based-resolution? action)
-  (if (member 'delayed-resolution (action-tags action))
+  (if (member 'initiative-based-resolution (action-tags action))
       #t
       #f))
 

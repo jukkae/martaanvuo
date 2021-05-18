@@ -727,12 +727,13 @@
         ": "
         (actor-name target)
         " in melee with crowbar.")
-       (λ () (make-action
+       (λ ()
+         (make-action
               #:symbol 'melee
               #:actor (situation-pc *situation*)
               #:duration 0
               #:target target
-              #:tags '()))))
+              #:tags '(initiative-based-resolution)))))
     (set! combat-choices
           (cons choice combat-choices)))
   
@@ -1663,6 +1664,8 @@
   (serialize-state)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
+    (displayln "PC ACTION:")
+    (displayln pc-action)
     (cond ((eq? pc-action 'end-round-early)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
@@ -1676,11 +1679,13 @@
 
            (define round-exit-status 'ok)
            (cond ((initiative-based-resolution? pc-action)
+                  (displayln "PC ACTION: initiative-based")
                   (add-to-action-queue pc-action)
                   (update-npc-reactions pc-action)
                   (sort-action-queue)
                   (resolve-turns!))
                  (else
+                  (displayln "PC ACTION: not initiative-based")
                   (define pc-action-result (resolve-pc-action! pc-action))
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
