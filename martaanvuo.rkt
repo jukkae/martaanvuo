@@ -132,7 +132,11 @@
 
 (define (expose-neighbor! location)
   (displayln "exposing neighbor")
-  (displayln location)
+  (cond ((eq? (location-type location) 'ridges)
+         (displayln "location type ridges")
+         (set-location-neighbors! ridges (list swamp ruins))
+         )
+        (else (error "unknown location type")))
   )
 
 (define (get-attribute-modifier-for attribute)
@@ -1291,11 +1295,10 @@
 (define (handle-exploration-check-result! result)
   (if result
       (begin
-        (displayln "EXPLORATION SUCCESS")
         (expose-neighbor! (current-location))
         'successful)
       (begin
-        (displayln "EXPLORATION FAILURE")
+        (displayln "Exploration failed.")
         'failure)))
 
 ; can return:
