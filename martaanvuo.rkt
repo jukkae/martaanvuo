@@ -47,6 +47,16 @@
    #:actions-provided '(search-for-paths)
    #:type 'ridges))
 
+(define valleys
+  (make-location
+   #:actors '()
+   #:features '()
+   #:items '()
+   #:neighbors '()
+   #:tags '()
+   #:actions-provided '(search-for-paths)
+   #:type 'valleys))
+
 (define crematory
   (make-location
    #:actors '()
@@ -97,29 +107,33 @@
    #:actions-provided '()
    #:type 'workshop))
 
-(define the-cataract
+(define spring
   (make-location
    #:actors '()
    #:features '()
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:actions-provided '(step-under-the-waterfall)
-   #:type 'the-cataract))
+   #:actions-provided '(dive-in-spring)
+   #:type 'spring))
 
 (define (setup-world)
   (set-location-neighbors! edges (list swamp))
-  (set-location-neighbors! swamp (list edges))
-  (set-location-neighbors! crematory (list swamp))
-  (set-location-neighbors! ruins (list swamp sewers cache))
+  (set-location-neighbors! swamp (list edges ridges valleys))
+  (set-location-neighbors! ridges (list swamp))
+  (set-location-neighbors! valleys (list swamp))
+  (set-location-neighbors! crematory (list valleys))
+  (set-location-neighbors! ruins (list ridges sewers cache))
   (set-location-neighbors! sewers (list ruins workshop))
   (set-location-neighbors! cache (list ruins))
-  (set-location-neighbors! workshop (list sewers the-cataract))
-  (set-location-neighbors! the-cataract (list workshop))
+  (set-location-neighbors! workshop (list sewers spring))
+  (set-location-neighbors! spring (list workshop))
   )
 
 (define (expose-neighbor! location)
-  (displayln "TEST"))
+  (displayln "exposing neighbor")
+  (displayln location)
+  )
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
@@ -295,12 +309,9 @@
            "Follow the ridges."
            "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
            (λ ()
-             (let ([exploration-skill (get-trait (situation-pc *situation*) "exploration-skill")]
-                   [target-number 5])
-
+             (begin
                (move-pc-to-location! ridges)
-
-               (define action (make-action
+(define action (make-action
                                #:symbol 'search-for-paths
                                #:actor (situation-pc *situation*)
                                #:duration 100
@@ -335,13 +346,38 @@
                          (make-decision
                           "Follow the valleys."
                           "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-                          (λ () (let ([exploration-skill
-                                       (get-trait (situation-pc *situation*) "exploration-skill")]
-                                      [target-number 8])
-                                                      
-                                  (if (skill-check "Exploration" exploration-skill target-number)
-                                      23
-                                      24))))))
+                          (λ ()
+             (begin
+               (move-pc-to-location! valleys)
+(define action (make-action
+                               #:symbol 'search-for-paths
+                               #:actor (situation-pc *situation*)
+                               #:duration 100
+                               #:target '()
+                               #:tags '(downtime)))
+
+               ; 'success, 'failure or 'suspended
+               (define
+                 action-result
+                 (resolve-pc-action! action))
+                                                  
+               (cond ((eq? action-result 'success)
+                      (begin
+                        (set-location-neighbors!
+                         swamp
+                         (append-element
+                          (location-neighbors swamp)
+                          ruins))
+                        23))
+                     ((eq? action-result 'interrupted)
+                      (begin
+                        (displayln "--interrupted")
+                        'exit
+                        ))
+                     (else
+                      (begin
+                        (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                        'exit))))))))
    decisions)
  (λ () '())
  )
@@ -372,20 +408,6 @@
  (λ () '())
  )
 
-(fragment
- 24
- (string-append
-  "Fail!"
-  )
-
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Oof."
-                                              "Oof."
-                                              'exit)))
-   decisions)
- (λ () '())
- )
 
 (fragment
  50
@@ -466,7 +488,7 @@
   ))
 
 (define *situation*
-  (let ([new-world (world (list edges crematory ruins sewers cache workshop the-cataract) 0 0)]
+  (let ([new-world (world (list edges swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)])
     (situation new-world pc 0 0 0 0 #f '() '())))
 
@@ -800,12 +822,12 @@
                    #:duration 0
                    #:target '()
                    #:tags '(downtime)))))))
-  (when (eq? (location-type (current-location)) 'the-cataract)
+  (when (eq? (location-type (current-location)) 'spring)
     (set! end-run-choices
           (list
            (make-choice
-            'step-under-the-waterfall
-            "Step under Martaanvuo Cataract."
+            'dive-in-spring
+            "Dive in the spring."
             (λ () (make-action
                    #:symbol 'win-game
                    #:actor (situation-pc *situation*)
@@ -1704,7 +1726,7 @@
   )
 
 (define (win-game)
-  (paragraph "Otava steps under the roaring waters of Martaanvuo Cataract and forever ceases to exist.")
+  (paragraph "Otava dives under the waters of Martaanvuo Spring and forever ceases to exist.")
   (wait-for-input)
   (exit))
 
