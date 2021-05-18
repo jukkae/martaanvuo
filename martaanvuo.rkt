@@ -648,14 +648,23 @@
   #;(displayln "-- current-location: TODO move to situation")
   (actor-current-location (situation-pc *situation*)))
 
+(define (clean-up-dead-actor! actor)
+  (displayln "clean-up-dead-actor!: todo")
+  (displayln (actor-name actor)))
+
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)
-  (if (= 0 (actor-hp actor))
-      'dead
-      'hit))
+  (define result
+    (if (= 0 (actor-hp actor))
+        'dead
+        'hit))
+
+  (when (eq? result 'dead) (clean-up-dead-actor! actor))
+  
+  result)
 
 (define (alive? actor)
   (> (actor-hp actor) 0))
@@ -1527,6 +1536,13 @@
   result
   )
 
+; TODO move to situation
+(serializable-struct
+ stance
+ (range
+  description))
+(define *enemy-stances* (make-hash))
+
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
          (displayln "-- spawning 2 enemies:")
@@ -1540,6 +1556,10 @@
          (displayln "enemy 1:")
          (displayln (actor-name enemy-1))
          (move-actor-to-location! enemy-1 (current-location))
+         (define stance-1
+           (stance 'close 'right))
+         (hash-set! *enemy-stances* enemy-1 stance-1)
+         
 
          (define enemy-2 (make-actor "Blindscraper" 4))
          (set-trait! enemy-2 "defense" 1)
@@ -1548,11 +1568,11 @@
          (displayln "enemy 2:")
          (displayln (actor-name enemy-2))
          (move-actor-to-location! enemy-2 (current-location))
+         (define stance-2
+           (stance 'close 'left))
+         (hash-set! *enemy-stances* enemy-2 stance-2)
 
-         ;(displayln "ACTORS HERE:")
-         ;(displayln (location-actors (current-location)))
-
-
+         
          
          )
         (else
