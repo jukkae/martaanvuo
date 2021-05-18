@@ -167,10 +167,12 @@
                 (set-actor-max-hp! (situation-pc *situation*) 4)
                 (set-actor-hp! (situation-pc *situation*) 4)
                 (set-trait! (situation-pc *situation*) "charisma" 10)
-                (set-trait! (situation-pc *situation*) "strength" 7)]
+                (set-trait! (situation-pc *situation*) "strength" 7)
+                (set-trait! (situation-pc *situation*) "melee-attack-skill" 0)]
     ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
               (set-trait! (situation-pc *situation*) "charisma" 7)
-              (set-trait! (situation-pc *situation*) "strength" 10)]
+              (set-trait! (situation-pc *situation*) "strength" 10)
+              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
@@ -717,9 +719,14 @@
     (define choice
       (make-choice
        'attack
-       "Attack." 
+       (string-append
+        "Attack enemy number "
+        (number->string i)
+        ": "
+        (actor-name target)
+        " in melee with crowbar.")
        (λ () (make-action
-              #:symbol 'attack
+              #:symbol 'melee
               #:actor (situation-pc *situation*)
               #:duration 1
               #:target target
@@ -1262,6 +1269,48 @@
 
   successful?)
 
+(define (resolve-melee-action! action)
+  (displayln "resolve-melee-action!: TODO")
+  
+  (define actor (action-actor action))
+  (define target (action-target action))
+  
+  (define target-defense (get-trait target "defense"))
+  (displayln "TD:")
+  (displayln target-defense)
+  
+
+  (define skill (get-trait actor "melee-attack-skill"))
+  (define action-target-number 7)
+  
+  (define success? (skill-check "Melee" skill action-target-number))
+  #;(define damage-roll ((actor-attack-damage actor)))
+  #;(define success? #t)
+  (define damage-roll 2)
+
+  (when success?
+    (info-card
+     (list
+      (list " damage roll formula " " result ")
+      (list
+       " < see actor > "
+       (string-append
+        " "
+        (number->string damage-roll))
+       ))
+     "HP damage roll"))
+
+  (define action-result 'ok)
+  (when success? (set! action-result (take-damage target damage-roll)))
+
+  (actor-status-card target (actor-name target))
+  (newline)
+
+  action-result
+  )
+
+
+
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
@@ -1312,8 +1361,16 @@
 ; 'failed   when the action is completely resolved and fails
 (define (resolve-action! action)
   (when (alive? (action-actor action))
-    (cond ((or (eq? (action-symbol action) 'shoot)
-               (eq? (action-symbol action) 'melee))
+    (cond ((eq? (action-symbol action) 'melee)
+           (define result (resolve-melee-action! action))
+           (when (eq? result 'dead)
+             (if (not (pc-actor? (action-target action)))
+                 (paragraph "The " (actor-name (action-target action)) " is dead.")
+                 (begin
+                   (paragraph "Otava is dead.")
+                   'pc-dead))))
+
+          ((eq? (action-symbol action) 'shoot)
            (define result (resolve-shoot-action! action))
            (when (eq? result 'dead)
              (if (not (pc-actor? (action-target action)))
@@ -1520,17 +1577,24 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (displayln "SPAWNING ENEMIES")
+         (displayln "-- spawning 2 enemies:")
 
          (set-situation-in-combat?! *situation* #t)
 
-         (define enemy (make-actor "Blindscraper" 4))
-         (displayln "ENEMY:")
-         (displayln (actor-name enemy))
+         (define enemy-1 (make-actor "Blindscraper" 4))
+         (set-trait! enemy-1 "defense" 1)
+         (displayln "enemy 1:")
+         (displayln (actor-name enemy-1))
+         (move-actor-to-location! enemy-1 (current-location))
 
-         (move-actor-to-location! enemy (current-location))
-         (displayln "ACTORS HERE:")
-         (displayln (location-actors (current-location)))
+         (define enemy-2 (make-actor "Blindscraper" 4))
+         (set-trait! enemy-1 "defense" 1)
+         (displayln "enemy 2:")
+         (displayln (actor-name enemy-2))
+         (move-actor-to-location! enemy-2 (current-location))
+
+         ;(displayln "ACTORS HERE:")
+         ;(displayln (location-actors (current-location)))
 
 
          
