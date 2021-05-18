@@ -901,7 +901,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
@@ -1510,7 +1510,21 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (displayln "SPAWNING ENEMIES"))
+         (displayln "SPAWNING ENEMIES")
+
+         (set-situation-in-combat?! *situation* #t)
+
+         (define enemy (make-actor "Blindscraper" 4))
+         (displayln "ENEMY:")
+         (displayln (actor-name enemy))
+
+         (move-actor-to-location! enemy (current-location))
+         (displayln "ACTORS HERE:")
+         (displayln (location-actors (current-location)))
+
+
+         
+         )
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
@@ -1523,10 +1537,6 @@
   
   (cond ((eq? (length interrupting-events) 1)
          (define event (car interrupting-events))
-         (displayln "EVENT (type details at):")
-         (displayln (event-type event))
-         (displayln (event-details event))
-         (displayln (event-at event))
          (handle-interrupting-event! event)
          )
         (else
