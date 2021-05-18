@@ -168,11 +168,13 @@
                 (set-actor-hp! (situation-pc *situation*) 4)
                 (set-trait! (situation-pc *situation*) "charisma" 10)
                 (set-trait! (situation-pc *situation*) "strength" 7)
-                (set-trait! (situation-pc *situation*) "melee-attack-skill" 0)]
+                (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
+                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)]
     ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
               (set-trait! (situation-pc *situation*) "charisma" 7)
               (set-trait! (situation-pc *situation*) "strength" 10)
-              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)]
+              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
+              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
@@ -1284,9 +1286,7 @@
   (define action-target-number 7)
   
   (define success? (skill-check "Melee" skill action-target-number))
-  #;(define damage-roll ((actor-attack-damage actor)))
-  #;(define success? #t)
-  (define damage-roll 2)
+  (define damage (get-trait actor "melee-attack-damage"))
 
   (when success?
     (info-card
@@ -1296,12 +1296,12 @@
        " < see actor > "
        (string-append
         " "
-        (number->string damage-roll))
+        (number->string damage))
        ))
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll)))
+  (when success? (set! action-result (take-damage target damage)))
 
   (actor-status-card target (actor-name target))
   (newline)
