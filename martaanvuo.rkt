@@ -315,7 +315,7 @@
            (λ ()
              (begin
                (move-pc-to-location! ridges)
-(define action (make-action
+               (define action (make-action
                                #:symbol 'search-for-paths
                                #:actor (situation-pc *situation*)
                                #:duration 100
@@ -351,37 +351,37 @@
                           "Follow the valleys."
                           "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
                           (λ ()
-             (begin
-               (move-pc-to-location! valleys)
-(define action (make-action
-                               #:symbol 'search-for-paths
-                               #:actor (situation-pc *situation*)
-                               #:duration 100
-                               #:target '()
-                               #:tags '(downtime)))
+                            (begin
+                              (move-pc-to-location! valleys)
+                              (define action (make-action
+                                              #:symbol 'search-for-paths
+                                              #:actor (situation-pc *situation*)
+                                              #:duration 100
+                                              #:target '()
+                                              #:tags '(downtime)))
 
-               ; 'success, 'failure or 'suspended
-               (define
-                 action-result
-                 (resolve-pc-action! action))
+                              ; 'success, 'failure or 'suspended
+                              (define
+                                action-result
+                                (resolve-pc-action! action))
                                                   
-               (cond ((eq? action-result 'success)
-                      (begin
-                        (set-location-neighbors!
-                         swamp
-                         (append-element
-                          (location-neighbors swamp)
-                          ruins))
-                        23))
-                     ((eq? action-result 'interrupted)
-                      (begin
-                        (displayln "--interrupted")
-                        'exit
-                        ))
-                     (else
-                      (begin
-                        (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                        'exit))))))))
+                              (cond ((eq? action-result 'success)
+                                     (begin
+                                       (set-location-neighbors!
+                                        swamp
+                                        (append-element
+                                         (location-neighbors swamp)
+                                         ruins))
+                                       23))
+                                    ((eq? action-result 'interrupted)
+                                     (begin
+                                       (displayln "--interrupted")
+                                       'exit
+                                       ))
+                                    (else
+                                     (begin
+                                       (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                       'exit))))))))
    decisions)
  (λ () '())
  )
@@ -532,33 +532,27 @@
 
 
   (when (not (in-combat?))
-    (cond (#t #;(eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-              (define dice-sides (if (or (eq? (current-location) 'tunnel)
-                                         (eq? (current-location) 'ruins))
-                                     1000 ; indoors locations are safer from random encounters
-                                     1000))
-              (define roll (d 1 dice-sides))
+    (cond
+      ;; Currently, only spawn enemies at daytime
+      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+                 'night))
+       (define dice-sides 1000) ; tweak on a per-location basis
+       (define roll (d 1 dice-sides))
 
-              #;(define roll
-                  (if (= (world-elapsed-time (situation-world *situation*)) 45)
-                      1
-                      2))
-              (cond ((= roll 1)
-                     (define title "Luck roll failure")
-                     (info-card
-                      (list (list
-                             (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
-                             (string-append " 1d" (number->string dice-sides) " = 1 ")
-                             " failure: hostile encounter, spawning enemies "))
-                      title)
-                     #;(spawn-enemies world 3)
-                     #;(wait-for-confirm)
-                     (define ev
-                       (make-event 'enemies-spawned
-                                   '() ; pack info about enemies here
-                                   #t))
-                     (set! events (append-element events ev))))
-              )))
+       (cond ((= roll 1)
+              (define title "Luck roll failure")
+              (info-card
+               (list (list
+                      (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
+                      (string-append " 1d" (number->string dice-sides) " = 1 ")
+                      " failure: hostile encounter, spawning enemies "))
+               title)
+              (define ev
+                (make-event 'spawn-enemies
+                            '() ; pack info about enemies / event here
+                            #t))
+              (set! events (append-element events ev))))
+       )))
   events
   )
 
@@ -1450,7 +1444,7 @@
                           (define inventory
                             (actor-inventory (situation-pc *situation*)))
                           (displayln inventory)
-                          (paragraph "Otava's seen enough.")
+                          (paragraph "Otava decides to head back to the Shack.")
                           (return 'end-run))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
@@ -1478,10 +1472,10 @@
                          ))
                       (timeline-events timeline)))
                    #;(info-card
-                    (append
-                     (list (list " at " " type " " details " " interrupts action? "))
-                     displayable-events)
-                    (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+                      (append
+                       (list (list " at " " type " " details " " interrupts action? "))
+                       displayable-events)
+                      (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
                    (for ([event (timeline-events timeline)])
                      (narrate-event event))
 
