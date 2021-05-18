@@ -737,10 +737,8 @@
       (make-choice
        'attack
        (string-append
-        "Attack enemy number "
-        (number->string i)
-        ": "
-        (actor-name target)
+        "Attack "
+        (get-combatant-name target)
         " in melee with crowbar.")
        (λ ()
          (make-action
@@ -1032,17 +1030,31 @@
       '())
     ))
 
-(define (display-combatant-info actor stance)
+(define (get-combatant-name actor)
+  (define stance (hash-ref! *enemy-stances* actor '()))
   (define name (actor-name actor))
-    
+  (define index (stance-index stance))
+  (append-string name " " index)
+  )
+
+(define (display-combatant-info actor)
+  (define stance (hash-ref! *enemy-stances* actor '()))
+  (define name (get-combatant-name actor))
   (info-card
    (list
+    (list
+     " size: "
+     (string-append " "
+                    (get-trait actor "size")
+                    " "
+      ))
     (list
      " location "
      (string-append " " (stance-location stance) " "))
     (list
      " range "
      (string-append " " (symbol->string (stance-range stance)) " "))
+
     (list
      " HP: "
      (string-append " "
@@ -1051,14 +1063,13 @@
                     (number->string (actor-max-hp actor))
                     " "
       )))
-   (string-append name " #" (number->string (stance-index stance))))
+   name)
   )
 
 (define (describe-combat-situation)
   (paragraph "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
-    (define stance (hash-ref! *enemy-stances* enemy '()))
-    (display-combatant-info enemy stance)
+    (display-combatant-info enemy)
     
     ))
 
@@ -1486,6 +1497,8 @@
        ('night (paragraph "Night falls. Brutal, pitch-black night."))
        ('morning (paragraph "It is morning."))
        ))
+     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
+    ('spawn-enemies '())
     (else (displayln (string-append "narrate-event: unknown event type "
                                     (symbol->string (event-type event)))))))
 
@@ -1578,7 +1591,7 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (displayln "-- spawning 2 enemies:")
+         (paragraph "A long, many-jointed finger extends from behind a tree trunk. The finger is followed by another finger, then a tangled, gnarly mass of stick-like appendages. The mass splits in two.")
 
          (set-situation-in-combat?! *situation* #t)
 
@@ -1586,11 +1599,12 @@
          (set-trait! enemy-1 "defense" 1)
          (set-trait! enemy-1 "melee-attack-skill" 1)
          (set-trait! enemy-1 "melee-attack-damage" 1)
+         (set-trait! enemy-1 "size" "small")
          (displayln "enemy 1:")
          (displayln (actor-name enemy-1))
          (move-actor-to-location! enemy-1 (current-location))
          (define stance-1
-           (stance 1 'close "right"))
+           (stance "α" 'close "right"))
          (hash-set! *enemy-stances* enemy-1 stance-1)
          
 
@@ -1598,11 +1612,12 @@
          (set-trait! enemy-2 "defense" 1)
          (set-trait! enemy-2 "melee-attack-skill" 1)
          (set-trait! enemy-2 "melee-attack-damage" 1)
+         (set-trait! enemy-2 "size" "small")
          (displayln "enemy 2:")
          (displayln (actor-name enemy-2))
          (move-actor-to-location! enemy-2 (current-location))
          (define stance-2
-           (stance 2 'close "left"))
+           (stance "β" 'close "left"))
          (hash-set! *enemy-stances* enemy-2 stance-2)
 
          
