@@ -163,9 +163,9 @@
      (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
   (case build
-    ['desperate (set-trait! (situation-pc *situation*) "constitution" 10)
-                (set-actor-max-hp! (situation-pc *situation*) 4)
+    ['desperate (set-actor-max-hp! (situation-pc *situation*) 4)
                 (set-actor-hp! (situation-pc *situation*) 4)
+                (set-trait! (situation-pc *situation*) "constitution" 10)
                 (set-trait! (situation-pc *situation*) "charisma" 10)
                 (set-trait! (situation-pc *situation*) "strength" 7)
                 (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
@@ -183,7 +183,6 @@
   (set-trait! (situation-pc *situation*) "exploration-skill" 1)
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
-  (displayln "[Build set]")
   (character-sheet)
   )
 
@@ -1073,6 +1072,12 @@
     ((in-combat?) (describe-combat-situation)))
   )
 
+(define (redescribe-situation)
+  (cond
+    ((in-combat?) (describe-combat-situation))
+    (else (displayln "redescribe-situation: TODO")))
+  )
+
 (define (describe-pc-intention pc-action)
   (case (action-symbol pc-action)
     ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
@@ -1127,6 +1132,7 @@
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
         (define meta-command (cdr meta-command-with-key))
         (meta-command)
+        (redescribe-situation)
         (what-do-you-do 'verbose))
       
       (define actor (situation-pc *situation*))
@@ -1714,7 +1720,30 @@
          #t))) ; mark input as handled
 
 (define (menu)
-  (displayln "menu")
+  (define (handle-meta-command meta-commands-with-keys input)
+    (set! input (string-upcase input))
+    (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+    (define meta-command (cdr meta-command-with-key))
+    (meta-command))
+  (define (close-menu) #t) ; hacky but eh
+  
+  (displayln "[Menu]")
+  (define meta-commands (make-hash))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
+  (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
+
+  (for ([(k v) (in-hash meta-commands)])
+    (display (car v))
+    (display " "))
+  (newline)
+  (newline)
+  (define input (wait-for-input))
+  (serialize-input)
+
+  (newline)
+
+  (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
+        (else (menu)))
   #t)
 
 (define (wait-for-input)
@@ -1724,7 +1753,6 @@
 
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
   #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
