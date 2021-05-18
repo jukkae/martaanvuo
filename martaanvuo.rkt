@@ -1504,19 +1504,7 @@
   ; do the state management mutation stuff
   (when (eq? 'interrupted result)
     (define time-left (- (action-duration action) elapsed-time))
-    (set! *pending-action* (lens-set action-duration-lens action time-left)
-          #;(pending-action action time-left))
-    (info-card
-     (list
-      (list
-       (string-append " "
-                      (symbol->string (action-symbol *pending-action*))
-                      " ")
-       (string-append " "
-                      "time left: "
-                      (number->string (action-duration *pending-action*))
-                      " ")))
-     "Pending action"))
+    (set! *pending-action* (lens-set action-duration-lens action time-left)))
   result
   )
 
