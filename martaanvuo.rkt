@@ -1421,6 +1421,19 @@
 
 (define *pending-action* '())
 
+(define (narrate-event event)
+  (case (event-type event)
+    ('new-time-of-day
+     (case (event-details event)
+       ('afternoon (paragraph "It is now afternoon."))
+       ('evening (paragraph (string-append
+                             "It is evening. "
+                             )))
+       ('night (paragraph "Night falls. Brutal, pitch-black night."))
+       ('morning (paragraph "It is morning."))
+       ))
+    (else (displayln (string-append "narrate-event: unknown event type "
+                                    (symbol->string (event-type event)))))))
 
 ; may return:
 ; void
@@ -1464,11 +1477,13 @@
                                         " ")
                          ))
                       (timeline-events timeline)))
-                   (info-card
+                   #;(info-card
                     (append
                      (list (list " at " " type " " details " " interrupts action? "))
                      displayable-events)
                     (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+                   (for ([event (timeline-events timeline)])
+                     (narrate-event event))
 
                    (when (eq? (timeline-metadata timeline) 'interrupted)
                      (return 'interrupted))
