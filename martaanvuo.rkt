@@ -658,17 +658,20 @@
 (define (alive? actor)
   (> (actor-hp actor) 0))
 
-; TODO shit
 (define (get-next-npc-action actor)
-  (if (not (in-combat?))
-      (make-action #:symbol 'hold-at-gunpoint
-                   #:actor actor
-                   #:duration 1
-                   #:target 'pc
-                   #:tags '(delayed-resolution))
-      (make-shoot-action actor))
-  
-  )
+  (case (actor-name actor)
+    (["Blindscraper"]
+     (if (in-combat?)
+         (begin
+           (displayln "in combat")
+           (make-action
+            #:symbol 'melee
+            #:actor actor
+            #:duration 1
+            #:target (situation-pc *situation*)
+            #:tags '(initiative-based-resolution)))
+         (begin (displayln "Blindscraper AI, not in combat"))))
+    (else (displayln "get-next-npc-action: unknown actor"))))
 
 
 (define (get-next-action actor)
@@ -729,11 +732,11 @@
         " in melee with crowbar.")
        (λ ()
          (make-action
-              #:symbol 'melee
-              #:actor (situation-pc *situation*)
-              #:duration 0
-              #:target target
-              #:tags '(initiative-based-resolution)))))
+          #:symbol 'melee
+          #:actor (situation-pc *situation*)
+          #:duration 1
+          #:target target
+          #:tags '(initiative-based-resolution)))))
     (set! combat-choices
           (cons choice combat-choices)))
   
@@ -952,7 +955,8 @@
 
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
-  (when (aggressive? pc-action)
+  (when (and (aggressive? pc-action)
+             (not (in-combat?)))
     ; remove own actions from queue
     (for ([actor npcs])
       (define actions (filter
@@ -960,19 +964,12 @@
                        action-queue))
       (remove-from-action-queue actions)
       ; blam blam
-      (define action (make-shoot-action actor))
+      #;(define action (make-shoot-action actor))
+      (define action '())
       (add-to-action-queue action))
     )
   )
 
-(define (make-shoot-action actor)
-  (define action (make-action
-                  #:symbol 'shoot
-                  #:actor actor
-                  #:duration 1
-                  #:target (situation-pc *situation*)
-                  #:tags '(combat delayed-resolution)))
-  action)
 
 (define (serialize-state)
   ; prng can be stored as vector:
@@ -1311,41 +1308,6 @@
   )
 
 
-
-(define (resolve-shoot-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  
-  #;(define target-number (actor-defense-number target))
-  (displayln "resolve-shoot-action!: TODO reimplement")
-  (define target-number 7)
-  
-  #;(define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
-  #;(define damage-roll ((actor-attack-damage actor)))
-  (define success? #t)
-  (define damage-roll 2)
-
-  (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       " < see actor > "
-       (string-append
-        " "
-        (number->string damage-roll))
-       ))
-     "HP damage roll"))
-
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll)))
-
-  (actor-status-card target (actor-name target))
-  (newline)
-
-  action-result
-  )
-
 (define (handle-exploration-check-result! result)
   (if result
       (begin
@@ -1371,14 +1333,6 @@
                    (paragraph "Otava is dead.")
                    'pc-dead))))
 
-          ((eq? (action-symbol action) 'shoot)
-           (define result (resolve-shoot-action! action))
-           (when (eq? result 'dead)
-             (if (not (pc-actor? (action-target action)))
-                 (paragraph "The " (actor-name (action-target action)) " is dead.")
-                 (begin
-                   (paragraph "Otava is dead.")
-                   'pc-dead))))
           ((eq? (action-symbol action) 'forage)
            (begin
              (define skill 0)
