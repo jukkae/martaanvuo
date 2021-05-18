@@ -730,7 +730,7 @@
        (λ () (make-action
               #:symbol 'melee
               #:actor (situation-pc *situation*)
-              #:duration 1
+              #:duration 0
               #:target target
               #:tags '()))))
     (set! combat-choices
@@ -1640,10 +1640,11 @@
 
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
+
   (when (= (length current-enemies) 0)
-    '()
-    #;(displayln "-- on-end-round: fix (in-combat?)")
-    #;(set! in-combat? #f))
+    ; would be nicer to only change when it's currently true, but eh
+    (set-situation-in-combat?! *situation* #f))
+  
   (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
   #;(when (not (eq? '() current-encounter))
