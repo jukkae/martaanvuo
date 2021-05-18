@@ -257,7 +257,7 @@
                                               ;(λ () (passive-check 'luck))
                                               )))
    decisions)
- (λ () (create-goal 'pay-off-debt))
+ (λ () (create-quest 'pay-off-debt))
  )
 
 (fragment
@@ -293,7 +293,7 @@
  14
  (string-append
   "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
-  ) ; and drop some meta-visible info or something somewhere; create a goal?
+  ) ; and drop some meta-visible info or something somewhere; create a quest?
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
@@ -301,7 +301,7 @@
                                               "\"The book, Yarn of the what?\""
                                               12)))
    decisions)
- (λ () (create-goal 'the-anthead))
+ (λ () (create-quest 'the-anthead))
  )
 
 (fragment
@@ -493,7 +493,7 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [current-fragment #:mutable]
-  [goals #:mutable]
+  [quests #:mutable]
   ))
 
 (define *situation*
@@ -607,13 +607,13 @@
   )
 
 ; TODO move to state
-; currently: goal - status - notes
+; currently: quest - status - notes
 ; and table-display formatted
-(define *goals* '())
+(define *quests* '())
 
-(define (create-goal goal-symbol)
-  (define goal
-    (case goal-symbol
+(define (create-quest quest-symbol)
+  (define quest
+    (case quest-symbol
       ['pay-off-debt
        (list " pay off the debt to the Collector "
              " in progress "
@@ -622,25 +622,25 @@
        (list " seek the Anthead Girl "
              " not started "
              " \"not ready yet\" ")]))
-  (set! *goals*
-        (append-element *goals* goal))
+  (set! *quests*
+        (append-element *quests* quest))
 
   (info-card
-   (list goal)
-   "New goal")
+   (list quest)
+   "New quest")
   )
 
-(define (goals)
+(define (quests)
   (define sheet
     (append
      (list
-      (list " goal " " status " " notes ")
+      (list " quest " " status " " notes ")
       )
-     *goals*
+     *quests*
      ))
   (info-card
    sheet
-   "Goals")
+   "Quests")
   )
 
 (define (current-location)
@@ -1757,7 +1757,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
-  (hash-set! meta-commands "G" (cons "[G]: Goals." goals))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
   meta-commands)
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
