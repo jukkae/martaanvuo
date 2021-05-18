@@ -169,12 +169,14 @@
                 (set-trait! (situation-pc *situation*) "charisma" 10)
                 (set-trait! (situation-pc *situation*) "strength" 7)
                 (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)]
+                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)
+                (set-trait! (situation-pc *situation*) "defense" 1)]
     ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
               (set-trait! (situation-pc *situation*) "charisma" 7)
               (set-trait! (situation-pc *situation*) "strength" 10)
               (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)]
+              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)
+              (set-trait! (situation-pc *situation*) "defense" 0)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
@@ -721,6 +723,8 @@
   (define targets (get-current-enemies))
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
+    (displayln (string-append "target number " (number->string i)))
+    (displayln (actor-name target))
     (define choice
       (make-choice
        'attack
@@ -1274,9 +1278,12 @@
   
   (define actor (action-actor action))
   (define target (action-target action))
+
+  (displayln "TARGET:")
+  (displayln (actor-name target))
   
   (define target-defense (get-trait target "defense"))
-  (displayln "TD:")
+  (displayln "Target trait: \"defense\":")
   (displayln target-defense)
   
 
@@ -1538,6 +1545,7 @@
 
          (define enemy-1 (make-actor "Blindscraper" 4))
          (set-trait! enemy-1 "defense" 1)
+         ;(set-trait! enemy-1 "melee-attack-damage" 1)
          (displayln "enemy 1:")
          (displayln (actor-name enemy-1))
          (move-actor-to-location! enemy-1 (current-location))
@@ -1618,8 +1626,7 @@
   (serialize-state)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
-    (displayln "PC ACTION:")
-    (displayln pc-action)
+    
     (cond ((eq? pc-action 'end-round-early)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
