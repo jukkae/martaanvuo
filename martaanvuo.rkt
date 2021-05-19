@@ -680,16 +680,21 @@
 
 (define (get-next-npc-action actor)
   (case (actor-name actor)
+    ; Blindscraper combat AI
     (["Blindscraper"]
-     (if (in-combat?)
-         (begin
-           (make-action
-            #:symbol 'melee
-            #:actor actor
-            #:duration 1
-            #:target (situation-pc *situation*)
-            #:tags '(initiative-based-resolution)))
-         (begin (displayln "Blindscraper AI, not in combat"))))
+     (cond ((in-combat?)
+            (begin
+              (define stance (hash-ref *enemy-stances* actor))
+              (cond ((or (eq? (stance-range stance) 'close)
+                         (eq? (stance-range stance) 'engaged))
+                     (make-action
+                      #:symbol 'melee
+                      #:actor actor
+                      #:duration 1
+                      #:target (situation-pc *situation*)
+                      #:tags '(initiative-based-resolution))))))
+           (else
+            (begin (displayln "Blindscraper AI, not in combat")))))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 
@@ -1055,10 +1060,12 @@
 
 (define (get-combatant-name actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
-  (define name (actor-name actor))
-  (define index (stance-index stance))
-  (append-string name " " index)
-  )
+  (cond ((= (hash-count *enemy-stances*) 1)
+         (append-string (actor-name actor)))
+        (else
+         (define name (actor-name actor))
+         (define index (stance-index stance))
+         (append-string name " " index))))
 
 (define (display-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
@@ -1621,37 +1628,34 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A long, many-jointed fingerlike appendage extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a tangled, gnarly mass of bony limbs. The mass splits in two.")
+         (paragraph "A long, many-jointed fingerlike appendage extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body the size of a human head.")
 
          (set-situation-in-combat?! *situation* #t)
 
-         (define closer-index (- (d 1 2) 1))
 
-         (for ([i 2])
-           (define enemy (make-actor "Blindscraper" 4))
-           (set-trait! enemy "defense" 1)
-           (set-trait! enemy "melee-attack-skill" 1)
-           (set-trait! enemy "melee-attack-damage" 1)
-           (set-trait! enemy "size" "small")
-           (move-actor-to-location! enemy (current-location))
-           (define index
-             (case i
-               [(0) "α"]
-               [(1) "β"]))
-           (define location
-             (case i
-               [(0) "right"]
-               [(1) "left"]))
-           (define range
-             (if (= i closer-index)
-                 'close
-                 'mid))
-           (define enemy-stance
-             (stance index range location))
+         (define i 0)
+         (define enemy (make-actor "Blindscraper" 4))
+         (set-trait! enemy "defense" 1)
+         (set-trait! enemy "melee-attack-skill" 1)
+         (set-trait! enemy "melee-attack-damage" 1)
+         (set-trait! enemy "size" "small")
+         (move-actor-to-location! enemy (current-location))
+         (define index
+           (case i
+             [(0) "α"]
+             [(1) "β"]))
+         (define location
+           (case i
+             [(0) "right"]
+             [(1) "left"]))
+         (define range
+           (if (= i 0)
+               'close
+               'mid))
+         (define enemy-stance
+           (stance index range location))
            
-           (hash-set! *enemy-stances* enemy enemy-stance)
-           )  
-         )
+         (hash-set! *enemy-stances* enemy enemy-stance))
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
