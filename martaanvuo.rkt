@@ -1850,6 +1850,7 @@
 
 
 (define (on-end-round)
+  (displayln "[End round]")
   (define current-enemies (get-current-enemies))
 
   (when (= (length current-enemies) 0)
@@ -1858,7 +1859,12 @@
   
   (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
-  
+
+  ; remove statuses
+  (displayln "[Removing statuses]")
+  (for ([enemy (get-current-enemies)])
+    (set-actor-statuses! enemy '()))
+  (set-actor-statuses! (situation-pc *situation*) '())
 
   (newline) ; This is the "extra" newline that separates rounds
   )
