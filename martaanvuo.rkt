@@ -168,12 +168,14 @@
                 (set-trait! (situation-pc *situation*) "constitution" 10)
                 (set-trait! (situation-pc *situation*) "charisma" 10)
                 (set-trait! (situation-pc *situation*) "strength" 7)
+                (set-trait! (situation-pc *situation*) "athletics-skill" 0)
                 (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
                 (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)
                 (set-trait! (situation-pc *situation*) "defense" 1)]
     ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
               (set-trait! (situation-pc *situation*) "charisma" 7)
               (set-trait! (situation-pc *situation*) "strength" 10)
+              (set-trait! (situation-pc *situation*) "athletics-skill" 1)
               (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
               (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)
               (set-trait! (situation-pc *situation*) "defense" 0)]
@@ -1431,6 +1433,12 @@
            (handle-exploration-check-result! exploration-check-result))
           ((eq? (action-symbol action) 'sleep)
            (paragraph "Otava turns in for the night. Get some rest.")
+           'ok)
+          ((eq? (action-symbol action) 'run)
+           (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+           (define target-number 9)
+           (skill-check "Athletics" skill target-number)
+           
            'ok)
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
