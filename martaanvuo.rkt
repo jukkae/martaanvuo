@@ -1435,11 +1435,19 @@
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
           ((eq? (action-symbol action) 'run)
+           (paragraph "Otava tries to run.")
            (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
            (define target-number 9)
-           (skill-check "Athletics" skill target-number)
-           
-           'ok)
+           (define success? (skill-check "Athletics" skill target-number))
+           (if success?
+               (begin
+                 (paragraph "Otava narrowly escapes.")
+                 (wait-for-confirm)
+                 'ok)
+               (begin
+                 (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+                 (wait-for-confirm)
+                 'failure)))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 
