@@ -1612,6 +1612,9 @@
          (set-situation-in-combat?! *situation* #t)
 
 
+         ; Enemies design idea v1:
+         ; Blindscraper: Can only attack when Engaged
+         ; Binderroot: Gives penalty on all Dex-based checks
          (define i 0)
          (define enemy (make-actor "Blindscraper" 4))
          (set-trait! enemy "defense" 1)
