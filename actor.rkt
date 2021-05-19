@@ -23,8 +23,8 @@
   [traits #:mutable]
 
   ; lists of symbols
-  [statuses #:mutable]
-  [conditions #:mutable]
+  [statuses #:mutable]   ; (semi)temporary
+  [conditions #:mutable] ; (semi)permanent
   
   [inventory #:mutable]
   [current-location #:mutable])

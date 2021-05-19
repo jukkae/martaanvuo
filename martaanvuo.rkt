@@ -1136,41 +1136,78 @@
                 (define index (stance-index stance))
                 (append-string name " " index))))))
 
-(define (display-combatant-info actor)
+(define (display-non-pc-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
   (define name (get-combatant-name actor))
-  (info-card
-   (list
+  (define body
     (list
-     " size: "
-     (string-append " "
-                    (get-trait actor "size")
-                    " "
-                    ))
-    (list
-     " location "
-     (string-append " " (stance-location stance) " "))
-    (list
-     " range "
-     (string-append " " (symbol->string (stance-range stance)) " "))
+     (list
+      " size "
+      (string-append " "
+                     (get-trait actor "size")
+                     " "
+                     ))
+     (list
+      " location "
+      (string-append " " (stance-location stance) " "))
+     (list
+      " range "
+      (string-append " " (symbol->string (stance-range stance)) " "))
 
+     (list
+      " HP "
+      (string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses " (~s statuses)))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (display-pc-combatant-info actor)
+  (define name (get-combatant-name actor))
+  (define body
     (list
-     " HP: "
-     (string-append " "
-                    (number->string (actor-hp actor))
-                    "/"
-                    (number->string (actor-max-hp actor))
-                    " "
-                    )))
-   name)
-  )
+     (list
+      " HP "
+      (string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses "
+            (string-append " " (~s statuses) " ")))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (display-combatant-info actor)
+  (if (pc-actor? actor)
+      (display-pc-combatant-info actor)
+      (display-non-pc-combatant-info actor)))
 
 (define (describe-combat-situation)
   (paragraph "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
     (display-combatant-info enemy)
     
-    ))
+    )
+  (display-pc-combatant-info (situation-pc *situation*))
+  )
 
 (define (describe-situation)
   (cond
@@ -1572,7 +1609,11 @@
                  'escape-from-combat)
                (begin
                  (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                 
+                 (set-actor-statuses!
+                  (situation-pc *situation*)
+                  (append (actor-statuses (situation-pc *situation*)) 'fallen))
+                 (display-pc-combatant-info (situation-pc *situation*))
+                 (wait-for-confirm)
                  'failure)))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
