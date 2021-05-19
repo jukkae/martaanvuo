@@ -506,6 +506,13 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
+(define (engaged?)
+  (define any-enemy-engaged? #f)
+  (for ([(k stance) (in-hash *enemy-stances*)])
+    (when (eq? (stance-range stance) 'engaged)
+      (set! any-enemy-engaged? #t)))
+  any-enemy-engaged?)
+
 
 (serializable-struct event
                      (type
@@ -755,19 +762,21 @@
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
-  (define run-choice
-    (make-choice
-     'run
-     (string-append
-      "Run.")
-     (λ ()
-       (make-action
-        #:symbol 'run
-        #:actor (situation-pc *situation*)
-        #:duration 1
-        #:target '()
-        #:tags '(initiative-based-resolution fast)))))
-  (set! combat-choices (append-element combat-choices run-choice))
+  (when (not (engaged?))
+    (define run-choice
+      (make-choice
+       'run
+       (string-append
+        "Run.")
+       (λ ()
+         (make-action
+          #:symbol 'run
+          #:actor (situation-pc *situation*)
+          #:duration 1
+          #:target '()
+          #:tags '(initiative-based-resolution fast)))))
+    (set! combat-choices (append-element combat-choices run-choice))
+    )
 
   combat-choices
   )
