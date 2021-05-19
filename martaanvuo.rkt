@@ -1870,6 +1870,18 @@
         (displayln status))
       (set-actor-statuses! enemy '())))
 
+  (for ([enemy (get-current-enemies)])
+    (define name (get-combatant-name enemy))
+    (when (not (null? (actor-statuses enemy)))
+      (define name (get-combatant-name enemy))
+      (define description (case (length (actor-statuses enemy))
+                            [(1) (symbol->string (car (actor-statuses enemy)))]
+                            [else "multiple statuses (todo)"]))
+    
+      (define description-prefix
+        (string-append "[" name ": removed statuses: "))
+      (define description-suffix "]")
+      (set-actor-statuses! enemy '())))
 
   ; urgh
   (when (not (null? (actor-statuses (situation-pc *situation*))))
