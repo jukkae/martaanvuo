@@ -54,7 +54,8 @@
 (serializable-struct
  pc-actor
  (lp
-  max-lp)
+  max-lp
+  xp)
  #:super struct:actor
  #:constructor-name pc-actor*)
 
@@ -62,7 +63,7 @@
          name
          max-hp
          max-lp)
-  (pc-actor* name max-hp max-hp (make-hash) '() '() '() '() max-lp max-lp))
+  (pc-actor* name max-hp max-hp (make-hash) '() '() '() '() max-lp max-lp 0))
 
 ;; operations
 (define (add-item-to-inventory! actor item)

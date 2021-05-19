@@ -155,6 +155,10 @@
    4
    ))
 
+(define (award-xp! amount)
+  (displayln (string-append "[+" (number->string amount) " xp]"))
+  (displayln "-- award-xp!"))
+
 (define (set-build! build)
   ; for desperate build, also set a time limit (or whatever other complication)
 
@@ -1449,12 +1453,14 @@
           ((eq? (action-symbol action) 'run)
            (paragraph "Otava tries to run.")
            (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+
+           
            (define target-number 9) ; TODO: Based on range, or something?
            (define success? (skill-check "Athletics" skill target-number))
            (if success?
                (begin
                  (paragraph "Otava narrowly escapes.")
-                 
+                 (award-xp! 3)
                  'escape-from-combat)
                (begin
                  (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
