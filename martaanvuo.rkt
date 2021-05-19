@@ -1125,13 +1125,16 @@
   '())
 
 (define (get-combatant-name actor)
-  (define stance (hash-ref! *enemy-stances* actor '()))
-  (cond ((= (hash-count *enemy-stances*) 1)
+  (cond ((pc-actor? actor)
+         "Otava")
+        (else
+         (define stance (hash-ref! *enemy-stances* actor '()))
+         (cond ((= (hash-count *enemy-stances*) 1)
          (append-string (actor-name actor)))
         (else
          (define name (actor-name actor))
          (define index (stance-index stance))
-         (append-string name " " index))))
+         (append-string name " " index))))))
 
 (define (display-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
@@ -1437,8 +1440,13 @@
 
   (define skill (get-trait actor "melee-attack-skill"))
   (define action-target-number 7)
-  
-  (define success? (skill-check "Melee" skill action-target-number))
+
+  (define title
+    (string-append "Melee, "
+                   (get-combatant-name actor)
+                   " vs "
+                   (get-combatant-name target)))
+  (define success? (skill-check title skill action-target-number))
   (define damage (get-trait actor "melee-attack-damage"))
 
   (when success?
