@@ -1447,7 +1447,7 @@
         ", failure"))
   (define results
     (list
-     (list " 2d6 + skill " " >= " " location TN ")
+     (list " 2d6 + skill " " >= " " TN ")
      (list
       (string-append
        " "
@@ -1476,7 +1476,15 @@
   (define target-defense (get-trait target "defense"))
 
   (define skill (get-trait actor "melee-attack-skill"))
-  (define action-target-number 7)
+
+  (define bonus 0)
+  
+  (cond ((member 'fallen (actor-statuses target))
+         (displayln "[Target fallen, TN -2]")
+         (set! bonus 2)
+         ))
+  
+  (define action-target-number (- 7 bonus))
 
   (define title
     (string-append "Melee, "
@@ -1611,7 +1619,7 @@
                  (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
                  (set-actor-statuses!
                   (situation-pc *situation*)
-                  (append (actor-statuses (situation-pc *situation*)) 'fallen))
+                  (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
                  (display-pc-combatant-info (situation-pc *situation*))
                  (wait-for-confirm)
                  'failure)))
