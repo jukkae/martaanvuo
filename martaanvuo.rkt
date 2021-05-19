@@ -157,7 +157,10 @@
 
 (define (award-xp! amount)
   (displayln (string-append "[+" (number->string amount) " xp]"))
-  (displayln "-- award-xp!"))
+  (define pc (situation-pc *situation*))
+  (set-pc-actor-xp! pc
+                    (+ (pc-actor-xp pc)
+                       amount)))
 
 (define (set-build! build)
   (define pc (situation-pc *situation*))
@@ -613,11 +616,13 @@
                                  (number->string (actor-hp actor))
                                  "/"
                                  (number->string (actor-max-hp actor))
-                                 " "))
-     (list " XP " (string-append " "
-                                 (number->string (pc-actor-xp actor))
-                                 " "))
-     ))
+                                 " "))))
+
+  (when (not (= 0 (pc-actor-xp actor)))
+    (set! sheet (append-element sheet
+                                (list " XP " (string-append " "
+                                (number->string (pc-actor-xp actor))
+                                " ")))))
 
   (define attributes-list '())
   (when (or (not (null? (actor-strength actor)))
