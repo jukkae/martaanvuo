@@ -1785,6 +1785,7 @@
          ; Blindscraper: Can only attack when Engaged
          ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
          ; Smashvine: Bludgeon damage against dodge, sensitive to fire
+         ; todo: define encounter levels to make it simpler
          (define i 0)
          (define enemy (make-actor "Blindscraper" 4))
          (set-trait! enemy "defense" 1)
@@ -1861,10 +1862,30 @@
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
 
   ; remove statuses
-  (displayln "[Removing statuses]")
   (for ([enemy (get-current-enemies)])
-    (set-actor-statuses! enemy '()))
-  (set-actor-statuses! (situation-pc *situation*) '())
+    (define name (get-combatant-name enemy))
+    (when (not (null? (actor-statuses enemy)))
+      (displayln (string-append "[" name ": removed statuses:]"))
+      (for ([status (actor-statuses enemy)])
+        (displayln status))
+      (set-actor-statuses! enemy '())))
+
+
+  ; urgh
+  (when (not (null? (actor-statuses (situation-pc *situation*))))
+    (define name (get-combatant-name (situation-pc *situation*)))
+    (define description (case (length (actor-statuses (situation-pc *situation*)))
+                          [(1) (symbol->string (car (actor-statuses (situation-pc *situation*))))]
+                          [else "multiple statuses (todo)"]))
+    
+    (define description-prefix
+      (string-append "[" name ": removed statuses: "))
+    (define description-suffix "]")
+    (set-actor-statuses! (situation-pc *situation*) '()))
+  
+  
+  
+  
 
   (newline) ; This is the "extra" newline that separates rounds
   )
