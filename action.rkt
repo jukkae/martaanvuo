@@ -60,7 +60,7 @@
       #f))
 
 (define (initiative-based-resolution? action)
-  (if (member 'delayed-resolution (action-tags action))
+  (if (member 'initiative-based-resolution (action-tags action))
       #t
       #f))
 
@@ -77,7 +77,9 @@
 ; ie., #t = action1 is faster than action2
 (define (action-faster-than? action1 action2)
   (cond ((has-tag? action1 'slow) #f)
-        ((has-tag? action1 'slow) #t)
+        ((has-tag? action2 'slow) #t)
+        ((has-tag? action1 'fast) #t)
+        ((has-tag? action2 'fast) #f)
         ((eq? (action-actor action1) 'pc) #t)
         ((eq? (action-actor action2) 'pc) #f)))
 

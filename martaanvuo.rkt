@@ -17,7 +17,7 @@
   day
   [elapsed-time #:mutable]))
 
-(define edges
+(define edgeflats
   (make-location
    #:actors '()
    #:features '()
@@ -25,7 +25,7 @@
    #:neighbors '()
    #:tags '()
    #:actions-provided '()
-   #:type 'edges))
+   #:type 'edgeflats))
 
 (define swamp
   (make-location
@@ -118,8 +118,8 @@
    #:type 'spring))
 
 (define (setup-world)
-  (set-location-neighbors! edges (list swamp))
-  (set-location-neighbors! swamp (list edges ridges valleys))
+  (set-location-neighbors! edgeflats (list swamp))
+  (set-location-neighbors! swamp (list edgeflats ridges valleys))
   (set-location-neighbors! ridges (list swamp))
   (set-location-neighbors! valleys (list swamp))
   (set-location-neighbors! crematory (list valleys))
@@ -163,21 +163,28 @@
      (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
   (case build
-    ['desperate (set-trait! (situation-pc *situation*) "constitution" 10)
-                (set-actor-max-hp! (situation-pc *situation*) 4)
+    ['desperate (set-actor-max-hp! (situation-pc *situation*) 4)
                 (set-actor-hp! (situation-pc *situation*) 4)
+                (set-trait! (situation-pc *situation*) "constitution" 10)
                 (set-trait! (situation-pc *situation*) "charisma" 10)
-                (set-trait! (situation-pc *situation*) "strength" 7)]
+                (set-trait! (situation-pc *situation*) "strength" 7)
+                (set-trait! (situation-pc *situation*) "athletics-skill" 0)
+                (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
+                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)
+                (set-trait! (situation-pc *situation*) "defense" 1)]
     ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
               (set-trait! (situation-pc *situation*) "charisma" 7)
-              (set-trait! (situation-pc *situation*) "strength" 10)]
+              (set-trait! (situation-pc *situation*) "strength" 10)
+              (set-trait! (situation-pc *situation*) "athletics-skill" 1)
+              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
+              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)
+              (set-trait! (situation-pc *situation*) "defense" 0)]
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
     )
 
   (set-trait! (situation-pc *situation*) "exploration-skill" 1)
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
-  (displayln "[Build set]")
   (character-sheet)
   )
 
@@ -252,7 +259,7 @@
                                               ;(λ () (passive-check 'luck))
                                               )))
    decisions)
- (λ () (create-goal 'pay-off-debt))
+ (λ () (create-quest 'pay-off-debt))
  )
 
 (fragment
@@ -288,7 +295,7 @@
  14
  (string-append
   "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
-  ) ; and drop some meta-visible info or something somewhere; create a goal?
+  ) ; and drop some meta-visible info or something somewhere; create a quest?
 
  (let ([decisions '()])
    (set! decisions (append-element decisions (make-decision
@@ -296,7 +303,7 @@
                                               "\"The book, Yarn of the what?\""
                                               12)))
    decisions)
- (λ () (create-goal 'the-anthead))
+ (λ () (create-quest 'the-anthead))
  )
 
 (fragment
@@ -440,6 +447,8 @@
  (λ () '())
  )
 
+
+
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
@@ -488,16 +497,31 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [current-fragment #:mutable]
-  [goals #:mutable]
+  [quests #:mutable]
   ))
 
 (define *situation*
-  (let ([new-world (world (list edges swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
+  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)])
     (situation new-world pc 0 0 0 0 #f '() '())))
 
 (define (in-combat?)
   (situation-in-combat? *situation*))
+
+(define (escape-from-combat!)
+  (displayln "todo: escape-from-combat!")
+  (for ([enemy (get-current-enemies)])
+    (hash-remove! *enemy-stances* enemy)
+    (remove-actor-from-location! (actor-current-location enemy) enemy)
+    )
+  (set-situation-in-combat?! *situation* #f))
+
+(define (engaged?)
+  (define any-enemy-engaged? #f)
+  (for ([(k stance) (in-hash *enemy-stances*)])
+    (when (eq? (stance-range stance) 'engaged)
+      (set! any-enemy-engaged? #t)))
+  any-enemy-engaged?)
 
 
 (serializable-struct event
@@ -551,7 +575,8 @@
                 (make-event 'spawn-enemies
                             '() ; pack info about enemies / event here
                             #t))
-              (set! events (append-element events ev))))
+              (set! events (append-element events ev))
+              (wait-for-confirm)))
        )))
   events
   )
@@ -602,13 +627,13 @@
   )
 
 ; TODO move to state
-; currently: goal - status - notes
+; currently: quest - status - notes
 ; and table-display formatted
-(define *goals* '())
+(define *quests* '())
 
-(define (create-goal goal-symbol)
-  (define goal
-    (case goal-symbol
+(define (create-quest quest-symbol)
+  (define quest
+    (case quest-symbol
       ['pay-off-debt
        (list " pay off the debt to the Collector "
              " in progress "
@@ -617,54 +642,71 @@
        (list " seek the Anthead Girl "
              " not started "
              " \"not ready yet\" ")]))
-  (set! *goals*
-        (append-element *goals* goal))
+  (set! *quests*
+        (append-element *quests* quest))
 
   (info-card
-   (list goal)
-   "New goal")
+   (list quest)
+   "New quest")
   )
 
-(define (goals)
+(define (quests)
   (define sheet
     (append
      (list
-      (list " goal " " status " " notes ")
+      (list " quest " " status " " notes ")
       )
-     *goals*
+     *quests*
      ))
   (info-card
    sheet
-   "Goals")
+   "Quests")
   )
 
 (define (current-location)
   #;(displayln "-- current-location: TODO move to situation")
   (actor-current-location (situation-pc *situation*)))
 
+(define (clean-up-dead-actor! actor)
+  (hash-remove! *enemy-stances* actor)
+  (displayln "clean-up-dead-actor!: todo: add corpse")
+  (displayln (actor-name actor)))
+
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)
-  (if (= 0 (actor-hp actor))
-      'dead
-      'hit))
+  (define result
+    (if (= 0 (actor-hp actor))
+        'dead
+        'hit))
+
+  (when (eq? result 'dead) (clean-up-dead-actor! actor))
+  
+  result)
 
 (define (alive? actor)
   (> (actor-hp actor) 0))
 
-; TODO shit
 (define (get-next-npc-action actor)
-  (if (not (in-combat?))
-      (make-action #:symbol 'hold-at-gunpoint
-                   #:actor actor
-                   #:duration 1
-                   #:target 'pc
-                   #:tags '(delayed-resolution))
-      (make-shoot-action actor))
-  
-  )
+  (case (actor-name actor)
+    ; Blindscraper combat AI
+    (["Blindscraper"]
+     (cond ((in-combat?)
+            (begin
+              (define stance (hash-ref *enemy-stances* actor))
+              (cond ((or (eq? (stance-range stance) 'close)
+                         (eq? (stance-range stance) 'engaged))
+                     (make-action
+                      #:symbol 'melee
+                      #:actor actor
+                      #:duration 1
+                      #:target (situation-pc *situation*)
+                      #:tags '(initiative-based-resolution))))))
+           (else
+            (begin (displayln "Blindscraper AI, not in combat")))))
+    (else (displayln "get-next-npc-action: unknown actor"))))
 
 
 (define (get-next-action actor)
@@ -699,7 +741,7 @@
   (case to-type
     ['ruins "Climb the hill to the ruins."]
     ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
-    ['edges "Go back to Edgeflats."]
+    ['edgeflats "Go back to Edgeflats."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
 
 (define (get-world-choices world actor)
@@ -710,13 +752,48 @@
         (else (get-downtime-choices world actor))))
 
 (define (get-combat-choices world actor)
-  (define combat-choices '())
   (define targets (get-current-enemies))
+
+  (define combat-choices '())
+
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    '()
+    (define stance (hash-ref *enemy-stances* target))
+    (cond ((or (eq? (stance-range stance) 'close)
+               (eq? (stance-range stance) 'engaged))
+           (define choice
+             (make-choice
+              'attack
+              (string-append
+               "Attack "
+               (get-combatant-name target)
+               " in melee with crowbar.")
+              (λ ()
+                (make-action
+                 #:symbol 'melee
+                 #:actor (situation-pc *situation*)
+                 #:duration 1
+                 #:target target
+                 #:tags '(initiative-based-resolution)))))
+           (set! combat-choices (append-element combat-choices choice)))
+          ))
+
+  (when (not (engaged?))
+    (define run-choice
+      (make-choice
+       'run
+       (string-append
+        "Run.")
+       (λ ()
+         (make-action
+          #:symbol 'run
+          #:actor (situation-pc *situation*)
+          #:duration 1
+          #:target '()
+          #:tags '(initiative-based-resolution fast)))))
+    (set! combat-choices (append-element combat-choices run-choice))
     )
-  (displayln "get-combat-choices: TODO not implemented yet")
+
   combat-choices
   )
 
@@ -808,7 +885,7 @@
           ))
 
   (define end-run-choices '()) ; poor name
-  (when (eq? (location-type (current-location)) 'edges)
+  (when (eq? (location-type (current-location)) 'edgeflats)
     (set! end-run-choices
           (list
            (make-choice
@@ -893,18 +970,13 @@
             " "
             (symbol->string (location-type (current-location)))
             " "))
-     (list " current location id "
-           (string-append
-            " "
-            (number->string (location-id (current-location)))
-            " "))
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
-  #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
+  
   (when (not (null? (situation-current-fragment *situation*)))
     (current-fragment-on-begin-round!))
   )
@@ -932,7 +1004,8 @@
 
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
-  (when (aggressive? pc-action)
+  (when (and (aggressive? pc-action)
+             (not (in-combat?)))
     ; remove own actions from queue
     (for ([actor npcs])
       (define actions (filter
@@ -940,19 +1013,12 @@
                        action-queue))
       (remove-from-action-queue actions)
       ; blam blam
-      (define action (make-shoot-action actor))
+      #;(define action (make-shoot-action actor))
+      (define action '())
       (add-to-action-queue action))
     )
   )
 
-(define (make-shoot-action actor)
-  (define action (make-action
-                  #:symbol 'shoot
-                  #:actor actor
-                  #:duration 1
-                  #:target (situation-pc *situation*)
-                  #:tags '(combat delayed-resolution)))
-  action)
 
 (define (serialize-state)
   ; prng can be stored as vector:
@@ -962,49 +1028,60 @@
 (define (serialize-input)
   '())
 
-(define encounter<%>
-  (interface () on-begin-round! on-end-round! on-get-pc-action! get-encounter-choices))
+(define (get-combatant-name actor)
+  (define stance (hash-ref! *enemy-stances* actor '()))
+  (cond ((= (hash-count *enemy-stances*) 1)
+         (append-string (actor-name actor)))
+        (else
+         (define name (actor-name actor))
+         (define index (stance-index stance))
+         (append-string name " " index))))
 
-(define scavenger-encounter%
-  (class* object% (encounter<%>)
-    (field [encounter-nodes '()])
-    (field [current-node '()#;(car encounter-nodes)])
-    (super-new)
+(define (display-combatant-info actor)
+  (define stance (hash-ref! *enemy-stances* actor '()))
+  (define name (get-combatant-name actor))
+  (info-card
+   (list
+    (list
+     " size: "
+     (string-append " "
+                    (get-trait actor "size")
+                    " "
+                    ))
+    (list
+     " location "
+     (string-append " " (stance-location stance) " "))
+    (list
+     " range "
+     (string-append " " (symbol->string (stance-range stance)) " "))
 
-    (define scavenger
-      (make-actor
-       "scavenger"
-       4
-       '()))
-      
+    (list
+     " HP: "
+     (string-append " "
+                    (number->string (actor-hp actor))
+                    "/"
+                    (number->string (actor-max-hp actor))
+                    " "
+                    )))
+   name)
+  )
+
+(define (describe-combat-situation)
+  (paragraph "Otava is in combat.")
+  (for ([enemy (get-current-enemies)])
+    (display-combatant-info enemy)
     
-    (define/private (exit-encounter!)
-      (displayln "The scavenger disappears.")
-      (newline)
-      (remove-actor-from-its-current-location! scavenger)
-      'exit-encounter)
-
-    (define/public (begin-encounter!)
-      (move-actor-to-location! scavenger (current-location)))
-
-    (define/public (on-begin-round!)
-      '())
-
-    (define/public (on-end-round!)
-      (define current-enemies (get-current-enemies))
-      (if (= (length current-enemies) 0)
-          (exit-encounter!)
-          '()))
-
-    (define/public (on-get-pc-action! pc-action)
-      '())
-
-    (define/public (get-encounter-choices)
-      '())
     ))
 
 (define (describe-situation)
-  '()
+  (cond
+    ((in-combat?) (describe-combat-situation)))
+  )
+
+(define (redescribe-situation)
+  (cond
+    ((in-combat?) (describe-combat-situation))
+    (else (displayln "redescribe-situation: TODO")))
   )
 
 (define (describe-pc-intention pc-action)
@@ -1061,6 +1138,7 @@
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
         (define meta-command (cdr meta-command-with-key))
         (meta-command)
+        (redescribe-situation)
         (what-do-you-do 'verbose))
       
       (define actor (situation-pc *situation*))
@@ -1130,7 +1208,6 @@
   choices-with-keys)
 
 (define (wait-for-confirm)
-  (newline)
   (displayln "[Enter]")
   (newline)
   (define input (read-line))
@@ -1185,6 +1262,7 @@
     (list " luck " (string-append " " wangernumb " "))
     (list " " result-text))
    "Luck check")
+  (wait-for-confirm)
   result)
 
 (define (passive-check type comparator target-number . silent)
@@ -1218,6 +1296,7 @@
      sheet
      "Passive check"
      ))
+  (wait-for-confirm)
   successful?)
 
 ; returns boolean
@@ -1250,20 +1329,21 @@
    results
    (string-append "Skill check: " title))
 
+  (wait-for-confirm)
+
   successful?)
 
-(define (resolve-shoot-action! action)
+(define (resolve-melee-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
   
-  #;(define target-number (actor-defense-number target))
-  (displayln "resolve-shoot-action!: TODO reimplement")
-  (define target-number 7)
+  (define target-defense (get-trait target "defense"))
+
+  (define skill (get-trait actor "melee-attack-skill"))
+  (define action-target-number 7)
   
-  #;(define success? (skill-check "Shoot" (actor-attack-skill actor) target-number))
-  #;(define damage-roll ((actor-attack-damage actor)))
-  (define success? #t)
-  (define damage-roll 2)
+  (define success? (skill-check "Melee" skill action-target-number))
+  (define damage (get-trait actor "melee-attack-damage"))
 
   (when success?
     (info-card
@@ -1273,18 +1353,19 @@
        " < see actor > "
        (string-append
         " "
-        (number->string damage-roll))
+        (number->string damage))
        ))
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll)))
+  (when success? (set! action-result (take-damage target damage)))
 
   (actor-status-card target (actor-name target))
   (newline)
 
   action-result
   )
+
 
 (define (handle-exploration-check-result! result)
   (if result
@@ -1302,15 +1383,15 @@
 ; 'failed   when the action is completely resolved and fails
 (define (resolve-action! action)
   (when (alive? (action-actor action))
-    (cond ((or (eq? (action-symbol action) 'shoot)
-               (eq? (action-symbol action) 'melee))
-           (define result (resolve-shoot-action! action))
+    (cond ((eq? (action-symbol action) 'melee)
+           (define result (resolve-melee-action! action))
            (when (eq? result 'dead)
              (if (not (pc-actor? (action-target action)))
                  (paragraph "The " (actor-name (action-target action)) " is dead.")
                  (begin
                    (paragraph "Otava is dead.")
                    'pc-dead))))
+
           ((eq? (action-symbol action) 'forage)
            (begin
              (define skill 0)
@@ -1365,15 +1446,22 @@
           ((eq? (action-symbol action) 'sleep)
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
+          ((eq? (action-symbol action) 'run)
+           (paragraph "Otava tries to run.")
+           (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+           (define target-number 9) ; TODO: Based on range, or something?
+           (define success? (skill-check "Athletics" skill target-number))
+           (if success?
+               (begin
+                 (paragraph "Otava narrowly escapes.")
+                 
+                 'escape-from-combat)
+               (begin
+                 (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+                 
+                 'failure)))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
-(define (spawn-encounter)
-  (displayln "-- spawn-encounter disabled")
-  #;(when (eq? '() current-encounter)
-      (begin
-        (set! current-encounter (new scavenger-encounter%))
-        (send current-encounter begin-encounter!)
-        )))
 
 (serializable-struct
  timeline
@@ -1426,6 +1514,8 @@
        ('night (paragraph "Night falls. Brutal, pitch-black night."))
        ('morning (paragraph "It is morning."))
        ))
+    ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
+    ('spawn-enemies '())
     (else (displayln (string-append "narrate-event: unknown event type "
                                     (symbol->string (event-type event)))))))
 
@@ -1484,9 +1574,9 @@
                      (return 'interrupted))
     
     
-                   ; should check results
+                   ; should check results maybe here?
                    (define action-result (resolve-action! action))
-
+                   
                    ; do these AFTER action resolution
                    (cond ((eq? (action-symbol action) 'go-to-location)
                           (define next-location (action-target action))
@@ -1496,33 +1586,58 @@
                           (when (eq? (location-type (current-location)) 'swamp)
                             (go-to-story-fragment 20))
                           (paragraph (describe-finish-go-to-action action))))
-                   (when (or (eq? action-result 'successful)
-                             (eq? action-result 'failure))
-                     action-result)
+                   
+                   action-result
                    ))
 
   ; do the state management mutation stuff
   (when (eq? 'interrupted result)
     (define time-left (- (action-duration action) elapsed-time))
-    (set! *pending-action* (lens-set action-duration-lens action time-left)
-          #;(pending-action action time-left))
-    (info-card
-     (list
-      (list
-       (string-append " "
-                      (symbol->string (action-symbol *pending-action*))
-                      " ")
-       (string-append " "
-                      "time left: "
-                      (number->string (action-duration *pending-action*))
-                      " ")))
-     "Pending action"))
+    (set! *pending-action* (lens-set action-duration-lens action time-left)))
   result
   )
 
+; TODO move to situation
+(serializable-struct
+ stance
+ (index
+  range
+  location))
+(define *enemy-stances* (make-hash))
+
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (displayln "SPAWNING ENEMIES"))
+         (paragraph "A many-jointed fingerlike appendage, long as a human arm, extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body.")
+
+         (set-situation-in-combat?! *situation* #t)
+
+
+         ; Enemies design idea v1:
+         ; Blindscraper: Can only attack when Engaged
+         ; Binderroot: Gives penalty on all Dex-based checks
+         (define i 0)
+         (define enemy (make-actor "Blindscraper" 4))
+         (set-trait! enemy "defense" 1)
+         (set-trait! enemy "melee-attack-skill" 1)
+         (set-trait! enemy "melee-attack-damage" 1)
+         (set-trait! enemy "size" "small")
+         (move-actor-to-location! enemy (current-location))
+         (define index
+           (case i
+             [(0) "α"]
+             [(1) "β"]))
+         (define location
+           (case i
+             [(0) "right"]
+             [(1) "left"]))
+         (define range
+           (if (= i 0)
+               'close
+               'mid))
+         (define enemy-stance
+           (stance index range location))
+           
+         (hash-set! *enemy-stances* enemy enemy-stance))
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
@@ -1535,10 +1650,6 @@
   
   (cond ((eq? (length interrupting-events) 1)
          (define event (car interrupting-events))
-         (displayln "EVENT (type details at):")
-         (displayln (event-type event))
-         (displayln (event-details event))
-         (displayln (event-at event))
          (handle-interrupting-event! event)
          )
         (else
@@ -1552,7 +1663,11 @@
   (let/ec end-round-early
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
+
       (when (eq? turn-result 'pc-dead) (end-round-early))
+      (when (eq? turn-result 'escape-from-combat)
+        (escape-from-combat!)
+        (end-round-early))
       )
     ))
 
@@ -1562,21 +1677,18 @@
       (resolve-npc-action! action))
   )
 
-(define (end-encounter)
-  (displayln "-- end-encounter disabled")
-  #;(set! current-encounter '()))
+
 
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
+
   (when (= (length current-enemies) 0)
-    '()
-    #;(displayln "-- on-end-round: fix (in-combat?)")
-    #;(set! in-combat? #f))
+    ; would be nicer to only change when it's currently true, but eh
+    (set-situation-in-combat?! *situation* #f))
+  
   (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
-  #;(when (not (eq? '() current-encounter))
-      (define encounter-status (send current-encounter on-end-round!))
-      (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+  
 
   (newline) ; This is the "extra" newline that separates rounds
   )
@@ -1590,6 +1702,7 @@
   (serialize-state)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
+    
     (cond ((eq? pc-action 'end-round-early)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
@@ -1597,9 +1710,7 @@
 
            (describe-pc-intention pc-action)
   
-           #;(when (not (null? current-encounter))
-               (define encounter-status (send current-encounter on-get-pc-action! pc-action))
-               (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+           
 
            (define round-exit-status 'ok)
            (cond ((initiative-based-resolution? pc-action)
@@ -1628,7 +1739,30 @@
          #t))) ; mark input as handled
 
 (define (menu)
-  (displayln "menu")
+  (define (handle-meta-command meta-commands-with-keys input)
+    (set! input (string-upcase input))
+    (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+    (define meta-command (cdr meta-command-with-key))
+    (meta-command))
+  (define (close-menu) #t) ; hacky but eh
+  
+  (displayln "[Menu]")
+  (define meta-commands (make-hash))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
+  (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
+
+  (for ([(k v) (in-hash meta-commands)])
+    (display (car v))
+    (display " "))
+  (newline)
+  (newline)
+  (define input (wait-for-input))
+  (serialize-input)
+
+  (newline)
+
+  (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
+        (else (menu)))
   #t)
 
 (define (wait-for-input)
@@ -1638,12 +1772,11 @@
 
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-  (hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
+  #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
-  (hash-set! meta-commands "G" (cons "[G]: Goals." goals))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
   meta-commands)
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
@@ -1684,7 +1817,7 @@
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
-  (move-actor-to-location! (situation-pc *situation*) edges)
+  (move-actor-to-location! (situation-pc *situation*) edgeflats)
   (narrate-begin-run)
   (go-to-story-fragment 1)
   )
