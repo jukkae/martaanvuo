@@ -965,7 +965,7 @@
   (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
-  #; (when (not (eq? '() current-encounter)) (send current-encounter on-begin-round!))
+  
   (when (not (null? (situation-current-fragment *situation*)))
     (current-fragment-on-begin-round!))
   )
@@ -1016,47 +1016,6 @@
 
 (define (serialize-input)
   '())
-
-(define encounter<%>
-  (interface () on-begin-round! on-end-round! on-get-pc-action! get-encounter-choices))
-
-(define scavenger-encounter%
-  (class* object% (encounter<%>)
-    (field [encounter-nodes '()])
-    (field [current-node '()#;(car encounter-nodes)])
-    (super-new)
-
-    (define scavenger
-      (make-actor
-       "scavenger"
-       4
-       '()))
-      
-    
-    (define/private (exit-encounter!)
-      (displayln "The scavenger disappears.")
-      (newline)
-      (remove-actor-from-its-current-location! scavenger)
-      'exit-encounter)
-
-    (define/public (begin-encounter!)
-      (move-actor-to-location! scavenger (current-location)))
-
-    (define/public (on-begin-round!)
-      '())
-
-    (define/public (on-end-round!)
-      (define current-enemies (get-current-enemies))
-      (if (= (length current-enemies) 0)
-          (exit-encounter!)
-          '()))
-
-    (define/public (on-get-pc-action! pc-action)
-      '())
-
-    (define/public (get-encounter-choices)
-      '())
-    ))
 
 (define (get-combatant-name actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
@@ -1475,13 +1434,6 @@
            'ok)
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
-(define (spawn-encounter)
-  (displayln "-- spawn-encounter disabled")
-  #;(when (eq? '() current-encounter)
-      (begin
-        (set! current-encounter (new scavenger-encounter%))
-        (send current-encounter begin-encounter!)
-        )))
 
 (serializable-struct
  timeline
@@ -1628,7 +1580,7 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A long, many-jointed fingerlike appendage extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body the size of a human head.")
+         (paragraph "A many-jointed fingerlike appendage, long as a human arm, extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body.")
 
          (set-situation-in-combat?! *situation* #t)
 
@@ -1691,9 +1643,7 @@
       (resolve-npc-action! action))
   )
 
-(define (end-encounter)
-  (displayln "-- end-encounter disabled")
-  #;(set! current-encounter '()))
+
 
 (define (on-end-round)
   (define current-enemies (get-current-enemies))
@@ -1704,9 +1654,7 @@
   
   (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
-  #;(when (not (eq? '() current-encounter))
-      (define encounter-status (send current-encounter on-end-round!))
-      (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+  
 
   (newline) ; This is the "extra" newline that separates rounds
   )
@@ -1728,9 +1676,7 @@
 
            (describe-pc-intention pc-action)
   
-           #;(when (not (null? current-encounter))
-               (define encounter-status (send current-encounter on-get-pc-action! pc-action))
-               (when (eq? 'exit-encounter encounter-status) (end-encounter)))
+           
 
            (define round-exit-status 'ok)
            (cond ((initiative-based-resolution? pc-action)
