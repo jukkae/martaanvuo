@@ -508,6 +508,14 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
+(define (escape-from-combat!)
+  (displayln "todo: escape-from-combat!")
+  (for ([enemy (get-current-enemies)])
+    (hash-remove! *enemy-stances* enemy)
+    (remove-actor-from-location! (actor-current-location enemy) enemy)
+    )
+  (set-situation-in-combat?! *situation* #f))
+
 (define (engaged?)
   (define any-enemy-engaged? #f)
   (for ([(k stance) (in-hash *enemy-stances*)])
@@ -1437,13 +1445,13 @@
           ((eq? (action-symbol action) 'run)
            (paragraph "Otava tries to run.")
            (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
-           (define target-number 9)
+           (define target-number 9) ; TODO: Based on range, or something?
            (define success? (skill-check "Athletics" skill target-number))
            (if success?
                (begin
                  (paragraph "Otava narrowly escapes.")
                  (wait-for-confirm)
-                 'ok)
+                 'escape-from-combat)
                (begin
                  (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
                  (wait-for-confirm)
@@ -1562,9 +1570,9 @@
                      (return 'interrupted))
     
     
-                   ; should check results
+                   ; should check results maybe here?
                    (define action-result (resolve-action! action))
-
+                   
                    ; do these AFTER action resolution
                    (cond ((eq? (action-symbol action) 'go-to-location)
                           (define next-location (action-target action))
@@ -1574,9 +1582,8 @@
                           (when (eq? (location-type (current-location)) 'swamp)
                             (go-to-story-fragment 20))
                           (paragraph (describe-finish-go-to-action action))))
-                   (when (or (eq? action-result 'successful)
-                             (eq? action-result 'failure))
-                     action-result)
+                   
+                   action-result
                    ))
 
   ; do the state management mutation stuff
@@ -1649,7 +1656,11 @@
   (let/ec end-round-early
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
+
       (when (eq? turn-result 'pc-dead) (end-round-early))
+      (when (eq? turn-result 'escape-from-combat)
+        (escape-from-combat!)
+        (end-round-early))
       )
     ))
 
