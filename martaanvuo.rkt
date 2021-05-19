@@ -621,8 +621,8 @@
   (when (not (= 0 (pc-actor-xp actor)))
     (set! sheet (append-element sheet
                                 (list " XP " (string-append " "
-                                (number->string (pc-actor-xp actor))
-                                " ")))))
+                                                            (number->string (pc-actor-xp actor))
+                                                            " ")))))
 
   (define attributes-list '())
   (when (or (not (null? (actor-strength actor)))
@@ -1130,11 +1130,11 @@
         (else
          (define stance (hash-ref! *enemy-stances* actor '()))
          (cond ((= (hash-count *enemy-stances*) 1)
-         (append-string (actor-name actor)))
-        (else
-         (define name (actor-name actor))
-         (define index (stance-index stance))
-         (append-string name " " index))))))
+                (append-string (actor-name actor)))
+               (else
+                (define name (actor-name actor))
+                (define index (stance-index stance))
+                (append-string name " " index))))))
 
 (define (display-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
@@ -1554,8 +1554,16 @@
            (paragraph "Otava tries to run.")
            (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
+           (define stance-range-values '())
+           (for ([(k v) (in-hash *enemy-stances*)])
+             (define value (get-stance-range-numeric-value (stance-range v)))
+             (set! stance-range-values (append-element stance-range-values value)))
+           (define target-number
+             ; if there's an enemy in engaged range, then more difficult check
+             (if (member 0 stance-range-values)
+                 10
+                 8))
            
-           (define target-number 9) ; TODO: Based on range, or something?
            (define success? (skill-check "Athletics" skill target-number))
            (if success?
                (begin
@@ -1703,6 +1711,12 @@
   result
   )
 
+(define (get-stance-range-numeric-value range)
+  (case range
+    ['engaged 0]
+    ['close 1]
+    [else (error "get-stance-range-numeric-value: unknown range")]))
+
 ; TODO move to situation
 (serializable-struct
  stance
@@ -1713,14 +1727,15 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A many-jointed fingerlike appendage, long as a human arm, extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body.")
+         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black talon. The finger is followed by another finger, then a glistening, sac-like body.")
 
          (set-situation-in-combat?! *situation* #t)
 
 
          ; Enemies design idea v1:
          ; Blindscraper: Can only attack when Engaged
-         ; Binderroot: Gives penalty on all Dex-based checks
+         ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
+         ; Smashvine: Bludgeon damage against dodge, sensitive to fire
          (define i 0)
          (define enemy (make-actor "Blindscraper" 4))
          (set-trait! enemy "defense" 1)
