@@ -4,18 +4,28 @@
 
 (require racket/serialize)
 
-;; types
-;; TODO: This is unwieldy, separate attributes etc to something like a (define checkables (make-hash))
-;; because not everything will always have all of these
-;; or, of course, look into composition
 (serializable-struct
  actor
  (name
+  
+  ; always numbers
   [hp #:mutable]
   [max-hp #:mutable]
-  traits
-  statuses
-  conditions
+
+  ; number or '()
+  [constitution #:mutable]
+  [strength #:mutable]
+  [dexterity #:mutable]
+  [charisma #:mutable]
+  [intelligence #:mutable]
+
+  ; hash of string-to-whatever-makes-sense
+  [traits #:mutable]
+
+  ; lists of symbols
+  [statuses #:mutable]
+  [conditions #:mutable]
+  
   [inventory #:mutable]
   [current-location #:mutable])
  #:constructor-name actor*)
@@ -23,18 +33,11 @@
 (define (make-actor
          name
          max-hp)
-  (actor* name max-hp max-hp (make-hash) '() '() '() '()))
-
-;;some common traits
-#;(list attack-skill
-      attack-damage
-      defense-number
-      [constitution #:mutable]
-      [strength #:mutable]
-      [dexterity #:mutable]
-      [charisma #:mutable]
-      [intelligence #:mutable]
-      )
+  (actor* name max-hp max-hp
+          ; attributes
+          '() '() '() '() '()
+          ; traits etc
+          (make-hash) '() '() '() '()))
 
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
@@ -63,7 +66,12 @@
          name
          max-hp
          max-lp)
-  (pc-actor* name max-hp max-hp (make-hash) '() '() '() '() max-lp max-lp 0))
+  (pc-actor*
+   name max-hp max-hp
+   ; attributes
+   '() '() '() '() '()
+   ; traits etc
+   (make-hash) '() '() '() '() max-lp max-lp 0))
 
 ;; operations
 (define (add-item-to-inventory! actor item)
