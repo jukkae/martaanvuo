@@ -13,11 +13,11 @@
   [max-hp #:mutable]
 
   ; number or '()
-  [constitution #:mutable]
   [strength #:mutable]
   [dexterity #:mutable]
-  [charisma #:mutable]
+  [constitution #:mutable]
   [intelligence #:mutable]
+  [charisma #:mutable]
 
   ; hash of string-to-whatever-makes-sense
   [traits #:mutable]
@@ -56,9 +56,9 @@
 
 (serializable-struct
  pc-actor
- (lp
-  max-lp
-  xp)
+ ([lp #:mutable]
+  [max-lp #:mutable]
+  [xp #:mutable])
  #:super struct:actor
  #:constructor-name pc-actor*)
 

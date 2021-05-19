@@ -160,32 +160,49 @@
   (displayln "-- award-xp!"))
 
 (define (set-build! build)
+  (define pc (situation-pc *situation*))
   ; for desperate build, also set a time limit (or whatever other complication)
 
   (define starting-inventory
     (list
      (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
+  
   (case build
-    ['desperate (set-actor-max-hp! (situation-pc *situation*) 4)
-                (set-actor-hp! (situation-pc *situation*) 4)
-                (set-trait! (situation-pc *situation*) "constitution" 10)
-                (set-trait! (situation-pc *situation*) "charisma" 10)
-                (set-trait! (situation-pc *situation*) "strength" 7)
-                (set-trait! (situation-pc *situation*) "athletics-skill" 0)
-                (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)
-                (set-trait! (situation-pc *situation*) "defense" 1)]
-    ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
-              (set-trait! (situation-pc *situation*) "charisma" 7)
-              (set-trait! (situation-pc *situation*) "strength" 10)
-              (set-trait! (situation-pc *situation*) "athletics-skill" 1)
-              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)
-              (set-trait! (situation-pc *situation*) "defense" 0)]
-    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
-    )
+    
+    ['desperate
+     (set-actor-strength! pc 7)
+     (set-actor-dexterity! pc 10)
+     (set-actor-constitution! pc 7)
+     (set-actor-intelligence! pc 7)
+     (set-actor-charisma! pc 10)
+     
+     (set-pc-actor-max-lp! pc 1)
+     (set-pc-actor-lp! pc 1)
 
+     (set-trait! pc "athletics-skill" 0)
+     (set-trait! pc "melee-attack-skill" 0)
+     (set-trait! pc "melee-attack-damage" 2)
+     (set-trait! pc "defense" 1)]
+    
+    ['bruiser
+     (set-actor-strength! pc 10)
+     (set-actor-dexterity! pc 10)
+     (set-actor-constitution! pc 10)
+     (set-actor-intelligence! pc 7)
+     (set-actor-charisma! pc 7)
+     
+     (set-pc-actor-max-lp! pc 0)
+     (set-pc-actor-lp! pc 0)
+
+     (set-trait! pc "athletics-skill" 1)
+     (set-trait! pc "melee-attack-skill" 1)
+     (set-trait! pc "melee-attack-damage" 2)
+     (set-trait! pc "defense" 1)]
+    
+    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
+
+  
   (set-trait! (situation-pc *situation*) "exploration-skill" 1)
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
