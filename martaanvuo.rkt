@@ -445,6 +445,8 @@
  (λ () '())
  )
 
+
+
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
@@ -727,28 +729,32 @@
         (else (get-downtime-choices world actor))))
 
 (define (get-combat-choices world actor)
-  (define combat-choices '())
   (define targets (get-current-enemies))
+
+  (define combat-choices '())
+
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    
-    (define choice
-      (make-choice
-       'attack
-       (string-append
-        "Attack "
-        (get-combatant-name target)
-        " in melee with crowbar.")
-       (λ ()
-         (make-action
-          #:symbol 'melee
-          #:actor (situation-pc *situation*)
-          #:duration 1
-          #:target target
-          #:tags '(initiative-based-resolution)))))
-    (set! combat-choices
-          (cons choice combat-choices)))
-  
+    (define stance (hash-ref *enemy-stances* target))
+    (cond ((or (eq? (stance-range stance) 'close)
+               (eq? (stance-range stance) 'engaged))
+           (define choice
+             (make-choice
+              'attack
+              (string-append
+               "Attack "
+               (get-combatant-name target)
+               " in melee with crowbar.")
+              (λ ()
+                (make-action
+                 #:symbol 'melee
+                 #:actor (situation-pc *situation*)
+                 #:duration 1
+                 #:target target
+                 #:tags '(initiative-based-resolution)))))
+           (set! combat-choices (append-element combat-choices choice)))
+          ))
+
   combat-choices
   )
 
@@ -1596,6 +1602,8 @@
 
          (set-situation-in-combat?! *situation* #t)
 
+         (define closer-index (- (d 1 2) 1))
+
          (for ([i 2])
            (define enemy (make-actor "Blindscraper" 4))
            (set-trait! enemy "defense" 1)
@@ -1611,8 +1619,12 @@
              (case i
                [(0) "right"]
                [(1) "left"]))
+           (define range
+             (if (= i closer-index)
+                 'close
+                 'mid))
            (define enemy-stance
-             (stance index 'close location))
+             (stance index range location))
            
            (hash-set! *enemy-stances* enemy enemy-stance)
            )  
