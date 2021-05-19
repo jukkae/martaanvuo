@@ -575,7 +575,8 @@
                 (make-event 'spawn-enemies
                             '() ; pack info about enemies / event here
                             #t))
-              (set! events (append-element events ev))))
+              (set! events (append-element events ev))
+              (wait-for-confirm)))
        )))
   events
   )
@@ -1207,7 +1208,6 @@
   choices-with-keys)
 
 (define (wait-for-confirm)
-  (newline)
   (displayln "[Enter]")
   (newline)
   (define input (read-line))
@@ -1262,6 +1262,7 @@
     (list " luck " (string-append " " wangernumb " "))
     (list " " result-text))
    "Luck check")
+  (wait-for-confirm)
   result)
 
 (define (passive-check type comparator target-number . silent)
@@ -1295,6 +1296,7 @@
      sheet
      "Passive check"
      ))
+  (wait-for-confirm)
   successful?)
 
 ; returns boolean
@@ -1326,6 +1328,8 @@
   (info-card
    results
    (string-append "Skill check: " title))
+
+  (wait-for-confirm)
 
   successful?)
 
@@ -1450,11 +1454,11 @@
            (if success?
                (begin
                  (paragraph "Otava narrowly escapes.")
-                 (wait-for-confirm)
+                 
                  'escape-from-combat)
                (begin
                  (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                 (wait-for-confirm)
+                 
                  'failure)))
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
