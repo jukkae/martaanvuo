@@ -1859,6 +1859,7 @@
   #t)
 
 (define (wait-for-input)
+  (newline)
   (define input (read-line))
   (newline)
   input)
