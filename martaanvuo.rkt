@@ -1726,6 +1726,7 @@
            
                   (define success? (skill-check "Athletics" skill target-number))
                   (if success?
+                      ; TODO this fails if there are multiple enemies!
                       (begin
                         (paragraph "It disappears in the foliage.")
                         (award-xp! 1)
