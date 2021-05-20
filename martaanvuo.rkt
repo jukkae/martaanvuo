@@ -765,6 +765,7 @@
 
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
+  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln (actor-name actor)))
 
