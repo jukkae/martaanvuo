@@ -1842,18 +1842,17 @@
           ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
 
-           (displayln "LP:")
            (define lp (pc-actor-lp (situation-pc *situation*)))
            (define dex (actor-dexterity (action-actor action)))
            (define success?
              (cond ((positive? lp)
-                    (displayln "[PC LP positive, check for success:]")
+                    (displayln "[LP positive]")
                     (attribute-check "Dexterity" dex))
                    (else #t)))
            
            (if success?
                (begin
-                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. Its sac is almost directly in front of Otava's eyes, and one of its long claws is swinging free, looking for an opening.")
+                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
                  (hash-remove! *enemy-stances* (action-actor action))
                  
                  (let ([enemy-stance (stance "α" 'engaged "right")])
