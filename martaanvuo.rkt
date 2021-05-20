@@ -369,7 +369,6 @@
                         21))
                      ((eq? action-result 'interrupted)
                       (begin
-                        (displayln "--interrupted")
                         'exit
                         ))
                      (else
@@ -793,9 +792,9 @@
   (eq? (stance-range stance) range))
 
 (define (make-blindscraper-action actor action-flag)
-  (cond
-    ((eq? action-flag 'attack)
-     (displayln "making action")
+  (case action-flag
+
+    ['attack
      (define damage-roll (λ () 2))
      (define details
        (list
@@ -808,8 +807,21 @@
       #:duration 1
       #:target (situation-pc *situation*)
       #:tags '(initiative-based-resolution)
-      #:details details))
-    (else (error (string-append "make-blindscraper-action: unknown action: " (symbol->string action-flag))))))
+      #:details details)]
+
+    ['go-to-engaged
+     (make-action
+      #:symbol 'go-to-engaged
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details '())]
+
+    [else
+     (error (string-append
+             "make-blindscraper-action: unknown action: "
+             (symbol->string action-flag)))]))
 
 (define (get-blindscraper-action actor)
   (cond ((in-combat?)
@@ -835,11 +847,12 @@
               ((actor-in-range? actor 'close)
                (define options
                  (list
-                  (cons 1 'attack)
-                  (cons 2 'attack)
-                  (cons 3 'attack)
-                  (cons 4 'attack)
-                  #;(cons 3 'go-to-engaged)
+                  #;(cons 1 'attack)
+                  #;(cons 2 'attack)
+                  (cons 3 'go-to-engaged)
+                  (cons 3 'go-to-engaged)
+                  (cons 3 'go-to-engaged)
+                  (cons 3 'go-to-engaged)
                   #;(cons 4 'parry)))
                (define roll (d 1 4))
                (define index (- roll 1))
@@ -1555,6 +1568,33 @@
   successful?)
 
 ; returns boolean
+; (eventually: 'critical-success and 'critical-failure?)
+(define (attribute-check title attribute)
+  (define roll (d 1 20))
+  (define successful? (< roll attribute))
+  (define success-string
+    (if successful?
+        ", success"
+        ", failure"))
+  (define results
+    (list
+     (list " 1d20 " " < " " attr ")
+     (list
+      (string-append
+       " "
+       (number->string roll))
+      " < "
+      (string-append " " (number->string attribute) success-string " "))))
+               
+  (info-card
+   results
+   (string-append "Attribute check: " title))
+
+  (wait-for-confirm)
+
+  successful?)
+
+; returns boolean
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
   (define second-d (d 1 6))
@@ -1763,7 +1803,7 @@
                    (string-append
                     (get-combatant-name (action-actor action))
                     " tries to run."))
-                  (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+                  (define skill 1)
                   (define stance (hash-ref *enemy-stances* (action-actor action)))
                   (define value (get-stance-range-numeric-value (stance-range stance)))
                   (define target-number
@@ -1787,6 +1827,29 @@
                         'failure))
                   ))
            )
+
+          ; This is starting to get unwieldy... but get poc done first
+          ((eq? (action-symbol action) 'go-to-engaged)
+           (displayln "go-to-eng")
+
+           (define dex (actor-dexterity (action-actor action)))
+           (define success? (attribute-check "Dexterity" dex))
+           
+           (if success?
+               (begin
+                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. Its sac is almost directly in front of Otava's eyes, and one of its long talons is swinging free, looking for an opening.")
+                 (hash-remove! *enemy-stances* (action-actor action))
+                 
+                 (let ([enemy-stance (stance "α" 'engaged "right")])
+                   (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
+        
+               (begin
+                 (paragraph "The Blindscraper tries to get close, but Otava dodges its jump.")
+                 
+                 'failure))
+           'ok
+           )
+          
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 
@@ -1951,7 +2014,7 @@
          ; Smashvine: Bludgeon damage against dodge, sensitive to fire
          ; todo: define encounter levels to make it simpler
          (define i 0)
-         (define enemy (make-actor "Blindscraper" 2))
+         (define enemy (make-actor "Blindscraper" 3))
          (set-actor-dexterity! enemy 13)
          (set-trait! enemy "defense" 1)
          (set-trait! enemy "melee-attack-skill" 1)
@@ -1961,14 +2024,14 @@
            (case i
              [(0) "α"]
              [(1) "β"]))
-         (define location
-           (case i
-             [(0) "right"]
-             [(1) "left"]))
          (define range
            (if (= i 0)
                'close
                'mid))
+         (define location
+           (case i
+             [(0) "right"]
+             [(1) "left"]))
          (define enemy-stance
            (stance index range location))
            
