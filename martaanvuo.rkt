@@ -185,7 +185,6 @@
 
      (set-trait! pc "athletics-skill" 0)
      (set-trait! pc "melee-attack-skill" 0)
-     (set-trait! pc "melee-attack-damage" 2)
      (set-trait! pc "defense" 1)]
     
     ['bruiser
@@ -200,7 +199,6 @@
 
      (set-trait! pc "athletics-skill" 1)
      (set-trait! pc "melee-attack-skill" 1)
-     (set-trait! pc "melee-attack-damage" 2)
      (set-trait! pc "defense" 1)]
     
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
@@ -1865,7 +1863,6 @@
          (set-actor-dexterity! enemy 13)
          (set-trait! enemy "defense" 1)
          (set-trait! enemy "melee-attack-skill" 1)
-         (set-trait! enemy "melee-attack-damage" 1)
          (set-trait! enemy "size" "small")
          (move-actor-to-location! enemy (current-location))
          (define index
