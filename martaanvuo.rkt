@@ -351,7 +351,8 @@
                                #:actor (situation-pc *situation*)
                                #:duration 100
                                #:target '()
-                               #:tags '(downtime)))
+                               #:tags '(downtime)
+                               #:details '()))
 
                ; 'success, 'failure or 'suspended
                (define
@@ -389,7 +390,8 @@
                                               #:actor (situation-pc *situation*)
                                               #:duration 100
                                               #:target '()
-                                              #:tags '(downtime)))
+                                              #:tags '(downtime)
+                                              #:details '()))
 
                               ; 'success, 'failure or 'suspended
                               (define
@@ -799,7 +801,8 @@
                       #:actor actor
                       #:duration 1
                       #:target (situation-pc *situation*)
-                      #:tags '(initiative-based-resolution))))))
+                      #:tags '(initiative-based-resolution)
+                      #:details '(blindscraper-melee))))))
            (else
             (begin (displayln "Blindscraper AI, not in combat")))))
     (else (displayln "get-next-npc-action: unknown actor"))))
@@ -870,7 +873,8 @@
                  #:actor (situation-pc *situation*)
                  #:duration 1
                  #:target target
-                 #:tags '(initiative-based-resolution)))))
+                 #:tags '(initiative-based-resolution)
+                 #:details '(pc-melee)))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
@@ -886,7 +890,8 @@
           #:actor (situation-pc *situation*)
           #:duration 1
           #:target '()
-          #:tags '(initiative-based-resolution fast)))))
+          #:tags '(initiative-based-resolution fast)
+          #:details '()))))
     (set! combat-choices (append-element combat-choices run-choice))
     )
 
@@ -904,7 +909,8 @@
            #:actor (situation-pc *situation*)
            #:duration 100
            #:target '()
-           #:tags '())))))
+           #:tags '()
+           #:details '())))))
 
 (define (get-location-name-from-location-type location-type)
   (cond ((eq? location-type 'swamp) "the swamps")
@@ -961,7 +967,8 @@
                              #:actor (situation-pc *situation*)
                              #:duration 100
                              #:target neighbor
-                             #:tags '(downtime))))))))
+                             #:tags '(downtime)
+                             #:details '())))))))
 
     (set! downtime-choices
           (if (eq? (location-type (current-location)) 'swamp)
@@ -974,7 +981,8 @@
                        #:actor (situation-pc *situation*)
                        #:duration 100
                        #:target '()
-                       #:tags '(downtime)))))
+                       #:tags '(downtime)
+                       #:details '()))))
               '())
 
 
@@ -992,7 +1000,8 @@
                    #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
-                   #:tags '(downtime)))))))
+                   #:tags '(downtime)
+                   #:details '()))))))
   (when (eq? (location-type (current-location)) 'spring)
     (set! end-run-choices
           (list
@@ -1004,7 +1013,8 @@
                    #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
-                   #:tags '(downtime)))))))
+                   #:tags '(downtime)
+                   #:details '()))))))
 
   
   (define neighbors
@@ -1022,7 +1032,8 @@
                  #:actor (situation-pc *situation*)
                  #:duration 100
                  #:target '()
-                 #:tags '(downtime))))])))
+                 #:tags '(downtime)
+                 #:details '())))])))
   (define choices-before-pruning
     (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
 
@@ -1829,7 +1840,7 @@
          ; Smashvine: Bludgeon damage against dodge, sensitive to fire
          ; todo: define encounter levels to make it simpler
          (define i 0)
-         (define enemy (make-actor "Blindscraper" 4))
+         (define enemy (make-actor "Blindscraper" 2))
          (set-actor-dexterity! enemy 13)
          (set-trait! enemy "defense" 1)
          (set-trait! enemy "melee-attack-skill" 1)
