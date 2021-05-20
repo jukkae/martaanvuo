@@ -795,11 +795,11 @@
   (case action-flag
 
     ['attack
-     (define damage-roll (λ () 2))
+     (define damage-roll (λ () (d 1 2)))
      (define details
        (list
         (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "2")
+        (cons 'damage-roll-formula "1d2")
         ))
      (make-action
       #:symbol 'melee
@@ -1859,16 +1859,22 @@
                    (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
         
                (begin
-                 (paragraph "The Blindscraper leaps at Otava, but she dives under its jump and stumbles back to her feet.")
+                 (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
                  (displayln "[-1 LP]")
-                 
+                 (set-pc-actor-lp! (situation-pc *situation*)
+                                   (- (pc-actor-lp (situation-pc *situation*))
+                                      1))
+                 (when (< (pc-actor-lp (situation-pc *situation*)) 0)
+                   (set-pc-actor-lp! (situation-pc *situation*)
+                                   0))
+                 (displayln (pc-actor-lp (situation-pc *situation*)))
                  'failure))
            'ok
            )
 
           ((eq? (action-symbol action) 'inflict-status)
            (case (action-details action)
-             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black. Blood is running down her face.")
+             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")
                        (paragraph "test")])
            'ok
            )
