@@ -791,23 +791,37 @@
     ; Blindscraper combat AI
     (["Blindscraper"]
      (cond ((in-combat?)
-            (begin
-              (define stance (hash-ref *enemy-stances* actor))
-              (cond ((or (eq? (stance-range stance) 'close)
-                         (eq? (stance-range stance) 'engaged))
-                     (define damage-roll (λ () 2))
-                     (define details
-                       (list
-                        (cons 'damage-roll damage-roll)
-                        (cons 'damage-roll-formula "2")
-                        ))
-                     (make-action
-                      #:symbol 'melee
-                      #:actor actor
-                      #:duration 1
-                      #:target (situation-pc *situation*)
-                      #:tags '(initiative-based-resolution)
-                      #:details details)))))
+            (cond ((> (actor-hp actor) 1)
+                   (begin
+                     (define stance (hash-ref *enemy-stances* actor))
+                     (cond ((or (eq? (stance-range stance) 'close)
+                                (eq? (stance-range stance) 'engaged))
+                            (define damage-roll (λ () 2))
+                            (define details
+                              (list
+                               (cons 'damage-roll damage-roll)
+                               (cons 'damage-roll-formula "2")
+                               ))
+                            (make-action
+                             #:symbol 'melee
+                             #:actor actor
+                             #:duration 1
+                             #:target (situation-pc *situation*)
+                             #:tags '(initiative-based-resolution)
+                             #:details details)))))
+                  (else
+                   (begin
+                     (displayln "blindscraper not well")
+                     (define stance (hash-ref *enemy-stances* actor))
+                     (cond ((or (eq? (stance-range stance) 'close)
+                                (eq? (stance-range stance) 'engaged))
+                            (make-action
+                             #:symbol 'run
+                             #:actor actor
+                             #:duration 1
+                             #:target '()
+                             #:tags '(initiative-based-resolution)
+                             #:details '())))))))
            (else
             (begin (displayln "Blindscraper AI, not in combat")))))
     (else (displayln "get-next-npc-action: unknown actor"))))
@@ -1669,33 +1683,64 @@
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
           ((eq? (action-symbol action) 'run)
-           (paragraph "Otava tries to run.")
-           (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+           (cond ((pc-actor? (action-actor action))
+                  (paragraph "Otava tries to run.")
+                  (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
-           (define stance-range-values '())
-           (for ([(k v) (in-hash *enemy-stances*)])
-             (define value (get-stance-range-numeric-value (stance-range v)))
-             (set! stance-range-values (append-element stance-range-values value)))
-           (define target-number
-             ; if there's an enemy in engaged range, then more difficult check
-             (if (member 0 stance-range-values)
-                 10
-                 8))
+                  (define stance-range-values '())
+                  (for ([(k v) (in-hash *enemy-stances*)])
+                    (define value (get-stance-range-numeric-value (stance-range v)))
+                    (set! stance-range-values (append-element stance-range-values value)))
+                  (define target-number
+                    ; if there's an enemy in engaged range, then more difficult check
+                    (if (member 0 stance-range-values)
+                        10
+                        8))
            
-           (define success? (skill-check "Athletics" skill target-number))
-           (if success?
-               (begin
-                 (paragraph "Otava narrowly escapes.")
-                 (award-xp! 3)
-                 'escape-from-combat)
-               (begin
-                 (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                 (set-actor-statuses!
-                  (situation-pc *situation*)
-                  (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
-                 (display-pc-combatant-info (situation-pc *situation*))
-                 (wait-for-confirm)
-                 'failure)))
+                  (define success? (skill-check "Athletics" skill target-number))
+                  (if success?
+                      (begin
+                        (paragraph "Otava narrowly escapes.")
+                        (award-xp! 3)
+                        'escape-from-combat)
+                      (begin
+                        (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+                        (set-actor-statuses!
+                         (situation-pc *situation*)
+                         (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
+                        (display-pc-combatant-info (situation-pc *situation*))
+                        (wait-for-confirm)
+                        'failure))
+                  )
+                 (else ; not a pc actor
+                  (paragraph
+                   (string-append
+                    (get-combatant-name (action-actor action))
+                    " tries to run."))
+                  (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+                  (define stance (hash-ref *enemy-stances* (action-actor action)))
+                  (define value (get-stance-range-numeric-value (stance-range stance)))
+                  (define target-number
+                    (if (= value 0)
+                        10
+                        8))
+           
+                  (define success? (skill-check "Athletics" skill target-number))
+                  (if success?
+                      (begin
+                        (displayln "TODO: run check")
+                        ;(award-xp! 3)
+                        'escape-from-combat)
+                      (begin
+                        (displayln "TODO: run check")
+                        #;(set-actor-statuses!
+                         (situation-pc *situation*)
+                         (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
+                        #;(display-pc-combatant-info (situation-pc *situation*))
+                        #;(wait-for-confirm)
+                        'failure))
+                  ))
+           )
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 
