@@ -796,13 +796,19 @@
               (define stance (hash-ref *enemy-stances* actor))
               (cond ((or (eq? (stance-range stance) 'close)
                          (eq? (stance-range stance) 'engaged))
+                     (define damage-roll (λ () 2))
+                     (define details
+                       (list
+                        (cons 'damage-roll damage-roll)
+                        (cons 'damage-roll-formula "2")
+                        ))
                      (make-action
                       #:symbol 'melee
                       #:actor actor
                       #:duration 1
                       #:target (situation-pc *situation*)
                       #:tags '(initiative-based-resolution)
-                      #:details '(blindscraper-melee))))))
+                      #:details details)))))
            (else
             (begin (displayln "Blindscraper AI, not in combat")))))
     (else (displayln "get-next-npc-action: unknown actor"))))
@@ -860,6 +866,13 @@
     (define stance (hash-ref *enemy-stances* target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
+           (define damage-roll (λ () (d 1 2)))
+           (define details
+             (list
+              (cons 'damage-roll damage-roll)
+              (cons 'damage-roll-formula "1d2")
+              (cons 'damage-type 'bludgeoning)
+              ))
            (define choice
              (make-choice
               'attack
@@ -874,7 +887,7 @@
                  #:duration 1
                  #:target target
                  #:tags '(initiative-based-resolution)
-                 #:details '(pc-melee)))))
+                 #:details details))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
@@ -1545,22 +1558,30 @@
                    " vs "
                    (get-combatant-name target)))
   (define success? (skill-check title skill action-target-number))
-  (define damage (get-trait actor "melee-attack-damage"))
+
+  (define details (action-details action))
+  
+
+  (define damage-roll (assoc 'damage-roll details))
+  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  (define damage-roll-result ((cdr damage-roll)))
+  
 
   (when success?
     (info-card
      (list
       (list " damage roll formula " " result ")
       (list
-       " < see actor > "
-       (string-append
-        " "
-        (number->string damage))
-       ))
+       (string-append " "
+                      damage-roll-formula
+                      " ")
+       (string-append " "
+                      (number->string damage-roll-result)
+                      " ")))
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage)))
+  (when success? (set! action-result (take-damage target damage-roll-result)))
 
   (actor-status-card target (actor-name target))
   (newline)
