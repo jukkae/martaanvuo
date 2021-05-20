@@ -818,6 +818,15 @@
       #:tags '(initiative-based-resolution)
       #:details '())]
 
+    ['blindscrape
+     (make-action
+      #:symbol 'inflict-status
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details '(blind))]
+
     [else
      (error (string-append
              "make-blindscraper-action: unknown action: "
@@ -833,9 +842,12 @@
                (define options
                  (list
                   (cons 1 'blindscrape)
-                  (cons 2 'attack)
-                  (cons 3 'attack)
-                  (cons 4 'attack)))
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  #;(cons 2 'attack)
+                  #;(cons 3 'attack)
+                  #;(cons 4 'attack)))
                (define roll (d 1 4))
                (define index (- roll 1))
                (displayln "Action")
@@ -847,13 +859,12 @@
               ((actor-in-range? actor 'close)
                (define options
                  (list
-                  #;(cons 1 'attack)
-                  #;(cons 2 'attack)
+                  (cons 1 'attack)
+                  (cons 2 'attack)
                   (cons 3 'go-to-engaged)
-                  (cons 3 'go-to-engaged)
-                  (cons 3 'go-to-engaged)
-                  (cons 3 'go-to-engaged)
-                  #;(cons 4 'parry)))
+                  (cons 4 'go-to-engaged)
+                  #;(cons 4 'parry)
+                  ))
                (define roll (d 1 4))
                (define index (- roll 1))
                (displayln "Action")
@@ -1830,23 +1841,36 @@
 
           ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
-           (displayln "go-to-eng")
 
+           (displayln "LP:")
+           (define lp (pc-actor-lp (situation-pc *situation*)))
            (define dex (actor-dexterity (action-actor action)))
-           (define success? (attribute-check "Dexterity" dex))
+           (define success?
+             (cond ((positive? lp)
+                    (displayln "[PC LP positive, check for success:]")
+                    (attribute-check "Dexterity" dex))
+                   (else #t)))
            
            (if success?
                (begin
-                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. Its sac is almost directly in front of Otava's eyes, and one of its long talons is swinging free, looking for an opening.")
+                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. Its sac is almost directly in front of Otava's eyes, and one of its long claws is swinging free, looking for an opening.")
                  (hash-remove! *enemy-stances* (action-actor action))
                  
                  (let ([enemy-stance (stance "α" 'engaged "right")])
                    (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
         
                (begin
-                 (paragraph "The Blindscraper tries to get close, but Otava dodges its jump.")
+                 (paragraph "The Blindscraper leaps at Otava, but she dives under its jump and stumbles back to her feet.")
+                 (displayln "[-1 LP]")
                  
                  'failure))
+           'ok
+           )
+
+          ((eq? (action-symbol action) 'inflict-status)
+           (case (action-details action)
+             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black. Blood is running down her face.")
+                       (paragraph "test")])
            'ok
            )
           
@@ -2003,7 +2027,7 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black talon. The finger is followed by another finger, then a glistening, sac-like body.")
+         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
 
          (set-situation-in-combat?! *situation* #t)
 
