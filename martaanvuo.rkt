@@ -792,9 +792,24 @@
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
 
-(define (make-blindscraper-action action-flag)
-  '()
-  )
+(define (make-blindscraper-action actor action-flag)
+  (cond
+    ((eq? action-flag 'attack)
+     (displayln "making action")
+     (define damage-roll (λ () 2))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "2")
+        ))
+     (make-action
+      #:symbol 'melee
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details))
+    (else (error (string-append "make-blindscraper-action: unknown action: " (symbol->string action-flag))))))
 
 (define (get-blindscraper-action actor)
   (cond ((in-combat?)
@@ -810,47 +825,31 @@
                   (cons 3 'attack)
                   (cons 4 'attack)))
                (define roll (d 1 4))
-               (displayln "ROLL:")
-               (displayln roll)
-               (define action (list-ref options roll))
-               (displayln action)
-               
-               (define damage-roll (λ () 2))
-               (define details
-                 (list
-                  (cons 'damage-roll damage-roll)
-                  (cons 'damage-roll-formula "2")
-                  ))
-               (make-action
-                #:symbol 'melee
-                #:actor actor
-                #:duration 1
-                #:target (situation-pc *situation*)
-                #:tags '(initiative-based-resolution)
-                #:details details))
+               (define index (- roll 1))
+               (displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))
                       
               ((actor-in-range? actor 'close)
                (define options
                  (list
                   (cons 1 'attack)
                   (cons 2 'attack)
-                  (cons 3 'go-to-engaged)
-                  (cons 4 'parry)))
+                  (cons 3 'attack)
+                  (cons 4 'attack)
+                  #;(cons 3 'go-to-engaged)
+                  #;(cons 4 'parry)))
                (define roll (d 1 4))
-               (displayln "ROLL:")
-               (displayln roll)
-               (define action (list-ref options roll))
-               (displayln action)
-                 
-               (make-action
-                #:symbol 'melee
-                #:actor actor
-                #:duration 1
-                #:target (situation-pc *situation*)
-                #:tags '(initiative-based-resolution)
-                #:details '()))))
+               (define index (- roll 1))
+               (displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))))
            
-           ((= (actor-hp 1))
+           ((= (actor-hp actor) 1)
             (make-action
              #:symbol 'run
              #:actor actor
