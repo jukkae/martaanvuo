@@ -766,8 +766,9 @@
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
+  (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
-  (displayln (actor-name actor)))
+  (displayln corpse))
 
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
@@ -779,50 +780,91 @@
         'dead
         'hit))
 
-  (when (eq? result 'dead) (clean-up-dead-actor! actor))
+  (when (eq? result 'dead)
+    (clean-up-dead-actor! actor))
   
   result)
 
 (define (alive? actor)
   (> (actor-hp actor) 0))
 
+(define (actor-in-range? enemy range)
+  (define stance (hash-ref *enemy-stances* enemy))
+  (eq? (stance-range stance) range))
+
+(define (make-blindscraper-action action-flag)
+  '()
+  )
+
+(define (get-blindscraper-action actor)
+  (cond ((in-combat?)
+         (cond
+           ((> (actor-hp actor) 1)
+
+            (cond
+              ((actor-in-range? actor 'engaged)
+               (define options
+                 (list
+                  (cons 1 'blindscrape)
+                  (cons 2 'attack)
+                  (cons 3 'attack)
+                  (cons 4 'attack)))
+               (define roll (d 1 4))
+               (displayln "ROLL:")
+               (displayln roll)
+               (define action (list-ref options roll))
+               (displayln action)
+               
+               (define damage-roll (λ () 2))
+               (define details
+                 (list
+                  (cons 'damage-roll damage-roll)
+                  (cons 'damage-roll-formula "2")
+                  ))
+               (make-action
+                #:symbol 'melee
+                #:actor actor
+                #:duration 1
+                #:target (situation-pc *situation*)
+                #:tags '(initiative-based-resolution)
+                #:details details))
+                      
+              ((actor-in-range? actor 'close)
+               (define options
+                 (list
+                  (cons 1 'attack)
+                  (cons 2 'attack)
+                  (cons 3 'go-to-engaged)
+                  (cons 4 'parry)))
+               (define roll (d 1 4))
+               (displayln "ROLL:")
+               (displayln roll)
+               (define action (list-ref options roll))
+               (displayln action)
+                 
+               (make-action
+                #:symbol 'melee
+                #:actor actor
+                #:duration 1
+                #:target (situation-pc *situation*)
+                #:tags '(initiative-based-resolution)
+                #:details '()))))
+           
+           ((= (actor-hp 1))
+            (make-action
+             #:symbol 'run
+             #:actor actor
+             #:duration 1
+             #:target '()
+             #:tags '(initiative-based-resolution fast)
+             #:details '()))))
+        (else
+         (begin (displayln "Blindscraper AI, not in combat")))))
+         
+
 (define (get-next-npc-action actor)
   (case (actor-name actor)
-    ; Blindscraper combat AI
-    (["Blindscraper"]
-     (cond ((in-combat?)
-            (cond ((> (actor-hp actor) 1)
-                   (begin
-                     (define stance (hash-ref *enemy-stances* actor))
-                     (cond ((or (eq? (stance-range stance) 'close)
-                                (eq? (stance-range stance) 'engaged))
-                            (define damage-roll (λ () 2))
-                            (define details
-                              (list
-                               (cons 'damage-roll damage-roll)
-                               (cons 'damage-roll-formula "2")
-                               ))
-                            (make-action
-                             #:symbol 'melee
-                             #:actor actor
-                             #:duration 1
-                             #:target (situation-pc *situation*)
-                             #:tags '(initiative-based-resolution)
-                             #:details details)))))
-                  (else
-                   (begin
-                     (define stance (hash-ref *enemy-stances* actor))
-                     (cond ((or (eq? (stance-range stance) 'close)
-                                (eq? (stance-range stance) 'engaged))
-                            (make-action
-                             #:symbol 'run
-                             #:actor actor
-                             #:duration 1
-                             #:target '()
-                             #:tags '(initiative-based-resolution fast)
-                             #:details '())))))))
-           (else
-            (begin (displayln "Blindscraper AI, not in combat")))))
+    (["Blindscraper"] (get-blindscraper-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 
@@ -878,12 +920,11 @@
     (define stance (hash-ref *enemy-stances* target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           #;(define damage-roll (λ () (d 1 2)))
-           (define damage-roll (λ () 1))
+           (define damage-roll (λ () (d 1 2)))
            (define details
              (list
               (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "1")
+              (cons 'damage-roll-formula "1d2")
               (cons 'damage-type 'bludgeoning)
               ))
            (define choice
@@ -1595,6 +1636,11 @@
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when (eq? action-result 'dead)
+    
+    ; TODO what's a smart place to store this? the actor?
+    (case (actor-name (action-target action))
+      [("Blindscraper") (award-xp! 7)]))
 
   (actor-status-card target (actor-name target))
   (newline)
