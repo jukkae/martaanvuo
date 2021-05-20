@@ -155,8 +155,10 @@
    4
    ))
 
-(define (award-xp! amount)
-  (displayln (string-append "[+" (number->string amount) " xp]"))
+(define (award-xp! amount . reason)
+  (if (null? reason)
+      (displayln (string-append "[+" (number->string amount) " xp]"))
+      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
   (define pc (situation-pc *situation*))
   (set-pc-actor-xp! pc
                     (+ (pc-actor-xp pc)
@@ -1699,7 +1701,7 @@
                   (if success?
                       (begin
                         (paragraph "Otava narrowly escapes.")
-                        (award-xp! 3)
+                        (award-xp! 3 "for a working survival instinct")
                         'escape-from-combat)
                       (begin
                         (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
