@@ -198,7 +198,7 @@
      (set-pc-actor-lp! pc 0)
 
      (set-trait! pc "athletics-skill" 1)
-     (set-trait! pc "melee-attack-skill" 1)
+     (set-trait! pc "melee-attack-skill" 3)
      (set-trait! pc "defense" 1)]
     
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
@@ -532,12 +532,10 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
-(define (escape-from-combat!)
-  (displayln "todo: escape-from-combat!")
+(define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! *enemy-stances* enemy)
-    (remove-actor-from-location! (actor-current-location enemy) enemy)
-    )
+    (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
 
 (define (engaged?)
@@ -811,7 +809,6 @@
                              #:details details)))))
                   (else
                    (begin
-                     (displayln "blindscraper not well")
                      (define stance (hash-ref *enemy-stances* actor))
                      (cond ((or (eq? (stance-range stance) 'close)
                                 (eq? (stance-range stance) 'engaged))
@@ -820,7 +817,7 @@
                              #:actor actor
                              #:duration 1
                              #:target '()
-                             #:tags '(initiative-based-resolution)
+                             #:tags '(initiative-based-resolution fast)
                              #:details '())))))))
            (else
             (begin (displayln "Blindscraper AI, not in combat")))))
@@ -879,11 +876,12 @@
     (define stance (hash-ref *enemy-stances* target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 2)))
+           #;(define damage-roll (λ () (d 1 2)))
+           (define damage-roll (λ () 1))
            (define details
              (list
               (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "1d2")
+              (cons 'damage-roll-formula "1")
               (cons 'damage-type 'bludgeoning)
               ))
            (define choice
@@ -1712,6 +1710,7 @@
                         (wait-for-confirm)
                         'failure))
                   )
+
                  (else ; not a pc actor
                   (paragraph
                    (string-append
@@ -1728,16 +1727,15 @@
                   (define success? (skill-check "Athletics" skill target-number))
                   (if success?
                       (begin
-                        (displayln "TODO: run check")
-                        ;(award-xp! 3)
+                        (paragraph "It disappears in the foliage.")
+                        (award-xp! 1)
                         'escape-from-combat)
                       (begin
-                        (displayln "TODO: run check")
-                        #;(set-actor-statuses!
-                         (situation-pc *situation*)
-                         (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
-                        #;(display-pc-combatant-info (situation-pc *situation*))
-                        #;(wait-for-confirm)
+                        (paragraph "It is fast, but not fast enough.")
+                        (set-actor-statuses!
+                         (action-actor action)
+                         (append-element (actor-statuses (action-actor action)) 'fallen))
+                        (display-combatant-info (action-actor action))
                         'failure))
                   ))
            )
@@ -1955,7 +1953,7 @@
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
       (when (eq? turn-result 'escape-from-combat)
-        (escape-from-combat!)
+        (remove-all-enemies-and-end-combat!)
         (end-round-early))
       )
     ))
