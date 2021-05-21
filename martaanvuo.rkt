@@ -523,12 +523,14 @@
   [in-combat? #:mutable]
   [current-fragment #:mutable]
   [quests #:mutable]
+  [grabberkin-encounters #:mutable]
   ))
 
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
-        [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f '() '())))
+        [pc (make-new-pc)]
+        [quests '()])
+    (situation new-world pc 0 0 0 0 #f '() quests 0)))
 
 (define (in-combat?)
   (situation-in-combat? *situation*))
@@ -2032,6 +2034,17 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
+         (define encounter-types '(blindscraper grabberkin))
+
+         (define encounter-type 'grabberkin)
+         (case encounter-type
+           ['grabberkin
+            (set-situation-grabberkin-encounters!
+             *situation*
+             (add1 (situation-grabberkin-encounters *situation*)))
+            (player-info)]
+           
+           )
          (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
 
          (set-situation-in-combat?! *situation* #t)
@@ -2325,15 +2338,20 @@
         (loop)))
     ))
 
+(define (player-info)
+  (define player-status
+    (list
+     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
+     (list " grabberkin encounters " (string-append " " (number->string (situation-grabberkin-encounters *situation*)) " "))
+     ))
+     
+  (info-card player-status (string-append "Player status"))
+  )
+
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
-  (define life-info
-    (list
-     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
-     ))
-     
-  (info-card life-info (string-append "Begin life number " (number->string (situation-life *situation*))))
+  (player-info)  
   )
 
 (define (on-begin-playthrough)
