@@ -856,9 +856,9 @@
                   #;(cons 4 'attack)))
                (define roll (d 1 4))
                (define index (- roll 1))
-               (displayln "Action")
+               #;(displayln "Action")
                (define action-flag-with-index (list-ref options index))
-               (displayln action-flag-with-index)
+               #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-blindscraper-action actor action-flag))
                       
@@ -873,9 +873,9 @@
                   ))
                (define roll (d 1 4))
                (define index (- roll 1))
-               (displayln "Action")
+               #;(displayln "Action")
                (define action-flag-with-index (list-ref options index))
-               (displayln action-flag-with-index)
+               #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-blindscraper-action actor action-flag))))
            
@@ -1013,7 +1013,7 @@
                #:details '()))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
-  (cond ((engaged?)
+  #;(cond ((engaged?)
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
          (define damage-roll (λ () (d 1 2)))
          (define details
@@ -1274,8 +1274,8 @@
         (string-append
          " "
          (actor-name (action-actor action))
-         ": "
-         (symbol->string (action-symbol action))
+         #;": "
+         #;(symbol->string (action-symbol action))
          " "))
       (list action-description (string-append " " (number->string initiative) " "))))
   
@@ -1343,33 +1343,35 @@
         #f))
 
   (define body
-    (list
-     (list
-      " HP "
-      (if hide-hp?
-          " ??? "
-          (string-append " "
-                         (number->string (actor-hp actor))
-                         "/"
-                         (number->string (actor-max-hp actor))
-                         " "
-                         )))))
-  #;(define body
-      (list
+    (case (actor-name actor)
+      [("Grabberkin")
        (list
-        " size "
-        (string-append " "
-                       (get-trait actor "size")
-                       " "
-                       ))
+        (list
+         " HP "
+         (if hide-hp?
+             " ??? "
+             (string-append " "
+                            (number->string (actor-hp actor))
+                            "/"
+                            (number->string (actor-max-hp actor))
+                            " "
+                            ))))]
+      [("Blindscraper")
        (list
-        " location "
-        (string-append " " (stance-location stance) " "))
-       (list
-        " range "
-        (string-append " " (symbol->string (stance-range stance)) " "))
+        (list
+         " size "
+         (string-append " "
+                        (get-trait actor "size")
+                        " "
+                        ))
+        #;(list
+         " location "
+         (string-append " " (stance-location stance) " "))
+        (list
+         " range "
+         (string-append " " (symbol->string (stance-range stance)) " "))
 
-       ))
+        )]))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -1717,6 +1719,10 @@
   (cond ((member 'fallen (actor-statuses target))
          (displayln "[Target fallen, TN -2]")
          (set! bonus 2)
+         ))
+  (cond ((engaged?)
+         (displayln "[Engaged, TN +1]")
+         (set! bonus -1)
          ))
   
   (define action-target-number (- 7 bonus))
@@ -2222,7 +2228,10 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type 'grabberkin)
+
+         (define encounter-type 'blindscraper)
+
+         
          (case encounter-type
            ['grabberkin
 
