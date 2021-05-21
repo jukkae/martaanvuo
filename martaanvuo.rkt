@@ -933,6 +933,16 @@
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
+(define (get-an-enemy-at-range range)
+  (define current-enemies (get-current-enemies))
+  (define enemies-shuffled (shuffle current-enemies))
+  (define enemy-in-range '())
+  (for ([enemy enemies-shuffled])
+    (define stance (hash-ref *enemy-stances* enemy '()))
+    (when (eq? (stance-range stance) range)
+      (set! enemy-in-range enemy)))
+  enemy-in-range)
+
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
@@ -1004,6 +1014,17 @@
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (cond ((engaged?)
+         (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
+         (define damage-roll (λ () (d 1 2)))
+         (define details
+           (list
+            (cons 'damage-roll damage-roll)
+            (cons 'damage-roll-formula
+                  (string-append "1d2 + str mod ["
+                                 (number->string strength-mod)
+                                 "]"))
+            (cons 'damage-type 'bludgeoning)
+            ))
          (define break-free-choice
            (make-choice
             'wrestle
@@ -1014,9 +1035,9 @@
                #:symbol 'wrestle
                #:actor (situation-pc *situation*)
                #:duration 1
-               #:target '()
+               #:target (get-an-enemy-at-range 'engaged)
                #:tags '(initiative-based-resolution)
-               #:details '()))))
+               #:details details))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
@@ -1328,11 +1349,11 @@
       (if hide-hp?
           " ??? "
           (string-append " "
-                       (number->string (actor-hp actor))
-                       "/"
-                       (number->string (actor-max-hp actor))
-                       " "
-                       )))))
+                         (number->string (actor-hp actor))
+                         "/"
+                         (number->string (actor-max-hp actor))
+                         " "
+                         )))))
   #;(define body
       (list
        (list
@@ -2180,7 +2201,7 @@
   (define i 0)
   (define enemy (make-actor "Grabberkin" 14))
   (set-actor-dexterity! enemy 4)
-  (set-actor-strength! enemy 13)
+  (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
