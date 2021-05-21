@@ -2201,7 +2201,7 @@
 
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Otava feels something strong grab her ankle.")
+  (paragraph "Otava feels something strong and spongy grab her ankle.")
   (set-situation-in-combat?! *situation* #t)
 
   (define i 0)
@@ -2229,7 +2229,12 @@
          (define encounter-types '(blindscraper grabberkin))
 
 
-         (define encounter-type 'blindscraper)
+         (define encounter-type 'grabberkin)
+         (displayln
+          (string-append
+           "<< setting encounter-type to "
+           (symbol->string encounter-type)
+           " >>"))
 
          
          (case encounter-type
