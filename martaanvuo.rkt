@@ -787,7 +787,9 @@
   result)
 
 (define (alive? actor)
-  (> (actor-hp actor) 0))
+  (if (string? (actor-hp actor))
+      #t
+      (> (actor-hp actor) 0)))
 
 (define (actor-in-range? enemy range)
   (define stance (hash-ref *enemy-stances* enemy))
@@ -1287,6 +1289,20 @@
   (define body
     (list
      (list
+      " HP "
+      (string-append " "
+                     (actor-hp actor)
+                     " "
+                     )
+      #;(string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+  #;(define body
+    (list
+     (list
       " size "
       (string-append " "
                      (get-trait actor "size")
@@ -1299,14 +1315,7 @@
       " range "
       (string-append " " (symbol->string (stance-range stance)) " "))
 
-     (list
-      " HP "
-      (string-append " "
-                     (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     " "
-                     ))))
+     ))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -2037,12 +2046,6 @@
 
   (set-situation-in-combat?! *situation* #t)
 
-
-  ; Enemies design idea v1:
-  ; Blindscraper: Can only attack when Engaged
-  ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
-  ; Smashvine: Bludgeon damage against dodge, sensitive to fire
-  ; todo: define encounter levels to make it simpler
   (define i 0)
   (define enemy (make-actor "Blindscraper" 3))
   (set-actor-dexterity! enemy 13)
@@ -2067,13 +2070,37 @@
            
   (hash-set! *enemy-stances* enemy enemy-stance))
 
+(define (spawn-grabberkin-encounter!)
+  ; TODO usually grab only one ankle, sometimes both
+  (paragraph "Otava feels something strong grab her ankle.")
+  (set-situation-in-combat?! *situation* #t)
+
+  (define i 0)
+  (define enemy (make-actor "Grabberkin" "???"))
+  (move-actor-to-location! enemy (current-location))
+
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range 'engaged)
+  (define location "grabbing Otava's ankle")
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance)
+  )
+
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type 'blindscraper)
+         (define encounter-type 'grabberkin)
          (case encounter-type
            ['grabberkin
+
+            (spawn-grabberkin-encounter!)
+            ; TODO this should happen at the end of the encounter for it to make sense narratively
             (set-situation-grabberkin-encounters!
              *situation*
              (add1 (situation-grabberkin-encounters *situation*)))
