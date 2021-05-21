@@ -187,6 +187,7 @@
 
      (set-trait! pc "athletics-skill" 0)
      (set-trait! pc "melee-attack-skill" 0)
+     (set-trait! pc "wrestle-attack-skill" 1)
      (set-trait! pc "defense" 1)]
     
     ['bruiser
@@ -201,6 +202,7 @@
 
      (set-trait! pc "athletics-skill" 1)
      (set-trait! pc "melee-attack-skill" 3)
+     (set-trait! pc "wrestle-attack-skill" -1)
      (set-trait! pc "defense" 1)]
     
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
@@ -1006,7 +1008,7 @@
            (make-choice
             'wrestle
             (string-append
-             "Break free.")
+             "Wrestle to break free.")
             (λ ()
               (make-action
                #:symbol 'wrestle
@@ -1314,20 +1316,23 @@
 (define (display-non-pc-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
   (define name (get-combatant-name actor))
+  (define hide-hp?
+    (if (hash-ref (actor-traits actor) "hp-hidden" #f)
+        #t
+        #f))
+
   (define body
     (list
      (list
       " HP "
-      #;(string-append " "
-                     (actor-hp actor)
-                     " "
-                     )
-      (string-append " "
+      (if hide-hp?
+          " ??? "
+          (string-append " "
                        (number->string (actor-hp actor))
                        "/"
                        (number->string (actor-max-hp actor))
                        " "
-                       ))))
+                       )))))
   #;(define body
       (list
        (list
@@ -1737,6 +1742,66 @@
   action-result
   )
 
+(define (resolve-wrestle-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  
+  #;(define target-defense (get-trait target "defense"))
+  (define target-defense (actor-strength target))
+
+  (define skill (get-trait actor "wrestle-attack-skill"))
+
+  (define bonus 0)
+  
+  (cond ((member 'fallen (actor-statuses target))
+         (displayln "[Target fallen, TN -2]")
+         (set! bonus 2)
+         ))
+  
+  (define action-target-number (- 7 bonus))
+
+  (define title
+    (string-append "Brawl, "
+                   (get-combatant-name actor)
+                   " vs "
+                   (get-combatant-name target)))
+  (define success? (skill-check title skill action-target-number))
+
+  (define details (action-details action))
+  
+
+  (define damage-roll (assoc 'damage-roll details))
+  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  (define damage-roll-result ((cdr damage-roll)))
+  
+
+  (when success?
+    (info-card
+     (list
+      (list " damage roll formula " " result ")
+      (list
+       (string-append " "
+                      damage-roll-formula
+                      " ")
+       (string-append " "
+                      (number->string damage-roll-result)
+                      " ")))
+     "HP damage roll"))
+
+  (define action-result 'ok)
+  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when (eq? action-result 'dead)
+    
+    ; TODO what's a smart place to store this? the actor?
+    (case (actor-name (action-target action))
+      [("Blindscraper") (award-xp! 7)]))
+
+  (actor-status-card target (actor-name target))
+  (newline)
+
+  action-result
+  )
+
 
 (define (handle-exploration-check-result! result)
   (if result
@@ -1756,6 +1821,15 @@
   (when (alive? (action-actor action))
     (cond ((eq? (action-symbol action) 'melee)
            (define result (resolve-melee-action! action))
+           (when (eq? result 'dead)
+             (if (not (pc-actor? (action-target action)))
+                 (paragraph "The " (actor-name (action-target action)) " is dead.")
+                 (begin
+                   (paragraph "Otava is dead.")
+                   'pc-dead))))
+
+          ((eq? (action-symbol action) 'wrestle)
+           (define result (resolve-wrestle-action! action))
            (when (eq? result 'dead)
              (if (not (pc-actor? (action-target action)))
                  (paragraph "The " (actor-name (action-target action)) " is dead.")
@@ -2104,9 +2178,11 @@
   (set-situation-in-combat?! *situation* #t)
 
   (define i 0)
-  (define enemy (make-actor "Grabberkin" 87))
+  (define enemy (make-actor "Grabberkin" 14))
   (set-actor-dexterity! enemy 4)
+  (set-actor-strength! enemy 13)
   (set-trait! enemy "defense" -1)
+  (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
 
   (define index
