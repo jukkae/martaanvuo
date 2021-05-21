@@ -2032,52 +2032,57 @@
   location))
 (define *enemy-stances* (make-hash))
 
+(define (spawn-blindscraper-encounter!)
+  (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
+
+  (set-situation-in-combat?! *situation* #t)
+
+
+  ; Enemies design idea v1:
+  ; Blindscraper: Can only attack when Engaged
+  ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
+  ; Smashvine: Bludgeon damage against dodge, sensitive to fire
+  ; todo: define encounter levels to make it simpler
+  (define i 0)
+  (define enemy (make-actor "Blindscraper" 3))
+  (set-actor-dexterity! enemy 13)
+  (set-trait! enemy "defense" 1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "size" "small")
+  (move-actor-to-location! enemy (current-location))
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range
+    (if (= i 0)
+        'close
+        'mid))
+  (define location
+    (case i
+      [(0) "right"]
+      [(1) "left"]))
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance))
+
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type 'grabberkin)
+         (define encounter-type 'blindscraper)
          (case encounter-type
            ['grabberkin
             (set-situation-grabberkin-encounters!
              *situation*
              (add1 (situation-grabberkin-encounters *situation*)))
             (player-info)]
-           
+           ['blindscraper
+            (spawn-blindscraper-encounter!)
+            ]
            )
-         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
-
-         (set-situation-in-combat?! *situation* #t)
-
-
-         ; Enemies design idea v1:
-         ; Blindscraper: Can only attack when Engaged
-         ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
-         ; Smashvine: Bludgeon damage against dodge, sensitive to fire
-         ; todo: define encounter levels to make it simpler
-         (define i 0)
-         (define enemy (make-actor "Blindscraper" 3))
-         (set-actor-dexterity! enemy 13)
-         (set-trait! enemy "defense" 1)
-         (set-trait! enemy "melee-attack-skill" 1)
-         (set-trait! enemy "size" "small")
-         (move-actor-to-location! enemy (current-location))
-         (define index
-           (case i
-             [(0) "α"]
-             [(1) "β"]))
-         (define range
-           (if (= i 0)
-               'close
-               'mid))
-         (define location
-           (case i
-             [(0) "right"]
-             [(1) "left"]))
-         (define enemy-stance
-           (stance index range location))
-           
-         (hash-set! *enemy-stances* enemy enemy-stance))
+         )
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
