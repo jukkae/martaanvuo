@@ -887,11 +887,24 @@
              #:details '()))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
+
+(define (get-grabberkin-action actor)
+  (cond ((in-combat?)
+         (make-action
+          #:symbol 'inflict-status
+          #:actor actor
+          #:duration 1
+          #:target (situation-pc *situation*)
+          #:tags '(initiative-based-resolution)
+          #:details '((cons bound 1))))
+        (else
+         (begin (displayln "Grabberkin AI, not in combat")))))
          
 
 (define (get-next-npc-action actor)
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
+    (["Grabberkin"] (get-grabberkin-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 
@@ -972,22 +985,37 @@
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
-  (when (not (engaged?))
-    (define run-choice
-      (make-choice
-       'flee
-       (string-append
-        "Run.")
-       (λ ()
-         (make-action
-          #:symbol 'flee
-          #:actor (situation-pc *situation*)
-          #:duration 1
-          #:target '()
-          #:tags '(initiative-based-resolution fast)
-          #:details '()))))
-    (set! combat-choices (append-element combat-choices run-choice))
-    )
+  (cond ((not (engaged?))
+         (define run-choice
+           (make-choice
+            'flee
+            (string-append
+             "Run.")
+            (λ ()
+              (make-action
+               #:symbol 'flee
+               #:actor (situation-pc *situation*)
+               #:duration 1
+               #:target '()
+               #:tags '(initiative-based-resolution fast)
+               #:details '()))))
+         (set! combat-choices (append-element combat-choices run-choice))))
+
+  (cond ((engaged?)
+         (define break-free-choice
+           (make-choice
+            'wrestle
+            (string-append
+             "Break free.")
+            (λ ()
+              (make-action
+               #:symbol 'wrestle
+               #:actor (situation-pc *situation*)
+               #:duration 1
+               #:target '()
+               #:tags '(initiative-based-resolution)
+               #:details '()))))
+         (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
   )
@@ -1290,32 +1318,32 @@
     (list
      (list
       " HP "
-      (string-append " "
+      #;(string-append " "
                      (actor-hp actor)
                      " "
                      )
-      #;(string-append " "
-                     (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     " "
-                     ))))
-  #;(define body
-    (list
-     (list
-      " size "
       (string-append " "
-                     (get-trait actor "size")
-                     " "
-                     ))
-     (list
-      " location "
-      (string-append " " (stance-location stance) " "))
-     (list
-      " range "
-      (string-append " " (symbol->string (stance-range stance)) " "))
+                       (number->string (actor-hp actor))
+                       "/"
+                       (number->string (actor-max-hp actor))
+                       " "
+                       ))))
+  #;(define body
+      (list
+       (list
+        " size "
+        (string-append " "
+                       (get-trait actor "size")
+                       " "
+                       ))
+       (list
+        " location "
+        (string-append " " (stance-location stance) " "))
+       (list
+        " range "
+        (string-append " " (symbol->string (stance-range stance)) " "))
 
-     ))
+       ))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -2076,7 +2104,9 @@
   (set-situation-in-combat?! *situation* #t)
 
   (define i 0)
-  (define enemy (make-actor "Grabberkin" "???"))
+  (define enemy (make-actor "Grabberkin" 87))
+  (set-actor-dexterity! enemy 4)
+  (set-trait! enemy "defense" -1)
   (move-actor-to-location! enemy (current-location))
 
   (define index
