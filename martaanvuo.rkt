@@ -898,7 +898,7 @@
           #:duration 1
           #:target (situation-pc *situation*)
           #:tags '(initiative-based-resolution)
-          #:details '((cons bound 1))))
+          #:details (cons 'bound 1)))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
          
@@ -1013,7 +1013,9 @@
                #:details '()))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
-  #;(cond ((engaged?)
+  (cond ((and (engaged?)
+              (eq? (actor-name (get-an-enemy-at-range 'engaged))
+                   "Grabberkin"))
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
          (define damage-roll (λ () (d 1 2)))
          (define details
@@ -1029,7 +1031,7 @@
            (make-choice
             'wrestle
             (string-append
-             "Wrestle to break free.")
+             "Try to pull the leg free.")
             (λ ()
               (make-action
                #:symbol 'wrestle
@@ -1763,7 +1765,7 @@
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 7)]))
 
-  (actor-status-card target (actor-name target))
+  (display-combatant-info target)
   (newline)
 
   action-result
@@ -1823,7 +1825,7 @@
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 7)]))
 
-  (actor-status-card target (actor-name target))
+  (display-combatant-info target)
   (newline)
 
   action-result
@@ -2013,9 +2015,10 @@
            )
 
           ((eq? (action-symbol action) 'inflict-status)
-           (case (action-details action)
-             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")
-                       (paragraph "test")])
+           (match (action-details action)
+             ['blind (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")]
+             [(cons 'bound number) (paragraph "The Grabberkin tightens its grip around Otava's ankle.")]
+             [else (paragraph "todo: unknown status")])
            'ok
            )
           
@@ -2201,7 +2204,7 @@
 
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Otava feels something strong and spongy grab her ankle.")
+  (paragraph "Otava feels something strong grab her ankle.")
   (set-situation-in-combat?! *situation* #t)
 
   (define i 0)
