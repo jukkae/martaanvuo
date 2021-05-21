@@ -155,33 +155,57 @@
    4
    ))
 
+(define (award-xp! amount . reason)
+  (if (null? reason)
+      (displayln (string-append "[+" (number->string amount) " xp]"))
+      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
+  (define pc (situation-pc *situation*))
+  (set-pc-actor-xp! pc
+                    (+ (pc-actor-xp pc)
+                       amount)))
+
 (define (set-build! build)
+  (define pc (situation-pc *situation*))
   ; for desperate build, also set a time limit (or whatever other complication)
 
   (define starting-inventory
     (list
      (list 'bolt-cutters (list 'melee-weapon 'tool))))
 
+  
   (case build
-    ['desperate (set-actor-max-hp! (situation-pc *situation*) 4)
-                (set-actor-hp! (situation-pc *situation*) 4)
-                (set-trait! (situation-pc *situation*) "constitution" 10)
-                (set-trait! (situation-pc *situation*) "charisma" 10)
-                (set-trait! (situation-pc *situation*) "strength" 7)
-                (set-trait! (situation-pc *situation*) "athletics-skill" 0)
-                (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-                (set-trait! (situation-pc *situation*) "melee-attack-damage" 2)
-                (set-trait! (situation-pc *situation*) "defense" 1)]
-    ['bruiser (set-trait! (situation-pc *situation*) "constitution" 10)
-              (set-trait! (situation-pc *situation*) "charisma" 7)
-              (set-trait! (situation-pc *situation*) "strength" 10)
-              (set-trait! (situation-pc *situation*) "athletics-skill" 1)
-              (set-trait! (situation-pc *situation*) "melee-attack-skill" 1)
-              (set-trait! (situation-pc *situation*) "melee-attack-damage" 3)
-              (set-trait! (situation-pc *situation*) "defense" 0)]
-    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))]
-    )
+    
+    ['desperate
+     (set-actor-strength! pc 7)
+     (set-actor-dexterity! pc 10)
+     (set-actor-constitution! pc 7)
+     (set-actor-intelligence! pc 7)
+     (set-actor-charisma! pc 10)
+     
+     (set-pc-actor-max-lp! pc 1)
+     (set-pc-actor-lp! pc 1)
 
+     (set-trait! pc "athletics-skill" 0)
+     (set-trait! pc "melee-attack-skill" 0)
+     (set-trait! pc "defense" 1)]
+    
+    ['bruiser
+     (set-actor-strength! pc 10)
+     (set-actor-dexterity! pc 10)
+     (set-actor-constitution! pc 10)
+     (set-actor-intelligence! pc 7)
+     (set-actor-charisma! pc 7)
+     
+     (set-pc-actor-max-lp! pc 0)
+     (set-pc-actor-lp! pc 0)
+
+     (set-trait! pc "athletics-skill" 1)
+     (set-trait! pc "melee-attack-skill" 3)
+     (set-trait! pc "defense" 1)]
+    
+    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
+
+  
   (set-trait! (situation-pc *situation*) "exploration-skill" 1)
 
   (set-actor-inventory! (situation-pc *situation*) starting-inventory)
@@ -327,7 +351,8 @@
                                #:actor (situation-pc *situation*)
                                #:duration 100
                                #:target '()
-                               #:tags '(downtime)))
+                               #:tags '(downtime)
+                               #:details '()))
 
                ; 'success, 'failure or 'suspended
                (define
@@ -344,7 +369,6 @@
                         21))
                      ((eq? action-result 'interrupted)
                       (begin
-                        (displayln "--interrupted")
                         'exit
                         ))
                      (else
@@ -365,7 +389,8 @@
                                               #:actor (situation-pc *situation*)
                                               #:duration 100
                                               #:target '()
-                                              #:tags '(downtime)))
+                                              #:tags '(downtime)
+                                              #:details '()))
 
                               ; 'success, 'failure or 'suspended
                               (define
@@ -508,12 +533,10 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
-(define (escape-from-combat!)
-  (displayln "todo: escape-from-combat!")
+(define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! *enemy-stances* enemy)
-    (remove-actor-from-location! (actor-current-location enemy) enemy)
-    )
+    (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
 
 (define (engaged?)
@@ -583,27 +606,99 @@
 
 (define (character-sheet)
   (define actor (situation-pc *situation*))
-  (define traits (actor-traits actor))
-  (define traits-list (for/list ([(k v) (in-hash traits)])
-                        (if (or (eq? k "strength")
-                                (eq? k "charisma")
-                                (eq? k "constitution")
-                                (eq? k "intelligence")
-                                (eq? k "dexterity"))
-                            (list (string-append " " k " ")
-                                  (string-append " "
-                                                 (number->string v)
-                                                 " "
-                                                 "[" (get-modifier-string (get-attribute-modifier-for v)) "]"
-                                                 " "))
-                            (list (string-append " " k " ") (string-append " " (number->string v) " ")))))
-  
+
   (define sheet
     (list
-     (list " Name " (string-append " " (actor-name actor) " "))
-     (list " HP " (string-append " " (number->string (actor-hp actor)) "/" (number->string (actor-max-hp actor)) " "))
-     ))
-  (set! sheet (append sheet traits-list))
+     (list (string-append " " (actor-name actor) " ") "" )
+     (list "" "")
+     (list " HP " (string-append " "
+                                 (number->string (actor-hp actor))
+                                 "/"
+                                 (number->string (actor-max-hp actor))
+                                 " "))))
+
+  (when (not (= 0 (pc-actor-xp actor)))
+    (set! sheet (append-element sheet
+                                (list " XP " (string-append " "
+                                                            (number->string (pc-actor-xp actor))
+                                                            " ")))))
+
+  (define attributes-list '())
+  (when (or (not (null? (actor-strength actor)))
+            (not (null? (actor-dexterity actor)))
+            (not (null? (actor-constitution actor)))
+            (not (null? (actor-intelligence actor)))
+            (not (null? (actor-charisma actor))))
+    (set! attributes-list
+          (append-element attributes-list
+                          (list "" ""))))
+  
+  (when (not (null? (actor-strength actor)))
+    (set! attributes-list (append-element attributes-list
+                                          (list
+                                           " strength "
+                                           (string-append " "
+                                                          (number->string (actor-strength actor))
+                                                          " ["
+                                                          (get-modifier-string
+                                                           (get-attribute-modifier-for
+                                                            (actor-strength actor)))
+                                                          "] ")))))
+  (when (not (null? (actor-dexterity actor)))
+    (set! attributes-list (append-element attributes-list
+                                          (list
+                                           " dexterity "
+                                           (string-append " "
+                                                          (number->string (actor-dexterity actor))
+                                                          " ["
+                                                          (get-modifier-string
+                                                           (get-attribute-modifier-for
+                                                            (actor-dexterity actor)))
+                                                          "] ")))))
+  (when (not (null? (actor-constitution actor)))
+    (set! attributes-list (append-element attributes-list
+                                          (list
+                                           " constitution "
+                                           (string-append " "
+                                                          (number->string (actor-constitution actor))
+                                                          " ["
+                                                          (get-modifier-string
+                                                           (get-attribute-modifier-for
+                                                            (actor-constitution actor)))
+                                                          "] ")))))
+  (when (not (null? (actor-intelligence actor)))
+    (set! attributes-list (append-element attributes-list
+                                          (list
+                                           " intelligence "
+                                           (string-append " "
+                                                          (number->string (actor-intelligence actor))
+                                                          " ["
+                                                          (get-modifier-string
+                                                           (get-attribute-modifier-for
+                                                            (actor-intelligence actor)))
+                                                          "] ")))))
+  (when (not (null? (actor-charisma actor)))
+    (set! attributes-list (append-element attributes-list
+                                          (list
+                                           " charisma "
+                                           (string-append " "
+                                                          (number->string (actor-charisma actor))
+                                                          " ["
+                                                          (get-modifier-string
+                                                           (get-attribute-modifier-for
+                                                            (actor-charisma actor)))
+                                                          "] ")))))
+  
+  (define traits (actor-traits actor))
+  (define traits-list
+    (for/list ([(k v) (in-hash traits)])
+      (list (string-append " " k " ") (string-append " " (number->string v) " "))))
+
+  ; append emptyline above
+  (when (not (null? traits-list))
+    (set! traits-list (cons (list "" "") traits-list)))
+
+  (set! sheet (append sheet attributes-list traits-list))
   (info-card
    sheet
    "Character sheet"
@@ -669,8 +764,10 @@
 
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
+  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
+  (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
-  (displayln (actor-name actor)))
+  (displayln corpse))
 
 (define (take-damage actor damage)
   (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
@@ -682,30 +779,115 @@
         'dead
         'hit))
 
-  (when (eq? result 'dead) (clean-up-dead-actor! actor))
+  (when (eq? result 'dead)
+    (clean-up-dead-actor! actor))
   
   result)
 
 (define (alive? actor)
   (> (actor-hp actor) 0))
 
+(define (actor-in-range? enemy range)
+  (define stance (hash-ref *enemy-stances* enemy))
+  (eq? (stance-range stance) range))
+
+(define (make-blindscraper-action actor action-flag)
+  (case action-flag
+
+    ['attack
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'melee
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+
+    ['go-to-engaged
+     (make-action
+      #:symbol 'go-to-engaged
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details '())]
+
+    ['blindscrape
+     (make-action
+      #:symbol 'inflict-status
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details '(blind))]
+
+    [else
+     (error (string-append
+             "make-blindscraper-action: unknown action: "
+             (symbol->string action-flag)))]))
+
+(define (get-blindscraper-action actor)
+  (cond ((in-combat?)
+         (cond
+           ((> (actor-hp actor) 1)
+
+            (cond
+              ((actor-in-range? actor 'engaged)
+               (define options
+                 (list
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  #;(cons 2 'attack)
+                  #;(cons 3 'attack)
+                  #;(cons 4 'attack)))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               (displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))
+                      
+              ((actor-in-range? actor 'close)
+               (define options
+                 (list
+                  (cons 1 'attack)
+                  (cons 2 'attack)
+                  (cons 3 'go-to-engaged)
+                  (cons 4 'go-to-engaged)
+                  #;(cons 4 'parry)
+                  ))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               (displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))))
+           
+           ((= (actor-hp actor) 1)
+            (make-action
+             #:symbol 'flee
+             #:actor actor
+             #:duration 1
+             #:target '()
+             #:tags '(initiative-based-resolution fast)
+             #:details '()))))
+        (else
+         (begin (displayln "Blindscraper AI, not in combat")))))
+         
+
 (define (get-next-npc-action actor)
   (case (actor-name actor)
-    ; Blindscraper combat AI
-    (["Blindscraper"]
-     (cond ((in-combat?)
-            (begin
-              (define stance (hash-ref *enemy-stances* actor))
-              (cond ((or (eq? (stance-range stance) 'close)
-                         (eq? (stance-range stance) 'engaged))
-                     (make-action
-                      #:symbol 'melee
-                      #:actor actor
-                      #:duration 1
-                      #:target (situation-pc *situation*)
-                      #:tags '(initiative-based-resolution))))))
-           (else
-            (begin (displayln "Blindscraper AI, not in combat")))))
+    (["Blindscraper"] (get-blindscraper-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 
@@ -761,6 +943,13 @@
     (define stance (hash-ref *enemy-stances* target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
+           (define damage-roll (λ () (d 1 2)))
+           (define details
+             (list
+              (cons 'damage-roll damage-roll)
+              (cons 'damage-roll-formula "1d2")
+              (cons 'damage-type 'bludgeoning)
+              ))
            (define choice
              (make-choice
               'attack
@@ -774,23 +963,25 @@
                  #:actor (situation-pc *situation*)
                  #:duration 1
                  #:target target
-                 #:tags '(initiative-based-resolution)))))
+                 #:tags '(initiative-based-resolution)
+                 #:details details))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
   (when (not (engaged?))
     (define run-choice
       (make-choice
-       'run
+       'flee
        (string-append
         "Run.")
        (λ ()
          (make-action
-          #:symbol 'run
+          #:symbol 'flee
           #:actor (situation-pc *situation*)
           #:duration 1
           #:target '()
-          #:tags '(initiative-based-resolution fast)))))
+          #:tags '(initiative-based-resolution fast)
+          #:details '()))))
     (set! combat-choices (append-element combat-choices run-choice))
     )
 
@@ -808,7 +999,8 @@
            #:actor (situation-pc *situation*)
            #:duration 100
            #:target '()
-           #:tags '())))))
+           #:tags '()
+           #:details '())))))
 
 (define (get-location-name-from-location-type location-type)
   (cond ((eq? location-type 'swamp) "the swamps")
@@ -865,7 +1057,8 @@
                              #:actor (situation-pc *situation*)
                              #:duration 100
                              #:target neighbor
-                             #:tags '(downtime))))))))
+                             #:tags '(downtime)
+                             #:details '())))))))
 
     (set! downtime-choices
           (if (eq? (location-type (current-location)) 'swamp)
@@ -878,7 +1071,8 @@
                        #:actor (situation-pc *situation*)
                        #:duration 100
                        #:target '()
-                       #:tags '(downtime)))))
+                       #:tags '(downtime)
+                       #:details '()))))
               '())
 
 
@@ -896,7 +1090,8 @@
                    #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
-                   #:tags '(downtime)))))))
+                   #:tags '(downtime)
+                   #:details '()))))))
   (when (eq? (location-type (current-location)) 'spring)
     (set! end-run-choices
           (list
@@ -908,7 +1103,8 @@
                    #:actor (situation-pc *situation*)
                    #:duration 0
                    #:target '()
-                   #:tags '(downtime)))))))
+                   #:tags '(downtime)
+                   #:details '()))))))
 
   
   (define neighbors
@@ -926,7 +1122,8 @@
                  #:actor (situation-pc *situation*)
                  #:duration 100
                  #:target '()
-                 #:tags '(downtime))))])))
+                 #:tags '(downtime)
+                 #:details '())))])))
   (define choices-before-pruning
     (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
 
@@ -987,11 +1184,53 @@
   (set! action-queue (remq* actions action-queue)))
 
 (define (sort-action-queue)
-  (set! action-queue (sort
-                      action-queue
-                      action-faster-than?))
   
-  )
+  (define actions-by-initiatives '())
+  (for ([action action-queue])
+    (define actor (action-actor action))
+    (define dexterity-mod (get-attribute-modifier-for (actor-dexterity actor)))
+    
+    (define action-mod 0)
+    
+    (cond ((has-tag? action 'fast)
+           (set! action-mod 2))
+          ((has-tag? action 'slow)
+           (set! action-mod -4)))
+
+
+
+    (define dice-1 (d 1 6))
+    (define dice-2 (d 1 6))
+
+    (define total (+ dice-1 dice-2 action-mod dexterity-mod))
+
+
+    (set! actions-by-initiatives (append-element actions-by-initiatives (cons total action))))
+
+  (define shuffled (shuffle actions-by-initiatives)) ; shuffle to avoid sort stability
+  (define sorted (sort shuffled
+                       (λ (a1 a2) (> (car a1) (car a2))))) ; intentionally flipped: Higher is better
+
+  (define actions
+    (for/list ([action-with-initiative sorted])
+      (define action (cdr action-with-initiative))
+      (define initiative (car action-with-initiative))
+      (define action-description
+        (string-append
+         " "
+         (actor-name (action-actor action))
+         ": "
+         (symbol->string (action-symbol action))
+         " "))
+      (list action-description (string-append " " (number->string initiative) " "))))
+  
+  (info-card actions "Action initiatives")
+
+  (set! action-queue '())
+  (for ([action-with-initiative sorted])
+    (set! action-queue (append-element action-queue (cdr action-with-initiative))))
+  
+  action-queue)
 
 (define (enqueue-npc-actions)
   (define actors (location-actors (current-location)))
@@ -1029,49 +1268,89 @@
   '())
 
 (define (get-combatant-name actor)
-  (define stance (hash-ref! *enemy-stances* actor '()))
-  (cond ((= (hash-count *enemy-stances*) 1)
-         (append-string (actor-name actor)))
+  (cond ((pc-actor? actor)
+         "Otava")
         (else
-         (define name (actor-name actor))
-         (define index (stance-index stance))
-         (append-string name " " index))))
+         (define stance (hash-ref! *enemy-stances* actor '()))
+         (cond ((= (hash-count *enemy-stances*) 1)
+                (append-string (actor-name actor)))
+               (else
+                (define name (actor-name actor))
+                (define index (stance-index stance))
+                (append-string name " " index))))))
 
-(define (display-combatant-info actor)
+(define (display-non-pc-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
   (define name (get-combatant-name actor))
-  (info-card
-   (list
+  (define body
     (list
-     " size: "
-     (string-append " "
-                    (get-trait actor "size")
-                    " "
-                    ))
-    (list
-     " location "
-     (string-append " " (stance-location stance) " "))
-    (list
-     " range "
-     (string-append " " (symbol->string (stance-range stance)) " "))
+     (list
+      " size "
+      (string-append " "
+                     (get-trait actor "size")
+                     " "
+                     ))
+     (list
+      " location "
+      (string-append " " (stance-location stance) " "))
+     (list
+      " range "
+      (string-append " " (symbol->string (stance-range stance)) " "))
 
+     (list
+      " HP "
+      (string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses " (~s statuses)))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (display-pc-combatant-info actor)
+  (define name (get-combatant-name actor))
+  (define body
     (list
-     " HP: "
-     (string-append " "
-                    (number->string (actor-hp actor))
-                    "/"
-                    (number->string (actor-max-hp actor))
-                    " "
-                    )))
-   name)
-  )
+     (list
+      " HP "
+      (string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses "
+            (string-append " " (~s statuses) " ")))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (display-combatant-info actor)
+  (if (pc-actor? actor)
+      (display-pc-combatant-info actor)
+      (display-non-pc-combatant-info actor)))
 
 (define (describe-combat-situation)
   (paragraph "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
     (display-combatant-info enemy)
     
-    ))
+    )
+  (display-pc-combatant-info (situation-pc *situation*))
+  )
 
 (define (describe-situation)
   (cond
@@ -1300,6 +1579,33 @@
   successful?)
 
 ; returns boolean
+; (eventually: 'critical-success and 'critical-failure?)
+(define (attribute-check title attribute)
+  (define roll (d 1 20))
+  (define successful? (< roll attribute))
+  (define success-string
+    (if successful?
+        ", success"
+        ", failure"))
+  (define results
+    (list
+     (list " 1d20 " " < " " attr ")
+     (list
+      (string-append
+       " "
+       (number->string roll))
+      " < "
+      (string-append " " (number->string attribute) success-string " "))))
+               
+  (info-card
+   results
+   (string-append "Attribute check: " title))
+
+  (wait-for-confirm)
+
+  successful?)
+
+; returns boolean
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
   (define second-d (d 1 6))
@@ -1311,7 +1617,7 @@
         ", failure"))
   (define results
     (list
-     (list " 2d6 + skill " " >= " " location TN ")
+     (list " 2d6 + skill " " >= " " TN ")
      (list
       (string-append
        " "
@@ -1340,25 +1646,51 @@
   (define target-defense (get-trait target "defense"))
 
   (define skill (get-trait actor "melee-attack-skill"))
-  (define action-target-number 7)
+
+  (define bonus 0)
   
-  (define success? (skill-check "Melee" skill action-target-number))
-  (define damage (get-trait actor "melee-attack-damage"))
+  (cond ((member 'fallen (actor-statuses target))
+         (displayln "[Target fallen, TN -2]")
+         (set! bonus 2)
+         ))
+  
+  (define action-target-number (- 7 bonus))
+
+  (define title
+    (string-append "Melee, "
+                   (get-combatant-name actor)
+                   " vs "
+                   (get-combatant-name target)))
+  (define success? (skill-check title skill action-target-number))
+
+  (define details (action-details action))
+  
+
+  (define damage-roll (assoc 'damage-roll details))
+  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  (define damage-roll-result ((cdr damage-roll)))
+  
 
   (when success?
     (info-card
      (list
       (list " damage roll formula " " result ")
       (list
-       " < see actor > "
-       (string-append
-        " "
-        (number->string damage))
-       ))
+       (string-append " "
+                      damage-roll-formula
+                      " ")
+       (string-append " "
+                      (number->string damage-roll-result)
+                      " ")))
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage)))
+  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when (eq? action-result 'dead)
+    
+    ; TODO what's a smart place to store this? the actor?
+    (case (actor-name (action-target action))
+      [("Blindscraper") (award-xp! 7)]))
 
   (actor-status-card target (actor-name target))
   (newline)
@@ -1446,20 +1778,107 @@
           ((eq? (action-symbol action) 'sleep)
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
-          ((eq? (action-symbol action) 'run)
-           (paragraph "Otava tries to run.")
-           (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
-           (define target-number 9) ; TODO: Based on range, or something?
-           (define success? (skill-check "Athletics" skill target-number))
+          ((eq? (action-symbol action) 'flee)
+           (cond ((pc-actor? (action-actor action))
+                  (paragraph "Otava turns her back to run.")
+                  (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+
+                  (define stance-range-values '())
+                  (for ([(k v) (in-hash *enemy-stances*)])
+                    (define value (get-stance-range-numeric-value (stance-range v)))
+                    (set! stance-range-values (append-element stance-range-values value)))
+                  (define target-number
+                    ; if there's an enemy in engaged range, then more difficult check
+                    (if (member 0 stance-range-values)
+                        10
+                        8))
+           
+                  (define success? (skill-check "Athletics" skill target-number))
+                  (if success?
+                      (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
+                        (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
+                        (award-xp! 3 "for a working survival instinct")
+                        'escape-from-combat)
+                      (begin
+                        (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+                        (set-actor-statuses!
+                         (situation-pc *situation*)
+                         (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
+                        (display-pc-combatant-info (situation-pc *situation*))
+                        (wait-for-confirm)
+                        'failure))
+                  )
+
+                 (else ; not a pc actor
+                  (paragraph
+                   (string-append
+                    (get-combatant-name (action-actor action))
+                    " tries to run."))
+                  (define skill 1)
+                  (define stance (hash-ref *enemy-stances* (action-actor action)))
+                  (define value (get-stance-range-numeric-value (stance-range stance)))
+                  (define target-number
+                    (if (= value 0)
+                        10
+                        8))
+           
+                  (define success? (skill-check "Athletics" skill target-number))
+                  (if success?
+                      ; TODO this fails if there are multiple enemies!
+                      (begin
+                        (paragraph "The Blindscraper skitters away and disappears in the foliage.")
+                        (award-xp! 1)
+                        'escape-from-combat)
+                      (begin
+                        (paragraph "It is fast, but not fast enough.")
+                        (set-actor-statuses!
+                         (action-actor action)
+                         (append-element (actor-statuses (action-actor action)) 'fallen))
+                        (display-combatant-info (action-actor action))
+                        'failure))
+                  ))
+           )
+
+          ; This is starting to get unwieldy... but get poc done first
+          ((eq? (action-symbol action) 'go-to-engaged)
+
+           (define lp (pc-actor-lp (situation-pc *situation*)))
+           (define dex (actor-dexterity (action-actor action)))
+           (define success?
+             (cond ((positive? lp)
+                    (displayln "[LP positive]")
+                    (attribute-check "Dexterity" dex))
+                   (else #t)))
+           
            (if success?
                (begin
-                 (paragraph "Otava narrowly escapes.")
+                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+                 (hash-remove! *enemy-stances* (action-actor action))
                  
-                 'escape-from-combat)
+                 (let ([enemy-stance (stance "α" 'engaged "right")])
+                   (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
+        
                (begin
-                 (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                 
-                 'failure)))
+                 (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+                 (displayln "[-1 LP]")
+                 (set-pc-actor-lp! (situation-pc *situation*)
+                                   (- (pc-actor-lp (situation-pc *situation*))
+                                      1))
+                 (when (< (pc-actor-lp (situation-pc *situation*)) 0)
+                   (set-pc-actor-lp! (situation-pc *situation*)
+                                     0))
+                 (displayln (pc-actor-lp (situation-pc *situation*)))
+                 'failure))
+           'ok
+           )
+
+          ((eq? (action-symbol action) 'inflict-status)
+           (case (action-details action)
+             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")
+                       (paragraph "test")])
+           'ok
+           )
+          
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
 
@@ -1597,6 +2016,12 @@
   result
   )
 
+(define (get-stance-range-numeric-value range)
+  (case range
+    ['engaged 0]
+    ['close 1]
+    [else (error "get-stance-range-numeric-value: unknown range")]))
+
 ; TODO move to situation
 (serializable-struct
  stance
@@ -1607,33 +2032,35 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A many-jointed fingerlike appendage, long as a human arm, extends from behind a tree trunk. At the tip of the thin finger is a long, curving talon. The finger is followed by another finger, then a glistening, sac-like body.")
+         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
 
          (set-situation-in-combat?! *situation* #t)
 
 
          ; Enemies design idea v1:
          ; Blindscraper: Can only attack when Engaged
-         ; Binderroot: Gives penalty on all Dex-based checks
+         ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
+         ; Smashvine: Bludgeon damage against dodge, sensitive to fire
+         ; todo: define encounter levels to make it simpler
          (define i 0)
-         (define enemy (make-actor "Blindscraper" 4))
+         (define enemy (make-actor "Blindscraper" 3))
+         (set-actor-dexterity! enemy 13)
          (set-trait! enemy "defense" 1)
          (set-trait! enemy "melee-attack-skill" 1)
-         (set-trait! enemy "melee-attack-damage" 1)
          (set-trait! enemy "size" "small")
          (move-actor-to-location! enemy (current-location))
          (define index
            (case i
              [(0) "α"]
              [(1) "β"]))
-         (define location
-           (case i
-             [(0) "right"]
-             [(1) "left"]))
          (define range
            (if (= i 0)
                'close
                'mid))
+         (define location
+           (case i
+             [(0) "right"]
+             [(1) "left"]))
          (define enemy-stance
            (stance index range location))
            
@@ -1659,14 +2086,28 @@
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
+(define (all-actions-of-type? type)
+  (define result #t)
+  (for ([action action-queue])
+    (when (not (eq? (action-symbol action)
+                    type))
+      (set! result #f)))
+  result
+  )
+
 (define (resolve-turns!)
   (let/ec end-round-early
+    (when (all-actions-of-type? 'flee)
+      (paragraph "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
+      (award-xp! 1)
+      (remove-all-enemies-and-end-combat!)
+      (end-round-early))
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
       (when (eq? turn-result 'escape-from-combat)
-        (escape-from-combat!)
+        (remove-all-enemies-and-end-combat!)
         (end-round-early))
       )
     ))
@@ -1680,6 +2121,7 @@
 
 
 (define (on-end-round)
+  (displayln "[End round]")
   (define current-enemies (get-current-enemies))
 
   (when (= (length current-enemies) 0)
@@ -1688,6 +2130,43 @@
   
   (when (not (null? (situation-current-fragment *situation*)))
     (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
+
+  ; remove statuses
+  (for ([enemy (get-current-enemies)])
+    (define name (get-combatant-name enemy))
+    (when (not (null? (actor-statuses enemy)))
+      (displayln (string-append "[" name ": removed statuses:]"))
+      (for ([status (actor-statuses enemy)])
+        (displayln status))
+      (set-actor-statuses! enemy '())))
+
+  (for ([enemy (get-current-enemies)])
+    (define name (get-combatant-name enemy))
+    (when (not (null? (actor-statuses enemy)))
+      (define name (get-combatant-name enemy))
+      (define description (case (length (actor-statuses enemy))
+                            [(1) (symbol->string (car (actor-statuses enemy)))]
+                            [else "multiple statuses (todo)"]))
+    
+      (define description-prefix
+        (string-append "[" name ": removed statuses: "))
+      (define description-suffix "]")
+      (set-actor-statuses! enemy '())))
+
+  ; urgh
+  (when (not (null? (actor-statuses (situation-pc *situation*))))
+    (define name (get-combatant-name (situation-pc *situation*)))
+    (define description (case (length (actor-statuses (situation-pc *situation*)))
+                          [(1) (symbol->string (car (actor-statuses (situation-pc *situation*))))]
+                          [else "multiple statuses (todo)"]))
+    
+    (define description-prefix
+      (string-append "[" name ": removed statuses: "))
+    (define description-suffix "]")
+    (set-actor-statuses! (situation-pc *situation*) '()))
+  
+  
+  
   
 
   (newline) ; This is the "extra" newline that separates rounds
@@ -1766,6 +2245,7 @@
   #t)
 
 (define (wait-for-input)
+  (newline)
   (define input (read-line))
   (newline)
   input)

@@ -14,7 +14,8 @@
               actor
               duration
               target
-              tags)
+              tags
+              details)
              #:constructor-name action*
 
              #:methods gen:custom-write
@@ -33,6 +34,8 @@
                     (action-target obj)
                     (unquoted-printing-string "tags: ")
                     (action-tags obj)
+                    (unquoted-printing-string "details: ")
+                    (action-details obj)
                     ))))])
 
 (define (make-action
@@ -40,8 +43,9 @@
          #:actor actor
          #:duration duration
          #:target target
-         #:tags tags)
-  (action* symbol actor duration target tags))
+         #:tags tags
+         #:details details)
+  (action* symbol actor duration target tags details))
 
 (define (visible-in-combat? action)
   (if (or (member 'combat (action-tags action))
