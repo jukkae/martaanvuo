@@ -875,7 +875,7 @@
            
            ((= (actor-hp actor) 1)
             (make-action
-             #:symbol 'run
+             #:symbol 'flee
              #:actor actor
              #:duration 1
              #:target '()
@@ -971,12 +971,12 @@
   (when (not (engaged?))
     (define run-choice
       (make-choice
-       'run
+       'flee
        (string-append
         "Run.")
        (λ ()
          (make-action
-          #:symbol 'run
+          #:symbol 'flee
           #:actor (situation-pc *situation*)
           #:duration 1
           #:target '()
@@ -1778,9 +1778,9 @@
           ((eq? (action-symbol action) 'sleep)
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
-          ((eq? (action-symbol action) 'run)
+          ((eq? (action-symbol action) 'flee)
            (cond ((pc-actor? (action-actor action))
-                  (paragraph "Otava tries to run.")
+                  (paragraph "Otava turns her back to run.")
                   (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
                   (define stance-range-values '())
@@ -1795,8 +1795,8 @@
            
                   (define success? (skill-check "Athletics" skill target-number))
                   (if success?
-                      (begin
-                        (paragraph "Otava narrowly escapes.")
+                      (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
+                        (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
                         (award-xp! 3 "for a working survival instinct")
                         'escape-from-combat)
                       (begin
@@ -1826,7 +1826,7 @@
                   (if success?
                       ; TODO this fails if there are multiple enemies!
                       (begin
-                        (paragraph "It disappears in the foliage.")
+                        (paragraph "The Blindscraper skitters away and disappears in the foliage.")
                         (award-xp! 1)
                         'escape-from-combat)
                       (begin
@@ -1866,7 +1866,7 @@
                                       1))
                  (when (< (pc-actor-lp (situation-pc *situation*)) 0)
                    (set-pc-actor-lp! (situation-pc *situation*)
-                                   0))
+                                     0))
                  (displayln (pc-actor-lp (situation-pc *situation*)))
                  'failure))
            'ok
@@ -2086,8 +2086,22 @@
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
+(define (all-actions-of-type? type)
+  (define result #t)
+  (for ([action action-queue])
+    (when (not (eq? (action-symbol action)
+                    type))
+      (set! result #f)))
+  result
+  )
+
 (define (resolve-turns!)
   (let/ec end-round-early
+    (when (all-actions-of-type? 'flee)
+      (paragraph "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
+      (award-xp! 1)
+      (remove-all-enemies-and-end-combat!)
+      (end-round-early))
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
 
