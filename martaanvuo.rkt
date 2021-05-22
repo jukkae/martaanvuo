@@ -898,7 +898,7 @@
           #:duration 1
           #:target (situation-pc *situation*)
           #:tags '(initiative-based-resolution)
-          #:details (cons 'bound 1)))
+          #:details (cons 'bound 3)))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
          
@@ -1367,8 +1367,8 @@
                         " "
                         ))
         #;(list
-         " location "
-         (string-append " " (stance-location stance) " "))
+           " location "
+           (string-append " " (stance-location stance) " "))
         (list
          " range "
          (string-append " " (symbol->string (stance-range stance)) " "))
@@ -2015,9 +2015,23 @@
            )
 
           ((eq? (action-symbol action) 'inflict-status)
+           (define target (action-target action))
            (match (action-details action)
-             ['blind (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")]
-             [(cons 'bound number) (paragraph "The Grabberkin tightens its grip around Otava's ankle.")]
+             ['blind
+              (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+              (define roll (d 1 2))
+              (wait-for-confirm)
+              (case roll
+                [(1)
+                 ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+                 (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+                [(2)
+                 (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
+              ]
+             [(cons 'bound number)
+              (paragraph "The Grabberkin tightens its grip around Otava's ankle.")
+              (add-actor-status! target 'bound 3)
+              ]
              [else (paragraph "todo: unknown status")])
            'ok
            )
@@ -2327,32 +2341,28 @@
       (displayln (string-append "[" name ": removed statuses:]"))
       (for ([status (actor-statuses enemy)])
         (displayln status))
-      (set-actor-statuses! enemy '())))
+      (decrement-actor-status-lifetimes! enemy)))
 
   (for ([enemy (get-current-enemies)])
     (define name (get-combatant-name enemy))
     (when (not (null? (actor-statuses enemy)))
       (define name (get-combatant-name enemy))
-      (define description (case (length (actor-statuses enemy))
-                            [(1) (symbol->string (car (actor-statuses enemy)))]
-                            [else "multiple statuses (todo)"]))
+      (define description (~s (actor-statuses enemy)))
     
       (define description-prefix
         (string-append "[" name ": removed statuses: "))
       (define description-suffix "]")
-      (set-actor-statuses! enemy '())))
+      (decrement-actor-status-lifetimes! enemy)))
 
   ; urgh
   (when (not (null? (actor-statuses (situation-pc *situation*))))
     (define name (get-combatant-name (situation-pc *situation*)))
-    (define description (case (length (actor-statuses (situation-pc *situation*)))
-                          [(1) (symbol->string (car (actor-statuses (situation-pc *situation*))))]
-                          [else "multiple statuses (todo)"]))
+    (define description (~s (actor-statuses (situation-pc *situation*))))
     
     (define description-prefix
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
-    (set-actor-statuses! (situation-pc *situation*) '()))
+    (decrement-actor-status-lifetimes! (situation-pc *situation*)))
   
   
   
