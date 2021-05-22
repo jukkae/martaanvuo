@@ -890,15 +890,74 @@
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 
+
+(define (make-grabberkin-action actor action-flag)
+  (case action-flag
+
+    ['attack
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'melee
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+
+    ['do-nothing
+     (make-action
+      #:symbol 'do-nothing
+      #:actor actor
+      #:duration 1
+      #:target '()
+      #:tags '(initiative-based-resolution)
+      #:details '())]
+
+    ['grab
+     (make-action
+      #:symbol 'inflict-status
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details (cons 'bound 3))]
+
+    [else
+     (error (string-append
+             "make-grabberkin-action: unknown action: "
+             (symbol->string action-flag)))]))
+
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
-         (make-action
-          #:symbol 'inflict-status
-          #:actor actor
-          #:duration 1
-          #:target (situation-pc *situation*)
-          #:tags '(initiative-based-resolution)
-          #:details (cons 'bound 3)))
+         (cond
+           ((>= (actor-hp actor) 8)
+
+            (cond
+              ((actor-in-range? actor 'engaged)
+               (define options
+                 (list
+                  (cons 1 'break-ankle)
+                  (cons 1 'do-nothing)
+                  (cons 1 'do-nothing)
+                  (cons 1 'do-nothing)))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               (define action-flag-with-index (list-ref options index))
+               (displayln "Action:")
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-grabberkin-action actor action-flag))
+                      
+              ((actor-in-range? actor 'close)
+               (make-grabberkin-action actor 'grab))))
+           
+           ((< (actor-hp actor) 8)
+            (make-grabberkin-action actor 'release-grip))))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
          
