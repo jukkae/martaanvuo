@@ -894,7 +894,7 @@
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
 
-    ['attack
+    ['break-ankle
      (define damage-roll (λ () (d 1 2)))
      (define details
        (list
@@ -2094,6 +2094,17 @@
              [else (paragraph "todo: unknown status")])
            'ok
            )
+
+          ((eq? (action-symbol action) 'do-nothing)
+           (cond ((eq? (actor-name (action-actor action))
+                       "Grabberkin")
+                  (paragraph "<< do-nothing: description missing >>"))
+                 (else
+                  (displayln "it is not grabberkin"))
+                 )
+           
+           'ok
+           )
           
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
@@ -2285,6 +2296,7 @@
   (set-actor-dexterity! enemy 4)
   (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)
+  (set-trait! enemy "melee-attack-skill" 1)
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
 
