@@ -893,8 +893,7 @@
 
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
-
-    ['break-ankle
+    ['pull-under
      (define damage-roll (λ () (d 1 2)))
      (define details
        (list
@@ -902,21 +901,51 @@
         (cons 'damage-roll-formula "1d2")
         ))
      (make-action
-      #:symbol 'melee
+      #:symbol 'pull-under
       #:actor actor
       #:duration 1
       #:target (situation-pc *situation*)
       #:tags '(initiative-based-resolution)
       #:details details)]
 
-    ['do-nothing
+    ['anklebreaker
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'anklebreaker
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+    
+    ['tighten-grip
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'tighten-grip
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+    
+    ['skip
      (make-action
       #:symbol 'do-nothing
       #:actor actor
-      #:duration 1
+      #:duration 0
       #:target '()
       #:tags '(initiative-based-resolution)
-      #:details '())]
+      #:details '(silent))]
 
     ['grab
      (make-action
@@ -941,10 +970,10 @@
               ((actor-in-range? actor 'engaged)
                (define options
                  (list
-                  (cons 1 'break-ankle)
-                  (cons 1 'do-nothing)
-                  (cons 1 'do-nothing)
-                  (cons 1 'do-nothing)))
+                  (cons 1 'pull-under)
+                  (cons 2 'anklebreaker)
+                  (cons 3 'tighten-grip)
+                  (cons 4 'skip)))
                (define roll (d 1 4))
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
