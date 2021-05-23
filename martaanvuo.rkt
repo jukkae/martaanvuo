@@ -187,6 +187,7 @@
 
      (set-trait! pc "athletics-skill" 0)
      (set-trait! pc "melee-attack-skill" 0)
+     (set-trait! pc "wrestle-attack-skill" 1)
      (set-trait! pc "defense" 1)]
     
     ['bruiser
@@ -201,6 +202,7 @@
 
      (set-trait! pc "athletics-skill" 1)
      (set-trait! pc "melee-attack-skill" 3)
+     (set-trait! pc "wrestle-attack-skill" -1)
      (set-trait! pc "defense" 1)]
     
     [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
@@ -523,12 +525,14 @@
   [in-combat? #:mutable]
   [current-fragment #:mutable]
   [quests #:mutable]
+  [grabberkin-encounters #:mutable]
   ))
 
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
-        [pc (make-new-pc)])
-    (situation new-world pc 0 0 0 0 #f '() '())))
+        [pc (make-new-pc)]
+        [quests '()])
+    (situation new-world pc 0 0 0 0 #f '() quests 0)))
 
 (define (in-combat?)
   (situation-in-combat? *situation*))
@@ -785,7 +789,9 @@
   result)
 
 (define (alive? actor)
-  (> (actor-hp actor) 0))
+  (if (string? (actor-hp actor))
+      #t
+      (> (actor-hp actor) 0)))
 
 (define (actor-in-range? enemy range)
   (define stance (hash-ref *enemy-stances* enemy))
@@ -850,9 +856,9 @@
                   #;(cons 4 'attack)))
                (define roll (d 1 4))
                (define index (- roll 1))
-               (displayln "Action")
+               #;(displayln "Action")
                (define action-flag-with-index (list-ref options index))
-               (displayln action-flag-with-index)
+               #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-blindscraper-action actor action-flag))
                       
@@ -867,9 +873,9 @@
                   ))
                (define roll (d 1 4))
                (define index (- roll 1))
-               (displayln "Action")
+               #;(displayln "Action")
                (define action-flag-with-index (list-ref options index))
-               (displayln action-flag-with-index)
+               #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-blindscraper-action actor action-flag))))
            
@@ -883,11 +889,123 @@
              #:details '()))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
+
+
+(define (make-grabberkin-action actor action-flag)
+  (case action-flag
+    ['pull-under
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'pull-under
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+
+    ['anklebreaker
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'anklebreaker
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+    
+    ['tighten-grip
+     (define damage-roll (λ () (d 1 2)))
+     (define details
+       (list
+        (cons 'damage-roll damage-roll)
+        (cons 'damage-roll-formula "1d2")
+        ))
+     (make-action
+      #:symbol 'tighten-grip
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details details)]
+    
+    ['skip
+     (make-action
+      #:symbol 'skip
+      #:actor actor
+      #:duration 0
+      #:target '()
+      #:tags '(initiative-based-resolution)
+      #:details '(silent))]
+
+    ['grab
+     (make-action
+      #:symbol 'inflict-status
+      #:actor actor
+      #:duration 1
+      #:target (situation-pc *situation*)
+      #:tags '(initiative-based-resolution)
+      #:details (cons 'bound 3))]
+
+    ['release-grip
+     (make-action
+      #:symbol 'release-grip
+      #:actor actor
+      #:duration 0
+      #:target '()
+      #:tags '(initiative-based-resolution)
+      #:details '(fast))]
+
+    [else
+     (error (string-append
+             "make-grabberkin-action: unknown action: "
+             (symbol->string action-flag)))]))
+
+(define (get-grabberkin-action actor)
+  (cond ((in-combat?)
+         (cond
+           ((>= (actor-hp actor) 8)
+
+            (cond
+              ((and (actor-in-range? actor 'engaged)
+                    (actor-has-status? (situation-pc *situation*) 'bound))
+               (define options
+                 (list
+                  (cons 1 'pull-under)
+                  (cons 2 'anklebreaker)
+                  (cons 3 'tighten-grip)
+                  (cons 4 'skip)))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               (define action-flag-with-index (list-ref options index))
+               (displayln "Action:")
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-grabberkin-action actor action-flag))
+              (else
+               (displayln "GRABBERKIN: Not grabbing!")
+               (make-grabberkin-action actor 'grab)
+               )))
+           
+           ((< (actor-hp actor) 8)
+            (make-grabberkin-action actor 'release-grip))))
+        (else
+         (begin (displayln "Grabberkin AI, not in combat")))))
          
 
 (define (get-next-npc-action actor)
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
+    (["Grabberkin"] (get-grabberkin-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 
@@ -913,6 +1031,16 @@
    (λ (actor) (and (alive? actor)
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
+
+(define (get-an-enemy-at-range range)
+  (define current-enemies (get-current-enemies))
+  (define enemies-shuffled (shuffle current-enemies))
+  (define enemy-in-range '())
+  (for ([enemy enemies-shuffled])
+    (define stance (hash-ref *enemy-stances* enemy '()))
+    (when (eq? (stance-range stance) range)
+      (set! enemy-in-range enemy)))
+  enemy-in-range)
 
 (define (in-range? target attack-mode)
   (case attack-mode
@@ -968,22 +1096,50 @@
            (set! combat-choices (append-element combat-choices choice)))
           ))
 
-  (when (not (engaged?))
-    (define run-choice
-      (make-choice
-       'flee
-       (string-append
-        "Run.")
-       (λ ()
-         (make-action
-          #:symbol 'flee
-          #:actor (situation-pc *situation*)
-          #:duration 1
-          #:target '()
-          #:tags '(initiative-based-resolution fast)
-          #:details '()))))
-    (set! combat-choices (append-element combat-choices run-choice))
-    )
+  (cond ((not (engaged?))
+         (define run-choice
+           (make-choice
+            'flee
+            (string-append
+             "Run.")
+            (λ ()
+              (make-action
+               #:symbol 'flee
+               #:actor (situation-pc *situation*)
+               #:duration 1
+               #:target '()
+               #:tags '(initiative-based-resolution fast)
+               #:details '()))))
+         (set! combat-choices (append-element combat-choices run-choice))))
+
+  (cond ((and (engaged?)
+              (eq? (actor-name (get-an-enemy-at-range 'engaged))
+                   "Grabberkin"))
+         (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
+         (define damage-roll (λ () (d 1 2)))
+         (define details
+           (list
+            (cons 'damage-roll damage-roll)
+            (cons 'damage-roll-formula
+                  (string-append "1d2 + str mod ["
+                                 (number->string strength-mod)
+                                 "]"))
+            (cons 'damage-type 'bludgeoning)
+            ))
+         (define break-free-choice
+           (make-choice
+            'wrestle
+            (string-append
+             "Try to pull the leg free.")
+            (λ ()
+              (make-action
+               #:symbol 'wrestle
+               #:actor (situation-pc *situation*)
+               #:duration 1
+               #:target (get-an-enemy-at-range 'engaged)
+               #:tags '(initiative-based-resolution)
+               #:details details))))
+         (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
   )
@@ -1219,8 +1375,8 @@
         (string-append
          " "
          (actor-name (action-actor action))
-         ": "
-         (symbol->string (action-symbol action))
+         #;": "
+         #;(symbol->string (action-symbol action))
          " "))
       (list action-description (string-append " " (number->string initiative) " "))))
   
@@ -1282,29 +1438,41 @@
 (define (display-non-pc-combatant-info actor)
   (define stance (hash-ref! *enemy-stances* actor '()))
   (define name (get-combatant-name actor))
-  (define body
-    (list
-     (list
-      " size "
-      (string-append " "
-                     (get-trait actor "size")
-                     " "
-                     ))
-     (list
-      " location "
-      (string-append " " (stance-location stance) " "))
-     (list
-      " range "
-      (string-append " " (symbol->string (stance-range stance)) " "))
+  (define hide-hp?
+    (if (hash-ref (actor-traits actor) "hp-hidden" #f)
+        #t
+        #f))
 
-     (list
-      " HP "
-      (string-append " "
-                     (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     " "
-                     ))))
+  (define body
+    (case (actor-name actor)
+      [("Grabberkin")
+       (list
+        (list
+         " HP "
+         (if hide-hp?
+             " ??? "
+             (string-append " "
+                            (number->string (actor-hp actor))
+                            "/"
+                            (number->string (actor-max-hp actor))
+                            " "
+                            ))))]
+      [("Blindscraper")
+       (list
+        (list
+         " size "
+         (string-append " "
+                        (get-trait actor "size")
+                        " "
+                        ))
+        #;(list
+           " location "
+           (string-append " " (stance-location stance) " "))
+        (list
+         " range "
+         (string-append " " (symbol->string (stance-range stance)) " "))
+
+        )]))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -1653,6 +1821,10 @@
          (displayln "[Target fallen, TN -2]")
          (set! bonus 2)
          ))
+  (cond ((engaged?)
+         (displayln "[Engaged, TN +1]")
+         (set! bonus -1)
+         ))
   
   (define action-target-number (- 7 bonus))
 
@@ -1692,7 +1864,67 @@
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 7)]))
 
-  (actor-status-card target (actor-name target))
+  (display-combatant-info target)
+  (newline)
+
+  action-result
+  )
+
+(define (resolve-wrestle-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  
+  #;(define target-defense (get-trait target "defense"))
+  (define target-defense (actor-strength target))
+
+  (define skill (get-trait actor "wrestle-attack-skill"))
+
+  (define bonus 0)
+  
+  (cond ((member 'fallen (actor-statuses target))
+         (displayln "[Target fallen, TN -2]")
+         (set! bonus 2)
+         ))
+  
+  (define action-target-number (- 7 bonus))
+
+  (define title
+    (string-append "Brawl, "
+                   (get-combatant-name actor)
+                   " vs "
+                   (get-combatant-name target)))
+  (define success? (skill-check title skill action-target-number))
+
+  (define details (action-details action))
+  
+
+  (define damage-roll (assoc 'damage-roll details))
+  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  (define damage-roll-result ((cdr damage-roll)))
+  
+
+  (when success?
+    (info-card
+     (list
+      (list " damage roll formula " " result ")
+      (list
+       (string-append " "
+                      damage-roll-formula
+                      " ")
+       (string-append " "
+                      (number->string damage-roll-result)
+                      " ")))
+     "HP damage roll"))
+
+  (define action-result 'ok)
+  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when (eq? action-result 'dead)
+    
+    ; TODO what's a smart place to store this? the actor?
+    (case (actor-name (action-target action))
+      [("Blindscraper") (award-xp! 7)]))
+
+  (display-combatant-info target)
   (newline)
 
   action-result
@@ -1708,6 +1940,27 @@
         (displayln "Exploration failed.")
         'failure)))
 
+(define (resolve-pull-under-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tries to pull Otava under")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-anklebreaker-action! action)
+  (define roll "2d6+whatever")
+  (displayln "Anklebreaker resolution")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-tighten-grip-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tightens its grip")
+  (displayln roll)
+  'ok
+  )
+
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
 ; 'ok       when the action is completely resolved and not explicitly successful or failed
@@ -1717,6 +1970,15 @@
   (when (alive? (action-actor action))
     (cond ((eq? (action-symbol action) 'melee)
            (define result (resolve-melee-action! action))
+           (when (eq? result 'dead)
+             (if (not (pc-actor? (action-target action)))
+                 (paragraph "The " (actor-name (action-target action)) " is dead.")
+                 (begin
+                   (paragraph "Otava is dead.")
+                   'pc-dead))))
+
+          ((eq? (action-symbol action) 'wrestle)
+           (define result (resolve-wrestle-action! action))
            (when (eq? result 'dead)
              (if (not (pc-actor? (action-target action)))
                  (paragraph "The " (actor-name (action-target action)) " is dead.")
@@ -1873,11 +2135,47 @@
            )
 
           ((eq? (action-symbol action) 'inflict-status)
-           (case (action-details action)
-             [('blind) (paragraph "The Blindscraper swings its claw past Otava's arms. The claw scrapes diagonally across Otava's face, cutting its way through the flesh, scraping bone. There is searing pain as her vision goes black.")
-                       (paragraph "test")])
+           (define target (action-target action))
+           (match (action-details action)
+             ['blind
+              (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+              (define roll (d 1 2))
+              (wait-for-confirm)
+              (case roll
+                [(1)
+                 ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+                 (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+                [(2)
+                 (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
+              ]
+             [(cons 'bound number)
+              (paragraph "The Grabberkin tightens its grip around Otava's ankle.")
+              (actor-add-status! target 'bound 3)
+              ]
+             [else (paragraph "todo: unknown status")])
            'ok
            )
+
+          ((eq? (action-symbol action) 'tighten-grip)
+           (define target (action-target action))
+           (resolve-tighten-grip-action! action))
+
+          ((eq? (action-symbol action) 'anklebreaker)
+           (define target (action-target action))
+           (resolve-anklebreaker-action! action))
+
+          ((eq? (action-symbol action) 'pull-under)
+           (define target (action-target action))
+           (resolve-pull-under-action! action))
+          
+          ((eq? (action-symbol action) 'release-grip)
+           'grip-released)
+
+          ((eq? (action-symbol action) 'skip)
+           (cond ((member 'silent (action-details action))
+                  'ok)
+                 (else
+                  'ok)))
           
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
@@ -2030,41 +2328,88 @@
   location))
 (define *enemy-stances* (make-hash))
 
+(define (spawn-blindscraper-encounter!)
+  (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
+
+  (set-situation-in-combat?! *situation* #t)
+
+  (define i 0)
+  (define enemy (make-actor "Blindscraper" 3))
+  (set-actor-dexterity! enemy 13)
+  (set-trait! enemy "defense" 1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "size" "small")
+  (move-actor-to-location! enemy (current-location))
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range
+    (if (= i 0)
+        'close
+        'mid))
+  (define location
+    (case i
+      [(0) "right"]
+      [(1) "left"]))
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance))
+
+(define (spawn-grabberkin-encounter!)
+  ; TODO usually grab only one ankle, sometimes both
+  (paragraph "Otava feels something strong grab her ankle.")
+  (set-situation-in-combat?! *situation* #t)
+
+  (define i 0)
+  (define enemy (make-actor "Grabberkin" 14))
+  (set-actor-dexterity! enemy 4)
+  (set-actor-strength! enemy 11)
+  (set-trait! enemy "defense" -1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "hp-hidden" #t)
+  (move-actor-to-location! enemy (current-location))
+
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range 'engaged)
+  (define location "grabbing Otava's ankle")
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance)
+  )
+
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
-
-         (set-situation-in-combat?! *situation* #t)
+         (define encounter-types '(blindscraper grabberkin))
 
 
-         ; Enemies design idea v1:
-         ; Blindscraper: Can only attack when Engaged
-         ; Grabberkin: Gives penalty on all Dex-based checks, can't really be killed, can douse fire
-         ; Smashvine: Bludgeon damage against dodge, sensitive to fire
-         ; todo: define encounter levels to make it simpler
-         (define i 0)
-         (define enemy (make-actor "Blindscraper" 3))
-         (set-actor-dexterity! enemy 13)
-         (set-trait! enemy "defense" 1)
-         (set-trait! enemy "melee-attack-skill" 1)
-         (set-trait! enemy "size" "small")
-         (move-actor-to-location! enemy (current-location))
-         (define index
-           (case i
-             [(0) "α"]
-             [(1) "β"]))
-         (define range
-           (if (= i 0)
-               'close
-               'mid))
-         (define location
-           (case i
-             [(0) "right"]
-             [(1) "left"]))
-         (define enemy-stance
-           (stance index range location))
-           
-         (hash-set! *enemy-stances* enemy enemy-stance))
+         (define encounter-type 'grabberkin)
+         (displayln
+          (string-append
+           "<< setting encounter-type to "
+           (symbol->string encounter-type)
+           " >>"))
+
+         
+         (case encounter-type
+           ['grabberkin
+
+            (spawn-grabberkin-encounter!)
+            ; TODO this should happen at the end of the encounter for it to make sense narratively
+            (set-situation-grabberkin-encounters!
+             *situation*
+             (add1 (situation-grabberkin-encounters *situation*)))
+            (player-info)]
+           ['blindscraper
+            (spawn-blindscraper-encounter!)
+            ]
+           )
+         )
         (else
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
@@ -2106,7 +2451,8 @@
       (define turn-result (resolve-turn! world action))
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
-      (when (eq? turn-result 'escape-from-combat)
+      (when (or (eq? turn-result 'escape-from-combat)
+                (eq? turn-result 'grip-released)) ; TODO this'll blow up, must handle per opponent
         (remove-all-enemies-and-end-combat!)
         (end-round-early))
       )
@@ -2138,32 +2484,28 @@
       (displayln (string-append "[" name ": removed statuses:]"))
       (for ([status (actor-statuses enemy)])
         (displayln status))
-      (set-actor-statuses! enemy '())))
+      (decrement-actor-status-lifetimes! enemy)))
 
   (for ([enemy (get-current-enemies)])
     (define name (get-combatant-name enemy))
     (when (not (null? (actor-statuses enemy)))
       (define name (get-combatant-name enemy))
-      (define description (case (length (actor-statuses enemy))
-                            [(1) (symbol->string (car (actor-statuses enemy)))]
-                            [else "multiple statuses (todo)"]))
+      (define description (~s (actor-statuses enemy)))
     
       (define description-prefix
         (string-append "[" name ": removed statuses: "))
       (define description-suffix "]")
-      (set-actor-statuses! enemy '())))
+      (decrement-actor-status-lifetimes! enemy)))
 
   ; urgh
   (when (not (null? (actor-statuses (situation-pc *situation*))))
     (define name (get-combatant-name (situation-pc *situation*)))
-    (define description (case (length (actor-statuses (situation-pc *situation*)))
-                          [(1) (symbol->string (car (actor-statuses (situation-pc *situation*))))]
-                          [else "multiple statuses (todo)"]))
+    (define description (~s (actor-statuses (situation-pc *situation*))))
     
     (define description-prefix
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
-    (set-actor-statuses! (situation-pc *situation*) '()))
+    (decrement-actor-status-lifetimes! (situation-pc *situation*)))
   
   
   
@@ -2325,15 +2667,20 @@
         (loop)))
     ))
 
+(define (player-info)
+  (define player-status
+    (list
+     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
+     (list " grabberkin encounters " (string-append " " (number->string (situation-grabberkin-encounters *situation*)) " "))
+     ))
+     
+  (info-card player-status (string-append "Player status"))
+  )
+
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
-  (define life-info
-    (list
-     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
-     ))
-     
-  (info-card life-info (string-append "Begin life number " (number->string (situation-life *situation*))))
+  (player-info)  
   )
 
 (define (on-begin-playthrough)
