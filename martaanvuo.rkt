@@ -956,6 +956,15 @@
       #:tags '(initiative-based-resolution)
       #:details (cons 'bound 3))]
 
+    ['release-grip
+     (make-action
+      #:symbol 'release-grip
+      #:actor actor
+      #:duration 0
+      #:target '()
+      #:tags '(initiative-based-resolution)
+      #:details '(fast))]
+
     [else
      (error (string-append
              "make-grabberkin-action: unknown action: "
@@ -2158,6 +2167,9 @@
           ((eq? (action-symbol action) 'pull-under)
            (define target (action-target action))
            (resolve-pull-under-action! action))
+          
+          ((eq? (action-symbol action) 'release-grip)
+           'grip-released)
 
           ((eq? (action-symbol action) 'skip)
            (cond ((member 'silent (action-details action))
@@ -2439,7 +2451,8 @@
       (define turn-result (resolve-turn! world action))
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
-      (when (eq? turn-result 'escape-from-combat)
+      (when (or (eq? turn-result 'escape-from-combat)
+                (eq? turn-result 'grip-released)) ; TODO this'll blow up, must handle per opponent
         (remove-all-enemies-and-end-combat!)
         (end-round-early))
       )
