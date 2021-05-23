@@ -940,7 +940,7 @@
     
     ['skip
      (make-action
-      #:symbol 'do-nothing
+      #:symbol 'skip
       #:actor actor
       #:duration 0
       #:target '()
@@ -967,23 +967,26 @@
            ((>= (actor-hp actor) 8)
 
             (cond
-              ((actor-in-range? actor 'engaged)
+              ((and (actor-in-range? actor 'engaged)
+                    (actor-has-status? (situation-pc *situation*) 'bound))
                (define options
                  (list
                   (cons 1 'pull-under)
                   (cons 2 'anklebreaker)
                   (cons 3 'tighten-grip)
                   (cons 4 'skip)))
-               (define roll (d 1 4))
+               ;(define roll (d 1 4))
+               (define roll 4)
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
                (displayln "Action:")
                (displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-grabberkin-action actor action-flag))
-                      
-              ((actor-in-range? actor 'close)
-               (make-grabberkin-action actor 'grab))))
+              (else
+               (displayln "GRABBERKIN: Not grabbing!")
+               (make-grabberkin-action actor 'grab)
+               )))
            
            ((< (actor-hp actor) 8)
             (make-grabberkin-action actor 'release-grip))))
@@ -2118,22 +2121,17 @@
               ]
              [(cons 'bound number)
               (paragraph "The Grabberkin tightens its grip around Otava's ankle.")
-              (add-actor-status! target 'bound 3)
+              (actor-add-status! target 'bound 3)
               ]
              [else (paragraph "todo: unknown status")])
            'ok
            )
 
-          ((eq? (action-symbol action) 'do-nothing)
-           (cond ((eq? (actor-name (action-actor action))
-                       "Grabberkin")
-                  (paragraph "<< do-nothing: description missing >>"))
+          ((eq? (action-symbol action) 'skip)
+           (cond ((member 'silent (action-details action))
+                  'ok)
                  (else
-                  (displayln "it is not grabberkin"))
-                 )
-           
-           'ok
-           )
+                  'ok)))
           
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 

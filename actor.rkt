@@ -56,9 +56,16 @@
                 (actor-name actor))))
   result)
 
-(define (add-actor-status! actor status turns)
+(define (actor-add-status! actor status turns)
   (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]"))
   (set-actor-statuses! actor (append-element (actor-statuses actor) (mcons status turns))))
+
+(define (actor-has-status? actor status)
+  (if (memf (λ (status_)
+              (eq? (mcar status_) status))
+            (actor-statuses actor))
+      #t
+      #f))
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
