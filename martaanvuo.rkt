@@ -2157,15 +2157,12 @@
            )
 
           ((eq? (action-symbol action) 'tighten-grip)
-           (define target (action-target action))
            (resolve-tighten-grip-action! action))
 
           ((eq? (action-symbol action) 'anklebreaker)
-           (define target (action-target action))
            (resolve-anklebreaker-action! action))
 
           ((eq? (action-symbol action) 'pull-under)
-           (define target (action-target action))
            (resolve-pull-under-action! action))
           
           ((eq? (action-symbol action) 'release-grip)
