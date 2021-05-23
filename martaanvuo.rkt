@@ -975,8 +975,7 @@
                   (cons 2 'anklebreaker)
                   (cons 3 'tighten-grip)
                   (cons 4 'skip)))
-               ;(define roll (d 1 4))
-               (define roll 4)
+               (define roll (d 1 4))
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
                (displayln "Action:")
@@ -1932,6 +1931,27 @@
         (displayln "Exploration failed.")
         'failure)))
 
+(define (resolve-pull-under-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tries to pull Otava under")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-anklebreaker-action! action)
+  (define roll "2d6+whatever")
+  (displayln "Anklebreaker resolution")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-tighten-grip-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tightens its grip")
+  (displayln roll)
+  'ok
+  )
+
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
 ; 'ok       when the action is completely resolved and not explicitly successful or failed
@@ -2126,6 +2146,18 @@
              [else (paragraph "todo: unknown status")])
            'ok
            )
+
+          ((eq? (action-symbol action) 'tighten-grip)
+           (define target (action-target action))
+           (resolve-tighten-grip-action! action))
+
+          ((eq? (action-symbol action) 'anklebreaker)
+           (define target (action-target action))
+           (resolve-anklebreaker-action! action))
+
+          ((eq? (action-symbol action) 'pull-under)
+           (define target (action-target action))
+           (resolve-pull-under-action! action))
 
           ((eq? (action-symbol action) 'skip)
            (cond ((member 'silent (action-details action))
