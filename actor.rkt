@@ -62,7 +62,7 @@
 
 (define (actor-has-status? actor status)
   (if (memf (λ (status_)
-              (eq? (mcar status_) status))
+              (eq? (mcar status_) (status)))
             (actor-statuses actor))
       #t
       #f))
