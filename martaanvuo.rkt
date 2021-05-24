@@ -2291,18 +2291,14 @@
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
-(define (all-actions-of-type? type)
-  (define result #t)
-  (for ([action action-queue])
-    (when (not (eq? (action-symbol action)
-                    type))
-      (set! result #f)))
-  result
-  )
+(define (all-actions-of-type? actions type)
+  (define predicate
+    (λ (action) (eq? (action-symbol action) type)))
+  (all-fulfill-predicate? actions predicate))
 
 (define (resolve-turns!)
   (let/ec end-round-early
-    (when (all-actions-of-type? 'flee)
+    (when (all-actions-of-type? action-queue 'flee)
       (paragraph "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
       (award-xp! 1)
       (remove-all-enemies-and-end-combat!)
