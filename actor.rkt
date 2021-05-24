@@ -41,6 +41,11 @@
           ; traits etc
           (make-hash) '() '() '() '()))
 
+(define (actor-alive? actor)
+  (if (string? (actor-hp actor))
+      #t
+      (> (actor-hp actor) 0)))
+
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
 

@@ -8,6 +8,7 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "fragment.rkt")
 (require "location.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -89,14 +90,6 @@
 
 
 (define *story-fragments* (make-hash))
-
-; store a list of closed paths / trees separately instead of storing that in the fragments themselves
-(serializable-struct
- story-fragment
- (id
-  description
-  decisions
-  on-enter!))
 
 (define (fragment id description decisions on-enter!)
   (define frag
@@ -661,11 +654,6 @@
   
   result)
 
-(define (alive? actor)
-  (if (string? (actor-hp actor))
-      #t
-      (> (actor-hp actor) 0)))
-
 (define (actor-in-range? enemy range)
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
@@ -902,7 +890,7 @@
 ; situation
 (define (get-current-enemies)
   (filter
-   (λ (actor) (and (alive? actor)
+   (λ (actor) (and (actor-alive? actor)
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
@@ -1842,7 +1830,7 @@
 ; 'success  when the action is completely resolved and explicitly successful
 ; 'failed   when the action is completely resolved and fails
 (define (resolve-action! action)
-  (when (alive? (action-actor action))
+  (when (actor-alive? (action-actor action))
     (cond ((eq? (action-symbol action) 'melee)
            (define result (resolve-melee-action! action))
            (when (eq? result 'dead)
@@ -2416,7 +2404,7 @@
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
            (on-end-round)
-           (when (not (alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
+           (when (not (actor-alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
            round-exit-status
            ))))
 
