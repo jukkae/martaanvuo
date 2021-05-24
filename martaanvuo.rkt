@@ -2080,6 +2080,7 @@
 
 (define *pending-action* '())
 
+; maybe the event should narrate itself, how about that, hmm?
 (define (narrate-event event)
   (case (event-type event)
     ('new-time-of-day
