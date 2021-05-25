@@ -14,6 +14,8 @@
   (engine-function
    pc
    paragraph
+   in-combat?
+   actor-in-range?
    set-in-combat?!
    move-actor-to-location!
    current-location
@@ -60,6 +62,58 @@
      (error (string-append
              "make-blindscraper-action: unknown action: "
              (symbol->string action-flag)))]))
+
+(define (get-blindscraper-action actor)
+  (cond ((in-combat?)
+         (cond
+           ((> (actor-hp actor) 1)
+
+            (cond
+              ((actor-in-range? actor 'engaged)
+               (define options
+                 (list
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  (cons 1 'blindscrape)
+                  #;(cons 2 'attack)
+                  #;(cons 3 'attack)
+                  #;(cons 4 'attack)))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               #;(displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               #;(displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))
+                      
+              ((actor-in-range? actor 'close)
+               (define options
+                 (list
+                  (cons 1 'attack)
+                  (cons 2 'attack)
+                  (cons 3 'go-to-engaged)
+                  (cons 4 'go-to-engaged)
+                  #;(cons 4 'parry)
+                  ))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               #;(displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               #;(displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))))
+           
+           ((= (actor-hp actor) 1)
+            (make-action
+             #:symbol 'flee
+             #:actor actor
+             #:duration 1
+             #:target '()
+             #:tags '(initiative-based-resolution fast)
+             #:details '()))))
+        (else
+         (begin (displayln "Blindscraper AI, not in combat")))))
 
 
 (define (spawn-blindscraper-encounter!)
