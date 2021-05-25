@@ -13,6 +13,10 @@
 (require "utils.rkt")
 (require "world.rkt")
 
+(provide engine-function)
+(define (engine-function)
+  (displayln "ENGINE FUNCTION CALLED FROM LAZY-LOADED MODULE"))
+
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
         ((<= 4  attribute  5) -2)
@@ -1260,6 +1264,7 @@
       (add-to-action-queue next-action))))
 
 
+; TODO this belongs to AI
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
   (when (and (aggressive? pc-action)
@@ -2147,6 +2152,7 @@
                    (for ([event (timeline-events timeline)])
                      (narrate-event event))
 
+                   ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
                    (when (eq? (timeline-metadata timeline) 'interrupted)
                      (handle-pc-action-interrupted! timeline)
                      (return 'interrupted))
@@ -2584,5 +2590,6 @@
   (paragraph "Otava dives under the waters of Martaanvuo Spring and forever ceases to exist.")
   (wait-for-input)
   (exit))
+
 
 (begin-game)

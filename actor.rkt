@@ -2,9 +2,12 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
 (require racket/serialize)
 
 (require "utils.rkt")
+
+(lazy-require ["martaanvuo.rkt" (engine-function)])
 
 (serializable-struct
  actor
@@ -92,6 +95,7 @@
          name
          max-hp
          max-lp)
+  (engine-function)
   (pc-actor*
    name max-hp max-hp
    ; attributes
