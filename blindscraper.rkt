@@ -9,7 +9,16 @@
 (require "actor.rkt")
 (require "utils.rkt")
 
-(lazy-require ["martaanvuo.rkt" (engine-function pc)])
+(lazy-require
+ ["martaanvuo.rkt"
+  (engine-function
+   pc
+   paragraph
+   set-in-combat?!
+   move-actor-to-location!
+   current-location
+   stance
+   *enemy-stances*)])
 
 (define (make-blindscraper-action actor action-flag)
   (case action-flag
@@ -51,3 +60,33 @@
      (error (string-append
              "make-blindscraper-action: unknown action: "
              (symbol->string action-flag)))]))
+
+
+(define (spawn-blindscraper-encounter!)
+  (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
+
+  (set-in-combat?! #t)
+
+  (define i 0)
+  (define enemy (make-actor "Blindscraper" 3))
+  (set-actor-dexterity! enemy 13)
+  (set-trait! enemy "defense" 1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "size" "small")
+  (move-actor-to-location! enemy (current-location))
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range
+    (if (= i 0)
+        'close
+        'mid))
+  (define location
+    (case i
+      [(0) "right"]
+      [(1) "left"]))
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance))

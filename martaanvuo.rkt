@@ -411,6 +411,10 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
+(provide set-in-combat?!)
+(define (set-in-combat?!)
+  (set-situation-in-combat?! *situation*))
+
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! *enemy-stances* enemy)
@@ -636,6 +640,7 @@
    "Quests")
   )
 
+(provide current-location)
 (define (current-location)
   #;(displayln "-- current-location: TODO move to situation")
   (actor-current-location (situation-pc *situation*)))
@@ -851,6 +856,7 @@
   (when (not (eq? '() current-location))
     (remove-actor-from-location! current-location actor)))
 
+(provide move-actor-to-location!)
 (define (move-actor-to-location! actor location)
   (remove-actor-from-its-current-location! actor)
   (set-actor-current-location! actor location)
@@ -1452,6 +1458,7 @@
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 
+(provide paragraph)
 (define (paragraph . args)
   (displayln (string-append* args))
   (newline))
@@ -2149,41 +2156,15 @@
     [else (error "get-stance-range-numeric-value: unknown range")]))
 
 ; TODO move to situation
+(provide stance)
 (serializable-struct
  stance
  (index
   range
   location))
+
+(provide *enemy-stances*)
 (define *enemy-stances* (make-hash))
-
-(define (spawn-blindscraper-encounter!)
-  (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
-
-  (set-situation-in-combat?! *situation* #t)
-
-  (define i 0)
-  (define enemy (make-actor "Blindscraper" 3))
-  (set-actor-dexterity! enemy 13)
-  (set-trait! enemy "defense" 1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "size" "small")
-  (move-actor-to-location! enemy (current-location))
-  (define index
-    (case i
-      [(0) "α"]
-      [(1) "β"]))
-  (define range
-    (if (= i 0)
-        'close
-        'mid))
-  (define location
-    (case i
-      [(0) "right"]
-      [(1) "left"]))
-  (define enemy-stance
-    (stance index range location))
-           
-  (hash-set! *enemy-stances* enemy enemy-stance))
 
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
