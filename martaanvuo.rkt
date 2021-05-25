@@ -8,6 +8,7 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "blindscraper.rkt")
 (require "fragment.rkt")
 (require "location.rkt")
 (require "utils.rkt")
@@ -15,7 +16,7 @@
 
 (provide engine-function)
 (define (engine-function)
-  (displayln "ENGINE FUNCTION CALLED FROM LAZY-LOADED MODULE"))
+  (displayln "ENGINE FUNCTION PROVIDED FROM ENGINE"))
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
@@ -383,7 +384,6 @@
   (set-situation-current-fragment! *situation* (get-fragment id))
   ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
-
 (serializable-struct
  situation
  (world
@@ -403,6 +403,10 @@
         [pc (make-new-pc)]
         [quests '()])
     (situation new-world pc 0 0 0 0 #f '() quests 0)))
+
+(provide pc)
+(define (pc)
+  (situation-pc *situation*))
 
 (define (in-combat?)
   (situation-in-combat? *situation*))
@@ -662,46 +666,7 @@
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
 
-(define (make-blindscraper-action actor action-flag)
-  (case action-flag
 
-    ['attack
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'melee
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
-
-    ['go-to-engaged
-     (make-action
-      #:symbol 'go-to-engaged
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details '())]
-
-    ['blindscrape
-     (make-action
-      #:symbol 'inflict-status
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details '(blind))]
-
-    [else
-     (error (string-append
-             "make-blindscraper-action: unknown action: "
-             (symbol->string action-flag)))]))
 
 (define (get-blindscraper-action actor)
   (cond ((in-combat?)
@@ -1931,9 +1896,7 @@
                         'escape-from-combat)
                       (begin
                         (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                        (set-actor-statuses!
-                         (situation-pc *situation*)
-                         (append-element (actor-statuses (situation-pc *situation*)) 'fallen))
+                        (actor-add-status! (action-target action) 'fallen 1)
                         (display-pc-combatant-info (situation-pc *situation*))
                         (wait-for-confirm)
                         'failure))
@@ -1961,9 +1924,7 @@
                         'escape-from-combat)
                       (begin
                         (paragraph "It is fast, but not fast enough.")
-                        (set-actor-statuses!
-                         (action-actor action)
-                         (append-element (actor-statuses (action-actor action)) 'fallen))
+                        (actor-add-status! (action-actor action) 'fallen 1)
                         (display-combatant-info (action-actor action))
                         'failure))
                   ))
@@ -2255,7 +2216,8 @@
          (define encounter-types '(blindscraper grabberkin))
 
 
-         (define encounter-type 'grabberkin)
+         ;(define encounter-type 'grabberkin)
+         (define encounter-type 'blindscraper)
          (displayln
           (string-append
            "<< setting encounter-type to "
