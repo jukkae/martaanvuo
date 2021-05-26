@@ -19,6 +19,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "round-resolver.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -33,11 +34,6 @@
   (set-pc-actor-xp! pc
                     (+ (pc-actor-xp pc)
                        amount)))
-
-; engine: round-resolver -> fragment-handler or something
-(define (current-fragment-on-begin-round!)
-  (paragraph (story-fragment-description (situation-current-fragment *situation*)))
-  )
 
 ; engine: round-resolver -> fragment-handler or something
 (define (current-fragment-get-decisions)
