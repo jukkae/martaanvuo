@@ -11,6 +11,7 @@
 (require racket/serialize)
 
 (require "utils.rkt")
+(require "info-card.rkt")
 
 
 (serializable-struct
@@ -141,3 +142,19 @@
   (set-actor-inventory! actor
                         (append (actor-inventory actor)
                                 (list item))))
+
+(define (actor-status-card actor title)
+  (info-card
+   (list
+    (list
+     (string-append " " (actor-name actor) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp actor))
+      "/"
+      (number->string (actor-max-hp actor))
+      " ")))
+   title))

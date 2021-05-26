@@ -441,22 +441,6 @@
   (define input (read-line))
   input)
 
-(define (actor-status-card actor title)
-  (info-card
-   (list
-    (list
-     (string-append " " (actor-name actor) " ")
-     "")
-    (list
-     " hp: "
-     (string-append
-      " "
-      (number->string (actor-hp actor))
-      "/"
-      (number->string (actor-max-hp actor))
-      " ")))
-   title))
-
 
 ; this definition looks like it should happen at the call site
 (provide handle-exploration-check-result!)
