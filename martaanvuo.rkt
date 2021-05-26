@@ -633,12 +633,6 @@
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
-; action or utils
-(define (all-actions-of-type? actions type)
-  (define predicate
-    (λ (action) (eq? (action-symbol action) type)))
-  (all-fulfill-predicate? actions predicate))
-
 ; engine / round resolver
 (define (resolve-turns!)
   (let/ec end-round-early
