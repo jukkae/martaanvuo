@@ -327,3 +327,14 @@
   (set-pc-actor-xp! pc
                     (+ (pc-actor-xp pc)
                        amount)))
+
+; scripting API?
+(define (player-info)
+  (define player-status
+    (list
+     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
+     (list " grabberkin encounters " (string-append " " (number->string (situation-grabberkin-encounters *situation*)) " "))
+     ))
+     
+  (info-card player-status (string-append "Player status"))
+  )

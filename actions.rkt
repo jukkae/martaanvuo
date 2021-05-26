@@ -248,3 +248,11 @@
   (define all-choices
     (append pending-choices pruned-choices))
   all-choices)
+
+
+; store in the action, handle calling from here
+; -> code to action handler?
+(define (describe-pc-intention pc-action)
+  (case (action-symbol pc-action)
+    ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+    #;[else (paragraph "TBD")]))
