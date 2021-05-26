@@ -4,8 +4,9 @@
 
 (require racket/serialize)
 
-(require "utils.rkt")
+(require "actor.rkt")
 (require "location.rkt")
+(require "utils.rkt")
 
 (serializable-struct
  world
@@ -134,3 +135,15 @@
          )
         (else (error "unknown location type"))))
 
+; world-as-simulation / scripting API
+(define (remove-actor-from-its-current-location! actor)
+  (define current-location (actor-current-location actor))
+  (when (not (eq? '() current-location))
+    (remove-actor-from-location! current-location actor)))
+
+; world-as-simulation / scripting API
+(provide move-actor-to-location!)
+(define (move-actor-to-location! actor location)
+  (remove-actor-from-its-current-location! actor)
+  (set-actor-current-location! actor location)
+  (add-actor-to-location! location actor))

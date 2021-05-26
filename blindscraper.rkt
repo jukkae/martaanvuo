@@ -10,8 +10,9 @@
 (require "io.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
+(require "world.rkt")
 
-(lazy-require
+#;(lazy-require
  ["martaanvuo.rkt"
   (move-actor-to-location!
    )])

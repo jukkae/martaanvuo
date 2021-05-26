@@ -182,20 +182,6 @@
          (get-next-pc-action)))
   )
 
-; world-as-simulation / scripting API
-(define (remove-actor-from-its-current-location! actor)
-  (define current-location (actor-current-location actor))
-  (when (not (eq? '() current-location))
-    (remove-actor-from-location! current-location actor)))
-
-; world-as-simulation / scripting API
-(provide move-actor-to-location!)
-(define (move-actor-to-location! actor location)
-  (remove-actor-from-its-current-location! actor)
-  (set-actor-current-location! actor location)
-  (add-actor-to-location! location actor))
-
-
 ; engine / round resolver: implementation detail
 (define action-queue '())
 
@@ -492,15 +478,6 @@
         (break))
       ))
   (timeline metadata events counter))
-
-; scripting API / location?
-(provide move-pc-to-location!)
-(define (move-pc-to-location! location)
-  ; TODO: location on-exit / on-enter triggers here
-  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
-  (remove-actor-from-location! (current-location) (situation-pc *situation*))
-  (set-actor-current-location! (situation-pc *situation*) location)
-  (add-actor-to-location! location (situation-pc *situation*)))
 
 ; narration content to event,
 ; function to call narration in engine / round-resolver

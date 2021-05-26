@@ -266,7 +266,7 @@
                       (begin
                         (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
                         (actor-add-status! (action-target action) 'fallen 1)
-                        (display-pc-combatant-info (situation-pc *situation*))
+                        (display-pc-combatant-info (pc))
                         (wait-for-confirm)
                         'failure))
                   )

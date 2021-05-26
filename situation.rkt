@@ -297,3 +297,12 @@
 (define (actor-in-range? enemy range)
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
+
+; scripting API / location?
+(provide move-pc-to-location!)
+(define (move-pc-to-location! location)
+  ; TODO: location on-exit / on-enter triggers here
+  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
+  (remove-actor-from-its-current-location! (situation-pc *situation*))
+  (set-actor-current-location! (situation-pc *situation*) location)
+  (add-actor-to-location! location (situation-pc *situation*)))

@@ -10,7 +10,7 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (wait-for-confirm
+  (
    pc
    )])
 
