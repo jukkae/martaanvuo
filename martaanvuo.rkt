@@ -6,6 +6,7 @@
 (require lens)
 (require text-table)
 
+(require "action-resolver.rkt")
 (require "action.rkt")
 (require "actions.rkt")
 (require "actor.rkt")
@@ -23,6 +24,7 @@
 (require "world.rkt")
 
 
+(provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)
       (displayln (string-append "[+" (number->string amount) " xp]"))
@@ -208,27 +210,13 @@
   #;(displayln "-- current-location: TODO move to situation")
   (actor-current-location (situation-pc *situation*)))
 
+(provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
   (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln corpse))
-
-(define (take-damage actor damage)
-  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
-  (define new-hp (- (actor-hp actor) damage))
-  (when (< new-hp 0) (set! new-hp 0))
-  (set-actor-hp! actor new-hp)
-  (define result
-    (if (= 0 (actor-hp actor))
-        'dead
-        'hit))
-
-  (when (eq? result 'dead)
-    (clean-up-dead-actor! actor))
-  
-  result)
 
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
@@ -378,42 +366,7 @@
 (define (serialize-input)
   '())
 
-(define (display-pc-combatant-info actor)
-  (define name (get-combatant-name actor))
-  (define body
-    (list
-     (list
-      " HP "
-      (string-append " "
-                     (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     " "
-                     ))))
 
-  (when (not (null? (actor-statuses actor)))
-    (define statuses (actor-statuses actor))
-    (define statuses-list
-      (list " statuses "
-            (string-append " " (~s statuses) " ")))
-    (set! body (append-element body statuses-list)))
-  (info-card
-   body
-   name))
-
-(define (display-combatant-info actor)
-  (if (pc-actor? actor)
-      (display-pc-combatant-info actor)
-      (display-non-pc-combatant-info actor)))
-
-(define (describe-combat-situation)
-  (paragraph "Otava is in combat.")
-  (for ([enemy (get-current-enemies)])
-    (display-combatant-info enemy)
-    
-    )
-  (display-pc-combatant-info (situation-pc *situation*))
-  )
 
 (define (describe-situation)
   (cond
@@ -573,72 +526,6 @@
       " ")))
    title))
 
-
-;;; ACTION RESOLUTION
-;;; TODO WHERE DOES THIS GO
-(displayln "find me and fix me")
-(define (resolve-melee-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  
-  (define target-defense (get-trait target "defense"))
-
-  (define skill (get-trait actor "melee-attack-skill"))
-
-  (define bonus 0)
-  
-  (cond ((member 'fallen (actor-statuses target))
-         (displayln "[Target fallen, TN -2]")
-         (set! bonus 2)
-         ))
-  (cond ((engaged?)
-         (displayln "[Engaged, TN +1]")
-         (set! bonus -1)
-         ))
-  
-  (define action-target-number (- 7 bonus))
-
-  (define title
-    (string-append "Melee, "
-                   (get-combatant-name actor)
-                   " vs "
-                   (get-combatant-name target)))
-  (define success? (skill-check title skill action-target-number))
-
-  (define details (action-details action))
-  
-
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
-  
-
-  (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       (string-append " "
-                      damage-roll-formula
-                      " ")
-       (string-append " "
-                      (number->string damage-roll-result)
-                      " ")))
-     "HP damage roll"))
-
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
-  (when (eq? action-result 'dead)
-    
-    ; TODO what's a smart place to store this? the actor?
-    (case (actor-name (action-target action))
-      [("Blindscraper") (award-xp! 7)]))
-
-  (display-combatant-info target)
-  (newline)
-
-  action-result
-  )
 
 (define (resolve-wrestle-action! action)
   (define actor (action-actor action))

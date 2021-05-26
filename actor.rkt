@@ -2,6 +2,12 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
+(lazy-require
+ ["martaanvuo.rkt"
+  (clean-up-dead-actor!
+   )])
+
 (require racket/serialize)
 
 (require "utils.rkt")
@@ -114,7 +120,23 @@
         ((= 0 modifier) (number->string modifier))
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
-;; operations
+
+(define (take-damage actor damage)
+  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+  (define new-hp (- (actor-hp actor) damage))
+  (when (< new-hp 0) (set! new-hp 0))
+  (set-actor-hp! actor new-hp)
+  (define result
+    (if (= 0 (actor-hp actor))
+        'dead
+        'hit))
+
+  (when (eq? result 'dead)
+    (clean-up-dead-actor! actor))
+  
+  result)
+
+
 (define (add-item-to-inventory! actor item)
   (set-actor-inventory! actor
                         (append (actor-inventory actor)

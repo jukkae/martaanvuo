@@ -157,7 +157,7 @@
       (set! any-enemy-engaged? #t)))
   any-enemy-engaged?)
 
-; situation
+
 (define (get-an-enemy-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-shuffled (shuffle current-enemies))
@@ -168,8 +168,44 @@
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
-; situation
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
     [else (displayln "in-range? not implemented yet for this attack mode")]))
+
+(define (display-pc-combatant-info actor)
+  (define name (get-combatant-name actor))
+  (define body
+    (list
+     (list
+      " HP "
+      (string-append " "
+                     (number->string (actor-hp actor))
+                     "/"
+                     (number->string (actor-max-hp actor))
+                     " "
+                     ))))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses "
+            (string-append " " (~s statuses) " ")))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (display-combatant-info actor)
+  (if (pc-actor? actor)
+      (display-pc-combatant-info actor)
+      (display-non-pc-combatant-info actor)))
+
+(define (describe-combat-situation)
+  (paragraph "Otava is in combat.")
+  (for ([enemy (get-current-enemies)])
+    (display-combatant-info enemy)
+    
+    )
+  (display-pc-combatant-info (situation-pc *situation*))
+  )
