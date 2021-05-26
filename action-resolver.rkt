@@ -3,10 +3,7 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(lazy-require
- ["martaanvuo.rkt"
-  (handle-exploration-check-result!
-   )])
+
 
 (require "action.rkt")
 (require "actor.rkt")
@@ -14,6 +11,7 @@
 (require "io.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
+(require "world.rkt")
 
 (define (resolve-melee-action! action)
   (define actor (action-actor action))
@@ -159,6 +157,14 @@
   'ok
   )
 
+(define (handle-exploration-check-result! result)
+  (if result
+      (begin
+        (expose-neighbor! (current-location))
+        'successful)
+      (begin
+        (displayln "Exploration failed.")
+        'failure)))
 
 ;; This should probably be formalized and eventually provided as a contract or something
 ; can return:

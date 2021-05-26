@@ -36,18 +36,6 @@
   (newline))
 
 
-; this definition looks like it should happen at the call site
-; - expose-neighbor! should be available for scripting
-(provide handle-exploration-check-result!)
-(define (handle-exploration-check-result! result)
-  (if result
-      (begin
-        (expose-neighbor! (current-location))
-        'successful)
-      (begin
-        (displayln "Exploration failed.")
-        'failure)))
-
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
   ;(paragraph "[" "Begin a story" "]")
