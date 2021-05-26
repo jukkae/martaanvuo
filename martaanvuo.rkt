@@ -357,40 +357,17 @@
     )
   )
 
-
-(define (serialize-state)
-  ; prng can be stored as vector:
-  ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
-  '())
-
-(define (serialize-input)
-  '())
-
-
-
-(define (describe-situation)
-  (cond
-    ((in-combat?) (describe-combat-situation)))
-  )
-
-(define (redescribe-situation)
-  (cond
-    ((in-combat?) (describe-combat-situation))
-    (else (displayln "redescribe-situation: TODO")))
-  )
-
+; These should be stored in the action
 (define (describe-pc-intention pc-action)
   (case (action-symbol pc-action)
     ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
     #;[else (paragraph "TBD")]))
-
 (define (describe-begin-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "The hillside is steep and slippery.")
         ((eq? 'swamp (location-type (action-target action)))
          "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Here and there are palm-sized patches of asphalt sticking through, fighting overgrown mosses.")
         ("[[begin-go-to description not written yet]")))
-
 (define (describe-finish-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "Eventually, Otava gets to the top.")
@@ -525,67 +502,6 @@
       (number->string (actor-max-hp actor))
       " ")))
    title))
-
-
-(define (resolve-wrestle-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  
-  #;(define target-defense (get-trait target "defense"))
-  (define target-defense (actor-strength target))
-
-  (define skill (get-trait actor "wrestle-attack-skill"))
-
-  (define bonus 0)
-  
-  (cond ((member 'fallen (actor-statuses target))
-         (displayln "[Target fallen, TN -2]")
-         (set! bonus 2)
-         ))
-  
-  (define action-target-number (- 7 bonus))
-
-  (define title
-    (string-append "Brawl, "
-                   (get-combatant-name actor)
-                   " vs "
-                   (get-combatant-name target)))
-  (define success? (skill-check title skill action-target-number))
-
-  (define details (action-details action))
-  
-
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
-  
-
-  (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       (string-append " "
-                      damage-roll-formula
-                      " ")
-       (string-append " "
-                      (number->string damage-roll-result)
-                      " ")))
-     "HP damage roll"))
-
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
-  (when (eq? action-result 'dead)
-    
-    ; TODO what's a smart place to store this? the actor?
-    (case (actor-name (action-target action))
-      [("Blindscraper") (award-xp! 7)]))
-
-  (display-combatant-info target)
-  (newline)
-
-  action-result
-  )
 
 
 (define (handle-exploration-check-result! result)
