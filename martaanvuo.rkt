@@ -17,6 +17,7 @@
 (require "fragments.rkt")
 (require "grabberkin.rkt")
 (require "io.rkt")
+(require "life-resolver.rkt")
 (require "location.rkt")
 (require "pc.rkt")
 (require "round-resolver.rkt")
@@ -46,29 +47,6 @@
       (begin
         (displayln "Exploration failed.")
         'failure)))
-
-
-
-
-; engine / life-resolver?
-(define (resolve-a-life)
-  (on-begin-life)
-  (let/ec end-life
-    (let loop ()
-      (define run-exit-status (resolve-a-run))
-      (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
-      (when (eq? run-exit-status 'win-game) (end-life 'win-game))
-      (when (eq? run-exit-status 'end-run)
-        (displayln "TODO: END RUN")
-        (loop)))
-    ))
-
-; engine / life-resolver?
-(define (on-begin-life)
-  (set-situation-life! *situation* (add1 (situation-life *situation*)))
-  (set-situation-pc! *situation* (make-new-pc))
-  (player-info)  
-  )
 
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
@@ -108,9 +86,7 @@
           (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
                 (else (end-of-life-menu 'abbreviated)))))
       (when (eq? pc-life-end-status 'win-game) (win-game))))
-  (win-game)
-  
-  )
+  (win-game))
 
 ; scripting API / game-specific
 (define (win-game)
