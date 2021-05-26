@@ -135,9 +135,14 @@
         #;(list
            " location "
            (string-append " " (stance-location stance) " "))
-        (list
+        (if (not (null? stance))
+            (list
+             " range "
+             (string-append " " (symbol->string (stance-range stance)) " "))
+            (list
          " range "
-         (string-append " " (symbol->string (stance-range stance)) " "))
+         (string-append " " "N/A" " ")))
+        
 
         )]))
 
