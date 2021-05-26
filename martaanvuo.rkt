@@ -18,9 +18,6 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-(provide engine-function)
-(define (engine-function)
-  (displayln "ENGINE FUNCTION PROVIDED FROM ENGINE"))
 
 (define (make-new-pc)
   (make-pc-actor
