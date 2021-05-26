@@ -15,16 +15,11 @@
 (require "grabberkin.rkt")
 (require "info-card.rkt")
 (require "location.rkt")
+(require "pc.rkt")
+(require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
-
-(define (make-new-pc)
-  (make-pc-actor
-   "Otava"
-   3
-   4
-   ))
 
 (define (award-xp! amount . reason)
   (if (null? reason)
@@ -34,56 +29,6 @@
   (set-pc-actor-xp! pc
                     (+ (pc-actor-xp pc)
                        amount)))
-
-(define (set-build! build)
-  (define pc (situation-pc *situation*))
-  ; for desperate build, also set a time limit (or whatever other complication)
-
-  (define starting-inventory
-    (list
-     (list 'bolt-cutters (list 'melee-weapon 'tool))))
-
-  
-  (case build
-    
-    ['desperate
-     (set-actor-strength! pc 7)
-     (set-actor-dexterity! pc 10)
-     (set-actor-constitution! pc 7)
-     (set-actor-intelligence! pc 7)
-     (set-actor-charisma! pc 10)
-     
-     (set-pc-actor-max-lp! pc 1)
-     (set-pc-actor-lp! pc 1)
-
-     (set-trait! pc "athletics-skill" 0)
-     (set-trait! pc "melee-attack-skill" 0)
-     (set-trait! pc "wrestle-attack-skill" 1)
-     (set-trait! pc "defense" 1)]
-    
-    ['bruiser
-     (set-actor-strength! pc 10)
-     (set-actor-dexterity! pc 10)
-     (set-actor-constitution! pc 10)
-     (set-actor-intelligence! pc 7)
-     (set-actor-charisma! pc 7)
-     
-     (set-pc-actor-max-lp! pc 0)
-     (set-pc-actor-lp! pc 0)
-
-     (set-trait! pc "athletics-skill" 1)
-     (set-trait! pc "melee-attack-skill" 3)
-     (set-trait! pc "wrestle-attack-skill" -1)
-     (set-trait! pc "defense" 1)]
-    
-    [else (error (string-append "set-build!: unknown build type )" (symbol->string build)))])
-
-  
-  (set-trait! (situation-pc *situation*) "exploration-skill" 1)
-
-  (set-actor-inventory! (situation-pc *situation*) starting-inventory)
-  (character-sheet)
-  )
 
 
 (define (current-fragment-on-begin-round!)
@@ -125,25 +70,6 @@
   (set-situation-current-fragment! *situation* (get-fragment id))
   ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
-(serializable-struct
- situation
- (world
-  [pc #:mutable]
-  [life #:mutable]
-  [run #:mutable]
-  [round #:mutable]
-  [elapsed-time #:mutable]
-  [in-combat? #:mutable]
-  [current-fragment #:mutable]
-  [quests #:mutable]
-  [grabberkin-encounters #:mutable]
-  ))
-
-(define *situation*
-  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
-        [pc (make-new-pc)]
-        [quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests 0)))
 
 (provide pc)
 (define (pc)
@@ -1775,7 +1701,6 @@
 
   (newline) ; This is the "extra" newline that separates rounds
   )
-
 
 (define (resolve-round)
   (on-begin-round)
