@@ -10,6 +10,7 @@
 (require "info-card.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "paragraph.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -17,7 +18,6 @@
  ["martaanvuo.rkt"
   (engine-function
    pc
-   paragraph
    in-combat?
    actor-in-range?
    set-in-combat?!

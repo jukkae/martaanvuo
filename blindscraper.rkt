@@ -7,20 +7,20 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "paragraph.rkt")
+(require "situation.rkt")
 (require "utils.rkt")
 
 (lazy-require
  ["martaanvuo.rkt"
   (engine-function
    pc
-   paragraph
    in-combat?
    actor-in-range?
    set-in-combat?!
    move-actor-to-location!
    current-location
-   stance
-   *enemy-stances*)])
+   )])
 
 (define (make-blindscraper-action actor action-flag)
   (case action-flag

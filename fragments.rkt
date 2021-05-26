@@ -8,6 +8,7 @@
 (require "action.rkt")
 (require "location.rkt")
 (require "fragment.rkt")
+(require "paragraph.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -15,7 +16,6 @@
  ["martaanvuo.rkt"
   (engine-function
    pc
-   paragraph
    in-combat?
    actor-in-range?
    set-in-combat?!
