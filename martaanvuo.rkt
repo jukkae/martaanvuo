@@ -513,27 +513,6 @@
         (displayln "Exploration failed.")
         'failure)))
 
-(define (resolve-pull-under-action! action)
-  (define roll "2d6+whatever")
-  (displayln "The gk tries to pull Otava under")
-  (displayln roll)
-  'ok
-  )
-
-(define (resolve-anklebreaker-action! action)
-  (define roll "2d6+whatever")
-  (displayln "Anklebreaker resolution")
-  (displayln roll)
-  'ok
-  )
-
-(define (resolve-tighten-grip-action! action)
-  (define roll "2d6+whatever")
-  (displayln "The gk tightens its grip")
-  (displayln roll)
-  'ok
-  )
-
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
 ; 'ok       when the action is completely resolved and not explicitly successful or failed

@@ -136,3 +136,24 @@
 
   action-result
   )
+
+(define (resolve-pull-under-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tries to pull Otava under")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-anklebreaker-action! action)
+  (define roll "2d6+whatever")
+  (displayln "Anklebreaker resolution")
+  (displayln roll)
+  'ok
+  )
+
+(define (resolve-tighten-grip-action! action)
+  (define roll "2d6+whatever")
+  (displayln "The gk tightens its grip")
+  (displayln roll)
+  'ok
+  )
