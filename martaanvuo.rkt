@@ -24,7 +24,7 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-
+; scripting API
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)
@@ -35,16 +35,18 @@
                     (+ (pc-actor-xp pc)
                        amount)))
 
-
+; engine: round-resolver -> fragment-handler or something
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
 
+; engine: round-resolver -> fragment-handler or something
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
           (story-fragment-decisions (situation-current-fragment *situation*))))
 
+; engine: round-resolver -> fragment-handler or something
 (define (current-fragment-handle-decision! decision)
 
   (paragraph (decision-description decision))
@@ -66,7 +68,9 @@
          (set-situation-current-fragment! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
-(define (current-scene-on-end-round!)
+
+; engine: round-resolver -> fragment-handler or something
+(define (current-fragment-on-end-round!)
   '()
   )
 
@@ -346,7 +350,7 @@
       choice
       #f))
 
-(define (scene-decision-valid? decisions-with-keys input)
+(define (fragment-decision-valid? decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input) '()))
   (if (not (null? decision))
       decision
@@ -374,30 +378,30 @@
       (define actor (situation-pc *situation*))
 
 
-      (define scene-decisions (if (null? (situation-current-fragment *situation*))
+      (define fragment-decisions (if (null? (situation-current-fragment *situation*))
                                   '()
                                   (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       
-      (define choices (if (null? scene-decisions)
+      (define choices (if (null? fragment-decisions)
                           world-choices
                           '()))
 
-      (define scene-decisions-with-keys (build-keys-to-choices-map scene-decisions 1))
-      (define first-non-scene-index (add1 (length scene-decisions)))
-      (define choices-with-keys (build-keys-to-choices-map choices first-non-scene-index)) ; should check for pending actions and name choices accordingly
+      (define fragment-decisions-with-keys (build-keys-to-choices-map fragment-decisions 1))
+      (define first-non-fragment-index (add1 (length fragment-decisions)))
+      (define choices-with-keys (build-keys-to-choices-map choices first-non-fragment-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
-      (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
+      (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
       (serialize-input)
 
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((scene-decision-valid? scene-decisions-with-keys input)
+            ((fragment-decision-valid? fragment-decisions-with-keys input)
              (begin
-               (handle-fragment-decision scene-decisions-with-keys input)
+               (handle-fragment-decision fragment-decisions-with-keys input)
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
@@ -682,7 +686,7 @@
     (set-situation-in-combat?! *situation* #f))
   
   (when (not (null? (situation-current-fragment *situation*)))
-    (current-scene-on-end-round!)) ; TODO scene-rounds should maybe not increase round?
+    (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
   ; remove statuses
   (for ([enemy (get-current-enemies)])
@@ -815,10 +819,10 @@
   (newline))
 
 
-(define (print-choices-and-meta-commands-with-keys choices-with-keys scene-decisions-with-keys meta-commands-with-keys verbosity)
+(define (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
          (display "Unknown command. Known commands: ")
-         (for ([(k v) (in-hash scene-decisions-with-keys)]) (display k))
+         (for ([(k v) (in-hash fragment-decisions-with-keys)]) (display k))
          (for ([(k v) (in-hash choices-with-keys)]) (display k))
          (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
          (newline)
@@ -826,7 +830,7 @@
         (else
          (newline) ; This is extra spacing, should pass a param to paragraph
          #;(paragraph "What do you do?")
-         (print-decisions-with-keys scene-decisions-with-keys)
+         (print-decisions-with-keys fragment-decisions-with-keys)
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
