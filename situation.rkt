@@ -316,3 +316,14 @@
   (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln corpse))
+
+; scripting API
+(provide award-xp!)
+(define (award-xp! amount . reason)
+  (if (null? reason)
+      (displayln (string-append "[+" (number->string amount) " xp]"))
+      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
+  (define pc (situation-pc *situation*))
+  (set-pc-actor-xp! pc
+                    (+ (pc-actor-xp pc)
+                       amount)))

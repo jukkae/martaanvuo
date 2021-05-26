@@ -70,7 +70,8 @@
   result)
 
 (define (actor-add-status! actor status turns)
-  (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]"))
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]")))
   (set-actor-statuses! actor (append-element (actor-statuses actor) (mcons status turns))))
 
 (define (actor-has-status? actor status)

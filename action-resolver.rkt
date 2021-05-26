@@ -5,9 +5,7 @@
 (require racket/lazy-require)
 (lazy-require
  ["martaanvuo.rkt"
-  (award-xp!
-   handle-exploration-check-result!
-   wait-for-confirm
+  (handle-exploration-check-result!
    )])
 
 (require "action.rkt")

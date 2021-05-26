@@ -24,19 +24,6 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-; scripting API
-(provide award-xp!)
-(define (award-xp! amount . reason)
-  (if (null? reason)
-      (displayln (string-append "[+" (number->string amount) " xp]"))
-      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
-  (define pc (situation-pc *situation*))
-  (set-pc-actor-xp! pc
-                    (+ (pc-actor-xp pc)
-                       amount)))
-
-
-
 
 ; some sort of generic ai module?
 (define (update-npc-reactions pc-action)
