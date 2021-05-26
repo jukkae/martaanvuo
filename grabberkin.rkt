@@ -102,3 +102,60 @@
      (error (string-append
              "make-grabberkin-action: unknown action: "
              (symbol->string action-flag)))]))
+
+(define (get-grabberkin-action actor)
+  (cond ((in-combat?)
+         (cond
+           ((>= (actor-hp actor) 8)
+
+            (cond
+              ((and (actor-in-range? actor 'engaged)
+                    (actor-has-status? (pc) 'bound))
+               (define options
+                 (list
+                  (cons 1 'pull-under)
+                  (cons 2 'anklebreaker)
+                  (cons 3 'tighten-grip)
+                  (cons 4 'skip)))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               (define action-flag-with-index (list-ref options index))
+               (displayln "Action:")
+               (displayln action-flag-with-index)
+               (define action-flag (cdr action-flag-with-index))
+               (make-grabberkin-action actor action-flag))
+              (else
+               (displayln "GRABBERKIN: Not grabbing!")
+               (make-grabberkin-action actor 'grab)
+               )))
+           
+           ((< (actor-hp actor) 8)
+            (make-grabberkin-action actor 'release-grip))))
+        (else
+         (begin (displayln "Grabberkin AI, not in combat")))))
+
+(define (spawn-grabberkin-encounter!)
+  ; TODO usually grab only one ankle, sometimes both
+  (paragraph "Otava feels something strong grab her ankle.")
+  (set-in-combat?! #t)
+
+  (define i 0)
+  (define enemy (make-actor "Grabberkin" 14))
+  (set-actor-dexterity! enemy 4)
+  (set-actor-strength! enemy 11)
+  (set-trait! enemy "defense" -1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "hp-hidden" #t)
+  (move-actor-to-location! enemy (current-location))
+
+  (define index
+    (case i
+      [(0) "α"]
+      [(1) "β"]))
+  (define range 'engaged)
+  (define location "grabbing Otava's ankle")
+  (define enemy-stance
+    (stance index range location))
+           
+  (hash-set! *enemy-stances* enemy enemy-stance)
+  )
