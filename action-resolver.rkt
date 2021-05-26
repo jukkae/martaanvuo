@@ -13,8 +13,7 @@
 (require "action.rkt")
 (require "actor.rkt")
 (require "checks.rkt")
-(require "info-card.rkt")
-(require "paragraph.rkt")
+(require "io.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 

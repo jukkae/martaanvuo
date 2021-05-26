@@ -8,3 +8,13 @@
   (when (not (null? title)) (displayln (string-append "[" title "]")))
   (print-table content #:row-sep? #f)
   (newline))
+
+(define (paragraph . args)
+  (displayln (string-append* args))
+  (newline))
+
+(define (wait-for-confirm)
+  (displayln "[Enter]")
+  (newline)
+  (define input (read-line))
+  input)

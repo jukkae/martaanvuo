@@ -5,7 +5,7 @@
 (require racket/lazy-require)
 
 (require "actor.rkt")
-(require "info-card.rkt")
+(require "io.rkt")
 (require "utils.rkt")
 
 (lazy-require

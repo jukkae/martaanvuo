@@ -16,9 +16,8 @@
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
-(require "info-card.rkt")
+(require "io.rkt")
 (require "location.rkt")
-(require "paragraph.rkt")
 (require "pc.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -444,14 +443,6 @@
     (define key (key-from-index (+ first-index i -1)))
     (hash-set! choices-with-keys key (list-ref choices i)))
   choices-with-keys)
-
-; UI / generic util / just a free function
-(provide wait-for-confirm)
-(define (wait-for-confirm)
-  (displayln "[Enter]")
-  (newline)
-  (define input (read-line))
-  input)
 
 
 ; this definition looks like it should happen at the call site

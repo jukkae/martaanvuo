@@ -9,7 +9,7 @@
 (require "checks.rkt")
 (require "location.rkt")
 (require "fragment.rkt")
-(require "paragraph.rkt")
+(require "io.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")

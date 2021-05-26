@@ -7,10 +7,9 @@
 
 (require "action.rkt")
 (require "actor.rkt")
-(require "info-card.rkt")
+(require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
-(require "paragraph.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 

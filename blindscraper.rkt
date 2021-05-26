@@ -7,7 +7,7 @@
 
 (require "action.rkt")
 (require "actor.rkt")
-(require "paragraph.rkt")
+(require "io.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 

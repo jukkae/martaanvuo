@@ -7,8 +7,8 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "io.rkt")
 (require "location.rkt")
-(require "paragraph.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")

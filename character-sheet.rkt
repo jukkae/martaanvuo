@@ -6,8 +6,7 @@
 (require racket/serialize)
 
 (require "actor.rkt")
-(require "info-card.rkt")
-(require "paragraph.rkt")
+(require "io.rkt")
 (require "utils.rkt")
 
 
