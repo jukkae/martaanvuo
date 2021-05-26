@@ -74,42 +74,52 @@
   '()
   )
 
+; engine: round-resolver -> fragment-handler or something
 (define (go-to-story-fragment id)
   (set-situation-current-fragment! *situation* (get-fragment id))
   ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
-
+; scripting API / situation
 (provide pc)
 (define (pc)
   (situation-pc *situation*))
 
+; scripting API / situation
 (provide in-combat?)
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
+; scripting API / situation / implementation detail
 (provide set-in-combat?!)
 (define (set-in-combat?! in-combat?)
   (set-situation-in-combat?! *situation* in-combat?))
 
+; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! *enemy-stances* enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
 
-(serializable-struct event
-                     (type
-                      details
-                      interrupting?
-                      at)
-                     #:constructor-name event*)
+; type used in engine / round-resolver
+(serializable-struct
+ event
+ (type
+  details
+  interrupting?
+  at)
+ #:constructor-name event*)
 
+; type used in engine / round-resolver
 (define (make-event
          type
          details
          interrupting?)
   (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
    
+
+; engine / low-level "world-as-simulation" sub-resolver
+; or perhaps world?
 
 ; increment world time
 ; return a list of events that occur at new timestamp
@@ -155,7 +165,7 @@
   )
 
 
-
+; pc? meta? api?
 (define (inventory)
   (define actor (situation-pc *situation*))
   
@@ -171,6 +181,7 @@
   #t
   )
 
+; cleanup used by actor.rkt -> have it do this instead
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
@@ -179,20 +190,21 @@
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln corpse))
 
+; situation
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
          
 
-; ai dispatching
+; engine / round resolver: ai dispatching
 (define (get-next-npc-action actor)
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
     (["Grabberkin"] (get-grabberkin-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
-
+; engine / round resolver
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
@@ -200,11 +212,13 @@
          (get-next-pc-action)))
   )
 
+; world-as-simulation / scripting API
 (define (remove-actor-from-its-current-location! actor)
   (define current-location (actor-current-location actor))
   (when (not (eq? '() current-location))
     (remove-actor-from-location! current-location actor)))
 
+; world-as-simulation / scripting API
 (provide move-actor-to-location!)
 (define (move-actor-to-location! actor location)
   (remove-actor-from-its-current-location! actor)
@@ -212,8 +226,10 @@
   (add-actor-to-location! location actor))
 
 
-
+; engine / round resolver: implementation detail
 (define action-queue '())
+
+; engine / round resolver
 (define (on-begin-round)
   (set-situation-round! *situation* (add1 (situation-round *situation*)))
   (define round-summary
@@ -239,11 +255,13 @@
     (current-fragment-on-begin-round!))
   )
 
+; engine / round resolver
 (define (add-to-action-queue action)
   (set! action-queue (cons action action-queue)))
+; engine / round resolver
 (define (remove-from-action-queue actions)
   (set! action-queue (remq* actions action-queue)))
-
+; engine / round resolver
 (define (sort-action-queue)
   
   (define actions-by-initiatives '())
@@ -293,6 +311,7 @@
   
   action-queue)
 
+; engine / round resolver
 (define (enqueue-npc-actions)
   (define actors (location-actors (current-location)))
   (for ([actor actors])
@@ -301,7 +320,7 @@
       (add-to-action-queue next-action))))
 
 
-; TODO this belongs to AI
+; some sort of generic ai module?
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))
   (when (and (aggressive? pc-action)
@@ -319,17 +338,24 @@
     )
   )
 
-; These should be stored in the action
+; store in the action, handle calling from here
+; -> code to action handler?
 (define (describe-pc-intention pc-action)
   (case (action-symbol pc-action)
     ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
     #;[else (paragraph "TBD")]))
+
+; store in the action, handle calling from here
+; -> code to action handler?
 (define (describe-begin-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "The hillside is steep and slippery.")
         ((eq? 'swamp (location-type (action-target action)))
          "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Here and there are palm-sized patches of asphalt sticking through, fighting overgrown mosses.")
         ("[[begin-go-to description not written yet]")))
+
+; store in the action, handle calling from here
+; -> code to action handler?
 (define (describe-finish-go-to-action action)
   (cond ((eq? 'ruins (location-type (action-target action)))
          "Eventually, Otava gets to the top.")
@@ -337,6 +363,7 @@
          "After a while, Otava finds herself in the middle of the swamps. Through the heavy fog, the bushes swaying in the wind look like evil beast-shadows.")
         ("[[finish-go-to description not written yet]")))
 
+; engine / get-next-pc-action
 (define (meta-command-valid? meta-commands-with-keys input)
   (set! input (string-upcase input))
   (define meta-command (hash-ref meta-commands-with-keys input '()))
@@ -344,25 +371,30 @@
       meta-command
       #f))
 
+; engine / get-next-pc-action
 (define (choice-valid? choices-with-keys input)
   (define choice (hash-ref choices-with-keys (string->number input) '()))
   (if (not (null? choice))
       choice
       #f))
 
+; engine / get-next-pc-action
 (define (fragment-decision-valid? decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input) '()))
   (if (not (null? decision))
       decision
       #f))
 
+; engine / get-next-pc-action
 (define (choice-as-action choices-with-keys input)
   ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
 
+; engine / turn handler / fragment handling?
 (define (handle-fragment-decision decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input)))
   (current-fragment-handle-decision! decision))
 
+; engine / get-next-pc-action
 (define (get-next-pc-action)
   (serialize-state)
   (let/ec produce-action
@@ -379,8 +411,8 @@
 
 
       (define fragment-decisions (if (null? (situation-current-fragment *situation*))
-                                  '()
-                                  (current-fragment-get-decisions)))
+                                     '()
+                                     (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       
       (define choices (if (null? fragment-decisions)
@@ -406,31 +438,35 @@
             ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 
-
+; game-specific, not engine!
 (define (title)
   (newline)
   (displayln "M A R T A A N V U O")
   (displayln "===================")
   (newline))
 
+; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)
   ; TODO: Should order here based on key
   (for ([(k v) (in-hash choices-with-keys)])
     (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
   (newline))
 
+; engine / get-next-pc-action
 (define (print-decisions-with-keys decisions-with-keys)
   (for ([(k v) (in-hash decisions-with-keys)])
     (displayln (string-append "[" (number->string k) "]: " (decision-title v))))
   #;(newline))
   
 
+; engine / get-next-pc-action
 (define (key-from-index i)
   (cond ((< i 0) (error "negative index!"))
         ((<= i 8) (add1 i))
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
+; engine / get-next-pc-action
 (define (build-keys-to-choices-map choices first-index)
   (define choices-with-keys (make-hash))
   (for ([i (in-range (length choices))])
@@ -438,6 +474,7 @@
     (hash-set! choices-with-keys key (list-ref choices i)))
   choices-with-keys)
 
+; UI / generic util / just a free function
 (provide wait-for-confirm)
 (define (wait-for-confirm)
   (displayln "[Enter]")
@@ -447,6 +484,7 @@
 
 
 ; this definition looks like it should happen at the call site
+; - expose-neighbor! should be available for scripting
 (provide handle-exploration-check-result!)
 (define (handle-exploration-check-result! result)
   (if result
@@ -459,13 +497,15 @@
 
 
 
-
+; engine / round resolver
+; timeline of interesting events
 (serializable-struct
  timeline
  (metadata
   events
   duration))
- 
+
+; engine / round resolver
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,
 ; returns a timeline of events that occurred with metadata
@@ -491,6 +531,7 @@
       ))
   (timeline metadata events counter))
 
+; scripting API / location?
 (provide move-pc-to-location!)
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
@@ -499,7 +540,8 @@
   (set-actor-current-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*)))
 
-; maybe the event should narrate itself, how about that, hmm?
+; narration content to event,
+; function to call narration in engine / round-resolver
 (define (narrate-event event)
   (case (event-type event)
     ('new-time-of-day
@@ -515,6 +557,10 @@
     ('spawn-enemies '())
     (else (displayln (string-append "narrate-event: unknown event type "
                                     (symbol->string (event-type event)))))))
+
+
+
+; engine / round-resolver at first; some of the stuff should go to action definitions etc
 
 ; may return:
 ; void
@@ -596,7 +642,7 @@
   result
   )
 
-
+; engine / round resolver
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
@@ -629,6 +675,7 @@
          (displayln "handle-interrupting-event!: unknown event type")))
   '())
 
+; engine / round resolver
 (define (handle-pc-action-interrupted! timeline)
   (define interrupting-events
     (filter
@@ -643,14 +690,17 @@
          (displayln "handle-pc-action-interrupted!: unexpected amount of interrupting events")))
   )
 
+; engine / round resolver
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
+; action or utils
 (define (all-actions-of-type? actions type)
   (define predicate
     (λ (action) (eq? (action-symbol action) type)))
   (all-fulfill-predicate? actions predicate))
 
+; engine / round resolver
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'flee)
@@ -669,6 +719,7 @@
       )
     ))
 
+; engine / round resolver
 (define (resolve-turn! world action)
   (if (pc-actor? (action-actor action))
       (resolve-pc-action! action)
@@ -676,7 +727,7 @@
   )
 
 
-
+; engine / round resolver
 (define (on-end-round)
   (displayln "[End round]")
   (define current-enemies (get-current-enemies))
@@ -725,6 +776,7 @@
   (newline) ; This is the "extra" newline that separates rounds
   )
 
+; engine / round resolver
 (define (resolve-round)
   (on-begin-round)
   (enqueue-npc-actions)
@@ -758,6 +810,7 @@
            round-exit-status
            ))))
 
+; UI? meta? scripting api? return value tied to round resolution
 (define (quit)
   (displayln "Really quit? [Q] to quit, anything else to continue.")
   (define input (wait-for-input))
@@ -769,6 +822,7 @@
          (newline)
          #t))) ; mark input as handled
 
+; UI? meta? scripting api? return value tied to round resolution
 (define (menu)
   (define (handle-meta-command meta-commands-with-keys input)
     (set! input (string-upcase input))
@@ -796,12 +850,14 @@
         (else (menu)))
   #t)
 
+; UI? util? standalone?
 (define (wait-for-input)
   (newline)
   (define input (read-line))
   (newline)
   input)
 
+; engine / get-next-pc-action
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
@@ -811,6 +867,7 @@
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
   meta-commands)
 
+; engine / get-next-pc-action
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
     (display (car v))
@@ -818,7 +875,7 @@
   (newline)
   (newline))
 
-
+; engine / get-next-pc-action
 (define (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
   (cond ((eq? verbosity 'abbreviated)
          (display "Unknown command. Known commands: ")
@@ -834,6 +891,10 @@
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
+; content should be provided "somewhere"
+; content is game-specific, not engine stuff
+; but figure out where this should be called from
+; engine / run-resolver?
 (define (narrate-begin-run)
   (info-card
    (list
@@ -846,6 +907,7 @@
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
 
+; engine / run-resolver?
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
@@ -854,6 +916,7 @@
   (go-to-story-fragment 1)
   )
 
+; engine / run-resolver?
 (define (resolve-a-run)
   (on-begin-run)
   (let/ec end-run
@@ -865,6 +928,7 @@
       (loop))
     ))
 
+; engine / life-resolver?
 (define (resolve-a-life)
   (on-begin-life)
   (let/ec end-life
@@ -877,6 +941,7 @@
         (loop)))
     ))
 
+; situation? some sort of player.rkt meta entity?
 (define (player-info)
   (define player-status
     (list
@@ -887,17 +952,20 @@
   (info-card player-status (string-append "Player status"))
   )
 
+; engine / life-resolver?
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
   (player-info)  
   )
 
+; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
   ;(paragraph "[" "Begin a story" "]")
   (setup-world)
   )
 
+; engine / game-resolver?
 (define (begin-game)
   #; (random-seed 13)
   (title)
@@ -933,10 +1001,11 @@
   
   )
 
+; scripting API / game-specific
 (define (win-game)
   (paragraph "Otava dives under the waters of Martaanvuo Spring and forever ceases to exist.")
   (wait-for-input)
   (exit))
 
-
+; main entrypoint
 (begin-game)
