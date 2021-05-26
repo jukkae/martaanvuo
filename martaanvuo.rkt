@@ -38,17 +38,6 @@
 
 
 
-
-; cleanup used by actor.rkt -> have it do this instead
-(provide clean-up-dead-actor!)
-(define (clean-up-dead-actor! actor)
-  (hash-remove! *enemy-stances* actor)
-  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
-  (define corpse (cons 'corpse "Blindscraper corpse"))
-  (displayln "clean-up-dead-actor!: todo: add corpse")
-  (displayln corpse))
-
-
 ; some sort of generic ai module?
 (define (update-npc-reactions pc-action)
   (define npcs (get-current-enemies))

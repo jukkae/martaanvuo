@@ -4,7 +4,7 @@
 
 (require racket/lazy-require)
 (lazy-require
- ["martaanvuo.rkt"
+ ["situation.rkt"
   (clean-up-dead-actor!
    )])
 

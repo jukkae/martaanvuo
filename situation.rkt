@@ -306,3 +306,13 @@
   (remove-actor-from-its-current-location! (situation-pc *situation*))
   (set-actor-current-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*)))
+
+
+; ??? where belong
+(provide clean-up-dead-actor!)
+(define (clean-up-dead-actor! actor)
+  (hash-remove! *enemy-stances* actor)
+  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
+  (define corpse (cons 'corpse "Blindscraper corpse"))
+  (displayln "clean-up-dead-actor!: todo: add corpse")
+  (displayln corpse))
