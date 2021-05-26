@@ -40,7 +40,6 @@
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
   )
 
-
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
@@ -168,49 +167,6 @@
   #t
   )
 
-; TODO move to state
-; currently: quest - status - notes
-; and table-display formatted
-(define *quests* '())
-
-(provide create-quest)
-(define (create-quest quest-symbol)
-  (define quest
-    (case quest-symbol
-      ['pay-off-debt
-       (list " pay off the debt to the Collector "
-             " in progress "
-             " unsettled: 4,328 grams of U-235 ")]
-      ['the-anthead
-       (list " seek the Anthead Girl "
-             " not started "
-             " \"not ready yet\" ")]))
-  (set! *quests*
-        (append-element *quests* quest))
-
-  (info-card
-   (list quest)
-   "New quest")
-  )
-
-(define (quests)
-  (define sheet
-    (append
-     (list
-      (list " quest " " status " " notes ")
-      )
-     *quests*
-     ))
-  (info-card
-   sheet
-   "Quests")
-  )
-
-(provide current-location)
-(define (current-location)
-  #;(displayln "-- current-location: TODO move to situation")
-  (actor-current-location (situation-pc *situation*)))
-
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
@@ -225,6 +181,7 @@
   (eq? (stance-range stance) range))
          
 
+; ai dispatching
 (define (get-next-npc-action actor)
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
@@ -501,6 +458,7 @@
    title))
 
 
+; this definition looks like it should happen at the call site
 (provide handle-exploration-check-result!)
 (define (handle-exploration-check-result! result)
   (if result

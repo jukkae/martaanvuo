@@ -22,7 +22,6 @@
    actor-in-range?
    set-in-combat?!
    move-actor-to-location!
-   current-location
    )])
 
 
@@ -44,6 +43,47 @@
          (string-append
           "Keep on searching for paths."))
         (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+
+
+; currently: quest - status - notes
+; and table-display formatted
+(define *quests* '())
+
+(define (create-quest quest-symbol)
+  (define quest
+    (case quest-symbol
+      ['pay-off-debt
+       (list " pay off the debt to the Collector "
+             " in progress "
+             " unsettled: 4,328 grams of U-235 ")]
+      ['the-anthead
+       (list " seek the Anthead Girl "
+             " not started "
+             " \"not ready yet\" ")]))
+  (set! *quests*
+        (append-element *quests* quest))
+
+  (info-card
+   (list quest)
+   "New quest")
+  )
+
+(define (quests)
+  (define sheet
+    (append
+     (list
+      (list " quest " " status " " notes ")
+      )
+     *quests*
+     ))
+  (info-card
+   sheet
+   "Quests")
+  )
+
+(define (current-location)
+  #;(displayln "-- current-location: TODO move to situation")
+  (actor-current-location (situation-pc *situation*)))
 
 ;;;
 

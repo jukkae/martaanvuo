@@ -21,7 +21,6 @@
    actor-in-range?
    set-in-combat?!
    move-actor-to-location!
-   current-location
    )])
 
 (define (get-nighttime-choices world actor)

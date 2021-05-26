@@ -6,9 +6,11 @@
 (require racket/serialize)
 
 (require "action.rkt")
+(require "checks.rkt")
 (require "location.rkt")
 (require "fragment.rkt")
 (require "paragraph.rkt")
+(require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -20,11 +22,6 @@
    actor-in-range?
    set-in-combat?!
    move-actor-to-location!
-   current-location
-   stance
-   *enemy-stances*
-   create-quest
-   passive-check
    move-pc-to-location!
    resolve-pc-action!)])
 

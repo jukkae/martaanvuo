@@ -10,16 +10,8 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (engine-function
-   pc
-   paragraph
-   in-combat?
-   actor-in-range?
-   set-in-combat?!
-   move-actor-to-location!
-   current-location
-   stance
-   *enemy-stances*)])
+  (pc
+   )])
 
 (define (make-new-pc)
   (make-pc-actor

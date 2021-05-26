@@ -19,7 +19,6 @@
    actor-in-range?
    set-in-combat?!
    move-actor-to-location!
-   current-location
    )])
 
 (define (make-blindscraper-action actor action-flag)
