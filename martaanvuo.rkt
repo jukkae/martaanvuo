@@ -36,68 +36,7 @@
                        amount)))
 
 
-; type used in engine / round-resolver
-(serializable-struct
- event
- (type
-  details
-  interrupting?
-  at)
- #:constructor-name event*)
 
-; type used in engine / round-resolver
-(define (make-event
-         type
-         details
-         interrupting?)
-  (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
-   
-
-; engine / low-level "world-as-simulation" sub-resolver
-; or perhaps world?
-
-; increment world time
-; return a list of events that occur at new timestamp
-(define (advance-time-by-a-jiffy!)
-  (define events '())
-  (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
-  (set-world-elapsed-time!
-   (situation-world *situation*)
-   new-elapsed-time)
-
-  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
-    (define suspend-action?
-      (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
-           'night))
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) suspend-action?))
-    (set! events (append-element events ev)))
-
-
-  (when (not (in-combat?))
-    (cond
-      ;; Currently, only spawn enemies at daytime
-      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
-                 'night))
-       (define dice-sides 100) ; tweak on a per-location basis
-       (define roll (d 1 dice-sides))
-
-       (cond ((= roll 1)
-              (define title "Luck roll failure")
-              (info-card
-               (list (list
-                      (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
-                      (string-append " 1d" (number->string dice-sides) " = 1 ")
-                      " failure: hostile encounter, spawning enemies "))
-               title)
-              (define ev
-                (make-event 'spawn-enemies
-                            '() ; pack info about enemies / event here
-                            #t))
-              (set! events (append-element events ev))
-              (wait-for-confirm)))
-       )))
-  events
-  )
 
 
 ; cleanup used by actor.rkt -> have it do this instead
@@ -174,6 +113,71 @@
         (displayln "Exploration failed.")
         'failure)))
 
+
+
+; type used in engine / round-resolver
+(serializable-struct
+ event
+ (type
+  details
+  interrupting?
+  at)
+ #:constructor-name event*)
+
+; type used in engine / round-resolver
+(define (make-event
+         type
+         details
+         interrupting?)
+  (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
+   
+
+; engine / low-level "world-as-simulation" sub-resolver
+; or perhaps world?
+; or perhaps just round-resolver?
+
+; increment world time
+; return a list of events that occur at new timestamp
+(define (advance-time-by-a-jiffy!)
+  (define events '())
+  (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
+  (set-world-elapsed-time!
+   (situation-world *situation*)
+   new-elapsed-time)
+
+  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
+    (define suspend-action?
+      (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+           'night))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) suspend-action?))
+    (set! events (append-element events ev)))
+
+
+  (when (not (in-combat?))
+    (cond
+      ;; Currently, only spawn enemies at daytime
+      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+                 'night))
+       (define dice-sides 100) ; tweak on a per-location basis
+       (define roll (d 1 dice-sides))
+
+       (cond ((= roll 1)
+              (define title "Luck roll failure")
+              (info-card
+               (list (list
+                      (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
+                      (string-append " 1d" (number->string dice-sides) " = 1 ")
+                      " failure: hostile encounter, spawning enemies "))
+               title)
+              (define ev
+                (make-event 'spawn-enemies
+                            '() ; pack info about enemies / event here
+                            #t))
+              (set! events (append-element events ev))
+              (wait-for-confirm)))
+       )))
+  events
+  )
 
 
 ; engine / round resolver
@@ -390,55 +394,6 @@
       (resolve-npc-action! action))
   )
 
-
-; engine / round resolver
-(define (on-end-round)
-  (displayln "[End round]")
-  (define current-enemies (get-current-enemies))
-
-  (when (= (length current-enemies) 0)
-    ; would be nicer to only change when it's currently true, but eh
-    (set-situation-in-combat?! *situation* #f))
-  
-  (when (not (null? (situation-current-fragment *situation*)))
-    (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
-
-  ; remove statuses
-  (for ([enemy (get-current-enemies)])
-    (define name (get-combatant-name enemy))
-    (when (not (null? (actor-statuses enemy)))
-      (displayln (string-append "[" name ": removed statuses:]"))
-      (for ([status (actor-statuses enemy)])
-        (displayln status))
-      (decrement-actor-status-lifetimes! enemy)))
-
-  (for ([enemy (get-current-enemies)])
-    (define name (get-combatant-name enemy))
-    (when (not (null? (actor-statuses enemy)))
-      (define name (get-combatant-name enemy))
-      (define description (~s (actor-statuses enemy)))
-    
-      (define description-prefix
-        (string-append "[" name ": removed statuses: "))
-      (define description-suffix "]")
-      (decrement-actor-status-lifetimes! enemy)))
-
-  ; urgh
-  (when (not (null? (actor-statuses (situation-pc *situation*))))
-    (define name (get-combatant-name (situation-pc *situation*)))
-    (define description (~s (actor-statuses (situation-pc *situation*))))
-    
-    (define description-prefix
-      (string-append "[" name ": removed statuses: "))
-    (define description-suffix "]")
-    (decrement-actor-status-lifetimes! (situation-pc *situation*)))
-  
-  
-  
-  
-
-  (newline) ; This is the "extra" newline that separates rounds
-  )
 
 ; engine / round resolver
 (define (resolve-round)
