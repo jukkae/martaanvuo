@@ -1,5 +1,7 @@
 #lang racket
 
+(provide (all-defined-out))
+
 (require racket/struct)
 (require racket/serialize)
 
@@ -89,5 +91,14 @@
 (define (location-has-tag? location tag)
   (memq tag (location-tags location)))
 
+(define (get-location-name-from-location-type location-type)
+  (cond ((eq? location-type 'swamp) "the swamps")
+        (else (string-append "get-location-name-from-location-type: unknown location type: " (symbol->string location-type)))))
 
-(provide (all-defined-out))
+(define (get-go-to-text-from-location-to-another from-type to-type)
+  (case to-type
+    ['ruins "Climb the hill to the ruins."]
+    ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
+    ['edgeflats "Go back to Edgeflats."]
+    [else (string-append "Go to " (symbol->string to-type) ".")]))
+

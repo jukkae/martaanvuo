@@ -7,6 +7,8 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "info-card.rkt")
+(require "location.rkt")
 (require "pc.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -21,8 +23,29 @@
    set-in-combat?!
    move-actor-to-location!
    current-location
-   stance
-   *enemy-stances*)])
+   )])
+
+
+;;; MISC
+
+(define *pending-action* '())
+(define (reset-pending-action!)
+  (set! *pending-action* '()))
+(define (set-pending-action! action)
+  (set! *pending-action* action))
+
+(define (get-continue-pending-action-name pending-action)
+  (cond ((eq? (action-symbol pending-action) 'go-to-location)
+         (string-append
+          "Continue towards "
+          (get-location-name-from-location-type (location-type (action-target pending-action)))
+          "."))
+        ((eq? (action-symbol pending-action) 'search-for-paths)
+         (string-append
+          "Keep on searching for paths."))
+        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+
+;;;
 
 (serializable-struct
  situation
@@ -43,3 +66,110 @@
         [pc (make-new-pc)]
         [quests '()])
     (situation new-world pc 0 0 0 0 #f '() quests 0)))
+
+
+(define (get-current-enemies)
+  (filter
+   (λ (actor) (and (actor-alive? actor)
+                   (not (pc-actor? actor))))
+   (location-actors (current-location))))
+
+(define (get-stance-range-numeric-value range)
+  (case range
+    ['engaged 0]
+    ['close 1]
+    [else (error "get-stance-range-numeric-value: unknown range")]))
+
+
+(serializable-struct
+ stance
+ (index
+  range
+  location))
+
+
+(define *enemy-stances* (make-hash))
+
+(define (get-combatant-name actor)
+  (cond ((pc-actor? actor)
+         "Otava")
+        (else
+         (define stance (hash-ref! *enemy-stances* actor '()))
+         (cond ((= (hash-count *enemy-stances*) 1)
+                (append-string (actor-name actor)))
+               (else
+                (define name (actor-name actor))
+                (define index (stance-index stance))
+                (append-string name " " index))))))
+
+(define (display-non-pc-combatant-info actor)
+  (define stance (hash-ref! *enemy-stances* actor '()))
+  (define name (get-combatant-name actor))
+  (define hide-hp?
+    (if (hash-ref (actor-traits actor) "hp-hidden" #f)
+        #t
+        #f))
+
+  (define body
+    (case (actor-name actor)
+      [("Grabberkin")
+       (list
+        (list
+         " HP "
+         (if hide-hp?
+             " ??? "
+             (string-append " "
+                            (number->string (actor-hp actor))
+                            "/"
+                            (number->string (actor-max-hp actor))
+                            " "
+                            ))))]
+      [("Blindscraper")
+       (list
+        (list
+         " size "
+         (string-append " "
+                        (get-trait actor "size")
+                        " "
+                        ))
+        #;(list
+           " location "
+           (string-append " " (stance-location stance) " "))
+        (list
+         " range "
+         (string-append " " (symbol->string (stance-range stance)) " "))
+
+        )]))
+
+  (when (not (null? (actor-statuses actor)))
+    (define statuses (actor-statuses actor))
+    (define statuses-list
+      (list " statuses " (~s statuses)))
+    (set! body (append-element body statuses-list)))
+  (info-card
+   body
+   name))
+
+(define (engaged?)
+  (define any-enemy-engaged? #f)
+  (for ([(k stance) (in-hash *enemy-stances*)])
+    (when (eq? (stance-range stance) 'engaged)
+      (set! any-enemy-engaged? #t)))
+  any-enemy-engaged?)
+
+; situation
+(define (get-an-enemy-at-range range)
+  (define current-enemies (get-current-enemies))
+  (define enemies-shuffled (shuffle current-enemies))
+  (define enemy-in-range '())
+  (for ([enemy enemies-shuffled])
+    (define stance (hash-ref *enemy-stances* enemy '()))
+    (when (eq? (stance-range stance) range)
+      (set! enemy-in-range enemy)))
+  enemy-in-range)
+
+; situation
+(define (in-range? target attack-mode)
+  (case attack-mode
+    ['melee #t]
+    [else (displayln "in-range? not implemented yet for this attack mode")]))
