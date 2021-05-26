@@ -8,18 +8,14 @@
 (require "action.rkt")
 (require "actor.rkt")
 (require "location.rkt")
+(require "paragraph.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
 (lazy-require
  ["martaanvuo.rkt"
-  (engine-function
-   pc
-   paragraph
-   in-combat?
-   actor-in-range?
-   set-in-combat?!
+  (actor-in-range?
    move-actor-to-location!
    )])
 

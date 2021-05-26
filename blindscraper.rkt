@@ -13,11 +13,7 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (engine-function
-   pc
-   in-combat?
-   actor-in-range?
-   set-in-combat?!
+  (actor-in-range?
    move-actor-to-location!
    )])
 

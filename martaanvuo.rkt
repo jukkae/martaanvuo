@@ -79,28 +79,6 @@
   (set-situation-current-fragment! *situation* (get-fragment id))
   ((story-fragment-on-enter! (situation-current-fragment *situation*))))
 
-; scripting API / situation
-(provide pc)
-(define (pc)
-  (situation-pc *situation*))
-
-; scripting API / situation
-(provide in-combat?)
-(define (in-combat?)
-  (situation-in-combat? *situation*))
-
-; scripting API / situation / implementation detail
-(provide set-in-combat?!)
-(define (set-in-combat?! in-combat?)
-  (set-situation-in-combat?! *situation* in-combat?))
-
-; scripting API / situation / implementation detail
-(define (remove-all-enemies-and-end-combat!)
-  (for ([enemy (get-current-enemies)])
-    (hash-remove! *enemy-stances* enemy)
-    (remove-actor-from-location! (actor-current-location enemy) enemy))
-  (set-situation-in-combat?! *situation* #f))
-
 ; type used in engine / round-resolver
 (serializable-struct
  event

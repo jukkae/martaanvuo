@@ -7,12 +7,13 @@
 
 (require "actor.rkt")
 (require "info-card.rkt")
+(require "paragraph.rkt")
 (require "utils.rkt")
 
+
 (lazy-require
- ["martaanvuo.rkt"
-  (engine-function
-   pc
+ ["situation.rkt"
+  (pc
    paragraph
    in-combat?
    actor-in-range?

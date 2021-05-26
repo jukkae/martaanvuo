@@ -16,11 +16,7 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (engine-function
-   pc
-   in-combat?
-   actor-in-range?
-   set-in-combat?!
+  (actor-in-range?
    move-actor-to-location!
    )])
 
@@ -275,3 +271,25 @@
     ((in-combat?) (describe-combat-situation))
     (else (displayln "redescribe-situation: TODO")))
   )
+
+; scripting API / situation
+(provide pc)
+(define (pc)
+  (situation-pc *situation*))
+
+; scripting API / situation
+(provide in-combat?)
+(define (in-combat?)
+  (situation-in-combat? *situation*))
+
+; scripting API / situation / implementation detail
+(provide set-in-combat?!)
+(define (set-in-combat?! in-combat?)
+  (set-situation-in-combat?! *situation* in-combat?))
+
+; scripting API / situation / implementation detail
+(define (remove-all-enemies-and-end-combat!)
+  (for ([enemy (get-current-enemies)])
+    (hash-remove! *enemy-stances* enemy)
+    (remove-actor-from-location! (actor-current-location enemy) enemy))
+  (set-situation-in-combat?! *situation* #f))
