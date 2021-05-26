@@ -16,8 +16,7 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (actor-in-range?
-   move-actor-to-location!
+  (move-actor-to-location!
    )])
 
 
@@ -293,3 +292,9 @@
     (hash-remove! *enemy-stances* enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
+
+; scripting API
+(provide actor-in-range?)
+(define (actor-in-range? enemy range)
+  (define stance (hash-ref *enemy-stances* enemy))
+  (eq? (stance-range stance) range))

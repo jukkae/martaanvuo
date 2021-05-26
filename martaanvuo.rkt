@@ -168,13 +168,6 @@
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln corpse))
 
-; situation
-(provide actor-in-range?)
-(define (actor-in-range? enemy range)
-  (define stance (hash-ref *enemy-stances* enemy))
-  (eq? (stance-range stance) range))
-         
-
 ; engine / round resolver: ai dispatching
 (define (get-next-npc-action actor)
   (case (actor-name actor)

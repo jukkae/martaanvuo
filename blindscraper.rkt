@@ -13,8 +13,7 @@
 
 (lazy-require
  ["martaanvuo.rkt"
-  (actor-in-range?
-   move-actor-to-location!
+  (move-actor-to-location!
    )])
 
 (define (make-blindscraper-action actor action-flag)
