@@ -10,6 +10,7 @@
 (require "actor.rkt")
 (require "blindscraper.rkt")
 (require "fragment.rkt")
+(require "grabberkin.rkt")
 (require "location.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -674,84 +675,7 @@
   (eq? (stance-range stance) range))
 
 
-(define (make-grabberkin-action actor action-flag)
-  (case action-flag
-    ['pull-under
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'pull-under
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
 
-    ['anklebreaker
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'anklebreaker
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
-    
-    ['tighten-grip
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'tighten-grip
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
-    
-    ['skip
-     (make-action
-      #:symbol 'skip
-      #:actor actor
-      #:duration 0
-      #:target '()
-      #:tags '(initiative-based-resolution)
-      #:details '(silent))]
-
-    ['grab
-     (make-action
-      #:symbol 'inflict-status
-      #:actor actor
-      #:duration 1
-      #:target (situation-pc *situation*)
-      #:tags '(initiative-based-resolution)
-      #:details (cons 'bound 3))]
-
-    ['release-grip
-     (make-action
-      #:symbol 'release-grip
-      #:actor actor
-      #:duration 0
-      #:target '()
-      #:tags '(initiative-based-resolution)
-      #:details '(fast))]
-
-    [else
-     (error (string-append
-             "make-grabberkin-action: unknown action: "
-             (symbol->string action-flag)))]))
 
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
