@@ -9,9 +9,11 @@
 (require "action.rkt")
 (require "actor.rkt")
 (require "blindscraper.rkt")
+(require "character-sheet.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
+(require "info-card.rkt")
 (require "location.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -19,15 +21,6 @@
 (provide engine-function)
 (define (engine-function)
   (displayln "ENGINE FUNCTION PROVIDED FROM ENGINE"))
-
-(define (get-attribute-modifier-for attribute)
-  (cond ((= attribute 3) -3)
-        ((<= 4  attribute  5) -2)
-        ((<= 6  attribute  8) -1)
-        ((<= 9  attribute 12)  0)
-        ((<= 13 attribute 15)  1)
-        ((<= 16 attribute 17)  2)
-        ((= attribute 18) 3)))
 
 (define (make-new-pc)
   (make-pc-actor
@@ -95,10 +88,6 @@
   (character-sheet)
   )
 
-(define (get-modifier-string modifier)
-  (cond ((negative? modifier) (number->string modifier))
-        ((= 0 modifier) (number->string modifier))
-        ((positive? modifier) (string-append "+" (number->string modifier)))))
 
 (define (current-fragment-on-begin-round!)
   (paragraph (story-fragment-description (situation-current-fragment *situation*)))
@@ -242,108 +231,7 @@
   events
   )
 
-; -> PC, or even just character-sheet.rkt
-(define (character-sheet)
-  (define actor (situation-pc *situation*))
 
-  (define sheet
-    (list
-     (list (string-append " " (actor-name actor) " ") "" )
-     (list "" "")
-     (list " HP " (string-append " "
-                                 (number->string (actor-hp actor))
-                                 "/"
-                                 (number->string (actor-max-hp actor))
-                                 " "))))
-
-  (when (not (= 0 (pc-actor-xp actor)))
-    (set! sheet (append-element sheet
-                                (list " XP " (string-append " "
-                                                            (number->string (pc-actor-xp actor))
-                                                            " ")))))
-
-  (define attributes-list '())
-  (when (or (not (null? (actor-strength actor)))
-            (not (null? (actor-dexterity actor)))
-            (not (null? (actor-constitution actor)))
-            (not (null? (actor-intelligence actor)))
-            (not (null? (actor-charisma actor))))
-    (set! attributes-list
-          (append-element attributes-list
-                          (list "" ""))))
-  
-  (when (not (null? (actor-strength actor)))
-    (set! attributes-list (append-element attributes-list
-                                          (list
-                                           " strength "
-                                           (string-append " "
-                                                          (number->string (actor-strength actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-strength actor)))
-                                                          "] ")))))
-  (when (not (null? (actor-dexterity actor)))
-    (set! attributes-list (append-element attributes-list
-                                          (list
-                                           " dexterity "
-                                           (string-append " "
-                                                          (number->string (actor-dexterity actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-dexterity actor)))
-                                                          "] ")))))
-  (when (not (null? (actor-constitution actor)))
-    (set! attributes-list (append-element attributes-list
-                                          (list
-                                           " constitution "
-                                           (string-append " "
-                                                          (number->string (actor-constitution actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-constitution actor)))
-                                                          "] ")))))
-  (when (not (null? (actor-intelligence actor)))
-    (set! attributes-list (append-element attributes-list
-                                          (list
-                                           " intelligence "
-                                           (string-append " "
-                                                          (number->string (actor-intelligence actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-intelligence actor)))
-                                                          "] ")))))
-  (when (not (null? (actor-charisma actor)))
-    (set! attributes-list (append-element attributes-list
-                                          (list
-                                           " charisma "
-                                           (string-append " "
-                                                          (number->string (actor-charisma actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-charisma actor)))
-                                                          "] ")))))
-  
-  (define traits (actor-traits actor))
-  (define traits-list
-    (for/list ([(k v) (in-hash traits)])
-      (list (string-append " " k " ") (string-append " " (number->string v) " "))))
-
-  ; append emptyline above
-  (when (not (null? traits-list))
-    (set! traits-list (cons (list "" "") traits-list)))
-
-  (set! sheet (append sheet attributes-list traits-list))
-  (info-card
-   sheet
-   "Character sheet"
-   )
-  #t
-  )
 
 (define (inventory)
   (define actor (situation-pc *situation*))
@@ -1094,11 +982,6 @@
   (newline)
   (define input (read-line))
   input)
-
-(define (info-card content title)
-  (when (not (null? title)) (displayln (string-append "[" title "]")))
-  (print-table content #:row-sep? #f)
-  (newline))
 
 (define (actor-status-card actor title)
   (info-card

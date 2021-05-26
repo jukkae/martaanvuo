@@ -103,6 +103,20 @@
    ; traits etc
    (make-hash) '() '() '() '() max-lp max-lp 0))
 
+(define (get-attribute-modifier-for attribute)
+  (cond ((= attribute 3) -3)
+        ((<= 4  attribute  5) -2)
+        ((<= 6  attribute  8) -1)
+        ((<= 9  attribute 12)  0)
+        ((<= 13 attribute 15)  1)
+        ((<= 16 attribute 17)  2)
+        ((= attribute 18) 3)))
+
+(define (get-modifier-string modifier)
+  (cond ((negative? modifier) (number->string modifier))
+        ((= 0 modifier) (number->string modifier))
+        ((positive? modifier) (string-append "+" (number->string modifier)))))
+
 ;; operations
 (define (add-item-to-inventory! actor item)
   (set-actor-inventory! actor
