@@ -100,22 +100,6 @@
   )
 
 
-; pc? meta? api?
-(define (inventory)
-  (define actor (situation-pc *situation*))
-  
-  (define sheet
-    (append
-     (list
-      (list " Item " " Notes "))
-     (actor-inventory actor)))
-  (info-card
-   sheet
-   "Inventory"
-   )
-  #t
-  )
-
 ; cleanup used by actor.rkt -> have it do this instead
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
@@ -124,25 +108,6 @@
   (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   (displayln corpse))
-
-
-
-; engine / round resolver
-(define (get-next-action actor)
-  (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
-        (else
-         (serialize-state)
-         (get-next-pc-action)))
-  )
-
-
-; engine / round resolver
-(define (enqueue-npc-actions)
-  (define actors (location-actors (current-location)))
-  (for ([actor actors])
-    (when (not (pc-actor? actor))
-      (define next-action (get-next-action actor))
-      (add-to-action-queue next-action))))
 
 
 ; some sort of generic ai module?
@@ -188,80 +153,6 @@
          "After a while, Otava finds herself in the middle of the swamps. Through the heavy fog, the bushes swaying in the wind look like evil beast-shadows.")
         ("[[finish-go-to description not written yet]")))
 
-; engine / get-next-pc-action
-(define (meta-command-valid? meta-commands-with-keys input)
-  (set! input (string-upcase input))
-  (define meta-command (hash-ref meta-commands-with-keys input '()))
-  (if (not (null? meta-command))
-      meta-command
-      #f))
-
-; engine / get-next-pc-action
-(define (choice-valid? choices-with-keys input)
-  (define choice (hash-ref choices-with-keys (string->number input) '()))
-  (if (not (null? choice))
-      choice
-      #f))
-
-; engine / get-next-pc-action
-(define (fragment-decision-valid? decisions-with-keys input)
-  (define decision (hash-ref decisions-with-keys (string->number input) '()))
-  (if (not (null? decision))
-      decision
-      #f))
-
-; engine / get-next-pc-action
-(define (choice-as-action choices-with-keys input)
-  ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
-
-; engine / turn handler / fragment handling?
-(define (handle-fragment-decision decisions-with-keys input)
-  (define decision (hash-ref decisions-with-keys (string->number input)))
-  (current-fragment-handle-decision! decision))
-
-; engine / get-next-pc-action
-(define (get-next-pc-action)
-  (serialize-state)
-  (let/ec produce-action
-    (let what-do-you-do ([verbosity 'verbose])
-      (define (handle-meta-command meta-commands-with-keys input)
-        (set! input (string-upcase input))
-        (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-        (define meta-command (cdr meta-command-with-key))
-        (meta-command)
-        (redescribe-situation)
-        (what-do-you-do 'verbose))
-      
-      (define actor (situation-pc *situation*))
-
-
-      (define fragment-decisions (if (null? (situation-current-fragment *situation*))
-                                     '()
-                                     (current-fragment-get-decisions)))
-      (define world-choices (get-world-choices (situation-world *situation*) actor))
-      
-      (define choices (if (null? fragment-decisions)
-                          world-choices
-                          '()))
-
-      (define fragment-decisions-with-keys (build-keys-to-choices-map fragment-decisions 1))
-      (define first-non-fragment-index (add1 (length fragment-decisions)))
-      (define choices-with-keys (build-keys-to-choices-map choices first-non-fragment-index)) ; should check for pending actions and name choices accordingly
-      (define meta-commands-with-keys (get-meta-commands-with-keys))
-      
-      (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
-      (define input (wait-for-input))
-      (serialize-input)
-
-      (newline)
-
-      (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((fragment-decision-valid? fragment-decisions-with-keys input)
-             (begin
-               (handle-fragment-decision fragment-decisions-with-keys input)
-               produce-action 'end-round-early))
-            ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
-            (else (what-do-you-do 'abbreviated))))))
 
 ; game-specific, not engine!
 (define (title)
@@ -269,35 +160,6 @@
   (displayln "M A R T A A N V U O")
   (displayln "===================")
   (newline))
-
-; engine / get-next-pc-action
-(define (print-choices-with-keys choices-with-keys)
-  ; TODO: Should order here based on key
-  (for ([(k v) (in-hash choices-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
-  (newline))
-
-; engine / get-next-pc-action
-(define (print-decisions-with-keys decisions-with-keys)
-  (for ([(k v) (in-hash decisions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (decision-title v))))
-  #;(newline))
-  
-
-; engine / get-next-pc-action
-(define (key-from-index i)
-  (cond ((< i 0) (error "negative index!"))
-        ((<= i 8) (add1 i))
-        ((= i 9) 0)
-        ((> i 9) (error "too many things to do!"))))
-
-; engine / get-next-pc-action
-(define (build-keys-to-choices-map choices first-index)
-  (define choices-with-keys (make-hash))
-  (for ([i (in-range (length choices))])
-    (define key (key-from-index (+ first-index i -1)))
-    (hash-set! choices-with-keys key (list-ref choices i)))
-  choices-with-keys)
 
 
 ; this definition looks like it should happen at the call site
@@ -612,86 +474,6 @@
            round-exit-status
            ))))
 
-; UI? meta? scripting api? return value tied to round resolution
-(define (quit)
-  (displayln "Really quit? [Q] to quit, anything else to continue.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "Q")
-         (paragraph "Game exited.")
-         (exit))
-        (else
-         (newline)
-         #t))) ; mark input as handled
-
-; UI? meta? scripting api? return value tied to round resolution
-(define (menu)
-  (define (handle-meta-command meta-commands-with-keys input)
-    (set! input (string-upcase input))
-    (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-    (define meta-command (cdr meta-command-with-key))
-    (meta-command))
-  (define (close-menu) #t) ; hacky but eh
-  
-  (displayln "[Menu]")
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
-  (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
-
-  (for ([(k v) (in-hash meta-commands)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline)
-  (define input (wait-for-input))
-  (serialize-input)
-
-  (newline)
-
-  (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
-        (else (menu)))
-  #t)
-
-; UI? util? standalone?
-(define (wait-for-input)
-  (newline)
-  (define input (read-line))
-  (newline)
-  input)
-
-; engine / get-next-pc-action
-(define (get-meta-commands-with-keys)
-  (define meta-commands (make-hash))
-  #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
-  (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
-  (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
-  (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
-  meta-commands)
-
-; engine / get-next-pc-action
-(define (print-meta-commands-with-keys meta-commands-with-keys)
-  (for ([(k v) (in-hash meta-commands-with-keys)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline))
-
-; engine / get-next-pc-action
-(define (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
-  (cond ((eq? verbosity 'abbreviated)
-         (display "Unknown command. Known commands: ")
-         (for ([(k v) (in-hash fragment-decisions-with-keys)]) (display k))
-         (for ([(k v) (in-hash choices-with-keys)]) (display k))
-         (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
-         (newline)
-         )
-        (else
-         (newline) ; This is extra spacing, should pass a param to paragraph
-         #;(paragraph "What do you do?")
-         (print-decisions-with-keys fragment-decisions-with-keys)
-         (print-choices-with-keys choices-with-keys)
-         (print-meta-commands-with-keys meta-commands-with-keys))))
 
 ; content should be provided "somewhere"
 ; content is game-specific, not engine stuff

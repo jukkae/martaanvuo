@@ -18,3 +18,9 @@
   (newline)
   (define input (read-line))
   input)
+
+(define (wait-for-input)
+  (newline)
+  (define input (read-line))
+  (newline)
+  input)
