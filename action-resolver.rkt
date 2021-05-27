@@ -166,6 +166,44 @@
   'ok
   )
 
+; ability-like attack
+(define (resolve-go-to-engaged-action! action)
+
+
+  (define lp (pc-actor-lp (situation-pc *situation*)))
+  (define dex (actor-dexterity (action-actor action)))
+  (define success?
+    (cond ((positive? lp)
+           (displayln "[LP positive]")
+           (attribute-check "Dexterity" dex))
+          (else #t)))
+           
+  (if success?
+      (begin
+        (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        (hash-remove! *enemy-stances* (action-actor action))
+                 
+        (let ([enemy-stance (stance "α" 'engaged "right")])
+          (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
+        
+      (begin
+        (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+        (displayln "[-1 LP]")
+        (set-pc-actor-lp! (situation-pc *situation*)
+                          (- (pc-actor-lp (situation-pc *situation*))
+                             1))
+        (when (< (pc-actor-lp (situation-pc *situation*)) 0)
+          (set-pc-actor-lp! (situation-pc *situation*)
+                            0))
+        (displayln (pc-actor-lp (situation-pc *situation*)))
+        'failure))
+  'ok
+  )
+
+
+
+
+
 ;; This should probably be formalized and eventually provided as a contract or something
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
@@ -309,36 +347,7 @@
 
           ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
-
-           (define lp (pc-actor-lp (situation-pc *situation*)))
-           (define dex (actor-dexterity (action-actor action)))
-           (define success?
-             (cond ((positive? lp)
-                    (displayln "[LP positive]")
-                    (attribute-check "Dexterity" dex))
-                   (else #t)))
-           
-           (if success?
-               (begin
-                 (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-                 (hash-remove! *enemy-stances* (action-actor action))
-                 
-                 (let ([enemy-stance (stance "α" 'engaged "right")])
-                   (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
-        
-               (begin
-                 (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-                 (displayln "[-1 LP]")
-                 (set-pc-actor-lp! (situation-pc *situation*)
-                                   (- (pc-actor-lp (situation-pc *situation*))
-                                      1))
-                 (when (< (pc-actor-lp (situation-pc *situation*)) 0)
-                   (set-pc-actor-lp! (situation-pc *situation*)
-                                     0))
-                 (displayln (pc-actor-lp (situation-pc *situation*)))
-                 'failure))
-           'ok
-           )
+           (resolve-go-to-engaged-action! action))
 
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
