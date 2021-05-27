@@ -708,7 +708,7 @@
 
 
 
-(displayln "todo find me fix me")
+
 ; UI? meta? scripting api? return value tied to round resolution
 (define (quit)
   (displayln "Really quit? [Q] to quit, anything else to continue.")
