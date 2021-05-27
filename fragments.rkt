@@ -15,7 +15,7 @@
 (require "world.rkt")
 
 (lazy-require
- ["martaanvuo.rkt"
+ ["round-resolver.rkt"
   (resolve-pc-action!)])
 
 
