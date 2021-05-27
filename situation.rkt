@@ -10,6 +10,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -227,9 +228,17 @@
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
+    (define statuses-strings
+      (for/list ([status statuses])
+        (string-append "["
+                       (symbol->string (status-type status))
+                       " ("
+                       (number->string (status-lifetime status))
+                       ")]")))
+    
     (define statuses-list
       (list " statuses "
-            (string-append " " (~s statuses) " ")))
+            (string-append " " (string-join statuses-strings) " ")))
     (set! body (append-element body statuses-list)))
   (info-card
    body
