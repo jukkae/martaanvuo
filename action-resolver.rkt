@@ -364,6 +364,7 @@
           
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
 
+; Scripting API
 (define (inflict-status! target status)
   (match (status-type status)
     ['blind
@@ -379,7 +380,7 @@
         (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
      ]
     ['bound
-     (paragraph "The Grabberkin tightens its grip around Otava's ankle.")
+     ;(paragraph "The Grabberkin tightens its grip around Otava's ankle.")
      (actor-add-status! target status)
      ]
     [else (paragraph "todo: unknown status")]))

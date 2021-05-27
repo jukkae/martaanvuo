@@ -5,6 +5,7 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require "action-resolver.rkt")
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
@@ -76,7 +77,7 @@
       #:actor actor
       #:duration 0
       #:target (pc)
-      #:tags '(initiative-based-resolution)
+      #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound 3)))]
 
     ['release-grip
@@ -110,12 +111,11 @@
                (define roll (d 1 4))
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
-               (displayln "Action:")
-               (displayln action-flag-with-index)
+
+               
                (define action-flag (cdr action-flag-with-index))
                (make-grabberkin-action actor action-flag))
               (else
-               (displayln "GRABBERKIN: Not grabbing!")
                (make-grabberkin-action actor 'grab)
                )))
            
@@ -126,7 +126,7 @@
 
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Otava feels something strong grab her ankle.")
+  (paragraph "Otava feels something like a hand grab her ankle.")
   (set-in-combat?! #t)
 
   (define i 0)
@@ -137,6 +137,8 @@
   (set-trait! enemy "melee-attack-skill" 1)
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
+
+  (inflict-status! (pc) (status 'bound 3))
 
   (define index
     (case i
