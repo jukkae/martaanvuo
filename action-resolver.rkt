@@ -168,8 +168,6 @@
 
 ; ability-like attack
 (define (resolve-go-to-engaged-action! action)
-
-
   (define lp (pc-actor-lp (situation-pc *situation*)))
   (define dex (actor-dexterity (action-actor action)))
   (define success?
@@ -200,7 +198,55 @@
   'ok
   )
 
+; just a skill check in a fancy coat
+(define (resolve-forage-action! action)
 
+  (begin
+    (define skill 0)
+    (define target 8)
+             
+    (define successful? (skill-check "Forage" skill target))
+             
+             
+    (cond (successful?
+           (define amount (d 1 4)) ; portions = days of survival
+           (define amount-string
+             (if (= amount 1)
+                 (string-append (number->string amount) " meal")
+                 (string-append (number->string amount) " meals")))
+
+           (info-card
+            (list
+             (list
+              " 1d4 "
+              " = "
+              (string-append " " amount-string " "))
+             )
+            "Forage results roll")
+           (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+           (define item (list 'food (list amount)))
+           (add-item-to-inventory! (situation-pc *situation*) item)
+           )
+          (else
+           (begin
+             (paragraph "Despite spending a while, Otava can't find anything to eat.")
+             (define luck-roll (d 1 20))
+             (info-card
+              (list
+               (list
+                " 1d20 "
+                " = "
+                (string-append " " (number->string luck-roll) " " )))
+              "Luck roll")
+             )))
+    (if successful?
+        'successful
+        'failure)
+    )
+
+
+
+  )
 
 
 
@@ -231,45 +277,7 @@
                    'pc-dead))))
 
           ((eq? (action-symbol action) 'forage)
-           (begin
-             (define skill 0)
-             (define target 8)
-             
-             (define successful? (skill-check "Forage" skill target))
-             
-             
-             (cond (successful?
-                    (define amount (d 1 4)) ; portions = days of survival
-                    (define amount-string
-                      (if (= amount 1)
-                          (string-append (number->string amount) " meal")
-                          (string-append (number->string amount) " meals")))
-
-                    (info-card
-                     (list
-                      (list
-                       " 1d4 "
-                       " = "
-                       (string-append " " amount-string " "))
-                      )
-                     "Forage results roll")
-                    (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                    (define item (list 'food (list amount)))
-                    (add-item-to-inventory! (situation-pc *situation*) item)
-                    )
-                   (else
-                    (begin
-                      (paragraph "Despite spending a while, Otava can't find anything to eat.")
-                      (define luck-roll (d 1 20))
-                      (info-card
-                       (list
-                        (list
-                         " 1d20 "
-                         " = "
-                         (string-append " " (number->string luck-roll) " " )))
-                       "Luck roll")
-                      )))
-             ))
+           (resolve-forage-action! action))
           ((eq? (action-symbol action) 'back-off)
            'ok
            )
