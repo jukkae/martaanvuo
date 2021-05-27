@@ -241,12 +241,65 @@
              )))
     (if successful?
         'successful
-        'failure)
-    )
+        'failure)))
 
 
+; skinnable, but in a sense generic action
+(define (resolve-flee-action! action)
+  (cond ((pc-actor? (action-actor action))
+         (paragraph "Otava turns her back to run.")
+         (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
-  )
+         (define stance-range-values '())
+         (for ([(k v) (in-hash *enemy-stances*)])
+           (define value (get-stance-range-numeric-value (stance-range v)))
+           (set! stance-range-values (append-element stance-range-values value)))
+         (define target-number
+           ; if there's an enemy in engaged range, then more difficult check
+           (if (member 0 stance-range-values)
+               10
+               8))
+           
+         (define success? (skill-check "Athletics" skill target-number))
+         (if success?
+             (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
+               (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
+               (award-xp! 3 "for a working survival instinct")
+               'escape-from-combat)
+             (begin
+               (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+               (actor-add-status! (action-target action) (status 'fallen 1))
+               (display-pc-combatant-info (pc))
+               (wait-for-confirm)
+               'failure))
+         )
+
+        (else ; not a pc actor
+         (paragraph
+          (string-append
+           (get-combatant-name (action-actor action))
+           " tries to run."))
+         (define skill 1)
+         (define stance (hash-ref *enemy-stances* (action-actor action)))
+         (define value (get-stance-range-numeric-value (stance-range stance)))
+         (define target-number
+           (if (= value 0)
+               10
+               8))
+           
+         (define success? (skill-check "Athletics" skill target-number))
+         (if success?
+             ; TODO this fails if there are multiple enemies!
+             (begin
+               (paragraph "The Blindscraper skitters away and disappears in the foliage.")
+               (award-xp! 1)
+               'escape-from-combat)
+             (begin
+               (paragraph "It is fast, but not fast enough.")
+               (actor-add-status! (action-actor action) (status 'fallen 1))
+               (display-combatant-info (action-actor action))
+               'failure))
+         )))
 
 
 
@@ -297,60 +350,7 @@
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
           ((eq? (action-symbol action) 'flee)
-           (cond ((pc-actor? (action-actor action))
-                  (paragraph "Otava turns her back to run.")
-                  (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
-
-                  (define stance-range-values '())
-                  (for ([(k v) (in-hash *enemy-stances*)])
-                    (define value (get-stance-range-numeric-value (stance-range v)))
-                    (set! stance-range-values (append-element stance-range-values value)))
-                  (define target-number
-                    ; if there's an enemy in engaged range, then more difficult check
-                    (if (member 0 stance-range-values)
-                        10
-                        8))
-           
-                  (define success? (skill-check "Athletics" skill target-number))
-                  (if success?
-                      (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
-                        (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
-                        (award-xp! 3 "for a working survival instinct")
-                        'escape-from-combat)
-                      (begin
-                        (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                        (actor-add-status! (action-target action) (status 'fallen 1))
-                        (display-pc-combatant-info (pc))
-                        (wait-for-confirm)
-                        'failure))
-                  )
-
-                 (else ; not a pc actor
-                  (paragraph
-                   (string-append
-                    (get-combatant-name (action-actor action))
-                    " tries to run."))
-                  (define skill 1)
-                  (define stance (hash-ref *enemy-stances* (action-actor action)))
-                  (define value (get-stance-range-numeric-value (stance-range stance)))
-                  (define target-number
-                    (if (= value 0)
-                        10
-                        8))
-           
-                  (define success? (skill-check "Athletics" skill target-number))
-                  (if success?
-                      ; TODO this fails if there are multiple enemies!
-                      (begin
-                        (paragraph "The Blindscraper skitters away and disappears in the foliage.")
-                        (award-xp! 1)
-                        'escape-from-combat)
-                      (begin
-                        (paragraph "It is fast, but not fast enough.")
-                        (actor-add-status! (action-actor action) (status 'fallen 1))
-                        (display-combatant-info (action-actor action))
-                        'failure))
-                  ))
+           (resolve-flee-action! action)
            )
 
           ; This is starting to get unwieldy... but get poc done first
