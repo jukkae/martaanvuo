@@ -77,11 +77,11 @@
 
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
-             (if (not (pc-actor? (action-target action)))
-                 (paragraph "The " (actor-name (action-target action)) " is dead.")
-                 (begin
-                   (paragraph "Otava is dead.")
-                   (set! action-result 'pc-dead))))
+    (if (not (pc-actor? (action-target action)))
+        (paragraph "The " (actor-name (action-target action)) " is dead.")
+        (begin
+          (paragraph "Otava is dead.")
+          (set! action-result 'pc-dead))))
 
   action-result
   )
@@ -143,6 +143,14 @@
 
   (display-combatant-info target)
   (newline)
+
+  ; Urgh, refactor!
+  (when (eq? action-result 'dead)
+    (if (not (pc-actor? (action-target action)))
+        (paragraph "The " (actor-name (action-target action)) " is dead.")
+        (begin
+          (paragraph "Otava is dead.")
+          (set! action-result 'pc-dead))))
 
   action-result
   )
@@ -324,13 +332,7 @@
            (resolve-melee-action! action))
 
           ((eq? (action-symbol action) 'wrestle)
-           (define result (resolve-wrestle-action! action))
-           (when (eq? result 'dead)
-             (if (not (pc-actor? (action-target action)))
-                 (paragraph "The " (actor-name (action-target action)) " is dead.")
-                 (begin
-                   (paragraph "Otava is dead.")
-                   'pc-dead))))
+           (resolve-wrestle-action! action))
 
           ((eq? (action-symbol action) 'forage)
            (resolve-forage-action! action))
