@@ -138,9 +138,12 @@
   )
 
 (define (resolve-pull-under-action! action)
-  (define roll "2d6+whatever")
-  (displayln "The gk tries to pull Otava under")
-  (displayln roll)
+  (define damage-roll (λ () (d 1 2)))
+  (define details
+    (list
+     (list "öö" "ää")
+     ))
+  (info-card details "The hand pulls harder and Otava is sucked half under the heavy wet soil.")
   'ok
   )
 

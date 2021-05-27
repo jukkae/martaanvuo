@@ -18,19 +18,13 @@
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
     ['pull-under
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
      (make-action
       #:symbol 'pull-under
       #:actor actor
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details details)]
+      #:details '())]
 
     ['anklebreaker
      (define damage-roll (λ () (d 1 2)))
@@ -108,7 +102,8 @@
                   (cons 2 'anklebreaker)
                   (cons 3 'tighten-grip)
                   (cons 4 'skip)))
-               (define roll (d 1 4))
+               ;(define roll (d 1 4))
+               (define roll 1)
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
 
