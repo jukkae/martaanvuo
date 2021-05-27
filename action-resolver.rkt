@@ -75,6 +75,14 @@
   (display-combatant-info target)
   (newline)
 
+  ; Urgh, refactor!
+  (when (eq? action-result 'dead)
+             (if (not (pc-actor? (action-target action)))
+                 (paragraph "The " (actor-name (action-target action)) " is dead.")
+                 (begin
+                   (paragraph "Otava is dead.")
+                   (set! action-result 'pc-dead))))
+
   action-result
   )
 
@@ -309,16 +317,11 @@
 ; 'ok       when the action is completely resolved and not explicitly successful or failed
 ; 'success  when the action is completely resolved and explicitly successful
 ; 'failed   when the action is completely resolved and fails
+; this should just dispatch, doing something else smells bad
 (define (resolve-action! action)
   (when (actor-alive? (action-actor action))
     (cond ((eq? (action-symbol action) 'melee)
-           (define result (resolve-melee-action! action))
-           (when (eq? result 'dead)
-             (if (not (pc-actor? (action-target action)))
-                 (paragraph "The " (actor-name (action-target action)) " is dead.")
-                 (begin
-                   (paragraph "Otava is dead.")
-                   'pc-dead))))
+           (resolve-melee-action! action))
 
           ((eq? (action-symbol action) 'wrestle)
            (define result (resolve-wrestle-action! action))
