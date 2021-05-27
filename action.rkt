@@ -1,7 +1,11 @@
 #lang racket
 
+(provide (all-defined-out))
+
 (require racket/struct)
 (require lens)
+
+(require "utils.rkt")
 
 (define-struct choice
   (symbol
@@ -87,5 +91,7 @@
         ((eq? (action-actor action1) 'pc) #t)
         ((eq? (action-actor action2) 'pc) #f)))
 
-
-(provide (all-defined-out))
+(define (all-actions-of-type? actions type)
+  (define predicate
+    (λ (action) (eq? (action-symbol action) type)))
+  (all-fulfill-predicate? actions predicate))

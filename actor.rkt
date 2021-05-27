@@ -2,9 +2,17 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
+(lazy-require
+ ["situation.rkt"
+  (clean-up-dead-actor!
+   )])
+
 (require racket/serialize)
 
 (require "utils.rkt")
+(require "io.rkt")
+
 
 (serializable-struct
  actor
@@ -41,6 +49,11 @@
           ; traits etc
           (make-hash) '() '() '() '()))
 
+(define (actor-alive? actor)
+  (if (string? (actor-hp actor))
+      #t
+      (> (actor-hp actor) 0)))
+
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
 
@@ -57,12 +70,13 @@
   result)
 
 (define (actor-add-status! actor status turns)
-  (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]"))
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]")))
   (set-actor-statuses! actor (append-element (actor-statuses actor) (mcons status turns))))
 
 (define (actor-has-status? actor status)
   (if (memf (λ (status_)
-              (eq? (mcar status_) status))
+              (eq? (mcar status_) (status)))
             (actor-statuses actor))
       #t
       #f))
@@ -94,8 +108,54 @@
    ; traits etc
    (make-hash) '() '() '() '() max-lp max-lp 0))
 
-;; operations
+(define (get-attribute-modifier-for attribute)
+  (cond ((= attribute 3) -3)
+        ((<= 4  attribute  5) -2)
+        ((<= 6  attribute  8) -1)
+        ((<= 9  attribute 12)  0)
+        ((<= 13 attribute 15)  1)
+        ((<= 16 attribute 17)  2)
+        ((= attribute 18) 3)))
+
+(define (get-modifier-string modifier)
+  (cond ((negative? modifier) (number->string modifier))
+        ((= 0 modifier) (number->string modifier))
+        ((positive? modifier) (string-append "+" (number->string modifier)))))
+
+
+(define (take-damage actor damage)
+  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+  (define new-hp (- (actor-hp actor) damage))
+  (when (< new-hp 0) (set! new-hp 0))
+  (set-actor-hp! actor new-hp)
+  (define result
+    (if (= 0 (actor-hp actor))
+        'dead
+        'hit))
+
+  (when (eq? result 'dead)
+    (clean-up-dead-actor! actor))
+  
+  result)
+
+
 (define (add-item-to-inventory! actor item)
   (set-actor-inventory! actor
                         (append (actor-inventory actor)
                                 (list item))))
+
+(define (actor-status-card actor title)
+  (info-card
+   (list
+    (list
+     (string-append " " (actor-name actor) " ")
+     "")
+    (list
+     " hp: "
+     (string-append
+      " "
+      (number->string (actor-hp actor))
+      "/"
+      (number->string (actor-max-hp actor))
+      " ")))
+   title))
