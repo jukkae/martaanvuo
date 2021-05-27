@@ -84,7 +84,19 @@
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
-    (set-status-lifetime! status (- (status-lifetime status) 1))))
+    (set-status-lifetime! status (- (status-lifetime status) 1)))
+  (define new-statuses '())
+  (for ([status (actor-statuses actor)])
+    (if (positive? (status-lifetime status))
+        (set! new-statuses (append-element new-statuses status))
+        (displayln
+         (string-append
+          "["
+          (actor-name actor)
+          ": Status ["
+          (symbol->string (status-type status))
+          "] removed]"))))
+  (set-actor-statuses! actor new-statuses))
 
 (serializable-struct
  pc-actor
