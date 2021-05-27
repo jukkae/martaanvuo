@@ -161,15 +161,6 @@
   'ok
   )
 
-(define (handle-exploration-check-result! result)
-  (if result
-      (begin
-        (expose-neighbor! (current-location))
-        'successful)
-      (begin
-        (displayln "Exploration failed.")
-        'failure)))
-
 ;; This should probably be formalized and eventually provided as a contract or something
 ; can return:
 ; 'pc-dead  when the pc is dead as a consequence of this action
@@ -246,7 +237,11 @@
            (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
-           (handle-exploration-check-result! exploration-check-result))
+           (when exploration-check-result (expose-neighbor! (current-location)))
+           (if exploration-check-result
+               'ok
+               'failure
+               ))
           ((eq? (action-symbol action) 'sleep)
            (paragraph "Otava turns in for the night. Get some rest.")
            'ok)
