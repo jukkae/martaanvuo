@@ -10,6 +10,7 @@
 
 (require racket/serialize)
 
+(require "status.rkt")
 (require "utils.rkt")
 (require "io.rkt")
 
@@ -69,25 +70,21 @@
                 (actor-name actor))))
   result)
 
-(define (actor-add-status! actor status turns)
+(define (actor-add-status! actor status)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string status) "] (" (number->string turns) " turns) added]")))
-  (set-actor-statuses! actor (append-element (actor-statuses actor) (mcons status turns))))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] (" (number->string (status-lifetime status)) " turns) added]")))
+  (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
-(define (actor-has-status? actor status)
-  (if (memf (λ (status_)
-              (eq? (mcar status_) (status)))
+(define (actor-has-status-of-type? actor type)
+  (if (memf (λ (status)
+              (eq? (status-type status) type))
             (actor-statuses actor))
       #t
       #f))
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
-    (set-mcdr! status (- (mcdr status) 1)))
-  (set-actor-statuses! actor (filter
-                              (λ (status) (positive? (mcdr status)))
-                              (actor-statuses actor)))
-  (displayln "DECREMENTING"))
+    (set-status-lifetime! status (- (status-lifetime status) 1))))
 
 (serializable-struct
  pc-actor

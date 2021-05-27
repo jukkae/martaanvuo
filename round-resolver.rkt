@@ -421,14 +421,8 @@
          (define encounter-types '(blindscraper grabberkin))
 
 
-         ;(define encounter-type 'grabberkin)
-         (define encounter-type 'blindscraper)
-         (displayln
-          (string-append
-           "<< setting encounter-type to "
-           (symbol->string encounter-type)
-           " >>"))
-
+         (define encounter-type 'grabberkin)
+         ;(define encounter-type 'blindscraper)
          
          (case encounter-type
            ['grabberkin

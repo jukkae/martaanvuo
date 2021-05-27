@@ -7,21 +7,11 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "io.rkt")
+(require "situation.rkt")
+(require "status.rkt")
 (require "utils.rkt")
-
-(lazy-require
- ["martaanvuo.rkt"
-  (engine-function
-   pc
-   paragraph
-   in-combat?
-   actor-in-range?
-   set-in-combat?!
-   move-actor-to-location!
-   current-location
-   stance
-   *enemy-stances*)])
-
+(require "world.rkt")
 
 
 (define (make-grabberkin-action actor action-flag)
@@ -84,10 +74,10 @@
      (make-action
       #:symbol 'inflict-status
       #:actor actor
-      #:duration 1
+      #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details (cons 'bound 3))]
+      #:details (list (status 'bound 3)))]
 
     ['release-grip
      (make-action
@@ -110,7 +100,7 @@
 
             (cond
               ((and (actor-in-range? actor 'engaged)
-                    (actor-has-status? (pc) 'bound))
+                    (actor-has-status-of-type? (pc) 'bound))
                (define options
                  (list
                   (cons 1 'pull-under)
