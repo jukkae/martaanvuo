@@ -2,7 +2,6 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
 (require racket/serialize)
 
 (require "action.rkt")
@@ -11,11 +10,6 @@
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
-
-#;(lazy-require
- ["martaanvuo.rkt"
-  (move-actor-to-location!
-   )])
 
 (define (make-blindscraper-action actor action-flag)
   (case action-flag

@@ -10,6 +10,7 @@
 (require "checks.rkt")
 (require "io.rkt")
 (require "situation.rkt")
+(require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -269,7 +270,7 @@
                         'escape-from-combat)
                       (begin
                         (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-                        (actor-add-status! (action-target action) 'fallen 1)
+                        (actor-add-status! (action-target action) (status 'fallen 1))
                         (display-pc-combatant-info (pc))
                         (wait-for-confirm)
                         'failure))
@@ -297,7 +298,7 @@
                         'escape-from-combat)
                       (begin
                         (paragraph "It is fast, but not fast enough.")
-                        (actor-add-status! (action-actor action) 'fallen 1)
+                        (actor-add-status! (action-actor action) (status 'fallen 1))
                         (display-combatant-info (action-actor action))
                         'failure))
                   ))
@@ -338,23 +339,8 @@
 
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
-           (match (action-details action)
-             ['blind
-              (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
-              (define roll (d 1 2))
-              (wait-for-confirm)
-              (case roll
-                [(1)
-                 ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
-                 (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
-                [(2)
-                 (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
-              ]
-             [(cons 'bound number)
-              (paragraph "The Grabberkin tightens its grip around Otava's ankle.")
-              (actor-add-status! target 'bound 3)
-              ]
-             [else (paragraph "todo: unknown status")])
+           (define status (car (action-details action)))
+           (inflict-status! target status)
            'ok
            )
 
@@ -377,3 +363,24 @@
                   'ok)))
           
           (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
+
+; Scripting API
+(define (inflict-status! target status)
+  (match (status-type status)
+    ['blind
+     (displayln "todo: blind should be a condition, not a status")
+     (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (define roll (d 1 2))
+     (wait-for-confirm)
+     (case roll
+       [(1)
+        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+        (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+       [(2)
+        (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
+     ]
+    ['bound
+     ;(paragraph "The Grabberkin tightens its grip around Otava's ankle.")
+     (actor-add-status! target status)
+     ]
+    [else (paragraph "todo: unknown status")]))
