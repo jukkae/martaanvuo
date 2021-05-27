@@ -150,6 +150,7 @@
       (list action-description (string-append " " (number->string initiative) " "))))
   
   (info-card actions "Action initiatives")
+  (wait-for-confirm)
 
   (set! action-queue '())
   (for ([action-with-initiative sorted])
@@ -244,6 +245,7 @@
     (decrement-actor-status-lifetimes! (situation-pc *situation*)))
   
   (newline) ; This is the "extra" newline that separates rounds
+  (wait-for-confirm)
   )
 
 ; engine / round resolver
