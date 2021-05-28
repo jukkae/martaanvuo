@@ -147,6 +147,17 @@
   
   result)
 
+(define (kill actor cause-of-death)
+  (set-actor-hp! actor 0)
+  (displayln
+   (string-append "["
+                  (actor-name actor)
+                  " is dead. Cause of death: "
+                  (symbol->string cause-of-death)
+                  "]"))
+  
+  (clean-up-dead-actor! actor))
+
 
 (define (add-item-to-inventory! actor item)
   (set-actor-inventory! actor

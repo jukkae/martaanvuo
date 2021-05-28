@@ -157,13 +157,18 @@
 
 ; ability-like attack
 (define (resolve-pull-under-action! action)
-  (define damage-roll (λ () (d 1 2)))
-  (define details
+  (define damage-roll (λ () (d 1 4)))
+  #;(define details
     (list
      (list "öö" "ää")
      ))
-  (info-card details "The hand pulls harder and Otava is sucked half under the heavy wet soil.")
-  'ok
+  #;(info-card details "The hand pulls harder and Otava is sucked under the wet soil.")
+  (paragraph "The thing grasping her ankle splashes in the waters under the moss, as it searches for better hold. It finds something and pulls with fervor. Otava tumbles on the soggy moss as the thing pulls her under the moss, through a thick layer of algae, and into the cloudy waters. This breath might be her last, so she fills he lungs with air. The wet heavy darkness closes in around her.")
+  (paragraph "She fights back, but her hands get caught in various dismal kinds of aquatic flora and her strikes fail to land. She is getting tired and cannot hold much longer.")
+  (wait-for-confirm)
+  ;(define damage-roll (λ () (d 1 4)))
+  (paragraph "Otava opens her mouth and drowns four feet under the surface of a nameless quagmire near Martaanvuo.")
+  (kill (pc) 'drowned)
   )
 
 ; ability-like attack?
