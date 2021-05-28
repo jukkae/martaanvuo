@@ -118,7 +118,7 @@
   (situation-quests *situation*))
 
 
-
+; combat?
 (define (get-combatant-name actor)
   (cond ((pc-actor? actor)
          "Otava")
@@ -203,11 +203,13 @@
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
+; API
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
     [else (displayln "in-range? not implemented yet for this attack mode")]))
 
+; Combat?
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body
@@ -239,6 +241,7 @@
    body
    name))
 
+; Combat?
 (define (display-combatant-info actor)
   (if (pc-actor? actor)
       (display-pc-combatant-info actor)
