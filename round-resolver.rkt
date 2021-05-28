@@ -761,6 +761,20 @@
   #t
   )
 
+; pc? meta?
+(define (display-quests)
+  (define sheet
+    (append
+     (list
+      (list " quest " " status " " notes ")
+      )
+     (quests)
+     ))
+  (info-card
+   sheet
+   "Quests")
+  )
+
 
 
 ; some sort of generic ai module?

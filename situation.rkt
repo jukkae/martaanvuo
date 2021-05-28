@@ -88,21 +88,7 @@
    "New quest")
   )
 
-;;; Display (meta action?)
-(define (display-quests)
-  (define sheet
-    (append
-     (list
-      (list " quest " " status " " notes ")
-      )
-     (quests)
-     ))
-  (info-card
-   sheet
-   "Quests")
-  )
-
-;;; Misc shorthand and helpers
+;;; plumbing for round-resolver
 (define (get-continue-pending-action-name pending-action)
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
@@ -115,12 +101,12 @@
         (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 
-
+; api
 (define (current-location)
   (actor-current-location (pc)))
 
 
-
+; api
 (define (get-current-enemies)
   (filter
    (λ (actor) (and (actor-alive? actor)
