@@ -45,9 +45,6 @@
 (define *pending-action* '())
 
 
-(define *quests* '())
-
-
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)]
@@ -67,6 +64,11 @@
 (define (set-pending-action! action)
   (set! *pending-action* action))
 
+(define (add-quest! quest)
+  (set-situation-quests!
+   *situation*
+   (append-element (situation-quests *situation*) quest)))
+
 ;;; Constructors
 (define (create-quest quest-symbol)
   (define quest
@@ -79,8 +81,7 @@
        (list " seek the Anthead Girl "
              " not started "
              " \"not ready yet\" ")]))
-  (set! *quests*
-        (append-element *quests* quest))
+  (add-quest! quest)
 
   (info-card
    (list quest)
@@ -88,13 +89,13 @@
   )
 
 ;;; Display (meta action?)
-(define (quests)
+(define (display-quests)
   (define sheet
     (append
      (list
       (list " quest " " status " " notes ")
       )
-     *quests*
+     (quests)
      ))
   (info-card
    sheet
@@ -126,8 +127,9 @@
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
-
-
+; api
+(define (quests)
+  (situation-quests *situation*))
 
 
 
@@ -277,7 +279,7 @@
 (define (clean-situation!)
   (displayln "<< clean-situation! >>")
   (reset-pending-action!)
-  (set! *quests* '()))
+  (set-situation-quests! *situation* '()))
 
 
 (define (describe-situation)

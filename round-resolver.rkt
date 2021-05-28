@@ -674,7 +674,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
   meta-commands)
 
 ; engine / get-next-pc-action
