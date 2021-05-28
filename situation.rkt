@@ -24,7 +24,7 @@
 ;;; Types
 (serializable-struct
  situation
- (world
+ ([world #:mutable]
   [pc #:mutable]
   [life #:mutable]
   [run #:mutable]
@@ -33,6 +33,7 @@
   [in-combat? #:mutable]
   [current-fragment #:mutable]
   [quests #:mutable]
+  [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   ))
 
@@ -48,8 +49,9 @@
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)]
-        [quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests 0)))
+        [quests '()]
+        [persistent-quests '()])
+    (situation new-world pc 0 0 0 0 #f '() quests persistent-quests 0)))
 
 (define *enemy-stances* (make-hash))
 
