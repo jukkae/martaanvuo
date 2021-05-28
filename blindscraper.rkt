@@ -8,6 +8,7 @@
 (require "actor.rkt")
 (require "io.rkt")
 (require "situation.rkt")
+(require "stance.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 

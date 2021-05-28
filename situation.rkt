@@ -10,6 +10,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -121,18 +122,7 @@
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
-(define (get-stance-range-numeric-value range)
-  (case range
-    ['engaged 0]
-    ['close 1]
-    [else (error "get-stance-range-numeric-value: unknown range")]))
 
-
-(serializable-struct
- stance
- (index
-  range
-  location))
 
 
 
@@ -202,6 +192,7 @@
    body
    name))
 
+; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
   (for ([(k stance) (in-hash *enemy-stances*)])
@@ -209,7 +200,7 @@
       (set! any-enemy-engaged? #t)))
   any-enemy-engaged?)
 
-
+; API
 (define (get-an-enemy-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-shuffled (shuffle current-enemies))
