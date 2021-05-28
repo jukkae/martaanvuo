@@ -32,6 +32,9 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [current-fragment #:mutable]
+
+  ; currently: quest - status - notes
+  ; and table-display formatted
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -41,10 +44,9 @@
 ;;; Actual state variables
 (define *pending-action* '())
 
-; currently: quest - status - notes
-; and table-display formatted
+
 (define *quests* '())
-(define *persistent-quests* '())
+
 
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
@@ -179,8 +181,8 @@
              " range "
              (string-append " " (symbol->string (stance-range stance)) " "))
             (list
-         " range "
-         (string-append " " "N/A" " ")))
+             " range "
+             (string-append " " "N/A" " ")))
         
 
         )]))
