@@ -20,30 +20,49 @@
    )])
 
 
-;;; MISC
+;;; Types
+(serializable-struct
+ situation
+ (world
+  [pc #:mutable]
+  [life #:mutable]
+  [run #:mutable]
+  [round #:mutable]
+  [elapsed-time #:mutable]
+  [in-combat? #:mutable]
+  [current-fragment #:mutable]
+  [quests #:mutable]
+  [grabberkin-encounters #:mutable]
+  ))
 
+
+;;; Actual state variables
 (define *pending-action* '())
+
+; currently: quest - status - notes
+; and table-display formatted
+(define *quests* '())
+(define *persistent-quests* '())
+
+(define *situation*
+  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
+        [pc (make-new-pc)]
+        [quests '()])
+    (situation new-world pc 0 0 0 0 #f '() quests 0)))
+
+(define *enemy-stances* (make-hash))
+
+;;; ^^^
+
+
+
+;;; Direct accessors and mutators
 (define (reset-pending-action!)
   (set! *pending-action* '()))
 (define (set-pending-action! action)
   (set! *pending-action* action))
 
-(define (get-continue-pending-action-name pending-action)
-  (cond ((eq? (action-symbol pending-action) 'go-to-location)
-         (string-append
-          "Continue towards "
-          (get-location-name-from-location-type (location-type (action-target pending-action)))
-          "."))
-        ((eq? (action-symbol pending-action) 'search-for-paths)
-         (string-append
-          "Keep on searching for paths."))
-        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
-
-
-; currently: quest - status - notes
-; and table-display formatted
-(define *quests* '())
-
+;;; Constructors
 (define (create-quest quest-symbol)
   (define quest
     (case quest-symbol
@@ -63,6 +82,7 @@
    "New quest")
   )
 
+;;; Display (meta action?)
 (define (quests)
   (define sheet
     (append
@@ -76,31 +96,23 @@
    "Quests")
   )
 
+;;; Misc shorthand and helpers
+(define (get-continue-pending-action-name pending-action)
+  (cond ((eq? (action-symbol pending-action) 'go-to-location)
+         (string-append
+          "Continue towards "
+          (get-location-name-from-location-type (location-type (action-target pending-action)))
+          "."))
+        ((eq? (action-symbol pending-action) 'search-for-paths)
+         (string-append
+          "Keep on searching for paths."))
+        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+
+
+
 (define (current-location)
-  #;(displayln "-- current-location: TODO move to situation")
-  (actor-current-location (situation-pc *situation*)))
+  (actor-current-location (pc)))
 
-;;;
-
-(serializable-struct
- situation
- (world
-  [pc #:mutable]
-  [life #:mutable]
-  [run #:mutable]
-  [round #:mutable]
-  [elapsed-time #:mutable]
-  [in-combat? #:mutable]
-  [current-fragment #:mutable]
-  [quests #:mutable]
-  [grabberkin-encounters #:mutable]
-  ))
-
-(define *situation*
-  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
-        [pc (make-new-pc)]
-        [quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests 0)))
 
 
 (define (get-current-enemies)
@@ -123,7 +135,7 @@
   location))
 
 
-(define *enemy-stances* (make-hash))
+
 
 (define (get-combatant-name actor)
   (cond ((pc-actor? actor)
@@ -266,6 +278,11 @@
 (define (serialize-input)
   '())
 
+
+(define (clean-situation!)
+  (displayln "<< clean-situation! >>")
+  (reset-pending-action!)
+  (set! *quests* '()))
 
 
 (define (describe-situation)

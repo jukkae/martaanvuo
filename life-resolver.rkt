@@ -6,7 +6,7 @@
 (require "run-resolver.rkt")
 (require "situation.rkt")
 
-; engine / life-resolver?
+
 (define (resolve-a-life)
   (on-begin-life)
   (let/ec end-life
@@ -19,8 +19,13 @@
         (loop)))
     ))
 
-; engine / life-resolver?
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
   (player-info))
+
+(define (on-end-life)
+  (displayln "[Life summary TODO]")
+  ; -> serialize run statistics
+  (clean-situation!)
+  )
