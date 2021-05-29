@@ -130,16 +130,16 @@
 ; actions.rkt, as in "the grand action table containing possible actions"?
 (define (get-downtime-choices world actor)
   (define pending-choices '())
-  (when (not (null? *pending-action*))
+  (when (not (null? (situation-pending-action *situation*)))
     (set!
      pending-choices
      (list
       (make-choice
        'go-to-location
-       (get-continue-pending-action-name *pending-action*)
+       (get-continue-pending-action-name)
        (λ ()
          (begin0
-           *pending-action*
+           (situation-pending-action *situation*)
            (reset-pending-action!)))))))
   ;(displayln "PC-not-null")
 

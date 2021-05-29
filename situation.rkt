@@ -28,25 +28,20 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [current-fragment #:mutable]
-
-  ; currently: quest - status - notes
-  ; and table-display formatted
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
+  [pending-action #:mutable]
   ))
 
 
 ;;; Actual state variables
-(define *pending-action* '())
-
-
 (define *situation*
   (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests persistent-quests 0)))
+    (situation new-world pc 0 0 0 0 #f '() quests persistent-quests 0 '())))
 
 (define *enemy-stances* (make-hash))
 
@@ -56,9 +51,9 @@
 
 ;;; Direct accessors and mutators
 (define (reset-pending-action!)
-  (set! *pending-action* '()))
+  (set-situation-pending-action! *situation* '()))
 (define (set-pending-action! action)
-  (set! *pending-action* action))
+  (set-situation-pending-action! *situation* action))
 
 (define (add-quest! quest)
   (set-situation-quests!
@@ -98,7 +93,8 @@
   )
 
 ;;; plumbing for round-resolver
-(define (get-continue-pending-action-name pending-action)
+(define (get-continue-pending-action-name)
+  (define pending-action (situation-pending-action *situation*))
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "Continue towards "
