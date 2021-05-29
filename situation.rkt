@@ -10,15 +10,11 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
-
-(lazy-require
- ["martaanvuo.rkt"
-  (move-actor-to-location!
-   )])
 
 
 ;;; Types
@@ -71,20 +67,33 @@
 
 ;;; Constructors
 (define (create-quest quest-symbol)
-  (define quest
+  (define q
     (case quest-symbol
       ['pay-off-debt
-       (list " pay off the debt to the Collector "
-             " in progress "
-             " unsettled: 4,328 grams of U-235 ")]
+       (quest 'pay-off-debt
+              "pay off the debt to the Collector"
+              "in progress"
+              "unsettled: 4,328 grams of U-235")]
       ['the-anthead
-       (list " seek the Anthead Girl "
-             " not started "
-             " \"not ready yet\" ")]))
-  (add-quest! quest)
+       (quest 'the-anthead
+              "seek the Anthead Girl"
+              "not started"
+              "\"not ready yet\"")]))
+  (add-quest! q)
+
+  (define body
+    (list (string-append " "
+                         (quest-title q)
+                         " ")
+          (string-append " "
+                         (quest-status q)
+                         " ")
+          (string-append " "
+                         (quest-notes q)
+                         " ")))
 
   (info-card
-   (list quest)
+   (list body)
    "New quest")
   )
 
@@ -310,7 +319,7 @@
   (define stance (hash-ref *enemy-stances* enemy))
   (eq? (stance-range stance) range))
 
-; scripting API / location?
+; infrastructure / location?
 (provide move-pc-to-location!)
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
@@ -320,7 +329,7 @@
   (add-actor-to-location! location (situation-pc *situation*)))
 
 
-; ??? where belong
+; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (hash-remove! *enemy-stances* actor)
