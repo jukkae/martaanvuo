@@ -75,15 +75,7 @@
   (add-quest! q)
 
   (define body
-    (list (string-append " "
-                         (quest-title q)
-                         " ")
-          (string-append " "
-                         (quest-status q)
-                         " ")
-          (string-append " "
-                         (quest-notes q)
-                         " ")))
+    (format-quest-for-card q))
 
   (info-card
    (list body)

@@ -18,6 +18,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -763,12 +764,15 @@
 
 ; pc? meta?
 (define (display-quests)
+  (define body
+    (for/list ([q (quests)])
+      (format-quest-for-card q)))
   (define sheet
     (append
      (list
       (list " quest " " status " " notes ")
       )
-     (quests)
+     body
      ))
   (info-card
    sheet
