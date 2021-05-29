@@ -145,5 +145,5 @@
   (define enemy-stance
     (stance index range location))
            
-  (hash-set! *enemy-stances* enemy enemy-stance)
+  (hash-set! (situation-enemy-stances *situation*) enemy enemy-stance)
   )

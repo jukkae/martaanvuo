@@ -48,7 +48,7 @@
 
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (define stance (hash-ref *enemy-stances* target))
+    (define stance (hash-ref (situation-enemy-stances *situation*) target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
            (define damage-roll (λ () (d 1 2)))

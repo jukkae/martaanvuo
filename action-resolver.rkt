@@ -201,10 +201,10 @@
   (if success?
       (begin
         (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-        (hash-remove! *enemy-stances* (action-actor action))
+        (hash-remove! (situation-enemy-stances *situation*) (action-actor action))
                  
         (let ([enemy-stance (stance "α" 'engaged "right")])
-          (hash-set! *enemy-stances* (action-actor action) enemy-stance)))
+          (hash-set! (situation-enemy-stances *situation*) (action-actor action) enemy-stance)))
         
       (begin
         (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
@@ -273,7 +273,7 @@
          (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
          (define stance-range-values '())
-         (for ([(k v) (in-hash *enemy-stances*)])
+         (for ([(k v) (in-hash (situation-enemy-stances *situation*))])
            (define value (get-stance-range-numeric-value (stance-range v)))
            (set! stance-range-values (append-element stance-range-values value)))
          (define target-number
@@ -302,7 +302,7 @@
            (get-combatant-name (action-actor action))
            " tries to run."))
          (define skill 1)
-         (define stance (hash-ref *enemy-stances* (action-actor action)))
+         (define stance (hash-ref (situation-enemy-stances *situation*) (action-actor action)))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)

@@ -27,6 +27,7 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
+  [enemy-stances #:mutable]
   [current-fragment #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
@@ -41,10 +42,7 @@
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests persistent-quests 0 '())))
-
-(define *enemy-stances* (make-hash))
-
+    (situation new-world pc 0 0 0 0 #f (make-hash) '() quests persistent-quests 0 '())))
 ;;; ^^^
 
 
@@ -128,8 +126,8 @@
   (cond ((pc-actor? actor)
          "Otava")
         (else
-         (define stance (hash-ref! *enemy-stances* actor '()))
-         (cond ((= (hash-count *enemy-stances*) 1)
+         (define stance (hash-ref! (situation-enemy-stances *situation*) actor '()))
+         (cond ((= (hash-count (situation-enemy-stances *situation*)) 1)
                 (append-string (actor-name actor)))
                (else
                 (define name (actor-name actor))
@@ -137,7 +135,7 @@
                 (append-string name " " index))))))
 
 (define (display-non-pc-combatant-info actor)
-  (define stance (hash-ref! *enemy-stances* actor '()))
+  (define stance (hash-ref! (situation-enemy-stances *situation*) actor '()))
   (define name (get-combatant-name actor))
   (define hide-hp?
     (if (hash-ref (actor-traits actor) "hp-hidden" #f)
@@ -192,7 +190,7 @@
 ; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
-  (for ([(k stance) (in-hash *enemy-stances*)])
+  (for ([(k stance) (in-hash (situation-enemy-stances *situation*))])
     (when (eq? (stance-range stance) 'engaged)
       (set! any-enemy-engaged? #t)))
   any-enemy-engaged?)
@@ -203,7 +201,7 @@
   (define enemies-shuffled (shuffle current-enemies))
   (define enemy-in-range '())
   (for ([enemy enemies-shuffled])
-    (define stance (hash-ref *enemy-stances* enemy '()))
+    (define stance (hash-ref (situation-enemy-stances *situation*) enemy '()))
     (when (eq? (stance-range stance) range)
       (set! enemy-in-range enemy)))
   enemy-in-range)
@@ -305,14 +303,14 @@
 ; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
-    (hash-remove! *enemy-stances* enemy)
+    (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
 
 ; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
-  (define stance (hash-ref *enemy-stances* enemy))
+  (define stance (hash-ref (situation-enemy-stances *situation*) enemy))
   (eq? (stance-range stance) range))
 
 ; infrastructure / location?
@@ -328,7 +326,7 @@
 ; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
-  (hash-remove! *enemy-stances* actor)
+  (hash-remove! (situation-enemy-stances *situation*) actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
   (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
