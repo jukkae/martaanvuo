@@ -184,13 +184,6 @@
     ('dead 'pc-dead)
     (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))
 
-; ability-like attack?
-(define (resolve-tighten-grip-action! action)
-  (define roll "2d6+whatever")
-  (displayln "The gk tightens its grip")
-  (displayln roll)
-  'ok
-  )
 
 ; ability-like attack
 (define (resolve-go-to-engaged-action! action)
@@ -378,9 +371,6 @@
            (inflict-status! target status)
            'ok
            )
-
-          ((eq? (action-symbol action) 'tighten-grip)
-           (resolve-tighten-grip-action! action))
 
           ((eq? (action-symbol action) 'anklebreaker)
            (resolve-anklebreaker-action! action))

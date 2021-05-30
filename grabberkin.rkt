@@ -36,21 +36,6 @@
       #:tags '(initiative-based-resolution)
       #:details '())]
     
-    ['tighten-grip
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'tighten-grip
-      #:actor actor
-      #:duration 1
-      #:target (pc)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
-    
     ['skip
      (make-action
       #:symbol 'skip
@@ -95,7 +80,7 @@
                  (list
                   (cons 1 'pull-under)
                   (cons 2 'anklebreaker)
-                  (cons 3 'tighten-grip)
+                  (cons 3 'skip)
                   (cons 4 'skip)))
                ;(define roll (d 1 4))
                (define roll 2)

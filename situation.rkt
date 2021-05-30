@@ -321,9 +321,9 @@
 (define (clean-up-dead-actor! actor)
   (hash-remove! (situation-enemy-stances *situation*) actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
-  (define corpse (cons 'corpse "Blindscraper corpse"))
+  (define corpse (cons 'corpse "Corpse (TODO)"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
-  (displayln corpse))
+  #;(displayln corpse))
 
 ; scripting API
 (provide award-xp!)
