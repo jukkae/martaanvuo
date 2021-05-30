@@ -28,19 +28,13 @@
       #:details '())]
 
     ['anklebreaker
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
      (make-action
       #:symbol 'anklebreaker
       #:actor actor
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details details)]
+      #:details '())]
     
     ['tighten-grip
      (define damage-roll (λ () (d 1 2)))
@@ -122,7 +116,7 @@
 
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Otava feels something like a hand grab her ankle.")
+  (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
   (set-in-combat?! #t)
 
   (define i 0)
