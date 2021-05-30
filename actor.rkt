@@ -105,6 +105,15 @@
     (displayln (condition-details condition)))
   (set-actor-conditions! actor (append-element (actor-conditions actor) condition)))
 
+(define (actor-remove-condition! actor condition)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (condition-type condition)) "] removed, details:]"))
+    (displayln (condition-details condition)))
+  (set-actor-conditions! actor (filter
+                                (λ (other) (not (eq? (condition-type condition)
+                                                     (condition-type other))))
+                                (actor-conditions actor))))
+
 (define (actor-has-condition-of-type? actor type)
   (if (memf (λ (condition)
               (eq? (condition-type condition) type))

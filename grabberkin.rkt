@@ -111,6 +111,8 @@
 ; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
 ; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
 ; - Slashing damage, IF you know how to do it - because it cuts through tendons -> can't grab no more
+; – Something purely mechanical, stun?
+; - Good perception (-> avoid)
 
 ; -> when selecting loadout, possibilities are bolt cutters or a chainsaw,
 ; gun has to be sourced by doing a favor to The Merchant, robbing a Cache, or finding your own corpse that had a gun in a prior run.

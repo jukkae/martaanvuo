@@ -368,9 +368,12 @@
      ]
     [else (paragraph "todo: unknown status")]))
 
-(define (inflict-condition! target condition)
-  (match (condition-type condition)
+(define (inflict-condition! target cond)
+  (match (condition-type cond)
     ['ankle-broken
-     (actor-add-condition! target condition)
+     (if (actor-has-condition-of-type? target 'ankle-broken)
+         (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
+         (actor-add-condition! target cond))
+     
      ]
     [else (paragraph "todo: unknown condition")]))
