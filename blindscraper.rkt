@@ -8,6 +8,7 @@
 (require "actor.rkt")
 (require "io.rkt")
 (require "situation.rkt")
+(require "stance.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -132,4 +133,4 @@
   (define enemy-stance
     (stance index range location))
            
-  (hash-set! *enemy-stances* enemy enemy-stance))
+  (hash-set! (situation-enemy-stances *situation*) enemy enemy-stance))

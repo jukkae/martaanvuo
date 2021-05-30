@@ -18,6 +18,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -150,6 +151,7 @@
       (list action-description (string-append " " (number->string initiative) " "))))
   
   (info-card actions "Action initiatives")
+  (wait-for-confirm)
 
   (set! action-queue '())
   (for ([action-with-initiative sorted])
@@ -244,6 +246,7 @@
     (decrement-actor-status-lifetimes! (situation-pc *situation*)))
   
   (newline) ; This is the "extra" newline that separates rounds
+  (wait-for-confirm)
   )
 
 ; engine / round resolver
@@ -672,7 +675,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quests." quests))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
   meta-commands)
 
 ; engine / get-next-pc-action
@@ -757,6 +760,23 @@
    "Inventory"
    )
   #t
+  )
+
+; pc? meta?
+(define (display-quests)
+  (define body
+    (for/list ([q (quests)])
+      (format-quest-for-card q)))
+  (define sheet
+    (append
+     (list
+      (list " quest " " status " " notes ")
+      )
+     body
+     ))
+  (info-card
+   sheet
+   "Quests")
   )
 
 

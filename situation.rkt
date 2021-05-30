@@ -10,25 +10,81 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
+(require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
-(lazy-require
- ["martaanvuo.rkt"
-  (move-actor-to-location!
-   )])
+
+;;; Types
+(serializable-struct
+ situation
+ ([world #:mutable]
+  [pc #:mutable]
+  [life #:mutable]
+  [run #:mutable]
+  [round #:mutable]
+  [elapsed-time #:mutable]
+  [in-combat? #:mutable]
+  [enemy-stances #:mutable]
+  [current-fragment #:mutable]
+  [quests #:mutable]
+  [persistent-quests #:mutable]
+  [grabberkin-encounters #:mutable]
+  [pending-action #:mutable]
+  ))
 
 
-;;; MISC
+;;; Actual state variables
+(define *situation*
+  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
+        [pc (make-new-pc)]
+        [quests '()]
+        [persistent-quests '()])
+    (situation new-world pc 0 0 0 0 #f (make-hash) '() quests persistent-quests 0 '())))
+;;; ^^^
 
-(define *pending-action* '())
+
+
+;;; Direct accessors and mutators
 (define (reset-pending-action!)
-  (set! *pending-action* '()))
+  (set-situation-pending-action! *situation* '()))
 (define (set-pending-action! action)
-  (set! *pending-action* action))
+  (set-situation-pending-action! *situation* action))
 
-(define (get-continue-pending-action-name pending-action)
+(define (add-quest! quest)
+  (set-situation-quests!
+   *situation*
+   (append-element (situation-quests *situation*) quest)))
+
+;;; Constructors
+(define (create-quest quest-symbol)
+  (define q
+    (case quest-symbol
+      ['pay-off-debt
+       (quest 'pay-off-debt
+              "pay off the debt to the Collector"
+              "in progress"
+              "unsettled: 4,328 grams of U-235")]
+      ['the-anthead
+       (quest 'the-anthead
+              "seek the Anthead Girl"
+              "not started"
+              "\"not ready yet\"")]))
+  (add-quest! q)
+
+  (define body
+    (format-quest-for-card q))
+
+  (info-card
+   (list body)
+   "New quest")
+  )
+
+;;; plumbing for round-resolver
+(define (get-continue-pending-action-name)
+  (define pending-action (situation-pending-action *situation*))
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "Continue towards "
@@ -40,97 +96,30 @@
         (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 
-; currently: quest - status - notes
-; and table-display formatted
-(define *quests* '())
-
-(define (create-quest quest-symbol)
-  (define quest
-    (case quest-symbol
-      ['pay-off-debt
-       (list " pay off the debt to the Collector "
-             " in progress "
-             " unsettled: 4,328 grams of U-235 ")]
-      ['the-anthead
-       (list " seek the Anthead Girl "
-             " not started "
-             " \"not ready yet\" ")]))
-  (set! *quests*
-        (append-element *quests* quest))
-
-  (info-card
-   (list quest)
-   "New quest")
-  )
-
-(define (quests)
-  (define sheet
-    (append
-     (list
-      (list " quest " " status " " notes ")
-      )
-     *quests*
-     ))
-  (info-card
-   sheet
-   "Quests")
-  )
-
+; api
 (define (current-location)
-  #;(displayln "-- current-location: TODO move to situation")
-  (actor-current-location (situation-pc *situation*)))
-
-;;;
-
-(serializable-struct
- situation
- (world
-  [pc #:mutable]
-  [life #:mutable]
-  [run #:mutable]
-  [round #:mutable]
-  [elapsed-time #:mutable]
-  [in-combat? #:mutable]
-  [current-fragment #:mutable]
-  [quests #:mutable]
-  [grabberkin-encounters #:mutable]
-  ))
-
-(define *situation*
-  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
-        [pc (make-new-pc)]
-        [quests '()])
-    (situation new-world pc 0 0 0 0 #f '() quests 0)))
+  (actor-current-location (pc)))
 
 
+; api
 (define (get-current-enemies)
   (filter
    (λ (actor) (and (actor-alive? actor)
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
-(define (get-stance-range-numeric-value range)
-  (case range
-    ['engaged 0]
-    ['close 1]
-    [else (error "get-stance-range-numeric-value: unknown range")]))
+; api
+(define (quests)
+  (situation-quests *situation*))
 
 
-(serializable-struct
- stance
- (index
-  range
-  location))
-
-
-(define *enemy-stances* (make-hash))
-
+; combat?
 (define (get-combatant-name actor)
   (cond ((pc-actor? actor)
          "Otava")
         (else
-         (define stance (hash-ref! *enemy-stances* actor '()))
-         (cond ((= (hash-count *enemy-stances*) 1)
+         (define stance (hash-ref! (situation-enemy-stances *situation*) actor '()))
+         (cond ((= (hash-count (situation-enemy-stances *situation*)) 1)
                 (append-string (actor-name actor)))
                (else
                 (define name (actor-name actor))
@@ -138,7 +127,7 @@
                 (append-string name " " index))))))
 
 (define (display-non-pc-combatant-info actor)
-  (define stance (hash-ref! *enemy-stances* actor '()))
+  (define stance (hash-ref! (situation-enemy-stances *situation*) actor '()))
   (define name (get-combatant-name actor))
   (define hide-hp?
     (if (hash-ref (actor-traits actor) "hp-hidden" #f)
@@ -175,8 +164,8 @@
              " range "
              (string-append " " (symbol->string (stance-range stance)) " "))
             (list
-         " range "
-         (string-append " " "N/A" " ")))
+             " range "
+             (string-append " " "N/A" " ")))
         
 
         )]))
@@ -190,29 +179,32 @@
    body
    name))
 
+; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
-  (for ([(k stance) (in-hash *enemy-stances*)])
+  (for ([(k stance) (in-hash (situation-enemy-stances *situation*))])
     (when (eq? (stance-range stance) 'engaged)
       (set! any-enemy-engaged? #t)))
   any-enemy-engaged?)
 
-
+; API
 (define (get-an-enemy-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-shuffled (shuffle current-enemies))
   (define enemy-in-range '())
   (for ([enemy enemies-shuffled])
-    (define stance (hash-ref *enemy-stances* enemy '()))
+    (define stance (hash-ref (situation-enemy-stances *situation*) enemy '()))
     (when (eq? (stance-range stance) range)
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
+; API
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
     [else (displayln "in-range? not implemented yet for this attack mode")]))
 
+; Combat?
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body
@@ -244,6 +236,7 @@
    body
    name))
 
+; Combat?
 (define (display-combatant-info actor)
   (if (pc-actor? actor)
       (display-pc-combatant-info actor)
@@ -266,6 +259,11 @@
 (define (serialize-input)
   '())
 
+
+(define (clean-situation!)
+  (displayln "<< clean-situation! >>")
+  (reset-pending-action!)
+  (set-situation-quests! *situation* '()))
 
 
 (define (describe-situation)
@@ -297,17 +295,17 @@
 ; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
-    (hash-remove! *enemy-stances* enemy)
+    (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
 
 ; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
-  (define stance (hash-ref *enemy-stances* enemy))
+  (define stance (hash-ref (situation-enemy-stances *situation*) enemy))
   (eq? (stance-range stance) range))
 
-; scripting API / location?
+; infrastructure / location?
 (provide move-pc-to-location!)
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
@@ -317,10 +315,10 @@
   (add-actor-to-location! location (situation-pc *situation*)))
 
 
-; ??? where belong
+; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
-  (hash-remove! *enemy-stances* actor)
+  (hash-remove! (situation-enemy-stances *situation*) actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
   (define corpse (cons 'corpse "Blindscraper corpse"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
@@ -347,3 +345,24 @@
      
   (info-card player-status (string-append "Player status"))
   )
+
+; Scripting API -> situation, for now
+(define (inflict-status! target status)
+  (match (status-type status)
+    ['blind
+     (displayln "todo: blind should be a condition, not a status")
+     (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (define roll (d 1 2))
+     (wait-for-confirm)
+     (case roll
+       [(1)
+        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+        (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+       [(2)
+        (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
+     ]
+    ['bound
+     ;(paragraph "The Grabberkin tightens its grip around Otava's ankle.")
+     (actor-add-status! target status)
+     ]
+    [else (paragraph "todo: unknown status")]))

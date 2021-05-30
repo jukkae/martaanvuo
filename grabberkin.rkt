@@ -10,6 +10,7 @@
 (require "actor.rkt")
 (require "io.rkt")
 (require "situation.rkt")
+(require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -18,19 +19,13 @@
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
     ['pull-under
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
      (make-action
       #:symbol 'pull-under
       #:actor actor
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details details)]
+      #:details '())]
 
     ['anklebreaker
      (define damage-roll (λ () (d 1 2)))
@@ -108,7 +103,8 @@
                   (cons 2 'anklebreaker)
                   (cons 3 'tighten-grip)
                   (cons 4 'skip)))
-               (define roll (d 1 4))
+               ;(define roll (d 1 4))
+               (define roll 1)
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
 
@@ -149,5 +145,5 @@
   (define enemy-stance
     (stance index range location))
            
-  (hash-set! *enemy-stances* enemy enemy-stance)
+  (hash-set! (situation-enemy-stances *situation*) enemy enemy-stance)
   )

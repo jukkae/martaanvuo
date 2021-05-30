@@ -10,6 +10,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "situation.rkt")
+(require "stance.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -47,7 +48,7 @@
 
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (define stance (hash-ref *enemy-stances* target))
+    (define stance (hash-ref (situation-enemy-stances *situation*) target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
            (define damage-roll (λ () (d 1 2)))
@@ -129,16 +130,16 @@
 ; actions.rkt, as in "the grand action table containing possible actions"?
 (define (get-downtime-choices world actor)
   (define pending-choices '())
-  (when (not (null? *pending-action*))
+  (when (not (null? (situation-pending-action *situation*)))
     (set!
      pending-choices
      (list
       (make-choice
        'go-to-location
-       (get-continue-pending-action-name *pending-action*)
+       (get-continue-pending-action-name)
        (λ ()
          (begin0
-           *pending-action*
+           (situation-pending-action *situation*)
            (reset-pending-action!)))))))
   ;(displayln "PC-not-null")
 
