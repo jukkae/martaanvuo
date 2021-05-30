@@ -7,6 +7,7 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "condition.rkt")
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
@@ -346,7 +347,7 @@
   (info-card player-status (string-append "Player status"))
   )
 
-; Scripting API -> situation, for now
+; Scripting API
 (define (inflict-status! target status)
   (match (status-type status)
     ['blind
@@ -366,3 +367,10 @@
      (actor-add-status! target status)
      ]
     [else (paragraph "todo: unknown status")]))
+
+(define (inflict-condition! target condition)
+  (match (condition-type condition)
+    ['ankle-broken
+     (actor-add-condition! target condition)
+     ]
+    [else (paragraph "todo: unknown condition")]))

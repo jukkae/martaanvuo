@@ -10,9 +10,10 @@
 
 (require racket/serialize)
 
+(require "condition.rkt")
+(require "io.rkt")
 (require "status.rkt")
 (require "utils.rkt")
-(require "io.rkt")
 
 
 (serializable-struct
@@ -97,6 +98,22 @@
           (symbol->string (status-type status))
           "] removed]"))))
   (set-actor-statuses! actor new-statuses))
+
+(define (actor-add-condition! actor condition)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (condition-type condition)) "] added, details:]"))
+    (displayln (condition-details condition)))
+  (set-actor-conditions! actor (append-element (actor-conditions actor) condition)))
+
+(define (actor-has-condition-of-type? actor type)
+  (if (memf (λ (condition)
+              (eq? (condition-type condition) type))
+            (actor-conditions actor))
+      #t
+      #f))
+
+
+
 
 (serializable-struct
  pc-actor

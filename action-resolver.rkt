@@ -8,6 +8,7 @@
 (require "action.rkt")
 (require "actor.rkt")
 (require "checks.rkt")
+(require "condition.rkt")
 (require "io.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
@@ -178,7 +179,7 @@
   (display-combatant-info (action-target action))
   (case action-result
     ('hit
-     (inflict-status! (action-target action) 'ankle-broken)
+     (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
      'ok)
     ('dead 'pc-dead)
     (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))
