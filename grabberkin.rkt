@@ -114,6 +114,26 @@
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
 
+;;; TO DO:
+;;; THE BIG THINGS:
+;;; What is Grabberkin's purpose, gameplay-wise? What is its niche?
+;;; What is its vulnerability?
+;;; How much leeway there is? Should it be considered a mini-boss?
+;;; Idea: Easy to win once you know how, but requires something specific that can be gotten easily if you know how
+;;; -> act as a soft gate
+;;; -> somewhat miniboss-like *at first*
+; Idea: Vulnerabilities:
+; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
+; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
+; - Slashing damage, IF you know how to do it - because it cuts through tendons -> can't grab no more
+
+; -> when selecting loadout, possibilities are bolt cutters or a chainsaw,
+; gun has to be sourced by doing a favor to The Merchant, robbing a Cache, or finding your own corpse that had a gun in a prior run.
+; guns: hunting rifles and shotguns in the wild, at the Facility also handguns and assault rifles.
+
+; This doesn't belong here really but what the hell:
+; - After combat, patching up is possible, but it is risk-free only if you know medicine, which requires finding literature (= doing a Cache-run, in practice) and then leveling up
+
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
   (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll

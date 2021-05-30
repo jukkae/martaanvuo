@@ -168,13 +168,20 @@
 
 ; ability-like attack?
 (define (resolve-anklebreaker-action! action)
-  (paragraph "The hand grasping her ankle twists sideways. There is a wet, crunchy snap and that lightheaded feeling where time slows down before the pain reaches the brain. Otava looks at her mangled foot and at the decaying pair of hands that's .")
-  (paragraph "She fights back, but her hands get caught in various dismal kinds of aquatic flora and her strikes fail to land. She is getting tired and cannot hold much longer.")
-  (wait-for-confirm)
-  ;(define damage-roll (λ () (d 1 4)))
-  (paragraph "Otava opens her mouth and drowns four feet under the surface of a nameless quagmire near Martaanvuo.")
-  'ok
-  )
+  (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
+  (define damage-roll (d 1 2))
+  (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
+  (case damage-roll
+    ((2)
+     (paragraph "A shard of bone sticks out through a gash in her ankle.")))
+  (define action-result (take-damage (action-target action) damage-roll))
+  (display-combatant-info (action-target action))
+  (case action-result
+    ('hit
+     (inflict-status! (action-target action) 'ankle-broken)
+     'ok)
+    ('dead 'pc-dead)
+    (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))
 
 ; ability-like attack?
 (define (resolve-tighten-grip-action! action)
