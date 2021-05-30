@@ -104,7 +104,7 @@
                   (cons 3 'tighten-grip)
                   (cons 4 'skip)))
                ;(define roll (d 1 4))
-               (define roll 1)
+               (define roll 2)
                (define index (- roll 1))
                (define action-flag-with-index (list-ref options index))
 
