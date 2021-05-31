@@ -137,6 +137,8 @@
  pc-actor
  ([lp #:mutable]
   [max-lp #:mutable]
+  [death-roll-dice #:mutable]
+  [alive? #:mutable]
   [xp #:mutable])
  #:super struct:actor
  #:constructor-name pc-actor*)
@@ -150,7 +152,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() max-lp max-lp 0))
+   (make-hash) '() '() '() '() max-lp max-lp 6 #t 0))
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
@@ -167,8 +169,56 @@
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
 
-(define (take-damage actor damage)
-  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+(define (pc-take-damage! actor damage damage-type)
+  (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
+  
+  (cond ((not (positive? (actor-hp actor)))
+
+         
+         (define new-hp (- (actor-hp actor) damage))
+         (set-actor-hp! actor new-hp)
+         (displayln (string-append "[Taking damage, new HP : "
+                                   (number->string new-hp)
+                                   "]"))
+                  
+         (define death-roll-dice (pc-actor-death-roll-dice actor))
+         (define death-roll (d 1 death-roll-dice))
+         (define result (+ death-roll
+                           (actor-hp actor)))
+         (displayln (string-append
+                     "[Death roll: 1d"
+                     (number->string death-roll-dice)
+                     " + HP"
+                     " = "
+                     (number->string death-roll)
+                     " - "
+                     (number->string (abs (actor-hp actor))) ; slightly dirty: actor-hp *should* be non-positive
+                     " = "
+                     (number->string result)
+                     "]"))
+
+         (define cause-of-death damage-type)
+
+         (cond ((<= result 1)
+                (begin
+                  (kill actor cause-of-death)
+                  'dead))
+               (else
+                'hit)
+               ))
+        
+        (else
+         (define new-hp (- (actor-hp actor) damage))
+         (when (not (positive? new-hp))
+           (displayln "[Otava is dying.]")
+           (wait-for-confirm))
+              
+         (set-actor-hp! actor new-hp)
+         'hit)))
+
+
+(define (non-pc-take-damage! actor damage damage-type)
+  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)
@@ -182,6 +232,11 @@
   
   result)
 
+(define (take-damage actor damage damage-type)
+  (if (pc-actor? actor)
+      (pc-take-damage! actor damage damage-type)
+      (non-pc-take-damage! actor damage damage-type)))
+
 (define (kill actor cause-of-death)
   (set-actor-hp! actor 0)
   (displayln
@@ -190,8 +245,10 @@
                   " is dead. Cause of death: "
                   (symbol->string cause-of-death)
                   "]"))
-  
-  (clean-up-dead-actor! actor))
+  (cond ((pc-actor? actor)
+         (set-pc-actor-alive?! actor #f))
+        (else
+         (clean-up-dead-actor! actor))))
 
 
 (define (add-item-to-inventory! actor item)

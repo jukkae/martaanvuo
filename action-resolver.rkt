@@ -67,7 +67,7 @@
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
     
     ; TODO what's a smart place to store this? the actor?
@@ -136,7 +136,7 @@
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when success? (set! action-result (take-damage target damage-roll-result 'brawl)))
   (when (eq? action-result 'dead)
     
     ; TODO what's a smart place to store this? the actor?
@@ -186,13 +186,35 @@
          (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
          
          (when critical?
-           (paragraph "A shard of bone sticks out through a gash in her ankle."))
-         (define action-result (take-damage target 1))
+           (paragraph "A shard of bone sticks out through a gash in her ankle and blood starts to flow."))
+         (define action-result (take-damage target 1 'trauma))
          (case action-result
            ('hit
-            (inflict-condition! target (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+            (inflict-condition!
+             target
+             (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" (λ () '())))
             (when critical?
-              (inflict-condition! target (condition 'bleeding "resolve-anklebreaker-action!: details for 'bleeding todo")))
+              (inflict-condition!
+               target
+
+               (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
+                          "resolve-anklebreaker-action!: details for 'bleeding todo"
+
+                          (λ ()
+                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+                            (cond ((= 6 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
+                                   (display-combatant-info target))
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "] => take 1 damage]"))
+                                   (take-damage target 1 'bleed)
+                                   (display-combatant-info target))))
+
+
+
+                          )))
             (display-combatant-info target)
             'ok)
            ('dead
@@ -211,16 +233,42 @@
                                  ", crit"
                                  ""))
          (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
-         (case crit-roll
-           ((2)
-            (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out.")))
-         (define action-result (take-damage (action-target action) 1))
+         (when critical?
+           (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out."))
+
+         (define action-result (take-damage (action-target action) 1 'trauma))
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
-            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
+            (inflict-condition!
+             (action-target action) (condition
+                                     'ankle-broken
+                                     "resolve-anklebreaker-action!: details todo"
+                                     (λ () '())))
+            (when critical?
+              (inflict-condition!
+               target
+
+               (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
+                          "resolve-anklebreaker-action!: details for 'bleeding todo"
+
+                          (λ ()
+                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+                            (cond ((= 6 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
+                                   (display-combatant-info target))
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "] => take 1 damage]"))
+                                   (take-damage target 1 'bleed)
+                                   (display-combatant-info target))))
+
+
+                          )))
             'ok)
-           ('dead 'pc-dead)
+           ('dead
+            'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
 
 
