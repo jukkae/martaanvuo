@@ -205,8 +205,7 @@
                             (when (= bleed-damage-roll 2)
                               (displayln "[Bleed: 1d2 = 2, 1 HP damage caused.]")
                               (take-damage target 1)
-                              (display-combatant-info target))
-                            (displayln "BLEED ON-END-ROUND"))
+                              (display-combatant-info target)))
 
 
 
@@ -214,6 +213,7 @@
             (display-combatant-info target)
             'ok)
            ('dead
+            (display "HELLO I AM HERE")
             (display-combatant-info target)
             'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
@@ -242,7 +242,9 @@
                                      "resolve-anklebreaker-action!: details todo"
                                      (λ () '())))
             'ok (λ () '()))
-           ('dead 'pc-dead)
+           ('dead
+            (display "YES HI HERE FIND ME")
+            'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
 
 

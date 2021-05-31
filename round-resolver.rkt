@@ -340,7 +340,7 @@
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
            (on-end-round)
-           (when (not (actor-alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
+           (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
            round-exit-status
            ))))
 
