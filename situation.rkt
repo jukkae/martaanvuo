@@ -233,6 +233,21 @@
       (list " statuses "
             (string-append " " (string-join statuses-strings) " ")))
     (set! body (append-element body statuses-list)))
+
+  (when (not (null? (actor-conditions actor)))
+    (define conditions (actor-conditions actor))
+    (define conditions-strings
+      (for/list ([condition conditions])
+        (string-append "["
+                       (symbol->string (condition-type condition))
+                       " ("
+                       "condition details TBD"
+                       ")]")))
+    
+    (define conditions-list
+      (list " conditions "
+            (string-append " " (string-join conditions-strings) " ")))
+    (set! body (append-element body conditions-list)))
   (info-card
    body
    name))
@@ -372,8 +387,14 @@
   (match (condition-type cond)
     ['ankle-broken
      (if (actor-has-condition-of-type? target 'ankle-broken)
-         (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
-         (actor-add-condition! target cond))
+         (actor-remove-condition! target 'ankle-broken)
+         (actor-add-condition! target (condition 'both-ankles-broken "TODO")))
+     
+     ]
+    ['bleeding
+     (if (not (actor-has-condition-of-type? target 'bleeding))
+         (actor-add-condition! target (condition 'bleeding "TODO"))
+         (displayln "Already bleeding."))
      
      ]
     [else (paragraph "todo: unknown condition")]))
