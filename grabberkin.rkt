@@ -120,12 +120,11 @@
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
 
+; implicitly, this is the pre-own-action reaction
 (define (get-grabberkin-reaction actor)
   (cond ((< (actor-hp actor) 12)
-         (displayln "RELEASE GRIP")
          (make-grabberkin-action actor 'release-grip))
         (else
-         (displayln "no reaction")
          '())))
 
 ;;; TO DO:

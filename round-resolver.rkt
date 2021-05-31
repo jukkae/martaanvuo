@@ -200,19 +200,20 @@
   (define actor (action-actor action))
   (cond ((not (pc-actor? actor))
          (cond ((equal? (actor-name actor) "Grabberkin")
-                (displayln "GK react")
                 (get-grabberkin-reaction actor))
                (else
                 (displayln "unknown non-pc-actor type for reaction")
                 '())))
         (else
          (serialize-state)
-         (displayln "PC REACTION")    
+         ; TODO
+         ; (displayln "PC REACTION")    
          '())))
 
 (define (get-post-action-reaction action result)
   (define actor (action-target action))
-  (displayln "POST-ACTION REACTION")
+  ; TODO
+  ; this is a chance for the target of an already-resolved action to react
   '())
 
 
@@ -505,9 +506,7 @@
       
       (define pre-action-reaction? (get-pre-action-reaction action))
       (when (not (null? pre-action-reaction?))
-        (set! action pre-action-reaction?)
-        (displayln "[Setting reaction:]")
-        (displayln action))
+        (set! action pre-action-reaction?))
       
       (define turn-result (resolve-turn! world action))
 
