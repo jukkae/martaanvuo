@@ -177,11 +177,30 @@
          (displayln "DYING")
          (define death-roll-dice (pc-actor-death-roll-dice actor))
          (define death-roll (d 1 death-roll-dice))
-         (displayln (string-append "[Death roll: 1d" (number->string death-roll-dice) " = " (number->string death-roll) "]"))
+         (define result (+ death-roll
+                           (actor-hp actor)))
+         (displayln (string-append
+                     "[Death roll: 1d"
+                     (number->string death-roll-dice)
+                     " + HP"
+                     " = "
+                     (number->string death-roll)
+                     " - "
+                     (number->string (abs (actor-hp actor))) ; slightly dirty: actor-hp *should* be non-positive
+                     " = "
+                     (number->string result)
+                     "]"))
 
-         (define new-hp (- (actor-hp actor) damage))
-         (set-actor-hp! actor new-hp)
-         'hit)
+         (cond ((<= result 1)
+                (begin
+                  (displayln "TODO: (pc-die) or something")
+                  'dead))
+               (else
+                (begin
+                  (define new-hp (- (actor-hp actor) damage))
+                  (set-actor-hp! actor new-hp)
+                  'hit))
+               ))
         
         (else
          (displayln "NOT DYING")

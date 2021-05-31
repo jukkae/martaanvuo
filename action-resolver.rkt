@@ -201,9 +201,9 @@
                           "resolve-anklebreaker-action!: details for 'bleeding todo"
 
                           (λ ()
-                            (define bleed-damage-roll (d 1 2)) ; could give bonus from constitution here? say, 1d6?
-                            (when (= bleed-damage-roll 2)
-                              (displayln "[Bleed: 1d2 = 2, 1 HP damage caused.]")
+                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+                            (when (< bleed-damage-roll 6)
+                              (displayln "[Bleed: 1d6 < 6 => take 1 damage]")
                               (take-damage target 1)
                               (display-combatant-info target)))
 
@@ -213,7 +213,6 @@
             (display-combatant-info target)
             'ok)
            ('dead
-            (display "HELLO I AM HERE")
             (display-combatant-info target)
             'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
@@ -243,7 +242,6 @@
                                      (λ () '())))
             'ok (λ () '()))
            ('dead
-            (display "YES HI HERE FIND ME")
             'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
 
