@@ -175,6 +175,13 @@
   
   (cond ((not (positive? (actor-hp actor)))
          (displayln "DYING")
+         
+         (define new-hp (- (actor-hp actor) damage))
+         (set-actor-hp! actor new-hp)
+         (displayln (string-append "[Taking damage, new HP : "
+                                   (number->string new-hp)
+                                   "]"))
+                  
          (define death-roll-dice (pc-actor-death-roll-dice actor))
          (define death-roll (d 1 death-roll-dice))
          (define result (+ death-roll
@@ -196,10 +203,7 @@
                   (displayln "TODO: (pc-die) or something")
                   'dead))
                (else
-                (begin
-                  (define new-hp (- (actor-hp actor) damage))
-                  (set-actor-hp! actor new-hp)
-                  'hit))
+                'hit)
                ))
         
         (else
