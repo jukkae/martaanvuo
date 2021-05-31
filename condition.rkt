@@ -7,4 +7,6 @@
 (serializable-struct
  condition
  (type
-  (details #:mutable)))
+  (details #:mutable)
+  on-end-round! ; lambda
+  ))

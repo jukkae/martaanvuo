@@ -190,9 +190,16 @@
          (define action-result (take-damage target 1))
          (case action-result
            ('hit
-            (inflict-condition! target (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+            (inflict-condition!
+             target
+             (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" (λ () '())))
             (when critical?
-              (inflict-condition! target (condition 'bleeding "resolve-anklebreaker-action!: details for 'bleeding todo")))
+              (inflict-condition!
+               target
+               (condition 'bleeding
+                          "resolve-anklebreaker-action!: details for 'bleeding todo"
+                          (λ ()
+                            (displayln "BLEED ON-END-ROUND")))))
             (display-combatant-info target)
             'ok)
            ('dead
@@ -219,7 +226,7 @@
          (case action-result
            ('hit
             (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
-            'ok)
+            'ok (λ () '()))
            ('dead 'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
 

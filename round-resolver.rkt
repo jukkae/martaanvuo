@@ -12,6 +12,7 @@
 (require "actor.rkt")
 (require "blindscraper.rkt")
 (require "character-sheet.rkt")
+(require "condition.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
@@ -244,6 +245,14 @@
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
     (decrement-actor-status-lifetimes! (situation-pc *situation*)))
+
+  
+  ; proc conditions - TODO this is currently only for PC, fix if needed!
+  (define pc-conditions (actor-conditions (pc)))
+  (for ([condition pc-conditions])
+    ((condition-on-end-round! condition))
+    )
+  
   
   (newline) ; This is the "extra" newline that separates rounds
   (wait-for-confirm)
