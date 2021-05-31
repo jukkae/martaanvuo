@@ -68,6 +68,8 @@
              "make-grabberkin-action: unknown action: "
              (symbol->string action-flag)))]))
 
+(define *action-number* 1)
+
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
@@ -82,14 +84,33 @@
                   (cons 2 'anklebreaker)
                   (cons 3 'skip)
                   (cons 4 'skip)))
-               ;(define roll (d 1 4))
-               (define roll 2)
-               (define index (- roll 1))
-               (define action-flag-with-index (list-ref options index))
+               (case *action-number*
+                 [(1)
+                  (define roll 2)
+                  (define index (- roll 1))
+                  (define action-flag-with-index (list-ref options index))
 
                
-               (define action-flag (cdr action-flag-with-index))
-               (make-grabberkin-action actor action-flag))
+                  (define action-flag (cdr action-flag-with-index))
+                  (set! *action-number* (add1 *action-number*))
+                  (make-grabberkin-action actor action-flag)]
+                 [(2)
+                  (define roll 2)
+                  (define index (- roll 1))
+                  (define action-flag-with-index (list-ref options index))
+
+               
+                  (define action-flag (cdr action-flag-with-index))
+                  (set! *action-number* (add1 *action-number*))
+                  (make-grabberkin-action actor action-flag)]
+                 [else
+                  (define roll 4)
+                  (define index (- roll 1))
+                  (define action-flag-with-index (list-ref options index))
+
+               
+                  (define action-flag (cdr action-flag-with-index))
+                  (make-grabberkin-action actor action-flag)]))
               (else
                (make-grabberkin-action actor 'grab)
                )))

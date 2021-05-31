@@ -193,7 +193,7 @@
 
         ; second ankle
         (else
-         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes its bones with ease.")
+         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes its bones.")
          (define crit-roll (d 1 6))
          (define critical? (= crit-roll 6))
          (define crit-string (if critical?
