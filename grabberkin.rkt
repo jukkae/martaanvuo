@@ -73,7 +73,7 @@
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
-           ((>= (actor-hp actor) 8)
+           ((>= (actor-hp actor) 11)
 
             (cond
               ((and (actor-in-range? actor 'engaged)
@@ -115,7 +115,7 @@
                (make-grabberkin-action actor 'grab)
                )))
            
-           ((< (actor-hp actor) 8)
+           ((< (actor-hp actor) 11)
             (make-grabberkin-action actor 'release-grip))))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))

@@ -487,6 +487,7 @@
       (when (eq? turn-result 'pc-dead) (end-round-early))
       (when (or (eq? turn-result 'escape-from-combat)
                 (eq? turn-result 'grip-released)) ; TODO this'll blow up, must handle per opponent
+        (displayln "TODO: FIX THIS")
         (remove-all-enemies-and-end-combat!)
         (end-round-early))
       )
