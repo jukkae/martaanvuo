@@ -167,8 +167,9 @@
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
 
-(define (take-damage actor damage)
-  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+(define (pc-take-damage! actor damage)
+  (displayln "pc-take-damage!")
+  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)
@@ -181,6 +182,27 @@
     (clean-up-dead-actor! actor))
   
   result)
+
+
+(define (non-pc-take-damage! actor damage)
+  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
+  (define new-hp (- (actor-hp actor) damage))
+  (when (< new-hp 0) (set! new-hp 0))
+  (set-actor-hp! actor new-hp)
+  (define result
+    (if (= 0 (actor-hp actor))
+        'dead
+        'hit))
+
+  (when (eq? result 'dead)
+    (clean-up-dead-actor! actor))
+  
+  result)
+
+(define (take-damage actor damage)
+  (if (pc-actor? actor)
+      (pc-take-damage! actor damage)
+      (non-pc-take-damage! actor damage)))
 
 (define (kill actor cause-of-death)
   (set-actor-hp! actor 0)
