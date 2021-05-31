@@ -159,7 +159,7 @@
 
 ; ability-like attack
 (define (resolve-pull-under-action! action)
- (paragraph "The hands grasping her ankle – the thing with the hands – shift in the waters under the floating raft of moss. The thing pulls Otava through the moss, through a thick layer of algae, into the cloudy waters. The heavy, dark water closes in around her.")
+  (paragraph "The hands grasping her ankle – the thing with the hands – shift in the waters under the floating raft of moss. The thing pulls Otava through the moss, through a thick layer of algae, into the cloudy waters. The heavy, dark water closes in around her.")
   (paragraph "The thing pulls her deeper. She fights back, but her arms get caught in the massive algae congesting the grimy waters. She cannot hold her breath much longer.") ; -> fragments -> saving throw, not direct death
   (wait-for-confirm)
 
@@ -169,20 +169,38 @@
 
 ; ability-like attack?
 (define (resolve-anklebreaker-action! action)
-  (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
-  (define damage-roll (d 1 2))
-  (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
-  (case damage-roll
-    ((2)
-     (paragraph "A shard of bone sticks out through a gash in her ankle.")))
-  (define action-result (take-damage (action-target action) damage-roll))
-  (display-combatant-info (action-target action))
-  (case action-result
-    ('hit
-     (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
-     'ok)
-    ('dead 'pc-dead)
-    (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))
+  (define target (action-target action))
+  (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
+         (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
+         (define damage-roll (d 1 2))
+         (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
+         (case damage-roll
+           ((2)
+            (paragraph "A shard of bone sticks out through a gash in her ankle.")))
+         (define action-result (take-damage (action-target action) damage-roll))
+         (display-combatant-info (action-target action))
+         (case action-result
+           ('hit
+            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
+            'ok)
+           ('dead 'pc-dead)
+           (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
+         )
+        (else
+         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes its bones with ease.")
+         (define damage-roll (d 1 2))
+         (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
+         (case damage-roll
+           ((2)
+            (paragraph "A sharp edge of a broken bone cuts through an artery.")))
+         (define action-result (take-damage (action-target action) damage-roll))
+         (display-combatant-info (action-target action))
+         (case action-result
+           ('hit
+            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
+            'ok)
+           ('dead 'pc-dead)
+           (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
 
 
 ; ability-like attack
