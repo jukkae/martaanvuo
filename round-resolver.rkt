@@ -199,11 +199,16 @@
 (define (get-reaction action)
   (define actor (action-actor action))
   (cond ((not (pc-actor? actor))
-         (displayln "NPC REACTION"))
+         (cond ((equal? (actor-name actor) "Grabberkin")
+                (displayln "GK react")
+                (get-grabberkin-reaction actor))
+               (else
+                (displayln "unknown non-pc-actor type for reaction")
+                '())))
         (else
          (serialize-state)
-         (displayln "PC REACTION")))
-  '())
+         (displayln "PC REACTION")    
+         '())))
 
 
 ; engine / round resolver
@@ -493,6 +498,8 @@
       (end-round-early))
     (for ([action action-queue])
       (define reaction? (get-reaction action))
+      (displayln "REACTION:")
+      (displayln reaction?)
       (when (not (null? reaction?))
         (set! action reaction?)
         (displayln "[Setting reaction:]")

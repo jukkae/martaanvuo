@@ -20,7 +20,7 @@
 (define (make-new-pc)
   (make-pc-actor
    "Otava"
-   3
+   6
    4
    ))
 
