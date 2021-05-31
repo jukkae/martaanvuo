@@ -196,7 +196,7 @@
   )
 
 ; engine / round resolver / -> ai?
-(define (get-reaction action)
+(define (get-pre-action-reaction action)
   (define actor (action-actor action))
   (cond ((not (pc-actor? actor))
          (cond ((equal? (actor-name actor) "Grabberkin")
@@ -209,6 +209,11 @@
          (serialize-state)
          (displayln "PC REACTION")    
          '())))
+
+(define (get-post-action-reaction action result)
+  (define actor (action-target action))
+  (displayln "POST-ACTION REACTION")
+  '())
 
 
 ; engine / round resolver
@@ -497,15 +502,20 @@
       (remove-all-enemies-and-end-combat!)
       (end-round-early))
     (for ([action action-queue])
-      (define reaction? (get-reaction action))
-      (displayln "REACTION:")
-      (displayln reaction?)
-      (when (not (null? reaction?))
-        (set! action reaction?)
+      
+      (define pre-action-reaction? (get-pre-action-reaction action))
+      (when (not (null? pre-action-reaction?))
+        (set! action pre-action-reaction?)
         (displayln "[Setting reaction:]")
         (displayln action))
       
       (define turn-result (resolve-turn! world action))
+
+      (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
+      (when (not (null? post-action-reaction-from-target?))
+        ;(define action post-action-reaction-from-target?)
+        (displayln "-- post-action-reaction-from-target?: handle!")
+        )
       
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
