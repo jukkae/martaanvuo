@@ -503,6 +503,8 @@
       (remove-all-enemies-and-end-combat!)
       (end-round-early))
     (for ([action action-queue])
+
+      (define actor (action-actor action))
       
       (define pre-action-reaction? (get-pre-action-reaction action))
       (when (not (null? pre-action-reaction?))
@@ -510,19 +512,28 @@
       
       (define turn-result (resolve-turn! world action))
 
+      ; todo
       (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
       (when (not (null? post-action-reaction-from-target?))
         ;(define action post-action-reaction-from-target?)
-        (displayln "-- post-action-reaction-from-target?: handle!")
-        )
+        (displayln "-- post-action-reaction-from-target?: handle!"))
       
+      (case turn-result
+        
+        ['pc-dead
+         (end-round-early)]
+        
+        ['escape-from-combat
+         (remove-all-enemies-and-end-combat!)
+         (end-round-early)
+         ]
 
-      (when (eq? turn-result 'pc-dead) (end-round-early))
-      (when (or (eq? turn-result 'escape-from-combat)
-                (eq? turn-result 'grip-released)) ; TODO this'll blow up, must handle per opponent
-        (displayln "TODO: FIX THIS")
-        (remove-all-enemies-and-end-combat!)
-        (end-round-early))
+        ['grip-released
+         (displayln "TODO: FIX THIS")
+         (displayln "Remove actor:")
+         (displayln (actor-name actor))
+         ]
+        )
       )
     ))
    
