@@ -187,15 +187,17 @@
          
          (when critical?
            (paragraph "A shard of bone sticks out through a gash in her ankle."))
-         (define action-result (take-damage (action-target action) 1))
-         (display-combatant-info (action-target action))
+         (define action-result (take-damage target 1))
          (case action-result
            ('hit
-            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+            (inflict-condition! target (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
             (when critical?
-              (inflict-condition! (action-target action) (condition 'bleeding "resolve-anklebreaker-action!: details for 'bleeding todo")))
+              (inflict-condition! target (condition 'bleeding "resolve-anklebreaker-action!: details for 'bleeding todo")))
+            (display-combatant-info target)
             'ok)
-           ('dead 'pc-dead)
+           ('dead
+            (display-combatant-info target)
+            'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
          )
 
