@@ -387,9 +387,11 @@
   (match (condition-type cond)
     ['ankle-broken
      (if (actor-has-condition-of-type? target 'ankle-broken)
-         (actor-remove-condition! target 'ankle-broken)
-         (actor-add-condition! target (condition 'both-ankles-broken "TODO")))
-     
+         (begin
+           (actor-remove-condition-of-type! target 'ankle-broken)
+           (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
+           )
+         (actor-add-condition! target (condition 'ankle-broken "TODO")))
      ]
     ['bleeding
      (if (not (actor-has-condition-of-type? target 'bleeding))

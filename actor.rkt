@@ -101,16 +101,25 @@
 
 (define (actor-add-condition! actor condition)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (condition-type condition)) "] added, details:]"))
+    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] added, details:]"))
     (displayln (condition-details condition)))
   (set-actor-conditions! actor (append-element (actor-conditions actor) condition)))
 
+; TODO: Broken!
 (define (actor-remove-condition! actor condition)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (condition-type condition)) "] removed, details:]"))
+    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] removed, details:]"))
     (displayln (condition-details condition)))
   (set-actor-conditions! actor (filter
                                 (λ (other) (not (eq? (condition-type condition)
+                                                     (condition-type other))))
+                                (actor-conditions actor))))
+
+(define (actor-remove-condition-of-type! actor type)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Condition of type [" (symbol->string type) "] removed]")))
+  (set-actor-conditions! actor (filter
+                                (λ (other) (not (eq? type
                                                      (condition-type other))))
                                 (actor-conditions actor))))
 
