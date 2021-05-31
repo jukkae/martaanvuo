@@ -172,12 +172,16 @@
   (define target (action-target action))
   (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
          (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
-         (define damage-roll (d 1 2))
-         (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
-         (case damage-roll
+         (define crit-roll (d 1 6))
+         (define critical? (= crit-roll 6))
+         (define crit-string (if critical?
+                                 ", crit"
+                                 ""))
+         (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
+         (case crit-roll
            ((2)
             (paragraph "A shard of bone sticks out through a gash in her ankle.")))
-         (define action-result (take-damage (action-target action) damage-roll))
+         (define action-result (take-damage (action-target action) 1))
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
@@ -186,14 +190,20 @@
            ('dead 'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
          )
+
+        ; second ankle
         (else
          (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes its bones with ease.")
-         (define damage-roll (d 1 2))
-         (displayln (string-append "[Damage roll: 1d2 = " (number->string damage-roll) "]"))
-         (case damage-roll
+         (define crit-roll (d 1 6))
+         (define critical? (= crit-roll 6))
+         (define crit-string (if critical?
+                                 ", crit"
+                                 ""))
+         (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
+         (case crit-roll
            ((2)
-            (paragraph "A sharp edge of a broken bone cuts through an artery.")))
-         (define action-result (take-damage (action-target action) damage-roll))
+            (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out.")))
+         (define action-result (take-damage (action-target action) 1))
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
