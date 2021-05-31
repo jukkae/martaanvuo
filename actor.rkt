@@ -137,6 +137,7 @@
  pc-actor
  ([lp #:mutable]
   [max-lp #:mutable]
+  [death-roll-dice #:mutable]
   [xp #:mutable])
  #:super struct:actor
  #:constructor-name pc-actor*)
@@ -150,7 +151,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() max-lp max-lp 0))
+   (make-hash) '() '() '() '() max-lp max-lp 6 0))
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
@@ -169,19 +170,27 @@
 
 (define (pc-take-damage! actor damage)
   (displayln "pc-take-damage!")
-  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
-  (define new-hp (- (actor-hp actor) damage))
-  (when (< new-hp 0) (set! new-hp 0))
-  (set-actor-hp! actor new-hp)
-  (define result
-    (if (= 0 (actor-hp actor))
-        'dead
-        'hit))
-
-  (when (eq? result 'dead)
-    (clean-up-dead-actor! actor))
+  (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
   
-  result)
+  (cond ((not (positive? (actor-hp actor)))
+         
+         (displayln "DYING")
+         'hit)
+        (else
+         (displayln "NOT DYING")
+         (define new-hp (- (actor-hp actor) damage))
+         ;(when (< new-hp 0) (set! new-hp 0))
+         (set-actor-hp! actor new-hp)
+         (define result 'hit)
+         #;(define result
+           (if (= 0 (actor-hp actor))
+               'dead
+               'hit))
+
+         (when (eq? result 'dead)
+           (clean-up-dead-actor! actor))
+  
+         result)))
 
 
 (define (non-pc-take-damage! actor damage)

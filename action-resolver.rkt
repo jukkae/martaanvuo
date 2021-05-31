@@ -236,7 +236,11 @@
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
-            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
+            (inflict-condition!
+             (action-target action) (condition
+                                     'ankle-broken
+                                     "resolve-anklebreaker-action!: details todo"
+                                     (λ () '())))
             'ok (λ () '()))
            ('dead 'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
