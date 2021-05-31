@@ -169,12 +169,12 @@
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
 
-(define (pc-take-damage! actor damage)
+(define (pc-take-damage! actor damage damage-type)
   (displayln "pc-take-damage!")
   (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
   
   (cond ((not (positive? (actor-hp actor)))
-         (displayln "DYING")
+
          
          (define new-hp (- (actor-hp actor) damage))
          (set-actor-hp! actor new-hp)
@@ -198,9 +198,11 @@
                      (number->string result)
                      "]"))
 
+         (define cause-of-death damage-type)
+
          (cond ((<= result 1)
                 (begin
-                  (displayln "TODO: (pc-die) or something")
+                  (kill actor cause-of-death)
                   'dead))
                (else
                 'hit)
@@ -213,7 +215,7 @@
          'hit)))
 
 
-(define (non-pc-take-damage! actor damage)
+(define (non-pc-take-damage! actor damage damage-type)
   (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
@@ -228,10 +230,10 @@
   
   result)
 
-(define (take-damage actor damage)
+(define (take-damage actor damage damage-type)
   (if (pc-actor? actor)
-      (pc-take-damage! actor damage)
-      (non-pc-take-damage! actor damage)))
+      (pc-take-damage! actor damage damage-type)
+      (non-pc-take-damage! actor damage damage-type)))
 
 (define (kill actor cause-of-death)
   (set-actor-hp! actor 0)
@@ -241,8 +243,11 @@
                   " is dead. Cause of death: "
                   (symbol->string cause-of-death)
                   "]"))
-  
-  (clean-up-dead-actor! actor))
+  (cond ((pc-actor? actor)
+         (set-pc-actor-alive?! actor #f)
+         (displayln "TODO: Set to dead"))
+        (else
+         (clean-up-dead-actor! actor))))
 
 
 (define (add-item-to-inventory! actor item)

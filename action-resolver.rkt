@@ -67,7 +67,7 @@
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
     
     ; TODO what's a smart place to store this? the actor?
@@ -136,7 +136,7 @@
      "HP damage roll"))
 
   (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result)))
+  (when success? (set! action-result (take-damage target damage-roll-result 'brawl)))
   (when (eq? action-result 'dead)
     
     ; TODO what's a smart place to store this? the actor?
@@ -187,7 +187,7 @@
          
          (when critical?
            (paragraph "A shard of bone sticks out through a gash in her ankle."))
-         (define action-result (take-damage target 1))
+         (define action-result (take-damage target 1 'trauma))
          (case action-result
            ('hit
             (inflict-condition!
@@ -204,7 +204,7 @@
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
                             (when (< bleed-damage-roll 6)
                               (displayln "[Bleed: 1d6 < 6 => take 1 damage]")
-                              (take-damage target 1)
+                              (take-damage target 1 'bleed)
                               (display-combatant-info target)))
 
 
@@ -228,10 +228,10 @@
                                  ", crit"
                                  ""))
          (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
-         (case crit-roll
-           ((2)
-            (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out.")))
-         (define action-result (take-damage (action-target action) 1))
+         (when critical?
+           (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out."))
+
+         (define action-result (take-damage (action-target action) 1 'trauma))
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
@@ -240,7 +240,24 @@
                                      'ankle-broken
                                      "resolve-anklebreaker-action!: details todo"
                                      (λ () '())))
-            'ok (λ () '()))
+            (when critical?
+              (inflict-condition!
+               target
+
+               (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
+                          "resolve-anklebreaker-action!: details for 'bleeding todo"
+
+                          (λ ()
+                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+                            (when (< bleed-damage-roll 6)
+                              (displayln "[Bleed: 1d6 < 6 => take 1 damage]")
+                              (take-damage target 1 'bleed)
+                              (display-combatant-info target)))
+
+
+
+                          )))
+            'ok)
            ('dead
             'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
