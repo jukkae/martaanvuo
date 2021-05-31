@@ -483,6 +483,7 @@
       (end-round-early))
     (for ([action action-queue])
       (define turn-result (resolve-turn! world action))
+      (displayln "TODO: add reaction possibility here")
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
       (when (or (eq? turn-result 'escape-from-combat)
