@@ -528,10 +528,11 @@
          (end-round-early)
          ]
 
+        ; TODO: As always, description belongs in the action
         ['grip-released
-         (displayln "TODO: FIX THIS")
-         (displayln "Remove actor:")
-         (displayln (actor-name actor))
+         (paragraph "The Grabberkin lets go of Otava's ankles and its hands disappear under the moss.")
+         (award-xp! 3 "for surviving an encounter with a Grabberkin")
+         (remove-enemy actor)
          ]
         )
       )
