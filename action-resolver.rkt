@@ -186,7 +186,7 @@
          (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
          
          (when critical?
-           (paragraph "A shard of bone sticks out through a gash in her ankle."))
+           (paragraph "A shard of bone sticks out through a gash in her ankle and blood starts to flow."))
          (define action-result (take-damage target 1 'trauma))
          (case action-result
            ('hit
@@ -202,10 +202,15 @@
 
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (when (< bleed-damage-roll 6)
-                              (displayln "[Bleed: 1d6 < 6 => take 1 damage]")
-                              (take-damage target 1 'bleed)
-                              (display-combatant-info target)))
+                            (cond ((= 6 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
+                                   (display-combatant-info target))
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "] => take 1 damage]"))
+                                   (take-damage target 1 'bleed)
+                                   (display-combatant-info target))))
 
 
 
@@ -249,11 +254,15 @@
 
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (when (< bleed-damage-roll 6)
-                              (displayln "[Bleed: 1d6 < 6 => take 1 damage]")
-                              (take-damage target 1 'bleed)
-                              (display-combatant-info target)))
-
+                            (cond ((= 6 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
+                                   (display-combatant-info target))
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "] => take 1 damage]"))
+                                   (take-damage target 1 'bleed)
+                                   (display-combatant-info target))))
 
 
                           )))
