@@ -187,13 +187,23 @@
     (current-fragment-on-begin-round!))
   )
 
-; engine / round resolver
+; engine / round resolver / -> ai?
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
          (serialize-state)
          (get-next-pc-action)))
   )
+
+; engine / round resolver / -> ai?
+(define (get-reaction action)
+  (define actor (action-actor action))
+  (cond ((not (pc-actor? actor))
+         (displayln "NPC REACTION"))
+        (else
+         (serialize-state)
+         (displayln "PC REACTION")))
+  '())
 
 
 ; engine / round resolver
@@ -482,8 +492,14 @@
       (remove-all-enemies-and-end-combat!)
       (end-round-early))
     (for ([action action-queue])
+      (define reaction? (get-reaction action))
+      (when (not (null? reaction?))
+        (set! action reaction?)
+        (displayln "[Setting reaction:]")
+        (displayln action))
+      
       (define turn-result (resolve-turn! world action))
-      (displayln "TODO: add reaction possibility here")
+      
 
       (when (eq? turn-result 'pc-dead) (end-round-early))
       (when (or (eq? turn-result 'escape-from-combat)
