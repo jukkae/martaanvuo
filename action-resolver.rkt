@@ -196,10 +196,21 @@
             (when critical?
               (inflict-condition!
                target
-               (condition 'bleeding
+
+               (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                           "resolve-anklebreaker-action!: details for 'bleeding todo"
+
                           (λ ()
-                            (displayln "BLEED ON-END-ROUND")))))
+                            (define bleed-damage-roll (d 1 2)) ; could give bonus from constitution here? say, 1d6?
+                            (when (= bleed-damage-roll 2)
+                              (displayln "[Bleed: 1d2 = 2, 1 HP damage caused.]")
+                              (take-damage target 1)
+                              (display-combatant-info target))
+                            (displayln "BLEED ON-END-ROUND"))
+
+
+
+                          )))
             (display-combatant-info target)
             'ok)
            ('dead
