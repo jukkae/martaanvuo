@@ -530,7 +530,7 @@
 
         ; TODO: As always, description belongs in the action
         ['grip-released
-         (paragraph "The Grabberkin lets go of Otava's ankles and its hands disappear under the moss.")
+         (paragraph "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
          (award-xp! 3 "for surviving an encounter with a Grabberkin")
          (remove-enemy actor)
          ]
