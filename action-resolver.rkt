@@ -167,25 +167,33 @@
   (kill (pc) 'drowned)
   )
 
-; ability-like attack?
+;;; CRIT ROLL IDEA:
+; Base chances are like 1/6 for "certain" attack failing, 1/6 for crit,
+; but PC's attribute/skill bonuses can shift that balance
+; - or would failures be based on saving throw? maybe.
+
+; ability-like attack
 (define (resolve-anklebreaker-action! action)
   (define target (action-target action))
   (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
          (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
-         (define crit-roll (d 1 6))
+         ;(define crit-roll (d 1 6))
+         (define crit-roll 6)
          (define critical? (= crit-roll 6))
          (define crit-string (if critical?
                                  ", crit"
                                  ""))
          (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
-         (case crit-roll
-           ((2)
-            (paragraph "A shard of bone sticks out through a gash in her ankle.")))
+         
+         (when critical?
+           (paragraph "A shard of bone sticks out through a gash in her ankle."))
          (define action-result (take-damage (action-target action) 1))
          (display-combatant-info (action-target action))
          (case action-result
            ('hit
-            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details todo"))
+            (inflict-condition! (action-target action) (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+            (when critical?
+              (inflict-condition! (action-target action) (condition 'bleeding "resolve-anklebreaker-action!: details for 'bleeding todo")))
             'ok)
            ('dead 'pc-dead)
            (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
@@ -193,8 +201,9 @@
 
         ; second ankle
         (else
-         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes its bones.")
-         (define crit-roll (d 1 6))
+         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes the bones in Otava's other ankle, too.")
+         ;(define crit-roll (d 1 6))
+         (define crit-roll 1)
          (define critical? (= crit-roll 6))
          (define crit-string (if critical?
                                  ", crit"
