@@ -5,6 +5,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require rebellion/collection/association-list)
+
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
@@ -102,10 +104,10 @@
 
          ; TODO shit action
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
-         
+
          (define details
-           (list
-            (cons 'str-mod strength-mod)))
+           (association-list 'str-mod strength-mod))
+         
          (define break-free-choice
            (make-choice
             'pull-free

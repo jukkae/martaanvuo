@@ -4,6 +4,7 @@
 
 (require racket/lazy-require)
 
+(require rebellion/collection/association-list)
 
 (require "action.rkt")
 (require "actor.rkt")
@@ -283,6 +284,11 @@
         'failure)))
 
 (define (resolve-break-free-action! action)
+  (define details (action-details action))
+  (displayln details)
+  
+  (define roll (d 1 6))
+  
   (displayln "resolve-break-free-action!"))
 
 
