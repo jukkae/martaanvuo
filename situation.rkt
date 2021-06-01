@@ -316,6 +316,13 @@
   (set-situation-in-combat?! *situation* #f))
 
 ; scripting API
+(define (remove-enemy enemy)
+  (hash-remove! (situation-enemy-stances *situation*) enemy)
+  (remove-actor-from-location! (actor-current-location enemy) enemy)
+  (when (= (length (get-current-enemies)) 0)
+    (set-situation-in-combat?! *situation* #f)))
+
+; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (hash-ref (situation-enemy-stances *situation*) enemy))

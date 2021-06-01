@@ -43,7 +43,7 @@
       #:duration 0
       #:target '()
       #:tags '(initiative-based-resolution)
-      #:details '(silent))]
+      #:details '(slow silent))]
 
     ['grab
      (make-action
@@ -73,7 +73,7 @@
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
-           ((>= (actor-hp actor) 8)
+           ((>= (actor-hp actor) 12)
 
             (cond
               ((and (actor-in-range? actor 'engaged)
@@ -115,10 +115,17 @@
                (make-grabberkin-action actor 'grab)
                )))
            
-           ((< (actor-hp actor) 8)
+           ((< (actor-hp actor) 12)
             (make-grabberkin-action actor 'release-grip))))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
+
+; implicitly, this is the pre-own-action reaction
+(define (get-grabberkin-reaction actor)
+  (cond ((< (actor-hp actor) 12)
+         (make-grabberkin-action actor 'release-grip))
+        (else
+         '())))
 
 ;;; TO DO:
 ;;; THE BIG THINGS:
