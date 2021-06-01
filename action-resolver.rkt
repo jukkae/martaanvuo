@@ -88,74 +88,7 @@
   action-result
   )
 
-; "generic" attack with type and flavor
-(define (resolve-wrestle-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
-  
-  #;(define target-defense (get-trait target "defense"))
-  (define target-defense (actor-strength target))
 
-  (define skill (get-trait actor "wrestle-attack-skill"))
-
-  (define bonus 0)
-  
-  (cond ((member 'fallen (actor-statuses target))
-         (displayln "[Target fallen, TN -2]")
-         (set! bonus 2)
-         ))
-  
-  (define action-target-number (- 7 bonus))
-
-  (define title
-    (string-append "Brawl, "
-                   (get-combatant-name actor)
-                   " vs "
-                   (get-combatant-name target)))
-  (define success? (skill-check title skill action-target-number))
-
-  (define details (action-details action))
-  
-
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
-  
-
-  (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       (string-append " "
-                      damage-roll-formula
-                      " ")
-       (string-append " "
-                      (number->string damage-roll-result)
-                      " ")))
-     "HP damage roll"))
-
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result 'brawl)))
-  (when (eq? action-result 'dead)
-    
-    ; TODO what's a smart place to store this? the actor?
-    (case (actor-name (action-target action))
-      [("Blindscraper") (award-xp! 7)]))
-
-  (display-combatant-info target)
-  (newline)
-
-  ; Urgh, refactor!
-  (when (eq? action-result 'dead)
-    (if (not (pc-actor? (action-target action)))
-        (paragraph "The " (actor-name (action-target action)) " is dead.")
-        (begin
-          (paragraph "Otava is dead.")
-          (set! action-result 'pc-dead))))
-
-  action-result
-  )
 
 ; ability-like attack
 (define (resolve-pull-under-action! action)
@@ -349,6 +282,9 @@
         'successful
         'failure)))
 
+(define (resolve-break-free-action! action)
+  (displayln "resolve-break-free-action!"))
+
 
 ; skinnable, but in a sense generic action
 (define (resolve-flee-action! action)
@@ -421,9 +357,6 @@
     (cond ((eq? (action-symbol action) 'melee)
            (resolve-melee-action! action))
 
-          ((eq? (action-symbol action) 'wrestle)
-           (resolve-wrestle-action! action))
-
           ((eq? (action-symbol action) 'forage)
            (resolve-forage-action! action))
           ((eq? (action-symbol action) 'back-off)
@@ -447,6 +380,9 @@
           ((eq? (action-symbol action) 'flee)
            (resolve-flee-action! action)
            )
+
+          ((eq? (action-symbol action) 'break-free)
+           (resolve-break-free-action! action))
 
           ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
