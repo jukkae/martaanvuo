@@ -92,9 +92,15 @@
                #:details '()))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
-  (cond ((and (engaged?)
-              (eq? (actor-name (get-an-enemy-at-range 'engaged))
-                   "Grabberkin"))
+  (define engaged-enemies (get-enemies-at-range 'engaged))
+  (define engaged-grabberkin
+    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'engaged))
+                               "Grabberkin"))
+            engaged-enemies))
+
+  (cond ((not (null? engaged-grabberkin))
+
+         ; TODO shit action
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
          (define damage-roll (λ () (d 1 2)))
          (define details
@@ -120,6 +126,7 @@
                #:tags '(initiative-based-resolution)
                #:details details))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
+ 
 
   combat-choices
   )

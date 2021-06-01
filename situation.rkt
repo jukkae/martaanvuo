@@ -200,6 +200,16 @@
   enemy-in-range)
 
 ; API
+(define (get-enemies-at-range range)
+  (define current-enemies (get-current-enemies))
+  (define enemies-in-range '())
+  (for ([enemy current-enemies])
+    (define stance (hash-ref (situation-enemy-stances *situation*) enemy '()))
+    (when (eq? (stance-range stance) range)
+      (set! enemies-in-range (append-element enemies-in-range enemy))))
+  enemies-in-range)
+
+; API
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
