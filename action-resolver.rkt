@@ -284,10 +284,57 @@
         'failure)))
 
 (define (resolve-break-free-action! action)
+  (define actor (action-actor action))
   (define details (action-details action))
-  (displayln details)
+
+  (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
+
+  (define target (action-target action))
+  (define target-stance (hash-ref (situation-enemy-stances *situation*) target))
+
   
-  (define roll (d 1 6))
+  (define statuses (actor-statuses actor))
+  (define actor-bound-status
+    (findf (λ (status) (eq? (status-type status) 'bound))
+           statuses))
+
+  (displayln "BOUND STATUS:")
+  (displayln (status-type actor-bound-status))
+  (displayln (status-lifetime actor-bound-status))
+  
+  (define target-number 4)
+
+  (define dice-sides 6)
+  (define bonus 1)
+  (define roll (d 1 dice-sides))
+  (define result (+ roll bonus))
+
+  (define success?
+    (cond ((= roll 1) #t)
+          ((= roll dice-sides) #f)
+          (else (<= result target-number))))
+
+  (define success-string
+    (if success?
+        "success"
+        "failure"))
+
+  (displayln
+   (string-append "["
+                  "Resolution: "
+                  "1d6 + bonus <= TN: "
+                  (number->string roll)
+                  " + "
+                  (number->string bonus)
+                  " = "
+                  (number->string result)
+                  " <= "
+                  (number->string target-number)
+                  " - "
+                  success-string
+                  "]"))
+  ; crit = nat 1 = always succeed,
+  ; crit fail = nat MAX = always fail, avoid hard failures?
   
   (displayln "resolve-break-free-action!"))
 

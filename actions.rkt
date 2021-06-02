@@ -102,9 +102,8 @@
 
   (cond ((not (null? engaged-grabberkin))
 
-         ; TODO shit action
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
-
+         
          (define details
            (association-list 'str-mod strength-mod))
          
