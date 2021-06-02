@@ -229,6 +229,11 @@
 
   (when (eq? result 'dead)
     (clean-up-dead-actor! actor))
+
+  (when (equal? (actor-name actor)
+                "Grabberkin")
+    (displayln "decrease bound status strength by 'damage'"))
+    
   
   result)
 

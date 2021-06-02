@@ -310,9 +310,9 @@
   (define result (+ roll bonus))
 
   (define success?
-    (cond ((= roll 1) #t)
-          ((= roll dice-sides) #f)
-          (else (<= result target-number))))
+    (cond ((= roll 1) #f)
+          ((= roll dice-sides) #t)
+          (else (> result target-number))))
 
   (define success-string
     (if success?
@@ -322,19 +322,20 @@
   (displayln
    (string-append "["
                   "Resolution: "
-                  "1d6 + bonus <= TN: "
+                  "1d6 + bonus > TN: "
                   (number->string roll)
                   " + "
                   (number->string bonus)
                   " = "
                   (number->string result)
-                  " <= "
+                  " > "
                   (number->string target-number)
                   " - "
                   success-string
                   "]"))
-  ; crit = nat 1 = always succeed,
-  ; crit fail = nat MAX = always fail, avoid hard failures?
+  ; crit = nat MAX = always succeed,
+  ; crit fail = nat 1 = always fail, avoid hard failures?
+  (wait-for-confirm)
   
   (displayln "resolve-break-free-action!"))
 
