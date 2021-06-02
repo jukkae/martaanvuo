@@ -336,8 +336,13 @@
   ; crit = nat MAX = always succeed,
   ; crit fail = nat 1 = always fail, avoid hard failures?
   (wait-for-confirm)
-  
-  (displayln "resolve-break-free-action!"))
+  (if success?
+      (begin
+        (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now
+        'ok)
+      (begin
+        (award-xp! 1 "for reaching the limits of the capabilities of the body")
+        'failed)))
 
 
 ; skinnable, but in a sense generic action
