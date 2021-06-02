@@ -68,8 +68,6 @@
              "make-grabberkin-action: unknown action: "
              (symbol->string action-flag)))]))
 
-(define *action-number* 1)
-
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
@@ -77,43 +75,28 @@
 
             (cond
               ((and (actor-in-range? actor 'engaged)
-                    (actor-has-status-of-type? (pc) 'bound))
+                    (actor-has-status-of-type? (pc) 'bound)
+                    (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+                       4))
                (define options
                  (list
                   (cons 1 'pull-under)
                   (cons 2 'anklebreaker)
-                  (cons 3 'skip)
-                  (cons 4 'skip)))
-               (case *action-number*
-                 [(1)
-                  (define roll 2)
-                  (define index (- roll 1))
-                  (define action-flag-with-index (list-ref options index))
+                  (cons 3 'anklebreaker)
+                  (cons 4 'skip)
+                  (cons 5 'skip)
+                  (cons 6 'skip)))
+               
+               (define roll (d 1 6))
+               (define index (- roll 1))
+               (define action-flag-with-index (list-ref options index))
 
                
-                  (define action-flag (cdr action-flag-with-index))
-                  (set! *action-number* (add1 *action-number*))
-                  (make-grabberkin-action actor action-flag)]
-                 [(2)
-                  (define roll 2)
-                  (define index (- roll 1))
-                  (define action-flag-with-index (list-ref options index))
-
+               (define action-flag (cdr action-flag-with-index))
                
-                  (define action-flag (cdr action-flag-with-index))
-                  (set! *action-number* (add1 *action-number*))
-                  (make-grabberkin-action actor action-flag)]
-                 [else
-                  (define roll 4)
-                  (define index (- roll 1))
-                  (define action-flag-with-index (list-ref options index))
-
-               
-                  (define action-flag (cdr action-flag-with-index))
-                  (make-grabberkin-action actor action-flag)]))
+               (make-grabberkin-action actor action-flag))
               (else
-               (make-grabberkin-action actor 'grab)
-               )))
+               (make-grabberkin-action actor 'grab))))
            
            ((< (actor-hp actor) 12)
             (make-grabberkin-action actor 'release-grip))))

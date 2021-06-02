@@ -84,6 +84,12 @@
       #t
       #f))
 
+(define (actor-lifetime-of-status-of-type? actor type)
+  (define s (findf (λ (status)
+              (eq? (status-type status) type))
+            (actor-statuses actor)))
+  (status-lifetime s))
+
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
     (set-status-lifetime! status (- (status-lifetime status) 1)))
