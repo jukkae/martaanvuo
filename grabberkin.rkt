@@ -68,11 +68,17 @@
              "make-grabberkin-action: unknown action: "
              (symbol->string action-flag)))]))
 
+(define (grabberkin-hp-above-threshold? actor)
+  (define hp (actor-hp actor))
+  (define max-hp (actor-max-hp actor))
+  (define threshold (quotient max-hp 2))
+  
+  (> hp threshold))
+
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
-           ((>= (actor-hp actor) 12)
-
+           ((grabberkin-hp-above-threshold? actor)
             (cond
               ((and (actor-in-range? actor 'engaged)
                     (actor-has-status-of-type? (pc) 'bound)
@@ -98,14 +104,14 @@
               (else
                (make-grabberkin-action actor 'grab))))
            
-           ((< (actor-hp actor) 12)
+           (else
             (make-grabberkin-action actor 'release-grip))))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
 
 ; implicitly, this is the pre-own-action reaction
 (define (get-grabberkin-reaction actor)
-  (cond ((< (actor-hp actor) 12)
+  (cond ((not (grabberkin-hp-above-threshold? actor))
          (make-grabberkin-action actor 'release-grip))
         (else
          '())))
@@ -137,8 +143,9 @@
   (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
   (set-in-combat?! #t)
 
+  (define hp 11)
   (define i 0)
-  (define enemy (make-actor "Grabberkin" 14))
+  (define enemy (make-actor "Grabberkin" hp))
   (set-actor-dexterity! enemy 4)
   (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)

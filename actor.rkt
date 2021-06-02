@@ -53,9 +53,8 @@
           (make-hash) '() '() '() '()))
 
 (define (actor-alive? actor)
-  (if (string? (actor-hp actor))
-      #t
-      (> (actor-hp actor) 0)))
+  (> (actor-hp actor) 0))
+
 
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
@@ -139,6 +138,7 @@
         (when (eq? (status-type status) type)
           (set-status-lifetime! status value)))
       (actor-add-status! actor (status type value))))
+
 
 
 
