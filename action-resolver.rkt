@@ -302,9 +302,9 @@
   (displayln (status-type actor-bound-status))
   (displayln (status-lifetime actor-bound-status))
   
-  (define target-number 4)
+  (define target-number (status-lifetime actor-bound-status))
 
-  (define dice-sides 6)
+  (define dice-sides 10)
   (define bonus 1)
   (define roll (d 1 dice-sides))
   (define result (+ roll bonus))
@@ -322,7 +322,7 @@
   (displayln
    (string-append "["
                   "Resolution: "
-                  "1d6 + bonus > TN: "
+                  "1d10 + bonus > TN: "
                   (number->string roll)
                   " + "
                   (number->string bonus)

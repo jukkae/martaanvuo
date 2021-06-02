@@ -6,6 +6,7 @@
 (lazy-require
  ["situation.rkt"
   (clean-up-dead-actor!
+   pc
    )])
 
 (require racket/serialize)
@@ -98,6 +99,28 @@
           (symbol->string (status-type status))
           "] removed]"))))
   (set-actor-statuses! actor new-statuses))
+
+; think:
+; what if statuses are, by definition, something that's a fairly explicit list?
+; and much of combat control is based on manipulating statuses?
+(define (modify-actor-status-lifetime actor type modify-amount)
+  (for ([status (actor-statuses actor)])
+    (when (eq? (status-type status) type)
+      (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
+  
+  (define new-statuses '())
+  (for ([status (actor-statuses actor)])
+    (if (positive? (status-lifetime status))
+        (set! new-statuses (append-element new-statuses status))
+        (displayln
+         (string-append
+          "["
+          (actor-name actor)
+          ": Status ["
+          (symbol->string (status-type status))
+          "] removed]"))))
+  (set-actor-statuses! actor new-statuses))
+
 
 (define (actor-add-condition! actor condition)
   (when (not (null? actor))
@@ -230,9 +253,13 @@
   (when (eq? result 'dead)
     (clean-up-dead-actor! actor))
 
+  ; TODO this belongs to grabberkin.rkt
+  ; -> subtype grabberkin-actor from actor?
   (when (equal? (actor-name actor)
                 "Grabberkin")
-    (displayln "decrease bound status strength by 'damage'"))
+    (modify-actor-status-lifetime (pc) 'bound (* -1 damage))
+    (displayln (string-append "decrease bound status strength by "
+                              (number->string (* -1 damage)))))
     
   
   result)

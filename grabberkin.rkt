@@ -163,7 +163,7 @@
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
 
-  (inflict-status! (pc) (status 'bound 6))
+  (inflict-status! (pc) (status 'bound 8))
 
   (define index
     (case i
