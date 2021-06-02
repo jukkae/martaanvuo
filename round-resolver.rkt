@@ -150,7 +150,7 @@
          #;(symbol->string (action-symbol action))
          " "))
       (list action-description (string-append " " (number->string initiative) " "))))
-  
+  ; TODO: Only show initiatives when more than one combatant do something, and exclude the ones that only "skip"
   (info-card actions "Action initiatives")
   (wait-for-confirm)
 

@@ -52,7 +52,7 @@
       #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
-      #:details (list (status 'bound 3)))]
+      #:details (list (status 'bound 10)))]
 
     ['release-grip
      (make-action
@@ -146,7 +146,7 @@
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
 
-  (inflict-status! (pc) (status 'bound 8))
+  (inflict-status! (pc) (status 'bound 10))
 
   (define index
     (case i

@@ -86,8 +86,8 @@
 
 (define (actor-lifetime-of-status-of-type? actor type)
   (define s (findf (λ (status)
-              (eq? (status-type status) type))
-            (actor-statuses actor)))
+                     (eq? (status-type status) type))
+                   (actor-statuses actor)))
   (status-lifetime s))
 
 (define (decrement-actor-status-lifetimes! actor)
@@ -127,7 +127,24 @@
           "] removed]"))))
   (set-actor-statuses! actor new-statuses))
 
+; yeah the way statuses currently work are a piece of shit
+; but the idea of strength decreasing by one always at end of turn, as well as conditionally,
+; it's a good idea
+(define (actor-set-status! actor type value)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Setting status [" (symbol->string type) "] strength to (" (number->string value) " turns)]")))
 
+  (if (actor-has-status-of-type? actor type)
+      (for ([status (actor-statuses actor)])
+        (when (eq? (status-type status) type)
+          (set-status-lifetime! status value)))
+      (actor-add-status! actor (status type value))))
+
+
+
+
+
+;;; CONDITIONS
 (define (actor-add-condition! actor condition)
   (when (not (null? actor))
     (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] added, details:]"))

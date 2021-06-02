@@ -396,7 +396,7 @@
      ]
     ['bound
      ;(paragraph "The Grabberkin tightens its grip around Otava's ankle.")
-     (actor-add-status! target status)
+     (actor-set-status! target (status-type status) (status-lifetime status))
      ]
     [else (paragraph "todo: unknown status")]))
 
