@@ -161,11 +161,12 @@
 ;;; Idea: Easy to win once you know how, but requires something specific that can be gotten easily if you know how
 ;;; -> act as a soft gate
 ;;; -> somewhat miniboss-like *at first*
+; They are greedy. They are clingy. (What do they most wish?)
+; TO DO: Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
 ; Idea: Vulnerabilities:
 ; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
 ; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
 ; - Slashing damage, IF you know how to do it - because it cuts through tendons -> can't grab no more
-; – Something purely mechanical, stun?
 ; - Good perception (-> avoid)
 
 ; -> when selecting loadout, possibilities are bolt cutters or a chainsaw,
