@@ -28,34 +28,13 @@
       #:details '())]
 
     ['anklebreaker
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
      (make-action
       #:symbol 'anklebreaker
       #:actor actor
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details details)]
-    
-    ['tighten-grip
-     (define damage-roll (λ () (d 1 2)))
-     (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
-     (make-action
-      #:symbol 'tighten-grip
-      #:actor actor
-      #:duration 1
-      #:target (pc)
-      #:tags '(initiative-based-resolution)
-      #:details details)]
+      #:details '())]
     
     ['skip
      (make-action
@@ -64,7 +43,7 @@
       #:duration 0
       #:target '()
       #:tags '(initiative-based-resolution)
-      #:details '(silent))]
+      #:details '(slow silent))]
 
     ['grab
      (make-action
@@ -73,7 +52,16 @@
       #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
-      #:details (list (status 'bound 3)))]
+      #:details (list (status 'bound 10)))]
+
+    ['choke
+     (make-action
+      #:symbol 'choke
+      #:actor actor
+      #:duration 1
+      #:target (pc)
+      #:tags '(initiative-based-resolution)
+      #:details '())]
 
     ['release-grip
      (make-action
@@ -89,44 +77,113 @@
              "make-grabberkin-action: unknown action: "
              (symbol->string action-flag)))]))
 
+(define (grabberkin-hp-above-threshold? actor)
+  (define hp (actor-hp actor))
+  (define max-hp (actor-max-hp actor))
+  (define threshold (quotient max-hp 2))
+  
+  (> hp threshold))
+
+(define (get-grabberkin-action-phase-1 actor)
+  (cond
+    ((and (actor-in-range? actor 'engaged)
+          (actor-has-status-of-type? (pc) 'bound)
+          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+             4))
+     (define options
+       '(anklebreaker grab grab skip skip skip))
+               
+     (define roll (d 1 6))
+     (displayln (string-append "[" (number->string roll) "]"))
+     (define index (- roll 1))
+     (define action (list-ref options index))
+
+     (make-grabberkin-action actor action))
+    (else
+     (make-grabberkin-action actor 'grab))))
+
+(define (get-grabberkin-action-phase-2 actor)
+  (cond
+    ((and (actor-in-range? actor 'engaged)
+          (actor-has-status-of-type? (pc) 'bound)
+          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+             4))
+     (define options
+       '(pull-under choke choke grab skip skip))
+               
+     (define roll (d 1 6))
+     (displayln (string-append "[" (number->string roll) "]"))
+     (define index (- roll 1))
+     (define action (list-ref options index))
+
+     (make-grabberkin-action actor action))
+    (else
+     (make-grabberkin-action actor 'grab))))
+
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
-           ((>= (actor-hp actor) 8)
-
-            (cond
-              ((and (actor-in-range? actor 'engaged)
-                    (actor-has-status-of-type? (pc) 'bound))
-               (define options
-                 (list
-                  (cons 1 'pull-under)
-                  (cons 2 'anklebreaker)
-                  (cons 3 'tighten-grip)
-                  (cons 4 'skip)))
-               ;(define roll (d 1 4))
-               (define roll 1)
-               (define index (- roll 1))
-               (define action-flag-with-index (list-ref options index))
-
-               
-               (define action-flag (cdr action-flag-with-index))
-               (make-grabberkin-action actor action-flag))
-              (else
-               (make-grabberkin-action actor 'grab)
-               )))
+           ((grabberkin-hp-above-threshold? actor)
+            (define target (pc))
+            (define phase
+              (cond
+                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
+                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
+                 1)
+                ((and (actor-has-condition-of-type? target 'ankle-broken)
+                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
+                 1)
+                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
+                      (actor-has-condition-of-type? target 'both-ankles-broken))
+                 2)))
+            
+            (case phase
+              [(1) (get-grabberkin-action-phase-1 actor)]
+              [(2) (get-grabberkin-action-phase-2 actor)]))
            
-           ((< (actor-hp actor) 8)
+           (else
             (make-grabberkin-action actor 'release-grip))))
         (else
          (begin (displayln "Grabberkin AI, not in combat")))))
 
+; implicitly, this is the pre-own-action reaction
+(define (get-grabberkin-reaction actor)
+  (cond ((not (grabberkin-hp-above-threshold? actor))
+         (make-grabberkin-action actor 'release-grip))
+        (else
+         '())))
+
+;;; TO DO:
+;;; THE BIG THINGS:
+;;; What is Grabberkin's purpose, gameplay-wise? What is its niche?
+;;; What is its vulnerability?
+;;; How much leeway there is? Should it be considered a mini-boss?
+;;; Idea: Easy to win once you know how, but requires something specific that can be gotten easily if you know how
+;;; -> act as a soft gate
+;;; -> somewhat miniboss-like *at first*
+; They are greedy. They are clingy. (What do they most wish?)
+; TO DO: Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
+; Idea: Vulnerabilities:
+; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
+; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
+; - Slashing damage, IF you know how to do it - because it cuts through tendons -> can't grab no more
+; - Good perception (-> avoid)
+
+; -> when selecting loadout, possibilities are bolt cutters or a chainsaw,
+; gun has to be sourced by doing a favor to The Merchant, robbing a Cache, or finding your own corpse that had a gun in a prior run.
+; guns: hunting rifles and shotguns in the wild, at the Facility also handguns and assault rifles.
+
+; This doesn't belong here really but what the hell:
+; - After combat, patching up is possible, but it is risk-free only if you know medicine, which requires finding literature (= doing a Cache-run, in practice) and then leveling up
+
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Otava feels something like a hand grab her ankle.")
+  (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
   (set-in-combat?! #t)
 
+  (define hp 11)
   (define i 0)
-  (define enemy (make-actor "Grabberkin" 14))
+  (define enemy (make-actor "Grabberkin" hp))
   (set-actor-dexterity! enemy 4)
   (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)
@@ -134,7 +191,7 @@
   (set-trait! enemy "hp-hidden" #t)
   (move-actor-to-location! enemy (current-location))
 
-  (inflict-status! (pc) (status 'bound 3))
+  (inflict-status! (pc) (status 'bound 10))
 
   (define index
     (case i

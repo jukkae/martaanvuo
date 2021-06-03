@@ -14,10 +14,13 @@
   (pc
    )])
 
+; PC hp <= 0 starts a "dying" counter of 1-2 rounds
+; - this as an "upgrade" or talent or build thing or whatever
+; - or a saving throw on any damage
 (define (make-new-pc)
   (make-pc-actor
    "Otava"
-   3
+   6
    4
    ))
 

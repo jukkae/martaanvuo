@@ -7,6 +7,7 @@
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "condition.rkt")
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
@@ -199,6 +200,16 @@
   enemy-in-range)
 
 ; API
+(define (get-enemies-at-range range)
+  (define current-enemies (get-current-enemies))
+  (define enemies-in-range '())
+  (for ([enemy current-enemies])
+    (define stance (hash-ref (situation-enemy-stances *situation*) enemy '()))
+    (when (eq? (stance-range stance) range)
+      (set! enemies-in-range (append-element enemies-in-range enemy))))
+  enemies-in-range)
+
+; API
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee #t]
@@ -232,6 +243,21 @@
       (list " statuses "
             (string-append " " (string-join statuses-strings) " ")))
     (set! body (append-element body statuses-list)))
+
+  (when (not (null? (actor-conditions actor)))
+    (define conditions (actor-conditions actor))
+    (define conditions-strings
+      (for/list ([condition conditions])
+        (string-append "["
+                       (symbol->string (condition-type condition))
+                       " ("
+                       "condition details TBD"
+                       ")]")))
+    
+    (define conditions-list
+      (list " conditions "
+            (string-append " " (string-join conditions-strings) " ")))
+    (set! body (append-element body conditions-list)))
   (info-card
    body
    name))
@@ -293,11 +319,19 @@
   (set-situation-in-combat?! *situation* in-combat?))
 
 ; scripting API / situation / implementation detail
+; TODO this should also purge action queue -> round-resolver needs to be informed when this gets called
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
   (set-situation-in-combat?! *situation* #f))
+
+; scripting API
+(define (remove-enemy enemy)
+  (hash-remove! (situation-enemy-stances *situation*) enemy)
+  (remove-actor-from-location! (actor-current-location enemy) enemy)
+  (when (= (length (get-current-enemies)) 0)
+    (set-situation-in-combat?! *situation* #f)))
 
 ; scripting API
 (provide actor-in-range?)
@@ -320,9 +354,9 @@
 (define (clean-up-dead-actor! actor)
   (hash-remove! (situation-enemy-stances *situation*) actor)
   (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
-  (define corpse (cons 'corpse "Blindscraper corpse"))
+  (define corpse (cons 'corpse "Corpse (TODO)"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
-  (displayln corpse))
+  #;(displayln corpse))
 
 ; scripting API
 (provide award-xp!)
@@ -346,7 +380,7 @@
   (info-card player-status (string-append "Player status"))
   )
 
-; Scripting API -> situation, for now
+; Scripting API
 (define (inflict-status! target status)
   (match (status-type status)
     ['blind
@@ -362,7 +396,24 @@
         (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
      ]
     ['bound
-     ;(paragraph "The Grabberkin tightens its grip around Otava's ankle.")
-     (actor-add-status! target status)
+     (actor-set-status! target (status-type status) (status-lifetime status))
      ]
     [else (paragraph "todo: unknown status")]))
+
+(define (inflict-condition! target cond)
+  (match (condition-type cond)
+    ['ankle-broken
+     (if (actor-has-condition-of-type? target 'ankle-broken)
+         (begin
+           (actor-remove-condition-of-type! target 'ankle-broken)
+           (actor-add-condition! target (condition 'both-ankles-broken "TODO" (λ () '())))
+           )
+         (actor-add-condition! target cond))
+     ]
+    ['bleeding
+     (if (not (actor-has-condition-of-type? target 'bleeding))
+         (actor-add-condition! target cond)
+         (displayln "Already bleeding."))
+     
+     ]
+    [else (paragraph "todo: unknown condition")]))

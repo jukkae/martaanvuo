@@ -12,6 +12,7 @@
 (require "actor.rkt")
 (require "blindscraper.rkt")
 (require "character-sheet.rkt")
+(require "condition.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
@@ -149,7 +150,7 @@
          #;(symbol->string (action-symbol action))
          " "))
       (list action-description (string-append " " (number->string initiative) " "))))
-  
+  ; TODO: Only show initiatives when more than one combatant do something, and exclude the ones that only "skip"
   (info-card actions "Action initiatives")
   (wait-for-confirm)
 
@@ -186,13 +187,34 @@
     (current-fragment-on-begin-round!))
   )
 
-; engine / round resolver
+; engine / round resolver / -> ai?
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
          (serialize-state)
          (get-next-pc-action)))
   )
+
+; engine / round resolver / -> ai?
+(define (get-pre-action-reaction action)
+  (define actor (action-actor action))
+  (cond ((not (pc-actor? actor))
+         (cond ((equal? (actor-name actor) "Grabberkin")
+                (get-grabberkin-reaction actor))
+               (else
+                (displayln "unknown non-pc-actor type for reaction")
+                '())))
+        (else
+         (serialize-state)
+         ; TODO
+         ; (displayln "PC REACTION")    
+         '())))
+
+(define (get-post-action-reaction action result)
+  (define actor (action-target action))
+  ; TODO
+  ; this is a chance for the target of an already-resolved action to react
+  '())
 
 
 ; engine / round resolver
@@ -244,6 +266,14 @@
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
     (decrement-actor-status-lifetimes! (situation-pc *situation*)))
+
+  
+  ; proc conditions - TODO this is currently only for PC, fix if needed!
+  (define pc-conditions (actor-conditions (pc)))
+  (for ([condition pc-conditions])
+    ((condition-on-end-round! condition))
+    )
+  
   
   (newline) ; This is the "extra" newline that separates rounds
   (wait-for-confirm)
@@ -331,7 +361,7 @@
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
            (on-end-round)
-           (when (not (actor-alive? (situation-pc *situation*))) (set! round-exit-status 'pc-dead))
+           (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
            round-exit-status
            ))))
 
@@ -473,13 +503,38 @@
       (remove-all-enemies-and-end-combat!)
       (end-round-early))
     (for ([action action-queue])
+
+      (define actor (action-actor action))
+      
+      (define pre-action-reaction? (get-pre-action-reaction action))
+      (when (not (null? pre-action-reaction?))
+        (set! action pre-action-reaction?))
+      
       (define turn-result (resolve-turn! world action))
 
-      (when (eq? turn-result 'pc-dead) (end-round-early))
-      (when (or (eq? turn-result 'escape-from-combat)
-                (eq? turn-result 'grip-released)) ; TODO this'll blow up, must handle per opponent
-        (remove-all-enemies-and-end-combat!)
-        (end-round-early))
+      ; todo
+      (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
+      (when (not (null? post-action-reaction-from-target?))
+        ;(define action post-action-reaction-from-target?)
+        (displayln "-- post-action-reaction-from-target?: handle!"))
+      
+      (case turn-result
+        
+        ['pc-dead
+         (end-round-early)]
+        
+        ['escape-from-combat
+         (remove-all-enemies-and-end-combat!)
+         (end-round-early)
+         ]
+
+        ; TODO: As always, description belongs in the action
+        ['grip-released
+         (paragraph "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
+         (award-xp! 3 "for surviving an encounter with a Grabberkin")
+         (remove-enemy actor)
+         ]
+        )
       )
     ))
    

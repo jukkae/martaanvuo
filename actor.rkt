@@ -6,13 +6,15 @@
 (lazy-require
  ["situation.rkt"
   (clean-up-dead-actor!
+   pc
    )])
 
 (require racket/serialize)
 
+(require "condition.rkt")
+(require "io.rkt")
 (require "status.rkt")
 (require "utils.rkt")
-(require "io.rkt")
 
 
 (serializable-struct
@@ -51,9 +53,8 @@
           (make-hash) '() '() '() '()))
 
 (define (actor-alive? actor)
-  (if (string? (actor-hp actor))
-      #t
-      (> (actor-hp actor) 0)))
+  (> (actor-hp actor) 0))
+
 
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
@@ -82,6 +83,12 @@
       #t
       #f))
 
+(define (actor-lifetime-of-status-of-type? actor type)
+  (define s (findf (λ (status)
+                     (eq? (status-type status) type))
+                   (actor-statuses actor)))
+  (status-lifetime s))
+
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
     (set-status-lifetime! status (- (status-lifetime status) 1)))
@@ -98,10 +105,86 @@
           "] removed]"))))
   (set-actor-statuses! actor new-statuses))
 
+; think:
+; what if statuses are, by definition, something that's a fairly explicit list?
+; and much of combat control is based on manipulating statuses?
+(define (modify-actor-status-lifetime actor type modify-amount)
+  (for ([status (actor-statuses actor)])
+    (when (eq? (status-type status) type)
+      (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
+  
+  (define new-statuses '())
+  (for ([status (actor-statuses actor)])
+    (if (positive? (status-lifetime status))
+        (set! new-statuses (append-element new-statuses status))
+        (displayln
+         (string-append
+          "["
+          (actor-name actor)
+          ": Status ["
+          (symbol->string (status-type status))
+          "] removed]"))))
+  (set-actor-statuses! actor new-statuses))
+
+; yeah the way statuses currently work are a piece of shit
+; but the idea of strength decreasing by one always at end of turn, as well as conditionally,
+; it's a good idea
+(define (actor-set-status! actor type value)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Setting status [" (symbol->string type) "] strength to (" (number->string value) " turns)]")))
+
+  (if (actor-has-status-of-type? actor type)
+      (for ([status (actor-statuses actor)])
+        (when (eq? (status-type status) type)
+          (set-status-lifetime! status value)))
+      (actor-add-status! actor (status type value))))
+
+
+
+
+
+
+;;; CONDITIONS
+(define (actor-add-condition! actor condition)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] added, details:]"))
+    (displayln (condition-details condition)))
+  (set-actor-conditions! actor (append-element (actor-conditions actor) condition)))
+
+; TODO: Broken!
+(define (actor-remove-condition! actor condition)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] removed, details:]"))
+    (displayln (condition-details condition)))
+  (set-actor-conditions! actor (filter
+                                (λ (other) (not (eq? (condition-type condition)
+                                                     (condition-type other))))
+                                (actor-conditions actor))))
+
+(define (actor-remove-condition-of-type! actor type)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Condition of type [" (symbol->string type) "] removed]")))
+  (set-actor-conditions! actor (filter
+                                (λ (other) (not (eq? type
+                                                     (condition-type other))))
+                                (actor-conditions actor))))
+
+(define (actor-has-condition-of-type? actor type)
+  (if (memf (λ (condition)
+              (eq? (condition-type condition) type))
+            (actor-conditions actor))
+      #t
+      #f))
+
+
+
+
 (serializable-struct
  pc-actor
  ([lp #:mutable]
   [max-lp #:mutable]
+  [death-roll-dice #:mutable]
+  [alive? #:mutable]
   [xp #:mutable])
  #:super struct:actor
  #:constructor-name pc-actor*)
@@ -115,7 +198,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() max-lp max-lp 0))
+   (make-hash) '() '() '() '() max-lp max-lp 6 #t 0))
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)
@@ -132,8 +215,56 @@
         ((positive? modifier) (string-append "+" (number->string modifier)))))
 
 
-(define (take-damage actor damage)
-  (when (< damage 0) (error "take-damage: damage cannot be less than 0"))
+(define (pc-take-damage! actor damage damage-type)
+  (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
+  
+  (cond ((not (positive? (actor-hp actor)))
+
+         
+         (define new-hp (- (actor-hp actor) damage))
+         (set-actor-hp! actor new-hp)
+         (displayln (string-append "[Taking damage, new HP : "
+                                   (number->string new-hp)
+                                   "]"))
+                  
+         (define death-roll-dice (pc-actor-death-roll-dice actor))
+         (define death-roll (d 1 death-roll-dice))
+         (define result (+ death-roll
+                           (actor-hp actor)))
+         (displayln (string-append
+                     "[Death roll: 1d"
+                     (number->string death-roll-dice)
+                     " + HP"
+                     " = "
+                     (number->string death-roll)
+                     " - "
+                     (number->string (abs (actor-hp actor))) ; slightly dirty: actor-hp *should* be non-positive
+                     " = "
+                     (number->string result)
+                     "]"))
+
+         (define cause-of-death damage-type)
+
+         (cond ((<= result 1)
+                (begin
+                  (kill actor cause-of-death)
+                  'dead))
+               (else
+                'hit)
+               ))
+        
+        (else
+         (define new-hp (- (actor-hp actor) damage))
+         (when (not (positive? new-hp))
+           (displayln "[Otava is dying.]")
+           (wait-for-confirm))
+              
+         (set-actor-hp! actor new-hp)
+         'hit)))
+
+
+(define (non-pc-take-damage! actor damage damage-type)
+  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)
@@ -144,8 +275,22 @@
 
   (when (eq? result 'dead)
     (clean-up-dead-actor! actor))
+
+  ; TODO this belongs to grabberkin.rkt
+  ; -> subtype grabberkin-actor from actor?
+  (when (equal? (actor-name actor)
+                "Grabberkin")
+    (modify-actor-status-lifetime (pc) 'bound (* -1 damage))
+    (displayln (string-append "decrease bound status strength by "
+                              (number->string (* -1 damage)))))
+    
   
   result)
+
+(define (take-damage actor damage damage-type)
+  (if (pc-actor? actor)
+      (pc-take-damage! actor damage damage-type)
+      (non-pc-take-damage! actor damage damage-type)))
 
 (define (kill actor cause-of-death)
   (set-actor-hp! actor 0)
@@ -155,8 +300,10 @@
                   " is dead. Cause of death: "
                   (symbol->string cause-of-death)
                   "]"))
-  
-  (clean-up-dead-actor! actor))
+  (cond ((pc-actor? actor)
+         (set-pc-actor-alive?! actor #f))
+        (else
+         (clean-up-dead-actor! actor))))
 
 
 (define (add-item-to-inventory! actor item)

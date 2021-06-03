@@ -5,6 +5,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require rebellion/collection/association-list)
+
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
@@ -92,34 +94,34 @@
                #:details '()))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
-  (cond ((and (engaged?)
-              (eq? (actor-name (get-an-enemy-at-range 'engaged))
-                   "Grabberkin"))
+  (define engaged-enemies (get-enemies-at-range 'engaged))
+  (define engaged-grabberkin
+    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'engaged))
+                               "Grabberkin"))
+            engaged-enemies))
+
+  (cond ((not (null? engaged-grabberkin))
+
          (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
-         (define damage-roll (λ () (d 1 2)))
+         
          (define details
-           (list
-            (cons 'damage-roll damage-roll)
-            (cons 'damage-roll-formula
-                  (string-append "1d2 + str mod ["
-                                 (number->string strength-mod)
-                                 "]"))
-            (cons 'damage-type 'bludgeoning)
-            ))
+           (association-list 'str-mod strength-mod))
+         
          (define break-free-choice
            (make-choice
-            'wrestle
+            'pull-free
             (string-append
              "Try to pull the leg free.")
             (λ ()
               (make-action
-               #:symbol 'wrestle
+               #:symbol 'break-free
                #:actor (situation-pc *situation*)
                #:duration 1
-               #:target (get-an-enemy-at-range 'engaged)
-               #:tags '(initiative-based-resolution)
+               #:target (take-random engaged-grabberkin)
+               #:tags '(initiative-based-resolution fast)
                #:details details))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
+ 
 
   combat-choices
   )

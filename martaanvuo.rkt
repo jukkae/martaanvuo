@@ -62,9 +62,9 @@
 
           (define meta-commands (make-hash))
           (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-          (hash-set! meta-commands "R" (cons "[R]: Reincarnate." begin-new-life)) ; TODO: change prompt dynamically based on meta-progress
+          (hash-set! meta-commands "P" (cons "[P]: Proceed." begin-new-life))
 
-          (paragraph "Reincarnate?")
+          (paragraph "Proceed?")
           (print-meta-commands-with-keys meta-commands)
           (define input (wait-for-input))
           (serialize-input)
