@@ -75,34 +75,81 @@
   
   (> hp threshold))
 
+(define (get-grabberkin-action-phase-1 actor)
+  (cond
+    ((and (actor-in-range? actor 'engaged)
+          (actor-has-status-of-type? (pc) 'bound)
+          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+             4))
+     (define options
+       '(anklebreaker anklebreaker anklebreaker skip skip skip))
+               
+     (define roll (d 1 6))
+     (displayln (string-append "[" (number->string roll) "]"))
+     (define index (- roll 1))
+     (define action (list-ref options index))
+
+     (make-grabberkin-action actor action))
+    (else
+     (make-grabberkin-action actor 'grab))))
+
+(define (get-grabberkin-action-phase-2 actor)
+  (cond
+    ((and (actor-in-range? actor 'engaged)
+          (actor-has-status-of-type? (pc) 'bound)
+          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+             4))
+     (define options
+       '(anklebreaker anklebreaker anklebreaker anklebreaker skip skip))
+               
+     (define roll (d 1 6))
+     (displayln (string-append "[" (number->string roll) "]"))
+     (define index (- roll 1))
+     (define action (list-ref options index))
+
+     (make-grabberkin-action actor action))
+    (else
+     (make-grabberkin-action actor 'grab))))
+
+(define (get-grabberkin-action-phase-3 actor)
+  (cond
+    ((and (actor-in-range? actor 'engaged)
+          (actor-has-status-of-type? (pc) 'bound)
+          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
+             4))
+     (define options
+       '(pull-under pull-under pull-under skip skip skip))
+               
+     (define roll (d 1 6))
+     (displayln (string-append "[" (number->string roll) "]"))
+     (define index (- roll 1))
+     (define action (list-ref options index))
+
+     (make-grabberkin-action actor action))
+    (else
+     (make-grabberkin-action actor 'grab))))
+
 (define (get-grabberkin-action actor)
   (cond ((in-combat?)
          (cond
            ((grabberkin-hp-above-threshold? actor)
-            (cond
-              ((and (actor-in-range? actor 'engaged)
-                    (actor-has-status-of-type? (pc) 'bound)
-                    (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-                       4))
-               (define options
-                 (list
-                  (cons 1 'pull-under)
-                  (cons 2 'anklebreaker)
-                  (cons 3 'anklebreaker)
-                  (cons 4 'skip)
-                  (cons 5 'skip)
-                  (cons 6 'skip)))
-               
-               (define roll (d 1 6))
-               (define index (- roll 1))
-               (define action-flag-with-index (list-ref options index))
-
-               
-               (define action-flag (cdr action-flag-with-index))
-               
-               (make-grabberkin-action actor action-flag))
-              (else
-               (make-grabberkin-action actor 'grab))))
+            (define target (pc))
+            (define phase
+              (cond
+                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
+                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
+                 1)
+                ((and (actor-has-condition-of-type? target 'ankle-broken)
+                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
+                 2)
+                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
+                      (actor-has-condition-of-type? target 'both-ankles-broken))
+                 3)))
+            
+            (case phase
+              [(1) (get-grabberkin-action-phase-1 actor)]
+              [(2) (get-grabberkin-action-phase-2 actor)]
+              [(3) (get-grabberkin-action-phase-3 actor)]))
            
            (else
             (make-grabberkin-action actor 'release-grip))))

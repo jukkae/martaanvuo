@@ -298,10 +298,6 @@
     (findf (λ (status) (eq? (status-type status) 'bound))
            statuses))
 
-  (displayln "BOUND STATUS:")
-  (displayln (status-type actor-bound-status))
-  (displayln (status-lifetime actor-bound-status))
-  
   (define target-number (status-lifetime actor-bound-status))
 
   (define dice-sides 10)
@@ -338,10 +334,12 @@
   (wait-for-confirm)
   (if success?
       (begin
+        (displayln "Otava manages to pull her ankle free.")
         (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now
         'ok)
       (begin
-        (award-xp! 1 "for reaching the limits of the capabilities of the body")
+        (displayln "Otava fails to free her ankle..")
+        (award-xp! 1 "for trying and failing")
         'failed)))
 
 
