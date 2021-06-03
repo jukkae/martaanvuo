@@ -338,12 +338,12 @@
   (wait-for-confirm)
   (if success?
       (begin
-        (displayln "Otava manages to pull her ankle free.")
+        (displayln "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
         (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now; should early-exit round, because not doing it causes order issues
         'ok)
       (begin
-        (displayln "Otava fails to free her ankle..")
-        (award-xp! 1 "for trying and failing")
+        (displayln "The grip is still too strong for Otava to break it.")
+        (award-xp! 1)
         'failed)))
 
 
@@ -452,6 +452,8 @@
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
            (define status (car (action-details action)))
+           (when (eq? (status-type status) 'bound)
+             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
            (inflict-status! target status)
            'ok
            )
