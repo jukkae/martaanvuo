@@ -54,15 +54,6 @@
       #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound 10)))]
 
-    ['choke
-     (make-action
-      #:symbol 'choke
-      #:actor actor
-      #:duration 1
-      #:target (pc)
-      #:tags '(initiative-based-resolution)
-      #:details '())]
-
     ['release-grip
      (make-action
       #:symbol 'release-grip
@@ -94,7 +85,6 @@
        '(anklebreaker grab grab skip skip skip))
                
      (define roll (d 1 6))
-     (displayln (string-append "[" (number->string roll) "]"))
      (define index (- roll 1))
      (define action (list-ref options index))
 
@@ -109,10 +99,9 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(pull-under choke choke grab skip skip))
+       '(pull-under pull-under grab grab skip skip))
                
      (define roll (d 1 6))
-     (displayln (string-append "[" (number->string roll) "]"))
      (define index (- roll 1))
      (define action (list-ref options index))
 
@@ -188,7 +177,7 @@
   (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)
   (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "hp-hidden" #t)
+  (set-trait! enemy "hp-hidden" #f)
   (move-actor-to-location! enemy (current-location))
 
   (inflict-status! (pc) (status 'bound 10))
