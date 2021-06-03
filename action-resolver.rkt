@@ -106,6 +106,10 @@
 ; but PC's attribute/skill bonuses can shift that balance
 ; - or would failures be based on saving throw? maybe.
 
+(define (resolve-choke-action! action)
+  (displayln "CHOKE")
+  (take-damage (action-target action) 1 'choking))
+
 ; ability-like attack
 (define (resolve-anklebreaker-action! action)
   (define target (action-target action))
@@ -136,15 +140,15 @@
 
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (cond ((= 6 bleed-damage-roll)
-                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
-                                   (display-combatant-info target))
-                                  (else
-                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
-                                                             (number->string bleed-damage-roll)
-                                                             "] => take 1 damage]"))
+                            (cond ((= 1 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
                                    (take-damage target 1 'bleed)
-                                   (display-combatant-info target))))
+                                   (display-combatant-info target)
+                                   )
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 = 1: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "]]")))))
 
 
 
@@ -301,7 +305,7 @@
   (define target-number (status-lifetime actor-bound-status))
 
   (define dice-sides 10)
-  (define bonus 1)
+  (define bonus str-mod)
   (define roll (d 1 dice-sides))
   (define result (+ roll bonus))
 
@@ -335,7 +339,7 @@
   (if success?
       (begin
         (displayln "Otava manages to pull her ankle free.")
-        (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now
+        (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now; should early-exit round, because not doing it causes order issues
         'ok)
       (begin
         (displayln "Otava fails to free her ankle..")
@@ -454,6 +458,9 @@
 
           ((eq? (action-symbol action) 'anklebreaker)
            (resolve-anklebreaker-action! action))
+
+          ((eq? (action-symbol action) 'choke)
+           (resolve-choke-action! action))
 
           ((eq? (action-symbol action) 'pull-under)
            (resolve-pull-under-action! action))

@@ -54,6 +54,15 @@
       #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound 10)))]
 
+    ['choke
+     (make-action
+      #:symbol 'choke
+      #:actor actor
+      #:duration 1
+      #:target (pc)
+      #:tags '(initiative-based-resolution)
+      #:details '())]
+
     ['release-grip
      (make-action
       #:symbol 'release-grip
@@ -82,7 +91,7 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(anklebreaker anklebreaker anklebreaker skip skip skip))
+       '(anklebreaker grab grab skip skip skip))
                
      (define roll (d 1 6))
      (displayln (string-append "[" (number->string roll) "]"))
@@ -100,25 +109,7 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(anklebreaker anklebreaker anklebreaker anklebreaker skip skip))
-               
-     (define roll (d 1 6))
-     (displayln (string-append "[" (number->string roll) "]"))
-     (define index (- roll 1))
-     (define action (list-ref options index))
-
-     (make-grabberkin-action actor action))
-    (else
-     (make-grabberkin-action actor 'grab))))
-
-(define (get-grabberkin-action-phase-3 actor)
-  (cond
-    ((and (actor-in-range? actor 'engaged)
-          (actor-has-status-of-type? (pc) 'bound)
-          (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             4))
-     (define options
-       '(pull-under pull-under pull-under skip skip skip))
+       '(pull-under choke choke grab skip skip))
                
      (define roll (d 1 6))
      (displayln (string-append "[" (number->string roll) "]"))
@@ -141,15 +132,14 @@
                  1)
                 ((and (actor-has-condition-of-type? target 'ankle-broken)
                       (not (actor-has-condition-of-type? target 'both-ankles-broken)))
-                 2)
+                 1)
                 ((and (not (actor-has-condition-of-type? target 'ankle-broken))
                       (actor-has-condition-of-type? target 'both-ankles-broken))
-                 3)))
+                 2)))
             
             (case phase
               [(1) (get-grabberkin-action-phase-1 actor)]
-              [(2) (get-grabberkin-action-phase-2 actor)]
-              [(3) (get-grabberkin-action-phase-3 actor)]))
+              [(2) (get-grabberkin-action-phase-2 actor)]))
            
            (else
             (make-grabberkin-action actor 'release-grip))))

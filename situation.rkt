@@ -319,6 +319,7 @@
   (set-situation-in-combat?! *situation* in-combat?))
 
 ; scripting API / situation / implementation detail
+; TODO this should also purge action queue -> round-resolver needs to be informed when this gets called
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
