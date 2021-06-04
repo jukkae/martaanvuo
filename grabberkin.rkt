@@ -46,13 +46,14 @@
       #:details '(slow silent))]
 
     ['grab
+     (define strength (+ (d 1 4) 1))
      (make-action
-      #:symbol 'inflict-status
+      #:symbol 'modify-status
       #:actor actor
       #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
-      #:details (list (status 'bound 10)))]
+      #:details (list (status 'bound strength)))] ; this is shit, refactor
 
     ['release-grip
      (make-action

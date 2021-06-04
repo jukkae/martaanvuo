@@ -324,6 +324,8 @@
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
+  (displayln "STANCES:")
+  (displayln (situation-enemy-stances *situation*))
   (set-situation-in-combat?! *situation* #f))
 
 ; scripting API

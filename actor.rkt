@@ -111,6 +111,7 @@
 (define (modify-actor-status-lifetime actor type modify-amount)
   (for ([status (actor-statuses actor)])
     (when (eq? (status-type status) type)
+      (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] modified." "]"))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
   
   (define new-statuses '())

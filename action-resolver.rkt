@@ -137,7 +137,7 @@
 
                (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                           ;"resolve-anklebreaker-action!: details for 'bleeding todo"
-
+                          '() ; details
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
                             (cond ((= 1 bleed-damage-roll)
@@ -184,7 +184,7 @@
 
                (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                           ;"resolve-anklebreaker-action!: details for 'bleeding todo"
-
+                          '() ; details
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
                             (cond ((= 1 bleed-damage-roll)
@@ -452,6 +452,19 @@
            (inflict-status! target status)
            'ok
            )
+
+          ((eq? (action-symbol action) 'modify-status)
+           (define target (action-target action))
+           (define status (car (action-details action)))
+           (when (eq? (status-type status) 'bound) ; this is shit, refactor
+             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+             (define amount (status-lifetime status))
+             (modify-actor-status-lifetime target 'bound amount)
+             )
+           'ok
+           )
+
+          
 
           ((eq? (action-symbol action) 'anklebreaker)
            (resolve-anklebreaker-action! action))
