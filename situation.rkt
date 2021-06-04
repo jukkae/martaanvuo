@@ -338,9 +338,7 @@
 ; scripting API
 (define (remove-enemy enemy)
   (hash-remove! (situation-enemy-stances *situation*) enemy)
-  (remove-actor-from-location! (actor-current-location enemy) enemy)
-  (when (= (length (get-current-enemies)) 0)
-    (end-combat!)))
+  (remove-actor-from-location! (actor-current-location enemy) enemy))
 
 ; scripting API
 (provide actor-in-range?)

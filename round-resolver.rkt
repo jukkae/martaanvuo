@@ -230,7 +230,8 @@
   (displayln "[End round]")
   (define current-enemies (get-current-enemies))
 
-  (when (= (length current-enemies) 0)
+  (when (and (in-combat?)
+             (= (length current-enemies) 0))
     (end-combat!))
   
   (when (not (null? (situation-current-fragment *situation*)))
