@@ -261,9 +261,7 @@
       (for/list ([condition conditions])
         (string-append "["
                        (symbol->string (condition-type condition))
-                       " ("
-                       "condition details TBD"
-                       ")]")))
+                       "]")))
     
     (define conditions-list
       (list " conditions "
