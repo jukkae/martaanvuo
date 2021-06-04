@@ -48,6 +48,17 @@
 
 
 
+;;; Combat
+;;; (or actually, eventually, any kind of action scene, but more about that later)
+(define (begin-combat!)
+  (displayln "BEGIN COMBAT")
+  (set-situation-in-combat?! *situation* #t))
+
+(define (end-combat!)
+  (displayln "END COMBAT")
+  (set-situation-in-combat?! *situation* #f))
+
+
 ;;; Direct accessors and mutators
 (define (reset-pending-action!)
   (set-situation-pending-action! *situation* '()))
@@ -313,10 +324,6 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
-; scripting API / situation / implementation detail
-(provide set-in-combat?!)
-(define (set-in-combat?! in-combat?)
-  (set-situation-in-combat?! *situation* in-combat?))
 
 ; scripting API / situation / implementation detail
 ; TODO this should also purge action queue -> round-resolver needs to be informed when this gets called
@@ -324,9 +331,9 @@
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
-  (displayln "STANCES:")
-  (displayln (situation-enemy-stances *situation*))
-  (set-situation-in-combat?! *situation* #f))
+  (set-situation-in-combat?! *situation* #f)
+  (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
+  )
 
 ; scripting API
 (define (remove-enemy enemy)

@@ -169,7 +169,7 @@
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
   (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
-  (set-in-combat?! #t)
+  (begin-combat!)
 
   (define hp 11)
   (define i 0)
