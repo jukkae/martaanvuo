@@ -44,7 +44,8 @@
                    (get-combatant-name actor)
                    " vs "
                    (get-combatant-name target)))
-  (define success? (skill-check title skill action-target-number))
+  #;(define success? (skill-check title skill action-target-number))
+  (define success? #t)
 
   (define details (action-details action))
   
@@ -52,6 +53,7 @@
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
+  
   
 
   (when success?

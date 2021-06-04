@@ -234,12 +234,32 @@
                  #:target '()
                  #:tags '(downtime)
                  #:details '())))])))
+
+  ; todo jesus fuck this is getting unwieldy
+  (define healing-choices '())
+  (cond ((actor-has-condition-of-type? actor 'bleeding)
+           
+         (set! healing-choices
+               (list
+                (make-choice
+                 'bandage-the-wounds
+                 "Bandage the wounds."
+                 (λ () (make-action
+                        #:symbol 'bandage-the-wounds
+                        #:actor (situation-pc *situation*)
+                        #:duration 10
+                        #:target '()
+                        #:tags '(downtime)
+                        #:details '())))))))
+
+  
   (define choices-before-pruning
-    (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices))
+    (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices healing-choices))
 
   (define (show-choice-based-on-pending-choice? choice)
     (cond ((not (null? pending-choices))
-           #f)
+           #t
+           #;#f)
           (else
            #t)))
   

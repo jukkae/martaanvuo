@@ -83,7 +83,7 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(anklebreaker grab grab skip skip skip))
+       '(anklebreaker anklebreaker grab skip skip skip))
                
      (define roll (d 1 6))
      (define index (- roll 1))
