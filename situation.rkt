@@ -88,13 +88,13 @@
   (define pending-action (situation-pending-action *situation*))
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
-          "Continue towards "
+          "[continue] Continue towards "
           (get-location-name-from-location-type (location-type (action-target pending-action)))
           "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
-          "Keep on searching for paths."))
-        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+          "[continue] Search for paths."))
+        (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 
 ; api
