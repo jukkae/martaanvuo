@@ -331,7 +331,7 @@
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
-  (set-situation-in-combat?! *situation* #f)
+  (end-combat!)
   (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
   )
 
@@ -340,7 +340,7 @@
   (hash-remove! (situation-enemy-stances *situation*) enemy)
   (remove-actor-from-location! (actor-current-location enemy) enemy)
   (when (= (length (get-current-enemies)) 0)
-    (set-situation-in-combat?! *situation* #f)))
+    (end-combat!)))
 
 ; scripting API
 (provide actor-in-range?)

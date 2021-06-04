@@ -231,8 +231,7 @@
   (define current-enemies (get-current-enemies))
 
   (when (= (length current-enemies) 0)
-    ; would be nicer to only change when it's currently true, but eh
-    (set-situation-in-combat?! *situation* #f))
+    (end-combat!))
   
   (when (not (null? (situation-current-fragment *situation*)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
