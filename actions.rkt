@@ -134,18 +134,34 @@
    name
    action))
 
+(define
+  (make-pc-choice #:id id
+                  #:text text
+                  #:duration duration
+                  #:target [target '()]
+                  #:tags [tags '()]
+                  #:details [details '()])
+  (define action
+    (make-action
+     #:symbol id
+     #:actor (pc)
+     #:duration duration
+     #:target target
+     #:tags tags
+     #:details '()))
+  (choice
+     id
+     text
+     action))
+
 (define (get-downtime-choices world actor)
   (list
-   (choice
-    'go-to-location
-    "Go to location"
-   (make-action
-    #:symbol 'go-to-location
-    #:actor (situation-pc *situation*)
+   (make-pc-choice
+    #:id 'go-to-location
+    #:text "Go to location"
     #:duration 100
-    #:target '()
-    #:tags '(downtime)
-    #:details '()))))
+    #:tags '(downtime))))
+    
 
 
 ; This should be refactored
