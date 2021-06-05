@@ -150,17 +150,21 @@
      #:tags tags
      #:details '()))
   (choice
-     id
-     text
-     action))
+   id
+   text
+   action))
 
 (define (get-downtime-choices world actor)
-  (list
-   (make-pc-choice
-    #:id 'go-to-location
-    #:text "Go to location"
-    #:duration 100
-    #:tags '(downtime))))
+  (filter ; TODO this should be extracted, useful!
+   (λ (x) (not (void? x)))
+   (list
+    (make-pc-choice
+     #:id 'go-to-location
+     #:text "Go to location"
+     #:duration 100
+     #:tags '(downtime))
+    (when #f
+      "foobar"))))
     
 
 
