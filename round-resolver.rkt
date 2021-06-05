@@ -694,7 +694,7 @@
 
 ; engine / get-next-pc-action
 (define (choice-as-action choices-with-keys input)
-  ((choice-resolution-effect (hash-ref choices-with-keys (string->number input) '()))))
+  (choice-action (hash-ref choices-with-keys (string->number input) '())))
 
 ; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)

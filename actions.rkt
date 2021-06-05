@@ -126,155 +126,177 @@
   combat-choices
   )
 
+
+
+
+(define-struct choice
+  (symbol
+   name
+   action))
+
+(define (get-downtime-choices world actor)
+  (list
+   (choice
+    'go-to-location
+    "Go to location"
+   (make-action
+    #:symbol 'go-to-location
+    #:actor (situation-pc *situation*)
+    #:duration 100
+    #:target '()
+    #:tags '(downtime)
+    #:details '()))))
+
+
 ; This should be refactored
 ; - a big question is, where does much of this logic
 ; best fit? locations?
 ; actions.rkt, as in "the grand action table containing possible actions"?
-(define (get-downtime-choices world actor)
-  (define pending-choices '())
-  (when (not (null? (situation-pending-action *situation*)))
-    (set!
-     pending-choices
-     (list
-      (make-choice
-       'go-to-location
-       (get-continue-pending-action-name)
-       (λ ()
-         (begin0
-           (situation-pending-action *situation*)
-           (reset-pending-action!)))))))
-  ;(displayln "PC-not-null")
+#;(define (get-downtime-choices world actor)
+    (define pending-choices '())
+    (when (not (null? (situation-pending-action *situation*)))
+      (set!
+       pending-choices
+       (list
+        (make-choice
+         'go-to-location
+         (get-continue-pending-action-name)
+         (λ ()
+           (begin0
+             (situation-pending-action *situation*)
+             (reset-pending-action!)))))))
+    ;(displayln "PC-not-null")
 
   
-  (define change-location-choices '())
-  (define downtime-choices '())
-  (when (and (not (in-combat?))
-             (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-    (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-           '()))
+    (define change-location-choices '())
+    (define downtime-choices '())
+    (when (and (not (in-combat?))
+               (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+      (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+             '()))
+      (define neighbors
+        (location-neighbors (current-location)))
+      (for ([i (in-range 0 (length neighbors))])
+        (define neighbor (list-ref neighbors i))
+        (set! change-location-choices
+              (append change-location-choices
+                      (list
+                       (make-choice
+                        'go-to-location
+                        (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+                        (λ () (make-action
+                               #:symbol 'go-to-location
+                               #:actor (situation-pc *situation*)
+                               #:duration 100
+                               #:target neighbor
+                               #:tags '(downtime)
+                               #:details '())))))))
+
+      (set! downtime-choices
+            (if (eq? (location-type (current-location)) 'swamp)
+                (list
+                 (make-choice
+                  'forage
+                  (string-append "Forage.")
+                  (λ () (make-action
+                         #:symbol 'forage
+                         #:actor (situation-pc *situation*)
+                         #:duration 100
+                         #:target '()
+                         #:tags '(downtime)
+                         #:details '()))))
+                '())
+
+
+            ))
+
+    (define end-run-choices '()) ; poor name
+    (when (eq? (location-type (current-location)) 'edgeflats)
+      (set! end-run-choices
+            (list
+             (make-choice
+              'go-back-to-the-shack
+              "Head back to The Shack."
+              (λ () (make-action
+                     #:symbol 'end-run
+                     #:actor (situation-pc *situation*)
+                     #:duration 0
+                     #:target '()
+                     #:tags '(downtime)
+                     #:details '()))))))
+    (when (eq? (location-type (current-location)) 'spring)
+      (set! end-run-choices
+            (list
+             (make-choice
+              'dive-in-spring
+              "Dive in the spring."
+              (λ () (make-action
+                     #:symbol 'win-game
+                     #:actor (situation-pc *situation*)
+                     #:duration 0
+                     #:target '()
+                     #:tags '(downtime)
+                     #:details '()))))))
+
+  
     (define neighbors
       (location-neighbors (current-location)))
-    (for ([i (in-range 0 (length neighbors))])
-      (define neighbor (list-ref neighbors i))
-      (set! change-location-choices
-            (append change-location-choices
-                    (list
-                     (make-choice
-                      'go-to-location
-                      (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
-                      (λ () (make-action
-                             #:symbol 'go-to-location
-                             #:actor (situation-pc *situation*)
-                             #:duration 100
-                             #:target neighbor
-                             #:tags '(downtime)
-                             #:details '())))))))
 
-    (set! downtime-choices
-          (if (eq? (location-type (current-location)) 'swamp)
-              (list
-               (make-choice
-                'forage
-                (string-append "Forage.")
-                (λ () (make-action
-                       #:symbol 'forage
-                       #:actor (situation-pc *situation*)
-                       #:duration 100
-                       #:target '()
-                       #:tags '(downtime)
-                       #:details '()))))
-              '())
-
-
-          ))
-
-  (define end-run-choices '()) ; poor name
-  (when (eq? (location-type (current-location)) 'edgeflats)
-    (set! end-run-choices
-          (list
+    (define location-specific-choices
+      (for/list ([action (location-actions-provided (current-location))])
+        (case action
+          ['search-for-paths
            (make-choice
-            'go-back-to-the-shack
-            "Head back to The Shack."
+            'search-for-paths
+            "Search for paths."
             (λ () (make-action
-                   #:symbol 'end-run
+                   #:symbol 'search-for-paths
                    #:actor (situation-pc *situation*)
-                   #:duration 0
+                   #:duration 100
                    #:target '()
                    #:tags '(downtime)
-                   #:details '()))))))
-  (when (eq? (location-type (current-location)) 'spring)
-    (set! end-run-choices
-          (list
-           (make-choice
-            'dive-in-spring
-            "Dive in the spring."
-            (λ () (make-action
-                   #:symbol 'win-game
-                   #:actor (situation-pc *situation*)
-                   #:duration 0
-                   #:target '()
-                   #:tags '(downtime)
-                   #:details '()))))))
+                   #:details '())))])))
 
-  
-  (define neighbors
-    (location-neighbors (current-location)))
-
-  (define location-specific-choices
-    (for/list ([action (location-actions-provided (current-location))])
-      (case action
-        ['search-for-paths
-         (make-choice
-          'search-for-paths
-          "Search for paths."
-          (λ () (make-action
-                 #:symbol 'search-for-paths
-                 #:actor (situation-pc *situation*)
-                 #:duration 100
-                 #:target '()
-                 #:tags '(downtime)
-                 #:details '())))])))
-
-  ; todo jesus fuck this is getting unwieldy
-  (define healing-choices '())
-  (cond ((actor-has-condition-of-type? actor 'bleeding)
+    ; todo jesus fuck this is getting unwieldy
+    (define healing-choices '())
+    (cond ((actor-has-condition-of-type? actor 'bleeding)
            
-         (set! healing-choices
-               (list
-                (make-choice
-                 'bandage-the-wounds
-                 "Bandage the wounds."
-                 (λ () (make-action
-                        #:symbol 'bandage-the-wounds
-                        #:actor (situation-pc *situation*)
-                        #:duration 10
-                        #:target '()
-                        #:tags '(downtime)
-                        #:details '())))))))
+           (set! healing-choices
+                 (list
+                  (make-choice
+                   'bandage-the-wounds
+                   "Bandage the wounds."
+                   (λ () (make-action
+                          #:symbol 'bandage-the-wounds
+                          #:actor (situation-pc *situation*)
+                          #:duration 10
+                          #:target '()
+                          #:tags '(downtime)
+                          #:details '())))))))
 
   
-  (define choices-before-pruning
-    (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices healing-choices))
+    (define choices-before-pruning
+      (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices healing-choices))
 
-  (define (show-choice-based-on-pending-choice? choice)
-    (cond ((not (null? pending-choices))
-           (displayln "CHOICE:")
-           (displayln (choice-symbol choice))
-           (displayln (choice-name choice))
+    (define (show-choice-based-on-pending-choice? choice)
+      (cond ((not (null? pending-choices))
+             (displayln "CHOICE:")
+             (displayln (choice-symbol choice))
+             (displayln (choice-name choice))
            
-           ;#t
-           #f)
-          (else
-           #t)))
+             ;#t
+             #f)
+            (else
+             #t)))
   
-  (define
-    pruned-choices
-    (filter
-     show-choice-based-on-pending-choice?
-     choices-before-pruning))
-  (define all-choices
-    (append pending-choices pruned-choices))
-  all-choices)
+    (define
+      pruned-choices
+      (filter
+       show-choice-based-on-pending-choice?
+       choices-before-pruning))
+    (define all-choices
+      (append pending-choices pruned-choices))
+    all-choices)
 
 
 ; store in the action, handle calling from here
