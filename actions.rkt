@@ -132,7 +132,7 @@
 (define-struct choice
   (symbol
    name
-   action))
+   action)) ; TODO: The last bit should be a resolution-effect, which is either a lambda or an action
 
 (define
   (make-pc-choice #:id id
