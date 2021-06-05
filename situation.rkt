@@ -97,6 +97,8 @@
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
   (define pending-action (situation-pending-action *situation*))
+  (displayln "PENDING ACTION:")
+  (displayln pending-action)
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "[continue] Continue towards "

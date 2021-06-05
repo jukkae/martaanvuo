@@ -258,8 +258,12 @@
 
   (define (show-choice-based-on-pending-choice? choice)
     (cond ((not (null? pending-choices))
-           #t
-           #;#f)
+           (displayln "CHOICE:")
+           (displayln (choice-symbol choice))
+           (displayln (choice-name choice))
+           
+           ;#t
+           #f)
           (else
            #t)))
   
