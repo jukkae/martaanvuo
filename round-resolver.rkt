@@ -666,7 +666,7 @@
              (begin
                (handle-fragment-decision fragment-decisions-with-keys input)
                produce-action 'end-round-early))
-            ((choice-valid? choices-with-keys input) (produce-action (choice-as-action choices-with-keys input)))
+            ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 
 
@@ -693,8 +693,15 @@
       #f))
 
 ; engine / get-next-pc-action
-(define (choice-as-action choices-with-keys input)
-  (choice-action (hash-ref choices-with-keys (string->number input) '())))
+(define (resolve-choice-and-produce-action! choices-with-keys input)
+  (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
+  (cond ((procedure? resolution-effect) (resolution-effect))
+        ((action? resolution-effect) resolution-effect)
+        (else (error "resolve-choice-and-produce-action!: unknown type"))))
+
+; engine / get-next-pc-action
+(define (choice-as-resolution-effect choices-with-keys input)
+  (choice-resolution-effect (hash-ref choices-with-keys (string->number input) '())))
 
 ; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)

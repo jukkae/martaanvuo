@@ -129,10 +129,11 @@
 
 
 
+; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
 (define-struct choice
   (symbol
    name
-   action)) ; TODO: The last bit should be a resolution-effect, which is either a lambda or an action
+   resolution-effect)) ; resolution-effect is either a paramless lambda that produces an action, or an action
 
 (define
   (make-pc-choice #:id id
