@@ -267,5 +267,25 @@
  (λ () '())
  )
 
+(fragment
+ 100
+ (string-append
+  "Patch up wounds fast, or patch up wounds well?"
+  )
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Fast."
+                                              "Otava patches up wounds as fast as she can."
+                                              'exit
+                                              )))
+   (set! decisions (append-element decisions (make-decision
+                                              "Well."
+                                              "Otava starts by cleaning the wounds, then wraps everything in fresh bandages."
+                                              'exit
+                                              )))
+
+   decisions)
+ (λ () '())
+ )
 
 

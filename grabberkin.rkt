@@ -46,22 +46,14 @@
       #:details '(slow silent))]
 
     ['grab
+     (define strength (+ (d 1 4) 1))
      (make-action
-      #:symbol 'inflict-status
+      #:symbol 'modify-status
       #:actor actor
       #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
-      #:details (list (status 'bound 10)))]
-
-    ['choke
-     (make-action
-      #:symbol 'choke
-      #:actor actor
-      #:duration 1
-      #:target (pc)
-      #:tags '(initiative-based-resolution)
-      #:details '())]
+      #:details (list (status 'bound strength)))] ; this is shit, refactor
 
     ['release-grip
      (make-action
@@ -91,10 +83,9 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(anklebreaker grab grab skip skip skip))
+       '(anklebreaker anklebreaker grab skip skip skip))
                
      (define roll (d 1 6))
-     (displayln (string-append "[" (number->string roll) "]"))
      (define index (- roll 1))
      (define action (list-ref options index))
 
@@ -109,10 +100,9 @@
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
              4))
      (define options
-       '(pull-under choke choke grab skip skip))
+       '(pull-under pull-under grab grab skip skip))
                
      (define roll (d 1 6))
-     (displayln (string-append "[" (number->string roll) "]"))
      (define index (- roll 1))
      (define action (list-ref options index))
 
@@ -179,7 +169,7 @@
 (define (spawn-grabberkin-encounter!)
   ; TODO usually grab only one ankle, sometimes both
   (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
-  (set-in-combat?! #t)
+  (begin-combat!)
 
   (define hp 11)
   (define i 0)
@@ -188,7 +178,7 @@
   (set-actor-strength! enemy 11)
   (set-trait! enemy "defense" -1)
   (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "hp-hidden" #t)
+  (set-trait! enemy "hp-hidden" #f)
   (move-actor-to-location! enemy (current-location))
 
   (inflict-status! (pc) (status 'bound 10))

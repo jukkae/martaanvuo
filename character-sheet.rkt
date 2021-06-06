@@ -16,7 +16,6 @@
    paragraph
    in-combat?
    actor-in-range?
-   set-in-combat?!
    move-actor-to-location!
    current-location
    stance

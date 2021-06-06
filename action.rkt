@@ -7,11 +7,6 @@
 
 (require "utils.rkt")
 
-(define-struct choice
-  (symbol
-   name
-   resolution-effect))
-
 (struct/lens action
  
              (symbol

@@ -44,7 +44,8 @@
                    (get-combatant-name actor)
                    " vs "
                    (get-combatant-name target)))
-  (define success? (skill-check title skill action-target-number))
+  #;(define success? (skill-check title skill action-target-number))
+  (define success? #t)
 
   (define details (action-details action))
   
@@ -52,6 +53,7 @@
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
+  
   
 
   (when success?
@@ -106,25 +108,25 @@
 ; but PC's attribute/skill bonuses can shift that balance
 ; - or would failures be based on saving throw? maybe.
 
-(define (resolve-choke-action! action)
-  (displayln "CHOKE")
-  (take-damage (action-target action) 1 'choking))
+; move to utils
+(define (roll-crit? sides)
+  (define crit-roll (d 1 sides))
+  (define critical? (= crit-roll 6))
+  (define crit-string (if critical?
+                          ", crit"
+                          ""))
+  (displayln (string-append "[crit roll: 1d"
+                            (number->string sides)
+                            " = " (number->string crit-roll) crit-string "]")))
 
 ; ability-like attack
 (define (resolve-anklebreaker-action! action)
   (define target (action-target action))
   (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
          (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
-         ;(define crit-roll (d 1 6))
-         (define crit-roll 6)
-         (define critical? (= crit-roll 6))
-         (define crit-string (if critical?
-                                 ", crit"
-                                 ""))
-         (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
-         
+         (define critical? (roll-crit? 4))
          (when critical?
-           (paragraph "A shard of bone sticks out through a gash in her ankle and blood starts to flow."))
+           (paragraph "A shard of bone sticks out through a gash in her ankle. Blood starts to flow."))
          (define action-result (take-damage target 1 'trauma))
          (case action-result
            ('hit
@@ -136,8 +138,8 @@
                target
 
                (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
-                          "resolve-anklebreaker-action!: details for 'bleeding todo"
-
+                          ;"resolve-anklebreaker-action!: details for 'bleeding todo"
+                          '() ; details
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
                             (cond ((= 1 bleed-damage-roll)
@@ -164,13 +166,8 @@
         ; second ankle
         (else
          (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes the bones in Otava's other ankle, too.")
-         ;(define crit-roll (d 1 6))
-         (define crit-roll 1)
-         (define critical? (= crit-roll 6))
-         (define crit-string (if critical?
-                                 ", crit"
-                                 ""))
-         (displayln (string-append "[crit roll: 1d6 = " (number->string crit-roll) crit-string "]"))
+
+         (define critical? (roll-crit? 4))
          (when critical?
            (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out."))
 
@@ -188,19 +185,19 @@
                target
 
                (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
-                          "resolve-anklebreaker-action!: details for 'bleeding todo"
-
+                          ;"resolve-anklebreaker-action!: details for 'bleeding todo"
+                          '() ; details
                           (λ ()
                             (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (cond ((= 6 bleed-damage-roll)
-                                   (displayln "[Bleed check: 1d6 < 6: [6] => no effect]")
-                                   (display-combatant-info target))
-                                  (else
-                                   (displayln (string-append "[Bleed check: 1d6 < 6: ["
-                                                             (number->string bleed-damage-roll)
-                                                             "] => take 1 damage]"))
+                            (cond ((= 1 bleed-damage-roll)
+                                   (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
                                    (take-damage target 1 'bleed)
-                                   (display-combatant-info target))))
+                                   (display-combatant-info target)
+                                   )
+                                  (else
+                                   (displayln (string-append "[Bleed check: 1d6 = 1: ["
+                                                             (number->string bleed-damage-roll)
+                                                             "]]")))))
 
 
                           )))
@@ -339,8 +336,8 @@
   (if success?
       (begin
         (displayln "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
-        (remove-all-enemies-and-end-combat!) ; TODO this has to be done on a per-enemy basis, but works for now; should early-exit round, because not doing it causes order issues
-        'ok)
+        (award-xp! 4)
+        'end-combat)
       (begin
         (displayln "The grip is still too strong for Otava to break it.")
         (award-xp! 1)
@@ -458,11 +455,21 @@
            'ok
            )
 
+          ((eq? (action-symbol action) 'modify-status)
+           (define target (action-target action))
+           (define status (car (action-details action)))
+           (when (eq? (status-type status) 'bound) ; this is shit, refactor
+             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+             (define amount (status-lifetime status))
+             (modify-actor-status-lifetime target 'bound amount)
+             )
+           'ok
+           )
+
+          
+
           ((eq? (action-symbol action) 'anklebreaker)
            (resolve-anklebreaker-action! action))
-
-          ((eq? (action-symbol action) 'choke)
-           (resolve-choke-action! action))
 
           ((eq? (action-symbol action) 'pull-under)
            (resolve-pull-under-action! action))

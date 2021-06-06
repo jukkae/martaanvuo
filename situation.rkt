@@ -48,6 +48,17 @@
 
 
 
+;;; Combat
+;;; (or actually, eventually, any kind of action scene, but more about that later)
+(define (begin-combat!)
+  (displayln "BEGIN COMBAT")
+  (set-situation-in-combat?! *situation* #t))
+
+(define (end-combat!)
+  (displayln "END COMBAT")
+  (set-situation-in-combat?! *situation* #f))
+
+
 ;;; Direct accessors and mutators
 (define (reset-pending-action!)
   (set-situation-pending-action! *situation* '()))
@@ -86,15 +97,17 @@
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
   (define pending-action (situation-pending-action *situation*))
+  (displayln "PENDING ACTION:")
+  (displayln pending-action)
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
-          "Continue towards "
+          "[continue] Continue towards "
           (get-location-name-from-location-type (location-type (action-target pending-action)))
           "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
-          "Keep on searching for paths."))
-        (else (string-append "get-continue-pending-action-name: unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+          "[continue] Search for paths."))
+        (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
 
 ; api
@@ -250,9 +263,7 @@
       (for/list ([condition conditions])
         (string-append "["
                        (symbol->string (condition-type condition))
-                       " ("
-                       "condition details TBD"
-                       ")]")))
+                       "]")))
     
     (define conditions-list
       (list " conditions "
@@ -313,10 +324,6 @@
 (define (in-combat?)
   (situation-in-combat? *situation*))
 
-; scripting API / situation / implementation detail
-(provide set-in-combat?!)
-(define (set-in-combat?! in-combat?)
-  (set-situation-in-combat?! *situation* in-combat?))
 
 ; scripting API / situation / implementation detail
 ; TODO this should also purge action queue -> round-resolver needs to be informed when this gets called
@@ -324,14 +331,14 @@
   (for ([enemy (get-current-enemies)])
     (hash-remove! (situation-enemy-stances *situation*) enemy)
     (remove-actor-from-location! (actor-current-location enemy) enemy))
-  (set-situation-in-combat?! *situation* #f))
+  (end-combat!)
+  (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
+  )
 
 ; scripting API
 (define (remove-enemy enemy)
   (hash-remove! (situation-enemy-stances *situation*) enemy)
-  (remove-actor-from-location! (actor-current-location enemy) enemy)
-  (when (= (length (get-current-enemies)) 0)
-    (set-situation-in-combat?! *situation* #f)))
+  (remove-actor-from-location! (actor-current-location enemy) enemy))
 
 ; scripting API
 (provide actor-in-range?)
