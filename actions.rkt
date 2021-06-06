@@ -156,9 +156,21 @@
    action))
 
 (define (get-downtime-choices world actor)
-  (filter ; TODO this should be extracted, useful!
-   (λ (x) (not (void? x)))
+  (filter ; TODO this should be extracted, useful, esp. the void check!
+   (λ (x) (and (not (null? x))
+               (not (void? x))))
    (list
+    
+    (when (not (null? (situation-pending-action *situation*)))
+      (choice
+       (action-symbol (situation-pending-action *situation*))
+       (get-continue-pending-action-name)
+     
+       (λ ()
+         (begin0
+           (situation-pending-action *situation*)
+           (reset-pending-action!)))))
+    
     (make-pc-choice
      #:id 'go-to-location
      #:text "Go to location"
@@ -174,20 +186,7 @@
 ; best fit? locations?
 ; actions.rkt, as in "the grand action table containing possible actions"?
 #;(define (get-downtime-choices world actor)
-    (define pending-choices '())
-    (when (not (null? (situation-pending-action *situation*)))
-      (set!
-       pending-choices
-       (list
-        (make-choice
-         'go-to-location
-         (get-continue-pending-action-name)
-         (λ ()
-           (begin0
-             (situation-pending-action *situation*)
-             (reset-pending-action!)))))))
-    ;(displayln "PC-not-null")
-
+    
   
     (define change-location-choices '())
     (define downtime-choices '())
