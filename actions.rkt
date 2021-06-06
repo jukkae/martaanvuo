@@ -156,38 +156,67 @@
    action))
 
 (define (get-downtime-choices world actor)
-  (filter ; TODO this should be extracted, useful, esp. the void check!
-   (λ (x) (and (not (null? x))
-               (not (void? x))))
-   (list
+  (flatten ; CBA
+   (filter ; TODO this should be extracted, useful, esp. the void check!
+    (λ (x) (and (not (null? x))
+                (not (void? x))))
+    (list
     
-    (when (not (null? (situation-pending-action *situation*)))
-      (choice
-       (action-symbol (situation-pending-action *situation*))
-       (get-continue-pending-action-name)
+     (when (not (null? (situation-pending-action *situation*)))
+       (choice
+        (action-symbol (situation-pending-action *situation*))
+        (get-continue-pending-action-name)
      
-       (λ ()
-         (begin0
-           (situation-pending-action *situation*)
-           (reset-pending-action!)))))
+        (λ ()
+          (begin0
+            (situation-pending-action *situation*)
+            (reset-pending-action!)))))
 
 
-    (when (eq? (location-type (current-location)) 'edgeflats)
+     (when (eq? (location-type (current-location)) 'edgeflats)
+       (make-pc-choice
+        #:id 'end-run
+        #:text "Head back to The Shack."
+        #:duration 0
+        #:tags '(downtime)))
+
+     (when (and (not (in-combat?))
+                (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+       (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+              '()))
       
+       (for/list ([neighbor (location-neighbors (current-location))])
+        
+         (make-choice
+          'go-to-location
+          (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+          (λ () (make-action
+                 #:symbol 'go-to-location
+                 #:actor (situation-pc *situation*)
+                 #:duration 100
+                 #:target neighbor
+                 #:tags '(downtime)
+                 #:details '())))))
 
-      (make-pc-choice
-       #:id 'end-run
-       #:text "Head back to The Shack."
-       #:duration 0
-       #:tags '(downtime)))
+     (when (eq? (location-type (current-location)) 'swamp)
+       (list
+        (make-choice
+         'forage
+         (string-append "Forage.")
+         (λ () (make-action
+                #:symbol 'forage
+                #:actor (situation-pc *situation*)
+                #:duration 100
+                #:target '()
+                #:tags '(downtime)
+                #:details '())))))
     
-    (make-pc-choice
-     #:id 'go-to-location
-     #:text "Go to location"
-     #:duration 100
-     #:tags '(downtime))
-    (when #f
-      "foobar"))))
+     #;(when #t
+         (make-pc-choice
+          #:id 'go-to-location
+          #:text "Go to location"
+          #:duration 100
+          #:tags '(downtime)))))))
     
 
 
@@ -200,45 +229,7 @@
   
     (define change-location-choices '())
     (define downtime-choices '())
-    (when (and (not (in-combat?))
-               (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-      (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-             '()))
-      (define neighbors
-        (location-neighbors (current-location)))
-      (for ([i (in-range 0 (length neighbors))])
-        (define neighbor (list-ref neighbors i))
-        (set! change-location-choices
-              (append change-location-choices
-                      (list
-                       (make-choice
-                        'go-to-location
-                        (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
-                        (λ () (make-action
-                               #:symbol 'go-to-location
-                               #:actor (situation-pc *situation*)
-                               #:duration 100
-                               #:target neighbor
-                               #:tags '(downtime)
-                               #:details '())))))))
-
-      (set! downtime-choices
-            (if (eq? (location-type (current-location)) 'swamp)
-                (list
-                 (make-choice
-                  'forage
-                  (string-append "Forage.")
-                  (λ () (make-action
-                         #:symbol 'forage
-                         #:actor (situation-pc *situation*)
-                         #:duration 100
-                         #:target '()
-                         #:tags '(downtime)
-                         #:details '()))))
-                '())
-
-
-            ))
+    
 
     (define end-run-choices '()) ; poor name
     
