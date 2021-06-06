@@ -694,6 +694,16 @@
 
 ; engine / get-next-pc-action
 (define (resolve-choice-and-produce-action! choices-with-keys input)
+  (define pending-choice-available? #f)
+  (for/hash ([(k v) (in-hash choices-with-keys)])
+    (values k
+            (begin
+              (when (string-prefix? (choice-name v) "[continue]")
+                (set! pending-choice-available? #t)))))
+  
+  ; choice either is pending (= resolve it) or is not, in which case discard pending action
+  (when pending-choice-available? (reset-pending-action!))
+  
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (cond ((procedure? resolution-effect) (resolution-effect))
         ((action? resolution-effect) resolution-effect)
