@@ -53,7 +53,7 @@
     (define stance (hash-ref (situation-enemy-stances *situation*) target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 2)))
+           (define damage-roll (λ () (d 1 6)))
            (define details
              (list
               (cons 'damage-roll damage-roll)
@@ -156,102 +156,82 @@
    action))
 
 (define (get-downtime-choices world actor)
-  (flatten ; CBA
-   (filter ; TODO this should be extracted, useful, esp. the void check!
-    (λ (x) (and (not (null? x))
-                (not (void? x))))
-    (list
+  (define (show-based-on-pending-choice? choice)
+    (if (null? (situation-pending-action *situation*))
+        #t
+        (begin
+          (cond
+            ; show pending action
+            ((string-prefix? (choice-name choice) "[continue]")
+             #t)
+            
+            ; don't show actions that have same symbol as pending action
+            ; (note: this may or may not lead to intended results, see how it works)
+            ((eq? (choice-symbol choice) (action-symbol (situation-pending-action *situation*)))
+             #f)
+            
+            ; show anything else
+            (else
+             #t)))))
+  
+
+  (filter ; okay now this is getting ridiculous
+   (λ (x) (show-based-on-pending-choice? x))
+   (flatten ; CBA
+    (filter ; TODO this should be extracted, useful, esp. the void check!
+     (λ (x) (and (not (null? x))
+                 (not (void? x))))
+     (list
     
-     (when (not (null? (situation-pending-action *situation*)))
-       (choice
-        (action-symbol (situation-pending-action *situation*))
-        (get-continue-pending-action-name)
+      (when (not (null? (situation-pending-action *situation*)))
+        (choice
+         (action-symbol (situation-pending-action *situation*))
+         (get-continue-pending-action-name)
      
-        (λ ()
-          (begin0
-            (situation-pending-action *situation*)
-            (reset-pending-action!)))))
+         (λ ()
+           (begin0
+             (situation-pending-action *situation*)
+             (reset-pending-action!)))))
 
 
-     (when (eq? (location-type (current-location)) 'edgeflats)
-       (make-pc-choice
-        #:id 'end-run
-        #:text "Head back to The Shack."
-        #:duration 0
-        #:tags '(downtime)))
+      (when (eq? (location-type (current-location)) 'edgeflats)
+        (make-pc-choice
+         #:id 'end-run
+         #:text "Head back to The Shack."
+         #:duration 0
+         #:tags '(downtime)))
 
-     (when (and (not (in-combat?))
-                (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-       (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-              '()))
+      (when (and (not (in-combat?))
+                 (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+        (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+               '()))
       
-       (for/list ([neighbor (location-neighbors (current-location))])
+        (for/list ([neighbor (location-neighbors (current-location))])
         
+          (make-choice
+           'go-to-location
+           (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+           (λ () (make-action
+                  #:symbol 'go-to-location
+                  #:actor (situation-pc *situation*)
+                  #:duration 100
+                  #:target neighbor
+                  #:tags '(downtime)
+                  #:details '())))))
+
+      (when (eq? (location-type (current-location)) 'swamp)
+        (list
          (make-choice
-          'go-to-location
-          (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+          'forage
+          (string-append "Forage.")
           (λ () (make-action
-                 #:symbol 'go-to-location
+                 #:symbol 'forage
                  #:actor (situation-pc *situation*)
                  #:duration 100
-                 #:target neighbor
+                 #:target '()
                  #:tags '(downtime)
                  #:details '())))))
 
-     (when (eq? (location-type (current-location)) 'swamp)
-       (list
-        (make-choice
-         'forage
-         (string-append "Forage.")
-         (λ () (make-action
-                #:symbol 'forage
-                #:actor (situation-pc *situation*)
-                #:duration 100
-                #:target '()
-                #:tags '(downtime)
-                #:details '())))))
-    
-     #;(when #t
-         (make-pc-choice
-          #:id 'go-to-location
-          #:text "Go to location"
-          #:duration 100
-          #:tags '(downtime)))))))
-    
-
-
-; This should be refactored
-; - a big question is, where does much of this logic
-; best fit? locations?
-; actions.rkt, as in "the grand action table containing possible actions"?
-#;(define (get-downtime-choices world actor)
-    
-  
-    (define change-location-choices '())
-    (define downtime-choices '())
-    
-
-    (define end-run-choices '()) ; poor name
-    
-    (when (eq? (location-type (current-location)) 'spring)
-      (set! end-run-choices
-            (list
-             (make-choice
-              'dive-in-spring
-              "Dive in the spring."
-              (λ () (make-action
-                     #:symbol 'win-game
-                     #:actor (situation-pc *situation*)
-                     #:duration 0
-                     #:target '()
-                     #:tags '(downtime)
-                     #:details '()))))))
-
-  
-    (define neighbors
-      (location-neighbors (current-location)))
-
-    (define location-specific-choices
       (for/list ([action (location-actions-provided (current-location))])
         (case action
           ['search-for-paths
@@ -264,48 +244,26 @@
                    #:duration 100
                    #:target '()
                    #:tags '(downtime)
-                   #:details '())))])))
+                   #:details '())))]))
 
-    ; todo jesus fuck this is getting unwieldy
-    (define healing-choices '())
-    (cond ((actor-has-condition-of-type? actor 'bleeding)
-           
-           (set! healing-choices
-                 (list
-                  (make-choice
-                   'bandage-the-wounds
-                   "Bandage the wounds."
-                   (λ () (make-action
-                          #:symbol 'bandage-the-wounds
-                          #:actor (situation-pc *situation*)
-                          #:duration 10
-                          #:target '()
-                          #:tags '(downtime)
-                          #:details '())))))))
+      (when (eq? (location-type (current-location)) 'spring)
+        (make-choice
+         'dive-in-spring
+         "Dive in the spring."
+         (λ () (make-action
+                #:symbol 'win-game
+                #:actor (situation-pc *situation*)
+                #:duration 0
+                #:target '()
+                #:tags '(downtime)
+                #:details '()))))
 
-  
-    (define choices-before-pruning
-      (append pending-choices change-location-choices downtime-choices end-run-choices location-specific-choices healing-choices))
 
-    (define (show-choice-based-on-pending-choice? choice)
-      (cond ((not (null? pending-choices))
-             (displayln "CHOICE:")
-             (displayln (choice-symbol choice))
-             (displayln (choice-name choice))
-           
-             ;#t
-             #f)
-            (else
-             #t)))
-  
-    (define
-      pruned-choices
-      (filter
-       show-choice-based-on-pending-choice?
-       choices-before-pruning))
-    (define all-choices
-      (append pending-choices pruned-choices))
-    all-choices)
+
+      ))))
+  )
+    
+
 
 
 ; store in the action, handle calling from here

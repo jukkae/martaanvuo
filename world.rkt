@@ -21,7 +21,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:actions-provided '()
+   #:actions-provided '(search-for-paths)
    #:type 'edgeflats))
 
 (define swamp
