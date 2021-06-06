@@ -170,6 +170,16 @@
          (begin0
            (situation-pending-action *situation*)
            (reset-pending-action!)))))
+
+
+    (when (eq? (location-type (current-location)) 'edgeflats)
+      
+
+      (make-pc-choice
+       #:id 'end-run
+       #:text "Head back to The Shack."
+       #:duration 0
+       #:tags '(downtime)))
     
     (make-pc-choice
      #:id 'go-to-location
@@ -231,19 +241,7 @@
             ))
 
     (define end-run-choices '()) ; poor name
-    (when (eq? (location-type (current-location)) 'edgeflats)
-      (set! end-run-choices
-            (list
-             (make-choice
-              'go-back-to-the-shack
-              "Head back to The Shack."
-              (λ () (make-action
-                     #:symbol 'end-run
-                     #:actor (situation-pc *situation*)
-                     #:duration 0
-                     #:target '()
-                     #:tags '(downtime)
-                     #:details '()))))))
+    
     (when (eq? (location-type (current-location)) 'spring)
       (set! end-run-choices
             (list
