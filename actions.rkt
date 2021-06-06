@@ -175,92 +175,90 @@
              #t)))))
   
 
-  (filter ; okay now this is getting ridiculous
-   (λ (x) (show-based-on-pending-choice? x))
-   (flatten ; CBA
-    (filter ; TODO this should be extracted, useful, esp. the void check!
-     (λ (x) (and (not (null? x))
-                 (not (void? x))))
-     (list
+  (flatten
+   (filter ; okay now this is getting ridiculous
+    (λ (x) (show-based-on-pending-choice? x))
+    (flatten ; CBA
+     (filter ; TODO this should be extracted, useful, esp. the void check!
+      (λ (x) (and (not (null? x))
+                  (not (void? x))))
+      (list
     
-      (when (not (null? (situation-pending-action *situation*)))
-        (choice
-         (action-symbol (situation-pending-action *situation*))
-         (get-continue-pending-action-name)
+       (when (not (null? (situation-pending-action *situation*)))
+         (choice
+          (action-symbol (situation-pending-action *situation*))
+          (get-continue-pending-action-name)
      
-         (λ ()
-           (begin0
-             (situation-pending-action *situation*)
-             (reset-pending-action!)))))
+          (λ ()
+            (begin0
+              (situation-pending-action *situation*)
+              (reset-pending-action!)))))
 
-
-      (when (eq? (location-type (current-location)) 'edgeflats)
-        (make-pc-choice
-         #:id 'end-run
-         #:text "Head back to The Shack."
-         #:duration 0
-         #:tags '(downtime)))
-
-      (when (and (not (in-combat?))
-                 (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-        (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-               '()))
+       (when (and (not (in-combat?))
+                  (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+                '()))
       
-        (for/list ([neighbor (location-neighbors (current-location))])
+         (for/list ([neighbor (location-neighbors (current-location))])
         
+           (make-choice
+            'go-to-location
+            (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+            (λ () (make-action
+                   #:symbol 'go-to-location
+                   #:actor (situation-pc *situation*)
+                   #:duration 100
+                   #:target neighbor
+                   #:tags '(downtime)
+                   #:details '())))))
+
+       (when (eq? (location-type (current-location)) 'swamp)
+         (list
           (make-choice
-           'go-to-location
-           (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+           'forage
+           (string-append "Forage.")
            (λ () (make-action
-                  #:symbol 'go-to-location
+                  #:symbol 'forage
                   #:actor (situation-pc *situation*)
                   #:duration 100
-                  #:target neighbor
+                  #:target '()
                   #:tags '(downtime)
                   #:details '())))))
 
-      (when (eq? (location-type (current-location)) 'swamp)
-        (list
+       (for/list ([action (location-actions-provided (current-location))])
+         (case action
+           ['search-for-paths
+            (make-choice
+             'search-for-paths
+             "Search for paths."
+             (λ () (make-action
+                    #:symbol 'search-for-paths
+                    #:actor (situation-pc *situation*)
+                    #:duration 100
+                    #:target '()
+                    #:tags '(downtime)
+                    #:details '())))]))
+
+       (when (eq? (location-type (current-location)) 'spring)
          (make-choice
-          'forage
-          (string-append "Forage.")
+          'dive-in-spring
+          "Dive in the spring."
           (λ () (make-action
-                 #:symbol 'forage
+                 #:symbol 'win-game
                  #:actor (situation-pc *situation*)
-                 #:duration 100
+                 #:duration 0
                  #:target '()
                  #:tags '(downtime)
-                 #:details '())))))
+                 #:details '()))))
+       
+       (when (eq? (location-type (current-location)) 'edgeflats)
+         (make-pc-choice
+          #:id 'end-run
+          #:text "Head back to The Shack."
+          #:duration 0
+          #:tags '(downtime)))
 
-      (for/list ([action (location-actions-provided (current-location))])
-        (case action
-          ['search-for-paths
-           (make-choice
-            'search-for-paths
-            "Search for paths."
-            (λ () (make-action
-                   #:symbol 'search-for-paths
-                   #:actor (situation-pc *situation*)
-                   #:duration 100
-                   #:target '()
-                   #:tags '(downtime)
-                   #:details '())))]))
-
-      (when (eq? (location-type (current-location)) 'spring)
-        (make-choice
-         'dive-in-spring
-         "Dive in the spring."
-         (λ () (make-action
-                #:symbol 'win-game
-                #:actor (situation-pc *situation*)
-                #:duration 0
-                #:target '()
-                #:tags '(downtime)
-                #:details '()))))
-
-
-
-      ))))
+       )))))
   )
     
 

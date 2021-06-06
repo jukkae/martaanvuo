@@ -76,12 +76,13 @@
           (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
                 (else (end-of-life-menu 'abbreviated)))))
       (when (eq? pc-life-end-status 'win-game) (win-game))))
-  (win-game))
+  (end-game))
 
 ; scripting API / game-specific
-(define (win-game)
-  (paragraph "Otava dives under the waters of Martaanvuo Spring and forever ceases to exist.")
-  (wait-for-input)
+(define (end-game)
+  (paragraph "[The end.]")
+  (player-info)
+  (wait-for-confirm)
   (exit))
 
 ; main entrypoint

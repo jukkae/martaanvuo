@@ -21,7 +21,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:actions-provided '(search-for-paths)
+   #:actions-provided '()
    #:type 'edgeflats))
 
 (define swamp
@@ -111,7 +111,7 @@
    #:items '()
    #:neighbors '()
    #:tags '()
-   #:actions-provided '(dive-in-spring)
+   #:actions-provided '()
    #:type 'spring))
 
 (define (setup-world)
