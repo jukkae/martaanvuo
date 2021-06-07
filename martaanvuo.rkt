@@ -1,29 +1,9 @@
 #lang racket
 
-(require racket/generator)
-(require racket/serialize)
-
-(require lens)
-(require text-table)
-
-(require "action-resolver.rkt")
-(require "action.rkt")
-(require "actions.rkt")
-(require "actor.rkt")
-(require "blindscraper.rkt")
-(require "checks.rkt")
-(require "character-sheet.rkt")
-(require "fragment.rkt")
-(require "fragments.rkt")
-(require "grabberkin.rkt")
 (require "io.rkt")
 (require "life-resolver.rkt")
-(require "location.rkt")
-(require "pc.rkt")
 (require "round-resolver.rkt")
-(require "run-resolver.rkt")
 (require "situation.rkt")
-(require "utils.rkt")
 (require "world.rkt")
 
 
