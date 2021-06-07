@@ -3,12 +3,12 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require rebellion/collection/association-list)
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "choice.rkt")
 (require "io.rkt")
 (require "location.rkt")
 (require "situation.rkt")
@@ -126,34 +126,6 @@
   combat-choices
   )
 
-
-
-
-; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
-(define-struct choice
-  (symbol
-   name
-   resolution-effect)) ; resolution-effect is either a paramless lambda that produces an action, or an action
-
-(define
-  (make-pc-choice #:id id
-                  #:text text
-                  #:duration duration
-                  #:target [target '()]
-                  #:tags [tags '()]
-                  #:details [details '()])
-  (define action
-    (make-action
-     #:symbol id
-     #:actor (pc)
-     #:duration duration
-     #:target target
-     #:tags tags
-     #:details '()))
-  (choice
-   id
-   text
-   action))
 
 (define (get-downtime-choices world actor)
   (define (show-based-on-pending-choice? choice)

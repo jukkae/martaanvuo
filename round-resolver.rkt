@@ -12,6 +12,7 @@
 (require "actor.rkt")
 (require "blindscraper.rkt")
 (require "character-sheet.rkt")
+(require "choice.rkt")
 (require "condition.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
@@ -455,9 +456,8 @@
          (define encounter-types '(blindscraper grabberkin))
 
 
-         (define encounter-type 'grabberkin)
-         ;(define encounter-type 'blindscraper)
-         
+         (define encounter-type (take-random encounter-types))
+
          (case encounter-type
            ['grabberkin
 
@@ -566,7 +566,7 @@
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
                  'night))
-       (define dice-sides 100) ; tweak on a per-location basis
+       (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
        (cond ((= roll 1)
