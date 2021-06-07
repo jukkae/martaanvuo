@@ -110,85 +110,81 @@
   "Otava is unsure whether to climb the ridges or head lower and try to follow the valleys. The ridges would perhaps mean drier feet, faster progress, and eventually better visibility if the fog dissipates. On the other hand, the laboratory ultimately lies on the banks of Martaanvuo river, and she's pretty sure that all the hollows here ultimately lead to Martaanvuo."
   )
 
- (let ([decisions '()])
-   (set! decisions
-         (append-element
-          decisions
-          (make-decision
-           "Follow the ridges."
-           "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-           (λ ()
-             (begin
-               (move-pc-to-location! ridges)
-               (define action (make-action
-                               #:symbol 'search-for-paths
-                               #:actor (pc)
-                               #:duration 100
-                               #:target '()
-                               #:tags '(downtime)
-                               #:details '()))
+ (list
+  (make-decision
+   #:title "Follow the ridges."
+   #:description "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
+   #:next-fragment (λ ()
+                     (begin
+                       (move-pc-to-location! ridges)
+                       (define action (make-action
+                                       #:symbol 'search-for-paths
+                                       #:actor (pc)
+                                       #:duration 100
+                                       #:target '()
+                                       #:tags '(downtime)
+                                       #:details '()))
 
-               ; 'success, 'failure or 'suspended
-               (define
-                 action-result
-                 (resolve-pc-action! action))
+                       ; 'success, 'failure or 'suspended
+                       (define
+                         action-result
+                         (resolve-pc-action! action))
                                                   
-               (cond ((eq? action-result 'success)
-                      (begin
-                        (set-location-neighbors!
-                         swamp
-                         (append-element
-                          (location-neighbors swamp)
-                          ruins))
-                        21))
-                     ((eq? action-result 'interrupted)
-                      (begin
-                        'exit
-                        ))
-                     (else
-                      (begin
-                        (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                        'exit))))))))
-   
-   (set! decisions
-         (append-element decisions
-                         (make-decision
-                          "Follow the valleys."
-                          "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-                          (λ ()
-                            (begin
-                              (move-pc-to-location! valleys)
-                              (define action (make-action
-                                              #:symbol 'search-for-paths
-                                              #:actor (pc)
-                                              #:duration 100
-                                              #:target '()
-                                              #:tags '(downtime)
-                                              #:details '()))
+                       (cond ((eq? action-result 'success)
+                              (begin
+                                (set-location-neighbors!
+                                 swamp
+                                 (append-element
+                                  (location-neighbors swamp)
+                                  ruins))
+                                21))
+                             ((eq? action-result 'interrupted)
+                              (begin
+                                'exit
+                                ))
+                             (else
+                              (begin
+                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                'exit))))))
+  
+  (make-decision
+   #:title "Follow the valleys."
+   #:description "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
+   #:next-fragment (λ ()
+                     (begin
+                       (move-pc-to-location! valleys)
+                       (define action (make-action
+                                       #:symbol 'search-for-paths
+                                       #:actor (pc)
+                                       #:duration 100
+                                       #:target '()
+                                       #:tags '(downtime)
+                                       #:details '()))
 
-                              ; 'success, 'failure or 'suspended
-                              (define
-                                action-result
-                                (resolve-pc-action! action))
+                       ; 'success, 'failure or 'suspended
+                       (define
+                         action-result
+                         (resolve-pc-action! action))
                                                   
-                              (cond ((eq? action-result 'success)
-                                     (begin
-                                       (set-location-neighbors!
-                                        swamp
-                                        (append-element
-                                         (location-neighbors swamp)
-                                         ruins))
-                                       23))
-                                    ((eq? action-result 'interrupted)
-                                     (begin
-                                       (displayln "--interrupted")
-                                       'exit
-                                       ))
-                                    (else
-                                     (begin
-                                       (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                       'exit))))))))
-   decisions)
+                       (cond ((eq? action-result 'success)
+                              (begin
+                                (set-location-neighbors!
+                                 swamp
+                                 (append-element
+                                  (location-neighbors swamp)
+                                  ruins))
+                                23))
+                             ((eq? action-result 'interrupted)
+                              (begin
+                                (displayln "--interrupted")
+                                'exit
+                                ))
+                             (else
+                              (begin
+                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                'exit))))))
+  )
+
  (λ () '())
  )
 
@@ -209,12 +205,10 @@
   "Success!"
   )
 
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Nice."
-                                              "Nice."
-                                              'exit)))
-   decisions)
+ (list (make-decision
+        #:title "Nice."
+        #:description "Nice."
+        #:next-fragment 'exit))
  (λ () '())
  )
 
@@ -224,46 +218,38 @@
  (string-append
   "\"Otava, what kind of a name is that anyway? What does it mean?\""
   )
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "A bear."
-                                              "\"It means a bear. The keeper of the forest.\""
-                                              51
-                                              (λ () (passive-check 'strength-mod '> -1))
-                                              )))
-   (set! decisions (append-element decisions (make-decision
-                                              "Northstar."
-                                              "\"Northstar.\""
-                                              52
-                                              (λ () (passive-check 'intelligence-mod '> -1))
-                                              )))
-
-   (set! decisions (append-element decisions (make-decision
-                                              "Don't know."
-                                              "\"Don't know.\""
-                                              53)))
-   decisions)
+ (list
+  (make-decision
+   #:title "A bear."
+   #:description "\"It means a bear. The keeper of the forest.\""
+   #:next-fragment 51
+   #:requirement (λ () (passive-check 'strength-mod '> -1))
+   )
+  (make-decision
+   #:title "Northstar."
+   #:description "\"Northstar.\""
+   #:next-fragment 52
+   #:requirement (λ () (passive-check 'intelligence-mod '> -1))
+   )
+  (make-decision
+   #:title "Don't know."
+   #:description "\"Don't know.\""
+   #:next-fragment 53))
+ 
+ 
  (λ () '())
  )
 
 (fragment
  100
  (string-append
-  "Patch up wounds fast, or patch up wounds well?"
+  "[post-combat steps to do]"
   )
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Fast."
-                                              "Otava patches up wounds as fast as she can."
-                                              'exit
-                                              )))
-   (set! decisions (append-element decisions (make-decision
-                                              "Well."
-                                              "Otava starts by cleaning the wounds, then wraps everything in fresh bandages."
-                                              'exit
-                                              )))
-
-   decisions)
+ (list (make-decision
+        #:title "Catch some breath."
+        #:description "Otava catches some breah."
+        #:next-fragment 'exit
+        ))
  (λ () '())
  )
 
@@ -276,21 +262,20 @@
   "\n\n"
   "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
   )
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Power on the device."
-                                              "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
-                                              'exit
-                                              (λ () '())
-                                              (λ () (end-game))
-                                              )))
-   (set! decisions (append-element decisions (make-decision
-                                              "Leave the device be."
-                                              "Otava leaves Hartmann Device mk. II alone."
-                                              'exit
-                                              )))
+ (list
+  (make-decision
+   #:title "Power on the device."
+   #:description "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
+   #:next-fragment 'exit
+   #:on-resolve! (λ () (end-game))
+   )
 
-   decisions)
+  (make-decision
+   #:title "Leave the device be."
+   #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
+   #:next-fragment 'exit
+   ))
+ 
  (λ () '())
  )
 
