@@ -58,12 +58,5 @@
       (when (eq? pc-life-end-status 'win-game) (win-game))))
   (end-game))
 
-; scripting API / game-specific
-(define (end-game)
-  (paragraph "[The end.]")
-  (player-info)
-  (wait-for-confirm)
-  (exit))
-
 ; main entrypoint
 (begin-game)

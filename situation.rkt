@@ -424,3 +424,10 @@
      
      ]
     [else (paragraph "todo: unknown condition")]))
+
+; scripting API
+(define (end-game)
+  (paragraph "[The end.]")
+  (player-info)
+  (wait-for-confirm)
+  (exit))

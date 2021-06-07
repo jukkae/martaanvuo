@@ -13,3 +13,27 @@
   description
   decisions
   on-enter!))
+
+; requirement is a lambda that's run on fragment's on-enter!
+; on-resolve! is a lambda that's run when the decision is resolved
+(serializable-struct
+ decision
+ (title
+  description
+  next-fragment
+  requirement
+  on-resolve!)
+ #:constructor-name decision*)
+
+(define (make-decision
+         title
+         description
+         next-fragment
+         [requirement (λ () '())]
+         [on-resolve! (λ () '())])
+  
+  (decision* title
+             description
+             next-fragment
+             requirement
+             on-resolve!))

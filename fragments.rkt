@@ -20,31 +20,6 @@
 
 
 
-; requirement is a lambda that's run on fragment's on-enter!
-; on-resolve! is a lambda that's run when the decision is resolved
-(serializable-struct
- decision
- (title
-  description
-  next-fragment
-  requirement
-  on-resolve!)
- #:constructor-name decision*)
-
-(define (make-decision
-         title
-         description
-         next-fragment
-         [requirement (λ () '())]
-         [on-resolve! (λ () '())])
-  
-  (decision* title
-             description
-             next-fragment
-             requirement
-             on-resolve!))
-
-
 (define *story-fragments* (make-hash))
 
 (define (fragment id description decisions on-enter!)
@@ -281,6 +256,33 @@
    (set! decisions (append-element decisions (make-decision
                                               "Well."
                                               "Otava starts by cleaning the wounds, then wraps everything in fresh bandages."
+                                              'exit
+                                              )))
+
+   decisions)
+ (λ () '())
+ )
+
+(fragment
+ 200
+ (string-append
+  "A complicated tangle of wires and pipes fill much of the back half of the room. On a cluttered desk to the side there's a pile of schematics and notes."
+  "\n\n"
+  "Hartmann Device mk. II."
+  "\n\n"
+  "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
+  )
+ (let ([decisions '()])
+   (set! decisions (append-element decisions (make-decision
+                                              "Power on the device."
+                                              "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
+                                              'exit
+                                              (λ () '())
+                                              (λ () (end-game))
+                                              )))
+   (set! decisions (append-element decisions (make-decision
+                                              "Leave the device be."
+                                              "Otava leaves Hartmann Device mk. II alone."
                                               'exit
                                               )))
 

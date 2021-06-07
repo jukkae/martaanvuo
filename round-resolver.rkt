@@ -41,6 +41,10 @@
 (define (current-fragment-handle-decision! decision)
 
   (paragraph (decision-description decision))
+
+  (when (not (null? (decision-on-resolve! decision)))
+    ((decision-on-resolve! decision)))
+  
   (define next-fragment (decision-next-fragment decision))
 
   ; brilliant idea x dirty hack
@@ -438,6 +442,8 @@
                             (go-to-story-fragment 11))
                           (when (eq? (location-type (current-location)) 'swamp)
                             (go-to-story-fragment 20))
+                          (when (eq? (location-type (current-location)) 'workshop)
+                            (go-to-story-fragment 200))
                           (paragraph (describe-finish-go-to-action action))))
                    
                    action-result
@@ -665,6 +671,7 @@
             ((fragment-decision-valid? fragment-decisions-with-keys input)
              (begin
                (handle-fragment-decision fragment-decisions-with-keys input)
+               
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
