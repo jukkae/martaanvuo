@@ -167,6 +167,7 @@
             
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
+            ; plot twist: it is shit and has to be fixed
             ((eq? (choice-symbol choice) (action-symbol (situation-pending-action *situation*)))
              #f)
             
