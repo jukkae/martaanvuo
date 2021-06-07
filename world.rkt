@@ -16,102 +16,47 @@
 
 (define edgeflats
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'edgeflats))
 
 (define swamp
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
    #:actions-provided '(search-for-paths)
    #:type 'swamp))
 
 (define ridges
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
    #:actions-provided '(search-for-paths)
    #:type 'ridges))
 
 (define valleys
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
    #:actions-provided '(search-for-paths)
    #:type 'valleys))
 
 (define crematory
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'crematory))
 
 (define ruins
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'ruins))
 
 (define sewers
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'sewers))
 
 (define cache
   (make-location
-   #:actors '()
-   #:features '()
    #:items '(u-235 veilbreaker-staff)
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'cache))
 
 (define workshop
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
+   #:features '(hartmann-device)
    #:type 'workshop))
 
 (define spring
   (make-location
-   #:actors '()
-   #:features '()
-   #:items '()
-   #:neighbors '()
-   #:tags '()
-   #:actions-provided '()
    #:type 'spring))
 
 (define (setup-world)
