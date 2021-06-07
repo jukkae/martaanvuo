@@ -39,51 +39,57 @@
 (fragment
  1
  "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Because she's desperate."
-                                              "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
-                                              'exit-and-set-build-desperate
-                                              )))
-   
-   (set! decisions (append-element decisions (make-decision
-                                              "Because she punches really hard."
-                                              "She can crack a jawbone with her bare hands. That should keep her alive."
-                                              'exit-and-set-build-bruiser
-                                              ;(λ () (passive-check 'luck))
-                                              )))
-   decisions)
+ (list
+  (make-decision
+   #:title "Because she's desperate."
+   #:description "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
+   #:next-fragment 'exit-and-set-build-desperate
+   )
+
+  (make-decision
+   #:title "Because she punches really hard."
+   #:description "She can crack a jawbone with her bare hands. That should keep her alive."
+   #:next-fragment 'exit-and-set-build-bruiser
+   ;(λ () (passive-check 'luck))
+   ))
+ 
  (λ () (create-quest 'pay-off-debt))
  )
 
 (fragment
  11
  "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask about the Yarn."
-                                              "\"Yarn of the what?\""
-                                              12
-                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
-                                              )))
-   
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask who's 'us'."
-                                              "\"'Us'? Who's 'us'?\""
-                                              14
-                                              (λ () (passive-check 'charisma-mod '> -1))
-                                              )))
-   decisions)
- (λ () '())
- )
+
+ (list
+  (make-decision
+   #:requirement   (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
+   #:title         "Ask about the Yarn."
+   #:description   "\"Yarn of the what?\""
+   #:next-fragment 12)
+
+  (make-decision
+   #:requirement   (λ () (passive-check 'charisma-mod '> -1))
+   #:title         "Ask who's 'us'."
+   #:description   "\"'Us'? Who's 'us'?\""
+   #:next-fragment 14))
+ 
+ (λ () '()))
 
 (fragment
  12
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
-       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))
- (λ () '())
- ) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
+ (list
+  (make-decision
+   #:title         "Agree to bring the book."
+   #:description   "\"Okay, so tell me what you know about the laboratory.\""
+   #:next-fragment 'create-quest-and-exit)
+
+  ; here XP reward and set the pc as 'cunning' (and figure out what that means)
+  (make-decision
+   #:title         "The book's more valuable than 11 bullets. Decline and keep the book to yourself."
+   #:description   "\"Not interested, but thanks for the chat.\""
+   #:next-fragment 'exit))
+ (λ () '())) 
 
 (fragment
  14
@@ -91,12 +97,10 @@
   "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
   ) ; and drop some meta-visible info or something somewhere; create a quest?
 
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask about the book."
-                                              "\"The book, Yarn of the what?\""
-                                              12)))
-   decisions)
+ (make-decision
+  #:title "Ask about the book."
+  #:description "\"The book, Yarn of the what?\""
+  #:next-fragment 12)
  (λ () (create-quest 'the-anthead))
  )
 

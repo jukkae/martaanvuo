@@ -25,12 +25,12 @@
   on-resolve!)
  #:constructor-name decision*)
 
-(define (make-decision
-         title
-         description
-         next-fragment
-         [requirement (λ () '())]
-         [on-resolve! (λ () '())])
+(define
+  (make-decision #:title title
+                 #:description description
+                 #:next-fragment next-fragment
+                 #:requirement [requirement (λ () '())]
+                 #:on-resolve![on-resolve! (λ () '())])
   
   (decision* title
              description
