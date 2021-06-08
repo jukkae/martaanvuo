@@ -31,10 +31,7 @@
     (λ () (make-action
            #:symbol 'sleep
            #:actor (pc)
-           #:duration 100
-           #:target '()
-           #:tags '()
-           #:details '())))))
+           #:duration 100)))))
 
 (define (get-world-choices world actor)
   (cond ((in-combat?)
@@ -89,9 +86,7 @@
                #:symbol 'flee
                #:actor (situation-pc *situation*)
                #:duration 1
-               #:target '()
-               #:tags '(initiative-based-resolution fast)
-               #:details '()))))
+               #:tags '(initiative-based-resolution fast)))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define engaged-enemies (get-enemies-at-range 'engaged))
@@ -182,8 +177,7 @@
                    #:actor (situation-pc *situation*)
                    #:duration 100
                    #:target neighbor
-                   #:tags '(downtime)
-                   #:details '())))))
+                   #:tags '(downtime))))))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list
@@ -194,9 +188,7 @@
                   #:symbol 'forage
                   #:actor (situation-pc *situation*)
                   #:duration 100
-                  #:target '()
-                  #:tags '(downtime)
-                  #:details '())))))
+                  #:tags '(downtime))))))
 
        (for/list ([action (location-actions-provided (current-location))])
          (case action
@@ -208,9 +200,7 @@
                     #:symbol 'search-for-paths
                     #:actor (situation-pc *situation*)
                     #:duration 100
-                    #:target '()
-                    #:tags '(downtime)
-                    #:details '())))]))
+                    #:tags '(downtime))))]))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice
@@ -220,9 +210,7 @@
                  #:symbol 'win-game
                  #:actor (situation-pc *situation*)
                  #:duration 0
-                 #:target '()
-                 #:tags '(downtime)
-                 #:details '()))))
+                 #:tags '(downtime)))))
        
        (when (eq? (location-type (current-location)) 'edgeflats)
          (make-pc-choice
