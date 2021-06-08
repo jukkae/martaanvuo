@@ -200,7 +200,17 @@
                     #:symbol 'search-for-paths
                     #:actor (situation-pc *situation*)
                     #:duration 100
-                    #:tags '(downtime))))]))
+                    #:tags '(downtime))))]
+           [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
+
+       (for/list ([feature (location-features (current-location))])
+         (case feature
+           ['hartmann-device
+            (make-choice
+             'turn-on-device
+             "Turn on Hartmann Device."
+             (λ () (end-game)))]
+           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice
