@@ -209,7 +209,9 @@
             (make-choice
              'turn-on-device
              "Turn on Hartmann Device."
-             (λ () (end-game)))]
+             (λ ()
+               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards at the speed of light, obliterating all traces of Otava within 4 nanoseconds, and proceeding to blink the entire Universe out of existence.")
+               (end-game)))]
            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
 
        (when (eq? (location-type (current-location)) 'spring)
