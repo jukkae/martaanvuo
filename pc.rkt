@@ -25,14 +25,8 @@
    ))
 
 (define (set-build! build)
-  
   ; for desperate build, also set a time limit (or whatever other complication)
 
-  (define starting-inventory
-    (list
-     (list 'bolt-cutters (list 'melee-weapon 'tool))))
-
-  
   (case build
     
     ['desperate
@@ -69,7 +63,9 @@
 
   
   (set-trait! (pc) "exploration-skill" 1)
-
-  (set-actor-inventory! (pc) starting-inventory)
   (character-sheet)
   )
+
+(define (add-item! item)
+  (define actor (pc))
+  (add-item-to-inventory! actor item))

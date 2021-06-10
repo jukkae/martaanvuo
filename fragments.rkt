@@ -10,6 +10,7 @@
 (require "location.rkt")
 (require "fragment.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "pc.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -64,14 +65,14 @@
   (make-decision
    #:title "But she has a gun."
    #:description "But she has a gun."
-   #:on-resolve! (proc (displayln "TODO: Add item"))
+   #:on-resolve! (proc (add-item! (item "gun" (list 'ranged-weapon (list 'ammo 3)))))
    #:next-fragment 'exit
    )
 
   (make-decision
    #:title "But she's studied the area."
    #:description "She knows the Anomaly well."
-   #:on-resolve! (proc (displayln "TODO: Add skill"))
+   #:on-resolve! (proc (add-item! (item "bolt cutters" (list 'melee-weapon 'tool))) (displayln "TODO: Add skill"))
    #:next-fragment 'exit)
   )
  
@@ -294,6 +295,20 @@
   (make-decision
    #:title "Leave the device be."
    #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
+   #:next-fragment 'exit
+   ))
+ 
+ (λ () '())
+ )
+
+(fragment
+ 300
+ (string-append
+  "There's an inconspicuous sign saying 'Murkwater Aix' on the wall of an automated guard's booth.")
+ (list
+  (make-decision
+   #:title ""
+   #:description ""
    #:next-fragment 'exit
    ))
  

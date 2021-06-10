@@ -14,6 +14,17 @@
   day
   [elapsed-time #:mutable]))
 
+;;; This seems as good a place as any, so:
+
+;   - the world is unspecifiedly post-apocalyptic
+;
+;   - weaponry is mostly improvised
+;   - firearms are rare and they are mostly blackpowder-based old-west era or similar
+;   - ... because modern weaponry requires smokeless powder, and supply is basically nonexistent
+;   - the only ones that have any capability for automatics is Murkwater Aix, a corporation behind
+;     the laboratory and the Anomaly
+;   - ditto regarding high explosives etc
+
 (define edgeflats
   (make-location
    #:type 'edgeflats))

@@ -18,6 +18,7 @@
 (require "fragments.rkt")
 (require "grabberkin.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "location.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
@@ -442,8 +443,10 @@
                             (go-to-story-fragment 11))
                           (when (eq? (location-type (current-location)) 'swamp)
                             (go-to-story-fragment 20))
+                          #;(when (eq? (location-type (current-location)) 'workshop)
+                              (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 200))
+                            (go-to-story-fragment 300))
                           (paragraph (describe-finish-go-to-action action))))
                    
                    action-result
@@ -835,11 +838,34 @@
 (define (inventory)
   (define actor (situation-pc *situation*))
   
+  (define header
+    (list
+     (list " Item " " Notes ")))
+
+  (define items (actor-inventory actor))
+  (define items-list
+    (for/list ([item items])
+      (list
+       (string-append " " (item-name item) " ")
+       (string-append " " (~v (item-details item)) " "))))
+  
   (define sheet
     (append
-     (list
-      (list " Item " " Notes "))
-     (actor-inventory actor)))
+     header
+     items-list))
+
+
+  (define traits (actor-traits actor))
+  (define traits-list
+    (for/list ([(k v) (in-hash traits)])
+      (list (string-append " " k " ") (string-append " " (number->string v) " "))))
+
+  ; append emptyline above
+  (when (not (null? traits-list))
+    (set! traits-list (cons (list "" "") traits-list)))
+
+  (set! sheet (append sheet traits-list))
+  
   (info-card
    sheet
    "Inventory"
