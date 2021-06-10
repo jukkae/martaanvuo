@@ -63,20 +63,20 @@
  "Otava knows it's going to be dangerous."
  (list
   (make-decision
-   #:title "But she has a gun."
-   #:description "But she has a gun."
-   #:on-resolve! (proc (add-item! (item "gun" (list 'ranged-weapon (list 'ammo 3)))))
+   #:title "But she has a revolver."
+   #:description "But she has a revolver."
+   #:on-resolve! (proc (add-item! 'revolver))
    #:next-fragment 'exit
    )
 
   (make-decision
    #:title "But she's studied the area."
    #:description "She knows the Anomaly well."
-   #:on-resolve! (proc (add-item! (item "bolt cutters" (list 'melee-weapon 'tool))) (displayln "TODO: Add skill"))
+   #:on-resolve! (proc (add-item! 'bolt-cutters) (displayln "TODO: Add skill"))
    #:next-fragment 'exit)
   )
- 
- (λ () (create-quest 'pay-off-debt)))
+ (nop)
+ )
 
 (fragment
  11

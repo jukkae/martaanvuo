@@ -853,18 +853,6 @@
     (append
      header
      items-list))
-
-
-  (define traits (actor-traits actor))
-  (define traits-list
-    (for/list ([(k v) (in-hash traits)])
-      (list (string-append " " k " ") (string-append " " (number->string v) " "))))
-
-  ; append emptyline above
-  (when (not (null? traits-list))
-    (set! traits-list (cons (list "" "") traits-list)))
-
-  (set! sheet (append sheet traits-list))
   
   (info-card
    sheet

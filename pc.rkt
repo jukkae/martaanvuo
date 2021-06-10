@@ -6,6 +6,7 @@
 
 (require "actor.rkt")
 (require "character-sheet.rkt")
+(require "item.rkt")
 ;(require "situation.rkt")
 (require "utils.rkt")
 
@@ -66,6 +67,14 @@
   (character-sheet)
   )
 
+; TODO dispatching based on type should be done elsewhere,
+; this should really be only concerned with adding an existing item
+; but this works for now
 (define (add-item! item)
   (define actor (pc))
-  (add-item-to-inventory! actor item))
+  (cond ((symbol? item)
+         (define new-item (make-item item))
+         (add-item-to-inventory! actor new-item))
+        ((item? item)
+         (add-item-to-inventory! actor item))
+        (else (error "Unknown item type in add-item!"))))
