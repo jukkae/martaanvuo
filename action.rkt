@@ -41,9 +41,9 @@
          #:symbol symbol
          #:actor actor
          #:duration duration
-         #:target target
-         #:tags tags
-         #:details details)
+         #:target [target '()]
+         #:tags [tags '()]
+         #:details [details '()])
   (action* symbol actor duration target tags details))
 
 (define (visible-in-combat? action)

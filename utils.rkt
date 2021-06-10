@@ -35,6 +35,12 @@
       (set! result #f)))
   result)
 
+(define-syntax-rule
+  (proc body ...)
+  (λ () body ...))
+(define-syntax-rule
+  (nop)
+  (λ () '()))
 
 ; various container stuff
 (define (collect-similar lst)

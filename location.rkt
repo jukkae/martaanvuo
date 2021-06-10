@@ -71,13 +71,13 @@
 (define *number-of-locations* 0)
 
 (define (make-location
-         #:neighbors neighbors
-         #:type type
-         #:features features
-         #:actors actors
-         #:items items
-         #:actions-provided actions-provided
-         #:tags tags)
+         #:neighbors [neighbors '()]
+         #:type [type '()]
+         #:features [features '()]
+         #:actors [actors '()]
+         #:items [items '()]
+         #:actions-provided [actions-provided '()]
+         #:tags [tags '()])
   (set! *number-of-locations* (add1 *number-of-locations*))
   (location* *number-of-locations* neighbors type features actors #f items actions-provided tags))
 

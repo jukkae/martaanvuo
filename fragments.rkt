@@ -10,6 +10,8 @@
 (require "location.rkt")
 (require "fragment.rkt")
 (require "io.rkt")
+(require "item.rkt")
+(require "pc.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -18,31 +20,6 @@
  ["round-resolver.rkt"
   (resolve-pc-action!)])
 
-
-
-; requirement is a lambda that's run on fragment's on-enter!
-; on-resolve! is a lambda that's run when the decision is resolved
-(serializable-struct
- decision
- (title
-  description
-  next-fragment
-  requirement
-  on-resolve!)
- #:constructor-name decision*)
-
-(define (make-decision
-         title
-         description
-         next-fragment
-         [requirement (λ () '())]
-         [on-resolve! (λ () '())])
-  
-  (decision* title
-             description
-             next-fragment
-             requirement
-             on-resolve!))
 
 
 (define *story-fragments* (make-hash))
@@ -64,51 +41,77 @@
 (fragment
  1
  "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Because she's desperate."
-                                              "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
-                                              'exit-and-set-build-desperate
-                                              )))
-   
-   (set! decisions (append-element decisions (make-decision
-                                              "Because she punches really hard."
-                                              "She can crack a jawbone with her bare hands. That should keep her alive."
-                                              'exit-and-set-build-bruiser
-                                              ;(λ () (passive-check 'luck))
-                                              )))
-   decisions)
- (λ () (create-quest 'pay-off-debt))
+ (list
+  (make-decision
+   #:title "Because she's desperate."
+   #:description "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
+   #:on-resolve! (proc (set-build! 'desperate))
+   #:next-fragment 2
+   )
+
+  (make-decision
+   #:title "Because she punches really hard."
+   #:description "She can crack a jawbone with her bare hands. That should keep her alive."
+   #:on-resolve! (proc (set-build! 'bruiser))
+   #:next-fragment 2)
+  )
+ 
+ (λ () (create-quest 'pay-off-debt)))
+
+(fragment
+ 2
+ "Otava knows it's going to be dangerous."
+ (list
+  (make-decision
+   #:title "But she has a revolver."
+   #:description "But she has a revolver."
+   #:on-resolve! (proc (add-item! 'revolver))
+   #:next-fragment 'exit
+   )
+
+  (make-decision
+   #:title "But she's studied the area."
+   #:description "She knows the Anomaly well."
+   #:on-resolve! (proc (add-item! 'bolt-cutters) (displayln "TODO: Add skill"))
+   #:next-fragment 'exit)
+  )
+ (nop)
  )
 
 (fragment
  11
  "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask about the Yarn."
-                                              "\"Yarn of the what?\""
-                                              12
-                                              (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
-                                              )))
-   
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask who's 'us'."
-                                              "\"'Us'? Who's 'us'?\""
-                                              14
-                                              (λ () (passive-check 'charisma-mod '> -1))
-                                              )))
-   decisions)
- (λ () '())
- )
+
+ (list
+  (make-decision
+   #:requirement   (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
+   #:title         "Ask about the Yarn."
+   #:description   "\"Yarn of the what?\""
+   #:next-fragment 12)
+
+  (make-decision
+   #:requirement   (λ () (passive-check 'charisma-mod '> -1))
+   #:title         "Ask who's 'us'."
+   #:description   "\"'Us'? Who's 'us'?\""
+   #:next-fragment 14))
+ 
+ (λ () '()))
 
 (fragment
  12
  "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list (make-decision "Agree to bring the book." "\"Okay, so tell me what you know about the laboratory.\"" 'create-quest-and-exit) ; plus a small loredump and set some knowledge or something bonus here!
-       (make-decision "It's more valuable than 11 bullets. Decline and keep the book to yourself." "\"Not interested, but thanks for the chat.\"" 'exit))
- (λ () '())
- ) ; here XP reward and set the pc as 'cunning' (and figure out what that means)
+ (list
+  (make-decision
+   #:title         "Agree to bring the book."
+   #:description   "\"Okay, so tell me what you know about the laboratory.\""
+   #:next-fragment 'create-quest-and-exit)
+
+  ; here XP reward and set the pc as 'cunning' (and figure out what that means)
+  (make-decision
+   #:title         "The book's more valuable than 11 bullets. Decline and keep the book to yourself."
+   #:description   "\"Not interested, but thanks for the chat.\""
+   #:next-fragment 'exit))
+ (λ () '())) 
 
 (fragment
  14
@@ -116,12 +119,10 @@
   "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
   ) ; and drop some meta-visible info or something somewhere; create a quest?
 
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Ask about the book."
-                                              "\"The book, Yarn of the what?\""
-                                              12)))
-   decisions)
+ (make-decision
+  #:title "Ask about the book."
+  #:description "\"The book, Yarn of the what?\""
+  #:next-fragment 12)
  (λ () (create-quest 'the-anthead))
  )
 
@@ -131,85 +132,81 @@
   "Otava is unsure whether to climb the ridges or head lower and try to follow the valleys. The ridges would perhaps mean drier feet, faster progress, and eventually better visibility if the fog dissipates. On the other hand, the laboratory ultimately lies on the banks of Martaanvuo river, and she's pretty sure that all the hollows here ultimately lead to Martaanvuo."
   )
 
- (let ([decisions '()])
-   (set! decisions
-         (append-element
-          decisions
-          (make-decision
-           "Follow the ridges."
-           "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-           (λ ()
-             (begin
-               (move-pc-to-location! ridges)
-               (define action (make-action
-                               #:symbol 'search-for-paths
-                               #:actor (pc)
-                               #:duration 100
-                               #:target '()
-                               #:tags '(downtime)
-                               #:details '()))
+ (list
+  (make-decision
+   #:title "Follow the ridges."
+   #:description "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
+   #:next-fragment (λ ()
+                     (begin
+                       (move-pc-to-location! ridges)
+                       (define action (make-action
+                                       #:symbol 'search-for-paths
+                                       #:actor (pc)
+                                       #:duration 100
+                                       #:target '()
+                                       #:tags '(downtime)
+                                       #:details '()))
 
-               ; 'success, 'failure or 'suspended
-               (define
-                 action-result
-                 (resolve-pc-action! action))
+                       ; 'success, 'failure or 'suspended
+                       (define
+                         action-result
+                         (resolve-pc-action! action))
                                                   
-               (cond ((eq? action-result 'success)
-                      (begin
-                        (set-location-neighbors!
-                         swamp
-                         (append-element
-                          (location-neighbors swamp)
-                          ruins))
-                        21))
-                     ((eq? action-result 'interrupted)
-                      (begin
-                        'exit
-                        ))
-                     (else
-                      (begin
-                        (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                        'exit))))))))
-   
-   (set! decisions
-         (append-element decisions
-                         (make-decision
-                          "Follow the valleys."
-                          "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-                          (λ ()
-                            (begin
-                              (move-pc-to-location! valleys)
-                              (define action (make-action
-                                              #:symbol 'search-for-paths
-                                              #:actor (pc)
-                                              #:duration 100
-                                              #:target '()
-                                              #:tags '(downtime)
-                                              #:details '()))
+                       (cond ((eq? action-result 'success)
+                              (begin
+                                (set-location-neighbors!
+                                 swamp
+                                 (append-element
+                                  (location-neighbors swamp)
+                                  ruins))
+                                21))
+                             ((eq? action-result 'interrupted)
+                              (begin
+                                'exit
+                                ))
+                             (else
+                              (begin
+                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                'exit))))))
+  
+  (make-decision
+   #:title "Follow the valleys."
+   #:description "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
+   #:next-fragment (λ ()
+                     (begin
+                       (move-pc-to-location! valleys)
+                       (define action (make-action
+                                       #:symbol 'search-for-paths
+                                       #:actor (pc)
+                                       #:duration 100
+                                       #:target '()
+                                       #:tags '(downtime)
+                                       #:details '()))
 
-                              ; 'success, 'failure or 'suspended
-                              (define
-                                action-result
-                                (resolve-pc-action! action))
+                       ; 'success, 'failure or 'suspended
+                       (define
+                         action-result
+                         (resolve-pc-action! action))
                                                   
-                              (cond ((eq? action-result 'success)
-                                     (begin
-                                       (set-location-neighbors!
-                                        swamp
-                                        (append-element
-                                         (location-neighbors swamp)
-                                         ruins))
-                                       23))
-                                    ((eq? action-result 'interrupted)
-                                     (begin
-                                       (displayln "--interrupted")
-                                       'exit
-                                       ))
-                                    (else
-                                     (begin
-                                       (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                       'exit))))))))
-   decisions)
+                       (cond ((eq? action-result 'success)
+                              (begin
+                                (set-location-neighbors!
+                                 swamp
+                                 (append-element
+                                  (location-neighbors swamp)
+                                  ruins))
+                                23))
+                             ((eq? action-result 'interrupted)
+                              (begin
+                                (displayln "--interrupted")
+                                'exit
+                                ))
+                             (else
+                              (begin
+                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
+                                'exit))))))
+  )
+
  (λ () '())
  )
 
@@ -230,12 +227,10 @@
   "Success!"
   )
 
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Nice."
-                                              "Nice."
-                                              'exit)))
-   decisions)
+ (list (make-decision
+        #:title "Nice."
+        #:description "Nice."
+        #:next-fragment 'exit))
  (λ () '())
  )
 
@@ -245,46 +240,78 @@
  (string-append
   "\"Otava, what kind of a name is that anyway? What does it mean?\""
   )
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "A bear."
-                                              "\"It means a bear. The keeper of the forest.\""
-                                              51
-                                              (λ () (passive-check 'strength-mod '> -1))
-                                              )))
-   (set! decisions (append-element decisions (make-decision
-                                              "Northstar."
-                                              "\"Northstar.\""
-                                              52
-                                              (λ () (passive-check 'intelligence-mod '> -1))
-                                              )))
-
-   (set! decisions (append-element decisions (make-decision
-                                              "Don't know."
-                                              "\"Don't know.\""
-                                              53)))
-   decisions)
+ (list
+  (make-decision
+   #:title "A bear."
+   #:description "\"It means a bear. The keeper of the forest.\""
+   #:next-fragment 51
+   #:requirement (λ () (passive-check 'strength-mod '> -1))
+   )
+  (make-decision
+   #:title "Northstar."
+   #:description "\"Northstar.\""
+   #:next-fragment 52
+   #:requirement (λ () (passive-check 'intelligence-mod '> -1))
+   )
+  (make-decision
+   #:title "Don't know."
+   #:description "\"Don't know.\""
+   #:next-fragment 53))
+ 
+ 
  (λ () '())
  )
 
 (fragment
  100
  (string-append
-  "Patch up wounds fast, or patch up wounds well?"
+  "[post-combat steps to do]"
   )
- (let ([decisions '()])
-   (set! decisions (append-element decisions (make-decision
-                                              "Fast."
-                                              "Otava patches up wounds as fast as she can."
-                                              'exit
-                                              )))
-   (set! decisions (append-element decisions (make-decision
-                                              "Well."
-                                              "Otava starts by cleaning the wounds, then wraps everything in fresh bandages."
-                                              'exit
-                                              )))
+ (list (make-decision
+        #:title "Catch some breath."
+        #:description "Otava catches some breah."
+        #:next-fragment 'exit
+        ))
+ (λ () '())
+ )
 
-   decisions)
+(fragment
+ 200
+ (string-append
+  "A complicated tangle of wires and pipes fill much of the back half of the room. On a cluttered desk to the side there's a pile of schematics and notes."
+  "\n\n"
+  "Hartmann Device mk. II."
+  "\n\n"
+  "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
+  )
+ (list
+  (make-decision
+   #:title "Power on the device."
+   #:description "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
+   #:next-fragment 'exit
+   #:on-resolve! (λ () (end-game))
+   )
+
+  (make-decision
+   #:title "Leave the device be."
+   #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
+   #:next-fragment 'exit
+   ))
+ 
+ (λ () '())
+ )
+
+(fragment
+ 300
+ (string-append
+  "There's an inconspicuous sign saying 'Murkwater Aix' on the wall of an automated guard's booth.")
+ (list
+  (make-decision
+   #:title ""
+   #:description ""
+   #:next-fragment 'exit
+   ))
+ 
  (λ () '())
  )
 

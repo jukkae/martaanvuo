@@ -1,29 +1,9 @@
 #lang racket
 
-(require racket/generator)
-(require racket/serialize)
-
-(require lens)
-(require text-table)
-
-(require "action-resolver.rkt")
-(require "action.rkt")
-(require "actions.rkt")
-(require "actor.rkt")
-(require "blindscraper.rkt")
-(require "checks.rkt")
-(require "character-sheet.rkt")
-(require "fragment.rkt")
-(require "fragments.rkt")
-(require "grabberkin.rkt")
 (require "io.rkt")
 (require "life-resolver.rkt")
-(require "location.rkt")
-(require "pc.rkt")
 (require "round-resolver.rkt")
-(require "run-resolver.rkt")
 (require "situation.rkt")
-(require "utils.rkt")
 (require "world.rkt")
 
 
@@ -76,13 +56,7 @@
           (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
                 (else (end-of-life-menu 'abbreviated)))))
       (when (eq? pc-life-end-status 'win-game) (win-game))))
-  (win-game))
-
-; scripting API / game-specific
-(define (win-game)
-  (paragraph "Otava dives under the waters of Martaanvuo Spring and forever ceases to exist.")
-  (wait-for-input)
-  (exit))
+  (end-game))
 
 ; main entrypoint
 (begin-game)

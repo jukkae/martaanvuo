@@ -12,11 +12,13 @@
 (require "actor.rkt")
 (require "blindscraper.rkt")
 (require "character-sheet.rkt")
+(require "choice.rkt")
 (require "condition.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "location.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
@@ -40,6 +42,10 @@
 (define (current-fragment-handle-decision! decision)
 
   (paragraph (decision-description decision))
+
+  (when (not (null? (decision-on-resolve! decision)))
+    ((decision-on-resolve! decision)))
+  
   (define next-fragment (decision-next-fragment decision))
 
   ; brilliant idea x dirty hack
@@ -437,6 +443,10 @@
                             (go-to-story-fragment 11))
                           (when (eq? (location-type (current-location)) 'swamp)
                             (go-to-story-fragment 20))
+                          #;(when (eq? (location-type (current-location)) 'workshop)
+                              (go-to-story-fragment 200))
+                          (when (eq? (location-type (current-location)) 'workshop)
+                            (go-to-story-fragment 300))
                           (paragraph (describe-finish-go-to-action action))))
                    
                    action-result
@@ -455,9 +465,8 @@
          (define encounter-types '(blindscraper grabberkin))
 
 
-         (define encounter-type 'grabberkin)
-         ;(define encounter-type 'blindscraper)
-         
+         (define encounter-type (take-random encounter-types))
+
          (case encounter-type
            ['grabberkin
 
@@ -566,7 +575,7 @@
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
                  'night))
-       (define dice-sides 100) ; tweak on a per-location basis
+       (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
        (cond ((= roll 1)
@@ -665,6 +674,7 @@
             ((fragment-decision-valid? fragment-decisions-with-keys input)
              (begin
                (handle-fragment-decision fragment-decisions-with-keys input)
+               
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
@@ -695,9 +705,24 @@
 ; engine / get-next-pc-action
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
-  (cond ((procedure? resolution-effect) (resolution-effect))
-        ((action? resolution-effect) resolution-effect)
-        (else (error "resolve-choice-and-produce-action!: unknown type"))))
+
+  (define action
+    (cond ((procedure? resolution-effect) (resolution-effect))
+          ((action? resolution-effect) resolution-effect)
+          (else (error "resolve-choice-and-produce-action!: unknown type"))))
+
+  ; dirty to do this here like this but eh
+  (define pending-choice-available? #f)
+  (for/hash ([(k v) (in-hash choices-with-keys)])
+    (values k
+            (begin
+              (when (string-prefix? (choice-name v) "[continue]")
+                (set! pending-choice-available? #t)))))
+  
+  ; choice either is pending (= resolve it) or is not, in which case discard pending action
+  (when pending-choice-available? (reset-pending-action!))
+  
+  action)
 
 ; engine / get-next-pc-action
 (define (choice-as-resolution-effect choices-with-keys input)
@@ -813,11 +838,22 @@
 (define (inventory)
   (define actor (situation-pc *situation*))
   
+  (define header
+    (list
+     (list " Item " " Notes ")))
+
+  (define items (actor-inventory actor))
+  (define items-list
+    (for/list ([item items])
+      (list
+       (string-append " " (item-name item) " ")
+       (string-append " " (~v (item-details item)) " "))))
+  
   (define sheet
     (append
-     (list
-      (list " Item " " Notes "))
-     (actor-inventory actor)))
+     header
+     items-list))
+  
   (info-card
    sheet
    "Inventory"

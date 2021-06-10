@@ -6,6 +6,7 @@
 
 (require "actor.rkt")
 (require "character-sheet.rkt")
+(require "item.rkt")
 ;(require "situation.rkt")
 (require "utils.rkt")
 
@@ -25,14 +26,8 @@
    ))
 
 (define (set-build! build)
-  
   ; for desperate build, also set a time limit (or whatever other complication)
 
-  (define starting-inventory
-    (list
-     (list 'bolt-cutters (list 'melee-weapon 'tool))))
-
-  
   (case build
     
     ['desperate
@@ -69,7 +64,17 @@
 
   
   (set-trait! (pc) "exploration-skill" 1)
-
-  (set-actor-inventory! (pc) starting-inventory)
   (character-sheet)
   )
+
+; TODO dispatching based on type should be done elsewhere,
+; this should really be only concerned with adding an existing item
+; but this works for now
+(define (add-item! item)
+  (define actor (pc))
+  (cond ((symbol? item)
+         (define new-item (make-item item))
+         (add-item-to-inventory! actor new-item))
+        ((item? item)
+         (add-item-to-inventory! actor item))
+        (else (error "Unknown item type in add-item!"))))

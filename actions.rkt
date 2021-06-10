@@ -3,12 +3,12 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require rebellion/collection/association-list)
 
 (require "action.rkt")
 (require "actor.rkt")
+(require "choice.rkt")
 (require "io.rkt")
 (require "location.rkt")
 (require "situation.rkt")
@@ -31,10 +31,7 @@
     (λ () (make-action
            #:symbol 'sleep
            #:actor (pc)
-           #:duration 100
-           #:target '()
-           #:tags '()
-           #:details '())))))
+           #:duration 100)))))
 
 (define (get-world-choices world actor)
   (cond ((in-combat?)
@@ -89,9 +86,7 @@
                #:symbol 'flee
                #:actor (situation-pc *situation*)
                #:duration 1
-               #:target '()
-               #:tags '(initiative-based-resolution fast)
-               #:details '()))))
+               #:tags '(initiative-based-resolution fast)))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define engaged-enemies (get-enemies-at-range 'engaged))
@@ -127,34 +122,6 @@
   )
 
 
-
-
-; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
-(define-struct choice
-  (symbol
-   name
-   resolution-effect)) ; resolution-effect is either a paramless lambda that produces an action, or an action
-
-(define
-  (make-pc-choice #:id id
-                  #:text text
-                  #:duration duration
-                  #:target [target '()]
-                  #:tags [tags '()]
-                  #:details [details '()])
-  (define action
-    (make-action
-     #:symbol id
-     #:actor (pc)
-     #:duration duration
-     #:target target
-     #:tags tags
-     #:details '()))
-  (choice
-   id
-   text
-   action))
-
 (define (get-downtime-choices world actor)
   (define (show-based-on-pending-choice? choice)
     (if (null? (situation-pending-action *situation*))
@@ -167,6 +134,7 @@
             
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
+            ; plot twist: it is shit and has to be fixed
             ((eq? (choice-symbol choice) (action-symbol (situation-pending-action *situation*)))
              #f)
             
@@ -175,92 +143,95 @@
              #t)))))
   
 
-  (filter ; okay now this is getting ridiculous
-   (λ (x) (show-based-on-pending-choice? x))
-   (flatten ; CBA
-    (filter ; TODO this should be extracted, useful, esp. the void check!
-     (λ (x) (and (not (null? x))
-                 (not (void? x))))
-     (list
+  (flatten
+   (filter ; okay now this is getting ridiculous
+    (λ (x) (show-based-on-pending-choice? x))
+    (flatten ; CBA
+     (filter ; TODO this should be extracted, useful, esp. the void check!
+      (λ (x) (and (not (null? x))
+                  (not (void? x))))
+      (list
     
-      (when (not (null? (situation-pending-action *situation*)))
-        (choice
-         (action-symbol (situation-pending-action *situation*))
-         (get-continue-pending-action-name)
+       (when (not (null? (situation-pending-action *situation*)))
+         (choice
+          (action-symbol (situation-pending-action *situation*))
+          (get-continue-pending-action-name)
      
-         (λ ()
-           (begin0
-             (situation-pending-action *situation*)
-             (reset-pending-action!)))))
+          (λ ()
+            (begin0
+              (situation-pending-action *situation*)
+              (reset-pending-action!)))))
 
-
-      (when (eq? (location-type (current-location)) 'edgeflats)
-        (make-pc-choice
-         #:id 'end-run
-         #:text "Head back to The Shack."
-         #:duration 0
-         #:tags '(downtime)))
-
-      (when (and (not (in-combat?))
-                 (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-        (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-               '()))
+       (when (and (not (in-combat?))
+                  (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+                '()))
       
-        (for/list ([neighbor (location-neighbors (current-location))])
+         (for/list ([neighbor (location-neighbors (current-location))])
         
-          (make-choice
-           'go-to-location
-           (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
-           (λ () (make-action
-                  #:symbol 'go-to-location
-                  #:actor (situation-pc *situation*)
-                  #:duration 100
-                  #:target neighbor
-                  #:tags '(downtime)
-                  #:details '())))))
-
-      (when (eq? (location-type (current-location)) 'swamp)
-        (list
-         (make-choice
-          'forage
-          (string-append "Forage.")
-          (λ () (make-action
-                 #:symbol 'forage
-                 #:actor (situation-pc *situation*)
-                 #:duration 100
-                 #:target '()
-                 #:tags '(downtime)
-                 #:details '())))))
-
-      (for/list ([action (location-actions-provided (current-location))])
-        (case action
-          ['search-for-paths
            (make-choice
-            'search-for-paths
-            "Search for paths."
+            'go-to-location
+            (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
             (λ () (make-action
-                   #:symbol 'search-for-paths
+                   #:symbol 'go-to-location
                    #:actor (situation-pc *situation*)
                    #:duration 100
-                   #:target '()
-                   #:tags '(downtime)
-                   #:details '())))]))
+                   #:target neighbor
+                   #:tags '(downtime))))))
 
-      (when (eq? (location-type (current-location)) 'spring)
-        (make-choice
-         'dive-in-spring
-         "Dive in the spring."
-         (λ () (make-action
-                #:symbol 'win-game
-                #:actor (situation-pc *situation*)
-                #:duration 0
-                #:target '()
-                #:tags '(downtime)
-                #:details '()))))
+       (when (eq? (location-type (current-location)) 'swamp)
+         (list
+          (make-choice
+           'forage
+           (string-append "Forage.")
+           (λ () (make-action
+                  #:symbol 'forage
+                  #:actor (situation-pc *situation*)
+                  #:duration 100
+                  #:tags '(downtime))))))
 
+       (for/list ([action (location-actions-provided (current-location))])
+         (case action
+           ['search-for-paths
+            (make-choice
+             'search-for-paths
+             "Search for paths."
+             (λ () (make-action
+                    #:symbol 'search-for-paths
+                    #:actor (situation-pc *situation*)
+                    #:duration 100
+                    #:tags '(downtime))))]
+           [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
 
+       (for/list ([feature (location-features (current-location))])
+         (case feature
+           ['hartmann-device
+            (make-choice
+             'turn-on-device
+             "Turn on Hartmann Device."
+             (λ ()
+               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards at the speed of light, obliterating all traces of Otava within 4 nanoseconds, and proceeding to blink the entire Universe out of existence.")
+               (end-game)))]
+           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
 
-      ))))
+       (when (eq? (location-type (current-location)) 'spring)
+         (make-choice
+          'dive-in-spring
+          "Dive in the spring."
+          (λ () (make-action
+                 #:symbol 'win-game
+                 #:actor (situation-pc *situation*)
+                 #:duration 0
+                 #:tags '(downtime)))))
+       
+       (when (eq? (location-type (current-location)) 'edgeflats)
+         (make-pc-choice
+          #:id 'end-run
+          #:text "Head back to The Shack."
+          #:duration 0
+          #:tags '(downtime)))
+
+       )))))
   )
     
 
