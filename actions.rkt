@@ -10,6 +10,7 @@
 (require "actor.rkt")
 (require "choice.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "location.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
@@ -21,6 +22,7 @@
   (actor-in-range?
    move-actor-to-location!
    )])
+
 
 (define (get-nighttime-choices world actor)
   (displayln "get-night-time-choices: TODO not implemented yet")
@@ -40,10 +42,23 @@
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
+
+; TODO this belongs to situation
+(define (actor-has-item? actor item)
+  (define inventory (actor-inventory actor))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
+         inventory))
+
 (define (get-combat-choices world actor)
   (define targets (get-current-enemies))
 
   (define combat-choices '())
+
+  (when (actor-has-item? (pc) 'bolt-cutters)
+    (displayln "Have bolt cutters!"))
+
+  (when (actor-has-item? (pc) 'revolver)
+    (displayln "Have revolver!"))
 
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
@@ -61,9 +76,9 @@
              (make-choice
               'attack
               (string-append
-               "Attack "
+               "Hit "
                (get-combatant-name target)
-               " in melee with crowbar.")
+               " with bolt cutters.")
               (λ ()
                 (make-action
                  #:symbol 'melee
