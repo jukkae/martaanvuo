@@ -10,6 +10,7 @@
 (require "location.rkt")
 (require "fragment.rkt")
 (require "io.rkt")
+(require "pc.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -43,18 +44,38 @@
   (make-decision
    #:title "Because she's desperate."
    #:description "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
-   #:next-fragment 'exit-and-set-build-desperate
+   #:on-resolve! (proc (set-build! 'desperate))
+   #:next-fragment 2
    )
 
   (make-decision
    #:title "Because she punches really hard."
    #:description "She can crack a jawbone with her bare hands. That should keep her alive."
-   #:next-fragment 'exit-and-set-build-bruiser
-   ;(λ () (passive-check 'luck))
-   ))
+   #:on-resolve! (proc (set-build! 'bruiser))
+   #:next-fragment 2)
+  )
  
- (λ () (create-quest 'pay-off-debt))
- )
+ (λ () (create-quest 'pay-off-debt)))
+
+(fragment
+ 2
+ "Otava knows it's going to be dangerous."
+ (list
+  (make-decision
+   #:title "But she has a gun."
+   #:description "But she has a gun."
+   #:on-resolve! (proc (displayln "TODO: Add item"))
+   #:next-fragment 'exit
+   )
+
+  (make-decision
+   #:title "But she's studied the area."
+   #:description "She knows the Anomaly well."
+   #:on-resolve! (proc (displayln "TODO: Add skill"))
+   #:next-fragment 'exit)
+  )
+ 
+ (λ () (create-quest 'pay-off-debt)))
 
 (fragment
  11
