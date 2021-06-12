@@ -23,7 +23,7 @@
    move-actor-to-location!
    )])
 
-
+; implementation detail
 (define (get-nighttime-choices world actor)
   (displayln "get-night-time-choices: TODO not implemented yet")
   (list
@@ -35,37 +35,24 @@
            #:actor (pc)
            #:duration 100)))))
 
+; this is called from outside
 (define (get-world-choices world actor)
   (cond ((in-combat?)
-         (get-combat-choices world actor))
+         (get-combat-choices))
         ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
-
-; TODO this belongs to situation
-(define (actor-has-item? actor item)
-  (define inventory (actor-inventory actor))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
-         inventory))
-
-(define (get-combat-choices world actor)
+; implementation detail
+(define (get-melee-choices)
   (define targets (get-current-enemies))
-
   (define combat-choices '())
-
-  (when (actor-has-item? (pc) 'bolt-cutters)
-    (displayln "Have bolt cutters!"))
-
-  (when (actor-has-item? (pc) 'revolver)
-    (displayln "Have revolver!"))
-
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
     (define stance (hash-ref (situation-enemy-stances *situation*) target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 6)))
+           (define damage-roll (λ () (d 1 2)))
            (define details
              (list
               (cons 'damage-roll damage-roll)
@@ -78,7 +65,7 @@
               (string-append
                "Hit "
                (get-combatant-name target)
-               " with bolt cutters.")
+               " [with bolt cutters].")
               (λ ()
                 (make-action
                  #:symbol 'melee
@@ -89,6 +76,63 @@
                  #:details details))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
+  combat-choices)
+
+; implementation detail
+(define (get-ranged-choices)
+  (define targets (get-current-enemies))
+  (define combat-choices '())
+  (for ([i (in-range 0 (length targets))])
+    (define target (list-ref targets i))
+    (define stance (hash-ref (situation-enemy-stances *situation*) target))
+    (cond ((or (eq? (stance-range stance) 'far) ; always require roll
+               (eq? (stance-range stance) 'mid) ; require roll if no proficiency
+               (eq? (stance-range stance) 'close) ; never require roll
+               (eq? (stance-range stance) 'engaged)) ; only possible with pistols
+           (define damage-roll (λ () (d 2 2)))
+           (define details
+             (list
+              (cons 'damage-roll damage-roll)
+              (cons 'damage-roll-formula "2d2")
+              (cons 'damage-type 'gunshot) ; we're assuming firearms here
+              ))
+           (define choice
+             (make-choice
+              'attack
+              (string-append
+               "Shoot "
+               (get-combatant-name target)
+               " [with revolver].")
+              (λ ()
+                (make-action
+                 #:symbol 'shoot
+                 #:actor (situation-pc *situation*)
+                 #:duration 1
+                 #:target target
+                 #:tags '(initiative-based-resolution)
+                 #:details details))))
+           (set! combat-choices (append-element combat-choices choice)))
+          ))
+  combat-choices)
+
+; TODO this belongs to situation
+(define (actor-has-item? actor item)
+  (define inventory (actor-inventory actor))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
+         inventory))
+
+(define (get-combat-choices)
+  (define targets (get-current-enemies))
+
+  (define combat-choices '())
+
+  (when (actor-has-item? (pc) 'bolt-cutters)
+    (set! combat-choices
+          (append combat-choices (get-melee-choices))))
+
+  (when (actor-has-item? (pc) 'revolver)
+    (set! combat-choices
+          (append combat-choices (get-ranged-choices))))
 
   (cond ((not (engaged?))
          (define run-choice
@@ -112,7 +156,7 @@
 
   (cond ((not (null? engaged-grabberkin))
 
-         (define strength-mod (get-attribute-modifier-for (actor-strength actor)))
+         (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
          
          (define details
            (association-list 'str-mod strength-mod))
@@ -251,7 +295,7 @@
     
 
 
-
+; where does this belong? some module auxilliary to round-resolver?
 ; store in the action, handle calling from here
 ; -> code to action handler?
 (define (describe-pc-intention pc-action)
