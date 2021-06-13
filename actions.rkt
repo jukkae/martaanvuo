@@ -49,7 +49,7 @@
   (define combat-choices '())
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (define stance (hash-ref (situation-enemy-stances *situation*) target))
+    (define stance (find-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
            (define damage-roll (λ () (d 1 2)))
@@ -84,7 +84,7 @@
   (define combat-choices '())
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (define stance (hash-ref (situation-enemy-stances *situation*) target))
+    (define stance (find-stance target))
     (cond ((or (eq? (stance-range stance) 'far) ; always require roll
                (eq? (stance-range stance) 'mid) ; require roll if no proficiency
                (eq? (stance-range stance) 'close) ; never require roll

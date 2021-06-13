@@ -276,10 +276,10 @@
   (if success?
       (begin
         (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-        (hash-remove! (situation-enemy-stances *situation*) (action-actor action))
+        (remove-stance! (action-actor action))
                  
-        (let ([enemy-stance (stance "α" 'engaged "right")])
-          (hash-set! (situation-enemy-stances *situation*) (action-actor action) enemy-stance)))
+        (let ([enemy-stance (stance (action-actor action) "α" 'engaged "right")])
+          (add-stance! enemy-stance)))
         
       (begin
         (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
@@ -347,7 +347,7 @@
   (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
 
   (define target (action-target action))
-  (define target-stance (hash-ref (situation-enemy-stances *situation*) target))
+  (define target-stance (find-stance target))
 
   
   (define statuses (actor-statuses actor))
@@ -407,8 +407,8 @@
          (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
          (define stance-range-values '())
-         (for ([(k v) (in-hash (situation-enemy-stances *situation*))])
-           (define value (get-stance-range-numeric-value (stance-range v)))
+         (for ([stance (situation-enemy-stances *situation*)])
+           (define value (get-stance-range-numeric-value (stance-range stance)))
            (set! stance-range-values (append-element stance-range-values value)))
          (define target-number
            ; if there's an enemy in engaged range, then more difficult check
@@ -424,7 +424,7 @@
                'escape-from-combat)
              (begin
                (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-               (actor-add-status! (action-target action) (status 'fallen 1))
+               (actor-add-status! (pc) (status 'fallen 1))
                (display-pc-combatant-info (pc))
                (wait-for-confirm)
                'failure))
@@ -436,7 +436,7 @@
            (get-combatant-name (action-actor action))
            " tries to run."))
          (define skill 1)
-         (define stance (hash-ref (situation-enemy-stances *situation*) (action-actor action)))
+         (define stance (find-stance (action-actor action)))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)

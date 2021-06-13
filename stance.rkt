@@ -13,6 +13,7 @@
 
 (serializable-struct
  stance
- (index
+ (enemy
+  index
   range
   location))

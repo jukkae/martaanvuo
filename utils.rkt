@@ -35,6 +35,7 @@
       (set! result #f)))
   result)
 
+; DSL macros
 (define-syntax-rule
   (proc body ...)
   (λ () body ...))

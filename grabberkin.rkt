@@ -186,11 +186,14 @@
   (define index
     (case i
       [(0) "α"]
-      [(1) "β"]))
+      [(1) "β"]
+      [(2) "γ"]
+      [(3) "δ"]
+      [else ""]))
   (define range 'engaged)
   (define location "grabbing Otava's ankle")
   (define enemy-stance
-    (stance index range location))
+    (stance enemy index range location))
            
-  (hash-set! (situation-enemy-stances *situation*) enemy enemy-stance)
+  (add-stance! enemy-stance)
   )
