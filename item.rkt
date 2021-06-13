@@ -10,6 +10,11 @@
   [name #:mutable]
   [details #:mutable]))
 
+(serializable-struct
+ ranged-weapon
+ item
+ ([ammo-left #:mutable]))
+
 (define (make-item id)
   (define details '())
   (case id
@@ -18,6 +23,6 @@
      (item id name details)]
     ['revolver
      (define name "Revolver")
-     (item id name (list (list "Ammo left" 6)))]
+     (ranged-weapon id name details 3)]
     [else (displayln "make-item: unknown id:") (displayln "id") '()]
   ))

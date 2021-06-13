@@ -92,30 +92,34 @@
   action-result
   )
 
-(define (item-info item)
+(define (weapon-info gun)
   (define body
-    (for/list ([item-detail (item-details item)])
-      (list (string-append " "
-                           (car item-detail)
-                           " ")
-            (string-append " "
-                           (~s (cdr item-detail))
-                           " "))))
-  (info-card body "Revolver"))
+    (append-element
+     (for/list ([item-detail (item-details gun)])
+       (list (string-append " "
+                            (car item-detail)
+                            " ")
+             (string-append " "
+                            (~s (cdr item-detail))
+                            " ")))
+     (list (string-append " Ammo left ")
+           (string-append " "
+                          (number->string (ranged-weapon-ammo-left gun))
+                          " "))))
+  (info-card body (item-name gun)))
 
 ; where does this belong?
 (define (consume-ammo!)
-  (displayln "consuming ammo")
   (define actor (pc))
   (define items (actor-inventory actor))
-  (define revolver (findf (λ (item) (eq? (item-id item) 'revolver))
-                          items))
-  (when revolver
-    (begin
-      (for ([item-detail (item-details revolver)])
-        (when (eq? (car item-detail) "Ammo left")
-          (displayln "found!"))
-      )))
+  (define gun (findf (λ (item) (ranged-weapon? item))
+                     items))
+  (when gun
+    (set-ranged-weapon-ammo-left!
+     gun (max (- (ranged-weapon-ammo-left gun)
+                 1)
+              0))
+    (weapon-info gun))
   '())
 
 (define (resolve-shoot-action! action)

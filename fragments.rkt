@@ -64,7 +64,7 @@
  (list
   (make-decision
    #:title "But she has a revolver."
-   #:description "But she has a revolver."
+   #:description "But she has a revolver, and a couple bullets."
    #:on-resolve! (proc (add-item! 'revolver))
    #:next-fragment 'exit
    )
