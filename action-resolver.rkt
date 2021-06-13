@@ -11,6 +11,7 @@
 (require "checks.rkt")
 (require "condition.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "status.rkt")
@@ -91,6 +92,32 @@
   action-result
   )
 
+(define (item-info item)
+  (define body
+    (for/list ([item-detail (item-details item)])
+      (list (string-append " "
+                           (car item-detail)
+                           " ")
+            (string-append " "
+                           (~s (cdr item-detail))
+                           " "))))
+  (info-card body "Revolver"))
+
+; where does this belong?
+(define (consume-ammo!)
+  (displayln "consuming ammo")
+  (define actor (pc))
+  (define items (actor-inventory actor))
+  (define revolver (findf (λ (item) (eq? (item-id item) 'revolver))
+                          items))
+  (when revolver
+    (begin
+      (for ([item-detail (item-details revolver)])
+        (when (eq? (car item-detail) "Ammo left")
+          (displayln "found!"))
+      )))
+  '())
+
 (define (resolve-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
@@ -102,6 +129,7 @@
 
   ; TODO add sophistication regarding ranges etc
   (define success? #t)
+  (consume-ammo!)
 
   (define details (action-details action))
   

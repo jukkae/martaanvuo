@@ -300,7 +300,8 @@
 (define (display-combatant-info actor)
   (if (pc-actor? actor)
       (display-pc-combatant-info actor)
-      (display-non-pc-combatant-info actor)))
+      (when (actor-alive? actor)
+        (display-non-pc-combatant-info actor))))
 
 (define (describe-combat-situation)
   (paragraph "Otava is in combat.")
