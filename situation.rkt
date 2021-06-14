@@ -70,14 +70,19 @@
 
 ;;; Combat
 ;;; (or actually, eventually, any kind of action scene, but more about that later)
+(define *combat-flags* '())
+(define (add-combat-flag flag)
+  (set! *combat-flags* (append-element *combat-flags* flag)))
 
 (define (begin-combat!)
   (displayln "BEGIN COMBAT")
-  (set-situation-in-combat?! *situation* #t))
+  (set-situation-in-combat?! *situation* #t)
+  (set! *combat-flags* '()))
 
 (define (end-combat!)
   (displayln "END COMBAT")
-  (set-situation-in-combat?! *situation* #f))
+  (set-situation-in-combat?! *situation* #f)
+  (set! *combat-flags* '()))
 
 
 ;;; Direct accessors and mutators

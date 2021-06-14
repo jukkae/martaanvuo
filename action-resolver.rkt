@@ -193,6 +193,7 @@
   (case (ranged-weapon-ammo-left gun)
     [(0) (paragraph "Click. Out of ammo.")
          (award-xp! 1 "Whoops.")
+         (add-combat-flag 'aware-of-being-out-of-ammo)
          'failure]
     [else (resolve-successful-shoot-action! action)]
     )

@@ -81,39 +81,46 @@
 ; implementation detail
 (define (get-ranged-choices)
   (define targets (get-current-enemies))
-  (define combat-choices '())
-  (for ([i (in-range 0 (length targets))])
-    (define target (list-ref targets i))
-    (define stance (find-stance target))
-    (cond ((or (eq? (stance-range stance) 'far) ; always require roll
-               (eq? (stance-range stance) 'mid) ; require roll if no proficiency
-               (eq? (stance-range stance) 'close) ; never require roll
-               (eq? (stance-range stance) 'engaged)) ; only possible with pistols
-           (define damage-roll (λ () (d 2 2)))
-           (define details
-             (list
-              (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "2d2")
-              (cons 'damage-type 'gunshot) ; we're assuming firearms here
-              ))
-           (define choice
-             (make-choice
-              'attack
-              (string-append
-               "Shoot "
-               (get-combatant-name target)
-               " [with revolver].")
-              (λ ()
-                (make-action
-                 #:symbol 'shoot
-                 #:actor (situation-pc *situation*)
-                 #:duration 1
-                 #:target target
-                 #:tags '(initiative-based-resolution)
-                 #:details details))))
-           (set! combat-choices (append-element combat-choices choice)))
-          ))
-  combat-choices)
+  
+  (define all-choices
+    (for/list ([i (in-range 0 (length targets))])
+      (define target (list-ref targets i))
+      (define stance (find-stance target))
+      (cond ((or (eq? (stance-range stance) 'far) ; always require roll
+                 (eq? (stance-range stance) 'mid) ; require roll if no proficiency
+                 (eq? (stance-range stance) 'close) ; never require roll
+                 (eq? (stance-range stance) 'engaged)) ; only possible with pistols
+           
+             (cond ((not (member 'aware-of-being-out-of-ammo *combat-flags*))  ; either ammo left, or not aware of being out of ammo)
+                    (define damage-roll (λ () (d 2 2)))
+                    (define details
+                      (list
+                       (cons 'damage-roll damage-roll)
+                       (cons 'damage-roll-formula "2d2")
+                       (cons 'damage-type 'gunshot) ; we're assuming firearms here
+                       ))
+           
+                    (make-choice
+                     'attack
+                     (string-append
+                      "Shoot "
+                      (get-combatant-name target)
+                      " [with revolver].")
+                     (λ ()
+                       (make-action
+                        #:symbol 'shoot
+                        #:actor (situation-pc *situation*)
+                        #:duration 1
+                        #:target target
+                        #:tags '(initiative-based-resolution)
+                        #:details details))))
+                   (else '())
+                   )))))
+  (flatten ; CBA
+     (filter ; TODO this should be extracted, useful, esp. the void check!
+      (λ (x) (and (not (null? x))
+                  (not (void? x))))
+      all-choices)))
 
 ; TODO this belongs to situation
 (define (actor-has-item? actor item)
