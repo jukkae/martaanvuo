@@ -185,7 +185,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   
@@ -233,7 +233,7 @@
 
 ; engine / round resolver
 (define (on-end-round)
-  (displayln "[End round]")
+  #;(displayln "[End round]")
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
