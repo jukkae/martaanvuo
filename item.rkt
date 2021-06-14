@@ -14,19 +14,36 @@
   [name #:mutable]
   [details #:mutable]))
 
+(define (new-item
+         name
+         #:id id
+         #:details (details '()))
+  (item id name details))
+
 (serializable-struct
  ranged-weapon
  item
  ([ammo-left #:mutable]))
 
+(define (new-ranged-weapon
+         name
+         #:id id
+         #:details (details '())
+         #:ammo-left ammo-left)
+  (ranged-weapon id name details ammo-left))
+
 (define (make-item id)
-  (define details '())
   (case id
     ['bolt-cutters
      (define name "Bolt cutters")
-     (item id name details)]
+     (new-item
+      "Bolt cutters"
+      #:id id)]
+    
     ['revolver
-     (define name "Revolver")
-     (ranged-weapon id name details 3)]
-    [else (displayln "make-item: unknown id:") (displayln "id") '()]
-  ))
+     (new-ranged-weapon
+      "Revolver"
+      #:id 'revolver
+      #:ammo-left 3)]
+    
+    [else (displayln "make-item: unknown id:") (displayln "id") '()]))
