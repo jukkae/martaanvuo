@@ -4,10 +4,7 @@
 
 (require racket/serialize)
 
-; TODO fields like this:
-; name, by position, required
-; id, by name, required
-; details, by name, not required, default to '()
+
 (serializable-struct
  item
  (id
@@ -15,7 +12,7 @@
   [details #:mutable])
  #:constructor-name item*)
 
-
+; not part of API
 (define (new-item
          name
          #:id id
@@ -28,6 +25,7 @@
  ([ammo-left #:mutable])
  #:constructor-name ranged-weapon*)
 
+; not part of API
 (define (new-ranged-weapon
          name
          #:id id
@@ -35,6 +33,8 @@
          #:ammo-left ammo-left)
   (ranged-weapon* id name details ammo-left))
 
+
+; API
 (define (make-item id)
   (case id
     ['bolt-cutters
