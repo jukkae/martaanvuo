@@ -122,7 +122,14 @@
     (weapon-info gun))
   '())
 
-(define (resolve-shoot-action! action)
+; helper that belongs to actor (or one layer above actor)
+(define (get-firearm actor)
+  (define items (actor-inventory actor))
+  (findf (λ (item) (ranged-weapon? item))
+         items)
+  )
+
+(define (resolve-successful-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
   (define title
@@ -177,6 +184,20 @@
           (set! action-result 'pc-dead))))
 
   action-result
+  )
+
+(define (resolve-shoot-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define gun (get-firearm actor))
+  (case (ranged-weapon-ammo-left gun)
+    [(0) (paragraph "Click. Out of ammo.")
+         (award-xp! 1 "Whoops.")
+         'failure]
+    [else (resolve-successful-shoot-action! action)]
+    )
+  
+  
   )
 
 

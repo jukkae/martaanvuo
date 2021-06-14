@@ -4,6 +4,10 @@
 
 (require racket/serialize)
 
+; TODO fields like this:
+; name, by position, required
+; id, by name, required
+; details, by name, not required, default to '()
 (serializable-struct
  item
  (id

@@ -70,6 +70,7 @@
 
 ;;; Combat
 ;;; (or actually, eventually, any kind of action scene, but more about that later)
+
 (define (begin-combat!)
   (displayln "BEGIN COMBAT")
   (set-situation-in-combat?! *situation* #t))
@@ -394,7 +395,7 @@
 (define (award-xp! amount . reason)
   (if (null? reason)
       (displayln (string-append "[+" (number->string amount) " xp]"))
-      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
+      (displayln (string-append "[+" (number->string amount) " xp: " (car reason) "]")))
   (define pc (situation-pc *situation*))
   (set-pc-actor-xp! pc
                     (+ (pc-actor-xp pc)
