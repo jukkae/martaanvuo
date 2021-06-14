@@ -12,30 +12,32 @@
  item
  (id
   [name #:mutable]
-  [details #:mutable]))
+  [details #:mutable])
+ #:constructor-name item*)
+
 
 (define (new-item
          name
          #:id id
          #:details (details '()))
-  (item id name details))
+  (item* id name details))
 
 (serializable-struct
  ranged-weapon
  item
- ([ammo-left #:mutable]))
+ ([ammo-left #:mutable])
+ #:constructor-name ranged-weapon*)
 
 (define (new-ranged-weapon
          name
          #:id id
          #:details (details '())
          #:ammo-left ammo-left)
-  (ranged-weapon id name details ammo-left))
+  (ranged-weapon* id name details ammo-left))
 
 (define (make-item id)
   (case id
     ['bolt-cutters
-     (define name "Bolt cutters")
      (new-item
       "Bolt cutters"
       #:id id)]
