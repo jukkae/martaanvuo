@@ -68,6 +68,14 @@
 
 
 
+;;; Meta progression / achievements
+(define (increment-achievement! achievement)
+  (case achievement
+    ['forgetful (displayln "forgetful achievement incremented")]
+    [else
+     (displayln "increment-achievement!: unknown achievement:")
+     (displayln achievement)]))
+
 ;;; Combat
 ;;; (or actually, eventually, any kind of action scene, but more about that later)
 (define *combat-flags* '())
