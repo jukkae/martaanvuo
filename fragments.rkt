@@ -91,7 +91,7 @@
    )
   (make-decision
    #:title "> That's exciting."
-   #:description "< That's exciting.\n\nIsn't it?"
+   #:description "> That's exciting.\n\n< Isn't it?"
    #:next-fragment 'exit
    ))
  (nop)

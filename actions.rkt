@@ -90,7 +90,8 @@
                  (eq? (stance-range stance) 'mid) ; require roll if no proficiency
                  (eq? (stance-range stance) 'close) ; never require roll
                  (eq? (stance-range stance) 'engaged)) ; only possible with pistols
-           
+
+             
              (cond ((not (member 'aware-of-being-out-of-ammo *combat-flags*))  ; either ammo left, or not aware of being out of ammo)
                     (define damage-roll (λ () (d 2 2)))
                     (define details
@@ -114,13 +115,40 @@
                         #:target target
                         #:tags '(initiative-based-resolution)
                         #:details details))))
-                   (else '())
+
+
+                   ; out of ammo
+                   (else
+                    (cond ((or (eq? (stance-range stance) 'close)
+                               (eq? (stance-range stance) 'engaged))
+                           (define damage-roll (λ () 1))
+                           (define details
+                             (list
+                              (cons 'damage-roll damage-roll)
+                              (cons 'damage-roll-formula 1)
+                              (cons 'damage-type 'bludgeoning)
+                              ))
+                           (make-choice
+                              'attack
+                              (string-append
+                               "Pistol whip the "
+                               (get-combatant-name target)
+                               " [with revolver].")
+                              (λ ()
+                                (make-action
+                                 #:symbol 'melee
+                                 #:actor (situation-pc *situation*)
+                                 #:duration 1
+                                 #:target target
+                                 #:tags '(initiative-based-resolution)
+                                 #:details details))))
+                          ))
                    )))))
   (flatten ; CBA
-     (filter ; TODO this should be extracted, useful, esp. the void check!
-      (λ (x) (and (not (null? x))
-                  (not (void? x))))
-      all-choices)))
+   (filter ; TODO this should be extracted, useful, esp. the void check!
+    (λ (x) (and (not (null? x))
+                (not (void? x))))
+    all-choices)))
 
 ; TODO this belongs to situation
 (define (actor-has-item? actor item)
