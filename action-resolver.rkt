@@ -54,8 +54,6 @@
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
-  
-  
 
   (when success?
     (info-card

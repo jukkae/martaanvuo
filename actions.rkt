@@ -86,69 +86,67 @@
     (for/list ([i (in-range 0 (length targets))])
       (define target (list-ref targets i))
       (define stance (find-stance target))
-      (cond ((or (eq? (stance-range stance) 'far) ; always require roll
-                 (eq? (stance-range stance) 'mid) ; require roll if no proficiency
-                 (eq? (stance-range stance) 'close) ; never require roll
-                 (eq? (stance-range stance) 'engaged)) ; only possible with pistols
 
-             
-             (cond ((not (member 'aware-of-being-out-of-ammo *combat-flags*))  ; either ammo left, or not aware of being out of ammo)
-                    (define damage-roll (λ () (d 2 2)))
-                    (define details
-                      (list
-                       (cons 'damage-roll damage-roll)
-                       (cons 'damage-roll-formula "2d2")
-                       (cons 'damage-type 'gunshot) ; we're assuming firearms here
-                       ))
+      (list
+       (when (and (not (member 'aware-of-being-out-of-ammo *combat-flags*))
+                  (or (eq? (stance-range stance) 'far) ; always require roll
+                      (eq? (stance-range stance) 'mid) ; require roll if no proficiency
+                      (eq? (stance-range stance) 'close) ; never require roll
+                      (eq? (stance-range stance) 'engaged)))
+         (define damage-roll (λ () (d 2 2)))
+         (define details
+           (list
+            (cons 'damage-roll damage-roll)
+            (cons 'damage-roll-formula "2d2")
+            (cons 'damage-type 'gunshot) ; we're assuming firearms here
+            ))
            
-                    (make-choice
-                     'attack
-                     (string-append
-                      "Shoot "
-                      (get-combatant-name target)
-                      " [with revolver].")
-                     (λ ()
-                       (make-action
-                        #:symbol 'shoot
-                        #:actor (situation-pc *situation*)
-                        #:duration 1
-                        #:target target
-                        #:tags '(initiative-based-resolution)
-                        #:details details))))
-
-
-                   ; out of ammo
-                   (else
-                    (cond ((or (eq? (stance-range stance) 'close)
-                               (eq? (stance-range stance) 'engaged))
-                           (define damage-roll (λ () 1))
-                           (define details
-                             (list
-                              (cons 'damage-roll damage-roll)
-                              (cons 'damage-roll-formula 1)
-                              (cons 'damage-type 'bludgeoning)
-                              ))
-                           (make-choice
-                              'attack
-                              (string-append
-                               "Pistol whip the "
-                               (get-combatant-name target)
-                               " [with revolver].")
-                              (λ ()
-                                (make-action
-                                 #:symbol 'melee
-                                 #:actor (situation-pc *situation*)
-                                 #:duration 1
-                                 #:target target
-                                 #:tags '(initiative-based-resolution)
-                                 #:details details))))
-                          ))
-                   )))))
-  (flatten ; CBA
-   (filter ; TODO this should be extracted, useful, esp. the void check!
-    (λ (x) (and (not (null? x))
-                (not (void? x))))
-    all-choices)))
+         (make-choice
+          'attack
+          (string-append
+           "Shoot "
+           (get-combatant-name target)
+           " [with revolver].")
+          (λ ()
+            (make-action
+             #:symbol 'shoot
+             #:actor (situation-pc *situation*)
+             #:duration 1
+             #:target target
+             #:tags '(initiative-based-resolution)
+             #:details details))))
+       
+       (when (or (eq? (stance-range stance) 'close)
+                 (eq? (stance-range stance) 'engaged))
+         
+         (define damage-roll (λ () 1))
+         (define details
+           (list
+            (cons 'damage-roll damage-roll)
+            (cons 'damage-roll-formula "1")
+            (cons 'damage-type 'bludgeoning)
+            ))
+         (make-choice
+          'attack
+          (string-append
+           "Pistol whip the "
+           (get-combatant-name target)
+           " [with revolver].")
+          (λ ()
+            (make-action
+             #:symbol 'melee
+             #:actor (situation-pc *situation*)
+             #:duration 1
+             #:target target
+             #:tags '(initiative-based-resolution)
+             #:details details))))
+       )))
+  
+  
+  (filter ; TODO this should be extracted, useful, esp. the void check!
+   (λ (x) (and (not (null? x))
+               (not (void? x))))
+   (flatten all-choices)))
 
 ; TODO this belongs to situation
 (define (actor-has-item? actor item)
