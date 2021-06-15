@@ -39,6 +39,15 @@
       #:tags '(initiative-based-resolution)
       #:details '())]
 
+    ['go-to-close
+     (make-action
+      #:symbol 'go-to-close
+      #:actor actor
+      #:duration 1
+      #:target (pc)
+      #:tags '(initiative-based-resolution)
+      #:details '())]
+
     ['blindscrape
      (make-action
       #:symbol 'inflict-status
@@ -92,6 +101,23 @@
                (define action-flag-with-index (list-ref options index))
                #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
+               (make-blindscraper-action actor action-flag))
+
+              (else
+               (define options
+                 (list
+                  (cons 1 'attack)
+                  (cons 2 'attack)
+                  (cons 3 'go-to-engaged)
+                  (cons 4 'go-to-engaged)
+                  #;(cons 4 'parry)
+                  ))
+               (define roll (d 1 4))
+               (define index (- roll 1))
+               #;(displayln "Action")
+               (define action-flag-with-index (list-ref options index))
+               #;(displayln action-flag-with-index)
+               (define action-flag 'go-to-close)
                (make-blindscraper-action actor action-flag))))
            
            ((= (actor-hp actor) 1)
@@ -111,7 +137,7 @@
 
   (begin-combat!)
 
-  (define i 0)
+  (define i 1)
   (define enemy (make-actor "Blindscraper" 3))
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)

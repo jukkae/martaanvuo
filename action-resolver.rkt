@@ -348,6 +348,18 @@
   'ok
   )
 
+(define (resolve-go-to-close-action! action)
+  (define lp (pc-actor-lp (situation-pc *situation*)))
+  (define dex (actor-dexterity (action-actor action)))
+           
+  (paragraph "The Blindscraper skitters towards Otava.")
+        (remove-stance! (action-actor action))
+                 
+        (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
+          (add-stance! enemy-stance))
+  'ok
+  )
+
 ; just a skill check in a fancy coat
 (define (resolve-forage-action! action)
 
@@ -553,9 +565,10 @@
           ((eq? (action-symbol action) 'break-free)
            (resolve-break-free-action! action))
 
-          ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
            (resolve-go-to-engaged-action! action))
+          ((eq? (action-symbol action) 'go-to-close)
+           (resolve-go-to-close-action! action))
 
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
