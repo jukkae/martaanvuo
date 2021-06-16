@@ -7,66 +7,34 @@
 
 (require "actor.rkt")
 (require "action.rkt")
+(require "io.rkt") ; TODO: this is only needed for the info card thingy, which likely belongs somewhere else
 (require "utils.rkt")
 
-(serializable-struct location
-  (id
-   [neighbors #:mutable]
-   type
-   features
-   [actors #:mutable]
-   [visited #:mutable]
-   items
-   [actions-provided #:mutable]
-   tags)
+(serializable-struct
+ location
+ (id
+  [neighbors #:mutable]
+  type
+  features
+  [actors #:mutable]
+  [visited #:mutable]
+  items
+  [actions-provided #:mutable]
+  tags)
 
-  #:constructor-name location*
+ #:constructor-name location*
 
-  #:methods gen:custom-write
-  [(define write-proc
-     (make-constructor-style-printer
-      (lambda (obj) 'location)
-      (lambda (obj)
-        (list
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "id: ")
-         (location-id obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "number of neighbors: ")
-         #;(location-neighbors obj)
-         (length (location-neighbors obj))
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "type: ")
-         (location-type obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "features: ")
-         (location-features obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "actors: ")
-         (location-actors obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "visited: ")
-         (location-visited obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "items: ")
-         (location-items obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "actions-provided: ")
-         (location-actions-provided obj)
-
-         (unquoted-printing-string "\n")
-         (unquoted-printing-string "tags: ")
-         (location-tags obj)
-
-         (unquoted-printing-string "\n")
-         ))))])
+ #:methods gen:custom-write
+ [(define write-proc
+    (make-constructor-style-printer
+     (lambda (obj) 'location)
+     (lambda (obj)
+       (list
+        (unquoted-printing-string "id: ")
+        (location-id obj)
+        (unquoted-printing-string ", ")
+        (unquoted-printing-string "type: ")
+        (location-type obj)))))])
 
 (define *number-of-locations* 0)
 
@@ -101,4 +69,23 @@
     ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
     ['edgeflats "Go back to Edgeflats."]
     [else (string-append "Go to " (symbol->string to-type) ".")]))
+
+; TODO: Where does this belong?
+(define (display-location-info-card location)
+  (define body
+    (list
+     (list (string-append " "
+                          "id"
+                          " ")
+           (string-append " "
+                          (number->string (location-id location))
+                          " "))
+     (list (string-append " "
+                          "type"
+                          " ")
+           (string-append " "
+                          (symbol->string (location-type location))
+                          " "))
+     ))
+  (info-card body "Location"))
 

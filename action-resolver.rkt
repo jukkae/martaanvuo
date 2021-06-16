@@ -590,6 +590,16 @@
            'ok
            )
 
+          ((eq? (action-symbol action) 'inflict-condition)
+           (define target (action-target action))
+           (define condition (car (action-details action)))
+           (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
+           #;(when (eq? (status-type status) 'bound)
+             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+           #;(inflict-status! target status)
+           'ok
+           )
+
           
 
           ((eq? (action-symbol action) 'anklebreaker)

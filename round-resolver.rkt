@@ -447,7 +447,9 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (paragraph (describe-finish-go-to-action action))))
+                          (paragraph (describe-finish-go-to-action action))
+                          (display-location-info-card (current-location))
+                          ))
                    
                    action-result
                    ))

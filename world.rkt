@@ -54,7 +54,8 @@
 
 (define sewers
   (make-location
-   #:type 'sewers))
+   #:type 'sewers
+   #:items '(ammo)))
 
 (define cache
   (make-location
