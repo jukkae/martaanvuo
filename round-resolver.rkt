@@ -449,6 +449,8 @@
                             (go-to-story-fragment 300))
                           (paragraph (describe-finish-go-to-action action))
                           (display-location-info-card (current-location))
+                          (when (not (null? (location-items (action-target action))))
+                            (pick-up-items!))
                           ))
                    
                    action-result
@@ -577,7 +579,7 @@
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
                  'night))
-       (define dice-sides 100) ; tweak on a per-location basis
+       (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
        (cond ((= roll 1)

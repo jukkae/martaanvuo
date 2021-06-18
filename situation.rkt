@@ -131,8 +131,6 @@
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
   (define pending-action (situation-pending-action *situation*))
-  (displayln "PENDING ACTION:")
-  (displayln pending-action)
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "[continue] Continue towards "
@@ -470,3 +468,12 @@
   (player-info)
   (wait-for-confirm)
   (exit))
+
+; api?
+(define (pick-up-items!)
+  (paragraph "Otava picks up everything there is to pick up.")
+  (define all-items (location-items (current-location)))
+  (for ([item all-items])
+    (remove-item-from-location! (current-location) item)
+    (add-item-to-inventory! (pc) item))
+  (display-location-info-card (current-location)))

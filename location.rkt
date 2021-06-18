@@ -18,7 +18,7 @@
   features
   [actors #:mutable]
   [visited #:mutable]
-  items
+  [items #:mutable]
   [actions-provided #:mutable]
   tags)
 
@@ -50,11 +50,16 @@
   (location* *number-of-locations* neighbors type features actors #f items actions-provided tags))
 
 (define (add-actor-to-location! location actor)
-  (set-location-actors! location (cons actor (location-actors location)))
-  )
+  (set-location-actors! location (cons actor (location-actors location))))
 
 (define (remove-actor-from-location! location actor)
   (set-location-actors! location (remove actor (location-actors location))))
+
+(define (add-item-to-location! location item)
+  (set-location-items! location (cons item (location-items location))))
+
+(define (remove-item-from-location! location item)
+  (set-location-items! location (remove item (location-items location))))
 
 (define (location-has-tag? location tag)
   (memq tag (location-tags location)))
@@ -85,6 +90,12 @@
                           " ")
            (string-append " "
                           (symbol->string (location-type location))
+                          " "))
+     (list (string-append " "
+                          "items"
+                          " ")
+           (string-append " "
+                          (~v (location-items location))
                           " "))
      ))
   (info-card body "Location"))
