@@ -5,6 +5,7 @@
 (require racket/serialize)
 
 (require "actor.rkt")
+(require "item.rkt")
 (require "location.rkt")
 (require "utils.rkt")
 
@@ -55,7 +56,7 @@
 (define sewers
   (make-location
    #:type 'sewers
-   #:items '(ammo)))
+   #:items (list (make-item 'ammo))))
 
 (define cache
   (make-location

@@ -347,7 +347,8 @@
 (define (redescribe-situation)
   (cond
     ((in-combat?) (describe-combat-situation))
-    (else (displayln "redescribe-situation: TODO")))
+    (else (hr)
+          (paragraph *last-paragraph*)))
   )
 
 ; scripting API / situation

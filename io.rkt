@@ -9,7 +9,15 @@
   (print-table content #:row-sep? #f)
   (newline))
 
+; hide this
+(define *last-paragraph* '())
+
+(define (hr)
+  (displayln "---")
+  (newline))
+
 (define (paragraph . args)
+  (set! *last-paragraph* (string-append* args))
   (displayln (string-append* args))
   (newline))
 

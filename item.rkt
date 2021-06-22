@@ -47,5 +47,11 @@
       "Revolver"
       #:id 'revolver
       #:ammo-left 0)]
+
+    ['ammo
+     (new-item
+      "Ammo"
+      #:id id
+      #:details 3)]
     
     [else (displayln "make-item: unknown id:") (displayln "id") '()]))
