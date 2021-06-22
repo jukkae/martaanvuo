@@ -476,4 +476,4 @@
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))
-  (display-location-info-card (current-location)))
+  (print-inventory))

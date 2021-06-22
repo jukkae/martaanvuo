@@ -851,9 +851,14 @@
   (define items (actor-inventory actor))
   (define items-list
     (for/list ([item items])
-      (list
-       (string-append " " (item-name item) " ")
-       (string-append " " (~v (item-details item)) " "))))
+      (cond ((item? item)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " (~v (item-details item)) " ")))
+            (else (list
+                   (string-append " " (symbol->string item) " ")
+                   (string-append " " " " " "))))
+      ))
   
   (define sheet
     (append

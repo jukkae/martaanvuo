@@ -60,7 +60,7 @@
 
 (define cache
   (make-location
-   #:items '(u-235 veilbreaker-staff)
+   #:items '(u-235)
    #:type 'cache))
 
 (define workshop

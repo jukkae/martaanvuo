@@ -6,6 +6,7 @@
 
 (require "actor.rkt")
 (require "character-sheet.rkt")
+(require "io.rkt")
 (require "item.rkt")
 ;(require "situation.rkt")
 (require "utils.rkt")
@@ -78,3 +79,32 @@
         ((item? item)
          (add-item-to-inventory! actor item))
         (else (error "Unknown item type in add-item!"))))
+
+(define (print-inventory)
+  (define actor (pc))
+  
+  (define header
+    (list
+     (list " Item " " Notes ")))
+
+  (define items (actor-inventory actor))
+  (define items-list
+    (for/list ([item items])
+      (cond ((item? item)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " (~v (item-details item)) " ")))
+            (else (list
+                   (string-append " " (symbol->string item) " ")
+                   (string-append " " " " " "))))
+      ))
+  
+  (define sheet
+    (append
+     header
+     items-list))
+  
+  (info-card
+   sheet
+   "Inventory"
+   ))
