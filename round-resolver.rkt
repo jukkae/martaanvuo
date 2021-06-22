@@ -766,7 +766,8 @@
   #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
-  (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
+  (when (not (null? (actor-inventory (pc))))
+    (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
   meta-commands)
 
