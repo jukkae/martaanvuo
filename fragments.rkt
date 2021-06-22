@@ -64,9 +64,9 @@
  (list
   (make-decision
    #:title "Luckily, she has a gun."
-   #:description "But she has a gun, an old revolver; as far as she knows, it's in perfect condition, and she's sure she'll find bullets somewhere in Martaanvuo."
+   #:description "But she has a gun, an old revolver, and five bullets."
    #:on-resolve! (proc (add-item! 'revolver))
-   #:next-fragment 3
+   #:next-fragment 'exit
    )
 
   #;(make-decision

@@ -46,7 +46,7 @@
      (new-ranged-weapon
       "Revolver"
       #:id 'revolver
-      #:ammo-left 0)]
+      #:ammo-left 5)]
 
     ['ammo
      (new-item

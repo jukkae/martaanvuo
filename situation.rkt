@@ -347,8 +347,7 @@
 (define (redescribe-situation)
   (cond
     ((in-combat?) (describe-combat-situation))
-    (else (hr)
-          (paragraph *last-paragraph*)))
+    (else (repeat-last-paragraph)))
   )
 
 ; scripting API / situation

@@ -4,13 +4,33 @@
 
 (require text-table)
 
+(require "utils.rkt")
+
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
   (print-table content #:row-sep? #f)
   (newline))
 
+(define *log* '())
+
+(define (write-paragraph-to-log paragraph)
+  (set! *log* (append-element *log* paragraph)))
+
+(define (display-log)
+  (hr)
+  (displayln "[BEGIN LOG]")
+  (newline)
+  (for ([entry *log*])
+    (paragraph entry))
+  (displayln "[END LOG]")
+  (newline))
+
 ; hide this
 (define *last-paragraph* '())
+
+(define (repeat-last-paragraph)
+  (hr)
+  (paragraph *last-paragraph*))
 
 (define (hr)
   (displayln "---")
@@ -18,6 +38,7 @@
 
 (define (paragraph . args)
   (set! *last-paragraph* (string-append* args))
+  (write-paragraph-to-log (string-append* args))
   (displayln (string-append* args))
   (newline))
 
