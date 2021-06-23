@@ -8,11 +8,14 @@
   (case range
     ['engaged 0]
     ['close 1]
-    [else (error "get-stance-range-numeric-value: unknown range")]))
+    ['mid 2]
+    [else (error (string-append "get-stance-range-numeric-value: unknown range: "
+                                (symbol->string range)))]))
 
 
 (serializable-struct
  stance
- (index
+ (enemy
+  index
   range
   location))

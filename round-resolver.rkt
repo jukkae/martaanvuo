@@ -185,7 +185,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   
@@ -233,7 +233,7 @@
 
 ; engine / round resolver
 (define (on-end-round)
-  (displayln "[End round]")
+  #;(displayln "[End round]")
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
@@ -282,8 +282,8 @@
     )
   
   
-  (newline) ; This is the "extra" newline that separates rounds
-  (wait-for-confirm)
+  #;(newline) ; This is the "extra" newline that separates rounds
+  #;(wait-for-confirm)
   )
 
 ; engine / round resolver
@@ -447,7 +447,11 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (paragraph (describe-finish-go-to-action action))))
+                          (paragraph (describe-finish-go-to-action action))
+                          (display-location-info-card (current-location))
+                          (when (not (null? (location-items (action-target action))))
+                            (pick-up-items!))
+                          ))
                    
                    action-result
                    ))
@@ -575,7 +579,7 @@
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
                  'night))
-       (define dice-sides 100) ; tweak on a per-location basis
+       (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
        (cond ((= roll 1)
@@ -762,7 +766,9 @@
   #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
-  (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory))
+  (when (not (null? (actor-inventory (pc))))
+    (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
+  (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
   meta-commands)
 
@@ -845,9 +851,14 @@
   (define items (actor-inventory actor))
   (define items-list
     (for/list ([item items])
-      (list
-       (string-append " " (item-name item) " ")
-       (string-append " " (~v (item-details item)) " "))))
+      (cond ((item? item)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " (~v (item-details item)) " ")))
+            (else (list
+                   (string-append " " (symbol->string item) " ")
+                   (string-append " " " " " "))))
+      ))
   
   (define sheet
     (append

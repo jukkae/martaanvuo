@@ -5,6 +5,7 @@
 (require racket/serialize)
 
 (require "actor.rkt")
+(require "item.rkt")
 (require "location.rkt")
 (require "utils.rkt")
 
@@ -54,11 +55,12 @@
 
 (define sewers
   (make-location
-   #:type 'sewers))
+   #:type 'sewers
+   #:items (list (make-item 'ammo))))
 
 (define cache
   (make-location
-   #:items '(u-235 veilbreaker-staff)
+   #:items '(u-235)
    #:type 'cache))
 
 (define workshop
@@ -71,7 +73,7 @@
    #:type 'spring))
 
 (define (setup-world)
-  (set-location-neighbors! edgeflats (list swamp workshop))
+  (set-location-neighbors! edgeflats (list swamp))
   (set-location-neighbors! swamp (list edgeflats ridges valleys))
   (set-location-neighbors! ridges (list swamp))
   (set-location-neighbors! valleys (list swamp))

@@ -11,6 +11,7 @@
 (require "checks.rkt")
 (require "condition.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "status.rkt")
@@ -46,6 +47,98 @@
                    (get-combatant-name target)))
   #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
+
+  (define details (action-details action))
+  
+
+  (define damage-roll (assoc 'damage-roll details))
+  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  (define damage-roll-result ((cdr damage-roll)))
+
+  (when success?
+    (info-card
+     (list
+      (list " damage roll formula " " result ")
+      (list
+       (string-append " "
+                      damage-roll-formula
+                      " ")
+       (string-append " "
+                      (number->string damage-roll-result)
+                      " ")))
+     "HP damage roll"))
+
+  (define action-result 'ok)
+  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+  (when (eq? action-result 'dead)
+    
+    ; TODO what's a smart place to store this? the actor?
+    (case (actor-name (action-target action))
+      [("Blindscraper") (award-xp! 7)]))
+
+  (display-combatant-info target)
+  (newline)
+
+  ; Urgh, refactor!
+  (when (eq? action-result 'dead)
+    (if (not (pc-actor? (action-target action)))
+        (paragraph "The " (actor-name (action-target action)) " is dead.")
+        (begin
+          (paragraph "Otava is dead.")
+          (set! action-result 'pc-dead))))
+
+  action-result
+  )
+
+(define (weapon-info gun)
+  (define body
+    (append-element
+     (for/list ([item-detail (item-details gun)])
+       (list (string-append " "
+                            (car item-detail)
+                            " ")
+             (string-append " "
+                            (~s (cdr item-detail))
+                            " ")))
+     (list (string-append " Ammo left ")
+           (string-append " "
+                          (number->string (ranged-weapon-ammo-left gun))
+                          " "))))
+  (info-card body (item-name gun)))
+
+; where does this belong?
+(define (consume-ammo!)
+  (define actor (pc))
+  (define items (actor-inventory actor))
+  (define gun (findf (λ (item) (ranged-weapon? item))
+                     items))
+  (when gun
+    (set-ranged-weapon-ammo-left!
+     gun (max (- (ranged-weapon-ammo-left gun)
+                 1)
+              0))
+    (weapon-info gun))
+  '())
+
+; helper that belongs to actor (or one layer above actor)
+(define (get-firearm actor)
+  (define items (actor-inventory actor))
+  (findf (λ (item) (ranged-weapon? item))
+         items)
+  )
+
+(define (resolve-successful-shoot-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define title
+    (string-append "Ranged [firearms], "
+                   (get-combatant-name actor)
+                   " vs "
+                   (get-combatant-name target)))
+
+  ; TODO add sophistication regarding ranges etc
+  (define success? #t)
+  (consume-ammo!)
 
   (define details (action-details action))
   
@@ -89,6 +182,22 @@
           (set! action-result 'pc-dead))))
 
   action-result
+  )
+
+(define (resolve-shoot-action! action)
+  (define actor (action-actor action))
+  (define target (action-target action))
+  (define gun (get-firearm actor))
+  (case (ranged-weapon-ammo-left gun)
+    [(0) (paragraph "Click. Out of ammo.")
+         (award-xp! 1 "Whoops.")
+         (add-combat-flag 'aware-of-being-out-of-ammo)
+         (increment-achievement! 'forgetful)
+         'failure]
+    [else (resolve-successful-shoot-action! action)]
+    )
+  
+  
   )
 
 
@@ -220,10 +329,10 @@
   (if success?
       (begin
         (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-        (hash-remove! (situation-enemy-stances *situation*) (action-actor action))
+        (remove-stance! (action-actor action))
                  
-        (let ([enemy-stance (stance "α" 'engaged "right")])
-          (hash-set! (situation-enemy-stances *situation*) (action-actor action) enemy-stance)))
+        (let ([enemy-stance (stance (action-actor action) "α" 'engaged "right")])
+          (add-stance! enemy-stance)))
         
       (begin
         (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
@@ -236,6 +345,18 @@
                             0))
         (displayln (pc-actor-lp (situation-pc *situation*)))
         'failure))
+  'ok
+  )
+
+(define (resolve-go-to-close-action! action)
+  (define lp (pc-actor-lp (situation-pc *situation*)))
+  (define dex (actor-dexterity (action-actor action)))
+           
+  (paragraph "The Blindscraper skitters towards Otava.")
+        (remove-stance! (action-actor action))
+                 
+        (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
+          (add-stance! enemy-stance))
   'ok
   )
 
@@ -291,7 +412,7 @@
   (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
 
   (define target (action-target action))
-  (define target-stance (hash-ref (situation-enemy-stances *situation*) target))
+  (define target-stance (find-stance target))
 
   
   (define statuses (actor-statuses actor))
@@ -351,8 +472,8 @@
          (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
          (define stance-range-values '())
-         (for ([(k v) (in-hash (situation-enemy-stances *situation*))])
-           (define value (get-stance-range-numeric-value (stance-range v)))
+         (for ([stance (situation-enemy-stances *situation*)])
+           (define value (get-stance-range-numeric-value (stance-range stance)))
            (set! stance-range-values (append-element stance-range-values value)))
          (define target-number
            ; if there's an enemy in engaged range, then more difficult check
@@ -368,7 +489,7 @@
                'escape-from-combat)
              (begin
                (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
-               (actor-add-status! (action-target action) (status 'fallen 1))
+               (actor-add-status! (pc) (status 'fallen 1))
                (display-pc-combatant-info (pc))
                (wait-for-confirm)
                'failure))
@@ -380,7 +501,7 @@
            (get-combatant-name (action-actor action))
            " tries to run."))
          (define skill 1)
-         (define stance (hash-ref (situation-enemy-stances *situation*) (action-actor action)))
+         (define stance (find-stance (action-actor action)))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)
@@ -414,6 +535,8 @@
   (when (actor-alive? (action-actor action))
     (cond ((eq? (action-symbol action) 'melee)
            (resolve-melee-action! action))
+          ((eq? (action-symbol action) 'shoot)
+           (resolve-shoot-action! action))
 
           ((eq? (action-symbol action) 'forage)
            (resolve-forage-action! action))
@@ -442,9 +565,10 @@
           ((eq? (action-symbol action) 'break-free)
            (resolve-break-free-action! action))
 
-          ; This is starting to get unwieldy... but get poc done first
           ((eq? (action-symbol action) 'go-to-engaged)
            (resolve-go-to-engaged-action! action))
+          ((eq? (action-symbol action) 'go-to-close)
+           (resolve-go-to-close-action! action))
 
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
@@ -463,6 +587,16 @@
              (define amount (status-lifetime status))
              (modify-actor-status-lifetime target 'bound amount)
              )
+           'ok
+           )
+
+          ((eq? (action-symbol action) 'inflict-condition)
+           (define target (action-target action))
+           (define condition (car (action-details action)))
+           (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
+           #;(when (eq? (status-type status) 'bound)
+             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+           #;(inflict-status! target status)
            'ok
            )
 

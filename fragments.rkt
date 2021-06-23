@@ -43,17 +43,17 @@
  "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
  (list
   (make-decision
-   #:title "Because she's desperate."
-   #:description "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
-   #:on-resolve! (proc (set-build! 'desperate))
-   #:next-fragment 2
+   #:title "She's smart, and she's got a gun."
+   #:description "She knows the Anomaly better than anyone. She's read the logs, people have come back, and she knows how. The revolver's weight at her back feels reassuring."
+   #:on-resolve! (proc (set-build! 'smart) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air. This is where the Martaanvuo swamps begin."))
+   #:next-fragment 'exit
    )
 
   (make-decision
-   #:title "Because she punches really hard."
+   #:title "She punches really hard."
    #:description "She can crack a jawbone with her bare hands. That should keep her alive."
    #:on-resolve! (proc (set-build! 'bruiser))
-   #:next-fragment 2)
+   #:next-fragment 'exit)
   )
  
  (λ () (create-quest 'pay-off-debt)))
@@ -63,18 +63,56 @@
  "Otava knows it's going to be dangerous."
  (list
   (make-decision
-   #:title "But she has a revolver."
-   #:description "But she has a revolver."
+   #:title "Luckily, she has a gun."
+   #:description "But she has a gun – an old revolver – and five bullets."
    #:on-resolve! (proc (add-item! 'revolver))
    #:next-fragment 'exit
    )
 
-  (make-decision
-   #:title "But she's studied the area."
-   #:description "She knows the Anomaly well."
-   #:on-resolve! (proc (add-item! 'bolt-cutters) (displayln "TODO: Add skill"))
-   #:next-fragment 'exit)
+  #;(make-decision
+     #:title "But she's studied the area."
+     #:description "She knows the Anomaly well."
+     #:on-resolve! (proc (add-item! 'bolt-cutters) (displayln "TODO: Add skill"))
+     #:next-fragment 'exit)
   )
+ (nop)
+ )
+
+(fragment
+ 3
+ (string-append "> Wait, what do you mean, 'she'll find bullets'? She has a gun with no bullets?"
+                "\n\n"
+                "< Yes.")
+ (list
+  (make-decision
+   #:title "> That's unfair."
+   #:description "> That's unfair.\n\n< Life is unfair. You're not getting bullets on beginning of a run unless you meet the prerequisites, which I won't tell you. You'll have to play to find out more."
+   #:next-fragment 4
+   )
+  (make-decision
+   #:title "> That's exciting."
+   #:description "> That's exciting.\n\n< Isn't it?"
+   #:next-fragment 'exit
+   ))
+ (nop)
+ )
+
+(fragment
+ 4
+ "< Do you want to play the game or not?"
+ (list
+  (make-decision
+   #:title "> Fine, I guess I'm not getting bullets for this run. You suck."
+   #:description "< I'll pretend I didn't hear that. If you're ready, let's continue."
+   ;#:on-resolve! (nop)
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "> I want to start again."
+   #:description "< Sure."
+   ;#:on-resolve! (nop)
+   #:next-fragment 'exit
+   ))
  (nop)
  )
 
