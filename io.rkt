@@ -82,7 +82,7 @@
              (set! space-left (- space-left (+ (string-length word) space-width)))))
       (set! output (string-append output word)))
 
-    (set! output (substring output 1)) ; remove the extra space
+    (when (not (equal? "" output)) (set! output (substring output 1))) ; remove the extra space
     (set! output (string-append indent-string output)) ; fix indenting
     (set! final-output (string-append final-output output))
     (set! final-output (string-append final-output "\n")) ; add newline to correspond to the possible manually broken newline, or for paragraph end

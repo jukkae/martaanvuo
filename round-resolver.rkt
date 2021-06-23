@@ -282,8 +282,8 @@
     )
   
   
-  (newline) ; This is the "extra" newline that separates rounds
-  (wait-for-confirm)
+  #;(newline) ; This is the "extra" newline that separates rounds
+  #;(wait-for-confirm)
   )
 
 ; engine / round resolver

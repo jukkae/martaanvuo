@@ -43,17 +43,17 @@
  "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
  (list
   (make-decision
-   #:title "Because she's desperate."
-   #:description "Because she's desperate.\n\nShe's running out of time. Soon she'll start losing more than just her fingers, if she cannot deliver the goods. But desperation, she knows, gives you an edge. Sharpens the senses. Makes you dangerous."
-   #:on-resolve! (proc (set-build! 'desperate))
-   #:next-fragment 2
+   #:title "She's smart, and she's got a gun."
+   #:description "She knows the Anomaly better than anyone. She's read the logs, people have come back, and she knows how. The revolver's weight at her back feels reassuring."
+   #:on-resolve! (proc (set-build! 'smart) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air. This is where the Martaanvuo swamps begin."))
+   #:next-fragment 'exit
    )
 
   (make-decision
-   #:title "Because she punches really hard."
+   #:title "She punches really hard."
    #:description "She can crack a jawbone with her bare hands. That should keep her alive."
    #:on-resolve! (proc (set-build! 'bruiser))
-   #:next-fragment 2)
+   #:next-fragment 'exit)
   )
  
  (λ () (create-quest 'pay-off-debt)))
@@ -64,7 +64,7 @@
  (list
   (make-decision
    #:title "Luckily, she has a gun."
-   #:description "But she has a gun, an old revolver, and five bullets."
+   #:description "But she has a gun – an old revolver – and five bullets."
    #:on-resolve! (proc (add-item! 'revolver))
    #:next-fragment 'exit
    )
