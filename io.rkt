@@ -50,6 +50,12 @@
   (write-paragraph-to-log str)
   (print-paragraph s))
 
+(define (notice . args)
+  (define str (string-append* args))
+  (set! str (string-append "[" str "]"))
+  (define s (format-for-printing str #:width 92 #:indent 0))
+  (print-paragraph s))
+
 (define (wait-for-confirm)
   (displayln "[Enter]")
   (newline)

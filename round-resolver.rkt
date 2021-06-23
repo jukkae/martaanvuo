@@ -315,12 +315,10 @@
   (case (event-type event)
     ('new-time-of-day
      (case (event-details event)
-       ('afternoon (paragraph "It is now afternoon."))
-       ('evening (paragraph (string-append
-                             "It is evening. "
-                             )))
-       ('night (paragraph "Night falls. Brutal, pitch-black night."))
-       ('morning (paragraph "It is morning."))
+       ('afternoon (notice "It is now afternoon."))
+       ('evening (notice "It is now evening."))
+       ('night (notice "It is now night."))
+       ('morning (notice "It is now morning."))
        ))
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
