@@ -28,9 +28,14 @@
 ; implementation detail
 (define *last-paragraph* '())
 
+; implementation detail
+(define (print-paragraph formatted-text)
+  (displayln formatted-text)
+  )
+
 (define (repeat-last-paragraph)
   (hr)
-  (paragraph *last-paragraph*))
+  (print-paragraph *last-paragraph*))
 
 (define (hr)
   ; (displayln "---")
@@ -42,7 +47,7 @@
   (define s (format-for-printing str #:width 84 #:indent 4))
   (set! *last-paragraph* str)
   (write-paragraph-to-log str)
-  (displayln s))
+  (print-paragraph s))
 
 (define (wait-for-confirm)
   (displayln "[Enter]")
