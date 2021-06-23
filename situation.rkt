@@ -83,12 +83,13 @@
   (set! *combat-flags* (append-element *combat-flags* flag)))
 
 (define (begin-combat!)
-  (displayln "BEGIN COMBAT")
+  #;(displayln "BEGIN COMBAT")
   (set-situation-in-combat?! *situation* #t)
   (set! *combat-flags* '()))
 
 (define (end-combat!)
-  (displayln "END COMBAT")
+  #;(displayln "END COMBAT")
+  (notice "Combat finished.")
   (set-situation-in-combat?! *situation* #f)
   (set! *combat-flags* '()))
 
@@ -316,7 +317,7 @@
         (display-non-pc-combatant-info actor))))
 
 (define (describe-combat-situation)
-  (paragraph "Otava is in combat.")
+  (notice "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
     (display-combatant-info enemy)
     

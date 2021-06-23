@@ -477,7 +477,7 @@
             (set-situation-grabberkin-encounters!
              *situation*
              (add1 (situation-grabberkin-encounters *situation*)))
-            (player-info)]
+            #;(player-info)]
            ['blindscraper
             (spawn-blindscraper-encounter!)
             ]
