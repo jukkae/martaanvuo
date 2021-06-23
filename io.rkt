@@ -33,7 +33,8 @@
   (paragraph *last-paragraph*))
 
 (define (hr)
-  (displayln "---")
+  ; (displayln "---")
+  (displayln "--------------------------------------------------------------------------------------------")
   (newline))
 
 (define (paragraph . args)
@@ -41,8 +42,7 @@
   (define s (format-for-printing str #:width 84 #:indent 4))
   (set! *last-paragraph* s)
   (write-paragraph-to-log s)
-  (displayln s)
-  (newline))
+  (displayln s))
 
 (define (wait-for-confirm)
   (displayln "[Enter]")
@@ -57,28 +57,34 @@
   input)
 
 ; implementation detail
-(define (format-for-printing string #:width width #:indent indent)
+(define (format-for-printing input-string #:width width #:indent indent)
   (define line-width width)
   (define space-width 1)
-
   (define indent-string (make-string indent #\space))
 
-  (define words (string-split string))
-  (define space-left line-width)
-  (define output "")
+  (define final-output "")
+  
+  (define pre-broken-lines (string-split input-string "\n"))
+  
+  (for ([line pre-broken-lines])
+    (define output "")
+    (define words (string-split line))
+    (define space-left line-width)
+  
+    (for ([word words])
+      (cond ((> (+ (string-length word) space-width) space-left)
+             (set! output (string-append output "\n")) ; append newline
+             (set! output (string-append output indent-string)) ; append indenting
 
-  (for ([word words])
-    (cond ((> (+ (string-length word) space-width) space-left)
-           (set! output (string-append output "\n")) ; append newline
-           (set! output (string-append output indent-string)) ; append indenting
+             (set! space-left (- line-width (string-length word))))
+            (else
+             (set! output (string-append output " ")) ; whoops, this creates an extra space for the first word
+             (set! space-left (- space-left (+ (string-length word) space-width)))))
+      (set! output (string-append output word)))
 
-           (set! space-left (- line-width (string-length word))))
-          (else
-           (set! output (string-append output " ")) ; whoops, this creates an extra space for the first word
-           (set! space-left (- space-left (+ (string-length word) space-width)))))
-    (set! output (string-append output word)))
-
-  (set! output (substring output 1)) ; remove the extra space
-  (set! output (string-append indent-string output)) ; fix indenting
-
-  output)
+    (set! output (substring output 1)) ; remove the extra space
+    (set! output (string-append indent-string output)) ; fix indenting
+    (set! final-output (string-append final-output output))
+    (set! final-output (string-append final-output "\n")) ; add newline to correspond to the possible manually broken newline, or for paragraph end
+    )
+  final-output)
