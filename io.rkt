@@ -53,3 +53,35 @@
   (define input (read-line))
   (newline)
   input)
+
+
+
+(define (format string #:width width #:indent indent)
+  (define line-width width)
+  (define space-width 1)
+
+  (define words (string-split string))
+  (define space-left line-width)
+  (define output "")
+
+  (for ([word words])
+    (cond ((> (+ (string-length word) space-width) space-left)
+           (set! output (string-append output "\n")) ; append newline
+           (define indent-string (make-string indent #\space))
+           (set! output (string-append output indent-string)) ; append indenting
+
+           (set! space-left (- line-width (string-length word))))
+          (else
+           (set! output (string-append output " ")) ; whoops this creates an extra space for the first word
+           (set! space-left (- space-left (+ (string-length word) space-width)))))
+    (set! output (string-append output word)))
+
+  (set! output (substring output 1)) ; remove the extra space
+
+  output)
+
+(define test-string "foo bar xyzzy")
+
+(define formatted (format test-string #:width 3 #:indent 2))
+
+(displayln formatted)
