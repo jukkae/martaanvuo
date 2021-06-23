@@ -40,8 +40,8 @@
 (define (paragraph . args)
   (define str (string-append* args))
   (define s (format-for-printing str #:width 84 #:indent 4))
-  (set! *last-paragraph* s)
-  (write-paragraph-to-log s)
+  (set! *last-paragraph* str)
+  (write-paragraph-to-log str)
   (displayln s))
 
 (define (wait-for-confirm)
