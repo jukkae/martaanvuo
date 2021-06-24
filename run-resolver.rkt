@@ -31,7 +31,6 @@
   (set-situation-round! *situation* 0)
   (move-actor-to-location! (situation-pc *situation*) edgeflats)
   (narrate-begin-run)
-  (go-to-story-fragment 1)
   )
 
 (define (narrate-end-run exit-status)

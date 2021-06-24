@@ -122,7 +122,7 @@
        (quest 'the-anthead
               "seek the Anthead Girl"
               "not started"
-              "\"not ready yet\"")]))
+              "\"not ready yet\", whatever.")]))
   (add-quest! q)
 
   (define body
