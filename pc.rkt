@@ -29,7 +29,7 @@
 (define (set-build! build)
   (case build
     
-    ['smart
+    ['gun
      (set-actor-strength! (pc) 7)
      (set-actor-dexterity! (pc) 10)
      (set-actor-constitution! (pc) 7)

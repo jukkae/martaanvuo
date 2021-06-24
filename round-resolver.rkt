@@ -386,10 +386,11 @@
   (define result (let/ec return
                    ; do these BEFORE action resolution
                    (cond ((eq? (action-symbol action) 'end-run)
-                          (define inventory
+                          #;(define inventory
                             (actor-inventory (situation-pc *situation*)))
-                          (displayln inventory)
-                          (paragraph "Otava decides to head back to the Shack.")
+                          #;(displayln inventory)
+                          
+                          (paragraph "From the Edgeflats, it's just following the blacktop, until Otava finally arrives at the Shack.")
                           (return 'end-run))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
