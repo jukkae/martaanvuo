@@ -55,8 +55,7 @@
    #:on-resolve! (proc (set-build! 'bruiser))
    #:next-fragment 'exit)
   )
- 
- (λ () (create-quest 'pay-off-debt)))
+ (nop))
 
 (fragment
  2

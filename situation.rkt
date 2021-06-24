@@ -105,6 +105,10 @@
    *situation*
    (append-element (situation-quests *situation*) quest)))
 
+(define (quest-exists? id)
+  (define quests (situation-quests *situation*))
+  (findf (λ (quest) (eq? id (quest-id quest))) quests))
+
 ;;; Constructors
 (define (create-quest quest-symbol)
   (define q
@@ -113,7 +117,7 @@
        (quest 'pay-off-debt
               "pay off the debt to the Collector"
               "in progress"
-              "unsettled: 4,328 grams of U-235")]
+              "unsettled: 10,111 grams of U-235")] ; 10,111 is the 1,242th prime number, binary 10111 = 23
       ['the-anthead
        (quest 'the-anthead
               "seek the Anthead Girl"
@@ -127,7 +131,8 @@
   (info-card
    (list body)
    "New quest")
-  )
+
+  (wait-for-confirm))
 
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
