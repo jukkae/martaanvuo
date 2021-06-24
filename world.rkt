@@ -86,11 +86,10 @@
   )
 
 (define (expose-neighbor! location)
-  (displayln "exposing neighbor")
   (cond ((eq? (location-type location) 'ridges)
-         (displayln "location type ridges")
-         (set-location-neighbors! ridges (list swamp ruins))
-         )
+         (set-location-neighbors! ridges (list swamp ruins)))
+        ((eq? (location-type location) 'valleys)
+         (set-location-neighbors! ridges (list swamp sewers)))
         (else (error "unknown location type"))))
 
 ; world-as-simulation / scripting API

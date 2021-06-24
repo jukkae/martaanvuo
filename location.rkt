@@ -65,15 +65,34 @@
   (memq tag (location-tags location)))
 
 (define (get-location-name-from-location-type location-type)
-  (cond ((eq? location-type 'swamp) "the swamps")
+  (cond ((eq? location-type 'swamp) "the Swamps")
         (else (string-append "get-location-name-from-location-type: unknown location type: " (symbol->string location-type)))))
 
 (define (get-go-to-text-from-location-to-another from-type to-type)
-  (case to-type
-    ['ruins "Climb the hill to the ruins."]
-    ['swamp "Enter the swamps."] ; TODO: Toggle meta-progression on when the swamps are entered for the first time
-    ['edgeflats "Go back to Edgeflats."]
-    [else (string-append "Go to " (symbol->string to-type) ".")]))
+  (case from-type
+    ['ridges
+     (case to-type
+       ['ruins "Climb the hill to the Ruins."]
+       ['swamp "Descend to the Swamps."]
+       ['edgeflats "Go back to Edgeflats."]
+       [else (string-append "Go to " (symbol->string to-type) ".")])]
+
+    ['valleys
+     (case to-type
+       ['ruins "Climb the hill to the Ruins."]
+       ['swamp "Go to the Swamps."]
+       ['edgeflats "Go back to Edgeflats."]
+       [else (string-append "Go to " (symbol->string to-type) ".")])]
+
+    [else
+     (case to-type
+       ['ruins "Go to the Ruins."]
+       ['swamp "Go to the Swamps."]
+       ['edgeflats "Go back to Edgeflats."]
+       [else (string-append "Go to " (symbol->string to-type) ".")])
+     ]
+    )
+  )
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)

@@ -185,7 +185,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   
@@ -466,14 +466,17 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-
-         (define encounter-type (take-random encounter-types))
+         (define encounter-type (take-random (cond ((eq? (location-type (current-location)) 'ridges)
+                                                    'blindscraper)
+                                                   ((eq? (location-type (current-location)) 'valleys)
+                                                    'grabberkin)
+                                                   (else (take-random encounter-types)))))
 
          (case encounter-type
            ['grabberkin
 
             (spawn-grabberkin-encounter!)
-            ; TODO this should happen at the end of the encounter for it to make sense narratively
+            ; TODO this should happen at the end of the encounter for it to make sense narratively -> basically, combat timeline handling
             (set-situation-grabberkin-encounters!
              *situation*
              (add1 (situation-grabberkin-encounters *situation*)))
