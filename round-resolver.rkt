@@ -387,7 +387,7 @@
                    ; do these BEFORE action resolution
                    (cond ((eq? (action-symbol action) 'end-run)
                           #;(define inventory
-                            (actor-inventory (situation-pc *situation*)))
+                              (actor-inventory (situation-pc *situation*)))
                           #;(displayln inventory)
                           
                           (paragraph "From the Edgeflats, it's just following the blacktop, until Otava finally arrives at the Shack.")
@@ -467,11 +467,11 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type (take-random (cond ((eq? (location-type (current-location)) 'ridges)
-                                                    'blindscraper)
-                                                   ((eq? (location-type (current-location)) 'valleys)
-                                                    'grabberkin)
-                                                   (else (take-random encounter-types)))))
+         (define encounter-type  (cond ((eq? (location-type (current-location)) 'ridges)
+                                        'blindscraper)
+                                       ((eq? (location-type (current-location)) 'valleys)
+                                        'grabberkin)
+                                       (else (take-random encounter-types))))
 
          (case encounter-type
            ['grabberkin
