@@ -32,14 +32,20 @@
   (go-to-story-fragment 1)
   )
 
+(define (on-end-run exit-status)
+  (displayln "RUN SUMMARY")
+  (wait-for-confirm))
+
 ; engine / run-resolver
 (define (resolve-a-run)
   (on-begin-run)
-  (let/ec end-run
+  (define run-exit-status
+    (let/ec end-run
     (let loop ()
       (define round-exit-status (resolve-round))
       (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
       (when (eq? round-exit-status 'win-game) (end-run 'win-game))
       (when (eq? round-exit-status 'end-run) (end-run 'end-run))
-      (loop))
-    ))
+      (loop))))
+  (on-end-run run-exit-status)
+  run-exit-status)
