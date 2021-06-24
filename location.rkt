@@ -116,6 +116,12 @@
            (string-append " "
                           (~v (location-items location))
                           " "))
+     (list (string-append " "
+                          "features"
+                          " ")
+           (string-append " "
+                          (~v (location-features location))
+                          " "))
      ))
   (info-card body "Location"))
 
