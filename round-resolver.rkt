@@ -535,7 +535,7 @@
         ['pc-dead
          (end-round-early)]
         
-        ['escape-from-combat
+        ['end-combat
          (remove-all-enemies-and-end-combat!)
          (end-round-early)
          ]

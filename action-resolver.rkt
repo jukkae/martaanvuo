@@ -486,7 +486,7 @@
              (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
                (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
                (award-xp! 3 "for a working survival instinct")
-               'escape-from-combat)
+               'end-combat)
              (begin
                (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
                (actor-add-status! (pc) (status 'fallen 1))
