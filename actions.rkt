@@ -12,6 +12,7 @@
 (require "io.rkt")
 (require "item.rkt")
 (require "location.rkt")
+(require "pc.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "utils.rkt")
@@ -306,12 +307,12 @@
                (end-game)))]
 
            ['locked-door
-            '()#;(make-choice
-                  'turn-on-device
-                  "Turn on Hartmann Device."
-                  (λ ()
-                    (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
-                    (end-game)))]
+            (when (pc-has-item? 'revolver)
+              (make-choice
+               'shoot-the-lock
+               "Shoot the lock."
+               (λ ()
+                 (paragraph "BANG! Otava shoots the lock open."))))]
            
            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
 

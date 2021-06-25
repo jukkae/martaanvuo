@@ -81,6 +81,11 @@
          (add-item-to-inventory! actor item))
         (else (error "Unknown item type in add-item!"))))
 
+(define (pc-has-item? id)
+  (define items (actor-inventory (pc)))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+         items))
+
 (define (print-inventory)
   (define actor (pc))
   
