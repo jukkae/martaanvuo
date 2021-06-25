@@ -312,7 +312,12 @@
                'shoot-the-lock
                "Shoot the lock."
                (λ ()
-                 (paragraph "BANG! Otava shoots the lock open."))))]
+                 (paragraph "BANG! Otava shoots the lock open.")
+                 (make-action
+                  #:symbol 'skip
+                  #:actor (situation-pc *situation*)
+                  #:duration 0
+                  #:tags '(downtime)))))]
            
            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
 
