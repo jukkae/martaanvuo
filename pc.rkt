@@ -86,6 +86,15 @@
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
          items))
 
+(define (pc-has-ammo-left?)
+  (define items (actor-inventory (pc)))
+  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+                          items))
+  (cond (revolver
+         (define ammo-left (ranged-weapon-ammo-left revolver))
+         (positive? ammo-left))
+        (else #f)))
+
 (define (print-inventory)
   (define actor (pc))
   

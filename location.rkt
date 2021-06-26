@@ -15,7 +15,7 @@
  (id
   [neighbors #:mutable]
   type
-  features
+  [features #:mutable]
   [actors #:mutable]
   [visited #:mutable]
   [items #:mutable]

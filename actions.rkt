@@ -296,7 +296,11 @@
                     #:tags '(downtime))))]
            [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
 
-       (for/list ([feature (location-features (current-location))])
+
+       (filter
+        (λ (x) (and (not (null? x))
+                  (not (void? x))))
+        (for/list ([feature (location-features (current-location))])
          (case feature
            ['hartmann-device
             (make-choice
@@ -307,7 +311,8 @@
                (end-game)))]
 
            ['locked-door
-            (when (pc-has-item? 'revolver) ; TODO and bullets...
+            (when (and (pc-has-item? 'revolver)
+                       (pc-has-ammo-left?))
               (make-choice
                'shoot-the-lock
                "Shoot the lock."
@@ -328,7 +333,7 @@
                   #:duration 0
                   #:tags '(downtime)))))]
            
-           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
+           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice
