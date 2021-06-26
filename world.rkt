@@ -51,6 +51,7 @@
 
 (define ruins
   (make-location
+   #:features '(locked-door)
    #:type 'ruins))
 
 (define sewers
@@ -78,7 +79,7 @@
   (set-location-neighbors! ridges (list swamp))
   (set-location-neighbors! valleys (list swamp))
   (set-location-neighbors! crematory (list valleys))
-  (set-location-neighbors! ruins (list ridges sewers cache))
+  (set-location-neighbors! ruins (list ridges sewers))
   (set-location-neighbors! sewers (list ruins workshop))
   (set-location-neighbors! cache (list ruins))
   (set-location-neighbors! workshop (list sewers spring))
@@ -86,11 +87,10 @@
   )
 
 (define (expose-neighbor! location)
-  (displayln "exposing neighbor")
   (cond ((eq? (location-type location) 'ridges)
-         (displayln "location type ridges")
-         (set-location-neighbors! ridges (list swamp ruins))
-         )
+         (set-location-neighbors! ridges (list swamp ruins)))
+        ((eq? (location-type location) 'valleys)
+         (set-location-neighbors! ridges (list swamp sewers)))
         (else (error "unknown location type"))))
 
 ; world-as-simulation / scripting API

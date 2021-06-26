@@ -185,7 +185,7 @@
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
-  #;(info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
   
@@ -315,12 +315,10 @@
   (case (event-type event)
     ('new-time-of-day
      (case (event-details event)
-       ('afternoon (paragraph "It is now afternoon."))
-       ('evening (paragraph (string-append
-                             "It is evening. "
-                             )))
-       ('night (paragraph "Night falls. Brutal, pitch-black night."))
-       ('morning (paragraph "It is morning."))
+       ('afternoon (notice "It is now afternoon."))
+       ('evening (notice "It is now evening."))
+       ('night (notice "It is now night."))
+       ('morning (notice "It is now morning."))
        ))
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
@@ -388,10 +386,11 @@
   (define result (let/ec return
                    ; do these BEFORE action resolution
                    (cond ((eq? (action-symbol action) 'end-run)
-                          (define inventory
-                            (actor-inventory (situation-pc *situation*)))
-                          (displayln inventory)
-                          (paragraph "Otava decides to head back to the Shack.")
+                          #;(define inventory
+                              (actor-inventory (situation-pc *situation*)))
+                          #;(displayln inventory)
+                          
+                          (paragraph "From the Edgeflats, it's just following the blacktop, until Otava finally arrives at the Shack.")
                           (return 'end-run))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
@@ -468,18 +467,21 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-
-         (define encounter-type (take-random encounter-types))
+         (define encounter-type  (cond ((eq? (location-type (current-location)) 'ridges)
+                                        'blindscraper)
+                                       ((eq? (location-type (current-location)) 'valleys)
+                                        'grabberkin)
+                                       (else (take-random encounter-types))))
 
          (case encounter-type
            ['grabberkin
 
             (spawn-grabberkin-encounter!)
-            ; TODO this should happen at the end of the encounter for it to make sense narratively
+            ; TODO this should happen at the end of the encounter for it to make sense narratively -> basically, combat timeline handling
             (set-situation-grabberkin-encounters!
              *situation*
              (add1 (situation-grabberkin-encounters *situation*)))
-            (player-info)]
+            #;(player-info)]
            ['blindscraper
             (spawn-blindscraper-encounter!)
             ]
@@ -537,7 +539,7 @@
         ['pc-dead
          (end-round-early)]
         
-        ['escape-from-combat
+        ['end-combat
          (remove-all-enemies-and-end-combat!)
          (end-round-early)
          ]
@@ -582,7 +584,7 @@
        (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
-       (cond ((= roll 1)
+       (cond ((= roll 0)
               (define title "Luck roll failure")
               (info-card
                (list (list

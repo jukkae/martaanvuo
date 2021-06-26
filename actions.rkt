@@ -12,6 +12,7 @@
 (require "io.rkt")
 (require "item.rkt")
 (require "location.rkt")
+(require "pc.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "utils.rkt")
@@ -295,16 +296,64 @@
                     #:tags '(downtime))))]
            [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
 
-       (for/list ([feature (location-features (current-location))])
+
+       (filter
+        (λ (x) (and (not (null? x))
+                  (not (void? x))))
+        (for/list ([feature (location-features (current-location))])
          (case feature
            ['hartmann-device
             (make-choice
              'turn-on-device
              "Turn on Hartmann Device."
              (λ ()
-               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards at the speed of light, obliterating all traces of Otava within 4 nanoseconds, and proceeding to blink the entire Universe out of existence.")
+               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
                (end-game)))]
-           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))]))
+
+           ['locked-door
+            (when (and (pc-has-item? 'revolver)
+                       (pc-has-ammo-left?))
+              (make-choice
+               'shoot-the-lock
+               "Shoot the lock."
+               (λ ()
+                 (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                 (set-location-neighbors!
+                                 ruins
+                                 (append-element
+                                  (location-neighbors ruins)
+                                  cache))
+                 (set-location-features! ; TODO should ofc check location etc
+                                 ruins
+                                 '())
+                 
+                 (make-action
+                  #:symbol 'skip
+                  #:actor (situation-pc *situation*)
+                  #:duration 0
+                  #:tags '(downtime)))))
+            (when (and (pc-has-item? 'bolt-cutters))
+              (make-choice
+               'cut-the-lock
+               "Cut the lock with bolt cutters."
+               (λ ()
+                 (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
+                 (set-location-neighbors!
+                                 ruins
+                                 (append-element
+                                  (location-neighbors ruins)
+                                  cache))
+                 (set-location-features! ; TODO should ofc check location etc
+                                 ruins
+                                 '())
+                 
+                 (make-action
+                  #:symbol 'skip
+                  #:actor (situation-pc *situation*)
+                  #:duration 0
+                  #:tags '(downtime)))))]
+           
+           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice
@@ -319,7 +368,7 @@
        (when (eq? (location-type (current-location)) 'edgeflats)
          (make-pc-choice
           #:id 'end-run
-          #:text "Head back to The Shack."
+          #:text "Head back to the Shack."
           #:duration 0
           #:tags '(downtime)))
 

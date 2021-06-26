@@ -18,7 +18,9 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of hiking, the old blacktop road Otava has been following starts to descend towards Martaanvuo swamps. The Collector told her of a pre-Rains laboratory there, abandoned and forgotten, just inside the Anomaly. There's a small reactor in the basement, and that should be enough to settle her debt.")]
+     (paragraph "After a couple of days of hiking, the old blacktop road Otava has been following starts to descend towards Martaanvuo swamps. The Collector told her of a pre-Rains laboratory there, abandoned and forgotten, just inside the Anomaly. There's a small reactor in the basement, and that should be enough to settle her debt.")
+     (when (not (quest-exists? 'pay-off-debt))
+       (create-quest 'pay-off-debt))]
     [(2)
      (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
 
@@ -29,17 +31,33 @@
   (set-situation-round! *situation* 0)
   (move-actor-to-location! (situation-pc *situation*) edgeflats)
   (narrate-begin-run)
-  (go-to-story-fragment 1)
   )
+
+(define (narrate-end-run exit-status)
+  (info-card
+   (list
+    (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+   (string-append "End run number " (number->string (situation-run *situation*))))
+  (case exit-status
+    ['end-run
+     (paragraph "She's still alive.")]
+    [else
+     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
+
+(define (on-end-run exit-status)
+  (narrate-end-run exit-status)
+  (wait-for-confirm))
 
 ; engine / run-resolver
 (define (resolve-a-run)
   (on-begin-run)
-  (let/ec end-run
-    (let loop ()
-      (define round-exit-status (resolve-round))
-      (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
-      (when (eq? round-exit-status 'win-game) (end-run 'win-game))
-      (when (eq? round-exit-status 'end-run) (end-run 'end-run))
-      (loop))
-    ))
+  (define run-exit-status
+    (let/ec end-run
+      (let loop ()
+        (define round-exit-status (resolve-round))
+        (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
+        (when (eq? round-exit-status 'win-game) (end-run 'win-game))
+        (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+        (loop))))
+  (on-end-run run-exit-status)
+  run-exit-status)

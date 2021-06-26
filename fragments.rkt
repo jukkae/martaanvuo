@@ -43,9 +43,9 @@
  "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
  (list
   (make-decision
-   #:title "She's smart, and she's got a gun."
-   #:description "She knows the Anomaly better than anyone. She's read the logs, people have come back, and she knows how. The revolver's weight at her back feels reassuring."
-   #:on-resolve! (proc (set-build! 'smart) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air. This is where the Martaanvuo swamps begin."))
+   #:title "She's got a gun."
+   #:description "The revolver's weight against her back feels reassuring."
+   #:on-resolve! (proc (set-build! 'gun) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air. This is where the Martaanvuo swamps begin."))
    #:next-fragment 'exit
    )
 
@@ -55,8 +55,7 @@
    #:on-resolve! (proc (set-build! 'bruiser))
    #:next-fragment 'exit)
   )
- 
- (λ () (create-quest 'pay-off-debt)))
+ (nop))
 
 (fragment
  2

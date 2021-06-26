@@ -2,7 +2,9 @@
 
 (provide (all-defined-out))
 
+(require "io.rkt")
 (require "pc.rkt")
+(require "round-resolver.rkt")
 (require "run-resolver.rkt")
 (require "situation.rkt")
 
@@ -15,13 +17,15 @@
       (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
       (when (eq? run-exit-status 'win-game) (end-life 'win-game))
       (when (eq? run-exit-status 'end-run)
-        (displayln "TODO: END RUN")
+        (paragraph "But there's still debt to be paid. Otava heads back to Martaanvuo.")
+        (wait-for-confirm)
         (loop)))
     ))
 
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
+  (go-to-story-fragment 1)
   #;(player-info))
 
 (define (on-end-life)

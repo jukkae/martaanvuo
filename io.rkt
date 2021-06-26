@@ -21,9 +21,10 @@
   (displayln "[BEGIN LOG]")
   (newline)
   (for ([entry *log*])
-    (paragraph entry))
+    (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
   (displayln "[END LOG]")
-  (newline))
+  (newline)
+  (wait-for-confirm))
 
 ; implementation detail
 (define *last-paragraph* '())
@@ -35,7 +36,7 @@
 
 (define (repeat-last-paragraph)
   (hr)
-  (print-paragraph *last-paragraph*))
+  (print-paragraph (format-for-printing *last-paragraph* #:width 84 #:indent 4)))
 
 (define (hr)
   ; (displayln "---")
@@ -47,6 +48,12 @@
   (define s (format-for-printing str #:width 84 #:indent 4))
   (set! *last-paragraph* str)
   (write-paragraph-to-log str)
+  (print-paragraph s))
+
+(define (notice . args)
+  (define str (string-append* args))
+  (set! str (string-append "[" str "]"))
+  (define s (format-for-printing str #:width 92 #:indent 0))
   (print-paragraph s))
 
 (define (wait-for-confirm)

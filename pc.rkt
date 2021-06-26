@@ -29,7 +29,7 @@
 (define (set-build! build)
   (case build
     
-    ['smart
+    ['gun
      (set-actor-strength! (pc) 7)
      (set-actor-dexterity! (pc) 10)
      (set-actor-constitution! (pc) 7)
@@ -80,6 +80,20 @@
         ((item? item)
          (add-item-to-inventory! actor item))
         (else (error "Unknown item type in add-item!"))))
+
+(define (pc-has-item? id)
+  (define items (actor-inventory (pc)))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+         items))
+
+(define (pc-has-ammo-left?)
+  (define items (actor-inventory (pc)))
+  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+                          items))
+  (cond (revolver
+         (define ammo-left (ranged-weapon-ammo-left revolver))
+         (positive? ammo-left))
+        (else #f)))
 
 (define (print-inventory)
   (define actor (pc))
