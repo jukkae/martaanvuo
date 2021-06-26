@@ -307,12 +307,21 @@
                (end-game)))]
 
            ['locked-door
-            (when (pc-has-item? 'revolver)
+            (when (pc-has-item? 'revolver) ; TODO and bullets...
               (make-choice
                'shoot-the-lock
                "Shoot the lock."
                (λ ()
-                 (paragraph "BANG! Otava shoots the lock open.")
+                 (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                 (set-location-neighbors!
+                                 ruins
+                                 (append-element
+                                  (location-neighbors ruins)
+                                  cache))
+                 (set-location-features! ; TODO should ofc check location etc
+                                 ruins
+                                 '())
+                 
                  (make-action
                   #:symbol 'skip
                   #:actor (situation-pc *situation*)
