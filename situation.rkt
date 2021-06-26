@@ -346,6 +346,14 @@
 
 
 (define (describe-situation)
+  (when (location-has-feature? (current-location) 'locked-door)
+    (cond ((and (pc-has-item? 'revolver)
+                       (pc-has-ammo-left?))
+           (paragraph "There's a door that's locked with a heavy padlock."))
+          ((and (pc-has-item? 'bolt-cutters))
+           (paragraph "There's a door that's locked with a heavy padlock."))
+          (else
+           (paragraph "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
   (cond
     ((in-combat?) (describe-combat-situation)))
   )

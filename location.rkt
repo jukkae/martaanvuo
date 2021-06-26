@@ -64,6 +64,9 @@
 (define (location-has-tag? location tag)
   (memq tag (location-tags location)))
 
+(define (location-has-feature? location feature)
+  (memq feature (location-features location)))
+
 (define (get-location-name-from-location-type location-type)
   (cond ((eq? location-type 'swamp) "the Swamps")
         (else (string-append "get-location-name-from-location-type: unknown location type: " (symbol->string location-type)))))

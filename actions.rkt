@@ -331,6 +331,26 @@
                   #:symbol 'skip
                   #:actor (situation-pc *situation*)
                   #:duration 0
+                  #:tags '(downtime)))))
+            (when (and (pc-has-item? 'bolt-cutters))
+              (make-choice
+               'cut-the-lock
+               "Cut the lock with bolt cutters."
+               (λ ()
+                 (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
+                 (set-location-neighbors!
+                                 ruins
+                                 (append-element
+                                  (location-neighbors ruins)
+                                  cache))
+                 (set-location-features! ; TODO should ofc check location etc
+                                 ruins
+                                 '())
+                 
+                 (make-action
+                  #:symbol 'skip
+                  #:actor (situation-pc *situation*)
+                  #:duration 0
                   #:tags '(downtime)))))]
            
            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
