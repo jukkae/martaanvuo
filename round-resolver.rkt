@@ -826,6 +826,7 @@
   (displayln "[Menu]")
   (define meta-commands (make-hash))
   (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
+  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
 
   (for ([(k v) (in-hash meta-commands)])
