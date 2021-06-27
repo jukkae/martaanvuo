@@ -584,7 +584,7 @@
        (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
 
-       (cond ((= roll 0)
+       (cond ((= roll 1)
               (define title "Luck roll failure")
               (info-card
                (list (list
