@@ -318,13 +318,14 @@
                "Shoot the lock."
                (λ ()
                  (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                 (set-location-neighbors!
+                 (displayln "TODO: Fix this after location rewrite")
+                 #;(set-location-neighbors!
                                  ruins
                                  (append-element
                                   (location-neighbors ruins)
                                   cache))
                  (set-location-features! ; TODO should ofc check location etc
-                                 ruins
+                                 power-plant-ruins
                                  '())
                  
                  (make-action
@@ -338,13 +339,14 @@
                "Cut the lock with bolt cutters."
                (λ ()
                  (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
-                 (set-location-neighbors!
+                 (displayln "TODO: Fix this too")
+                 #;(set-location-neighbors!
                                  ruins
                                  (append-element
                                   (location-neighbors ruins)
                                   cache))
                  (set-location-features! ; TODO should ofc check location etc
-                                 ruins
+                                 power-plant-ruins
                                  '())
                  
                  (make-action

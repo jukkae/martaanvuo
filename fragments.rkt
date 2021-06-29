@@ -118,7 +118,7 @@
    #:description "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
    #:next-fragment (λ ()
                      (begin
-                       (move-pc-to-location! ridges)
+                       (move-pc-to-location! blackfang-peak)
                        (define action (make-action
                                        #:symbol 'search-for-paths
                                        #:actor (pc)
@@ -134,8 +134,9 @@
                                                   
                        (cond ((eq? action-result 'success)
                               (begin
-                                (set-location-neighbors!
-                                 swamp
+                                (displayln "TODO: Fix this post-location-rewrite")
+                                #;(set-location-neighbors!
+                                 martaanvuo-swamp
                                  (append-element
                                   (location-neighbors swamp)
                                   ruins))
@@ -147,45 +148,7 @@
                              (else
                               (begin
                                 (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                'exit))))))
-  
-  (make-decision
-   #:title "Follow the valleys."
-   #:description "The shortest way to Martaanvuo river is also the simplest, nevermind a bit of a swamp. If she finds the river, she'll find the laboratory. And when she finds the laboratory, she'll find what she's looking for."
-   #:next-fragment (λ ()
-                     (begin
-                       (move-pc-to-location! valleys)
-                       (define action (make-action
-                                       #:symbol 'search-for-paths
-                                       #:actor (pc)
-                                       #:duration 100
-                                       #:target '()
-                                       #:tags '(downtime)
-                                       #:details '()))
-
-                       ; 'success, 'failure or 'suspended
-                       (define
-                         action-result
-                         (resolve-pc-action! action))
-                                                  
-                       (cond ((eq? action-result 'success)
-                              (begin
-                                (set-location-neighbors!
-                                 swamp
-                                 (append-element
-                                  (location-neighbors swamp)
-                                  ruins))
-                                23))
-                             ((eq? action-result 'interrupted)
-                              (begin
-                                (displayln "--interrupted")
-                                'exit
-                                ))
-                             (else
-                              (begin
-                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                'exit))))))
-  )
+                                'exit)))))))
 
  (λ () '())
  )

@@ -550,7 +550,8 @@
            (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
-           (when exploration-check-result (expose-neighbor! (current-location)))
+           #;(when exploration-check-result (expose-neighbor! (current-location)))
+           (displayln "TODO: Redo exploration things")
            (if exploration-check-result
                'ok
                'failure

@@ -39,7 +39,7 @@
 
 ;;; Actual state variables
 (define *situation*
-  (let ([new-world (world (list edgeflats swamp ridges valleys crematory ruins sewers cache workshop spring) 0 0)]
+  (let ([new-world (world 0 0)]
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])

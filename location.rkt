@@ -38,7 +38,10 @@
 
 (define *number-of-locations* 0)
 
+(define (get-numeric-id) *number-of-locations*)
+
 (define (make-location
+         #:id [id (get-numeric-id)]
          #:neighbors [neighbors '()]
          #:type [type '()]
          #:features [features '()]
