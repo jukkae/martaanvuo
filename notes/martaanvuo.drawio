@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-06-28T15:22:53.271Z" agent="5.0 (Macintosh)" etag="tfQYUi06lEIsnOa6McqP" version="14.8.1" type="gitlab">
+<mxfile host="app.diagrams.net" modified="2021-06-29T18:09:52.962Z" agent="5.0 (Macintosh)" etag="5EvLmTjuO8mpbRvQQF2D" version="14.8.1" type="gitlab">
   <diagram id="PkY6KuNAQByWHemVEjpS" name="Page-1">
     <mxGraphModel dx="1426" dy="915" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -956,12 +956,6 @@
         </mxCell>
         <mxCell id="ySDdey2_GM9XsEy1JAFF-7" value="&lt;div&gt;Workshop&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="2003" y="335" width="90" height="55" as="geometry" />
-        </mxCell>
-        <mxCell id="ySDdey2_GM9XsEy1JAFF-8" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;endArrow=none;endFill=0;strokeColor=#000000;" parent="1" source="VtJOc1jhrBRUda-8Q_qS-71" target="ySDdey2_GM9XsEy1JAFF-7" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2051.3387096774195" y="420" as="sourcePoint" />
-            <mxPoint x="2161.6612903225805" y="320" as="targetPoint" />
-          </mxGeometry>
         </mxCell>
         <mxCell id="ySDdey2_GM9XsEy1JAFF-13" value="Murkwater AIX compound entrance" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Courier New;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1993" y="447.5" width="90" height="55" as="geometry" />
