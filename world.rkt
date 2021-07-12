@@ -11,8 +11,7 @@
 
 (serializable-struct
  world
- (locations
-  day
+ (day
   [elapsed-time #:mutable]))
 
 ;;; This seems as good a place as any, so:
@@ -28,65 +27,112 @@
 
 (define edgeflats
   (make-location
+   #:id 'edgeflats
    #:type 'edgeflats))
 
-(define swamp
+(define martaanvuo-swamp
   (make-location
-   #:actions-provided '(search-for-paths)
+   #:id 'martaanvuo-swamp
    #:type 'swamp))
 
-(define ridges
+(define blackfang-peak
   (make-location
-   #:actions-provided '(search-for-paths)
+   #:id 'blackfang-peak
    #:type 'ridges))
-
-(define valleys
-  (make-location
-   #:actions-provided '(search-for-paths)
-   #:type 'valleys))
 
 (define crematory
   (make-location
    #:type 'crematory))
 
-(define ruins
+(define martaanvuo-docks
   (make-location
+   #:id 'martaanvuo-docks
+   #:type 'docks))
+
+(define power-plant-ruins
+  (make-location
+   #:id 'power-plant-ruins
    #:features '(locked-door)
    #:type 'ruins))
 
-(define sewers
+(define sewers-1
+  (make-location
+   #:type 'sewers
+   #:items (list (make-item 'ammo))))
+
+(define sewers-2
   (make-location
    #:type 'sewers
    #:items (list (make-item 'ammo))))
 
 (define cache
   (make-location
+   #:id 'cache
    #:items '(u-235)
    #:type 'cache))
 
 (define workshop
   (make-location
+   #:id 'workshop
    #:features '(hartmann-device)
    #:type 'workshop))
 
-(define spring
+(define compound-entrance
   (make-location
-   #:type 'spring))
+   #:id 'compound-entrance))
+
+(define murkwater-docks
+  (make-location
+   #:id 'murkwater-docks
+   #:type 'docks))
+
+(define storage-closet
+  (make-location
+   #:id 'storage-closet))
+
+(define control-room
+  (make-location
+   #:id 'control-room))
+
+(define reactor-room
+  (make-location
+   #:id 'reactor-room))
+
+(define martaanvuo-source
+  (make-location
+   #:id 'martaanvuo-source))
+
+
+; TODO uniqueness constraints, unidirectional paths(?), yada yada
+(define (make-path-between location-a location-b)
+  (set-location-neighbors! location-a (append-element (location-neighbors location-a) location-b))
+  (set-location-neighbors! location-b (append-element (location-neighbors location-b) location-a)))
 
 (define (setup-world)
-  (set-location-neighbors! edgeflats (list swamp))
-  (set-location-neighbors! swamp (list edgeflats ridges valleys))
-  (set-location-neighbors! ridges (list swamp))
-  (set-location-neighbors! valleys (list swamp))
-  (set-location-neighbors! crematory (list valleys))
-  (set-location-neighbors! ruins (list ridges sewers))
-  (set-location-neighbors! sewers (list ruins workshop))
-  (set-location-neighbors! cache (list ruins))
-  (set-location-neighbors! workshop (list sewers spring))
-  (set-location-neighbors! spring (list workshop))
+  (make-path-between edgeflats martaanvuo-swamp)
+  (make-path-between edgeflats blackfang-peak)
+  (make-path-between martaanvuo-swamp crematory)
+  (make-path-between martaanvuo-swamp martaanvuo-docks)
+  (make-path-between martaanvuo-swamp blackfang-peak)
+  (make-path-between blackfang-peak power-plant-ruins)
+  (make-path-between power-plant-ruins cache)
+  (make-path-between power-plant-ruins sewers-1)
+  (make-path-between sewers-1 sewers-2)
+  (make-path-between sewers-1 workshop)
+  (make-path-between sewers-1 compound-entrance)
+  (make-path-between compound-entrance murkwater-docks)
+  (make-path-between compound-entrance workshop)
+  (make-path-between murkwater-docks workshop)
+  (make-path-between sewers-2 storage-closet)
+  (make-path-between storage-closet workshop)
+  (make-path-between workshop control-room)
+  (make-path-between workshop martaanvuo-source)
+  (make-path-between control-room reactor-room)
   )
 
-(define (expose-neighbor! location)
+
+; TODO: Rewrite this in terms of pre-existing, but hidden, paths between locations
+#;(define (expose-neighbor! location)
   (cond ((eq? (location-type location) 'ridges)
          (set-location-neighbors! ridges (list swamp ruins)))
         ((eq? (location-type location) 'valleys)

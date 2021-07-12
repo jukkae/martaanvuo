@@ -353,10 +353,10 @@
   (define dex (actor-dexterity (action-actor action)))
            
   (paragraph "The Blindscraper skitters towards Otava.")
-        (remove-stance! (action-actor action))
+  (remove-stance! (action-actor action))
                  
-        (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
-          (add-stance! enemy-stance))
+  (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
+    (add-stance! enemy-stance))
   'ok
   )
 
@@ -484,7 +484,12 @@
          (define success? (skill-check "Athletics" skill target-number))
          (if success?
              (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
-               (paragraph "She dives behind a small bush and waits. Nothing seems to be following her.")
+               (paragraph "She dives behind a small bush and waits.")
+               (wait-for-confirm)
+               (if (luck-check)
+                   (paragraph "PASS")
+                   (paragraph "FAIL"))
+               (paragraph "Nothing seems to be following her.")
                (award-xp! 3 "for a working survival instinct")
                'end-combat)
              (begin
@@ -550,7 +555,8 @@
            (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
-           (when exploration-check-result (expose-neighbor! (current-location)))
+           #;(when exploration-check-result (expose-neighbor! (current-location)))
+           (displayln "TODO: Redo exploration things")
            (if exploration-check-result
                'ok
                'failure
@@ -595,7 +601,7 @@
            (define condition (car (action-details action)))
            (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
            #;(when (eq? (status-type status) 'bound)
-             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+               (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
            #;(inflict-status! target status)
            'ok
            )
