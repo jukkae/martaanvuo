@@ -18,7 +18,7 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "The narrow path Otava is following leads through foggy woods. It should reach the facility soon.")
+     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     [(2)

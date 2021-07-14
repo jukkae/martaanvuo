@@ -40,11 +40,11 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "This time it is going to be it. She'll make it and she'll make it back"
+ "It is worth it, and she will make it back."
  (list
   (make-decision
    #:title "Because she's got a gun."
-   #:description "Her AIX revolver should keep her alive."
+   #:description "Her trusty AIX revolver should keep her alive. From before the Rains, before the Cataclysm, before the whatever the fuck you want to call it happened."
    #:on-resolve! (proc (set-build! 'gun) (wait-for-confirm))
    #:next-fragment 'exit
    )

@@ -128,7 +128,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free, she thinks. Or the one that kills her. Otava sighs and gathers pace.")]
+     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs – she's made her choice.")]
     )
   
 
@@ -340,7 +340,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter )
-                (paragraph "Rusty machines and remains of makeshift habs litter the hostile woods of Perimeter, the last area outside Anomaly. The snaking path splits in two. The left hand path is a steep and narrow climb up Blackfang Peak. The other one descends to Martaanvuo swamp."))))))
+                (paragraph "Rusty remains of unknown machines in the woods tell Otava she's now reached Perimeter. The trail forks. Forks? The broker didn't say anything about a fork. To the left, the trail turns into a climb up a rocky hill. To the right, the trail plunges down, toward Martaanvuo swamp. A magpie calls somewhere in the distance."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:
