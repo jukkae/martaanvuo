@@ -264,7 +264,7 @@
         
            (make-choice
             'go-to-location
-            (get-go-to-text-from-location-to-another (location-type (current-location)) (location-type neighbor)) 
+            (get-go-to-text (current-location) neighbor) 
             (λ () (make-action
                    #:symbol 'go-to-location
                    #:actor (situation-pc *situation*)
@@ -367,7 +367,7 @@
                  #:duration 0
                  #:tags '(downtime)))))
        
-       (when (eq? (location-type (current-location)) 'edgeflats)
+       (when (eq? (location-type (current-location)) 'perimeter)
          (make-pc-choice
           #:id 'end-run
           #:text "Head back to the Shack."

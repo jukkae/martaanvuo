@@ -50,7 +50,7 @@
          #:actions-provided [actions-provided '()]
          #:tags [tags '()])
   (set! *number-of-locations* (add1 *number-of-locations*))
-  (location* *number-of-locations* neighbors type features actors #f items actions-provided tags))
+  (location* id neighbors type features actors #f items actions-provided tags))
 
 (define (add-actor-to-location! location actor)
   (set-location-actors! location (cons actor (location-actors location))))
@@ -70,35 +70,27 @@
 (define (location-has-feature? location feature)
   (memq feature (location-features location)))
 
-(define (get-location-name-from-location-type location-type)
-  (cond ((eq? location-type 'swamp) "the Swamps")
-        (else (string-append "get-location-name-from-location-type: unknown location type: " (symbol->string location-type)))))
+; internal impl. detail
+(define (get-location-name-from-location location)
+  (define id (location-id location))
+  
+  (cond ((and id
+              (not (number? id)))
+         (cond ((eq? id 'blackfang-peak) "Blackfang Peak")
+               ((eq? id 'martaanvuo-swamp) "Martaanvuo Swamp")
+               ((eq? id 'perimeter) "Perimeter")
+               (else (symbol->string id))))
+        
+        (else
+         (define type (location-type location))
+         (cond ((eq? type 'swamp) "the swamps")
+               ((eq? type 'mountains) "the mountains")
+               (else (symbol->string type))))))
 
-(define (get-go-to-text-from-location-to-another from-type to-type)
-  (case from-type
-    ['ridges
-     (case to-type
-       ['ruins "Climb the hill to the Ruins."]
-       ['swamp "Descend to the Swamps."]
-       ['edgeflats "Go back to Edgeflats."]
-       [else (string-append "Go to " (symbol->string to-type) ".")])]
-
-    ['valleys
-     (case to-type
-       ['ruins "Climb the hill to the Ruins."]
-       ['swamp "Go to the Swamps."]
-       ['edgeflats "Go back to Edgeflats."]
-       [else (string-append "Go to " (symbol->string to-type) ".")])]
-
-    [else
-     (case to-type
-       ['ruins "Go to the Ruins."]
-       ['swamp "Go to the Swamps."]
-       ['edgeflats "Go back to Edgeflats."]
-       [else (string-append "Go to " (symbol->string to-type) ".")])
-     ]
-    )
-  )
+(define (get-go-to-text from to)
+  (define from-name (get-location-name-from-location from))
+  (define to-name (get-location-name-from-location to))
+  (string-append "Go from " from-name " to " to-name))
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)

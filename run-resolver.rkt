@@ -29,7 +29,7 @@
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
-  (move-actor-to-location! (situation-pc *situation*) edgeflats)
+  (move-actor-to-location! (situation-pc *situation*) perimeter)
   (narrate-begin-run)
   )
 

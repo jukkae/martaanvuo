@@ -25,10 +25,10 @@
 ;     the laboratory and the Anomaly
 ;   - ditto regarding high explosives etc
 
-(define edgeflats
+(define perimeter
   (make-location
-   #:id 'edgeflats
-   #:type 'edgeflats))
+   #:id 'perimeter
+   #:type 'perimeter))
 
 (define martaanvuo-swamp
   (make-location
@@ -38,7 +38,7 @@
 (define blackfang-peak
   (make-location
    #:id 'blackfang-peak
-   #:type 'ridges))
+   #:type 'mountains))
 
 (define crematory
   (make-location
@@ -103,14 +103,16 @@
    #:id 'martaanvuo-source))
 
 
-; TODO uniqueness constraints, unidirectional paths(?), yada yada
-(define (make-path-between location-a location-b)
+; Uniqueness constraints(?), unidirectional paths(?), yada yada
+(define (make-path-between location-a location-b [hidden? #f])
   (set-location-neighbors! location-a (append-element (location-neighbors location-a) location-b))
-  (set-location-neighbors! location-b (append-element (location-neighbors location-b) location-a)))
+  (set-location-neighbors! location-b (append-element (location-neighbors location-b) location-a))
+  (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)
-  (make-path-between edgeflats martaanvuo-swamp)
-  (make-path-between edgeflats blackfang-peak)
+  #;(make-path-between perimeter martaanvuo-swamp 'hidden)
+  (make-path-between perimeter martaanvuo-swamp)
+  (make-path-between perimeter blackfang-peak)
   (make-path-between martaanvuo-swamp crematory)
   (make-path-between martaanvuo-swamp martaanvuo-docks)
   (make-path-between martaanvuo-swamp blackfang-peak)
@@ -130,14 +132,6 @@
   (make-path-between control-room reactor-room)
   )
 
-
-; TODO: Rewrite this in terms of pre-existing, but hidden, paths between locations
-#;(define (expose-neighbor! location)
-  (cond ((eq? (location-type location) 'ridges)
-         (set-location-neighbors! ridges (list swamp ruins)))
-        ((eq? (location-type location) 'valleys)
-         (set-location-neighbors! ridges (list swamp sewers)))
-        (else (error "unknown location type"))))
 
 ; world-as-simulation / scripting API
 (define (remove-actor-from-its-current-location! actor)

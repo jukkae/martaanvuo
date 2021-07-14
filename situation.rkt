@@ -140,7 +140,7 @@
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "[continue] Continue towards "
-          (get-location-name-from-location-type (location-type (action-target pending-action)))
+          (get-location-name-from-location (action-target pending-action))
           "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
