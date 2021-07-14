@@ -40,19 +40,19 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Otava has never been this far. Nobody has, nobody goes this far. But she'll make it, and she'll make it back."
+ "She's as well prepared as she could."
  (list
   (make-decision
    #:title "She's got a gun."
    #:description "The revolver's weight against her back feels reassuring."
-   #:on-resolve! (proc (set-build! 'gun) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air. This is where the Martaanvuo swamps begin."))
+   #:on-resolve! (proc (set-build! 'gun) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air."))
    #:next-fragment 'exit
    )
 
   (make-decision
    #:title "She punches really hard."
    #:description "She can crack a jawbone with her bare hands. That should keep her alive."
-   #:on-resolve! (proc (set-build! 'bruiser))
+   #:on-resolve! (proc (set-build! 'bruiser) (wait-for-confirm) (paragraph "The snaking blacktop disappears under mosslike growth, and there is a musky, salty smell in the damp air."))
    #:next-fragment 'exit)
   )
  (nop))

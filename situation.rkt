@@ -125,6 +125,13 @@
               "\"not ready yet\", whatever.")]))
   (add-quest! q)
 
+
+  (case quest-symbol
+      ['pay-off-debt
+       (paragraph "She still owes the Collector a debt of a bit over ten kilograms of U-235, but if the stories she's heard about the facility are true...")]
+      )
+  
+
   (define body
     (format-quest-for-card q))
 
@@ -330,6 +337,11 @@
   (display-pc-combatant-info (situation-pc *situation*))
   )
 
+(define (describe-non-combat-situation)
+  (when (not (situation-current-fragment *situation*))
+    (cond ((eq? (location-id (current-location)) 'perimeter )
+         (paragraph "Rusty machines and remains of makeshift habs litter the hostile woods of Perimeter, the last area outside Anomaly. The snaking path splits in two. The left hand path is a steep and narrow climb up Blackfang Peak. The other one descends to Martaanvuo swamp.")))))
+
 (define (serialize-state)
   ; prng can be stored as vector:
   ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
@@ -348,14 +360,15 @@
 (define (describe-situation)
   (when (location-has-feature? (current-location) 'locked-door)
     (cond ((and (pc-has-item? 'revolver)
-                       (pc-has-ammo-left?))
+                (pc-has-ammo-left?))
            (paragraph "There's a door that's locked with a heavy padlock."))
           ((and (pc-has-item? 'bolt-cutters))
            (paragraph "There's a door that's locked with a heavy padlock."))
           (else
            (paragraph "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
   (cond
-    ((in-combat?) (describe-combat-situation)))
+    ((in-combat?) (describe-combat-situation))
+    (else (describe-non-combat-situation)))
   )
 
 (define (redescribe-situation)

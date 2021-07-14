@@ -18,11 +18,9 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "After a couple of days of hiking, the old blacktop road Otava has been following starts to descend towards Martaanvuo swamps. The Collector told her of a pre-Rains laboratory there, abandoned and forgotten, just inside the Anomaly. There's a small reactor in the basement, and that should be enough to settle her debt.")
+     (paragraph "The path Otava is following, the one he bought the instructions to from the broker, leads reliably through the nameless woods.")
      (when (not (quest-exists? 'pay-off-debt))
-       (create-quest 'pay-off-debt))]
-    [(2)
-     (paragraph "As the path descends, temperature climbs, and Otava soon finds herself drenched in sweat.")]))
+       (create-quest 'pay-off-debt))]))
 
 
 ; engine / run-resolver
