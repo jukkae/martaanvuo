@@ -90,7 +90,7 @@
 (define (get-go-to-text from to)
   (define from-name (get-location-name-from-location from))
   (define to-name (get-location-name-from-location to))
-  (string-append "Go from " from-name " to " to-name))
+  (string-append "Go to " to-name))
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)

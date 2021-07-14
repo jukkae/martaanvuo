@@ -340,7 +340,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter )
-                (paragraph "Rusty remains of unknown machines in the woods tell Otava she's now reached Perimeter. The trail forks. Forks? The broker didn't say anything about a fork. To the left, the trail turns into a climb up a rocky hill. To the right, the trail plunges down, toward Martaanvuo swamp. A magpie calls somewhere in the distance."))))))
+                (paragraph "To the left, a climb up a rocky slope. To the right, a swamp."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:

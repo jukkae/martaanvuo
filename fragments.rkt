@@ -44,18 +44,29 @@
  (list
   (make-decision
    #:title "Because she's got a gun."
-   #:description "Her trusty AIX revolver should keep her alive. From before the Rains, before the Cataclysm, before the whatever the fuck you want to call it happened."
-   #:on-resolve! (proc (set-build! 'gun) (wait-for-confirm))
+   #:description "She's got an AIX revolver. From before the Rains, before the Cataclysm, before the whatever you want to call it happened. One of the good ones."
+   #:on-resolve! (proc
+                  (set-build! 'gun)
+                  (wait-for-confirm)
+                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. Worthless remains of some machines, the Broker had told, nothing worth salvaging. She's getting close.")
+                  (wait-for-confirm)
+                  (paragraph "The trail forks. Forks? The Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility. But fork it does. To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
    #:next-fragment 'exit
    )
 
   (make-decision
    #:title "Because she punches really hard."
-   #:description "She can crack a jawbone with her bare hands. That should keep her alive."
-   #:on-resolve! (proc (set-build! 'bruiser) (wait-for-confirm))
+   #:description "Otava can crack a jawbone with her bare hands. The trick is in just how to hit the hinge. It's saved her life more than once."
+   #:on-resolve! (proc
+                  (set-build! 'bruiser)
+                  (wait-for-confirm)
+                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. Worthless remains of some machines, the Broker had told, nothing worth salvaging. She's getting close.")
+                  (wait-for-confirm)
+                  (paragraph "The trail forks. Forks? The Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility. But fork it does. To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
  (nop))
+
 
 
 (fragment

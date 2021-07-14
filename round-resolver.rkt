@@ -240,6 +240,7 @@
              (= (length current-enemies) 0))
     (end-combat!)
     (go-to-story-fragment 100))
+  (wait-for-confirm)
   
   (when (not (null? (situation-current-fragment *situation*)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
