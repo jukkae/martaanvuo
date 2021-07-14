@@ -128,7 +128,7 @@
 
   (case quest-symbol
       ['pay-off-debt
-       (paragraph "She still owes the Collector a debt of a bit over ten kilograms of U-235, but if the stories she's heard about the facility are true...")]
+       (paragraph "She's got a feeling that the Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs and gathers pace.")]
       )
   
 

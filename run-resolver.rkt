@@ -18,9 +18,11 @@
    (string-append "Begin run number " (number->string (situation-run *situation*))))
   (case (situation-run *situation*)
     [(1)
-     (paragraph "The path Otava is following, the one he bought the instructions to from the broker, leads reliably through the nameless woods.")
+     (paragraph "The path Otava is following leads reliably through the nameless woods.")
      (when (not (quest-exists? 'pay-off-debt))
-       (create-quest 'pay-off-debt))]))
+       (create-quest 'pay-off-debt))]
+    [(2)
+     (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
 
 ; engine / run-resolver
