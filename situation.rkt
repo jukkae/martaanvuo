@@ -128,8 +128,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs – she's made her choice.")]
-    )
+     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or this might be the one that kills her. Otava sighs. A sensible person wouldn't be here.")])
   
 
   (define body
