@@ -40,7 +40,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "It is going to be worth it, and she will make it back."
+ "Otava reminds herself of why she will survive."
  (list
   (make-decision
    #:title "Because she's got a gun."
@@ -48,10 +48,9 @@
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)
-                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. Worthless remains of some machines, the Broker had told, nothing worth salvaging. She's getting close.")
-                  (wait-for-confirm)
-                  (paragraph "The trail comes to a fork. A fork? There shouldn't be a fork, the Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility!")
-                  (paragraph "To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
+                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
+                  (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
    #:next-fragment 'exit
    )
 
@@ -61,12 +60,24 @@
    #:on-resolve! (proc
                   (set-build! 'bruiser)
                   (wait-for-confirm)
-                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. Worthless remains of some machines, the Broker had told, nothing worth salvaging. She's getting close.")
+                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
+                  (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
+   #:next-fragment 'exit)
+
+  (make-decision
+   #:title "Because she's a survivor."
+   #:description "She knows she'll survive because she's a survivor. That's kept her alive more than once."
+   #:on-resolve! (proc
+                  (set-build! 'bruiser)
                   (wait-for-confirm)
-                  (paragraph "The trail forks. Forks? The Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility. But fork it does. To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
+                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
+                  (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
    #:next-fragment 'exit)
   )
  (nop))
+
 
 
 
