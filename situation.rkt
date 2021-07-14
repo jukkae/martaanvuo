@@ -127,9 +127,9 @@
 
 
   (case quest-symbol
-      ['pay-off-debt
-       (paragraph "She's got a feeling that Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs and gathers pace.")]
-      )
+    ['pay-off-debt
+     (paragraph "Martaanvuo facility might be the big one, the one that sets her free, she thinks. Or the one that kills her. Otava sighs and gathers pace.")]
+    )
   
 
   (define body
@@ -338,9 +338,9 @@
   )
 
 (define (describe-non-combat-situation)
-  (when (not (situation-current-fragment *situation*))
-    (cond ((eq? (location-id (current-location)) 'perimeter )
-         (paragraph "Rusty machines and remains of makeshift habs litter the hostile woods of Perimeter, the last area outside Anomaly. The snaking path splits in two. The left hand path is a steep and narrow climb up Blackfang Peak. The other one descends to Martaanvuo swamp.")))))
+  (cond ((null? (situation-current-fragment *situation*))
+         (cond ((eq? (location-id (current-location)) 'perimeter )
+                (paragraph "Rusty machines and remains of makeshift habs litter the hostile woods of Perimeter, the last area outside Anomaly. The snaking path splits in two. The left hand path is a steep and narrow climb up Blackfang Peak. The other one descends to Martaanvuo swamp."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:
