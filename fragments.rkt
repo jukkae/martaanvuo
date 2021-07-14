@@ -40,7 +40,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "It is worth it, and she will make it back."
+ "It is going to be worth it, and she will make it back."
  (list
   (make-decision
    #:title "Because she's got a gun."
@@ -50,7 +50,8 @@
                   (wait-for-confirm)
                   (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. Worthless remains of some machines, the Broker had told, nothing worth salvaging. She's getting close.")
                   (wait-for-confirm)
-                  (paragraph "The trail forks. Forks? The Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility. But fork it does. To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
+                  (paragraph "The trail comes to a fork. A fork? There shouldn't be a fork, the Broker didn't say anything about a fork. The trail was supposed to lead directly to the docks of the facility!")
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. The right branch descends toward Martaanvuo swamp."))
    #:next-fragment 'exit
    )
 

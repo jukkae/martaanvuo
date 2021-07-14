@@ -340,7 +340,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter )
-                (paragraph "To the left, a climb up a rocky slope. To the right, a swamp."))))))
+                (paragraph "To the left, a climb up a rocky slope. To the right, Martaanvuo swamp."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:
