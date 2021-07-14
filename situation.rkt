@@ -128,7 +128,7 @@
 
   (case quest-symbol
       ['pay-off-debt
-       (paragraph "She's got a feeling that the Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs and gathers pace.")]
+       (paragraph "She's got a feeling that Martaanvuo facility might be the big one, the one that sets her free. Or the one that kills her. Otava sighs and gathers pace.")]
       )
   
 
