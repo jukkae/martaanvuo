@@ -94,13 +94,15 @@
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)
+  (define id (location-id location))
   (define body
     (list
      (list (string-append " "
                           "id"
                           " ")
            (string-append " "
-                          (number->string (location-id location))
+                          (cond ((number? id) (number->string id))
+                                ((symbol? id) (symbol->string id)))
                           " "))
      (list (string-append " "
                           "type"

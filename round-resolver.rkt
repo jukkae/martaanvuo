@@ -180,7 +180,7 @@
      (list " current location "
            (string-append
             " "
-            (symbol->string (location-type (current-location)))
+            (get-location-name-from-location (current-location))
             " "))
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
