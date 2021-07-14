@@ -129,104 +129,9 @@
  (λ () (create-quest 'the-anthead))
  )
 
-(fragment
- 20
- (string-append
-  "Otava is unsure whether to climb the ridges or head lower and try to follow the valleys. The ridges would perhaps mean drier feet, faster progress, and eventually better visibility if the fog dissipates. On the other hand, the laboratory ultimately lies on the banks of Martaanvuo river, and she's pretty sure that all the hollows here ultimately lead to Martaanvuo."
-  )
-
- (list
-  (make-decision
-   #:title "Follow the ridges."
-   #:description "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
-   #:next-fragment (λ ()
-                     (begin
-                       (move-pc-to-location! magpie-hill)
-                       (define action (make-action
-                                       #:symbol 'search-for-paths
-                                       #:actor (pc)
-                                       #:duration 100
-                                       #:target '()
-                                       #:tags '(downtime)
-                                       #:details '()))
-
-                       ; 'success, 'failure or 'suspended
-                       (define
-                         action-result
-                         (resolve-pc-action! action))
-                                                  
-                       (cond ((eq? action-result 'success)
-                              (begin
-                                (displayln "TODO: Fix this post-location-rewrite")
-                                #;(set-location-neighbors!
-                                 martaanvuo-swamp
-                                 (append-element
-                                  (location-neighbors swamp)
-                                  ruins))
-                                21))
-                             ((eq? action-result 'interrupted)
-                              (begin
-                                'exit
-                                ))
-                             (else
-                              (begin
-                                (paragraph "After about half a day of searching, Otava still hasn't found anything remotely interesting.")
-                                'exit)))))))
-
- (λ () '())
- )
-
-(fragment
- 21
- (string-append
-  "After half a day of making her way eastward on the rolling ridges, Otava comes upon a hill that's steeper and taller than any thus far. The jagged silhouettes of ruined buildings looming against the gray sky look menacing, alien. There's a small pillar of smoke rising from the hilltop."
-  )
-
- '()
- (λ () '())
- )
 
 
-(fragment
- 23
- (string-append
-  "Success!"
-  )
 
- (list (make-decision
-        #:title "Nice."
-        #:description "Nice."
-        #:next-fragment 'exit))
- (λ () '())
- )
-
-
-(fragment
- 50
- (string-append
-  "\"Otava, what kind of a name is that anyway? What does it mean?\""
-  )
- (list
-  (make-decision
-   #:title "A bear."
-   #:description "\"It means a bear. The keeper of the forest.\""
-   #:next-fragment 51
-   #:requirement (λ () (passive-check 'strength-mod '> -1))
-   )
-  (make-decision
-   #:title "Northstar."
-   #:description "\"Northstar.\""
-   #:next-fragment 52
-   #:requirement (λ () (passive-check 'intelligence-mod '> -1))
-   )
-  (make-decision
-   #:title "Don't know."
-   #:description "\"Don't know.\""
-   #:next-fragment 53))
- 
- 
- (λ () '())
- )
 
 (fragment
  100
@@ -234,8 +139,8 @@
   "[post-combat steps to do]"
   )
  (list (make-decision
-        #:title "Catch some breath."
-        #:description "Otava catches some breah."
+        #:title "Exit action."
+        #:description "Combat finished."
         #:next-fragment 'exit
         ))
  (λ () '())
