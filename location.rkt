@@ -76,7 +76,7 @@
   
   (cond ((and id
               (not (number? id)))
-         (cond ((eq? id 'blackfang-peak) "Blackfang Peak")
+         (cond ((eq? id 'magpie-hill) "Magpie Hill")
                ((eq? id 'martaanvuo-swamp) "Martaanvuo Swamp")
                ((eq? id 'perimeter) "Perimeter")
                (else (symbol->string id))))

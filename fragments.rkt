@@ -50,7 +50,7 @@
                   (wait-for-confirm)
                   (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
                   (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
-                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit
    )
 
@@ -62,7 +62,7 @@
                   (wait-for-confirm)
                   (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
                   (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
-                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
 
   (make-decision
@@ -73,7 +73,7 @@
                   (wait-for-confirm)
                   (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. She's getting close.")
                   (paragraph "Suddenly the trail comes to a fork. The Broker had said nothing about a fork. She'll have to let him know what she thinks of this rather critical omission.")
-                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. The right branch descends toward Martaanvuo swamp. An army of ants marches down the  right branch of the trail into the murk."))
+                  (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
  (nop))
@@ -141,7 +141,7 @@
    #:description "Otava decides to climb the hills and try to stay as high as possible. The fog's going to have to dissipate eventually, and then she'll get a good overview of the landscape, see at least Martaanvuo river, and maybe the laboratory she's looking for."
    #:next-fragment (λ ()
                      (begin
-                       (move-pc-to-location! blackfang-peak)
+                       (move-pc-to-location! magpie-hill)
                        (define action (make-action
                                        #:symbol 'search-for-paths
                                        #:actor (pc)

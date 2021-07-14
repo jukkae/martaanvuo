@@ -35,9 +35,9 @@
    #:id 'martaanvuo-swamp
    #:type 'swamp))
 
-(define blackfang-peak
+(define magpie-hill
   (make-location
-   #:id 'blackfang-peak
+   #:id 'magpie-hill
    #:type 'mountains))
 
 (define crematory
@@ -112,11 +112,11 @@
 (define (setup-world)
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
   (make-path-between perimeter martaanvuo-swamp)
-  (make-path-between perimeter blackfang-peak)
+  (make-path-between perimeter magpie-hill)
   (make-path-between martaanvuo-swamp crematory)
   (make-path-between martaanvuo-swamp martaanvuo-docks)
-  (make-path-between martaanvuo-swamp blackfang-peak)
-  (make-path-between blackfang-peak power-plant-ruins)
+  (make-path-between martaanvuo-swamp magpie-hill)
+  (make-path-between magpie-hill power-plant-ruins)
   (make-path-between power-plant-ruins cache)
   (make-path-between power-plant-ruins sewers-1)
   (make-path-between sewers-1 sewers-2)
