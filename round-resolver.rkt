@@ -90,11 +90,12 @@
 ; store in the action, handle calling from here
 ; -> code to action handler?
 (define (describe-begin-go-to-action action)
-  (cond ((eq? 'ruins (location-type (action-target action)))
-         "The hillside is steep and slippery.")
-        ((eq? 'swamp (location-type (action-target action)))
-         "The path soon disappears entirely, and a dense, suffocating fog obscures what little visibility there is through the bushes and thickets of small trees. Here and there are palm-sized patches of asphalt sticking through, fighting overgrown mosses.")
-        ("[[begin-go-to description not written yet]")))
+  (define from (current-location))
+  (define to (action-target action))
+  (cond ((location-is? 'magpie-hill to)
+         "Otava starts the treacherous climb up Magpie Hill.")
+        (else
+         "[[begin-go-to description not written yet]")))
 
 ; store in the action, handle calling from here
 ; -> code to action handler?

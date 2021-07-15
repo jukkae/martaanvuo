@@ -70,6 +70,15 @@
 (define (location-has-feature? location feature)
   (memq feature (location-features location)))
 
+; API
+(define (location-is? identifier location)
+  (cond ((symbol? identifier)
+         (eq? (location-id location)
+              identifier))
+        (else
+         (displayln "not symbol"))
+  ))
+
 ; internal impl. detail
 (define (get-location-name-from-location location)
   (define id (location-id location))
