@@ -93,9 +93,11 @@
   (define from (current-location))
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
-         "Drawn by the familiar call of the magpie, Otava begins up the hill. The trail turns into narrow natural stairs, as the hill gets steeper.")
+         (paragraph
+          "Drawn by the familiar call of the magpie, Otava begins up the hill. The trail turns into narrow natural stairs, as the hill gets steeper."))
         (else
-         "[[begin-go-to description not written yet]")))
+         (paragraph
+          "[[begin-go-to description not written yet]"))))
 
 ; store in the action, handle calling from here
 ; -> code to action handler?
@@ -103,9 +105,11 @@
   (define from (current-location))
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
-         "There's massive slab of stone with an engraving of a dancing human-like being with the head of an ant. In its hands it holds the control rods of a puppeteer, but the puppets have been lost to time. The trail levels out, and Otava comes to what appears to be a large plateau. The thick fog makes it hard to tell distances. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")
+         (paragraph "There's massive slab of stone with a painting on it. The upper portions have been protected from the weather by the small overhang on the top of the slab, but the bottom's washed away. It depicts a human-like being with the head of an ant, holding the control rods of a puppeteer. The puppets are lost to time. The figure instills a vague dread in Otava.")
+         (paragraph "Soon after the slab and the painting, the trail levels out, and Otava comes to what appears to be a large plateau. The thick fog makes it hard to tell distances. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?"))
         (else
-         "[[finish-go-to description not written yet]")))
+         (paragraph
+          "[[finish-go-to description not written yet]"))))
 
 
 
@@ -411,7 +415,7 @@
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
                          ((eq? (action-symbol action) 'go-to-location)
-                          (paragraph (describe-begin-go-to-action action))))
+                          (describe-begin-go-to-action action)))
                    ; begin advancing time
                    (define timeline
                      (advance-time-until-next-interesting-event! (action-duration action)))
@@ -462,7 +466,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (paragraph (describe-finish-go-to-action action))
+                          (describe-finish-go-to-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))

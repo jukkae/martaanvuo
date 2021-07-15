@@ -128,7 +128,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or this might be the one that kills her. Otava sighs. A sensible person wouldn't be here.")])
+     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or it might be the one that kills her. Otava sighs.")])
   
 
   (define body
@@ -339,7 +339,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
-                (paragraph "It's either a climb up the rocky slope, or to the swamp."))))))
+                (paragraph "It's either a climb up the rocky slope, or downhill and to the swamp."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:

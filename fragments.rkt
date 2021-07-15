@@ -40,11 +40,11 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Otava reminds herself of why she will survive."
+ "Death is always a possibility, but it's never come close to Otava. She tells herself it's because of how good she is, but mostly she has been lucky. Otava believes she has a good reason to be confident."
  (list
   (make-decision
-   #:title "Because she's got a gun."
-   #:description "She's got an AIX revolver. From before the Rains, before the Cataclysm, before the whatever you want to call it happened. One of the good ones."
+   #:title "She has a gun."
+   #:description "She's got a revolver. An AIX Metalworks one, one of the last ones they ever made before the Rains."
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)
@@ -55,8 +55,8 @@
    )
 
   (make-decision
-   #:title "Because she punches really hard."
-   #:description "Otava can crack a jawbone with her bare hands. The trick is in just how to hit the hinge. It's saved her life more than once."
+   #:title "She punches really hard."
+   #:description "She can crack a jawbone with her bare hands. The trick is in just how to hit the hinge."
    #:on-resolve! (proc
                   (set-build! 'bruiser)
                   (wait-for-confirm)
@@ -66,8 +66,8 @@
    #:next-fragment 'exit)
 
   (make-decision
-   #:title "Because she's a survivor."
-   #:description "She knows she'll survive because she's a survivor. That's kept her alive more than once."
+   #:title "She's a survivor."
+   #:description "She's a survivor. That's kept her alive more than once."
    #:on-resolve! (proc
                   (set-build! 'survivor)
                   (wait-for-confirm)
