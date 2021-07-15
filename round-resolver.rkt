@@ -105,7 +105,7 @@
   (define from (current-location))
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
-         (paragraph "Otava comes to a slab of stone with a painting on it. The upper portions have been protected from the weather by the small overhang on the top of the slab, but the bottom's washed away. It depicts a human-like being with the head of an ant, holding the control rods of a puppeteer. All the detail on the puppets has been washed out. The figure's unsettling gaze seems to follow Otava as she passes by the painting.")
+         (paragraph "Otava comes to a slab of stone with a painting of a human figure on it. The upper parts have been protected from the weather by a small overhang above the slab. On a closer look, the human-like being has the head of an ant. Its hands are contorted, gesturing wildly with the control rods of a puppeteer. The puppets have been washed away, so that it looks like the strings have been cut. The figure's unsettling gaze seems to follow Otava as she passes by the painting and fills her with apprehension.")
          (paragraph "Soon after the dreadful painting, the rocky stairs turn back to a trail that soon levels out. The thick fog still obscures much, but Otava appears to be at the edge of a rather large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?"))
         (else
          (paragraph
