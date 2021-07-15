@@ -543,3 +543,7 @@
 
 (define (flag-set? flag)
   (memq flag *flags*))
+
+(define (print-flags)
+  (displayln "print-flags:")
+  (displayln *flags*))
