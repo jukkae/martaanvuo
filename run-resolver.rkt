@@ -7,6 +7,11 @@
 (require "situation.rkt")
 (require "world.rkt")
 
+
+; This belongs to situation
+(define *current-part* 1)
+(define *current-chapter* 1)
+
 ; content should be provided "somewhere"
 ; content is game-specific, not engine stuff
 ; but figure out where this should be called from
@@ -16,6 +21,14 @@
    (list
     (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
    (string-append "Begin run number " (number->string (situation-run *situation*))))
+
+  ; heading
+  (define heading
+    (string-append "PART "
+                   (number->string *current-part*)
+                   ", CHAPTER "
+                   (number->string *current-chapter*)))
+  (paragraph heading)
   (case (situation-run *situation*)
     [(1)
      (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell.")
