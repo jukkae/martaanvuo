@@ -111,8 +111,8 @@
 
 (define (setup-world)
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
-  (make-path-between perimeter martaanvuo-swamp)
   (make-path-between perimeter magpie-hill)
+  (make-path-between perimeter martaanvuo-swamp)
   (make-path-between martaanvuo-swamp crematory)
   (make-path-between martaanvuo-swamp martaanvuo-docks)
   (make-path-between martaanvuo-swamp magpie-hill)

@@ -404,8 +404,9 @@
                                  (paragraph "She takes one last look at the rusty machines and the hostile woods of Perimeter and thinks about Martaanvuo and what lies beyond Martaanvuo. She shudders and takes the trail back to the Shack.")
                                  (return 'end-run))
                                 (else
-                                 (paragraph "The unexpected fork is worrisome. She must have taken the wrong turn somewhere. Otava decides to turn back.")
+                                 (paragraph "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
                                  (wait-for-confirm)
+                                 (next-chapter!) ; end chapter
                                  (paragraph "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
                                  (wait-for-confirm)
                                  (paragraph "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")

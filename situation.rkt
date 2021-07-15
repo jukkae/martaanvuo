@@ -503,3 +503,28 @@
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))
   (print-inventory))
+
+
+; This belongs to situation
+(define *current-part* 0)
+(define *current-chapter* 0)
+
+; This belongs... somewhere
+(define (print-heading)
+  (define heading
+    (string-append "PART "
+                   (number->string *current-part*)
+                   ", CHAPTER "
+                   (number->string *current-chapter*)))
+  (paragraph heading))
+
+(define (next-chapter!)
+  (when (= *current-part* 0)
+    (set! *current-part* 1))
+  (set! *current-chapter* (add1 *current-chapter*))
+  (print-heading))
+
+(define (next-part!)
+  (set! *current-part* (add1 *current-part*))
+  (set! *current-chapter* 0)
+  (print-heading))
