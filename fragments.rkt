@@ -40,7 +40,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "It's these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
+ "She's usually not this dramatic. It's these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
  (list
   (make-decision
    #:title "She has a gun."
@@ -48,8 +48,8 @@
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)
-                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
-                  (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
+                  (paragraph "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit
    )
@@ -60,8 +60,8 @@
    #:on-resolve! (proc
                   (set-build! 'bruiser)
                   (wait-for-confirm)
-                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
-                  (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
+                  (paragraph "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
 
@@ -71,8 +71,8 @@
    #:on-resolve! (proc
                   (set-build! 'survivor)
                   (wait-for-confirm)
-                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
-                  (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
+                  (paragraph "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )

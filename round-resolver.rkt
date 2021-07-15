@@ -94,7 +94,7 @@
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
          (paragraph
-          "Drawn by the familiar call of the magpie, Otava begins up the hill. The trail turns into narrow natural stairs, as the hill gets steeper."))
+          "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff."))
         (else
          (paragraph
           "[[begin-go-to description not written yet]"))))
@@ -105,8 +105,8 @@
   (define from (current-location))
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
-         (paragraph "There's massive slab of stone with a painting on it. The upper portions have been protected from the weather by the small overhang on the top of the slab, but the bottom's washed away. It depicts a human-like being with the head of an ant, holding the control rods of a puppeteer. The puppets are lost to time. The figure instills a vague dread in Otava.")
-         (paragraph "Soon after the slab and the painting, the trail levels out, and Otava comes to what appears to be a large plateau. The thick fog makes it hard to tell distances. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?"))
+         (paragraph "Otava comes to a slab of stone with a painting on it. The upper portions have been protected from the weather by the small overhang on the top of the slab, but the bottom's washed away. It depicts a human-like being with the head of an ant, holding the control rods of a puppeteer. All the detail on the puppets has been washed out. The figure's unsettling gaze seems to follow Otava as she passes by the painting.")
+         (paragraph "Soon after the dreadful painting, the rocky stairs turn back to a trail that soon levels out. The thick fog still obscures much, but Otava appears to be at the edge of a rather large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?"))
         (else
          (paragraph
           "[[finish-go-to description not written yet]"))))
