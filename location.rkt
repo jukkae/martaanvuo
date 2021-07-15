@@ -88,6 +88,7 @@
          (cond ((eq? id 'magpie-hill) "Magpie Hill")
                ((eq? id 'martaanvuo-swamp) "Martaanvuo Swamp")
                ((eq? id 'perimeter) "Perimeter")
+               ((eq? id 'power-plant-ruins) "Ruins")
                (else (symbol->string id))))
         
         (else
@@ -99,7 +100,7 @@
 (define (get-go-to-text from to)
   (define from-name (get-location-name-from-location from))
   (define to-name (get-location-name-from-location to))
-  (string-append "Go to " to-name))
+  (string-append "Go to " to-name "."))
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)
