@@ -374,6 +374,11 @@
 
 ; engine / round-resolver at first; some of the stuff should go to action definitions etc
 
+
+; TODO -> situation
+(define (ending-run-allowed?)
+  #f)
+
 ; may return:
 ; void
 ; 'end-run
@@ -386,13 +391,21 @@
   (define elapsed-time 0)
   (define result (let/ec return
                    ; do these BEFORE action resolution
+
+                   ; TODO this is heavy on narration -> is this a fragment?
                    (cond ((eq? (action-symbol action) 'end-run)
-                          #;(define inventory
-                              (actor-inventory (situation-pc *situation*)))
-                          #;(displayln inventory)
-                          
-                          (paragraph "From the Edgeflats, it's just following the blacktop, until Otava finally arrives at the Shack.")
-                          (return 'end-run))
+                          (cond ((ending-run-allowed?)
+                                 (paragraph "She takes one last look at the rusty machines and the hostile woods of Perimeter and thinks about Martaanvuo and what lies beyond Martaanvuo. She shudders and takes the trail back to the Shack.")
+                                 (return 'end-run))
+                                (else
+                                 (paragraph "Otava takes a look at the hostile woods and decides to turn back.")
+                                 (wait-for-confirm)
+                                 (paragraph "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here? It was about...")
+                                 (wait-for-confirm)
+                                 (paragraph "Oh, yes. The facility. She is looking for the facility at Martaanvuo, to pay back her debt to the Collector. There's the Anomaly to watch out for, but Otava believes she should be fine, now that she knows to be mindful of that. Broker's trail comes to a fork.")
+                                 (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
+                                 (return 'failure)
+                                 )))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
                          ((eq? (action-symbol action) 'go-to-location)

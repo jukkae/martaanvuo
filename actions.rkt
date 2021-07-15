@@ -370,7 +370,7 @@
        (when (eq? (location-type (current-location)) 'perimeter)
          (make-pc-choice
           #:id 'end-run
-          #:text "Go back to the Shack."
+          #:text "Go back."
           #:duration 0
           #:tags '(downtime)))
 
