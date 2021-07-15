@@ -93,18 +93,19 @@
   (define from (current-location))
   (define to (action-target action))
   (cond ((location-is? 'magpie-hill to)
-         "Otava starts the treacherous climb up Magpie Hill.")
+         "Drawn by the familiar call of the magpie, Otava begins up the hill. The trail turns into narrow natural stairs, as the hill gets steeper.")
         (else
          "[[begin-go-to description not written yet]")))
 
 ; store in the action, handle calling from here
 ; -> code to action handler?
 (define (describe-finish-go-to-action action)
-  (cond ((eq? 'ruins (location-type (action-target action)))
-         "Eventually, Otava gets to the top.")
-        ((eq? 'swamp (location-type (action-target action)))
-         "After a while, Otava finds herself in the middle of the swamps. Through the heavy fog, the bushes swaying in the wind look like evil beast-shadows.")
-        ("[[finish-go-to description not written yet]")))
+  (define from (current-location))
+  (define to (action-target action))
+  (cond ((location-is? 'magpie-hill to)
+         "There's massive slab of stone with an engraving of a dancing human-like being with the head of an ant. In its hands it holds the control rods of a puppeteer, but the puppets have been lost to time. The trail levels out, and Otava comes to what appears to be a large plateau. The thick fog makes it hard to tell distances. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")
+        (else
+         "[[finish-go-to description not written yet]")))
 
 
 
