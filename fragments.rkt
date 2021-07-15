@@ -40,15 +40,15 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Death is always a possibility, but it's never come close to Otava. She tells herself it's because of how good she is, but mostly she has been lucky. Otava believes she has a good reason to be confident."
+ "It's these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
  (list
   (make-decision
    #:title "She has a gun."
-   #:description "She's got a revolver. An AIX Metalworks one, one of the last ones they ever made before the Rains."
+   #:description "She has a revolver. An AIX Metalworks one, one of the last ones they ever made before the Rains."
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)
-                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
                   (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit
@@ -56,22 +56,22 @@
 
   (make-decision
    #:title "She punches really hard."
-   #:description "She can crack a jawbone with her bare hands. The trick is in just how to hit the hinge."
+   #:description "She can crack a jawbone with her bare hands. The trick is in hitting from the side and from below."
    #:on-resolve! (proc
                   (set-build! 'bruiser)
                   (wait-for-confirm)
-                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
                   (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
 
   (make-decision
    #:title "She's a survivor."
-   #:description "She's a survivor. That's kept her alive more than once."
+   #:description "She is a survivor. That's what's kept her alive all these years."
    #:on-resolve! (proc
                   (set-build! 'survivor)
                   (wait-for-confirm)
-                  (paragraph "Jagged pieces of metal stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
+                  (paragraph "Otava notices jagged pieces of metal that stand out from the ground surrounding the trail. This is anomaly perimeter, then – she's getting close.")
                   (paragraph "The trail turns behind a boulder and comes to a fork. Broker had said nothing about a fork.")
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
