@@ -404,6 +404,7 @@
                                  (paragraph "She takes one last look at the rusty machines and the hostile woods of Perimeter and thinks about Martaanvuo and what lies beyond Martaanvuo. She shudders and takes the trail back to the Shack.")
                                  (return 'end-run))
                                 (else
+                                 (set-flag 'tried-to-go-back)
                                  (paragraph "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
                                  (wait-for-confirm)
                                  (next-chapter!) ; end chapter

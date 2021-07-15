@@ -528,3 +528,18 @@
   (set! *current-part* (add1 *current-part*))
   (set! *current-chapter* 0)
   (print-heading))
+
+
+; TODO think about api and usage
+(define *flags* '())
+
+(define (set-flag flag)
+  (when (not (flag-set? flag))
+    (set! *flags* (append-element *flags* flag))))
+
+(define (remove-flag flag)
+  (when (flag-set? flag)
+    (set! *flags* (remq flag *flags*))))
+
+(define (flag-set? flag)
+  (memq flag *flags*))

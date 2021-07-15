@@ -299,63 +299,63 @@
 
        (filter
         (λ (x) (and (not (null? x))
-                  (not (void? x))))
+                    (not (void? x))))
         (for/list ([feature (location-features (current-location))])
-         (case feature
-           ['hartmann-device
-            (make-choice
-             'turn-on-device
-             "Turn on Hartmann Device."
-             (λ ()
-               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
-               (end-game)))]
+          (case feature
+            ['hartmann-device
+             (make-choice
+              'turn-on-device
+              "Turn on Hartmann Device."
+              (λ ()
+                (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
+                (end-game)))]
 
-           ['locked-door
-            (when (and (pc-has-item? 'revolver)
-                       (pc-has-ammo-left?))
-              (make-choice
-               'shoot-the-lock
-               "Shoot the lock."
-               (λ ()
-                 (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                 (displayln "TODO: Fix this after location rewrite")
-                 #;(set-location-neighbors!
-                                 ruins
-                                 (append-element
-                                  (location-neighbors ruins)
-                                  cache))
-                 (set-location-features! ; TODO should ofc check location etc
-                                 power-plant-ruins
-                                 '())
+            ['locked-door
+             (when (and (pc-has-item? 'revolver)
+                        (pc-has-ammo-left?))
+               (make-choice
+                'shoot-the-lock
+                "Shoot the lock."
+                (λ ()
+                  (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                  (displayln "TODO: Fix this after location rewrite")
+                  #;(set-location-neighbors!
+                     ruins
+                     (append-element
+                      (location-neighbors ruins)
+                      cache))
+                  (set-location-features! ; TODO should ofc check location etc
+                   power-plant-ruins
+                   '())
                  
-                 (make-action
-                  #:symbol 'skip
-                  #:actor (situation-pc *situation*)
-                  #:duration 0
-                  #:tags '(downtime)))))
-            (when (and (pc-has-item? 'bolt-cutters))
-              (make-choice
-               'cut-the-lock
-               "Cut the lock with bolt cutters."
-               (λ ()
-                 (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
-                 (displayln "TODO: Fix this too")
-                 #;(set-location-neighbors!
-                                 ruins
-                                 (append-element
-                                  (location-neighbors ruins)
-                                  cache))
-                 (set-location-features! ; TODO should ofc check location etc
-                                 power-plant-ruins
-                                 '())
+                  (make-action
+                   #:symbol 'skip
+                   #:actor (situation-pc *situation*)
+                   #:duration 0
+                   #:tags '(downtime)))))
+             (when (and (pc-has-item? 'bolt-cutters))
+               (make-choice
+                'cut-the-lock
+                "Cut the lock with bolt cutters."
+                (λ ()
+                  (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
+                  (displayln "TODO: Fix this too")
+                  #;(set-location-neighbors!
+                     ruins
+                     (append-element
+                      (location-neighbors ruins)
+                      cache))
+                  (set-location-features! ; TODO should ofc check location etc
+                   power-plant-ruins
+                   '())
                  
-                 (make-action
-                  #:symbol 'skip
-                  #:actor (situation-pc *situation*)
-                  #:duration 0
-                  #:tags '(downtime)))))]
+                  (make-action
+                   #:symbol 'skip
+                   #:actor (situation-pc *situation*)
+                   #:duration 0
+                   #:tags '(downtime)))))]
            
-           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
+            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice
@@ -367,7 +367,8 @@
                  #:duration 0
                  #:tags '(downtime)))))
        
-       (when (eq? (location-type (current-location)) 'perimeter)
+       (when (and (eq? (location-type (current-location)) 'perimeter)
+                  (not (flag-set? 'tried-to-go-back)))
          (make-pc-choice
           #:id 'end-run
           #:text "Go back."
