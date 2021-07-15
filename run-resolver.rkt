@@ -13,10 +13,12 @@
 ; but figure out where this should be called from
 ; engine / run-resolver
 (define (narrate-begin-run)
-  (info-card
-   (list
-    (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-   (string-append "Begin run number " (number->string (situation-run *situation*))))
+  ; Don't show this until the second run!
+  (when (not (= 1 (situation-run *situation*)))
+    (info-card
+     (list
+      (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+     (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
   (next-chapter!)
   (case (situation-run *situation*)

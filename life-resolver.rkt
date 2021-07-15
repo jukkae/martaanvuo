@@ -26,7 +26,8 @@
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
   (go-to-story-fragment 1)
-  (player-info))
+  (when (not (= 1 (situation-life *situation*)))
+    (player-info)))
 
 (define (on-end-life)
   (displayln "[Life summary TODO]")
