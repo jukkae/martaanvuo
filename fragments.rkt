@@ -133,18 +133,18 @@
 (fragment
  20
  (string-append
-  "\"Chk-chk-chk-chk,\" the magpie calls from among the trees."
+  "Otava thinks the magpie should be close, but the sound seems to come from a slightly different direction every time."
   )
 
  (list (make-decision
-        #:title "Listen and quietly walk closer."
-        #:description "\"Chk-chk-chk-chk.\" The sound is insistent and frustrated, as if it's trying to say something. Otava catches flutter of wings in the corner of her eye, but the magpie disappears in foggy foliage before she gets a good look at it."
+        #:title "Listen quietly."
+        #:description "The magpie laughs straight above her. The bird is hidden somewhere within the shadowy branches of a large dead oak. There's a worn tombstone half buried under the roots of the tree."
         #:on-resolve! (proc
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit)
        (make-decision
-        #:title "Listen and quietly walk closer, with a gun in hand."
-        #:description "There's a flutter. The outline of a tree shakes as the magpie takes flight and disappears, unseen. Otava jogs the rest of the way. At the bottom of the tree there is a stone engraved with the terrible ant-headed evil god Otava saw on her way up here."
+        #:title "Listen quietly, with a gun in the hand."
+        #:description "There's a flutter. The outline of a tree shakes as the magpie takes flight and disappears, unseen. Otava jogs the rest of the way. At the bottom of the tree there is a stone engraved with the terrible ant-headed evil god Otava saw on her way up here. Otava picks up a bullet."
         #:on-resolve! (proc
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit))
