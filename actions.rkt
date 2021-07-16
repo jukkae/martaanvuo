@@ -365,8 +365,9 @@
               'follow-the-magpie
               "Follow the magpie's call"
               (λ ()
+                (paragraph "There is something compelling in the sound, and Otava's feet take her deeper in the dense fog of the monochrome forest on the malevolent hilltop.")
                 (go-to-story-fragment 20)
-                'end-round-early)) ; this is a smell and should be handled better in action handler
+                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
            

@@ -359,6 +359,10 @@
     (cond ((eq? pc-action 'end-round-early)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
+          ((eq? pc-action 'end-chapter)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (next-chapter!)
+           (end-round-early-with-round-status 'ok))
           (else
 
            (describe-pc-intention pc-action)

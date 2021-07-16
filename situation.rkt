@@ -343,7 +343,7 @@
                ((eq? (location-id (current-location)) 'magpie-hill)
                 (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (paragraph "A magpie calls from the skeletonlike forest."))))))
+                (paragraph "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:
