@@ -77,7 +77,7 @@
               identifier))
         (else
          (displayln "not symbol"))
-  ))
+        ))
 
 ; internal impl. detail
 (define (get-location-name-from-location location)
@@ -96,6 +96,20 @@
          (cond ((eq? type 'swamp) "the swamps")
                ((eq? type 'mountains) "the mountains")
                (else (symbol->string type))))))
+
+; internal
+(define (get-location-short-description location)
+  (define name (get-location-name-from-location location))
+  (define features-str
+    (cond ((not (null? (location-features location)))
+           (cond ((memq 'magpie-effigy (location-features location))
+                  "Magpie Effigy")
+                 (else "Unknown features TODO")))
+          (else
+           " NO FEATURES ")))
+  (string-append name
+                 features-str)
+  )
 
 (define (get-go-to-text from to)
   (define from-name (get-location-name-from-location from))

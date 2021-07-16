@@ -40,7 +40,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "She's usually not this dramatic. It's these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
+ "That's a bit of an overstatement. It's just these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
  (list
   (make-decision
    #:title "She has a gun."

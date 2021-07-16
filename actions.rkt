@@ -354,6 +354,13 @@
                    #:actor (situation-pc *situation*)
                    #:duration 0
                    #:tags '(downtime)))))]
+
+            ['magpie-effigy
+             (make-choice
+              'follow-the-magpie
+              "Follow the magpie's call"
+              (λ ()
+                (paragraph "TODO: magpie effigy action")))]
            
             [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
