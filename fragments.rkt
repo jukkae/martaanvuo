@@ -139,6 +139,8 @@
  (list (make-decision
         #:title "Listen closer."
         #:description "\"Chk-chk-chk-chk.\""
+        #:on-resolve! (proc
+                       (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit))
  (λ () '())
  )

@@ -64,6 +64,12 @@
 (define (remove-item-from-location! location item)
   (set-location-items! location (remove item (location-items location))))
 
+(define (add-feature-to-location! location feature)
+  (set-location-features! location (cons feature (location-features location))))
+
+(define (remove-feature-from-location! location feature)
+  (set-location-features! location (remove feature (location-features location))))
+
 (define (location-has-tag? location tag)
   (memq tag (location-tags location)))
 
