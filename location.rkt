@@ -107,12 +107,14 @@
 (define (get-location-short-description location)
   (define name (get-location-name-from-location location))
   (define features-str
-    (cond ((not (null? (location-features location)))
+    ; Disabled for now, just do empty string
+    #;(cond ((not (null? (location-features location)))
            (cond ((memq 'magpie-effigy (location-features location))
                   "Magpie Effigy")
                  (else "Unknown features TODO")))
-          (else
-           " NO FEATURES ")))
+          (else ; no features
+           ""))
+    "")
   (string-append name
                  features-str)
   )
