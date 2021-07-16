@@ -137,8 +137,8 @@
   )
 
  (list (make-decision
-        #:title "Listen closer."
-        #:description "\"Chk-chk-chk-chk.\""
+        #:title "Listen."
+        #:description "\"Chk-chk-chk-chk.\" The sound is insistent and frustrated, as if it's trying to say something. Otava catches flutter of wings in the corner of her eye, but the magpie disappears in foggy foliage before she gets a good look at it."
         #:on-resolve! (proc
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit))
