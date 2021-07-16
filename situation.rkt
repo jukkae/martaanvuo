@@ -341,7 +341,9 @@
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (paragraph "It's either a climb up the rocky slope where the magpie was, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
-                (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp."))))))
+                (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
+         (cond ((location-has-feature? (current-location) 'magpie-effigy)
+                (paragraph "A magpie calls from the skeletonlike forest."))))))
 
 (define (serialize-state)
   ; prng can be stored as vector:
