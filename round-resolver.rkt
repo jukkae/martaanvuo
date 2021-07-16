@@ -420,7 +420,11 @@
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
                          ((eq? (action-symbol action) 'go-to-location)
-                          (describe-begin-go-to-action action)))
+                          (describe-begin-go-to-action action))
+                         ((eq? (action-symbol action) 'go-to-story-fragment)
+                          (go-to-story-fragment 20)
+                          (return 'ok)))
+                   
                    ; begin advancing time
                    (define timeline
                      (advance-time-until-next-interesting-event! (action-duration action)))
@@ -463,6 +467,8 @@
                    (cond ((eq? (action-symbol action) 'go-to-location)
                           (define next-location (action-target action))
                           (move-pc-to-location! next-location)
+
+                          ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
                             (go-to-story-fragment 11))
                           (when (eq? (location-type (current-location)) 'swamp)

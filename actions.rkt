@@ -24,6 +24,11 @@
    move-actor-to-location!
    )])
 
+(lazy-require
+ ["round-resolver.rkt"
+  (go-to-story-fragment
+   )])
+
 ; implementation detail
 (define (get-nighttime-choices world actor)
   (displayln "get-night-time-choices: TODO not implemented yet")
@@ -360,7 +365,13 @@
               'follow-the-magpie
               "Follow the magpie's call"
               (λ ()
-                (paragraph "TODO: magpie effigy action")))]
+                (make-action
+                   #:symbol 'go-to-story-fragment
+                   #:actor (situation-pc *situation*)
+                   #:duration 0
+                   #:target 20)))
+
+             ]
            
             [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 

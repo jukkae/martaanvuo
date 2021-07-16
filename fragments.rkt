@@ -130,6 +130,19 @@
  )
 
 
+(fragment
+ 20
+ (string-append
+  "\"chk-chk-chk-chk,\" the magpie calls from among the trees."
+  )
+
+ (make-decision
+  #:title "OK"
+  #:description "yes"
+  #:next-fragment 'exit)
+ (λ () '())
+ )
+
 
 
 

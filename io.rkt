@@ -75,6 +75,12 @@
   (define indent-string (make-string indent #\space))
 
   (define final-output "")
+
+  ; if the input begins with a newline, then it is important and should be preserved
+  (define first-char (string-ref input-string 0))
+  (when (= 10 (char->integer first-char))
+    #;(displayln "HELLO YEAH")
+    (set! final-output "\n"))
   
   (define pre-broken-lines (string-split input-string "\n"))
   

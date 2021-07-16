@@ -514,7 +514,8 @@
 ; This belongs... somewhere
 (define (print-heading)
   (define heading
-    (string-append "PART "
+    (string-append "\n"
+                   "PART "
                    (number->string *current-part*)
                    ", CHAPTER "
                    (number->string *current-chapter*)))
