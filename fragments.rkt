@@ -133,13 +133,13 @@
 (fragment
  20
  (string-append
-  "\"chk-chk-chk-chk,\" the magpie calls from among the trees."
+  "\"Chk-chk-chk-chk,\" the magpie calls from among the trees."
   )
 
- (make-decision
-  #:title "OK"
-  #:description "yes"
-  #:next-fragment 'exit)
+ (list (make-decision
+        #:title "Listen closer."
+        #:description "\"Chk-chk-chk-chk.\""
+        #:next-fragment 'exit))
  (λ () '())
  )
 

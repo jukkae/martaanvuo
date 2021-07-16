@@ -420,10 +420,7 @@
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
                          ((eq? (action-symbol action) 'go-to-location)
-                          (describe-begin-go-to-action action))
-                         ((eq? (action-symbol action) 'go-to-story-fragment)
-                          (go-to-story-fragment 20)
-                          (return 'ok)))
+                          (describe-begin-go-to-action action)))
                    
                    ; begin advancing time
                    (define timeline

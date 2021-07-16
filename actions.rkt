@@ -365,11 +365,8 @@
               'follow-the-magpie
               "Follow the magpie's call"
               (λ ()
-                (make-action
-                   #:symbol 'go-to-story-fragment
-                   #:actor (situation-pc *situation*)
-                   #:duration 0
-                   #:target 20)))
+                (go-to-story-fragment 20)
+                'end-round-early)) ; this is a smell and should be handled better in action handler
 
              ]
            
@@ -402,6 +399,7 @@
 ; store in the action, handle calling from here
 ; -> code to action handler?
 (define (describe-pc-intention pc-action)
-  (case (action-symbol pc-action)
-    ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
-    #;[else (paragraph "TBD")]))
+  (when (not (null? pc-action)) ; should be checked at call site but eh
+    (case (action-symbol pc-action)
+      ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+      #;[else (paragraph "TBD")])))
