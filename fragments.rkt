@@ -144,8 +144,12 @@
         #:next-fragment 'exit)
        (make-decision
         #:title "Listen quietly, with a gun in the hand."
-        #:description "There's a flutter. The outline of a tree shakes as the magpie takes flight and disappears, unseen. Otava jogs the rest of the way. At the bottom of the tree there is a stone engraved with the terrible ant-headed evil god Otava saw on her way up here. Otava picks up a bullet."
+        ; TODO this should be The Eternal Bullet, which would have a chance of not being consumed, and a chance of seriously messing with the ontology of the world
+        #:description "There's a flutter. The outline of a tree shakes as the magpie takes flight and disappears, unseen. Otava jogs the rest of the way. At the bottom of the tree there are the decaying remains of a frog. Ants have created a temporary bypass around the rotting carcass. Something glimmery catches Otava's eyes."
         #:on-resolve! (proc
+                       (paragraph "Otava picks up a revolver cartridge. Ordinary-looking, and the right size.")
+                       (set-flag 'eternal-bullet)
+                       (add-ammo! 1)
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit))
  (λ () '())

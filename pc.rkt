@@ -96,6 +96,13 @@
          (add-item-to-inventory! actor item))
         (else (error "Unknown item type in add-item!"))))
 
+(define (add-ammo! amount)
+  (define items (actor-inventory (pc)))
+  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+                          items))
+  (cond (revolver
+         (set-ranged-weapon-ammo-left! revolver (add1 (ranged-weapon-ammo-left revolver))))))
+
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id))

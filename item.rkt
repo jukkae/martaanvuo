@@ -46,12 +46,12 @@
      (new-ranged-weapon
       "Revolver"
       #:id 'revolver
-      #:ammo-left 5)]
+      #:ammo-left 3)]
 
     ['ammo
      (new-item
       "Ammo"
       #:id id
-      #:details 3)]
+      #:details 2)]
     
     [else (displayln "make-item: unknown id:") (displayln "id") '()]))
