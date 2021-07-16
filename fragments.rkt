@@ -137,8 +137,14 @@
   )
 
  (list (make-decision
-        #:title "Listen."
+        #:title "Listen and quietly walk closer."
         #:description "\"Chk-chk-chk-chk.\" The sound is insistent and frustrated, as if it's trying to say something. Otava catches flutter of wings in the corner of her eye, but the magpie disappears in foggy foliage before she gets a good look at it."
+        #:on-resolve! (proc
+                       (remove-feature-from-location! (current-location) 'magpie-effigy))
+        #:next-fragment 'exit)
+       (make-decision
+        #:title "Listen and quietly walk closer, with a gun in hand."
+        #:description "There's a flutter. The outline of a tree shakes as the magpie takes flight and disappears, unseen. Otava jogs the rest of the way. At the bottom of the tree there is a stone engraved with the terrible ant-headed evil god Otava saw on her way up here."
         #:on-resolve! (proc
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
         #:next-fragment 'exit))
