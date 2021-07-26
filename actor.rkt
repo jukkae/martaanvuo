@@ -41,8 +41,18 @@
   [conditions #:mutable] ; (semi)permanent
   
   [inventory #:mutable]
-  [current-location #:mutable])
+  [location #:mutable])
  #:constructor-name actor*)
+
+(serializable-struct
+ pc-actor
+ ([lp #:mutable]
+  [max-lp #:mutable]
+  [death-roll-dice #:mutable]
+  [alive? #:mutable]
+  [xp #:mutable])
+ #:super struct:actor
+ #:constructor-name pc-actor*)
 
 (define (make-actor
          name
@@ -52,6 +62,17 @@
           '() '() '() '() '()
           ; traits etc
           (make-hash) '() '() '() '()))
+
+(define (make-pc-actor
+         name
+         max-hp
+         max-lp)
+  (pc-actor*
+   name max-hp max-hp
+   ; attributes
+   '() '() '() '() '()
+   ; traits etc
+   (make-hash) '() '() '() '() max-lp max-lp 6 #t 0))
 
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))
@@ -177,30 +198,6 @@
             (actor-conditions actor))
       #t
       #f))
-
-
-
-
-(serializable-struct
- pc-actor
- ([lp #:mutable]
-  [max-lp #:mutable]
-  [death-roll-dice #:mutable]
-  [alive? #:mutable]
-  [xp #:mutable])
- #:super struct:actor
- #:constructor-name pc-actor*)
-
-(define (make-pc-actor
-         name
-         max-hp
-         max-lp)
-  (pc-actor*
-   name max-hp max-hp
-   ; attributes
-   '() '() '() '() '()
-   ; traits etc
-   (make-hash) '() '() '() '() max-lp max-lp 6 #t 0))
 
 (define (get-attribute-modifier-for attribute)
   (cond ((= attribute 3) -3)

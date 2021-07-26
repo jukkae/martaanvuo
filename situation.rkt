@@ -30,6 +30,7 @@
   [in-combat? #:mutable]
   [enemy-stances #:mutable]
   [current-fragment-number #:mutable]
+  [current-location #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -42,12 +43,16 @@
   (let ([new-world (world 0 0)]
         [pc (make-new-pc)]
         [quests '()]
-        [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '())))
+        [persistent-quests '()]
+        [current-location '()])
+    (situation new-world pc 0 0 0 0 #f '() '() current-location quests persistent-quests 0 '())))
 ;;; ^^^
 
+
+; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
+; - https://docs.racket-lang.org/reference/serialization.html
 (define (load-situation situation)
-  (displayln situation)
+  #;(displayln situation)
   (define deserialized (deserialize situation))
   (displayln deserialized)
   (set *situation* deserialized))
@@ -161,7 +166,7 @@
 
 ; api
 (define (current-location)
-  (actor-current-location (pc)))
+  (situation-current-location *situation*))
 
 
 ; api
@@ -401,7 +406,7 @@
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (remove-stance! enemy)
-    (remove-actor-from-location! (actor-current-location enemy) enemy))
+    (remove-actor-from-location! (actor-location enemy) enemy))
   (end-combat!)
   (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
   )
@@ -409,7 +414,7 @@
 ; scripting API
 (define (remove-enemy enemy)
   (remove-stance! enemy)
-  (remove-actor-from-location! (actor-current-location enemy) enemy))
+  (remove-actor-from-location! (actor-location enemy) enemy))
 
 ; scripting API
 (provide actor-in-range?)
@@ -423,7 +428,7 @@
   ; TODO: location on-exit / on-enter triggers here
   #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
   (remove-actor-from-its-current-location! (situation-pc *situation*))
-  (set-actor-current-location! (situation-pc *situation*) location)
+  (set-actor-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*)))
 
 
