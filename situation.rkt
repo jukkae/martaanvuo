@@ -29,7 +29,7 @@
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [enemy-stances #:mutable]
-  [current-fragment #:mutable]
+  [current-fragment-number #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -337,7 +337,7 @@
   )
 
 (define (describe-non-combat-situation)
-  (cond ((null? (situation-current-fragment *situation*))
+  (cond ((null? (situation-current-fragment-number *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (paragraph "It's either a climb up the rocky slope where the magpie was, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)

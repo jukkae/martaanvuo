@@ -32,10 +32,10 @@
                  #:requirement [requirement (λ () '())]
                  #:on-resolve![on-resolve! (λ () '())])
 
-  (displayln "TODO: requirement and on-resolve! won't serialize because they are lambdas, think about this")
-  
   (decision* title
              description
              next-fragment
              requirement
              on-resolve!))
+
+; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere.

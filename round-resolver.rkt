@@ -28,14 +28,13 @@
 
 ; fragment handler
 (define (current-fragment-on-begin-round!)
-  (paragraph (story-fragment-description (situation-current-fragment *situation*)))
-  )
+  (paragraph (story-fragment-description (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
-          (story-fragment-decisions (situation-current-fragment *situation*))))
+          (story-fragment-decisions (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
 ; move specifics from here to the actual fragment
@@ -55,13 +54,14 @@
          (go-to-story-fragment next-fragment)
          )
         ((eq? 'exit next-fragment)
-         (set-situation-current-fragment! *situation* '()))
+         ; TODO: call this unset-current-fragment! or something
+         (set-situation-current-fragment-number! *situation* '()))
         ((eq? 'exit-and-set-build-desperate next-fragment)
          (set-build! 'desperate)
-         (set-situation-current-fragment! *situation* '()))
+         (set-situation-current-fragment-number! *situation* '()))
         ((eq? 'exit-and-set-build-bruiser next-fragment)
          (set-build! 'bruiser)
-         (set-situation-current-fragment! *situation* '()))
+         (set-situation-current-fragment-number! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
 
@@ -72,8 +72,8 @@
 
 ; fragment handler
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment! *situation* (get-fragment id))
-  ((story-fragment-on-enter! (situation-current-fragment *situation*))))
+  (set-situation-current-fragment-number! *situation* id)
+  ((story-fragment-on-enter! (get-fragment id))))
 
 ; fragment handler
 (define (handle-fragment-decision decisions-with-keys input)
@@ -198,7 +198,7 @@
   
   (set! action-queue '())
   
-  (when (not (null? (situation-current-fragment *situation*)))
+  (when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-begin-round!))
   )
 
@@ -251,7 +251,7 @@
     (go-to-story-fragment 100))
   (wait-for-confirm)
   
-  (when (not (null? (situation-current-fragment *situation*)))
+  (when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
   ; remove statuses
@@ -688,7 +688,7 @@
       (define actor (situation-pc *situation*))
 
 
-      (define fragment-decisions (if (null? (situation-current-fragment *situation*))
+      (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
