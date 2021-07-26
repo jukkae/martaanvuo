@@ -556,7 +556,6 @@
 
 (define (save-situation s)
   (displayln "saving situation...")
-  (displayln s)
-  (displayln (serializable? s))
-  (define serialized (serialize s))
+  (define serialized-situation (serialize s))
+  (write-save-file serialized-situation)
   (displayln "done!"))
