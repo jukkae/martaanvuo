@@ -33,7 +33,39 @@
   (define situation (read input-file))
   (load-situation situation)
   (newline)
-  (displayln "situation loaded"))
+  (displayln "situation loaded")
+
+  (title)
+
+  (let/ec win-game
+    (let continue-life ()
+      (define pc-life-end-status (continue-a-life))
+      (when (eq? pc-life-end-status 'pc-dead)
+
+        (let end-of-life-menu ([verbosity 'verbose])
+          (define (handle-meta-command meta-commands-with-keys input)
+            (set! input (string-upcase input))
+            (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+            (define meta-command (cdr meta-command-with-key))
+            (meta-command)
+            (end-of-life-menu 'verbose))
+
+          (define meta-commands (make-hash))
+          (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
+          (hash-set! meta-commands "P" (cons "[P]: Proceed." begin-new-game))
+
+          (paragraph "Proceed?")
+          (print-meta-commands-with-keys meta-commands)
+          (define input (wait-for-input))
+          (serialize-input)
+
+          (newline)
+
+          (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
+                (else (end-of-life-menu 'abbreviated)))))
+      (when (eq? pc-life-end-status 'win-game) (win-game))))
+  (end-game)
+  )
 
 (define (begin-new-game)
   (displayln "beginning new game")
