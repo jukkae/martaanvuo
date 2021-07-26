@@ -47,7 +47,10 @@
 ;;; ^^^
 
 (define (load-situation situation)
-  (set *situation* situation))
+  (displayln situation)
+  (define deserialized (deserialize situation))
+  (displayln deserialized)
+  (set *situation* deserialized))
 
 (define (add-stance! stance)
   (set-situation-enemy-stances!
