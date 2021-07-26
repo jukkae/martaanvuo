@@ -27,10 +27,18 @@
   (setup-world)
   )
 
-; engine / game-resolver?
-(define (begin-game)
-  #; (random-seed 13)
+(define (load-save-file)
+  (displayln "loading save file")
+  (define input-file (open-input-file "save.txt"))
+  (define situation (read input-file))
+  (load-situation situation)
+  (newline)
+  (displayln "situation loaded"))
+
+(define (begin-new-game)
+  (displayln "beginning new game")
   (title)
+  
   (on-begin-playthrough)
   (let/ec win-game
     (let begin-new-life ()
@@ -60,6 +68,14 @@
                 (else (end-of-life-menu 'abbreviated)))))
       (when (eq? pc-life-end-status 'win-game) (win-game))))
   (end-game))
+
+; engine / game-resolver?
+(define (begin-game)
+  #; (random-seed 13)
+
+  (if (file-exists? "save.txt")
+      (load-save-file)
+      (begin-new-game)))
 
 ; main entrypoint
 (begin-game)

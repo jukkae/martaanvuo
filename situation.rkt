@@ -46,6 +46,8 @@
     (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '())))
 ;;; ^^^
 
+(define (load-situation situation)
+  (set *situation* situation))
 
 (define (add-stance! stance)
   (set-situation-enemy-stances!
@@ -555,7 +557,5 @@
 
 
 (define (save-situation s)
-  (displayln "saving situation...")
   (define serialized-situation (serialize s))
-  (write-save-file serialized-situation)
-  (displayln "done!"))
+  (write-save-file serialized-situation))

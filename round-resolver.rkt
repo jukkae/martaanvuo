@@ -900,8 +900,8 @@
   )
 
 (define (save)
-  (displayln "SAVING")
-  (save-situation *situation*))
+  (save-situation *situation*)
+  (displayln "World state has been saved to save.txt."))
 
 
 
