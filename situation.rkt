@@ -552,3 +552,11 @@
 (define (print-flags)
   (displayln "print-flags:")
   (displayln *flags*))
+
+
+(define (save-situation s)
+  (displayln "saving situation...")
+  (displayln s)
+  (displayln (serializable? s))
+  (define serialized (serialize s))
+  (displayln "done!"))

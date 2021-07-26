@@ -804,6 +804,7 @@
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
+  (hash-set! meta-commands "S" (cons "[S]: Save." save))
   meta-commands)
 
 ; engine / get-next-pc-action
@@ -897,6 +898,10 @@
    sheet
    "Quests")
   )
+
+(define (save)
+  (displayln "SAVING")
+  (save-situation *situation*))
 
 
 
