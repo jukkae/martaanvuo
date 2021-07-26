@@ -44,7 +44,7 @@
  (list
   (make-decision
    #:title "She has a gun."
-   #:description "She has a revolver. An AIX Metalworks one, one of the last ones they ever made before the Rains."
+   #:description "She has a revolver. An AIX Metalworks one, one of the last ones they ever made before the Rains. Hundreds of years old, and more reliable than anything that's made since."
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)

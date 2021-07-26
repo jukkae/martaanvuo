@@ -100,8 +100,14 @@
   (define items (actor-inventory (pc)))
   (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
                           items))
+  (increase-ammo! revolver))
+
+(define (consume-ammo! amount)
+  (define items (actor-inventory (pc)))
+  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+                          items))
   (cond (revolver
-         (set-ranged-weapon-ammo-left! revolver (add1 (ranged-weapon-ammo-left revolver))))))
+         (set-ranged-weapon-ammo-left! revolver (sub1 (ranged-weapon-ammo-left revolver))))))
 
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
@@ -135,7 +141,8 @@
              (list
               (string-append " " (item-name item) " ")
               (string-append " " (~v (item-details item)) " ")))
-            (else (list
+            (else
+             (list
                    (string-append " " (symbol->string item) " ")
                    (string-append " " " " " "))))
       ))

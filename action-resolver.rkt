@@ -12,6 +12,7 @@
 (require "condition.rkt")
 (require "io.rkt")
 (require "item.rkt")
+(require "pc.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "status.rkt")
@@ -106,20 +107,6 @@
                           " "))))
   (info-card body (item-name gun)))
 
-; where does this belong?
-(define (consume-ammo!)
-  (define actor (pc))
-  (define items (actor-inventory actor))
-  (define gun (findf (λ (item) (ranged-weapon? item))
-                     items))
-  (when gun
-    (set-ranged-weapon-ammo-left!
-     gun (max (- (ranged-weapon-ammo-left gun)
-                 1)
-              0))
-    (weapon-info gun))
-  '())
-
 ; helper that belongs to actor (or one layer above actor)
 (define (get-firearm actor)
   (define items (actor-inventory actor))
@@ -138,7 +125,7 @@
 
   ; TODO add sophistication regarding ranges etc
   (define success? #t)
-  (consume-ammo!)
+  (consume-ammo! 1)
 
   (define details (action-details action))
   

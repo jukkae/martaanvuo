@@ -55,3 +55,6 @@
       #:details 2)]
     
     [else (displayln "make-item: unknown id:") (displayln "id") '()]))
+
+(define (increase-ammo! gun)
+  (set-ranged-weapon-ammo-left! gun (add1 (ranged-weapon-ammo-left gun))))

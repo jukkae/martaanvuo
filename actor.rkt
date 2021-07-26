@@ -13,6 +13,7 @@
 
 (require "condition.rkt")
 (require "io.rkt")
+(require "item.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 
@@ -308,6 +309,7 @@
 
 
 (define (add-item-to-inventory! actor item)
+  
   (set-actor-inventory! actor
                         (append (actor-inventory actor)
                                 (list item))))
