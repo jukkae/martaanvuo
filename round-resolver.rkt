@@ -385,7 +385,7 @@
   (enqueue-npc-actions)
   (describe-situation)
   
-  (serialize-state)
+  (save)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     
@@ -418,12 +418,13 @@
            ))))
 
 ; TODO: duplication bad, deal with this asap!
+; TODO: THIS LOOPS ON ITSELF, NEXT ROUND SHOULD BE NORMAL
+; (and ditto for lives and runs)
 (define (continue-round)
   (on-continue-round)
   (enqueue-npc-actions)
   (redescribe-situation)
   
-  (serialize-state)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     
@@ -971,8 +972,7 @@
   )
 
 (define (save)
-  (save-situation *situation*)
-  (displayln "World state has been saved to save.txt."))
+  (save-situation *situation*))
 
 
 

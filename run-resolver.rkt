@@ -71,11 +71,22 @@
   (on-end-run run-exit-status)
   run-exit-status)
 
+; TODO: DO THIS TO LIFE AND MAIN RESOLVERS
 (define (continue-run)
   (define run-exit-status
     (let/ec end-run
+      (define first-round-exit-status (continue-round))
+      ; end run?
+      (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
+      (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
+      (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
+
+      ; continue
+      (when (eq? first-round-exit-status 'next-chapter) (next-chapter!))
+
+      
       (let loop ()
-        (define round-exit-status (continue-round))
+        (define round-exit-status (resolve-round))
         ; end run?
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))
@@ -83,6 +94,7 @@
 
         ; continue
         (when (eq? round-exit-status 'next-chapter) (next-chapter!))
+        
         (loop))))
   (on-end-run run-exit-status)
   run-exit-status
