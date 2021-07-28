@@ -231,7 +231,7 @@
   
   (set! action-queue '())
   
-  (when (not (null? (situation-current-fragment-number *situation*)))
+  #;(when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-begin-round!))
   )
 

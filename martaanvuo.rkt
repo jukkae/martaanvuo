@@ -14,11 +14,7 @@
   ;(displayln "--------------------------------------------------------------------------------") ; 80
   (displayln "--------------------------------------------------------------------------------------------") ; 92
   (newline)
-  (define title-string
-    (string-append "M A R T A A N V U O"
-                   "\n"
-                   "==================="))
-  (paragraph title-string))
+  (display-title))
 
 
 ; engine / game-resolver? meta player.rkt?

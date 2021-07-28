@@ -21,6 +21,14 @@
 (define (write-paragraph-to-log paragraph)
   (append-to-log paragraph))
 
+(define (display-title)
+  (define title-string
+    (string-append "M A R T A A N V U O"
+                   "\n"
+                   "==================="))
+  (define s (format-for-printing title-string #:width 84 #:indent 4))
+  (print-paragraph s))
+
 (define (display-log)
   (hr)
   (displayln "[BEGIN LOG]")
