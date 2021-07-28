@@ -53,8 +53,6 @@
 (define (load-situation situation)
   #;(displayln situation)
   (define deserialized (deserialize situation))
-  (displayln "deserialized to:")
-  (displayln deserialized)
   (set! *situation* deserialized))
 
 (define (add-stance! stance)

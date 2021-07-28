@@ -66,7 +66,6 @@
   )
 
 (define (begin-new-game)
-  (displayln "beginning new game")
   (title)
   
   (on-begin-playthrough)
