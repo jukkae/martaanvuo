@@ -24,10 +24,11 @@
   )
 
 (define (load-save-file)
+  (newline)
+  (displayln "Loading stored progress.")
   (define input-file (open-input-file "save.txt"))
   (define situation (read input-file))
   (load-situation situation)
-  (newline)
   
   (title)
 
@@ -66,6 +67,11 @@
   )
 
 (define (begin-new-game)
+  (newline)
+  (displayln "Begin a new game.")
+  (newline)
+  (displayln "Your progress is automatically stored whenever you make a choice.")
+  
   (title)
   
   (on-begin-playthrough)

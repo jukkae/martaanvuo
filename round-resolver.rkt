@@ -869,14 +869,12 @@
 ; engine / get-next-pc-action
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
-  #;(hash-set! meta-commands "D" (cons "[D]: Describe situation again." describe-situation))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (when (not (null? (actor-inventory (pc))))
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
-  (hash-set! meta-commands "S" (cons "[S]: Save." save))
   meta-commands)
 
 ; engine / get-next-pc-action
