@@ -35,6 +35,7 @@
   (hr)
   (displayln "[BEGIN LOG]")
   (newline)
+  (display-title)
   #;(displayln (get-log))
   (for ([entry (get-log)])
     (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
