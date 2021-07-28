@@ -356,8 +356,7 @@
                 (paragraph "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
 (define (serialize-state)
-  ; prng can be stored as vector:
-  ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
+  
   '())
 
 (define (serialize-input)
@@ -577,5 +576,9 @@
 
 
 (define (save-situation s)
+  ; prng can be stored as vector:
+  ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
+  ; NOTE: By storing the prng in savefile, you essentially get predestination
+  ; -> this opens the possibility for deliberately using this as a mechanic
   (define serialized-situation (serialize s))
   (write-save-file serialized-situation))
