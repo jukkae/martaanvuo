@@ -70,3 +70,20 @@
         (loop))))
   (on-end-run run-exit-status)
   run-exit-status)
+
+(define (continue-run)
+  (define run-exit-status
+    (let/ec end-run
+      (let loop ()
+        (define round-exit-status (continue-round))
+        ; end run?
+        (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
+        (when (eq? round-exit-status 'win-game) (end-run 'win-game))
+        (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+
+        ; continue
+        (when (eq? round-exit-status 'next-chapter) (next-chapter!))
+        (loop))))
+  (on-end-run run-exit-status)
+  run-exit-status
+  )

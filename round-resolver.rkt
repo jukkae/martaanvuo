@@ -28,14 +28,13 @@
 
 ; fragment handler
 (define (current-fragment-on-begin-round!)
-  (paragraph (story-fragment-description (situation-current-fragment *situation*)))
-  )
+  (paragraph (story-fragment-description (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
-          (story-fragment-decisions (situation-current-fragment *situation*))))
+          (story-fragment-decisions (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
 ; move specifics from here to the actual fragment
@@ -55,13 +54,14 @@
          (go-to-story-fragment next-fragment)
          )
         ((eq? 'exit next-fragment)
-         (set-situation-current-fragment! *situation* '()))
+         ; TODO: call this unset-current-fragment! or something
+         (set-situation-current-fragment-number! *situation* '()))
         ((eq? 'exit-and-set-build-desperate next-fragment)
          (set-build! 'desperate)
-         (set-situation-current-fragment! *situation* '()))
+         (set-situation-current-fragment-number! *situation* '()))
         ((eq? 'exit-and-set-build-bruiser next-fragment)
          (set-build! 'bruiser)
-         (set-situation-current-fragment! *situation* '()))
+         (set-situation-current-fragment-number! *situation* '()))
         (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
   )
 
@@ -72,8 +72,8 @@
 
 ; fragment handler
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment! *situation* (get-fragment id))
-  ((story-fragment-on-enter! (situation-current-fragment *situation*))))
+  (set-situation-current-fragment-number! *situation* id)
+  ((story-fragment-on-enter! (get-fragment id))))
 
 ; fragment handler
 (define (handle-fragment-decision decisions-with-keys input)
@@ -189,7 +189,9 @@
            (string-append
             " "
             #;(get-location-name-from-location (current-location))
-            (get-location-short-description (current-location))
+            (if (not (null? (current-location)))
+                (get-location-short-description (current-location))
+                "N/A")
             " "))
      (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
@@ -198,7 +200,38 @@
   
   (set! action-queue '())
   
-  (when (not (null? (situation-current-fragment *situation*)))
+  (when (not (null? (situation-current-fragment-number *situation*)))
+    (current-fragment-on-begin-round!))
+  )
+
+; TODO DUPLICATION BAD!!!
+(define (on-continue-round)
+  #;(set-situation-round! *situation* (add1 (situation-round *situation*)))
+
+  ; ROUND SUMMARY
+  (define round-summary
+    (list
+     (list " round "
+           (string-append
+            " "
+            (number->string (situation-round *situation*))
+            " "))
+     (list " current location "
+           (string-append
+            " "
+            #;(get-location-name-from-location (current-location))
+            (if (not (null? (current-location)))
+                (get-location-short-description (current-location))
+                "N/A")
+            " "))
+     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
+     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
+     ))
+  (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
+  
+  (set! action-queue '())
+  
+  (when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-begin-round!))
   )
 
@@ -251,7 +284,7 @@
     (go-to-story-fragment 100))
   (wait-for-confirm)
   
-  (when (not (null? (situation-current-fragment *situation*)))
+  (when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
   ; remove statuses
@@ -349,6 +382,44 @@
 ; MAIN RESOLVER ENTRYPOINT
 (define (resolve-round)
   (on-begin-round)
+  (enqueue-npc-actions)
+  (describe-situation)
+  
+  (serialize-state)
+  (let/ec end-round-early-with-round-status
+    (define pc-action (get-next-pc-action))
+    
+    (cond ((eq? pc-action 'end-round-early)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (end-round-early-with-round-status 'ok))
+          ((eq? pc-action 'end-chapter)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (next-chapter!)
+           (end-round-early-with-round-status 'ok))
+          (else
+
+           (describe-pc-intention pc-action)
+  
+           
+
+           (define round-exit-status 'ok)
+           (cond ((initiative-based-resolution? pc-action)
+                  (add-to-action-queue pc-action)
+                  (update-npc-reactions pc-action)
+                  (sort-action-queue)
+                  (resolve-turns!))
+                 (else
+                  (define pc-action-result (resolve-pc-action! pc-action))
+                  (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+                  (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+           (on-end-round)
+           (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
+           round-exit-status
+           ))))
+
+; TODO: duplication bad, deal with this asap!
+(define (continue-round)
+  (on-continue-round)
   (enqueue-npc-actions)
   (describe-situation)
   
@@ -688,7 +759,7 @@
       (define actor (situation-pc *situation*))
 
 
-      (define fragment-decisions (if (null? (situation-current-fragment *situation*))
+      (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
       (define world-choices (get-world-choices (situation-world *situation*) actor))
@@ -804,6 +875,7 @@
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
+  (hash-set! meta-commands "S" (cons "[S]: Save." save))
   meta-commands)
 
 ; engine / get-next-pc-action
@@ -897,6 +969,10 @@
    sheet
    "Quests")
   )
+
+(define (save)
+  (save-situation *situation*)
+  (displayln "World state has been saved to save.txt."))
 
 
 

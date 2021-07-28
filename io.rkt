@@ -106,3 +106,8 @@
     (set! final-output (string-append final-output "\n")) ; add newline to correspond to the possible manually broken newline, or for paragraph end
     )
   final-output)
+
+(define (write-save-file serialized-state)
+  (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
+  (write serialized-state output-file)
+  (close-output-port output-file))

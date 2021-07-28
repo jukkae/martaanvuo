@@ -142,7 +142,7 @@
 
 ; world-as-simulation / scripting API
 (define (remove-actor-from-its-current-location! actor)
-  (define current-location (actor-current-location actor))
+  (define current-location (actor-location actor))
   (when (not (eq? '() current-location))
     (remove-actor-from-location! current-location actor)))
 
@@ -150,5 +150,5 @@
 (provide move-actor-to-location!)
 (define (move-actor-to-location! actor location)
   (remove-actor-from-its-current-location! actor)
-  (set-actor-current-location! actor location)
+  (set-actor-location! actor location)
   (add-actor-to-location! location actor))
