@@ -46,12 +46,12 @@
 
 (serializable-struct
  pc-actor
+ actor
  ([lp #:mutable]
   [max-lp #:mutable]
   [death-roll-dice #:mutable]
   [alive? #:mutable]
   [xp #:mutable])
- #:super struct:actor
  #:constructor-name pc-actor*)
 
 (define (make-actor
