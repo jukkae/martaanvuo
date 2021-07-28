@@ -12,15 +12,15 @@
 
 (serializable-struct
  location
- (id
+ ([id #:mutable] ; has to be mutable for serialization reasons
   [neighbors #:mutable]
-  type
+  [type #:mutable] ; has to be mutable for serialization reasons
   [features #:mutable]
   [actors #:mutable]
   [visited #:mutable]
   [items #:mutable]
   [actions-provided #:mutable]
-  tags)
+  [tags #:mutable])
 
  #:constructor-name location*
 
