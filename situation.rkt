@@ -30,7 +30,6 @@
   [in-combat? #:mutable]
   [enemy-stances #:mutable]
   [current-fragment-number #:mutable]
-  [current-location #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -43,9 +42,8 @@
   (let ([new-world (world 0 0)]
         [pc (make-new-pc)]
         [quests '()]
-        [persistent-quests '()]
-        [current-location '()])
-    (situation new-world pc 0 0 0 0 #f '() '() current-location quests persistent-quests 0 '())))
+        [persistent-quests '()])
+    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '())))
 ;;; ^^^
 
 
@@ -166,7 +164,7 @@
 
 ; api
 (define (current-location)
-  (situation-current-location *situation*))
+  (actor-location (pc)))
 
 
 ; api
