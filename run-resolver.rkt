@@ -75,7 +75,7 @@
   (define run-exit-status
     (let/ec end-run
       (let loop ()
-        (define round-exit-status (resolve-round))
+        (define round-exit-status (continue-round))
         ; end run?
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))

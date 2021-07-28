@@ -204,6 +204,37 @@
     (current-fragment-on-begin-round!))
   )
 
+; TODO DUPLICATION BAD!!!
+(define (on-continue-round)
+  #;(set-situation-round! *situation* (add1 (situation-round *situation*)))
+
+  ; ROUND SUMMARY
+  (define round-summary
+    (list
+     (list " round "
+           (string-append
+            " "
+            (number->string (situation-round *situation*))
+            " "))
+     (list " current location "
+           (string-append
+            " "
+            #;(get-location-name-from-location (current-location))
+            (if (not (null? (current-location)))
+                (get-location-short-description (current-location))
+                "N/A")
+            " "))
+     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
+     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
+     ))
+  (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
+  
+  (set! action-queue '())
+  
+  (when (not (null? (situation-current-fragment-number *situation*)))
+    (current-fragment-on-begin-round!))
+  )
+
 ; engine / round resolver / -> ai?
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
@@ -351,6 +382,44 @@
 ; MAIN RESOLVER ENTRYPOINT
 (define (resolve-round)
   (on-begin-round)
+  (enqueue-npc-actions)
+  (describe-situation)
+  
+  (serialize-state)
+  (let/ec end-round-early-with-round-status
+    (define pc-action (get-next-pc-action))
+    
+    (cond ((eq? pc-action 'end-round-early)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (end-round-early-with-round-status 'ok))
+          ((eq? pc-action 'end-chapter)
+           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (next-chapter!)
+           (end-round-early-with-round-status 'ok))
+          (else
+
+           (describe-pc-intention pc-action)
+  
+           
+
+           (define round-exit-status 'ok)
+           (cond ((initiative-based-resolution? pc-action)
+                  (add-to-action-queue pc-action)
+                  (update-npc-reactions pc-action)
+                  (sort-action-queue)
+                  (resolve-turns!))
+                 (else
+                  (define pc-action-result (resolve-pc-action! pc-action))
+                  (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+                  (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+           (on-end-round)
+           (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
+           round-exit-status
+           ))))
+
+; TODO: duplication bad, deal with this asap!
+(define (continue-round)
+  (on-continue-round)
   (enqueue-npc-actions)
   (describe-situation)
   

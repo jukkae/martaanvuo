@@ -28,14 +28,11 @@
   )
 
 (define (load-save-file)
-  (displayln "loading save file")
   (define input-file (open-input-file "save.txt"))
   (define situation (read input-file))
   (load-situation situation)
   (newline)
-  (displayln "situation loaded")
-  (displayln *situation*)
-
+  
   (title)
 
   (let/ec win-game
