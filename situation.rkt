@@ -36,6 +36,8 @@
   [pending-action #:mutable]
   [log #:mutable]
   [last-paragraph #:mutable]
+  [current-part #:mutable]
+  [current-chapter #:mutable]
   )
  #:transparent)
 
@@ -46,7 +48,7 @@
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '())))
+    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0)))
 ;;; ^^^
 
 
@@ -518,29 +520,25 @@
   (print-inventory))
 
 
-; This belongs to situation
-(define *current-part* 0)
-(define *current-chapter* 0)
-
 ; This belongs... somewhere
 (define (print-heading)
   (define heading
     (string-append "\n"
                    "PART "
-                   (number->string *current-part*)
+                   (number->string (situation-current-part *situation*))
                    ", CHAPTER "
-                   (number->string *current-chapter*)))
+                   (number->string (situation-current-chapter *situation*))))
   (paragraph heading))
 
 (define (next-chapter!)
-  (when (= *current-part* 0)
-    (set! *current-part* 1))
-  (set! *current-chapter* (add1 *current-chapter*))
+  (when (= (situation-current-part *situation*) 0)
+    (set-situation-current-part! *situation* 1))
+  (set-situation-current-chapter! *situation* (add1 (situation-current-chapter *situation*)))
   (print-heading))
 
 (define (next-part!)
-  (set! *current-part* (add1 *current-part*))
-  (set! *current-chapter* 0)
+  (set-situation-current-part! *situation* (add1 (situation-current-part *situation*)))
+  (set-situation-current-chapter! *situation* 0)
   (print-heading))
 
 (define (append-to-log paragraph)
