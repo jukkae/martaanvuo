@@ -110,6 +110,12 @@
 (define (reset-pending-action!)
   (set-situation-pending-action! *situation* '()))
 (define (set-pending-action! action)
+  #;(symbol
+     actor
+     duration
+     target
+     tags
+     details)
   (set-situation-pending-action! *situation* action))
 
 (define (add-quest! quest)

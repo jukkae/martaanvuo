@@ -562,7 +562,9 @@
   ; do the state management mutation stuff
   (when (eq? 'interrupted result)
     (define time-left (- (action-duration action) elapsed-time))
-    (set-pending-action! (lens-set action-duration-lens action time-left)))
+    (define pending-action action)
+    (set-action-duration! pending-action time-left)
+    (set-pending-action! pending-action))
   result
   )
 
