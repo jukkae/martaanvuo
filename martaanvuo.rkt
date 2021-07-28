@@ -31,6 +31,10 @@
   
   (title)
 
+  (for ([entry (get-log)])
+    (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
+  (hr)
+
   (let/ec win-game
     (let continue-life ()
       (define pc-life-end-status (continue-a-life))
