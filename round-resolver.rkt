@@ -230,7 +230,7 @@
   (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
   
   (set! action-queue '())
-  
+  (repeat-last-paragraph)
   #;(when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-begin-round!))
   )

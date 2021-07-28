@@ -11,7 +11,9 @@
  ["situation.rkt"
   (situation-log
    append-to-log
-   get-log)])
+   get-log
+   get-last-paragraph
+   set-last-paragraph!)])
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
@@ -41,16 +43,13 @@
   (wait-for-confirm))
 
 ; implementation detail
-(define *last-paragraph* '())
-
-; implementation detail
 (define (print-paragraph formatted-text)
   (displayln formatted-text)
   )
 
 (define (repeat-last-paragraph)
   (hr)
-  (print-paragraph (format-for-printing *last-paragraph* #:width 84 #:indent 4)))
+  (print-paragraph (format-for-printing (get-last-paragraph) #:width 84 #:indent 4)))
 
 (define (hr)
   ; (displayln "---")
@@ -60,7 +59,7 @@
 (define (paragraph . args)
   (define str (string-append* args))
   (define s (format-for-printing str #:width 84 #:indent 4))
-  (set! *last-paragraph* str)
+  (set-last-paragraph! str)
   (write-paragraph-to-log str)
   (print-paragraph s))
 

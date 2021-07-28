@@ -35,6 +35,7 @@
   [grabberkin-encounters #:mutable]
   [pending-action #:mutable]
   [log #:mutable]
+  [last-paragraph #:mutable]
   )
  #:transparent)
 
@@ -45,7 +46,7 @@
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '())))
+    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '())))
 ;;; ^^^
 
 
@@ -548,6 +549,13 @@
 
 (define (get-log)
   (situation-log *situation*))
+
+(define (get-last-paragraph)
+  (situation-last-paragraph *situation*))
+
+(define (set-last-paragraph! paragraph)
+  (set-situation-last-paragraph! *situation* paragraph)
+  )
 
 ; TODO think about api and usage
 (define *flags* '())
