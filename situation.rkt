@@ -34,6 +34,7 @@
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   [pending-action #:mutable]
+  [log #:mutable]
   )
  #:transparent)
 
@@ -44,7 +45,7 @@
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '())))
+    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '())))
 ;;; ^^^
 
 
@@ -542,6 +543,11 @@
   (set! *current-chapter* 0)
   (print-heading))
 
+(define (append-to-log paragraph)
+  (set-situation-log! *situation* (append-element (situation-log *situation*) paragraph)))
+
+(define (get-log)
+  (situation-log *situation*))
 
 ; TODO think about api and usage
 (define *flags* '())

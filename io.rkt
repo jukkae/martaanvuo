@@ -2,25 +2,31 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
 (require text-table)
 
 (require "utils.rkt")
+
+(lazy-require
+ ["situation.rkt"
+  (situation-log
+   append-to-log
+   get-log)])
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
   (print-table content #:row-sep? #f)
   (newline))
 
-(define *log* '())
-
 (define (write-paragraph-to-log paragraph)
-  (set! *log* (append-element *log* paragraph)))
+  (append-to-log paragraph))
 
 (define (display-log)
   (hr)
   (displayln "[BEGIN LOG]")
   (newline)
-  (for ([entry *log*])
+  #;(displayln (get-log))
+  (for ([entry (get-log)])
     (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
   (displayln "[END LOG]")
   (newline)
