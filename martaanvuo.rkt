@@ -34,6 +34,7 @@
   (load-situation situation)
   (newline)
   (displayln "situation loaded")
+  (displayln *situation*)
 
   (title)
 
