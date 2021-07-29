@@ -321,7 +321,9 @@
   ; proc conditions - TODO this is currently only for PC, fix if needed!
   (define pc-conditions (actor-conditions (pc)))
   (for ([condition pc-conditions])
-    ((condition-on-end-round! condition))
+    (process-condition-on-end-turn (pc) condition)
+    #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
+    '()
     )
   
   

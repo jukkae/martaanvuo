@@ -228,7 +228,7 @@
            ('hit
             (inflict-condition!
              target
-             (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" (λ () '())))
+             (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
             (when critical?
               (inflict-condition!
                target
@@ -236,20 +236,6 @@
                (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                           ;"resolve-anklebreaker-action!: details for 'bleeding todo"
                           '() ; details
-                          (λ ()
-                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (cond ((= 1 bleed-damage-roll)
-                                   (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
-                                   (take-damage target 1 'bleed)
-                                   (display-combatant-info target)
-                                   )
-                                  (else
-                                   (displayln (string-append "[Bleed check: 1d6 = 1: ["
-                                                             (number->string bleed-damage-roll)
-                                                             "]]")))))
-
-
-
                           )))
             (display-combatant-info target)
             'ok)
