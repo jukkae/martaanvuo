@@ -9,11 +9,13 @@
 (require "situation.rkt")
 
 
-(define (resolve-a-life)
-  (on-begin-life)
+(define (resolve-life mode)
+  (when (eq? mode 'begin)
+    (on-begin-life))
+  
   (let/ec end-life
     (let loop ()
-      (define run-exit-status (resolve-a-run))
+      (define run-exit-status (resolve-run mode))
       (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
       (when (eq? run-exit-status 'win-game) (end-life 'win-game))
       (when (eq? run-exit-status 'end-run)
@@ -22,18 +24,6 @@
         (loop)))
     ))
 
-(define (continue-a-life)
-  (let/ec end-life
-    (let loop ()
-      (define run-exit-status (continue-run))
-      (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
-      (when (eq? run-exit-status 'win-game) (end-life 'win-game))
-      (when (eq? run-exit-status 'end-run)
-        (paragraph "But there's still debt to be paid. Otava heads back to Martaanvuo.")
-        (wait-for-confirm)
-        (loop)))
-    )
-  )
 
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))

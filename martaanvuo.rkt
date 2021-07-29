@@ -38,7 +38,7 @@
 
   (let/ec win-game
     (let continue-life ()
-      (define pc-life-end-status (continue-a-life))
+      (define pc-life-end-status (resolve-life 'continue))
       (when (eq? pc-life-end-status 'pc-dead)
 
         (let end-of-life-menu ([verbosity 'verbose])
@@ -77,7 +77,7 @@
   (on-begin-playthrough)
   (let/ec win-game
     (let begin-new-life ()
-      (define pc-life-end-status (resolve-a-life))
+      (define pc-life-end-status (resolve-life 'begin))
       (when (eq? pc-life-end-status 'pc-dead)
 
         (let end-of-life-menu ([verbosity 'verbose])

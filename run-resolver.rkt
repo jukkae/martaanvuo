@@ -38,6 +38,10 @@
   (narrate-begin-run)
   )
 
+(define (on-continue-run)
+  (displayln "on-continue-run")
+  )
+
 (define (narrate-end-run exit-status)
   (info-card
    (list
@@ -54,39 +58,28 @@
   (wait-for-confirm))
 
 ; engine / run-resolver
-(define (resolve-a-run)
-  (on-begin-run)
+(define (resolve-run mode)
+  (if (eq? mode 'continue)
+      (on-continue-run)
+      (on-begin-run))
+  
   (define run-exit-status
     (let/ec end-run
-      (let loop ()
-        (define round-exit-status (resolve-round))
+
+      
+      (when (eq? mode 'continue)
+        (define first-round-exit-status (resolve-round 'continue))
         ; end run?
-        (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
-        (when (eq? round-exit-status 'win-game) (end-run 'win-game))
-        (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
+        (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
+        (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
 
         ; continue
-        (when (eq? round-exit-status 'next-chapter) (next-chapter!))
-        (loop))))
-  (on-end-run run-exit-status)
-  run-exit-status)
-
-; TODO: DO THIS TO LIFE AND MAIN RESOLVERS
-(define (continue-run)
-  (define run-exit-status
-    (let/ec end-run
-      (define first-round-exit-status (continue-round))
-      ; end run?
-      (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
-      (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
-      (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
-
-      ; continue
-      (when (eq? first-round-exit-status 'next-chapter) (next-chapter!))
+        (when (eq? first-round-exit-status 'next-chapter) (next-chapter!)))
 
       
       (let loop ()
-        (define round-exit-status (resolve-round))
+        (define round-exit-status (resolve-round 'begin))
         ; end run?
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))
@@ -97,5 +90,4 @@
         
         (loop))))
   (on-end-run run-exit-status)
-  run-exit-status
-  )
+  run-exit-status)

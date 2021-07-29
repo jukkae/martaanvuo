@@ -382,10 +382,18 @@
 
 ; engine / round resolver
 ; MAIN RESOLVER ENTRYPOINT
-(define (resolve-round)
-  (on-begin-round)
+(define (resolve-round mode)
+
+  ; assume 'begin, be explicit about 'continue
+  (if (eq? mode 'continue)
+      (on-continue-round)
+      (on-begin-round))
+  
   (enqueue-npc-actions)
-  (describe-situation)
+  
+  (if (eq? mode 'continue)
+      (redescribe-situation)
+      (describe-situation))
   
   (save)
   (let/ec end-round-early-with-round-status
@@ -422,8 +430,7 @@
 ; TODO: duplication bad, deal with this asap!
 ; TODO: THIS LOOPS ON ITSELF, NEXT ROUND SHOULD BE NORMAL
 ; (and ditto for lives and runs)
-(define (continue-round)
-  (on-continue-round)
+#;(define (continue-round)
   (enqueue-npc-actions)
   (redescribe-situation)
   
