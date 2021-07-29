@@ -39,7 +39,7 @@
   )
 
 (define (on-continue-run)
-  (displayln "on-continue-run")
+  '()
   )
 
 (define (narrate-end-run exit-status)

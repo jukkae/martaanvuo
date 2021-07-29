@@ -28,14 +28,14 @@
   (case mode
     ['begin
      (newline)
-     (displayln "Your progress is saved automatically.")]
+     (displayln "Progress is saved automatically.")]
     
     ['continue
-     (newline)
-     (displayln "Loading stored progress.")
      (define input-file (open-input-file "save.txt"))
      (define situation (read input-file))
-     (load-situation situation)])
+     (load-situation situation)
+     (newline)
+     (displayln "Progress loaded.")])
   
   (title)
 
