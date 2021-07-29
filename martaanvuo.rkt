@@ -28,9 +28,7 @@
   (case mode
     ['begin
      (newline)
-     (displayln "Begin a new game.")
-     (newline)
-     (displayln "Your progress is automatically stored when you make choices.")]
+     (displayln "Your progress is saved automatically.")]
     
     ['continue
      (newline)

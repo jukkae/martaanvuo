@@ -146,7 +146,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or it might be the one that kills her. She chuckles.")])
+     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or this might be the one that fucks her up, does her in.")])
   
 
   (define body
