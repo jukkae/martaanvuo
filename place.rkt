@@ -13,7 +13,7 @@
 (serializable-struct
  place
  ([id #:mutable] ; has to be mutable for serialization reasons
-  [routes #:mutable]
+  [routes #:mutable] ; TODO: should this be called neighbors and include both routes and places? -> simple adjacencies wouldn't require routes. OTOH, resolvers now assume routes
   [type #:mutable] ; has to be mutable for serialization reasons
   [features #:mutable]
   [actors #:mutable]

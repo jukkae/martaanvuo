@@ -132,8 +132,6 @@
 ; internal
 (define (get-location-short-description location)
   (define name (get-location-name-from-location location))
-  (displayln "HELLO")
-  (displayln name)
   (define features-str
     ; Disabled for now, just do empty string
     #;(cond ((not (null? (location-features location)))
