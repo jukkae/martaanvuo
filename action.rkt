@@ -14,7 +14,7 @@
                       [duration #:mutable]
                       target
                       tags
-                      details)
+                      [details #:mutable])
                      #:constructor-name action*
 
                      )
@@ -31,6 +31,11 @@
 (define (visible-in-combat? action)
   (if (or (member 'combat (action-tags action))
           (member 'always (action-tags action)))
+      #t
+      #f))
+
+(define (pending? action)
+  (if (member 'pending (action-details action))
       #t
       #f))
 
