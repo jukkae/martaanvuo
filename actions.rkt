@@ -264,10 +264,10 @@
         (for/list ([neighbor (location-neighbors (current-location))])
         
           (make-choice
-           'go-to-location
+           'traverse
            (get-go-to-text (current-location) neighbor) 
            (λ () (make-action
-                  #:symbol 'go-to-location
+                  #:symbol 'traverse
                   #:actor (situation-pc *situation*)
                   #:duration 100
                   #:target neighbor

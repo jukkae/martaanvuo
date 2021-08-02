@@ -207,7 +207,7 @@
   (set! action-queue '())
   #;(repeat-last-paragraph)
   #;(when (not (null? (situation-current-fragment-number *situation*)))
-    (current-fragment-on-begin-round!))
+      (current-fragment-on-begin-round!))
   )
 
 ; engine / round resolver / -> ai?
@@ -406,39 +406,39 @@
 ; TODO: THIS LOOPS ON ITSELF, NEXT ROUND SHOULD BE NORMAL
 ; (and ditto for lives and runs)
 #;(define (continue-round)
-  (enqueue-npc-actions)
-  (redescribe-situation)
+    (enqueue-npc-actions)
+    (redescribe-situation)
   
-  (let/ec end-round-early-with-round-status
-    (define pc-action (get-next-pc-action))
+    (let/ec end-round-early-with-round-status
+      (define pc-action (get-next-pc-action))
     
-    (cond ((eq? pc-action 'end-round-early)
-           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
-           (end-round-early-with-round-status 'ok))
-          ((eq? pc-action 'end-chapter)
-           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
-           (next-chapter!)
-           (end-round-early-with-round-status 'ok))
-          (else
+      (cond ((eq? pc-action 'end-round-early)
+             (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+             (end-round-early-with-round-status 'ok))
+            ((eq? pc-action 'end-chapter)
+             (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+             (next-chapter!)
+             (end-round-early-with-round-status 'ok))
+            (else
 
-           (describe-pc-intention pc-action)
+             (describe-pc-intention pc-action)
   
            
 
-           (define round-exit-status 'ok)
-           (cond ((initiative-based-resolution? pc-action)
-                  (add-to-action-queue pc-action)
-                  (update-npc-reactions pc-action)
-                  (sort-action-queue)
-                  (resolve-turns!))
-                 (else
-                  (define pc-action-result (resolve-pc-action! pc-action))
-                  (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
-                  (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
-           (on-end-round)
-           (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
-           round-exit-status
-           ))))
+             (define round-exit-status 'ok)
+             (cond ((initiative-based-resolution? pc-action)
+                    (add-to-action-queue pc-action)
+                    (update-npc-reactions pc-action)
+                    (sort-action-queue)
+                    (resolve-turns!))
+                   (else
+                    (define pc-action-result (resolve-pc-action! pc-action))
+                    (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+                    (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+             (on-end-round)
+             (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
+             round-exit-status
+             ))))
 
 
 ; engine / round-resolver at first; some of the stuff should go to action definitions etc
@@ -480,41 +480,47 @@
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
                          ((eq? (action-symbol action) 'go-to-location)
+                          (describe-begin-go-to-action action))
+                         ((eq? (action-symbol action) 'traverse)
                           (describe-begin-go-to-action action)))
-                   
-                   ; begin advancing time
-                   (define timeline
-                     (advance-time-until-next-interesting-event! (action-duration action)))
-                   (set! elapsed-time (timeline-duration timeline))
 
-                   ; display events
-                   (define
-                     displayable-events
-                     (map
-                      (λ (event)
-                        (list
-                         (string-append " " (number->string (event-at event)) " ")
-                         (string-append " " (symbol->string (event-type event)) " ")
-                         (string-append " " (~s (event-details event)) " ")
-                         (string-append " "
-                                        (if (event-interrupting? event)
-                                            "yes"
-                                            "no")
-                                        " ")
-                         ))
-                      (timeline-events timeline)))
-                   #;(info-card
-                      (append
-                       (list (list " at " " type " " details " " interrupts action? "))
-                       displayable-events)
-                      (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
-                   (for ([event (timeline-events timeline)])
-                     (narrate-event event))
+                   ; TODO: think about how this actually interacts with elapse-time;
+                   ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
+                   (when (not (eq? (action-symbol action) 'traverse))
+                     ; begin advancing time
+                     (define timeline
+                       (advance-time-until-next-interesting-event! (action-duration action)))
+                     (set! elapsed-time (timeline-duration timeline))
 
-                   ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-                   (when (eq? (timeline-metadata timeline) 'interrupted)
-                     (handle-pc-action-interrupted! timeline)
-                     (return 'interrupted))
+                     ; display events
+                     (define
+                       displayable-events
+                       (map
+                        (λ (event)
+                          (list
+                           (string-append " " (number->string (event-at event)) " ")
+                           (string-append " " (symbol->string (event-type event)) " ")
+                           (string-append " " (~s (event-details event)) " ")
+                           (string-append " "
+                                          (if (event-interrupting? event)
+                                              "yes"
+                                              "no")
+                                          " ")
+                           ))
+                        (timeline-events timeline)))
+                     #;(info-card
+                        (append
+                         (list (list " at " " type " " details " " interrupts action? "))
+                         displayable-events)
+                        (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+                     (for ([event (timeline-events timeline)])
+                       (narrate-event event))
+
+                     ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
+                     (when (eq? (timeline-metadata timeline) 'interrupted)
+                       (handle-pc-action-interrupted! timeline)
+                       (return 'interrupted))
+                     )
     
     
                    ; should check results maybe here?
@@ -522,6 +528,26 @@
                    
                    ; do these AFTER action resolution
                    (cond ((eq? (action-symbol action) 'go-to-location)
+                          (define next-location (action-target action))
+                          (move-pc-to-location! next-location)
+
+                          ; TODO where should this happen really, and how??
+                          (when (eq? (location-type (current-location)) 'crematory)
+                            (go-to-story-fragment 11))
+                          (when (eq? (location-type (current-location)) 'swamp)
+                            (go-to-story-fragment 20))
+                          #;(when (eq? (location-type (current-location)) 'workshop)
+                              (go-to-story-fragment 200))
+                          (when (eq? (location-type (current-location)) 'workshop)
+                            (go-to-story-fragment 300))
+                          (describe-finish-go-to-action action)
+                          (display-location-info-card (current-location))
+                          (when (not (null? (location-items (action-target action))))
+                            (pick-up-items!))
+                          ))
+
+                   ; TODO duplication, clean up
+                   (cond ((eq? (action-symbol action) 'traverse)
                           (define next-location (action-target action))
                           (move-pc-to-location! next-location)
 
