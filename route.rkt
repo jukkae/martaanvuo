@@ -25,24 +25,29 @@
   [actors #:mutable]))
 
 (define (get-traverse-text route starting-location)
-  (define direction
-    (cond ((eq? (place-id starting-location)
-                (place-id (route-a route)))
-           'a-to-b)
-          ((eq? (place-id starting-location)
-                (place-id (route-b route)))
-           'b-to-a)))
 
-  ; (string-append "Go back to " to-name ".")
-  (case direction
-    ['a-to-b
-     (define from-name (get-location-name-from-location (route-a route)))
-     (define to-name (get-location-name-from-location (route-b route)))
-     (string-append "Go to " to-name ".")]
-    ['b-to-a
-     (define from-name (get-location-name-from-location (route-b route)))
-     (define to-name (get-location-name-from-location (route-a route)))
-     (string-append "Go to " to-name ".")]))
+  (cond ((route-fully-known? route)
+  
+         (define direction
+           (cond ((eq? (place-id starting-location)
+                       (place-id (route-a route)))
+                  'a-to-b)
+                 ((eq? (place-id starting-location)
+                       (place-id (route-b route)))
+                  'b-to-a)))
+
+         ; (string-append "Go back to " to-name ".")
+         (case direction
+           ['a-to-b
+            (define from-name (get-location-name-from-location (route-a route)))
+            (define to-name (get-location-name-from-location (route-b route)))
+            (string-append "Go to " to-name ".")]
+           ['b-to-a
+            (define from-name (get-location-name-from-location (route-b route)))
+            (define to-name (get-location-name-from-location (route-a route)))
+            (string-append "Go to " to-name ".")]))
+        (else
+         "ROUTE PARTLY UNKNOWN")))
 
 (define (set-route-endpoint-visited! route location)
   (define endpoint

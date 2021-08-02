@@ -89,10 +89,16 @@
   (set-place-features! location (remove feature (place-features location))))
 
 (define (location-has-tag? location tag)
-  (memq tag (place-tags location)))
+  (cond ((route? location)
+         #f)
+        ((place? location)
+         (memq tag (place-tags location)))))
 
 (define (location-has-feature? location feature)
-  (memq feature (place-features location)))
+  (cond ((route? location)
+         #f)
+        ((place? location)
+         (memq feature (place-features location)))))
 
 ; API
 (define (location-is? identifier location)
