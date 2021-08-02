@@ -13,6 +13,7 @@
 (require "pc.rkt")
 (require "place.rkt")
 (require "quest.rkt")
+(require "route.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
@@ -438,7 +439,14 @@
   (remove-actor-from-its-current-location! (situation-pc *situation*))
   (set-actor-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*))
-  (set-place-visited?! location #t))
+  (when (place? location)
+    (set-place-visited?! location #t)
+    (for ([route (place-routes location)])
+      (when #t ; if not hidden
+        (set-route-endpoint-visited! route location)
+        ))
+      
+      ))
 
 
 ; infrastructure, not scripting api
