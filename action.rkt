@@ -35,7 +35,8 @@
       #f))
 
 (define (pending? action)
-  (if (member 'pending (action-details action))
+  (if (or (member 'pending (action-details action))
+          (eq? 'pending (action-details action)))
       #t
       #f))
 
