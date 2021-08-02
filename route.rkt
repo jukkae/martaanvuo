@@ -43,10 +43,15 @@
          ['magpie-hill "Magpie and the rocky slope."]
          ['martaanvuo-swamp "Ants and the swamp."]
          [else (string-append "< unknown location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
+      ['magpie-hill
+       (case (location-id (route-other-end-from route start-location))
+         ['perimeter "Rocky stairs."]
+         ['martaanvuo-swamp "Down, toward the swamp."]
+         [else (string-append "< unknown to-location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
       [else
-       (displayln "get-route-short-description: unknown location id:")
+       (displayln "get-route-short-description: unknown start location id:")
        (displayln (location-id start-location))
-       "< unknown location >"]))
+       (string-append "< unknown start location >" (symbol->string (location-id start-location)))]))
   
   (cond ((route-fully-known? route)
          ; (string-append "Go back to " to-name ".")
