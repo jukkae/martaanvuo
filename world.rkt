@@ -112,8 +112,8 @@
 
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 (define (make-path-between location-a location-b [hidden? #f])
-  (set-location-neighbors! location-a (append-element (location-neighbors location-a) location-b))
-  (set-location-neighbors! location-b (append-element (location-neighbors location-b) location-a))
+  (set-location-routes! location-a (append-element (location-routes location-a) location-b))
+  (set-location-routes! location-b (append-element (location-routes location-b) location-a))
   (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)

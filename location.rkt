@@ -13,7 +13,7 @@
 (serializable-struct
  location
  ([id #:mutable] ; has to be mutable for serialization reasons
-  [neighbors #:mutable]
+  [routes #:mutable]
   [type #:mutable] ; has to be mutable for serialization reasons
   [features #:mutable]
   [actors #:mutable]
@@ -42,7 +42,7 @@
 
 (define (make-location
          #:id [id (get-numeric-id)]
-         #:neighbors [neighbors '()]
+         #:routes [routes '()]
          #:type [type '()]
          #:features [features '()]
          #:actors [actors '()]
@@ -50,7 +50,7 @@
          #:actions-provided [actions-provided '()]
          #:tags [tags '()])
   (set! *number-of-locations* (add1 *number-of-locations*))
-  (location* id neighbors type features actors #f items actions-provided tags))
+  (location* id routes type features actors #f items actions-provided tags))
 
 (define (add-actor-to-location! location actor)
   (set-location-actors! location (cons actor (location-actors location))))

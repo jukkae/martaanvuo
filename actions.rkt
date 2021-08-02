@@ -13,6 +13,7 @@
 (require "item.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "route.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
 (require "utils.rkt")
@@ -262,16 +263,16 @@
         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
                '()))
       
-        (for/list ([neighbor (location-neighbors (current-location))])
+        (for/list ([route (location-routes (current-location))])
         
           (make-choice
            'traverse
-           (get-go-to-text (current-location) neighbor) 
+           (get-traverse-text route) 
            (λ () (make-action
                   #:symbol 'traverse
                   #:actor (situation-pc *situation*)
                   #:duration 100
-                  #:target neighbor
+                  #:target route
                   #:tags '(downtime))))))
 
       (when (eq? (location-type (current-location)) 'swamp)
