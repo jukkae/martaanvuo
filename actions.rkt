@@ -244,7 +244,8 @@
 
     (filter
      (λ (x) (show-based-on-pending-choice? x))
-     (list
+     (condense
+      (list
     
       (when (not (null? (situation-pending-action *situation*)))
         (choice
@@ -389,7 +390,7 @@
          #:duration 0
          #:tags '(downtime)))
 
-      )))
+      ))))
   
   (define condensed (condense all-actions))
   condensed)
