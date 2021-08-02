@@ -13,7 +13,8 @@
 
 (lazy-require
  ["place.rkt"
-  (place-id)])
+  (place-id
+   place-visited?)])
 
 (serializable-struct
  route
@@ -57,10 +58,32 @@
     ['b (set-route-details! route
                             (append-element (route-details route) 'b-visited))]))
 
+(define (route-traversed? route)
+  (memq 'traversed (route-details route)))
+
+(define (route-a-visited? route)
+  (memq 'a-visited (route-details route)))
+
+(define (route-b-visited? route)
+  (memq 'b-visited (route-details route)))
+
+(define (route-place-known? route place)
+  (define endpoint
+    (cond ((eq? (place-id place)
+                (place-id (route-a route)))
+           'a)
+          ((eq? (place-id place)
+                (place-id (route-b route)))
+           'b)))
+  (case endpoint
+    ['a (place-visited? (route-a route))]
+    ['b (place-visited? (route-b route))])
+  )
+
 (define (set-route-traversed! route)
   (set-route-details! route (append-element (route-details route) 'traversed)))
 
 (define (route-fully-known? route)
-  (and (memq 'a-visited (route-details route))
-       (memq 'b-visited (route-details route))
-       (memq 'traversed (route-details route))))
+  (and (route-a-visited? route)
+       (route-b-visited? route)
+       (route-traversed? route)))
