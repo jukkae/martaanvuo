@@ -7,6 +7,7 @@
 (require "actor.rkt")
 (require "item.rkt")
 (require "location.rkt")
+(require "route.rkt")
 (require "utils.rkt")
 
 (serializable-struct
@@ -110,10 +111,14 @@
    #:id 'martaanvuo-source))
 
 
+(define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 (define (make-path-between location-a location-b [hidden? #f])
-  (set-location-routes! location-a (append-element (location-routes location-a) location-b))
-  (set-location-routes! location-b (append-element (location-routes location-b) location-a))
+  (set! *number-of-routes* (add1 *number-of-routes*))
+  (define details '())
+  (define r (route *number-of-routes* location-a location-b details))
+  (set-location-routes! location-a (append-element (location-routes location-a) r))
+  (set-location-routes! location-b (append-element (location-routes location-b) r))
   (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)

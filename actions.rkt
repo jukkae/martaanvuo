@@ -267,7 +267,7 @@
         
           (make-choice
            'traverse
-           (get-traverse-text route) 
+           (get-traverse-text route (current-location)) 
            (λ () (make-action
                   #:symbol 'traverse
                   #:actor (situation-pc *situation*)

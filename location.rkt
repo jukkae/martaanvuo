@@ -119,17 +119,6 @@
                  features-str)
   )
 
-(define (get-go-to-text from to)
-  (cond ((location-visited? to) ; TODO: This should be stored in the route, rather
-         (define from-name (get-location-name-from-location from))
-         (define to-name (get-location-name-from-location to))
-         (string-append "Go back to " to-name "."))
-        (else
-         (define from-name (get-location-name-from-location from))
-         (define to-name (get-location-name-from-location to))
-         (string-append "Go to " to-name ".")))
-  )
-
 ; TODO: Where does this belong?
 (define (display-location-info-card location)
   (define id (location-id location))

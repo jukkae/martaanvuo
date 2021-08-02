@@ -7,13 +7,14 @@
 (require "action.rkt")
 (require "io.rkt")
 (require "location.rkt")
+(require "route.rkt")
 
 (lazy-require ["situation.rkt"
                (current-location)])
 
 (define (describe-begin-go-to-action action)
   (define from (current-location))
-  (define to (action-target action))
+  (define to (route-b (action-target action))) ; TODO FIXME
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-begin-go-to-action))
         (else
@@ -49,7 +50,7 @@
 
 (define (describe-finish-go-to-action action)
   (define from (current-location))
-  (define to (action-target action))
+  (define to (route-b (action-target action)))
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-finish-go-to-action))
         (else
