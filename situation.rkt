@@ -11,6 +11,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "place.rkt")
 (require "quest.rkt")
 (require "stance.rkt")
 (require "status.rkt")
@@ -437,14 +438,14 @@
   (remove-actor-from-its-current-location! (situation-pc *situation*))
   (set-actor-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*))
-  (set-location-visited?! location #t))
+  (set-place-visited?! location #t))
 
 
 ; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (remove-stance! actor)
-  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
+  (remove-actor-from-location! (current-location) actor)
   (define corpse (cons 'corpse "Corpse (TODO)"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   #;(displayln corpse))
@@ -520,7 +521,7 @@
 ; api?
 (define (pick-up-items!)
   (paragraph "Otava picks up everything there is to pick up.")
-  (define all-items (location-items (current-location)))
+  (define all-items (place-items (current-location)))
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))

@@ -14,7 +14,8 @@
  ([id #:mutable] ; mutable for s11n, but should not be mutated
   [a #:mutable]
   [b #:mutable]
-  [details #:mutable]))
+  [details #:mutable]
+  [actors #:mutable]))
 
 (define (get-traverse-text route starting-location)
   
