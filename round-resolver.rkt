@@ -23,6 +23,7 @@
 (require "locations.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
+(require "route.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -549,6 +550,7 @@
 
                    ; TODO duplication, clean up
                    (cond ((eq? (action-symbol action) 'traverse)
+                          (set-actor-location! (pc) (action-target action))
                           (when (not (pending? action))
                             (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
 
@@ -641,11 +643,18 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type  (cond ((eq? (location-type (current-location)) 'ridges)
+         (define
+           encounter-type
+           (cond ((location? (current-location))
+                (cond ((eq? (location-type (current-location)) 'ridges)
                                         'blindscraper)
                                        ((eq? (location-type (current-location)) 'valleys)
                                         'grabberkin)
                                        (else (take-random encounter-types))))
+               ((route? (current-location))
+                'blindscraper)) ; TODO this should be gotten from content tables
+
+           )
 
          (case encounter-type
            ['grabberkin
