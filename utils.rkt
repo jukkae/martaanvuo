@@ -35,6 +35,12 @@
       (set! result #f)))
   result)
 
+(define (condense lst)
+  (filter
+   (λ (x) (and (not (null? x))
+               (not (void? x))))
+   (flatten lst)))
+
 ; DSL macros
 (define-syntax-rule
   (proc body ...)
