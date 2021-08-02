@@ -40,7 +40,9 @@
     (case (location-id start-location)
       ['perimeter
        (case (location-id (route-other-end-from route start-location))
-         ['magpie-hill "magpie hill"])]
+         ['magpie-hill "Magpie and the rocky slope."]
+         ['martaanvuo-swamp "Ants and the swamp."]
+         [else (string-append "< unknown location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
       [else
        (displayln "get-route-short-description: unknown location id:")
        (displayln (location-id start-location))
