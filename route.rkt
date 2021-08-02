@@ -9,7 +9,8 @@
 
 (lazy-require
  ["location.rkt"
-  (get-location-name-from-location)])
+  (get-location-name-from-location
+   location-id)])
 
 (lazy-require
  ["place.rkt"
@@ -24,30 +25,54 @@
   [details #:mutable]
   [actors #:mutable]))
 
-(define (get-traverse-text route starting-location)
 
-  (cond ((route-fully-known? route)
+
+(define (get-traverse-text route start-location)
+  (define direction
+    (cond ((eq? (place-id start-location)
+                (place-id (route-a route)))
+           'a-to-b)
+          ((eq? (place-id start-location)
+                (place-id (route-b route)))
+           'b-to-a)))
+
+  (define (get-route-short-description)
+    (case (location-id start-location)
+      ['perimeter
+       (case (location-id (route-other-end-from route start-location))
+         ['magpie-hill "magpie hill"])]
+      [else
+       (displayln "get-route-short-description: unknown location id:")
+       (displayln (location-id start-location))
+       "< unknown location >"]))
   
-         (define direction
-           (cond ((eq? (place-id starting-location)
-                       (place-id (route-a route)))
-                  'a-to-b)
-                 ((eq? (place-id starting-location)
-                       (place-id (route-b route)))
-                  'b-to-a)))
-
+  (cond ((route-fully-known? route)
          ; (string-append "Go back to " to-name ".")
          (case direction
            ['a-to-b
-            (define from-name (get-location-name-from-location (route-a route)))
             (define to-name (get-location-name-from-location (route-b route)))
             (string-append "Go to " to-name ".")]
            ['b-to-a
-            (define from-name (get-location-name-from-location (route-b route)))
             (define to-name (get-location-name-from-location (route-a route)))
             (string-append "Go to " to-name ".")]))
         (else
-         "ROUTE PARTLY UNKNOWN")))
+         (get-route-short-description))))
+
+(define (route-other-end-from route start-location)
+  (define start
+    (cond ((eq? (place-id start-location)
+                (place-id (route-a route)))
+           'a)
+          ((eq? (place-id start-location)
+                (place-id (route-b route)))
+           'b)))
+  (define endpoint
+    (case start
+    ['a (route-b route)]
+    ['b (route-a route)]))
+  endpoint)
+
+
 
 (define (set-route-endpoint-visited! route location)
   (define endpoint
