@@ -607,7 +607,8 @@
                                      (return 'interrupted)))))
                           
 
-                          (displayln "todo this is broken")
+
+                          (set-route-traversed! (action-target action)) ; I think this should work
                           (define next-location (route-b (action-target action)))
                           (move-pc-to-location! next-location)
 

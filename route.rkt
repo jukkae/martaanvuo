@@ -53,15 +53,17 @@
        (displayln (location-id start-location))
        (string-append "< unknown start location >" (symbol->string (location-id start-location)))]))
   
+
+  
   (cond ((route-fully-known? route)
-         ; (string-append "Go back to " to-name ".")
+         ; Currently, "fully known" implies having been at the other end, fix as needed
          (case direction
            ['a-to-b
             (define to-name (get-location-name-from-location (route-b route)))
-            (string-append "Go to " to-name ".")]
+            (string-append "Go back to " to-name ".")]
            ['b-to-a
             (define to-name (get-location-name-from-location (route-a route)))
-            (string-append "Go to " to-name ".")]))
+            (string-append "Go back to " to-name ".")]))
         (else
          (get-route-short-description))))
 
