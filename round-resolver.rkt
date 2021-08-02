@@ -606,8 +606,9 @@
                                      (handle-pc-action-interrupted! tl)
                                      (return 'interrupted)))))
                           
-                          
-                          (define next-location (action-target action))
+
+                          (displayln "todo this is broken")
+                          (define next-location (route-b (action-target action)))
                           (move-pc-to-location! next-location)
 
                           ; TODO where should this happen really, and how??
