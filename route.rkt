@@ -47,6 +47,7 @@
        (case (location-id (route-other-end-from route start-location))
          ['perimeter "Rocky stairs."]
          ['martaanvuo-swamp "Down, toward the swamp."]
+         ['power-plant-ruins "Decrepit building."]
          [else (string-append "< unknown to-location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
       [else
        (displayln "get-route-short-description: unknown start location id:")
