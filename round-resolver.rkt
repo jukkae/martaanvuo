@@ -550,53 +550,59 @@
                    ; TODO duplication, clean up
                    (cond ((eq? (action-symbol action) 'traverse)
                           (when (not (pending? action))
-                            (define encounter (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
+                            (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
 
                             (displayln "encounter roll: ")
-                            (displayln encounter)
+                            (displayln encounter-roll)
+                            (define encounter-event
+                              (if (< 4 encounter-roll)
+                                  (make-event 'spawn-enemies
+                                              '() ; pack info about enemies / event here
+                                              #t)
+                                  '()))
 
-                            ; create timeline to leverage existing code
-                            (define events
-                              (list
-                               (make-event 'spawn-enemies
-                                           '() ; pack info about enemies / event here
-                                           #t)))
-                            (define metadata 'interrupted)
-                            (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
-                            (define tl (timeline metadata events duration))
+                            (cond ((not (null? encounter-event))
+                                   ; create timeline to leverage existing code
+                                   (define events
+                                     (list
+                                      (make-event 'spawn-enemies
+                                                  '() ; pack info about enemies / event here
+                                                  #t)))
+                                   (define metadata 'interrupted)
+                                   (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
+                                   (define tl (timeline metadata events duration))
 
-                            (set! elapsed-time (timeline-duration tl))
+                                   (set! elapsed-time (timeline-duration tl))
 
-                            ; DUPLICATION, clean up
-                            ; display events
-                            (define
-                              displayable-events
-                              (map
-                               (λ (event)
-                                 (list
-                                  (string-append " " (number->string (event-at event)) " ")
-                                  (string-append " " (symbol->string (event-type event)) " ")
-                                  (string-append " " (~s (event-details event)) " ")
-                                  (string-append " "
-                                                 (if (event-interrupting? event)
-                                                     "yes"
-                                                     "no")
-                                                 " ")
-                                  ))
-                               (timeline-events tl)))
-                            #;(info-card
-                               (append
-                                (list (list " at " " type " " details " " interrupts action? "))
-                                displayable-events)
-                               (string-append "Timeline, duration " (number->string (timeline-duration tl))))
-                            (for ([event (timeline-events tl)])
-                              (narrate-event event))
+                                   ; DUPLICATION, clean up
+                                   ; display events
+                                   (define
+                                     displayable-events
+                                     (map
+                                      (λ (event)
+                                        (list
+                                         (string-append " " (number->string (event-at event)) " ")
+                                         (string-append " " (symbol->string (event-type event)) " ")
+                                         (string-append " " (~s (event-details event)) " ")
+                                         (string-append " "
+                                                        (if (event-interrupting? event)
+                                                            "yes"
+                                                            "no")
+                                                        " ")
+                                         ))
+                                      (timeline-events tl)))
+                                   #;(info-card
+                                      (append
+                                       (list (list " at " " type " " details " " interrupts action? "))
+                                       displayable-events)
+                                      (string-append "Timeline, duration " (number->string (timeline-duration tl))))
+                                   (for ([event (timeline-events tl)])
+                                     (narrate-event event))
 
-                            ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-                            (when (eq? (timeline-metadata tl) 'interrupted)
-                              (handle-pc-action-interrupted! tl)
-                              (return 'interrupted))
-                            )
+                                   ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
+                                   (when (eq? (timeline-metadata tl) 'interrupted)
+                                     (handle-pc-action-interrupted! tl)
+                                     (return 'interrupted)))))
                           
                           
                           (define next-location (action-target action))
