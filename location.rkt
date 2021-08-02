@@ -8,6 +8,8 @@
 (require "actor.rkt")
 (require "action.rkt")
 (require "io.rkt") ; TODO: this is only needed for the info card thingy, which likely belongs somewhere else
+(require "place.rkt")
+(require "route.rkt")
 (require "utils.rkt")
 
 (serializable-struct

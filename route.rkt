@@ -2,9 +2,12 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
 (require racket/serialize)
 
-(require "location.rkt")
+(lazy-require
+ ["location.rkt"
+  (get-location-name-from-location)])
 
 (serializable-struct
  route
