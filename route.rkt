@@ -56,3 +56,11 @@
                             (append-element (route-details route) 'a-visited))]
     ['b (set-route-details! route
                             (append-element (route-details route) 'b-visited))]))
+
+(define (set-route-traversed! route)
+  (set-route-details! route (append-element (route-details route) 'traversed)))
+
+(define (route-fully-known? route)
+  (and (memq 'a-visited (route-details route))
+       (memq 'b-visited (route-details route))
+       (memq 'traversed (route-details route))))
