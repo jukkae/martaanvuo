@@ -260,8 +260,7 @@
             (inflict-condition!
              (action-target action) (condition
                                      'ankle-broken
-                                     "resolve-anklebreaker-action!: details todo"
-                                     (λ () '())))
+                                     "resolve-anklebreaker-action!: details todo"))
             (when critical?
               (inflict-condition!
                target
