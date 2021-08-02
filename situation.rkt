@@ -436,7 +436,8 @@
   #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
   (remove-actor-from-its-current-location! (situation-pc *situation*))
   (set-actor-location! (situation-pc *situation*) location)
-  (add-actor-to-location! location (situation-pc *situation*)))
+  (add-actor-to-location! location (situation-pc *situation*))
+  (set-location-visited?! location #t))
 
 
 ; infrastructure, not scripting api

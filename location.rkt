@@ -17,7 +17,7 @@
   [type #:mutable] ; has to be mutable for serialization reasons
   [features #:mutable]
   [actors #:mutable]
-  [visited #:mutable]
+  [visited? #:mutable]
   [items #:mutable]
   [actions-provided #:mutable]
   [tags #:mutable])
@@ -109,20 +109,26 @@
   (define features-str
     ; Disabled for now, just do empty string
     #;(cond ((not (null? (location-features location)))
-           (cond ((memq 'magpie-effigy (location-features location))
-                  "Magpie Effigy")
-                 (else "Unknown features TODO")))
-          (else ; no features
-           ""))
+             (cond ((memq 'magpie-effigy (location-features location))
+                    "Magpie Effigy")
+                   (else "Unknown features TODO")))
+            (else ; no features
+             ""))
     "")
   (string-append name
                  features-str)
   )
 
 (define (get-go-to-text from to)
-  (define from-name (get-location-name-from-location from))
-  (define to-name (get-location-name-from-location to))
-  (string-append "Go to " to-name "."))
+  (cond ((location-visited? to) ; TODO: This should be stored in the route, rather
+         (define from-name (get-location-name-from-location from))
+         (define to-name (get-location-name-from-location to))
+         (string-append "Go back to " to-name "."))
+        (else
+         (define from-name (get-location-name-from-location from))
+         (define to-name (get-location-name-from-location to))
+         (string-append "Go to " to-name ".")))
+  )
 
 ; TODO: Where does this belong?
 (define (display-location-info-card location)
