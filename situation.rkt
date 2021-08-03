@@ -191,6 +191,20 @@
   
   (string-append "Go back to " (get-location-name-from-location cancel-traverse-endpoint) "."))
 
+(define (get-cancel-and-go-back-destination
+         route
+         pending-action)
+  (define cancel-traverse-direction
+    (if (memq 'b-to-a (action-details pending-action))
+        'a-to-b
+        'b-to-a))
+
+  (define cancel-traverse-endpoint
+    (case cancel-traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+  cancel-traverse-endpoint)
+
 
 ; api
 (define (current-location)

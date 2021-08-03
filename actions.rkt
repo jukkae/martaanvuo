@@ -259,7 +259,14 @@
               (situation-pending-action *situation*)
               (reset-pending-action!)))))
 
+       ; route traversal can be canceled
        (when (route? (current-location))
+         (define destination
+           (get-cancel-and-go-back-destination
+            (current-location)
+            (situation-pending-action *situation*)))
+         (displayln "cancel action destination:")
+         (displayln destination)
          (make-choice
           'cancel
           ; the pending action's direction is needed
@@ -268,7 +275,7 @@
                  #:symbol 'traverse
                  #:actor (situation-pc *situation*)
                  #:duration 100
-                 #:target route
+                 #:target destination
                  #:tags '(downtime)))))
 
        (when (and (not (in-combat?))
