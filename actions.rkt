@@ -258,6 +258,17 @@
              (situation-pending-action *situation*)
              (reset-pending-action!)))))
 
+      (when (route? (current-location))
+        (make-choice
+           'cancel
+           "CANCEL AND GO BACK" 
+           (λ () (make-action
+                  #:symbol 'traverse
+                  #:actor (situation-pc *situation*)
+                  #:duration 100
+                  #:target route
+                  #:tags '(downtime)))))
+
       (when (and (not (in-combat?))
                  (not (location-has-tag? (current-location) 'forbid-simple-exit)))
         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
