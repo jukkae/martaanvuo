@@ -635,7 +635,7 @@
     (define time-left (- (action-duration action) elapsed-time))
     (define pending-action action)
     (set-action-duration! pending-action time-left)
-    (set-action-details! pending-action 'pending)
+    (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
     (set-pending-action! pending-action))
   result
   )

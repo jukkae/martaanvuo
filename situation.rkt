@@ -173,6 +173,24 @@
           "[continue] Search for paths."))
         (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
 
+(define (get-cancel-pending-action-and-go-back-name
+         route
+         pending-action)
+  ; this assumes that pending-action is 'traverse, which might not be the case
+  ;(define end-location (action-target pending-action))
+  ; not very robust... anyhow, cancel direction is opposite to the pending action direction
+  (define cancel-traverse-direction
+    (if (memq 'b-to-a (action-details pending-action))
+        'a-to-b
+        'b-to-a))
+
+  (define cancel-traverse-endpoint
+    (case cancel-traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+  
+  (string-append "Go back to " (get-location-name-from-location cancel-traverse-endpoint) "."))
+
 
 ; api
 (define (current-location)
@@ -446,7 +464,7 @@
         (set-route-endpoint-visited! route location)
         ))
       
-      ))
+    ))
 
 
 ; infrastructure, not scripting api
