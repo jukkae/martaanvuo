@@ -20,7 +20,8 @@
            (route-b (action-target action))) ; TODO FIX DIRECTION
           (else
            (displayln "HELLO FIND ME")
-           (displayln (action-target action)))
+           (displayln (action-target action))
+           (action-target action))
           ))
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-begin-go-to-action))
@@ -57,7 +58,15 @@
 
 (define (describe-finish-go-to-action action)
   (define from (current-location))
-  (define to (route-b (action-target action)))
+
+  (define to
+    (cond ((route? (action-target action))
+           (route-b (action-target action))) ; TODO FIX DIRECTION
+          (else
+           (displayln "HELLO FIND ME")
+           (displayln (action-target action))
+           (action-target action))
+          ))
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-finish-go-to-action))
         (else

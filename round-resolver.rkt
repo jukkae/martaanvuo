@@ -488,7 +488,8 @@
 
                    ; TODO: think about how this actually interacts with elapse-time;
                    ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
-                   (when (not (eq? (action-symbol action) 'traverse))
+                   (when (or (not (eq? (action-symbol action) 'traverse))
+                             (not (eq? (action-symbol action) 'cancel-traverse)))
                      ; begin advancing time
                      (define timeline
                        (advance-time-until-next-interesting-event! (action-duration action)))
@@ -611,6 +612,26 @@
                           (set-route-traversed! (action-target action)) ; I think this should work
                           (define next-location (route-b (action-target action)))
                           (move-pc-to-location! next-location)
+
+                          ; TODO where should this happen really, and how??
+                          (when (eq? (location-type (current-location)) 'crematory)
+                            (go-to-story-fragment 11))
+                          (when (eq? (location-type (current-location)) 'swamp)
+                            (go-to-story-fragment 20))
+                          #;(when (eq? (location-type (current-location)) 'workshop)
+                              (go-to-story-fragment 200))
+                          (when (eq? (location-type (current-location)) 'workshop)
+                            (go-to-story-fragment 300))
+                          (describe-finish-go-to-action action)
+                          (display-location-info-card (current-location))
+                          (when (not (null? (location-items (action-target action))))
+                            (pick-up-items!))
+                          ))
+
+                   ; TODO TRIPLICATION CLEAN THIS SHIT UP
+                   (cond ((eq? (action-symbol action) 'cancel-traverse)
+                         
+                          (move-pc-to-location! (action-target action))
 
                           ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
