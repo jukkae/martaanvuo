@@ -499,8 +499,7 @@
                           ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
                             (go-to-story-fragment 11))
-                          (when (eq? (location-type (current-location)) 'swamp)
-                            (go-to-story-fragment 20))
+                          
                           #;(when (eq? (location-type (current-location)) 'workshop)
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
@@ -581,8 +580,7 @@
                           ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
                             (go-to-story-fragment 11))
-                          (when (eq? (location-type (current-location)) 'swamp)
-                            (go-to-story-fragment 20))
+
                           #;(when (eq? (location-type (current-location)) 'workshop)
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
@@ -602,8 +600,7 @@
                           ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
                             (go-to-story-fragment 11))
-                          (when (eq? (location-type (current-location)) 'swamp)
-                            (go-to-story-fragment 20))
+                          
                           #;(when (eq? (location-type (current-location)) 'workshop)
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
