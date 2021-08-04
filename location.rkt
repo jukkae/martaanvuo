@@ -130,9 +130,7 @@
                (else (symbol->string id))))
 
         ((number? id)
-         "TEST")
-        
-        
+         "id is number, check get-location-name-from-location")
         ))
 
 ; internal

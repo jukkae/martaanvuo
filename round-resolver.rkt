@@ -551,7 +551,7 @@
 
                    ; TODO duplication, clean up
                    (cond ((eq? (action-symbol action) 'traverse)
-                          (set-actor-location! (pc) (action-target action))
+                          (move-pc-to-location! (action-target action))
                           (when (not (pending? action))
                             (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
 
@@ -631,6 +631,7 @@
                    ; TODO TRIPLICATION CLEAN THIS SHIT UP
                    (cond ((eq? (action-symbol action) 'cancel-traverse)
                           (displayln "cancel-traverse")
+                          (reset-pending-action!)
                           (move-pc-to-location! (action-target action))
 
                           ; TODO where should this happen really, and how??

@@ -168,6 +168,25 @@
           "[continue] Continue towards "
           (get-location-name-from-location (action-target pending-action))
           "."))
+        ((eq? (action-symbol pending-action) 'traverse)
+         (define target (action-target pending-action))
+         
+         (define details (action-details pending-action))
+         
+         (define direction
+           (if (memq 'a-to-b details)
+               'a-to-b
+               'b-to-a))
+
+         (define endpoint
+           (case direction
+             ['a-to-b (route-b target)]
+             ['b-to-a (route-a target)]))
+         
+         (string-append
+          "[continue] Continue towards "
+          (get-location-name-from-location endpoint)
+          "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
           "[continue] Search for paths."))
