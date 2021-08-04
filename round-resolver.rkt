@@ -632,13 +632,13 @@
          (define
            encounter-type
            (cond ((location? (current-location))
-                (cond ((eq? (location-type (current-location)) 'ridges)
-                                        'blindscraper)
-                                       ((eq? (location-type (current-location)) 'valleys)
-                                        'grabberkin)
-                                       (else (take-random encounter-types))))
-               ((route? (current-location))
-                'blindscraper)) ; TODO this should be gotten from content tables
+                  (cond ((eq? (location-type (current-location)) 'ridges)
+                         'blindscraper)
+                        ((eq? (location-type (current-location)) 'valleys)
+                         'grabberkin)
+                        (else (take-random encounter-types))))
+                 ((route? (current-location))
+                  'blindscraper)) ; TODO this should be gotten from content tables
 
            )
 
@@ -986,17 +986,17 @@
          #t))) ; mark input as handled
 
 ; dev stuff, player-visible should be called restart, and that should not just remove save file, but, well, restart completely
-(define (delete-progress)
-  (displayln "Really delete progress? [D] to delete, anything else to continue. Remember to restart Martaanvuo after.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "D")
-         (delete-save-file)
-         (paragraph "Progress deleted.")
-         #t)
-        (else
-         (newline)
-         #t))) ; mark input as handled
+#;(define (delete-progress)
+    (displayln "Really delete progress? [D] to delete, anything else to continue. Remember to restart Martaanvuo after.")
+    (define input (wait-for-input))
+    (set! input (string-upcase input))
+    (cond ((equal? input "D")
+           (delete-save-file)
+           (paragraph "Progress deleted.")
+           #t)
+          (else
+           (newline)
+           #t))) ; mark input as handled
 
 (define (restart)
   (displayln "Really restart? [R] to restart, anything else to continue.")
@@ -1020,7 +1020,7 @@
   (displayln "[Menu]")
   (define meta-commands (make-hash))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
-  (hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
+  ;(hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
   (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
   (hash-set! meta-commands "R" (cons "[R]: Restart." restart))

@@ -29,6 +29,8 @@
     ['begin
      (newline)
      (displayln "Progress is saved automatically.")]
+
+    ['restart '()] ; If the player restarts, they should know that progress is saved automatically.
     
     ['continue
      (define input-file (open-input-file "save.txt"))
@@ -41,6 +43,7 @@
 
   (case mode
     ['begin (on-begin-playthrough)]
+    ['restart (on-begin-playthrough)]
     
     ['continue
      (for ([entry (get-log)])
@@ -83,7 +86,7 @@
      (delete-save-file)
      (reset-situation!)
      (displayln "Progress deleted. Restarting.")
-     (resolve-game 'begin)]))
+     (resolve-game 'restart)]))
 
 ; engine / game-resolver?
 (define (begin-session)
