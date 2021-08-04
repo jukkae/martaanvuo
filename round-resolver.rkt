@@ -630,7 +630,7 @@
 
                    ; TODO TRIPLICATION CLEAN THIS SHIT UP
                    (cond ((eq? (action-symbol action) 'cancel-traverse)
-                         
+                          (displayln "cancel-traverse")
                           (move-pc-to-location! (action-target action))
 
                           ; TODO where should this happen really, and how??
@@ -642,7 +642,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (describe-finish-go-to-action action)
+                          (describe-cancel-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))

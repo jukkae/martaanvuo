@@ -72,3 +72,15 @@
         (else
          (paragraph
           "[[finish-go-to description not written yet]"))))
+
+
+(define (describe-perimeter-cancel-traverse-to-action)
+  (paragraph "Otava comes back to the fork in the path somewhere in Perimeter."))
+
+(define (describe-cancel-traverse-action action)
+  (define to (action-target action))
+  (cond ((location-is? 'perimeter to)
+         (describe-perimeter-cancel-traverse-to-action))
+        (else
+         (paragraph
+          "[[finish-go-to description not written yet]"))))
