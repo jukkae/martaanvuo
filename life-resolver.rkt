@@ -21,7 +21,9 @@
       (when (eq? run-exit-status 'end-run)
         (paragraph "But there's still debt to be paid. Otava heads back to Martaanvuo.")
         (wait-for-confirm)
-        (loop)))
+        (loop))
+      (when (eq? run-exit-status 'restart) (end-life 'restart))
+      )
     ))
 
 

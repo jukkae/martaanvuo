@@ -53,6 +53,14 @@
     (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0)))
 ;;; ^^^
 
+(define (reset-situation!)
+  (set! *situation*
+        (let ([new-world (world 0 0)]
+              [pc (make-new-pc)]
+              [quests '()]
+              [persistent-quests '()])
+          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0))))
+
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
 ; - https://docs.racket-lang.org/reference/serialization.html
