@@ -50,6 +50,8 @@
   (case exit-status
     ['end-run
      (paragraph "She's still alive.")]
+    ['restart
+     (paragraph "Otava is left to wander Martaanvuo, bereft of purpose, void of hope, until the end of all eternity.")]
     [else
      (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
 
