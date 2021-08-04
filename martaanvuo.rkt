@@ -50,10 +50,16 @@
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 
+  (define life-resolver-mode
+    (case mode
+      ['begin 'begin]
+      ['restart 'begin]
+      ['continue 'continue]))
+
   (define end-game-status
     (let/ec end-game
       (let begin-new-life ()
-        (define pc-life-end-status (resolve-life mode))
+        (define pc-life-end-status (resolve-life life-resolver-mode))
         (when (eq? pc-life-end-status 'pc-dead)
 
           (let end-of-life-menu ([verbosity 'verbose])
