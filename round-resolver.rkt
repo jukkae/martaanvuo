@@ -450,8 +450,8 @@
 
                    ; TODO: think about how this actually interacts with elapse-time;
                    ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
-                   (when (or (not (eq? (action-symbol action) 'traverse))
-                             (not (eq? (action-symbol action) 'cancel-traverse)))
+                   (when (and (not (eq? (action-symbol action) 'traverse))
+                              (not (eq? (action-symbol action) 'cancel-traverse)))
                      ; begin advancing time
                      (define timeline
                        (advance-time-until-next-interesting-event! (action-duration action)))
@@ -572,7 +572,10 @@
 
 
                           (set-route-traversed! (action-target action)) ; I think this should work
-                          (define next-location (route-b (action-target action)))
+
+                          (define next-location (if (memq 'a-to-b (action-details action))
+                                                    (route-b (action-target action))
+                                                    (route-a (action-target action))))
                           (move-pc-to-location! next-location)
 
                           ; TODO where should this happen really, and how??

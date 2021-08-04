@@ -17,7 +17,9 @@
 
   (define to
     (cond ((route? (action-target action))
-           (route-b (action-target action))) ; TODO FIX DIRECTION
+           (if (memq 'a-to-b (action-details action))
+               (route-b (action-target action))
+               (route-a (action-target action)))) ; TODO FIX DIRECTION
           (else
            (displayln "HELLO FIND ME")
            (displayln (action-target action))
