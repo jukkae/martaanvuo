@@ -11,7 +11,9 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "place.rkt")
 (require "quest.rkt")
+(require "route.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
@@ -50,6 +52,14 @@
         [persistent-quests '()])
     (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0)))
 ;;; ^^^
+
+(define (reset-situation!)
+  (set! *situation*
+        (let ([new-world (world 0 0)]
+              [pc (make-new-pc)]
+              [quests '()]
+              [persistent-quests '()])
+          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0))))
 
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
@@ -166,10 +176,61 @@
           "[continue] Continue towards "
           (get-location-name-from-location (action-target pending-action))
           "."))
+        ((eq? (action-symbol pending-action) 'traverse)
+         (define target (action-target pending-action))
+         
+         (define details (action-details pending-action))
+         
+         (define direction
+           (if (memq 'a-to-b details)
+               'a-to-b
+               'b-to-a))
+
+         (define endpoint
+           (case direction
+             ['a-to-b (route-b target)]
+             ['b-to-a (route-a target)]))
+         
+         (string-append
+          "[continue] Continue towards "
+          (get-location-name-from-location endpoint)
+          "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
           "[continue] Search for paths."))
         (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+
+(define (get-cancel-pending-action-and-go-back-name
+         route
+         pending-action)
+  ; this assumes that pending-action is 'traverse, which might not be the case
+  ;(define end-location (action-target pending-action))
+  ; not very robust... anyhow, cancel direction is opposite to the pending action direction
+  (define cancel-traverse-direction
+    (if (memq 'b-to-a (action-details pending-action))
+        'a-to-b
+        'b-to-a))
+
+  (define cancel-traverse-endpoint
+    (case cancel-traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+  
+  (string-append "Go back to " (get-location-name-from-location cancel-traverse-endpoint) "."))
+
+(define (get-cancel-and-go-back-destination
+         route
+         pending-action)
+  (define cancel-traverse-direction
+    (if (memq 'b-to-a (action-details pending-action))
+        'a-to-b
+        'b-to-a))
+
+  (define cancel-traverse-endpoint
+    (case cancel-traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+  cancel-traverse-endpoint)
 
 
 ; api
@@ -437,14 +498,21 @@
   (remove-actor-from-its-current-location! (situation-pc *situation*))
   (set-actor-location! (situation-pc *situation*) location)
   (add-actor-to-location! location (situation-pc *situation*))
-  (set-location-visited?! location #t))
+  (when (place? location)
+    (set-place-visited?! location #t)
+    (for ([route (place-routes location)])
+      (when #t ; if not hidden
+        (set-route-endpoint-visited! route location)
+        ))
+      
+    ))
 
 
 ; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
   (remove-stance! actor)
-  (set-location-actors! (current-location) (remove actor (location-actors (current-location))))
+  (remove-actor-from-location! (current-location) actor)
   (define corpse (cons 'corpse "Corpse (TODO)"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
   #;(displayln corpse))
@@ -520,7 +588,7 @@
 ; api?
 (define (pick-up-items!)
   (paragraph "Otava picks up everything there is to pick up.")
-  (define all-items (location-items (current-location)))
+  (define all-items (place-items (current-location)))
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))

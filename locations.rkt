@@ -7,13 +7,22 @@
 (require "action.rkt")
 (require "io.rkt")
 (require "location.rkt")
+(require "route.rkt")
 
 (lazy-require ["situation.rkt"
                (current-location)])
 
 (define (describe-begin-go-to-action action)
   (define from (current-location))
-  (define to (action-target action))
+
+  (define to
+    (cond ((route? (action-target action))
+           (route-b (action-target action))) ; TODO FIX DIRECTION
+          (else
+           (displayln "HELLO FIND ME")
+           (displayln (action-target action))
+           (action-target action))
+          ))
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-begin-go-to-action))
         (else
@@ -49,9 +58,29 @@
 
 (define (describe-finish-go-to-action action)
   (define from (current-location))
-  (define to (action-target action))
+
+  (define to
+    (cond ((route? (action-target action))
+           (route-b (action-target action))) ; TODO FIX DIRECTION
+          (else
+           (displayln "HELLO FIND ME")
+           (displayln (action-target action))
+           (action-target action))
+          ))
   (cond ((location-is? 'magpie-hill to)
          (describe-magpie-hill-finish-go-to-action))
+        (else
+         (paragraph
+          "[[finish-go-to description not written yet]"))))
+
+
+(define (describe-perimeter-cancel-traverse-to-action)
+  (paragraph "Otava comes back to the fork in the path somewhere in Perimeter."))
+
+(define (describe-cancel-traverse-action action)
+  (define to (action-target action))
+  (cond ((location-is? 'perimeter to)
+         (describe-perimeter-cancel-traverse-to-action))
         (else
          (paragraph
           "[[finish-go-to description not written yet]"))))

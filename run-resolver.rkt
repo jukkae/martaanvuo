@@ -73,6 +73,7 @@
         (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? first-round-exit-status 'restart) (end-run 'restart))
 
         ; continue
         (when (eq? first-round-exit-status 'next-chapter) (next-chapter!)))
@@ -84,6 +85,7 @@
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? round-exit-status 'restart) (end-run 'restart))
 
         ; continue
         (when (eq? round-exit-status 'next-chapter) (next-chapter!))

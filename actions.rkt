@@ -13,6 +13,7 @@
 (require "item.rkt")
 (require "location.rkt")
 (require "pc.rkt")
+(require "place.rkt")
 (require "route.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
@@ -248,150 +249,177 @@
      (condense
       (list
     
-      (when (not (null? (situation-pending-action *situation*)))
-        (choice
-         (action-symbol (situation-pending-action *situation*))
-         (get-continue-pending-action-name)
+       (when (not (null? (situation-pending-action *situation*)))
+         (choice
+          (action-symbol (situation-pending-action *situation*))
+          (get-continue-pending-action-name)
      
-         (λ ()
-           (begin0
-             (situation-pending-action *situation*)
-             (reset-pending-action!)))))
+          (λ ()
+            (begin0
+              (situation-pending-action *situation*)
+              (reset-pending-action!)))))
 
-      (when (and (not (in-combat?))
-                 (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-        (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
-               '()))
-      
-        (for/list ([route (location-routes (current-location))])
-        
-          (make-choice
-           'traverse
-           (get-traverse-text route) 
-           (λ () (make-action
-                  #:symbol 'traverse
-                  #:actor (situation-pc *situation*)
-                  #:duration 100
-                  #:target route
-                  #:tags '(downtime))))))
-
-      (when (eq? (location-type (current-location)) 'swamp)
-        (list
+       ; route traversal can be canceled
+       (when (route? (current-location))
+         (define destination
+           (get-cancel-and-go-back-destination
+            (current-location)
+            (situation-pending-action *situation*)))
+         (displayln "cancel action destination:")
+         (displayln destination)
          (make-choice
-          'forage
-          (string-append "Forage.")
+          'cancel-traverse
+          ; the pending action's direction is needed
+          (get-cancel-pending-action-and-go-back-name (current-location) (situation-pending-action *situation*)) 
           (λ () (make-action
-                 #:symbol 'forage
+                 #:symbol 'cancel-traverse
                  #:actor (situation-pc *situation*)
                  #:duration 100
-                 #:tags '(downtime))))))
+                 #:target destination
+                 #:tags '(downtime)))))
 
-      (for/list ([action (location-actions-provided (current-location))])
-        (case action
-          ['search-for-paths
+       (when (and (not (in-combat?))
+                  (not (location-has-tag? (current-location) 'forbid-simple-exit)))
+         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+                '()))
+      
+         (for/list ([route (location-routes (current-location))])
+
+           (define direction
+             (cond ((eq? (place-id (current-location))
+                         (place-id (route-a route)))
+                    'a-to-b)
+                   ((eq? (place-id (current-location))
+                         (place-id (route-b route)))
+                    'b-to-a)))
            (make-choice
-            'search-for-paths
-            "Search for paths."
+            'traverse
+            (get-traverse-text route (current-location)) 
             (λ () (make-action
-                   #:symbol 'search-for-paths
+                   #:symbol 'traverse
                    #:actor (situation-pc *situation*)
                    #:duration 100
-                   #:tags '(downtime))))]
-          [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
+                   #:target route
+                   #:tags '(downtime)
+                   #:details (list direction))))))
 
+       (when (eq? (location-type (current-location)) 'swamp)
+         (list
+          (make-choice
+           'forage
+           (string-append "Forage.")
+           (λ () (make-action
+                  #:symbol 'forage
+                  #:actor (situation-pc *situation*)
+                  #:duration 100
+                  #:tags '(downtime))))))
 
-      (filter
-       (λ (x) (and (not (null? x))
-                   (not (void? x))))
-       (for/list ([feature (location-features (current-location))])
-         (case feature
-           ['hartmann-device
+       (for/list ([action (location-actions-provided (current-location))])
+         (case action
+           ['search-for-paths
             (make-choice
-             'turn-on-device
-             "Turn on Hartmann Device."
-             (λ ()
-               (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
-               (end-game)))]
+             'search-for-paths
+             "Search for paths."
+             (λ () (make-action
+                    #:symbol 'search-for-paths
+                    #:actor (situation-pc *situation*)
+                    #:duration 100
+                    #:tags '(downtime))))]
+           [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
 
-           ['locked-door
-            (list
-             (when (and (pc-has-item? 'revolver)
-                        (pc-has-ammo-left?))
-               (displayln "LOCK")
-               (make-choice
-                'shoot-the-lock
-                "Shoot the lock."
-                (λ ()
-                  (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                  (displayln "TODO: Fix this after location rewrite")
-                  #;(set-location-neighbors!
-                     ruins
-                     (append-element
-                      (location-neighbors ruins)
-                      cache))
-                  (set-location-features! ; TODO should ofc check location etc
-                   power-plant-ruins
-                   '())
+
+       (filter
+        (λ (x) (and (not (null? x))
+                    (not (void? x))))
+        (for/list ([feature (location-features (current-location))])
+          (case feature
+            ['hartmann-device
+             (make-choice
+              'turn-on-device
+              "Turn on Hartmann Device."
+              (λ ()
+                (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
+                (end-game)))]
+
+            ['locked-door
+             (list
+              (when (and (pc-has-item? 'revolver)
+                         (pc-has-ammo-left?))
+                (displayln "LOCK")
+                (make-choice
+                 'shoot-the-lock
+                 "Shoot the lock."
+                 (λ ()
+                   (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                   (displayln "TODO: Fix this after location rewrite")
+                   #;(set-location-neighbors!
+                      ruins
+                      (append-element
+                       (location-neighbors ruins)
+                       cache))
+                   (set-location-features! ; TODO should ofc check location etc
+                    power-plant-ruins
+                    '())
                  
-                  (make-action
-                   #:symbol 'skip
-                   #:actor (situation-pc *situation*)
-                   #:duration 0
-                   #:tags '(downtime)))))
-             (when (and (pc-has-item? 'bolt-cutters))
-               (make-choice
-                'cut-the-lock
-                "Cut the lock with bolt cutters."
-                (λ ()
-                  (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
-                  (displayln "TODO: Fix this too")
-                  #;(set-location-neighbors!
-                     ruins
-                     (append-element
-                      (location-neighbors ruins)
-                      cache))
-                  (set-location-features! ; TODO should ofc check location etc
-                   power-plant-ruins
-                   '())
+                   (make-action
+                    #:symbol 'skip
+                    #:actor (situation-pc *situation*)
+                    #:duration 0
+                    #:tags '(downtime)))))
+              (when (and (pc-has-item? 'bolt-cutters))
+                (make-choice
+                 'cut-the-lock
+                 "Cut the lock with bolt cutters."
+                 (λ ()
+                   (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
+                   (displayln "TODO: Fix this too")
+                   #;(set-location-neighbors!
+                      ruins
+                      (append-element
+                       (location-neighbors ruins)
+                       cache))
+                   (set-location-features! ; TODO should ofc check location etc
+                    power-plant-ruins
+                    '())
                  
-                  (make-action
-                   #:symbol 'skip
-                   #:actor (situation-pc *situation*)
-                   #:duration 0
-                   #:tags '(downtime))))))]
+                   (make-action
+                    #:symbol 'skip
+                    #:actor (situation-pc *situation*)
+                    #:duration 0
+                    #:tags '(downtime))))))]
 
-           ['magpie-effigy
-            (make-choice
-             'follow-the-magpie
-             "Follow the magpie's call"
-             (λ ()
-               (paragraph "There is something compelling in the sound, and Otava's feet take her deeper in the dense fog of the monochrome forest on the malevolent hilltop.")
-               (go-to-story-fragment 20)
-               'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+            ['magpie-effigy
+             (make-choice
+              'follow-the-magpie
+              "Follow the magpie's call"
+              (λ ()
+                (paragraph "There is something compelling in the sound, and Otava's feet take her deeper in the dense fog of the monochrome forest on the malevolent hilltop.")
+                (go-to-story-fragment 20)
+                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
-            ]
+             ]
            
-           [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
+            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
-      (when (eq? (location-type (current-location)) 'spring)
-        (make-choice
-         'dive-in-spring
-         "Dive in the spring."
-         (λ () (make-action
-                #:symbol 'win-game
-                #:actor (situation-pc *situation*)
-                #:duration 0
-                #:tags '(downtime)))))
+       (when (eq? (location-type (current-location)) 'spring)
+         (make-choice
+          'dive-in-spring
+          "Dive in the spring."
+          (λ () (make-action
+                 #:symbol 'win-game
+                 #:actor (situation-pc *situation*)
+                 #:duration 0
+                 #:tags '(downtime)))))
        
-      (when (and (eq? (location-type (current-location)) 'perimeter)
-                 (not (flag-set? 'tried-to-go-back)))
-        (make-pc-choice
-         #:id 'end-run
-         #:text "Go back."
-         #:duration 0
-         #:tags '(downtime)))
+       (when (and (eq? (location-type (current-location)) 'perimeter)
+                  (not (flag-set? 'tried-to-go-back)))
+         (make-pc-choice
+          #:id 'end-run
+          #:text "Go back."
+          #:duration 0
+          #:tags '(downtime)))
 
-      ))))
+       ))))
   
   (define condensed (condense all-actions))
   condensed)

@@ -7,6 +7,8 @@
 (require "actor.rkt")
 (require "item.rkt")
 (require "location.rkt")
+(require "place.rkt")
+(require "route.rkt")
 (require "utils.rkt")
 
 (serializable-struct
@@ -32,88 +34,93 @@
 ;  - a sort of an event horizon!
 
 (define perimeter
-  (make-location
+  (make-place
    #:id 'perimeter
    #:type 'perimeter))
 
 (define martaanvuo-swamp
-  (make-location
+  (make-place
    #:id 'martaanvuo-swamp
    #:type 'swamp))
 
 (define magpie-hill
-  (make-location
+  (make-place
    #:id 'magpie-hill
    #:features '(magpie-effigy)
    #:type 'mountains))
 
 (define crematory
-  (make-location
+  (make-place
    #:type 'crematory))
 
 (define martaanvuo-docks
-  (make-location
+  (make-place
    #:id 'martaanvuo-docks
    #:type 'docks))
 
 (define power-plant-ruins
-  (make-location
+  (make-place
    #:id 'power-plant-ruins
    #:features '(locked-door)
    #:type 'ruins))
 
 (define sewers-1
-  (make-location
+  (make-place
    #:type 'sewers
    #:items (list (make-item 'ammo))))
 
 (define sewers-2
-  (make-location
+  (make-place
    #:type 'sewers
    #:items (list (make-item 'ammo))))
 
 (define cache
-  (make-location
+  (make-place
    #:id 'cache
    #:items '(u-235)
    #:type 'cache))
 
 (define workshop
-  (make-location
+  (make-place
    #:id 'workshop
    #:features '(hartmann-device)
    #:type 'workshop))
 
 (define compound-entrance
-  (make-location
+  (make-place
    #:id 'compound-entrance))
 
 (define murkwater-docks
-  (make-location
+  (make-place
    #:id 'murkwater-docks
    #:type 'docks))
 
 (define storage-closet
-  (make-location
+  (make-place
    #:id 'storage-closet))
 
 (define control-room
-  (make-location
+  (make-place
    #:id 'control-room))
 
 (define reactor-room
-  (make-location
+  (make-place
    #:id 'reactor-room))
 
 (define martaanvuo-source
-  (make-location
+  (make-place
    #:id 'martaanvuo-source))
 
 
+(define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-(define (make-path-between location-a location-b [hidden? #f])
-  (set-location-routes! location-a (append-element (location-routes location-a) location-b))
-  (set-location-routes! location-b (append-element (location-routes location-b) location-a))
+(define (make-path-between place-a place-b [hidden? #f])
+  (set! *number-of-routes* (add1 *number-of-routes*))
+  (define details '())
+  (define actors '()) ; TODO this should be hidden
+  (define r (route *number-of-routes* place-a place-b details actors))
+  (set-place-routes! place-a (append-element (place-routes place-a) r))
+  (set-place-routes! place-b (append-element (place-routes place-b) r))
   (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)

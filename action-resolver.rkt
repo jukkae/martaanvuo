@@ -526,6 +526,9 @@
           ((eq? (action-symbol action) 'traverse)
            'ok
            )
+          ((eq? (action-symbol action) 'cancel-traverse)
+           'ok
+           )
           ((eq? (action-symbol action) 'search-for-paths)
            (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
            (define target-number 9)

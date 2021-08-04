@@ -23,6 +23,7 @@
 (require "locations.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
+(require "route.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -215,7 +216,8 @@
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
          (serialize-state)
-         (get-next-pc-action)))
+         (get-next-pc-action)
+         ))
   )
 
 ; engine / round resolver / -> ai?
@@ -377,6 +379,8 @@
     (cond ((eq? pc-action 'end-round-early)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (end-round-early-with-round-status 'ok))
+          ((eq? pc-action 'restart)
+           (end-round-early-with-round-status 'restart))
           ((eq? pc-action 'end-chapter)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (next-chapter!)
@@ -401,47 +405,6 @@
            (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
            round-exit-status
            ))))
-
-; TODO: duplication bad, deal with this asap!
-; TODO: THIS LOOPS ON ITSELF, NEXT ROUND SHOULD BE NORMAL
-; (and ditto for lives and runs)
-#;(define (continue-round)
-    (enqueue-npc-actions)
-    (redescribe-situation)
-  
-    (let/ec end-round-early-with-round-status
-      (define pc-action (get-next-pc-action))
-    
-      (cond ((eq? pc-action 'end-round-early)
-             (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
-             (end-round-early-with-round-status 'ok))
-            ((eq? pc-action 'end-chapter)
-             (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
-             (next-chapter!)
-             (end-round-early-with-round-status 'ok))
-            (else
-
-             (describe-pc-intention pc-action)
-  
-           
-
-             (define round-exit-status 'ok)
-             (cond ((initiative-based-resolution? pc-action)
-                    (add-to-action-queue pc-action)
-                    (update-npc-reactions pc-action)
-                    (sort-action-queue)
-                    (resolve-turns!))
-                   (else
-                    (define pc-action-result (resolve-pc-action! pc-action))
-                    (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
-                    (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
-             (on-end-round)
-             (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
-             round-exit-status
-             ))))
-
-
-; engine / round-resolver at first; some of the stuff should go to action definitions etc
 
 
 ; TODO -> situation
@@ -487,7 +450,8 @@
 
                    ; TODO: think about how this actually interacts with elapse-time;
                    ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
-                   (when (not (eq? (action-symbol action) 'traverse))
+                   (when (or (not (eq? (action-symbol action) 'traverse))
+                             (not (eq? (action-symbol action) 'cancel-traverse)))
                      ; begin advancing time
                      (define timeline
                        (advance-time-until-next-interesting-event! (action-duration action)))
@@ -549,6 +513,7 @@
 
                    ; TODO duplication, clean up
                    (cond ((eq? (action-symbol action) 'traverse)
+                          (move-pc-to-location! (action-target action))
                           (when (not (pending? action))
                             (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
 
@@ -604,8 +569,10 @@
                                      (handle-pc-action-interrupted! tl)
                                      (return 'interrupted)))))
                           
-                          
-                          (define next-location (action-target action))
+
+
+                          (set-route-traversed! (action-target action)) ; I think this should work
+                          (define next-location (route-b (action-target action)))
                           (move-pc-to-location! next-location)
 
                           ; TODO where should this happen really, and how??
@@ -622,6 +589,27 @@
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
                           ))
+
+                   ; TODO TRIPLICATION CLEAN THIS SHIT UP
+                   (cond ((eq? (action-symbol action) 'cancel-traverse)
+                          (displayln "cancel-traverse")
+                          (reset-pending-action!)
+                          (move-pc-to-location! (action-target action))
+
+                          ; TODO where should this happen really, and how??
+                          (when (eq? (location-type (current-location)) 'crematory)
+                            (go-to-story-fragment 11))
+                          (when (eq? (location-type (current-location)) 'swamp)
+                            (go-to-story-fragment 20))
+                          #;(when (eq? (location-type (current-location)) 'workshop)
+                              (go-to-story-fragment 200))
+                          (when (eq? (location-type (current-location)) 'workshop)
+                            (go-to-story-fragment 300))
+                          (describe-cancel-traverse-action action)
+                          (display-location-info-card (current-location))
+                          (when (not (null? (location-items (action-target action))))
+                            (pick-up-items!))
+                          ))
                    
                    action-result
                    ))
@@ -631,7 +619,7 @@
     (define time-left (- (action-duration action) elapsed-time))
     (define pending-action action)
     (set-action-duration! pending-action time-left)
-    (set-action-details! pending-action 'pending)
+    (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
     (set-pending-action! pending-action))
   result
   )
@@ -641,11 +629,18 @@
   (cond ((eq? (event-type event) 'spawn-enemies)
          (define encounter-types '(blindscraper grabberkin))
 
-         (define encounter-type  (cond ((eq? (location-type (current-location)) 'ridges)
-                                        'blindscraper)
-                                       ((eq? (location-type (current-location)) 'valleys)
-                                        'grabberkin)
-                                       (else (take-random encounter-types))))
+         (define
+           encounter-type
+           (cond ((location? (current-location))
+                  (cond ((eq? (location-type (current-location)) 'ridges)
+                         'blindscraper)
+                        ((eq? (location-type (current-location)) 'valleys)
+                         'grabberkin)
+                        (else (take-random encounter-types))))
+                 ((route? (current-location))
+                  'blindscraper)) ; TODO this should be gotten from content tables
+
+           )
 
          (case encounter-type
            ['grabberkin
@@ -823,7 +818,10 @@
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
         (define meta-command (cdr meta-command-with-key))
-        (meta-command)
+        (define meta-command-result (meta-command))
+        (when (eq? meta-command-result 'restart) (produce-action 'restart))
+        
+        
         (redescribe-situation)
         (what-do-you-do 'verbose))
       
@@ -987,6 +985,29 @@
          (newline)
          #t))) ; mark input as handled
 
+; dev stuff, player-visible should be called restart, and that should not just remove save file, but, well, restart completely
+#;(define (delete-progress)
+    (displayln "Really delete progress? [D] to delete, anything else to continue. Remember to restart Martaanvuo after.")
+    (define input (wait-for-input))
+    (set! input (string-upcase input))
+    (cond ((equal? input "D")
+           (delete-save-file)
+           (paragraph "Progress deleted.")
+           #t)
+          (else
+           (newline)
+           #t))) ; mark input as handled
+
+(define (restart)
+  (displayln "Really restart? [R] to restart, anything else to continue.")
+  (define input (wait-for-input))
+  (set! input (string-upcase input))
+  (cond ((equal? input "R")
+         'restart)
+        (else
+         (newline)
+         #t))) ; mark input as handled
+
 ; UI? meta? scripting api? return value tied to round resolution
 (define (menu)
   (define (handle-meta-command meta-commands-with-keys input)
@@ -998,9 +1019,12 @@
   
   (displayln "[Menu]")
   (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
-  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
+  ;(hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
+  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
+  (hash-set! meta-commands "R" (cons "[R]: Restart." restart))
+  
 
   (for ([(k v) (in-hash meta-commands)])
     (display (car v))
@@ -1013,8 +1037,7 @@
   (newline)
 
   (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
-        (else (menu)))
-  #t)
+        (else (menu))))
 
 ; pc? meta? api?
 (define (inventory)
