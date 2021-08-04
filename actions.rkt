@@ -265,8 +265,6 @@
            (get-cancel-and-go-back-destination
             (current-location)
             (situation-pending-action *situation*)))
-         (displayln "cancel action destination:")
-         (displayln destination)
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
