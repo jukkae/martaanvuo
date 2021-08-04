@@ -1019,6 +1019,19 @@
          (newline)
          #t))) ; mark input as handled
 
+; dev stuff, player-visible should be called restart, and that should not just remove save file, but, well, restart completely
+(define (delete-progress)
+  (displayln "Really delete progress? [D] to delete, anything else to continue. Remember to restart Martaanvuo after.")
+  (define input (wait-for-input))
+  (set! input (string-upcase input))
+  (cond ((equal? input "D")
+         (delete-save-file)
+         (paragraph "Progress deleted.")
+         #t)
+        (else
+         (newline)
+         #t))) ; mark input as handled
+
 ; UI? meta? scripting api? return value tied to round resolution
 (define (menu)
   (define (handle-meta-command meta-commands-with-keys input)
@@ -1030,9 +1043,10 @@
   
   (displayln "[Menu]")
   (define meta-commands (make-hash))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
-  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
+  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
+  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
+  (hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
 
   (for ([(k v) (in-hash meta-commands)])
     (display (car v))
