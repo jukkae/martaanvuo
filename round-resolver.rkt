@@ -593,7 +593,6 @@
 
                    ; TODO TRIPLICATION CLEAN THIS SHIT UP
                    (cond ((eq? (action-symbol action) 'cancel-traverse)
-                          (displayln "cancel-traverse")
                           (reset-pending-action!)
                           (move-pc-to-location! (action-target action))
 
