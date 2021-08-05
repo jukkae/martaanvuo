@@ -59,6 +59,12 @@
         ((place? location)
          (place-type location))))
 
+(define (location-on-enter-symbol location)
+  (cond ((route? location)
+         '())
+        ((place? location)
+         (place-on-enter-symbol location))))
+
 (define (location? it)
   (or (place? it)
       (route? it)))

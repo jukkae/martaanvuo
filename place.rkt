@@ -15,6 +15,7 @@
  ([id #:mutable] ; has to be mutable for serialization reasons
   [routes #:mutable] ; TODO: should this be called neighbors and include both routes and places? -> simple adjacencies wouldn't require routes. OTOH, resolvers now assume routes
   [type #:mutable] ; has to be mutable for serialization reasons
+  [on-enter-symbol #:mutable] ; symbol, because lambdas cannot be easily serialized
   [features #:mutable]
   [actors #:mutable]
   [visited? #:mutable]
@@ -44,10 +45,11 @@
          #:id [id (get-numeric-id)]
          #:routes [routes '()]
          #:type [type '()]
+         #:on-enter-symbol [on-enter-symbol '()]
          #:features [features '()]
          #:actors [actors '()]
          #:items [items '()]
          #:actions-provided [actions-provided '()]
          #:tags [tags '()])
   (set! *number-of-places* (add1 *number-of-places*))
-  (place* id routes type features actors #f items actions-provided tags))
+  (place* id routes type on-enter-symbol features actors #f items actions-provided tags))

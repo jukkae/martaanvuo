@@ -86,3 +86,9 @@
         (else
          (paragraph
           "[[finish-go-to description not written yet]"))))
+
+
+; This seems to be more content than code, so it's here for now, instead of location.rkt
+(define (location-on-enter! location)
+  (displayln "LOCATION-ON-ENTER")
+  (displayln location))

@@ -495,6 +495,7 @@
                    (cond ((eq? (action-symbol action) 'go-to-location)
                           (define next-location (action-target action))
                           (move-pc-to-location! next-location)
+                          (location-on-enter! (current-location))
 
                           ; TODO where should this happen really, and how??
                           (when (eq? (location-type (current-location)) 'crematory)
@@ -974,28 +975,15 @@
 
 ; UI? meta? scripting api? return value tied to round resolution
 (define (quit)
-  (displayln "Really quit? [Q] to quit, anything else to continue.")
+  (displayln "Really quit Martaanvuo? [Q] to quit, anything else to continue.")
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (paragraph "Game exited.")
+         (paragraph "Martaanvuo expects your return.")
          (exit))
         (else
          (newline)
          #t))) ; mark input as handled
-
-; dev stuff, player-visible should be called restart, and that should not just remove save file, but, well, restart completely
-#;(define (delete-progress)
-    (displayln "Really delete progress? [D] to delete, anything else to continue. Remember to restart Martaanvuo after.")
-    (define input (wait-for-input))
-    (set! input (string-upcase input))
-    (cond ((equal? input "D")
-           (delete-save-file)
-           (paragraph "Progress deleted.")
-           #t)
-          (else
-           (newline)
-           #t))) ; mark input as handled
 
 (define (restart)
   (displayln "Really restart? [R] to restart, anything else to continue.")

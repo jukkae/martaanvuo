@@ -24,6 +24,34 @@
   )
 
 
+; TODO sort of bad
+(define (handle-broken-save)
+  (newline)
+  (displayln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
+  
+  (define input (wait-for-input))
+  (set! input (string-upcase input))
+  
+  (cond ((equal? input "D")
+         (delete-save-file)
+         (newline)
+         (displayln "Progress deleted. Starting from the beginning. Progress is saved automatically."))
+
+        ((equal? input "Q")
+         (newline)
+         (displayln "Saved progress was not deleted, but it is still corrupt or incompatible.")
+         (newline)
+         (displayln "Come back soon. Martaanvuo is eager for your return.")
+         (exit))
+          
+        (else
+         (newline)
+         (displayln "It was [D] or [Q], but nevermind. Your saved progress was not deleted, but it is still corrupt or incompatible.")
+         (newline)
+         (displayln "Martaanvuo awaits your return.")
+         (exit))))
+
+
 (define (resolve-game mode)
   (case mode
     ['begin
@@ -34,10 +62,15 @@
     
     ['continue
      (define input-file (open-input-file "save.txt"))
-     (define situation (read input-file))
-     (load-situation situation)
-     (newline)
-     (displayln "Progress loaded.")])
+     (define serialized-situation (read input-file))
+ 
+     (with-handlers ([exn:fail:contract:arity?
+                      (λ (exn)
+                        (handle-broken-save)
+                        (set! mode 'begin))])
+       (load-situation serialized-situation)
+       (newline)
+       (displayln "Progress loaded."))])
   
   (title)
 
