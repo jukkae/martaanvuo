@@ -355,7 +355,7 @@
                       (append-element
                        (location-neighbors ruins)
                        cache))
-                   (set-location-features! ; TODO should ofc check location etc
+                   #;(set-location-features! ; TODO should ofc check location etc
                     power-plant-ruins
                     '())
                  
@@ -376,7 +376,7 @@
                       (append-element
                        (location-neighbors ruins)
                        cache))
-                   (set-location-features! ; TODO should ofc check location etc
+                   #;(set-location-features! ; TODO should ofc check location etc
                     power-plant-ruins
                     '())
                  
