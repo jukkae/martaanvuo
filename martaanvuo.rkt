@@ -124,7 +124,7 @@
     ['restart
      (delete-save-file)
      (reset-situation!)
-     (displayln "Progress deleted. Restarting.")
+     (displayln "Progress deleted. Starting from the beginning. Progress is saved automatically.")
      (resolve-game 'restart)]))
 
 ; engine / game-resolver?
