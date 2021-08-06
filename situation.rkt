@@ -40,6 +40,7 @@
   [last-paragraph #:mutable]
   [current-part #:mutable]
   [current-chapter #:mutable]
+  [prompt #:mutable]
   )
  #:transparent)
 
@@ -50,7 +51,7 @@
         [pc (make-new-pc)]
         [quests '()]
         [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0)))
+    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 "")))
 ;;; ^^^
 
 (define (reset-situation!)
@@ -59,7 +60,7 @@
               [pc (make-new-pc)]
               [quests '()]
               [persistent-quests '()])
-          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0))))
+          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 ""))))
 
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
@@ -418,7 +419,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment-number *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
-                (paragraph "It's either a climb up the rocky slope where the magpie was, or follow the ants to the swamp."))
+                (set-prompt! "It's either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
                 (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
@@ -628,6 +629,12 @@
 (define (set-last-paragraph! paragraph)
   (set-situation-last-paragraph! *situation* paragraph)
   )
+
+(define (set-prompt! prompt)
+  (set-situation-prompt! *situation* prompt))
+
+(define (get-prompt)
+  (situation-prompt *situation*))
 
 ; TODO think about api and usage
 (define *flags* '())

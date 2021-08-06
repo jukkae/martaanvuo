@@ -253,6 +253,7 @@
 ; engine / round resolver
 (define (on-end-round)
   #;(displayln "[End round]")
+  (set-prompt! "") ; TODO: can be done much much earlier in the round - when should it be done?
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
@@ -814,6 +815,10 @@
   (serialize-state)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
+      (when (not (eq? "" (get-prompt)))
+        (newline)
+        (displayln (get-prompt)))
+      
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
