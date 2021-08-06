@@ -10,13 +10,14 @@
 (require "route.rkt")
 
 (lazy-require ["situation.rkt"
-               (current-location)])
+               (current-location
+                times-begin-traverse-narrated
+                times-begin-traverse-narrated++
+                times-finish-traverse-narrated
+                times-finish-traverse-narrated++
+                times-cancel-traverse-narrated
+                times-cancel-traverse-narrated++)])
 
-
-(displayln "TODO: move times-narrated to situation")
-(define *times-begin-traverse-narrated* (make-hash)) ; per each pair
-(define *times-finish-traverse-narrated* (make-hash)) ; per each pair
-(define *times-cancel-traverse-narrated* (make-hash)) ; essentially for each route, so both endpoints have to be tracked
 
 (define (describe-begin-traverse-action action)
   (define from
@@ -37,11 +38,9 @@
            (action-target action))
           ))
 
-  (define key (list from to))
-  (when (not (hash-has-key? *times-begin-traverse-narrated* key))
-    (hash-set! *times-begin-traverse-narrated* key 0))
-  (hash-set! *times-begin-traverse-narrated* key (add1 (hash-ref *times-begin-traverse-narrated* key)))
-  (define n (hash-ref *times-begin-traverse-narrated* key))
+  (define key (list (location-id from) (location-id to)))
+  (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
+  (define n (times-begin-traverse-narrated key))
   (case (location-id from)
     ['perimeter
      (case (location-id to)
@@ -57,7 +56,8 @@
         ])
 
      
-     ]))
+     ])
+  )
 
 (define (describe-finish-traverse-action action)
   (define from
@@ -79,10 +79,8 @@
           ))
 
   (define key (list from to))
-  (when (not (hash-has-key? *times-finish-traverse-narrated* key))
-    (hash-set! *times-finish-traverse-narrated* key 0))
-  (hash-set! *times-finish-traverse-narrated* key (add1 (hash-ref *times-finish-traverse-narrated* key)))
-  (define n (hash-ref *times-finish-traverse-narrated* key))
+  (times-finish-traverse-narrated++ key) ; dumbass order of initialization but who cares
+  (define n (times-finish-traverse-narrated key))
   (case (location-id from)
     ['perimeter
      (case (location-id to)
@@ -98,7 +96,9 @@
         ])
 
      
-     ]))
+     ])
+  
+  )
   
 
 
@@ -125,10 +125,8 @@
           ))
 
   (define key (list from to))
-  (when (not (hash-has-key? *times-cancel-traverse-narrated* key))
-    (hash-set! *times-cancel-traverse-narrated* key 0))
-  (hash-set! *times-cancel-traverse-narrated* key (add1 (hash-ref *times-cancel-traverse-narrated* key)))
-  (define n (hash-ref *times-cancel-traverse-narrated* key))
+  (times-cancel-traverse-narrated++ key) ; dumbass order of initialization
+  (define n (times-cancel-traverse-narrated key))
   (case (location-id from)
     ['perimeter
      (case (location-id to)
@@ -142,7 +140,8 @@
         ])
 
      
-     ]))
+     ])
+  )
 
 
 ; This seems to be more content than code, so it's here for now, instead of location.rkt

@@ -20,7 +20,12 @@
 (require "world.rkt")
 
 
-;;; Types
+; Think about breaking this apart:
+; - run-specific
+; - life-specific
+; - playthrough-specific
+; - in-world / out-of-world (ie., narration)
+; - player knowledge vs character knowledge
 (serializable-struct
  situation
  ([world #:mutable]
@@ -42,8 +47,56 @@
   [current-chapter #:mutable]
   [prompt #:mutable]
   [flags #:mutable]
+
+  ; these are place-place pairs, from-to
+  [times-begin-traverse-narrated #:mutable]
+  [times-finish-traverse-narrated #:mutable]
+  [times-cancel-traverse-narrated #:mutable]
   )
  #:transparent)
+
+;; name: hmm
+(define (times-begin-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-begin-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-begin-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-begin-traverse-narrated *situation*)
+                             key))))
+
+(define (times-begin-traverse-narrated key) 
+  (if (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
+      #f
+      (hash-ref (situation-times-begin-traverse-narrated *situation*)
+                key)))
+
+(define (times-finish-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-finish-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-finish-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-finish-traverse-narrated *situation*)
+                             key))))
+
+(define (times-finish-traverse-narrated key) 
+  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
+    #f)
+  (hash-ref (situation-times-finish-traverse-narrated *situation*)
+            key))
+
+(define (times-cancel-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-cancel-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-cancel-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-cancel-traverse-narrated *situation*)
+                             key))))
+
+(define (times-cancel-traverse-narrated key) 
+  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
+    #f)
+  (hash-ref (situation-times-cancel-traverse-narrated *situation*)
+            key))
 
 
 ;;; Actual state variables
@@ -55,7 +108,28 @@
               [pc (make-new-pc)]
               [quests '()]
               [persistent-quests '()])
-          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 "" '()))))
+          (situation new-world
+                     pc
+                     0
+                     0
+                     0
+                     0
+                     #f
+                     '()
+                     '()
+                     quests
+                     persistent-quests
+                     0
+                     '()
+                     '()
+                     '()
+                     0
+                     0
+                     ""
+                     '()
+                     (make-hash)
+                     (make-hash)
+                     (make-hash)))))
 
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
