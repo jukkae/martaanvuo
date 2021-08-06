@@ -12,6 +12,10 @@
 (lazy-require ["situation.rkt"
                (current-location)])
 
+
+(displayln "TODO: move times-narrated to situation")
+(define *times-begin-traverse-narrated* (make-hash)) ; per each pair
+
 (define (describe-begin-traverse-action action)
   (define from
     (cond ((route? (action-target action))
@@ -31,9 +35,27 @@
            (action-target action))
           ))
 
+  (define key (list from to))
+  (when (not (hash-has-key? *times-begin-traverse-narrated* key))
+    (hash-set! *times-begin-traverse-narrated* key 0))
+  (hash-set! *times-begin-traverse-narrated* key (add1 (hash-ref *times-begin-traverse-narrated* key)))
+  (define n (hash-ref *times-begin-traverse-narrated* key))
   (case (location-id from)
     ['perimeter
-     (displayln "Leaving Perimeter.")]))
+     (case (location-id to)
+       ['magpie-hill
+        (case n
+          [(1)
+           (paragraph
+            "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
+          [else
+           (paragraph
+            "Otava climbs the natural stairs up to Magpie Hill.")])
+     
+        ])
+
+     
+     ]))
 
 (define (describe-finish-traverse-action action)
   (displayln "describe-finish-traverse-action"))
