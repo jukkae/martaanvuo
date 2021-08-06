@@ -41,18 +41,13 @@
   [current-part #:mutable]
   [current-chapter #:mutable]
   [prompt #:mutable]
+  [flags #:mutable]
   )
  #:transparent)
 
 
 ;;; Actual state variables
-(define *situation*
-  (let ([new-world (world 0 0)]
-        [pc (make-new-pc)]
-        [quests '()]
-        [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 "")))
-;;; ^^^
+(define *situation* '())
 
 (define (reset-situation!)
   (set! *situation*
@@ -60,7 +55,7 @@
               [pc (make-new-pc)]
               [quests '()]
               [persistent-quests '()])
-          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 ""))))
+          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0 "" '()))))
 
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
@@ -636,23 +631,21 @@
 (define (get-prompt)
   (situation-prompt *situation*))
 
-; TODO think about api and usage
-(define *flags* '())
 
 (define (set-flag flag)
   (when (not (flag-set? flag))
-    (set! *flags* (append-element *flags* flag))))
+    (set-situation-flags! *situation* (append-element (situation-flags *situation*) flag))))
 
 (define (remove-flag flag)
   (when (flag-set? flag)
-    (set! *flags* (remq flag *flags*))))
+    (set-situation-flags! *situation* (remq flag (situation-flags *situation*)))))
 
 (define (flag-set? flag)
-  (memq flag *flags*))
+  (memq flag (situation-flags *situation*)))
 
 (define (print-flags)
   (displayln "print-flags:")
-  (displayln *flags*))
+  (displayln (situation-flags *situation*)))
 
 
 (define (save-situation s)
