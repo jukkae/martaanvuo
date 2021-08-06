@@ -12,8 +12,15 @@
 (lazy-require ["situation.rkt"
                (current-location)])
 
-(define (describe-begin-go-to-action action)
-  (define from (current-location))
+(define (describe-begin-traverse-action action)
+  (define from
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-a (action-target action))
+               (route-b (action-target action))))
+          (else
+           (current-location))
+          ))
 
   (define to
     (cond ((route? (action-target action))
@@ -21,15 +28,16 @@
                (route-b (action-target action))
                (route-a (action-target action))))
           (else
-           (displayln "HELLO FIND ME")
-           (displayln (action-target action))
            (action-target action))
           ))
-  (cond ((location-is? 'magpie-hill to)
-         (describe-magpie-hill-begin-go-to-action))
-        (else
-         (paragraph
-          "[[begin-go-to description not written yet]"))))
+
+  (case (location-id from)
+    ['perimeter
+     (displayln "Leaving Perimeter.")]))
+
+(define (describe-finish-traverse-action action)
+  (displayln "describe-finish-traverse-action"))
+
 
 ; shit names for shit functions /shrug
 (define *magpie-hill-begin-go-to-nth* 0)

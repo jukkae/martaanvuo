@@ -443,11 +443,10 @@
                                  )))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
-                         ((eq? (action-symbol action) 'go-to-location)
-                          (describe-begin-go-to-action action))
+                         
                          ((and (eq? (action-symbol action) 'traverse)
                                (not (pending? action)))
-                          (describe-begin-go-to-action action)))
+                          (describe-begin-traverse-action action)))
 
                    ; TODO: think about how this actually interacts with elapse-time;
                    ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
@@ -506,7 +505,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (describe-finish-go-to-action action)
+                          (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
@@ -587,7 +586,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (describe-finish-go-to-action action)
+                          (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
