@@ -20,7 +20,7 @@
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
 ;  - a sort of an event horizon!
 
-(define *places*
+(define (make-places)
   (list
    
    (make-place
@@ -89,6 +89,8 @@
     #:id 'martaanvuo-source)
    ))
 
+(define *places* '())
+
 (define (find-place-by-id id)
   (findf (λ (place) (location-is? id place))
          *places*))
@@ -107,7 +109,8 @@
   (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)
-  (displayln "fix setup-world!")
+  (set! *places* (make-places))
+  
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
   (make-path-between 'perimeter 'magpie-hill)
   (make-path-between 'perimeter 'martaanvuo-swamp)
