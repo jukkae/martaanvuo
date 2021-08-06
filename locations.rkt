@@ -41,21 +41,15 @@
   (define key (list (location-id from) (location-id to)))
   (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-begin-traverse-narrated key))
-  (case (location-id from)
-    ['perimeter
-     (case (location-id to)
-       ['magpie-hill
-        (case n
+  (case key
+    ['(perimeter magpie-hill)
+     (case n
           [(1)
            (paragraph
             "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
           [else
            (paragraph
             "Otava climbs the natural stairs up to Magpie Hill.")])
-     
-        ])
-
-     
      ])
   )
 
