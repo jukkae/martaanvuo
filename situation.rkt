@@ -207,15 +207,15 @@
   (define quests (situation-quests *situation*))
   (findf (λ (quest) (eq? id (quest-id quest))) quests))
 
-;;; Constructors
+;;; move these elsewhere, more content than code
 (define (create-quest quest-symbol)
   (define q
     (case quest-symbol
       ['pay-off-debt
        (quest 'pay-off-debt
-              "pay off the debt to the Collector"
+              "pay off Debt to Collector"
               "in progress"
-              "unsettled: 10,111 grams of U-235")] ; 10,111 is the 1,242th prime number, binary 10111 = 23
+              "unsettled: 10,111 g of Martaanvuo gold")] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
       ['the-anthead
        (quest 'the-anthead
               "seek the Anthead Girl"
@@ -226,7 +226,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or this might be the one that fucks her up, does her in.")])
+     (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
   
 
   (define body

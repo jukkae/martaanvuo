@@ -40,11 +40,11 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "That's a bit of an overstatement. It's just these miserable woods and the suffocating fog that's making her nervous. She tries to push away her anxiety, and reminds herself that she has a reason to be confident."
+ "Maybe whoever made this path made it back, maybe they didn't. But she will."
  (list
   (make-decision
    #:title "She has a gun."
-   #:description "She has a revolver. An Aegis Metalworks one, one of the last ones they ever made before the Rains. Hundreds of years old, and more reliable than anything that's made since."
+   #:description "Her Aegis Metalworks revolver will get her out of a pinch. One of the last ones they ever made before the Rains. Hundreds of years old, and more reliable than anything that's made since."
    #:on-resolve! (proc
                   (set-build! 'gun)
                   (wait-for-confirm)
@@ -76,7 +76,7 @@
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
- (nop))
+ (λ () (set-prompt! "Because...")))
 
 
 
