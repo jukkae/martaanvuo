@@ -5,6 +5,7 @@
 (require "io.rkt")
 (require "round-resolver.rkt")
 (require "situation.rkt")
+(require "utils.rkt")
 (require "world.rkt")
 
 
@@ -23,10 +24,10 @@
   (next-chapter!)
   (case (situation-run *situation*)
     [(1)
-     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell.")
+     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. At least somebody has been here, once. Did they make it back?")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
-    [(2)
+    #;[(2)
      (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
 
@@ -34,13 +35,23 @@
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
-  (move-pc-to-location! perimeter)
+  (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)
   )
 
 (define (on-continue-run)
   '()
   )
+
+(define (narrate-restart)
+  (paragraph
+   (take-random
+    (list
+     "Otava wanders Martaanvuo the rest of her life without finding what she's looking for."
+     "Death comes quickly to Otava."
+     "A strange sense of detachment overcomes Otava, and she finds the Cache she was looking for, and in it, enough gold-198 to pay off her debt. Unbeknownst to her, she would soon experience it all over again."
+     "Otava finds passage through the swamps and disappears to the other side of the unnamed mountain range, to begin a new life herding the reindeer."
+     ))))
 
 (define (narrate-end-run exit-status)
   (info-card
@@ -51,7 +62,7 @@
     ['end-run
      (paragraph "She's still alive.")]
     ['restart
-     (paragraph "Otava is left to wander Martaanvuo, bereft of purpose, void of hope, until the end of all eternity.")]
+     (narrate-restart)]
     [else
      (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
 

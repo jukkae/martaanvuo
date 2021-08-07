@@ -19,7 +19,7 @@
 
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
-  ;(paragraph "[" "Begin a story" "]")
+  (reset-situation!)
   (setup-world)
   )
 

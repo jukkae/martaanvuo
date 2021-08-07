@@ -253,6 +253,7 @@
 ; engine / round resolver
 (define (on-end-round)
   #;(displayln "[End round]")
+  (set-prompt! "") ; TODO: can be done much much earlier in the round - when should it be done?
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
@@ -442,11 +443,10 @@
                                  )))
                          ((eq? (action-symbol action) 'win-game)
                           (return 'win-game))
-                         ((eq? (action-symbol action) 'go-to-location)
-                          (describe-begin-go-to-action action))
+                         
                          ((and (eq? (action-symbol action) 'traverse)
                                (not (pending? action)))
-                          (describe-begin-go-to-action action)))
+                          (describe-begin-traverse-action action)))
 
                    ; TODO: think about how this actually interacts with elapse-time;
                    ; likely, elapse-time should take a parameter: whether or not to have time-dependent random events
@@ -505,7 +505,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (describe-finish-go-to-action action)
+                          (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
@@ -586,7 +586,7 @@
                               (go-to-story-fragment 200))
                           (when (eq? (location-type (current-location)) 'workshop)
                             (go-to-story-fragment 300))
-                          (describe-finish-go-to-action action)
+                          (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
@@ -814,6 +814,10 @@
   (serialize-state)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
+      (when (not (eq? "" (get-prompt)))
+        (newline)
+        (displayln (get-prompt)))
+      
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
@@ -935,9 +939,11 @@
   choices-with-keys)
 
 ; engine / get-next-pc-action
+; THIS IS THE BASIC META MENU
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
+  (hash-set! meta-commands "N" (cons "[N]: Notes." notes))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   (when (not (null? (actor-inventory (pc))))
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
@@ -979,6 +985,8 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
+         (define session-score (d 1 4))
+         (paragraph (string-append "Your session score was " (number->string session-score) "."))
          (paragraph "Martaanvuo expects your return.")
          (exit))
         (else
@@ -1029,6 +1037,22 @@
 ; pc? meta? api?
 (define (inventory)
   (print-inventory)
+  #t
+  )
+
+; player state
+(define (notes)
+  (define actor (pc))
+  
+  (define list-items
+    (list
+     (list " Martaanvuo " " The anomaly is very strong here. ")))
+
+  
+  (info-card
+   list-items
+   "Notes"
+   )
   #t
   )
 

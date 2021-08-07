@@ -20,7 +20,12 @@
 (require "world.rkt")
 
 
-;;; Types
+; Think about breaking this apart:
+; - run-specific
+; - life-specific
+; - playthrough-specific
+; - in-world / out-of-world (ie., narration)
+; - player knowledge vs character knowledge
 (serializable-struct
  situation
  ([world #:mutable]
@@ -40,18 +45,62 @@
   [last-paragraph #:mutable]
   [current-part #:mutable]
   [current-chapter #:mutable]
+  [prompt #:mutable]
+  [flags #:mutable]
+
+  ; these are place-place pairs, from-to
+  [times-begin-traverse-narrated #:mutable]
+  [times-finish-traverse-narrated #:mutable]
+  [times-cancel-traverse-narrated #:mutable]
   )
  #:transparent)
 
+;; name: hmm
+(define (times-begin-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-begin-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-begin-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-begin-traverse-narrated *situation*)
+                             key))))
+
+(define (times-begin-traverse-narrated key) 
+  (if (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
+      #f
+      (hash-ref (situation-times-begin-traverse-narrated *situation*)
+                key)))
+
+(define (times-finish-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-finish-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-finish-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-finish-traverse-narrated *situation*)
+                             key))))
+
+(define (times-finish-traverse-narrated key) 
+  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
+    #f)
+  (hash-ref (situation-times-finish-traverse-narrated *situation*)
+            key))
+
+(define (times-cancel-traverse-narrated++ key) 
+  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
+    (hash-set! (situation-times-cancel-traverse-narrated *situation*) key 0))
+  (hash-set! (situation-times-cancel-traverse-narrated *situation*)
+             key
+             (add1 (hash-ref (situation-times-cancel-traverse-narrated *situation*)
+                             key))))
+
+(define (times-cancel-traverse-narrated key) 
+  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
+    #f)
+  (hash-ref (situation-times-cancel-traverse-narrated *situation*)
+            key))
+
 
 ;;; Actual state variables
-(define *situation*
-  (let ([new-world (world 0 0)]
-        [pc (make-new-pc)]
-        [quests '()]
-        [persistent-quests '()])
-    (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0)))
-;;; ^^^
+(define *situation* '())
 
 (define (reset-situation!)
   (set! *situation*
@@ -59,7 +108,28 @@
               [pc (make-new-pc)]
               [quests '()]
               [persistent-quests '()])
-          (situation new-world pc 0 0 0 0 #f '() '() quests persistent-quests 0 '() '() '() 0 0))))
+          (situation new-world
+                     pc
+                     0
+                     0
+                     0
+                     0
+                     #f
+                     '()
+                     '()
+                     quests
+                     persistent-quests
+                     0
+                     '()
+                     '()
+                     '()
+                     0
+                     0
+                     ""
+                     '()
+                     (make-hash)
+                     (make-hash)
+                     (make-hash)))))
 
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
@@ -137,15 +207,15 @@
   (define quests (situation-quests *situation*))
   (findf (λ (quest) (eq? id (quest-id quest))) quests))
 
-;;; Constructors
+;;; move these elsewhere, more content than code
 (define (create-quest quest-symbol)
   (define q
     (case quest-symbol
       ['pay-off-debt
        (quest 'pay-off-debt
-              "pay off the debt to the Collector"
+              "pay off Debt to Collector"
               "in progress"
-              "unsettled: 10,111 grams of U-235")] ; 10,111 is the 1,242th prime number, binary 10111 = 23
+              "unsettled: 10,111 g of Martaanvuo gold")] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
       ['the-anthead
        (quest 'the-anthead
               "seek the Anthead Girl"
@@ -156,7 +226,7 @@
 
   (case quest-symbol
     ['pay-off-debt
-     (paragraph "Martaanvuo facility might be the big one, the one that sets her free. Or this might be the one that fucks her up, does her in.")])
+     (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
   
 
   (define body
@@ -418,7 +488,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment-number *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
-                (paragraph "It's either a climb up the rocky slope where the magpie was, or follow the ants to the swamp."))
+                (set-prompt! "It's either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
                 (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
@@ -629,23 +699,27 @@
   (set-situation-last-paragraph! *situation* paragraph)
   )
 
-; TODO think about api and usage
-(define *flags* '())
+(define (set-prompt! prompt)
+  (set-situation-prompt! *situation* prompt))
+
+(define (get-prompt)
+  (situation-prompt *situation*))
+
 
 (define (set-flag flag)
   (when (not (flag-set? flag))
-    (set! *flags* (append-element *flags* flag))))
+    (set-situation-flags! *situation* (append-element (situation-flags *situation*) flag))))
 
 (define (remove-flag flag)
   (when (flag-set? flag)
-    (set! *flags* (remq flag *flags*))))
+    (set-situation-flags! *situation* (remq flag (situation-flags *situation*)))))
 
 (define (flag-set? flag)
-  (memq flag *flags*))
+  (memq flag (situation-flags *situation*)))
 
 (define (print-flags)
   (displayln "print-flags:")
-  (displayln *flags*))
+  (displayln (situation-flags *situation*)))
 
 
 (define (save-situation s)

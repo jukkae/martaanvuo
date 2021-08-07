@@ -16,105 +16,90 @@
  (day
   [elapsed-time #:mutable]))
 
-;;; This seems as good a place as any, so:
-
-;   - the world is unspecifiedly post-apocalyptic
-;
-;   - weaponry is mostly improvised
-;   - firearms are rare and they are mostly blackpowder-based old-west era or similar
-;   - ... because modern weaponry requires smokeless powder, and supply is basically nonexistent
-;   - the only ones that have any capability for automatics is Murkwater Aix, a corporation behind
-;     the laboratory and the Anomaly
-;   - ditto regarding high explosives etc
-
-;;; Also:
-
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
 ;  - a sort of an event horizon!
 
-(define perimeter
-  (make-place
-   #:id 'perimeter
-   #:type 'perimeter))
+(define (make-places)
+  (list
+   
+   (make-place
+    #:id 'perimeter
+    #:type 'perimeter)
 
-(define martaanvuo-swamp
-  (make-place
-   #:id 'martaanvuo-swamp
-   #:type 'swamp))
+   (make-place
+    #:id 'martaanvuo-swamp
+    #:type 'swamp)
 
-(define magpie-hill
-  (make-place
-   #:id 'magpie-hill
-   #:features '(magpie-effigy)
-   #:type 'mountains))
+   (make-place
+    #:id 'magpie-hill
+    #:features '(magpie-effigy)
+    #:type 'mountains)
 
-(define crematory
-  (make-place
-   #:type 'crematory))
+   (make-place
+    #:id 'crematory
+    #:type 'crematory)
 
-(define martaanvuo-docks
-  (make-place
-   #:id 'martaanvuo-docks
-   #:type 'docks))
+   (make-place
+    #:id 'martaanvuo-docks
+    #:type 'docks)
 
-(define power-plant-ruins
-  (make-place
-   #:id 'power-plant-ruins
-   #:features '(locked-door)
-   #:type 'ruins))
+   (make-place
+    #:id 'power-plant-ruins
+    #:features '(locked-door)
+    #:type 'ruins)
 
-(define sewers-1
-  (make-place
-   #:type 'sewers
-   #:items (list (make-item 'ammo))))
+   (make-place
+    #:id 'sewers-1
+    #:type 'sewers
+    #:items (list (make-item 'ammo)))
 
-(define sewers-2
-  (make-place
-   #:type 'sewers
-   #:items (list (make-item 'ammo))))
+   (make-place
+    #:id 'sewers-2
+    #:type 'sewers
+    #:items (list (make-item 'ammo)))
 
-(define cache
-  (make-place
-   #:id 'cache
-   #:items '(u-235)
-   #:type 'cache))
+   (make-place
+    #:id 'cache
+    #:items '(gold-198)
+    #:type 'cache)
 
-(define workshop
-  (make-place
-   #:id 'workshop
-   #:features '(hartmann-device)
-   #:type 'workshop))
+   (make-place
+    #:id 'workshop
+    #:features '(hartmann-device)
+    #:type 'workshop)
 
-(define compound-entrance
-  (make-place
-   #:id 'compound-entrance))
+   (make-place
+    #:id 'compound-entrance)
 
-(define murkwater-docks
-  (make-place
-   #:id 'murkwater-docks
-   #:type 'docks))
+   (make-place
+    #:id 'murkwater-docks
+    #:type 'docks)
 
-(define storage-closet
-  (make-place
-   #:id 'storage-closet))
+   (make-place
+    #:id 'storage-closet)
 
-(define control-room
-  (make-place
-   #:id 'control-room))
+   (make-place
+    #:id 'control-room)
 
-(define reactor-room
-  (make-place
-   #:id 'reactor-room))
+   (make-place
+    #:id 'reactor-room)
 
-(define martaanvuo-source
-  (make-place
-   #:id 'martaanvuo-source))
+   (make-place
+    #:id 'martaanvuo-source)
+   ))
 
+(define *places* '())
+
+(define (find-place-by-id id)
+  (findf (λ (place) (location-is? id place))
+         *places*))
 
 (define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-(define (make-path-between place-a place-b [hidden? #f])
+(define (make-path-between id-a id-b [hidden? #f])
+  (define place-a (find-place-by-id id-a))
+  (define place-b (find-place-by-id id-b))
   (set! *number-of-routes* (add1 *number-of-routes*))
   (define details '())
   (define actors '()) ; TODO this should be hidden
@@ -124,26 +109,28 @@
   (when hidden? (error "Implement hidden paths")))
 
 (define (setup-world)
+  (set! *places* (make-places))
+  
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
-  (make-path-between perimeter magpie-hill)
-  (make-path-between perimeter martaanvuo-swamp)
-  (make-path-between martaanvuo-swamp crematory)
-  (make-path-between martaanvuo-swamp martaanvuo-docks)
-  (make-path-between martaanvuo-swamp magpie-hill)
-  (make-path-between magpie-hill power-plant-ruins)
-  (make-path-between power-plant-ruins cache)
-  (make-path-between power-plant-ruins sewers-1)
-  (make-path-between sewers-1 sewers-2)
-  (make-path-between sewers-1 workshop)
-  (make-path-between sewers-1 compound-entrance)
-  (make-path-between compound-entrance murkwater-docks)
-  (make-path-between compound-entrance workshop)
-  (make-path-between murkwater-docks workshop)
-  (make-path-between sewers-2 storage-closet)
-  (make-path-between storage-closet workshop)
-  (make-path-between workshop control-room)
-  (make-path-between workshop martaanvuo-source)
-  (make-path-between control-room reactor-room)
+  (make-path-between 'perimeter 'magpie-hill)
+  (make-path-between 'perimeter 'martaanvuo-swamp)
+  (make-path-between 'martaanvuo-swamp 'crematory)
+  (make-path-between 'martaanvuo-swamp 'martaanvuo-docks)
+  (make-path-between 'martaanvuo-swamp 'magpie-hill)
+  (make-path-between 'magpie-hill 'power-plant-ruins)
+  (make-path-between 'power-plant-ruins 'cache)
+  (make-path-between 'power-plant-ruins 'sewers-1)
+  (make-path-between 'sewers-1 'sewers-2)
+  (make-path-between 'sewers-1 'workshop)
+  (make-path-between 'sewers-1 'compound-entrance)
+  (make-path-between 'compound-entrance 'murkwater-docks)
+  (make-path-between 'compound-entrance 'workshop)
+  (make-path-between 'murkwater-docks 'workshop)
+  (make-path-between 'sewers-2 'storage-closet)
+  (make-path-between 'storage-closet 'workshop)
+  (make-path-between 'workshop 'control-room)
+  (make-path-between 'workshop 'martaanvuo-source)
+  (make-path-between 'control-room 'reactor-room)
   )
 
 
