@@ -48,7 +48,9 @@
    (take-random
     (list
      "Otava wanders Martaanvuo the rest of her life without finding what she's looking for."
-     "A strange sense of detachment overcomes Otava, and she finds the Cache she was looking for, and in it, enough gold-198 to pay off her debt. Unbeknownst to her, she would experience it all over again."
+     "Death comes quickly to Otava."
+     "A strange sense of detachment overcomes Otava, and she finds the Cache she was looking for, and in it, enough gold-198 to pay off her debt. Unbeknownst to her, she would soon experience it all over again."
+     "Otava finds passage through the swamps and disappears to the other side of the unnamed mountain range, to begin a new life herding the reindeer."
      ))))
 
 (define (narrate-end-run exit-status)

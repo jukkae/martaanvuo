@@ -76,7 +76,7 @@
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
- (λ () (set-prompt! "Because...")))
+ (λ () '()#;(set-prompt! "Because...")))
 
 
 
