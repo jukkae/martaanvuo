@@ -985,6 +985,8 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
+         (define session-score (d 1 4))
+         (paragraph (string-append "Your session score was " (number->string session-score) "."))
          (paragraph "Martaanvuo expects your return.")
          (exit))
         (else
