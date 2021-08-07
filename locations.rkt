@@ -50,6 +50,15 @@
           [else
            (paragraph
             "Otava climbs the natural stairs up to Magpie Hill.")])
+     ]
+    ['(perimeter martaanvuo-swamp)
+     (case n
+          [(1)
+           (paragraph
+            "Otava decides to follow the ants.")]
+          [else
+           (paragraph
+            "Otava follows the ants.")])
      ])
   )
 
