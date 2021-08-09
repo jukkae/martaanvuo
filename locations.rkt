@@ -17,7 +17,8 @@
                 times-finish-traverse-narrated
                 times-finish-traverse-narrated++
                 times-cancel-traverse-narrated
-                times-cancel-traverse-narrated++)])
+                times-cancel-traverse-narrated++
+                set-flag)])
 
 (lazy-require ["fragment.rkt"
                (decision
@@ -170,7 +171,8 @@
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
                         (paragraph "The creature throws something on the pier. There's a heavy clink and a shiny glimmer. Otava picks up the bag: There's some small gold coins in it.")
-                        (add-item! 'gold #:amount 101 #:title "Picked up"))
+                        (add-item! 'gold #:amount 101 #:title "Picked up")
+                        (set-flag 'ending-run-allowed))
                 #:next-fragment 'exit
                 ))))
 

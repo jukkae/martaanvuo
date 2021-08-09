@@ -24,7 +24,7 @@
   (next-chapter!)
   (case (situation-run *situation*)
     [(1)
-     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. At least somebody has been here, once. Did they make it back?")
+     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far. Somebody has been here, once.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     #;[(2)
@@ -35,6 +35,7 @@
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
+  (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)
   )

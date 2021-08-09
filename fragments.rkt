@@ -40,7 +40,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Maybe whoever made this path made it back, maybe they didn't. But she will."
+ "Still, someone's been there, and so will she. And she'll make it back, too."
  (list
   (make-decision
    #:title "She has a gun."

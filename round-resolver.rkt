@@ -408,10 +408,6 @@
            ))))
 
 
-; TODO -> situation
-(define (ending-run-allowed?)
-  #f)
-
 ; may return:
 ; void
 ; 'end-run
@@ -427,8 +423,8 @@
 
                    ; TODO this is heavy on narration -> is this a fragment?
                    (cond ((eq? (action-symbol action) 'end-run)
-                          (cond ((ending-run-allowed?)
-                                 (paragraph "She takes one last look at the rusty machines and the hostile woods of Perimeter and thinks about Martaanvuo and what lies beyond Martaanvuo. She shudders and takes the trail back to the Shack.")
+                          (cond ((flag-set? 'ending-run-allowed)
+                                 (paragraph "At least it's something.")
                                  (return 'end-run))
                                 (else
                                  (set-flag 'tried-to-go-back)

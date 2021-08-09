@@ -410,7 +410,8 @@
                  #:tags '(downtime)))))
        
        (when (and (eq? (location-type (current-location)) 'perimeter)
-                  (not (flag-set? 'tried-to-go-back))) ; actually show this only if this is the very first time in this location
+                  (not (flag-set? 'tried-to-go-back))
+                  (= (situation-run *situation*) 1))
          (make-pc-choice
           #:id 'end-run
           #:text "Return to the Shack."
