@@ -94,7 +94,27 @@
          (add-item-to-inventory! actor new-item))
         ((item? item)
          (add-item-to-inventory! actor item))
-        (else (error "Unknown item type in add-item!"))))
+        (else (error "Unknown item type in add-item!")))
+
+
+  ; TO DO: Make the item, if it's still a symbol, before printing it
+  (define body
+    (list
+     (cond ((ranged-weapon? item)
+            (list
+             (string-append " " (item-name item) " ")
+             (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
+           ((item? item)
+            (list
+             (string-append " " (item-name item) " ")
+             (string-append " " (~v (item-details item)) " ")))
+           (else
+            (list
+             (string-append " " (symbol->string item) " ")
+             (string-append " " " " " "))))
+     ))
+
+  (info-card body "Item added"))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
@@ -143,8 +163,8 @@
               (string-append " " (~v (item-details item)) " ")))
             (else
              (list
-                   (string-append " " (symbol->string item) " ")
-                   (string-append " " " " " "))))
+              (string-append " " (symbol->string item) " ")
+              (string-append " " " " " "))))
       ))
   
   (define sheet

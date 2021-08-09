@@ -23,6 +23,9 @@
                (decision
                 make-decision)])
 
+(lazy-require ["pc.rkt"
+               (add-item!)])
+
 
 (define (describe-begin-traverse-action action)
   (define from
@@ -163,10 +166,15 @@
              (when (location-has-feature? location 'stiltman)
                (make-decision
                 #:title "Talk to the stilted figure."
-                #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the shadowlike figure stutters through the mist, as it stumbles and wobbles in the mire."
-                
+                #:description "\"... helped me – finally you understand – come back tomorrow – Murkwater made it special – here's the fee we agreed –\", the shadowlike figure stutters through the mist, as it stumbles and wobbles in the mire."
+                #:on-resolve! (proc
+                        (remove-feature-from-location! location 'stiltman)
+                        (paragraph "The creature throws something on the pier. There's a clink. Otava picks up the bag of gold.")
+                        (add-item! 'gold))
                 #:next-fragment 'exit
                 ))))
+
+  ; not sure which is more ergonomic
   #;(case (location-id location)
       ['martaanvuo-docks
        (list
