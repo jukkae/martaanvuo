@@ -42,6 +42,7 @@
 
    (make-place
     #:id 'martaanvuo-docks
+    #:features '(stiltman)
     #:type 'docks)
 
    (make-place

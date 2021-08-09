@@ -397,7 +397,7 @@
 
              ]
            
-            [else (error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
+            [else '()#;(error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice

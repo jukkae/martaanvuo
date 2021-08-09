@@ -86,7 +86,7 @@
            (action-target action))
           ))
 
-  (define key (list from to))
+  (define key (list (location-id from) (location-id to)))
   (times-finish-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-finish-traverse-narrated key))
   (case key
@@ -97,12 +97,23 @@
         (paragraph "Soon after the dreadful painting, the rocky stairs turn back to a trail that levels out. The thick fog and the drizzle that's now a steady rain obscure much of the view. Otava is at the edge of a large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")]
        [else
         (paragraph
-         "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])
+         "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
+    
+    ['(martaanvuo-swamp martaanvuo-docks)
+     (case n
+       [(1)
+        (paragraph "Decaying docks slowly appear from the mist. Rusty rebar sticks out from vast broken concrete slabs. Much of it is unusable, and there's not much shelter to be found here. There is a stilted figure moving on the water maybe fifteen meters away from the shore.")]
+       [else
+        (paragraph
+         "The misty docks slowly appear from the mist.")])]
 
-     
-     ])
-  
-  )
+    [else
+     (displayln "unknown key:")
+     (displayln key)]
+
+    
+
+    ))
   
 
 
@@ -148,14 +159,22 @@
 
 
 (define (get-location-decisions location)
-  (case (location-id location)
-    ['martaanvuo-docks
-     (list
-      (make-decision
-       #:title "Talk to the stilted figure."
-       #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
-       #:on-resolve! (proc
-                      (displayln "There is a bag of gold on the ground."))
-       #:next-fragment 'exit
-       ))]
-    [else '()]))
+  (condense (list
+             (when (location-has-feature? location 'stiltman)
+               (make-decision
+                #:title "Talk to the stilted figure."
+                #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the shadowlike figure stutters through the mist, as it stumbles and wobbles in the mire."
+                
+                #:next-fragment 'exit
+                ))))
+  #;(case (location-id location)
+      ['martaanvuo-docks
+       (list
+        (make-decision
+         #:title "Talk to the stilted figure."
+         #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
+         #:on-resolve! (proc
+                        (displayln "There is a bag of gold on the ground."))
+         #:next-fragment 'exit
+         ))]
+      [else '()]))
