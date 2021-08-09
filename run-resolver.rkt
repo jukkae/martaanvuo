@@ -3,6 +3,7 @@
 (provide (all-defined-out))
 
 (require "io.rkt")
+(require "pc.rkt")
 (require "round-resolver.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -68,6 +69,8 @@
      (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
 
 (define (on-end-run exit-status)
+  (when (> (pc-gold-amount) 0)
+    (displayln "pc has gold"))
   (narrate-end-run exit-status)
   (wait-for-confirm))
 

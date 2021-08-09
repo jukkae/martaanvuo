@@ -170,8 +170,8 @@
                 #:description "\"... helped me – finally you understand – come back tomorrow – Murkwater made it special – here's the fee we agreed –\", the shadowlike figure stutters through the mist, as it stumbles and wobbles in the mire."
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
-                        (paragraph "The creature throws something on the pier. There's a heavy clink and a shiny glimmer. Otava picks up the bag: There's some small gold coins in it.")
-                        (add-item! 'gold #:amount 101 #:title "Picked up")
+                        (paragraph "The creature throws something on the pier. There's a heavy clink and a shiny glimmer. Otava picks up the bag. There's a handful of small gold coins in it.")
+                        (add-item! 'gold #:amount 11 #:title "Picked up")
                         (set-flag 'ending-run-allowed))
                 #:next-fragment 'exit
                 ))))

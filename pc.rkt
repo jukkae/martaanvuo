@@ -119,6 +119,14 @@
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
          items))
 
+(define (pc-gold-amount)
+  (define items (actor-inventory (pc)))
+  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+                       items))
+  (if gold?
+      (item-details gold?)
+      0))
+
 (define (pc-has-ammo-left?)
   (define items (actor-inventory (pc)))
   (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
