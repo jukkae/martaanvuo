@@ -515,59 +515,65 @@
                    (cond ((eq? (action-symbol action) 'traverse)
                           (move-pc-to-location! (action-target action))
                           (when (not (pending? action))
-                            (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
+                            ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
 
-                            (displayln "encounter roll: ")
-                            (displayln encounter-roll)
-                            (define encounter-event
-                              (if (< 4 encounter-roll)
-                                  (make-event 'spawn-enemies
-                                              '() ; pack info about enemies / event here
-                                              #t)
-                                  '()))
+                            (define encounter-roll
+                              (if (not (route-has-detail? (current-location) 'no-encounters))
+                                  (d 1 6)
+                                  #f))
 
-                            (cond ((not (null? encounter-event))
-                                   ; create timeline to leverage existing code
-                                   (define events
-                                     (list
-                                      (make-event 'spawn-enemies
-                                                  '() ; pack info about enemies / event here
-                                                  #t)))
-                                   (define metadata 'interrupted)
-                                   (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
-                                   (define tl (timeline metadata events duration))
+                            (when encounter-roll
+                              (displayln "encounter roll: ")
+                              (displayln encounter-roll)
+                              (define encounter-event
+                                (if (< 4 encounter-roll)
+                                    (make-event 'spawn-enemies
+                                                '() ; pack info about enemies / event here
+                                                #t)
+                                    '()))
 
-                                   (set! elapsed-time (timeline-duration tl))
+                              (cond ((not (null? encounter-event))
+                                     ; create timeline to leverage existing code
+                                     (define events
+                                       (list
+                                        (make-event 'spawn-enemies
+                                                    '() ; pack info about enemies / event here
+                                                    #t)))
+                                     (define metadata 'interrupted)
+                                     (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
+                                     (define tl (timeline metadata events duration))
 
-                                   ; DUPLICATION, clean up
-                                   ; display events
-                                   (define
-                                     displayable-events
-                                     (map
-                                      (λ (event)
-                                        (list
-                                         (string-append " " (number->string (event-at event)) " ")
-                                         (string-append " " (symbol->string (event-type event)) " ")
-                                         (string-append " " (~s (event-details event)) " ")
-                                         (string-append " "
-                                                        (if (event-interrupting? event)
-                                                            "yes"
-                                                            "no")
-                                                        " ")
-                                         ))
-                                      (timeline-events tl)))
-                                   #;(info-card
-                                      (append
-                                       (list (list " at " " type " " details " " interrupts action? "))
-                                       displayable-events)
-                                      (string-append "Timeline, duration " (number->string (timeline-duration tl))))
-                                   (for ([event (timeline-events tl)])
-                                     (narrate-event event))
+                                     (set! elapsed-time (timeline-duration tl))
 
-                                   ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-                                   (when (eq? (timeline-metadata tl) 'interrupted)
-                                     (handle-pc-action-interrupted! tl)
-                                     (return 'interrupted)))))
+                                     ; DUPLICATION, clean up
+                                     ; display events
+                                     (define
+                                       displayable-events
+                                       (map
+                                        (λ (event)
+                                          (list
+                                           (string-append " " (number->string (event-at event)) " ")
+                                           (string-append " " (symbol->string (event-type event)) " ")
+                                           (string-append " " (~s (event-details event)) " ")
+                                           (string-append " "
+                                                          (if (event-interrupting? event)
+                                                              "yes"
+                                                              "no")
+                                                          " ")
+                                           ))
+                                        (timeline-events tl)))
+                                     #;(info-card
+                                        (append
+                                         (list (list " at " " type " " details " " interrupts action? "))
+                                         displayable-events)
+                                        (string-append "Timeline, duration " (number->string (timeline-duration tl))))
+                                     (for ([event (timeline-events tl)])
+                                       (narrate-event event))
+
+                                     ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
+                                     (when (eq? (timeline-metadata tl) 'interrupted)
+                                       (handle-pc-action-interrupted! tl)
+                                       (return 'interrupted))))))
                           
 
 
@@ -836,7 +842,7 @@
                                      '()
                                      (current-fragment-get-decisions)))
 
-       ; launch a fragment directly -> no action resolution -> not a choice
+      ; launch a fragment directly -> no action resolution -> not a choice
       (define location-decisions (if (null? (situation-current-fragment-number *situation*))
                                      (get-location-decisions (current-location))
                                      '()))

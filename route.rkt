@@ -132,3 +132,6 @@
   (and (route-a-visited? route)
        (route-b-visited? route)
        (route-traversed? route)))
+
+(define (route-has-detail? route detail)
+  (memq detail (route-details route)))

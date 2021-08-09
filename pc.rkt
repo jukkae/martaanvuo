@@ -87,34 +87,19 @@
 ; TODO dispatching based on type should be done elsewhere,
 ; this should really be only concerned with adding an existing item
 ; but this works for now
-(define (add-item! item)
+(define (add-item!
+         item
+         #:amount [amount 1]
+         #:title [title "Item added"])
   (define actor (pc))
   (cond ((symbol? item)
-         (define new-item (make-item item))
-         (add-item-to-inventory! actor new-item))
+         (define new-item (make-item item #:amount amount))
+         (add-item-to-inventory! actor new-item)
+         (item-info-card new-item #:title title))
         ((item? item)
-         (add-item-to-inventory! actor item))
-        (else (error "Unknown item type in add-item!")))
-
-
-  ; TO DO: Make the item, if it's still a symbol, before printing it
-  (define body
-    (list
-     (cond ((ranged-weapon? item)
-            (list
-             (string-append " " (item-name item) " ")
-             (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
-           ((item? item)
-            (list
-             (string-append " " (item-name item) " ")
-             (string-append " " (~v (item-details item)) " ")))
-           (else
-            (list
-             (string-append " " (symbol->string item) " ")
-             (string-append " " " " " "))))
-     ))
-
-  (info-card body "Item added"))
+         (add-item-to-inventory! actor item)
+         (item-info-card item #:title title))
+        (else (error "Error: add-item! expects symbol or item"))))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))

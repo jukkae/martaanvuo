@@ -4,6 +4,8 @@
 
 (require racket/serialize)
 
+(require "io.rkt")
+
 
 (serializable-struct
  item
@@ -35,7 +37,9 @@
 
 
 ; API
-(define (make-item id)
+(define (make-item
+         id
+         #:amount [amount 1])
   (case id
     ['bolt-cutters
      (new-item
@@ -58,9 +62,27 @@
      (new-item
       "Gold" ; gold-198, to be more precise
       #:id id
-      #:details 5000)] ; amount in grams, for now
+      #:details amount)] ; amount in grams, for now
     
     [else (displayln "make-item: unknown id:") (displayln "id") '()]))
 
 (define (increase-ammo! gun)
   (set-ranged-weapon-ammo-left! gun (add1 (ranged-weapon-ammo-left gun))))
+
+(define (item-info-card
+         item
+         #:title [title "Item"])
+
+  (define body (list (cond ((ranged-weapon? item)
+                            (list
+                             (string-append " " (item-name item) " ")
+                             (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
+                           ((item? item)
+                            (list
+                             (string-append " " (item-name item) " ")
+                             (string-append " " (~v (item-details item)) " ")))
+                           (else
+                            (list
+                             (string-append " " (symbol->string item) " ")
+                             (string-append " " " " " "))))))
+  (info-card body title))
