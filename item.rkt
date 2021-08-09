@@ -53,6 +53,12 @@
       "Ammo"
       #:id id
       #:details 2)]
+
+    ['gold
+     (new-item
+      "Gold" ; gold-198, to be more precise
+      #:id id
+      #:details 5000)] ; amount in grams, for now
     
     [else (displayln "make-item: unknown id:") (displayln "id") '()]))
 

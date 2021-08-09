@@ -61,7 +61,7 @@
 
    (make-place
     #:id 'cache
-    #:items '(gold-198)
+    #:items '(gold)
     #:type 'cache)
 
    (make-place

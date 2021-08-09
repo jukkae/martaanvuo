@@ -57,7 +57,7 @@
       [else
        (displayln "get-route-short-description: unknown start location id:")
        (displayln (location-id start-location))
-       (string-append "< unknown start location >" (symbol->string (location-id start-location)))]))
+       (string-append "< to: >" (symbol->string (location-id (route-other-end-from route start-location))))]))
   
 
   
