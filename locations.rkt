@@ -49,21 +49,21 @@
   (case key
     ['(perimeter magpie-hill)
      (case n
-          [(1)
-           (paragraph
-            "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
-          [else
-           (paragraph
-            "Otava climbs the natural stairs up to Magpie Hill.")])
+       [(1)
+        (paragraph
+         "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
+       [else
+        (paragraph
+         "Otava climbs the natural stairs up to Magpie Hill.")])
      ]
     ['(perimeter martaanvuo-swamp)
      (case n
-          [(1)
-           (paragraph
-            "Otava decides to follow the ants.")]
-          [else
-           (paragraph
-            "Otava follows the ants.")])
+       [(1)
+        (paragraph
+         "Otava decides to follow the ants.")]
+       [else
+        (paragraph
+         "Otava follows the ants.")])
      ])
   )
 
@@ -148,17 +148,14 @@
 
 
 (define (get-location-decisions location)
-  (displayln "get-location-decisions")
-  (list
-  (make-decision
-   #:title "Talk to the stilted figure."
-   #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
-   #:on-resolve! (proc
-                  (displayln "There is a bag of gold on the ground."))
-   #:next-fragment 'exit
-   )
-
-  
-  
-  )
-  )
+  (case (location-id location)
+    ['martaanvuo-docks
+     (list
+      (make-decision
+       #:title "Talk to the stilted figure."
+       #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
+       #:on-resolve! (proc
+                      (displayln "There is a bag of gold on the ground."))
+       #:next-fragment 'exit
+       ))]
+    [else '()]))
