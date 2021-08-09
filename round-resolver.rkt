@@ -835,27 +835,34 @@
       (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
+
+       ; launch a fragment directly -> no action resolution -> not a choice
+      (define location-decisions (if (null? (situation-current-fragment-number *situation*))
+                                     (get-location-decisions (current-location))
+                                     '()))
+      
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       
       (define choices (if (null? fragment-decisions)
                           world-choices
                           '()))
 
-      (define fragment-decisions-with-keys (build-keys-to-choices-map fragment-decisions 1))
-      (define first-non-fragment-index (add1 (length fragment-decisions)))
-      (define choices-with-keys (build-keys-to-choices-map choices first-non-fragment-index)) ; should check for pending actions and name choices accordingly
+      (define all-decisions (append fragment-decisions location-decisions))
+      (define decisions-with-keys (build-keys-to-choices-map all-decisions 1))
+      (define first-free-index (add1 (length all-decisions)))
+      (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
-      (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
+      (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
       (serialize-input)
 
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((fragment-decision-valid? fragment-decisions-with-keys input)
+            ((fragment-decision-valid? decisions-with-keys input)
              (begin
-               (handle-fragment-decision fragment-decisions-with-keys input)
+               (handle-fragment-decision decisions-with-keys input)
                
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))

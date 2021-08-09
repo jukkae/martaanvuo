@@ -97,11 +97,19 @@
 
 (define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-(define (make-path-between id-a id-b [hidden? #f])
+(define (make-path-between
+         id-a
+         id-b
+         #:hidden? [hidden? #f]
+         #:no-encounters? [no-encounters? #f])
+  
   (define place-a (find-place-by-id id-a))
   (define place-b (find-place-by-id id-b))
   (set! *number-of-routes* (add1 *number-of-routes*))
+
   (define details '())
+  (when no-encounters? (set! details (append-element details 'no-encounters)))
+  
   (define actors '()) ; TODO this should be hidden
   (define r (route *number-of-routes* place-a place-b details actors))
   (set-place-routes! place-a (append-element (place-routes place-a) r))
@@ -117,8 +125,8 @@
   (make-path-between 'martaanvuo-swamp 'crematory)
   (make-path-between 'martaanvuo-swamp 'martaanvuo-docks)
   (make-path-between 'martaanvuo-swamp 'magpie-hill)
-  (make-path-between 'magpie-hill 'power-plant-ruins)
-  (make-path-between 'power-plant-ruins 'cache)
+  (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+  (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t)
   (make-path-between 'power-plant-ruins 'sewers-1)
   (make-path-between 'sewers-1 'sewers-2)
   (make-path-between 'sewers-1 'workshop)

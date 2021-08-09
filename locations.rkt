@@ -8,6 +8,7 @@
 (require "io.rkt")
 (require "location.rkt")
 (require "route.rkt")
+(require "utils.rkt")
 
 (lazy-require ["situation.rkt"
                (current-location
@@ -17,6 +18,10 @@
                 times-finish-traverse-narrated++
                 times-cancel-traverse-narrated
                 times-cancel-traverse-narrated++)])
+
+(lazy-require ["fragment.rkt"
+               (decision
+                make-decision)])
 
 
 (define (describe-begin-traverse-action action)
@@ -140,3 +145,20 @@
 (define (location-on-enter! location)
   (displayln "LOCATION-ON-ENTER")
   (displayln location))
+
+
+(define (get-location-decisions location)
+  (displayln "get-location-decisions")
+  (list
+  (make-decision
+   #:title "Talk to the stilted figure."
+   #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
+   #:on-resolve! (proc
+                  (displayln "There is a bag of gold on the ground."))
+   #:next-fragment 'exit
+   )
+
+  
+  
+  )
+  )
