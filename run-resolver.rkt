@@ -4,6 +4,7 @@
 
 (require "io.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
 (require "quests.rkt")
 (require "round-resolver.rkt")
 (require "situation.rkt")
@@ -59,7 +60,14 @@
 
 (define (on-end-run exit-status)
   (cond ((> (pc-gold-amount) 0)
-         (define new-debt-amount 10)
+         (define debt-quest (find-quest 'pay-off-debt))
+         (define gold-collected (pc-gold-amount))
+         (reduce-debt-by! gold-collected)
+         
+
+         (displayln "Quest:")
+         (displayln debt-quest)
+         
          (info-card
           (list
            (list " run "
@@ -67,7 +75,7 @@
            (list " gold collected "
                  (string-append " " (number->string (pc-gold-amount)) " grams "))
            (list " debt still owed "
-                 (string-append " " (number->string new-debt-amount) " grams ")))
+                 (string-append " " (number->string (quest-details debt-quest)) " grams ")))
           (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
 
         

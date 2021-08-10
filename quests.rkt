@@ -18,12 +18,14 @@
        (quest 'pay-off-debt
               "pay off Debt to Collector"
               "in progress"
-              "unsettled: 10,111 g of Martaanvuo gold")] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
+              "unsettled: 10,111 g of Martaanvuo gold"
+              10111)] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
       ['the-anthead
        (quest 'the-anthead
               "seek the Anthead Girl"
               "not started"
-              "\"not ready yet\", whatever.")]))
+              "\"not ready yet\", whatever."
+              '())]))
   (add-quest! q)
 
 

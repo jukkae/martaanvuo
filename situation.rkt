@@ -289,6 +289,29 @@
 (define (quests)
   (situation-quests *situation*))
 
+(define (find-quest id)
+  (findf (λ (q) (eq? (quest-id q) id))
+         (situation-quests *situation*)))
+
+
+
+(define (reduce-debt-by! amount)
+  (define debt-quest (find-quest 'pay-off-debt))
+  
+  (define old-debt-amount (quest-details debt-quest))
+  (define new-debt-amount (- old-debt-amount amount))
+  (set-quest-details! debt-quest new-debt-amount)
+  (set-quest-notes! debt-quest
+                    (string-append
+                     "unsettled: "
+                     (number->string new-debt-amount)
+                     " g of Martaanvuo gold"))
+  (displayln "new-debt-amount:")
+  #;(displayln (~r new-debt-amount)) ; formatting todo
+  (displayln new-debt-amount)
+  
+  '())
+
 
 ; combat?
 (define (get-combatant-name actor)
