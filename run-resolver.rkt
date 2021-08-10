@@ -4,6 +4,7 @@
 
 (require "io.rkt")
 (require "pc.rkt")
+(require "quests.rkt")
 (require "round-resolver.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -29,7 +30,7 @@
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     #;[(2)
-     (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
+       (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
 
 ; engine / run-resolver
@@ -55,23 +56,37 @@
      "Otava finds passage through the swamps and disappears to the other side of the unnamed mountain range, to begin a new life herding the reindeer."
      ))))
 
-(define (narrate-end-run exit-status)
-  (info-card
-   (list
-    (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-   (string-append "End run number " (number->string (situation-run *situation*))))
+
+(define (on-end-run exit-status)
+  (cond ((> (pc-gold-amount) 0)
+         (define new-debt-amount 10)
+         (info-card
+          (list
+           (list " run "
+                 (string-append " " (number->string (situation-run *situation*)) " "))
+           (list " gold collected "
+                 (string-append " " (number->string (pc-gold-amount)) " grams "))
+           (list " debt still owed "
+                 (string-append " " (number->string new-debt-amount) " grams ")))
+          (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
+
+        
+        (else
+         (displayln "FAILED RUN")
+         (info-card
+          (list
+           (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+          (string-append "End run number " (number->string (situation-run *situation*))))))
+
+  
+  
   (case exit-status
     ['end-run
      (paragraph "She's still alive.")]
     ['restart
      (narrate-restart)]
     [else
-     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
-
-(define (on-end-run exit-status)
-  (when (> (pc-gold-amount) 0)
-    (displayln "pc has gold"))
-  (narrate-end-run exit-status)
+     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
   (wait-for-confirm))
 
 ; engine / run-resolver

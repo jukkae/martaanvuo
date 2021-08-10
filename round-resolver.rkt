@@ -424,7 +424,7 @@
                    ; TODO this is heavy on narration -> is this a fragment?
                    (cond ((eq? (action-symbol action) 'end-run)
                           (cond ((flag-set? 'ending-run-allowed)
-                                 (paragraph "At least it's something.")
+                                 #;(paragraph "At least it's something.")
                                  (return 'end-run))
                                 (else
                                  (set-flag 'tried-to-go-back)

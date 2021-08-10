@@ -207,36 +207,6 @@
   (define quests (situation-quests *situation*))
   (findf (λ (quest) (eq? id (quest-id quest))) quests))
 
-;;; move these elsewhere, more content than code
-(define (create-quest quest-symbol)
-  (define q
-    (case quest-symbol
-      ['pay-off-debt
-       (quest 'pay-off-debt
-              "pay off Debt to Collector"
-              "in progress"
-              "unsettled: 10,111 g of Martaanvuo gold")] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
-      ['the-anthead
-       (quest 'the-anthead
-              "seek the Anthead Girl"
-              "not started"
-              "\"not ready yet\", whatever.")]))
-  (add-quest! q)
-
-
-  (case quest-symbol
-    ['pay-off-debt
-     (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
-  
-
-  (define body
-    (format-quest-for-card q))
-
-  (info-card
-   (list body)
-   "New quest")
-
-  (wait-for-confirm))
 
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
