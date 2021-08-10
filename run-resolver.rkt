@@ -17,6 +17,8 @@
 ; but figure out where this should be called from
 ; engine / run-resolver
 (define (narrate-begin-run)
+  (next-chapter!)
+  
   ; Don't show this until the second run!
   (when (not (= 1 (situation-run *situation*)))
     (info-card
@@ -24,7 +26,7 @@
       (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
      (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
-  (next-chapter!)
+  
   (case (situation-run *situation*)
     [(1)
      (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far. Somebody has been here, once.")
