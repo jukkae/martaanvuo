@@ -63,6 +63,8 @@
          (define debt-quest (find-quest 'pay-off-debt))
          (define gold-collected (pc-gold-amount))
          (reduce-debt-by! gold-collected)
+         (remove-item! 'gold)
+         
          
 
          (displayln "Quest:")

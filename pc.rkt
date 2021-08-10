@@ -101,6 +101,16 @@
          (item-info-card item #:title title))
         (else (error "Error: add-item! expects symbol or item"))))
 
+(define (remove-item! id)
+  (define items (actor-inventory (pc)))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+         items)
+  (set-actor-inventory! (pc)
+                        (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                (actor-inventory (pc))
+                                ))
+  (displayln "removing item"))
+
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
   (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
