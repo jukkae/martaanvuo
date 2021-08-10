@@ -14,11 +14,11 @@
     (on-begin-life))
   
   (let/ec end-life
-    (let loop ()
-      (define run-exit-status (resolve-run mode))
+    (let loop ([m mode])
+      (define run-exit-status (resolve-run m))
       (when (eq? run-exit-status 'pc-dead) (end-life 'pc-dead))
       (when (eq? run-exit-status 'win-game) (end-life 'win-game))
-      (when (eq? run-exit-status 'end-run) (loop))
+      (when (eq? run-exit-status 'end-run) (loop 'begin))
       (when (eq? run-exit-status 'restart) (end-life 'restart))
       )
     ))
