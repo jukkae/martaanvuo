@@ -27,6 +27,9 @@
 (lazy-require ["pc.rkt"
                (add-item!)])
 
+(lazy-require ["quests.rkt"
+               (create-quest)])
+
 
 (define (describe-begin-traverse-action action)
   (define from
@@ -106,7 +109,8 @@
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
-        (paragraph "Decaying docks slowly appear from the mist. Rusty rebar sticks out from vast broken concrete slabs. Much of it is unusable, and there's not much shelter to be found here. There is a stilted figure moving on the water maybe fifteen meters away from the shore.")]
+        (paragraph "Decaying docks slowly appear from the mist. Rusty rebar sticks out from vast broken concrete slabs. Most portside buildings are completely ruined, but some piers are still in one piece.")
+        (paragraph "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a pile of rubble and rusty rebar. It is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
        [else
         (paragraph
          "The misty docks slowly appear from the mist.")])]
@@ -167,11 +171,13 @@
              (when (location-has-feature? location 'stiltman)
                (make-decision
                 #:title "Talk to the stilted figure."
-                #:description "\"... helped me – finally you understand – come back tomorrow – Murkwater made it special – here's the fee we agreed –\", the shadowlike figure stutters through the mist, as it stumbles and wobbles in the mire."
+                #:description "Otava goes closer. The figure is a man on stilts, flailing in the water, yet making minimal noise.  \"– helped me – finally you understand – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis."
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
-                        (paragraph "The creature throws something on the pier. There's a heavy clink and a shiny glimmer. Otava picks up the bag. There's a handful of small gold coins in it.")
+                        (paragraph "Otava tries to think of something to say, but Stiltman goes on. \" – Murkwater made it special – I knew you would ask that question – here's the fee we agreed – yes, bottled is fine –\"")
+                        (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava picks up the bag. It's her lucky day: There's a handful of small gold coins in the bag, maybe ten gees or more. When Otava raises her head, Stiltman has disappeared in the mangrove-like growths of the mire.")
                         (add-item! 'gold #:amount 11 #:title "Picked up")
+                        (create-quest 'bottled-is-fine)
                         (set-flag 'ending-run-allowed))
                 #:next-fragment 'exit
                 ))))

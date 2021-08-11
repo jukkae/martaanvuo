@@ -25,6 +25,12 @@
               "seek the Anthead Girl"
               "not started"
               "\"not ready yet\", whatever."
+              '())]
+      ['bottled-is-fine
+       (quest 'bottled-is-fine
+              "Bottled is Fine"
+              "???"
+              "who (or WHAT) is Stiltman?? fee agreed for WHAT?"
               '())]))
   (add-quest! q)
 
