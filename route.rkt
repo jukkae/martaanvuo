@@ -23,7 +23,8 @@
   [a #:mutable]
   [b #:mutable]
   [details #:mutable]
-  [actors #:mutable]))
+  [actors #:mutable])
+ #:transparent)
 
 
 
@@ -42,22 +43,46 @@
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill "Magpie and the rocky slope."]
          ['martaanvuo-swamp "Ants and the swamp."]
-         [else (string-append "< unknown location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
+         [else (string-append "["
+                      (symbol->string (location-id start-location))
+                      " to "
+                      (symbol->string (location-id (route-other-end-from route start-location)))
+                      "]")])]
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
          ['perimeter "Rocky stairs."]
          ['martaanvuo-swamp "Down, toward the swamp."]
          ['power-plant-ruins "Decrepit building."]
-         [else (string-append "< unknown to-location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
+         [else (string-append "["
+                      (symbol->string (location-id start-location))
+                      " to "
+                      (symbol->string (location-id (route-other-end-from route start-location)))
+                      "]")])]
+      ['martaanvuo-swamp
+       (case (location-id (route-other-end-from route start-location))
+         ['magpie-hill "The hill."]
+         ['perimeter "The path."]
+         [else (string-append "["
+                      (symbol->string (location-id start-location))
+                      " to "
+                      (symbol->string (location-id (route-other-end-from route start-location)))
+                      "]")])]
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill "Magpie and the rocky slope."]
          ['perimeter "Rocky stairs."]
-         [else (string-append "< unknown location: " (symbol->string (location-id (route-other-end-from route start-location))) " >")])]
+         [else (string-append "["
+                      (symbol->string (location-id start-location))
+                      " to "
+                      (symbol->string (location-id (route-other-end-from route start-location)))
+                      "]")])]
       [else
-       (displayln "get-route-short-description: unknown start location id:")
-       (displayln (location-id start-location))
-       (string-append "< to: >" (symbol->string (location-id (route-other-end-from route start-location))))]))
+       
+       (string-append "["
+                      (symbol->string (location-id start-location))
+                      " to "
+                      (symbol->string (location-id (route-other-end-from route start-location)))
+                      "]")]))
   
 
   

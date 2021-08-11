@@ -26,7 +26,7 @@
               "not started"
               "\"not ready yet\", whatever."
               '())]
-      ['bottled-is-fine
+      ['treatise-on-pulverization
        (quest 'treatise-on-pulverization
               "Treatise on Pulverization"
               "???"

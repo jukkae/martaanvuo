@@ -493,14 +493,6 @@
                           (move-pc-to-location! next-location)
                           (location-on-enter! (current-location))
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
-                          
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
@@ -580,14 +572,7 @@
                                                     (route-a (action-target action))))
                           (move-pc-to-location! next-location)
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
 
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
@@ -599,14 +584,6 @@
                           (reset-pending-action!)
                           (move-pc-to-location! (action-target action))
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
-                          
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-cancel-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))

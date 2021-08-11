@@ -201,7 +201,7 @@
 (fragment
  300
  (string-append
-  "There's an inconspicuous sign saying 'Murkwater Aix' on the wall of an automated guard's booth.")
+  "There's an inconspicuous sign saying 'Murkwater / Aegis' on the wall of an automated guard's booth.")
  (list
   (make-decision
    #:title ""
