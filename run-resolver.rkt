@@ -61,34 +61,35 @@
 
 
 (define (on-end-run exit-status)
-  (cond ((> (pc-gold-amount) 0)
-         (define debt-quest (find-quest 'pay-off-debt))
-         (define gold-collected (pc-gold-amount))
-         (reduce-debt-by! gold-collected)
-         (remove-item! 'gold)
+  (when (not (eq? exit-status 'restart))
+    (cond ((> (pc-gold-amount) 0)
+           (define debt-quest (find-quest 'pay-off-debt))
+           (define gold-collected (pc-gold-amount))
+           (reduce-debt-by! gold-collected)
+           (remove-item! 'gold)
          
          
 
-         (displayln "Quest:")
-         (displayln debt-quest)
+           (displayln "Quest:")
+           (displayln debt-quest)
          
-         (info-card
-          (list
-           (list " run "
-                 (string-append " " (number->string (situation-run *situation*)) " "))
-           (list " gold collected "
-                 (string-append " " (number->string (pc-gold-amount)) " grams "))
-           (list " debt still owed "
-                 (string-append " " (number->string (quest-details debt-quest)) " grams ")))
-          (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
+           (info-card
+            (list
+             (list " run "
+                   (string-append " " (number->string (situation-run *situation*)) " "))
+             (list " gold collected "
+                   (string-append " " (number->string (pc-gold-amount)) " grams "))
+             (list " debt still owed "
+                   (string-append " " (number->string (quest-details debt-quest)) " grams ")))
+            (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
 
         
-        (else
-         (displayln "FAILED RUN")
-         (info-card
-          (list
-           (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-          (string-append "End run number " (number->string (situation-run *situation*))))))
+          (else
+           (displayln "FAILED RUN")
+           (info-card
+            (list
+             (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+            (string-append "End run number " (number->string (situation-run *situation*)))))))
 
   
   

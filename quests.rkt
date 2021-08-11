@@ -27,10 +27,10 @@
               "\"not ready yet\", whatever."
               '())]
       ['bottled-is-fine
-       (quest 'bottled-is-fine
-              "Bottled is Fine"
+       (quest 'treatise-on-pulverization
+              "Treatise on Pulverization"
               "???"
-              "who (or WHAT) is Stiltman?? fee agreed for WHAT?"
+              "a book? who/WHAT is Stiltman?? fee agreed for what?"
               '())]))
   (add-quest! q)
 
