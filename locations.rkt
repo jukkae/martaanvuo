@@ -174,7 +174,7 @@
                 #:description "Otava goes closer. The figure is a man on stilts, flailing in the water, yet making minimal noise.  \"– helped me – finally you understand – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis."
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
-                        (paragraph "Otava tries to think of something to say, but Stiltman goes on. \" – Murkwater made it special – I knew you would ask that question – here's the fee we agreed – yes, bottled is fine –\"")
+                        (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \" – Murkwater made it special – I knew you would ask that question – here's the fee we agreed – yes, bottled is fine –\"")
                         (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava picks up the bag. It's her lucky day: There's a handful of small gold coins in the bag, maybe ten gees or more. When Otava raises her head, Stiltman has disappeared in the mangrove-like growths of the mire.")
                         (add-item! 'gold #:amount 11 #:title "Picked up")
                         (create-quest 'bottled-is-fine)
