@@ -23,26 +23,12 @@
   (resolve-pc-action!)])
 
 
-
-(define *story-fragments* (make-hash))
-
-(define (fragment id description decisions on-enter!)
-  (define frag
-    (story-fragment
-     id
-     description
-     decisions
-     on-enter!))
-  (hash-set! *story-fragments* id frag))
-
-(define (get-fragment id)
-  (hash-ref *story-fragments* id))
-
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
 (fragment
  1
  "Still, someone's been there, and so will she. And she'll make it back, too."
+ #:decisions
  (list
   (make-decision
    #:title "She has a gun."
@@ -78,58 +64,13 @@
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
+ #:on-enter!
  (λ () '()#;(set-prompt! "Because...")))
 
 
 
 
-(fragment
- 11
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
 
- (list
-  (make-decision
-   #:requirement   (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
-   #:title         "Ask about the Yarn."
-   #:description   "\"Yarn of the what?\""
-   #:next-fragment 12)
-
-  (make-decision
-   #:requirement   (λ () (passive-check 'charisma-mod '> -1))
-   #:title         "Ask who's 'us'."
-   #:description   "\"'Us'? Who's 'us'?\""
-   #:next-fragment 14))
- 
- (λ () '()))
-
-(fragment
- 12
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list
-  (make-decision
-   #:title         "Agree to bring the book."
-   #:description   "\"Okay, so tell me what you know about the laboratory.\""
-   #:next-fragment 'create-quest-and-exit)
-
-  ; here XP reward and set the pc as 'cunning' (and figure out what that means)
-  (make-decision
-   #:title         "The book's more valuable than 11 bullets. Decline and keep the book to yourself."
-   #:description   "\"Not interested, but thanks for the chat.\""
-   #:next-fragment 'exit))
- (λ () '())) 
-
-(fragment
- 14
- (string-append
-  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
-  ) ; and drop some meta-visible info or something somewhere; create a quest?
-
- (make-decision
-  #:title "Ask about the book."
-  #:description "\"The book, Yarn of the what?\""
-  #:next-fragment 12)
- (λ () (create-quest 'the-anthead))
- )
 
 
 (fragment
@@ -137,7 +78,8 @@
  (string-append
   "Otava thinks the magpie should be close, but the sound seems to come from a slightly different direction every time."
   )
-
+ 
+ #:decisions
  (list (make-decision
         #:title "Listen quietly."
         #:description "The magpie laughs straight above her. The bird is hidden somewhere within the shadowy branches of a large dead oak. There's a worn tombstone half buried under the roots of the tree."
@@ -153,9 +95,7 @@
                        (set-flag 'eternal-bullet)
                        (add-ammo! 1)
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
-        #:next-fragment 'exit))
- (λ () '())
- )
+        #:next-fragment 'exit)))
 
 
 
@@ -165,13 +105,13 @@
  (string-append
   "[post-combat steps to do]"
   )
+ 
+ #:decisions
  (list (make-decision
         #:title "Exit action."
         #:description "Combat finished."
         #:next-fragment 'exit
-        ))
- (λ () '())
- )
+        )))
 
 (fragment
  200
@@ -182,6 +122,7 @@
   "\n\n"
   "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
   )
+ #:decisions
  (list
   (make-decision
    #:title "Power on the device."
@@ -194,16 +135,15 @@
    #:title "Leave the device be."
    #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
    #:next-fragment 'exit
-   ))
- 
- (λ () '())
- )
+   )))
 
 
 (fragment
  'stiltman-dialogue
  (string-append
   "Stiltman goes quiet and seems to struggle against an unseen wind, Otava thinks, or like an animal that's tied down struggling to break free.")
+
+ #:decisions
  (list
   (make-decision
    #:title "\"Uh...\""
@@ -237,7 +177,7 @@
    #:next-fragment 'exit
    ))
  
- (λ () '())
+ 
  )
 
 
