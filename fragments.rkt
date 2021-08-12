@@ -198,18 +198,30 @@
  (λ () '())
  )
 
+
 (fragment
- 300
+ 'stiltman-dialogue
  (string-append
-  "There's an inconspicuous sign saying 'Murkwater / Aegis' on the wall of an automated guard's booth.")
+  "Stiltman seems to stabilise for a while, and shuts up a moment.")
  (list
   (make-decision
-   #:title ""
-   #:description ""
+   #:title "\"Uh...\""
+   #:description "\"Uh...\""
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "Ask about the Treatise."
+   #:description "\"The Treatise?\", Otava asks."
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "Ask about what the fee is for."
+   #:description "\"The fee, what is it for?\""
    #:next-fragment 'exit
    ))
  
  (λ () '())
  )
+
 
 

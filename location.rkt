@@ -175,18 +175,20 @@
                     (string-append " "
                                    (symbol->string (place-type location))
                                    " ")))
-            (list (string-append " "
-                                 "items"
-                                 " ")
-                  (string-append " "
-                                 (~v (place-items location))
-                                 " "))
-            (list (string-append " "
-                                 "features"
-                                 " ")
-                  (string-append " "
-                                 (~v (place-features location))
-                                 " "))
+            (when (not (null? (place-items location)))
+              (list (string-append " "
+                                   "items"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-items location))
+                                   " ")))
+            (when (not (null? (place-features location)))
+              (list (string-append " "
+                                   "features"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-features location))
+                                   " ")))
             )))
   (info-card body title))
 
