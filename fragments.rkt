@@ -7,6 +7,7 @@
 
 (require "action.rkt")
 (require "checks.rkt")
+(require "decision.rkt")
 (require "location.rkt")
 (require "fragment.rkt")
 (require "io.rkt")

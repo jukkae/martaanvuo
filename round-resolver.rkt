@@ -14,6 +14,7 @@
 (require "character-sheet.rkt")
 (require "choice.rkt")
 (require "condition.rkt")
+(require "decision.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
