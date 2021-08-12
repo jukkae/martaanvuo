@@ -20,15 +20,9 @@
               "in progress"
               "unsettled: 10,111 g of Martaanvuo gold"
               10111)] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
-      ['the-anthead
-       (quest 'the-anthead
-              "seek the Anthead Girl"
-              "not started"
-              "\"not ready yet\", whatever."
-              '())]
-      ['pulverization-monograph
-       (quest 'pulverization-monograph
-              "Pulverization Monograph"
+      ['anthead-monograph
+       (quest 'anthead-monograph
+              "Anthead Monograph"
               "???"
               "a book? who/WHAT is Stiltman?? fee agreed for what?"
               '())]))

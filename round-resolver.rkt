@@ -42,7 +42,9 @@
 ; move specifics from here to the actual fragment
 (define (current-fragment-handle-decision! decision)
 
-  (paragraph (decision-description decision))
+  #;(when (not (null? (decision-description decision)))
+    (paragraph (decision-description decision)))
+  
 
   (when (not (null? (decision-on-resolve! decision)))
     ((decision-on-resolve! decision)))

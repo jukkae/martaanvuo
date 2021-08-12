@@ -217,7 +217,7 @@
     "\n\n"
     "\"What kind of outside help?\""
     "\n\n"
-    "\"I don't know the precise details, but there was this book... Pulverization Monograph, it was called, it's this like really old, all philosophy and metaphysical woo-woo, see, the 'Land of the Dead' type of reincarnation thing and whatnot. So then they claimed that, the bullshit aside, the logic was solid, see, it was different, so they'd developed a new kind of mathematics from there – and this is where it gets crazy, trust me I know –\""
+    "\"I don't know the precise details, but there was this book... Anthead Monograph, it was called, it's this like really old, all philosophy and metaphysical woo-woo, see, the 'Land of the Dead' type of reincarnation thing and whatnot. So then they claimed that, the bullshit aside, the logic was solid, see, it was different, so they'd developed a new kind of mathematics from there – and this is where it gets crazy, trust me I know –\""
     "\n\n"
     "\"– so the we used the new approach on our simulations, and everything checked out and we were well within the parameter range even in the worst case, see – so then, it was not like we could like make normal gold radioactive, or do the whole fusion fission type of thing the others do, it's that we could, see, create gold – so then we modified the reactor and – it's getting worse again – I was fishing, thank the heavens you noticed me –\" Stiltman exclaims, as he's falling away from the shore, like gravity is suddenly sideways for him. \"– thank you – I am currently unstably present –\", he stutters, as he disappears in the mist."
     )

@@ -82,7 +82,7 @@
 
    (make-place
     #:id 'control-room
-    #:items '(pulverization-monograph))
+    #:items '(anthead-monograph))
 
    (make-place
     #:id 'reactor-room)
