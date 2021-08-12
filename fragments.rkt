@@ -175,10 +175,48 @@
    #:title "Ask about what the fee is for."
    #:description "\"The fee, what is it for?\""
    #:next-fragment 'exit
+   )))
+
+
+(fragment
+ 'begin-stiltman-dialogue
+ (string-append
+  "Stiltman goes quiet and seems to struggle against an unseen wind, Otava thinks, or like an animal that's tied down struggling to break free.")
+
+ #:decisions
+ (list
+  (make-decision
+   #:title "\"Uh...\""
+   ; this is starting to look like the fragment should contain calls to paragraph directly
+   #:description
+   (string-append
+    "bla"
+    )
+   #:next-fragment 'exit
+   )
+  ; -> the mission is to find the monograph
+  (make-decision
+   #:title "Ask about the Monograph."
+   #:description "\"The Monograph?\", Otava asks."
+   #:next-fragment 'exit
+   )
+  ; -> the mission is to destroy the monograph
+  (make-decision
+   #:title "Ask about what the fee is for."
+   #:description "\"The fee, what is it for?\""
+   #:next-fragment 'exit
    ))
- 
- 
- )
+
+ #:on-enter!
+ (proc
+  (next-chapter!)
+  (paragraph "\"– helped me – no, I insist – finally you understand, working it through took ages – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis.")
+  (remove-feature-from-location! (current-location) 'stiltman)
+  (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \"– Anthead Monograph had the missing viewpoint on multi-valued logic which was needed to run the simulations  – I knew you would ask that question – here's the fee we agreed – or was, really –\"")
+  (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
+  (add-item! 'gold #:amount 11 #:title "Picked up")
+  (create-quest 'anthead-monograph)
+  (set-flag 'ending-run-allowed)))
 
 
 
