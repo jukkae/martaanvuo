@@ -202,11 +202,17 @@
 (fragment
  'stiltman-dialogue
  (string-append
-  "Stiltman seems to stabilise for a while, and shuts up a moment.")
+  "Stiltman goes quiet and seems to struggle against an unseen wind, Otava thinks, or like an animal that's tied down struggling to break free.")
  (list
   (make-decision
    #:title "\"Uh...\""
-   #:description "\"Uh...\""
+   ; this is starting to look like the fragment should contain calls to paragraph directly
+   #:description
+   (string-append
+    "\"I, uh...\", Otava begins. \"Do not read it! –\", the Stiltman goes, \"– I was fishing, thank God you noticed me – \""
+    "\n\n"
+    "With a poof, he is gone."
+    )
    #:next-fragment 'exit
    )
   (make-decision

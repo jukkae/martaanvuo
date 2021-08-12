@@ -175,7 +175,7 @@
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
                         (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \"– Treatise on Pulverization is the key – I knew you would ask that question – here's the fee we agreed – or was, really –\"")
-                        (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag. There's a handful of small gold coins in the bag. When Otava raises her head, Stiltman has disappeared in the mangrove-like growths of the mire.")
+                        (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
                         (add-item! 'gold #:amount 11 #:title "Picked up")
                         (create-quest 'treatise-on-pulverization)
                         (set-flag 'ending-run-allowed))
