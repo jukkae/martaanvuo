@@ -19,7 +19,7 @@
 
 (define
   (make-decision #:title title
-                 #:description description
+                 #:description [description '()]
                  #:next-fragment next-fragment
                  #:requirement [requirement (λ () '())]
                  #:on-resolve![on-resolve! (λ () '())])
