@@ -169,23 +169,12 @@
 
 (define (get-location-decisions location)
   (condense (list
+
+             ; definition / content goes to -> features, or world, or something
              (when (location-has-feature? location 'stiltman)
                (make-decision
                 #:title "Talk to the stilted figure."
                 #:on-resolve! (proc
                                (paragraph "Otava goes closer. The figure is a man on stilts, flailing peculiarly above the water, barely staying upright."))
                 #:next-fragment 'begin-stiltman-dialogue
-                ))))
-
-  ; not sure which is more ergonomic
-  #;(case (location-id location)
-      ['martaanvuo-docks
-       (list
-        (make-decision
-         #:title "Talk to the stilted figure."
-         #:description "\"... helped me – finally you understand – Murkwater made it special – here's the fee we agreed –\", the figure stutters, as it stumbles and wobbles in the mire. It drops something next to Otava. \"– yes, no, no – it is precisely 101 grams – \""
-         #:on-resolve! (proc
-                        (displayln "There is a bag of gold on the ground."))
-         #:next-fragment 'exit
-         ))]
-      [else '()]))
+                )))))
