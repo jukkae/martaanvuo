@@ -173,6 +173,7 @@
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
   (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (display-location-info-card (current-location) "Current location")
   
   (set! action-queue '())
   
@@ -204,6 +205,7 @@
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
   (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
+  (display-location-info-card (current-location) "Current location")
   
   (set! action-queue '())
   #;(repeat-last-paragraph)

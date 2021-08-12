@@ -35,6 +35,12 @@
       (set! result #f)))
   result)
 
+(define (prune lst)
+  (filter
+   (λ (x) (and (not (null? x))
+               (not (void? x))))
+   lst))
+
 (define (condense lst)
   (filter
    (λ (x) (and (not (null? x))
