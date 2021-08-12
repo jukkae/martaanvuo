@@ -82,7 +82,7 @@
 
    (make-place
     #:id 'control-room
-    #:items '(treatise-on-pulverization))
+    #:items '(pulverization-monograph))
 
    (make-place
     #:id 'reactor-room)

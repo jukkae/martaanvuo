@@ -209,17 +209,25 @@
    ; this is starting to look like the fragment should contain calls to paragraph directly
    #:description
    (string-append
-    "\"I, uh...\", Otava begins. \"Do not read it! –\", the Stiltman goes, \"– I was fishing, thank God you noticed me – \""
+    "\"I, uh...\", Otava begins. \"– Thank the heavens that you noticed me!\", the man says, and continues \"I have only a little of – do not read it! – time, as I am currently unstably present, due to an accident at the Murkwater / Aegis complex downriver. You can call me... Stiltman.\""
     "\n\n"
-    "With a poof, he is gone."
+    "\"Do not read it! –\", Stiltman goes, \"– I was fishing, thank the heavens you noticed me – \", and then he's stable again. \"– I was fishing, thank the heavens you noticed me – so they were manufacturing a special kind of radioactive gold, who knows what for – I'm just a technician, see – \""
+    "\n\n"
+    "Otava takes a step closer. \"No! Don't come any closer or it'll get you too!\", Stiltman says, and then continues, \"They had enhanced the process, you see, gotten outside help.\""
+    "\n\n"
+    "\"What kind of outside help?\""
+    "\n\n"
+    "\"I don't know the precise details, but there was this book... Pulverization Monograph, it was called, it's like really old, all philosophy and like metaphysical woo-woo. So then they claimed that they'd got a new kind of mathematics from there, which they then used to essentially create Gold-198 out of thin air! So you see, it's not that they could convert something to the needed special radioactive gold, it's that they, well, you know. It sounds mad, I know, but we ran the simulations, everything checked out, we were well within parameter range even in the worst case, so we modified the reactor. – It's getting worse again – – I was fishing, thank the heavens you noticed me – \" Stiltman exclaims, as he looks like gravity is pulling him further out, away from the shore. \"– thank you – I am currently unstably present –\", he goes, as he disappears in the mist."
     )
    #:next-fragment 'exit
    )
+  ; -> the mission is to find the monograph
   (make-decision
-   #:title "Ask about the Treatise."
-   #:description "\"The Treatise?\", Otava asks."
+   #:title "Ask about the Monograph."
+   #:description "\"The Monograph?\", Otava asks."
    #:next-fragment 'exit
    )
+  ; -> the mission is to destroy the monograph
   (make-decision
    #:title "Ask about what the fee is for."
    #:description "\"The fee, what is it for?\""

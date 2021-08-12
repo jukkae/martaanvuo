@@ -26,9 +26,9 @@
               "not started"
               "\"not ready yet\", whatever."
               '())]
-      ['treatise-on-pulverization
-       (quest 'treatise-on-pulverization
-              "Treatise on Pulverization"
+      ['pulverization-monograph
+       (quest 'pulverization-monograph
+              "Pulverization Monograph"
               "???"
               "a book? who/WHAT is Stiltman?? fee agreed for what?"
               '())]))

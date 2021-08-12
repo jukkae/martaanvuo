@@ -171,13 +171,13 @@
              (when (location-has-feature? location 'stiltman)
                (make-decision
                 #:title "Talk to the stilted figure."
-                #:description "Otava goes closer. The figure is a man on stilts, flailing peculiarly above the water, barely staying upright.  \"– helped me – confidently – finally you understand, working it through took ages – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis."
+                #:description "Otava goes closer. The figure is a man on stilts, flailing peculiarly above the water, barely staying upright.  \"– helped me – no, I insist – finally you understand, working it through took ages – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis."
                 #:on-resolve! (proc
                         (remove-feature-from-location! location 'stiltman)
-                        (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \"– Treatise on Pulverization is the key – I knew you would ask that question – here's the fee we agreed – or was, really –\"")
+                        (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \"– Pulverization Monograph had the missing viewpoint on multi-valued logic which was needed to run the simulations  – I knew you would ask that question – here's the fee we agreed – or was, really –\"")
                         (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
                         (add-item! 'gold #:amount 11 #:title "Picked up")
-                        (create-quest 'treatise-on-pulverization)
+                        (create-quest 'pulverization-monograph)
                         (set-flag 'ending-run-allowed))
                 #:next-fragment 'stiltman-dialogue
                 ))))
