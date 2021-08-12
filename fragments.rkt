@@ -187,10 +187,17 @@
  (list
   (make-decision
    #:title "\"Uh...\""
-   ; this is starting to look like the fragment should contain calls to paragraph directly
-   #:description
-   (string-append
-    "bla"
+   
+   
+   #:on-resolve!
+   (proc
+    (paragraph "\"I, uh...\", Otava begins. \"– Thank the heavens that you noticed me!\", the man says, and continues \"I have only a little of – do not read it! – time, as I am currently unstably present, due to an accident at the Murkwater / Aegis complex downriver. You can call me... Stiltman.\"")
+    (paragraph "\"Do not read it! –\", Stiltman goes, \"– I was fishing, thank the heavens you noticed me – \", and then he's stable again. \"– I was fishing, thank the heavens you noticed me – so they were manufacturing a special kind of radioactive gold, who knows what for – I'm just a technician, see – \"")
+    (paragraph "Otava takes a step closer. \"No! Don't come any closer or it'll get you too!\", Stiltman says, and then continues, \"They had enhanced the process, you see, gotten outside help.\"")
+    (paragraph "\"What kind of outside help?\"")
+    (paragraph "\"I don't know the precise details, but there was this book... Anthead Monograph, it was called, it's this like really old, all philosophy and metaphysical woo-woo, see, the 'Land of the Dead' type of reincarnation thing and whatnot. So then they claimed that, the bullshit aside, the logic was solid, see, it was different, so they'd developed a new kind of mathematics from there – and this is where it gets crazy, trust me I know –\"")
+    (paragraph "\"– so the we used the new approach on our simulations, and everything checked out and we were well within the parameter range even in the worst case, see – so then, it was not like we could like make normal gold radioactive, or do the whole fusion fission type of thing the others do, it's that we could, see, create gold – so then we modified the reactor and – it's getting worse again – I was fishing, thank the heavens you noticed me –\" Stiltman exclaims, as he's falling away from the shore, like gravity is suddenly sideways for him. \"– thank you – I am currently unstably present –\", he stutters, as he disappears in the mist.")
+    
     )
    #:next-fragment 'exit
    )
@@ -210,7 +217,7 @@
  #:on-enter!
  (proc
   (next-chapter!)
-  (paragraph "\"– helped me – no, I insist – finally you understand, working it through took ages – I am unstably present –\", shadowlike Stiltman stutters when it notices Otava, stumbling and wobbling in the mire. The man is wearing ragged overalls of a lab technician, and some sort of a makeshift semi-transparent mask covers his face, too foggy to see through. The logo on the overalls says Murkwater–Aegis.")
+  (paragraph "\"– helped me – no, I insist – finally you understand, working it through took ages – I am unstably present –\", the shadowlike man stutters when it notices Otava, stumbling and wobbling in the mire. He's balancing precariously on a vaguely insectlike, three-legged makeshift contraption that's strapped to his legs. The man is wearing ragged overalls of a lab technician, old make and sturdier than anything recent. The logo on the overalls says Murkwater–Aegis.")
   (remove-feature-from-location! (current-location) 'stiltman)
   (paragraph "\"Uh, –\" Otava begins, but Stiltman goes on. \"– Anthead Monograph had the missing viewpoint on multi-valued logic which was needed to run the simulations  – I knew you would ask that question – here's the fee we agreed – or was, really –\"")
   (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
