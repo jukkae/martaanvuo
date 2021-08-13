@@ -175,6 +175,6 @@
                (make-decision
                 #:title "Talk to the stilted figure."
                 #:on-resolve! (proc
-                               (paragraph "Otava goes closer. The figure is a man on stilts, flailing peculiarly above the water, barely staying upright."))
+                               (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption made of lots of levers and rods."))
                 #:next-fragment 'begin-stiltman-dialogue
                 )))))

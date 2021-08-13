@@ -146,7 +146,7 @@
  #:on-enter!
  (proc
   (next-chapter!)
-  (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the mire, when he notices Otava approaching. He's balancing precariously on an insectlike, three-legged makeshift contraption that's strapped to his legs. Stiltman is wearing the overalls of a lab technician. The thick and heavy fabric is clearly old, far superior in quality to what Otava has seen in ages. The logo on the overalls says Murkwater–Aegis.")
+  (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the mire, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis.")
   (remove-feature-from-location! (current-location) 'stiltman)
   (paragraph "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee –\"")
   (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
