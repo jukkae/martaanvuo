@@ -42,6 +42,7 @@
 
    (make-place
     #:id 'martaanvuo-docks
+    #:features '(stiltman)
     #:type 'docks)
 
    (make-place
@@ -61,12 +62,12 @@
 
    (make-place
     #:id 'cache
-    #:items '(gold-198)
+    #:items '(gold)
     #:type 'cache)
 
    (make-place
     #:id 'workshop
-    #:features '(hartmann-device)
+    ;#:features '(hartmann-device)
     #:type 'workshop)
 
    (make-place
@@ -77,7 +78,8 @@
     #:type 'docks)
 
    (make-place
-    #:id 'storage-closet)
+    #:id 'storage-closet
+    #:items '(anthead-monograph))
 
    (make-place
     #:id 'control-room)
@@ -97,11 +99,19 @@
 
 (define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-(define (make-path-between id-a id-b [hidden? #f])
+(define (make-path-between
+         id-a
+         id-b
+         #:hidden? [hidden? #f]
+         #:no-encounters? [no-encounters? #f])
+  
   (define place-a (find-place-by-id id-a))
   (define place-b (find-place-by-id id-b))
   (set! *number-of-routes* (add1 *number-of-routes*))
+
   (define details '())
+  (when no-encounters? (set! details (append-element details 'no-encounters)))
+  
   (define actors '()) ; TODO this should be hidden
   (define r (route *number-of-routes* place-a place-b details actors))
   (set-place-routes! place-a (append-element (place-routes place-a) r))
@@ -113,22 +123,23 @@
   
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
   (make-path-between 'perimeter 'magpie-hill)
-  (make-path-between 'perimeter 'martaanvuo-swamp)
+  (make-path-between 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
   (make-path-between 'martaanvuo-swamp 'crematory)
-  (make-path-between 'martaanvuo-swamp 'martaanvuo-docks)
+  (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
+  (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; TODO: This is temporary!
   (make-path-between 'martaanvuo-swamp 'magpie-hill)
-  (make-path-between 'magpie-hill 'power-plant-ruins)
-  (make-path-between 'power-plant-ruins 'cache)
+  (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+  (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t)
   (make-path-between 'power-plant-ruins 'sewers-1)
   (make-path-between 'sewers-1 'sewers-2)
   (make-path-between 'sewers-1 'workshop)
   (make-path-between 'sewers-1 'compound-entrance)
   (make-path-between 'compound-entrance 'murkwater-docks)
   (make-path-between 'compound-entrance 'workshop)
-  (make-path-between 'murkwater-docks 'workshop)
+  (make-path-between 'murkwater-docks 'workshop #:no-encounters? #t)
   (make-path-between 'sewers-2 'storage-closet)
   (make-path-between 'storage-closet 'workshop)
-  (make-path-between 'workshop 'control-room)
+  (make-path-between 'workshop 'control-room #:no-encounters? #t)
   (make-path-between 'workshop 'martaanvuo-source)
   (make-path-between 'control-room 'reactor-room)
   )

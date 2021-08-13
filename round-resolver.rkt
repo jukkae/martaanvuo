@@ -14,6 +14,7 @@
 (require "character-sheet.rkt")
 (require "choice.rkt")
 (require "condition.rkt")
+(require "decision.rkt")
 (require "fragment.rkt")
 (require "fragments.rkt")
 (require "grabberkin.rkt")
@@ -42,7 +43,9 @@
 ; move specifics from here to the actual fragment
 (define (current-fragment-handle-decision! decision)
 
-  (paragraph (decision-description decision))
+  #;(when (not (null? (decision-description decision)))
+    (paragraph (decision-description decision)))
+  
 
   (when (not (null? (decision-on-resolve! decision)))
     ((decision-on-resolve! decision)))
@@ -55,16 +58,22 @@
   (cond ((number? next-fragment)
          (go-to-story-fragment next-fragment)
          )
-        ((eq? 'exit next-fragment)
-         ; TODO: call this unset-current-fragment! or something
-         (set-situation-current-fragment-number! *situation* '()))
-        ((eq? 'exit-and-set-build-desperate next-fragment)
-         (set-build! 'desperate)
-         (set-situation-current-fragment-number! *situation* '()))
-        ((eq? 'exit-and-set-build-bruiser next-fragment)
-         (set-build! 'bruiser)
-         (set-situation-current-fragment-number! *situation* '()))
-        (else (error (string-append "(current-fragment-handle-decision!): next-fragment type not implemented: " (symbol->string next-fragment)))))
+        ((symbol? next-fragment)
+         (cond
+           ; it can either be a special symbol...
+           ((eq? 'exit next-fragment)
+            ; TODO: call this unset-current-fragment! or something
+            (set-situation-current-fragment-number! *situation* '()))
+           ((eq? 'exit-and-set-build-desperate next-fragment)
+            (set-build! 'desperate)
+            (set-situation-current-fragment-number! *situation* '()))
+           ((eq? 'exit-and-set-build-bruiser next-fragment)
+            (set-build! 'bruiser)
+            (set-situation-current-fragment-number! *situation* '()))
+           ; ... or it can be just a label
+           (else (go-to-story-fragment next-fragment))
+           ))
+        (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type."))))
   )
 
 ; fragment handler
@@ -173,6 +182,7 @@
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
   (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
+  (display-location-info-card (current-location) "Current location")
   
   (set! action-queue '())
   
@@ -204,6 +214,7 @@
      (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
      ))
   (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
+  (display-location-info-card (current-location) "Current location")
   
   (set! action-queue '())
   #;(repeat-last-paragraph)
@@ -260,7 +271,7 @@
              (= (length current-enemies) 0))
     (end-combat!)
     (go-to-story-fragment 100))
-  (wait-for-confirm)
+  #;(wait-for-confirm)
   
   (when (not (null? (situation-current-fragment-number *situation*)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
@@ -408,10 +419,6 @@
            ))))
 
 
-; TODO -> situation
-(define (ending-run-allowed?)
-  #f)
-
 ; may return:
 ; void
 ; 'end-run
@@ -427,8 +434,8 @@
 
                    ; TODO this is heavy on narration -> is this a fragment?
                    (cond ((eq? (action-symbol action) 'end-run)
-                          (cond ((ending-run-allowed?)
-                                 (paragraph "She takes one last look at the rusty machines and the hostile woods of Perimeter and thinks about Martaanvuo and what lies beyond Martaanvuo. She shudders and takes the trail back to the Shack.")
+                          (cond ((flag-set? 'ending-run-allowed)
+                                 #;(paragraph "At least it's something.")
                                  (return 'end-run))
                                 (else
                                  (set-flag 'tried-to-go-back)
@@ -497,14 +504,6 @@
                           (move-pc-to-location! next-location)
                           (location-on-enter! (current-location))
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
-                          
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
@@ -515,59 +514,65 @@
                    (cond ((eq? (action-symbol action) 'traverse)
                           (move-pc-to-location! (action-target action))
                           (when (not (pending? action))
-                            (define encounter-roll (d 1 6)) ; -> this function, roll-for-encounter or something, is more content than code and belongs elsewhere
+                            ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
 
-                            (displayln "encounter roll: ")
-                            (displayln encounter-roll)
-                            (define encounter-event
-                              (if (< 4 encounter-roll)
-                                  (make-event 'spawn-enemies
-                                              '() ; pack info about enemies / event here
-                                              #t)
-                                  '()))
+                            (define encounter-roll
+                              (if (not (route-has-detail? (current-location) 'no-encounters))
+                                  (d 1 6)
+                                  #f))
 
-                            (cond ((not (null? encounter-event))
-                                   ; create timeline to leverage existing code
-                                   (define events
-                                     (list
-                                      (make-event 'spawn-enemies
-                                                  '() ; pack info about enemies / event here
-                                                  #t)))
-                                   (define metadata 'interrupted)
-                                   (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
-                                   (define tl (timeline metadata events duration))
+                            (when encounter-roll
+                              (displayln "encounter roll: ")
+                              (displayln encounter-roll)
+                              (define encounter-event
+                                (if (< 4 encounter-roll)
+                                    (make-event 'spawn-enemies
+                                                '() ; pack info about enemies / event here
+                                                #t)
+                                    '()))
 
-                                   (set! elapsed-time (timeline-duration tl))
+                              (cond ((not (null? encounter-event))
+                                     ; create timeline to leverage existing code
+                                     (define events
+                                       (list
+                                        (make-event 'spawn-enemies
+                                                    '() ; pack info about enemies / event here
+                                                    #t)))
+                                     (define metadata 'interrupted)
+                                     (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
+                                     (define tl (timeline metadata events duration))
 
-                                   ; DUPLICATION, clean up
-                                   ; display events
-                                   (define
-                                     displayable-events
-                                     (map
-                                      (λ (event)
-                                        (list
-                                         (string-append " " (number->string (event-at event)) " ")
-                                         (string-append " " (symbol->string (event-type event)) " ")
-                                         (string-append " " (~s (event-details event)) " ")
-                                         (string-append " "
-                                                        (if (event-interrupting? event)
-                                                            "yes"
-                                                            "no")
-                                                        " ")
-                                         ))
-                                      (timeline-events tl)))
-                                   #;(info-card
-                                      (append
-                                       (list (list " at " " type " " details " " interrupts action? "))
-                                       displayable-events)
-                                      (string-append "Timeline, duration " (number->string (timeline-duration tl))))
-                                   (for ([event (timeline-events tl)])
-                                     (narrate-event event))
+                                     (set! elapsed-time (timeline-duration tl))
 
-                                   ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-                                   (when (eq? (timeline-metadata tl) 'interrupted)
-                                     (handle-pc-action-interrupted! tl)
-                                     (return 'interrupted)))))
+                                     ; DUPLICATION, clean up
+                                     ; display events
+                                     (define
+                                       displayable-events
+                                       (map
+                                        (λ (event)
+                                          (list
+                                           (string-append " " (number->string (event-at event)) " ")
+                                           (string-append " " (symbol->string (event-type event)) " ")
+                                           (string-append " " (~s (event-details event)) " ")
+                                           (string-append " "
+                                                          (if (event-interrupting? event)
+                                                              "yes"
+                                                              "no")
+                                                          " ")
+                                           ))
+                                        (timeline-events tl)))
+                                     #;(info-card
+                                        (append
+                                         (list (list " at " " type " " details " " interrupts action? "))
+                                         displayable-events)
+                                        (string-append "Timeline, duration " (number->string (timeline-duration tl))))
+                                     (for ([event (timeline-events tl)])
+                                       (narrate-event event))
+
+                                     ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
+                                     (when (eq? (timeline-metadata tl) 'interrupted)
+                                       (handle-pc-action-interrupted! tl)
+                                       (return 'interrupted))))))
                           
 
 
@@ -578,14 +583,7 @@
                                                     (route-a (action-target action))))
                           (move-pc-to-location! next-location)
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
 
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-finish-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
@@ -597,14 +595,6 @@
                           (reset-pending-action!)
                           (move-pc-to-location! (action-target action))
 
-                          ; TODO where should this happen really, and how??
-                          (when (eq? (location-type (current-location)) 'crematory)
-                            (go-to-story-fragment 11))
-                          
-                          #;(when (eq? (location-type (current-location)) 'workshop)
-                              (go-to-story-fragment 200))
-                          (when (eq? (location-type (current-location)) 'workshop)
-                            (go-to-story-fragment 300))
                           (describe-cancel-traverse-action action)
                           (display-location-info-card (current-location))
                           (when (not (null? (location-items (action-target action))))
@@ -835,27 +825,34 @@
       (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
+
+      ; launch a fragment directly -> no action resolution -> not a choice
+      (define location-decisions (if (null? (situation-current-fragment-number *situation*))
+                                     (get-location-decisions (current-location))
+                                     '()))
+      
       (define world-choices (get-world-choices (situation-world *situation*) actor))
       
       (define choices (if (null? fragment-decisions)
                           world-choices
                           '()))
 
-      (define fragment-decisions-with-keys (build-keys-to-choices-map fragment-decisions 1))
-      (define first-non-fragment-index (add1 (length fragment-decisions)))
-      (define choices-with-keys (build-keys-to-choices-map choices first-non-fragment-index)) ; should check for pending actions and name choices accordingly
+      (define all-decisions (append fragment-decisions location-decisions))
+      (define decisions-with-keys (build-keys-to-choices-map all-decisions 1))
+      (define first-free-index (add1 (length all-decisions)))
+      (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
-      (print-choices-and-meta-commands-with-keys choices-with-keys fragment-decisions-with-keys meta-commands-with-keys verbosity)
+      (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
       (define input (wait-for-input))
       (serialize-input)
 
       (newline)
 
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
-            ((fragment-decision-valid? fragment-decisions-with-keys input)
+            ((fragment-decision-valid? decisions-with-keys input)
              (begin
-               (handle-fragment-decision fragment-decisions-with-keys input)
+               (handle-fragment-decision decisions-with-keys input)
                
                produce-action 'end-round-early))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))

@@ -9,7 +9,8 @@
  (id
   [title #:mutable]
   [status #:mutable]
-  [notes #:mutable]))
+  [notes #:mutable]
+  [details #:mutable]))
 
 (define (format-quest-for-card q)
   (list (string-append " "

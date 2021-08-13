@@ -156,35 +156,39 @@
   )
 
 ; TODO: Where does this belong?
-(define (display-location-info-card location)
+(define (display-location-info-card location [title "Location"])
   (define id (place-id location))
   (define body
-    (list
-     (list (string-append " "
-                          "id"
-                          " ")
-           (string-append " "
-                          (cond ((number? id) (number->string id))
-                                ((symbol? id) (symbol->string id)))
-                          " "))
-     (list (string-append " "
-                          "type"
-                          " ")
-           (string-append " "
-                          (symbol->string (place-type location))
-                          " "))
-     (list (string-append " "
-                          "items"
-                          " ")
-           (string-append " "
-                          (~v (place-items location))
-                          " "))
-     (list (string-append " "
-                          "features"
-                          " ")
-           (string-append " "
-                          (~v (place-features location))
-                          " "))
-     ))
-  (info-card body "Location"))
+    (prune (list
+            (when (not (null? (place-id location)))
+              (list (string-append " "
+                                   "id"
+                                   " ")
+                    (string-append " "
+                                   (cond ((number? id) (number->string id))
+                                         ((symbol? id) (symbol->string id)))
+                                   " ")))
+            (when (not (null? (place-type location)))
+              (list (string-append " "
+                                   "type"
+                                   " ")
+                    (string-append " "
+                                   (symbol->string (place-type location))
+                                   " ")))
+            (when (not (null? (place-items location)))
+              (list (string-append " "
+                                   "items"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-items location))
+                                   " ")))
+            (when (not (null? (place-features location)))
+              (list (string-append " "
+                                   "features"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-features location))
+                                   " ")))
+            )))
+  (info-card body title))
 

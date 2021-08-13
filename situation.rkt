@@ -207,36 +207,32 @@
   (define quests (situation-quests *situation*))
   (findf (λ (quest) (eq? id (quest-id quest))) quests))
 
-;;; move these elsewhere, more content than code
-(define (create-quest quest-symbol)
-  (define q
-    (case quest-symbol
-      ['pay-off-debt
-       (quest 'pay-off-debt
-              "pay off Debt to Collector"
-              "in progress"
-              "unsettled: 10,111 g of Martaanvuo gold")] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
-      ['the-anthead
-       (quest 'the-anthead
-              "seek the Anthead Girl"
-              "not started"
-              "\"not ready yet\", whatever.")]))
-  (add-quest! q)
+; set-quest-status! is obviously reserved
+(define (update-quest-status! id status)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-status! quest status)
+    )
+  )
 
+; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
+(define (update-quest-notes! id notes)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-notes! quest notes)
+    )
+  )
 
-  (case quest-symbol
-    ['pay-off-debt
-     (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
-  
+(define (update-quest-details! id details)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-details! quest details)
+    )
+  )
 
-  (define body
-    (format-quest-for-card q))
-
-  (info-card
-   (list body)
-   "New quest")
-
-  (wait-for-confirm))
 
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
@@ -318,6 +314,29 @@
 ; api
 (define (quests)
   (situation-quests *situation*))
+
+(define (find-quest id)
+  (findf (λ (q) (eq? (quest-id q) id))
+         (situation-quests *situation*)))
+
+
+
+(define (reduce-debt-by! amount)
+  (define debt-quest (find-quest 'pay-off-debt))
+  
+  (define old-debt-amount (quest-details debt-quest))
+  (define new-debt-amount (- old-debt-amount amount))
+  (set-quest-details! debt-quest new-debt-amount)
+  (set-quest-notes! debt-quest
+                    (string-append
+                     "unsettled: "
+                     (number->string new-debt-amount)
+                     " g of Martaanvuo gold"))
+  (displayln "new-debt-amount:")
+  #;(displayln (~r new-debt-amount)) ; formatting todo
+  (displayln new-debt-amount)
+  
+  '())
 
 
 ; combat?

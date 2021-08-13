@@ -7,11 +7,14 @@
 
 (require "action.rkt")
 (require "checks.rkt")
+(require "decision.rkt")
 (require "location.rkt")
 (require "fragment.rkt")
 (require "io.rkt")
 (require "item.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
+(require "quests.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -21,26 +24,12 @@
   (resolve-pc-action!)])
 
 
-
-(define *story-fragments* (make-hash))
-
-(define (fragment id description decisions on-enter!)
-  (define frag
-    (story-fragment
-     id
-     description
-     decisions
-     on-enter!))
-  (hash-set! *story-fragments* id frag))
-
-(define (get-fragment id)
-  (hash-ref *story-fragments* id))
-
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
 (fragment
  1
- "Maybe whoever made this path made it back, maybe they didn't. But she will."
+ "Still, someone's been there, and so will she. And she'll make it back, too."
+ #:decisions
  (list
   (make-decision
    #:title "She has a gun."
@@ -76,58 +65,13 @@
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
+ #:on-enter!
  (λ () '()#;(set-prompt! "Because...")))
 
 
 
 
-(fragment
- 11
- "A hooded figure emerges from behind the trees. \"Those bolt cutters of yours, looking for some work? There's an old abandoned nuclear lab half a day from here. Break in, take what you want, but bring us one thing: A leatherbound book with the inscription 'Yarn of the World-Gorger'. Bring it to us. Pay you in bullets, how's 11 rounds sound?\""
 
- (list
-  (make-decision
-   #:requirement   (λ () (passive-check 'fail-charisma-mod '> -1 'silent))
-   #:title         "Ask about the Yarn."
-   #:description   "\"Yarn of the what?\""
-   #:next-fragment 12)
-
-  (make-decision
-   #:requirement   (λ () (passive-check 'charisma-mod '> -1))
-   #:title         "Ask who's 'us'."
-   #:description   "\"'Us'? Who's 'us'?\""
-   #:next-fragment 14))
- 
- (λ () '()))
-
-(fragment
- 12
- "\"'Yarn of the World-Gorger'. It's, uh, it's a mythological book. Bound in leather, pentacle on cover. It used to belong to one of the subjects, Subject 101, he was an Adept. Not related to the work at the laboratory at all. Walk in, find his locker, grab the book, walk out, bring us the book. 11 bullets could save your life 11 times. What do you say?\""
- (list
-  (make-decision
-   #:title         "Agree to bring the book."
-   #:description   "\"Okay, so tell me what you know about the laboratory.\""
-   #:next-fragment 'create-quest-and-exit)
-
-  ; here XP reward and set the pc as 'cunning' (and figure out what that means)
-  (make-decision
-   #:title         "The book's more valuable than 11 bullets. Decline and keep the book to yourself."
-   #:description   "\"Not interested, but thanks for the chat.\""
-   #:next-fragment 'exit))
- (λ () '())) 
-
-(fragment
- 14
- (string-append
-  "\"It's... ah, wouldn't make sense to you, you are not ready yet. When you are, seek the Anthead Girl. Look, will you bring us the book or not?\""
-  ) ; and drop some meta-visible info or something somewhere; create a quest?
-
- (make-decision
-  #:title "Ask about the book."
-  #:description "\"The book, Yarn of the what?\""
-  #:next-fragment 12)
- (λ () (create-quest 'the-anthead))
- )
 
 
 (fragment
@@ -135,7 +79,8 @@
  (string-append
   "Otava thinks the magpie should be close, but the sound seems to come from a slightly different direction every time."
   )
-
+ 
+ #:decisions
  (list (make-decision
         #:title "Listen quietly."
         #:description "The magpie laughs straight above her. The bird is hidden somewhere within the shadowy branches of a large dead oak. There's a worn tombstone half buried under the roots of the tree."
@@ -151,9 +96,7 @@
                        (set-flag 'eternal-bullet)
                        (add-ammo! 1)
                        (remove-feature-from-location! (current-location) 'magpie-effigy))
-        #:next-fragment 'exit))
- (λ () '())
- )
+        #:next-fragment 'exit)))
 
 
 
@@ -163,13 +106,13 @@
  (string-append
   "[post-combat steps to do]"
   )
+ 
+ #:decisions
  (list (make-decision
         #:title "Exit action."
         #:description "Combat finished."
         #:next-fragment 'exit
-        ))
- (λ () '())
- )
+        )))
 
 (fragment
  200
@@ -180,6 +123,7 @@
   "\n\n"
   "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
   )
+ #:decisions
  (list
   (make-decision
    #:title "Power on the device."
@@ -192,23 +136,98 @@
    #:title "Leave the device be."
    #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
    #:next-fragment 'exit
-   ))
- 
- (λ () '())
- )
+   )))
+
+
 
 (fragment
- 300
- (string-append
-  "There's an inconspicuous sign saying 'Murkwater Aix' on the wall of an automated guard's booth.")
- (list
-  (make-decision
-   #:title ""
-   #:description ""
-   #:next-fragment 'exit
-   ))
+ 'begin-stiltman-dialogue
+ "Stiltman goes quiet and seems to struggle against an unseen wind."
+
+ #:on-enter!
+ (proc
+  (next-chapter!)
+  (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the cove, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag saying STILTMAN.")
+  (remove-feature-from-location! (current-location) 'stiltman)
+  (paragraph "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee –\"")
+  (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
+  (add-item! 'gold #:amount 11 #:title "Picked up")
+  (create-quest 'anthead-monograph)
+  (set-flag 'ending-run-allowed))
  
- (λ () '())
- )
+ #:decisions
+ (list
+
+  ; -> there is no mission, but something else happens
+  (make-decision
+   #:title "Ask what he means, 'unstably present'."
+   #:on-resolve!
+   (proc
+    (paragraph "\"What do you mean, 'unstably present'?\", Otava asks.")
+    (paragraph "\"– I was fishing, thank the heavens you noticed me – \", Stiltman goes, \"– they were manufacturing a special kind of radioactive gold, for medicine and things – I'm just a technician, see, I was doing the night shift when it –\"")
+    (paragraph "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics –\"")
+    (paragraph "\"– so then we ran the simulations, and everything checked out and we were well within the parameter range even in the worst case – so then we could, well, create gold out of thin air –\", Stiltman says, as he's beginning to slip away, like gravity is suddenly sideways for him. \"– so then we modified the reactor and – I've been here for weeks – different causes lead to different effects – I need the book to get back! –\", he stutters, as he disappears in the mist.")
+
+    (update-quest-status! 'anthead-monograph "find it")
+    (update-quest-notes! 'anthead-monograph "-> Stiltman (lab tech); new kind of physics - gold!")
+    (update-quest-details! 'anthead-monograph '(find-it))
+
+    (define body
+      (format-quest-for-card (quest-exists? 'anthead-monograph)))
+    (info-card
+     (list body)
+     "Quest updated")
+
+    (wait-for-confirm)
+    )
+   #:next-fragment 'exit
+   )
+  ; -> the mission is to find the monograph
+  (make-decision
+   #:title "Ask about the Monograph."
+   #:on-resolve!
+   (proc
+    (paragraph "\"The Monograph?\", Otava asks.")
+    (paragraph "\"– we all got stuck, see – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident –\"")
+    (paragraph "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
+
+    (update-quest-status! 'anthead-monograph "find it")
+    (update-quest-notes! 'anthead-monograph "-> Stiltman; Murkwater-Aegis facility upriver - gold!")
+    (update-quest-details! 'anthead-monograph '(find-it))
+
+    (define body
+      (format-quest-for-card (quest-exists? 'anthead-monograph)))
+    (info-card
+     (list body)
+     "Quest updated")
+
+    (wait-for-confirm)
+    )
+   
+   #:next-fragment 'exit
+   )
+  ; -> the mission is to destroy the monograph
+  (make-decision
+   #:title "Ask about what the fee is for."
+   #:on-resolve!
+   (proc
+    (paragraph "\"The fee, what is it for?\", Otava asks.")
+    (paragraph "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – Uncolor is looking for it and she must not get it – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– she went insane from reading it, rambling about the Anthead – do not read it! –\", he shouts, disappearing in the mist")
+
+    (update-quest-status! 'anthead-monograph "destroy")
+    (update-quest-notes! 'anthead-monograph "-> Stiltman; Murkwater-Aegis facility upriver - gold!")
+    (update-quest-details! 'anthead-monograph '(destroy-it))
+
+    (define body
+      (format-quest-for-card (quest-exists? 'anthead-monograph)))
+    (info-card
+     (list body)
+     "Quest updated")
+
+    (wait-for-confirm)
+    )
+   #:next-fragment 'exit
+   )))
+
 
 

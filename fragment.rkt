@@ -6,7 +6,7 @@
 
 (require "utils.rkt")
 
-; store a list of closed paths / trees separately instead of storing that in the fragments themselves
+
 (serializable-struct
  story-fragment
  (id
@@ -14,28 +14,22 @@
   decisions
   on-enter!))
 
-; requirement is a lambda that's run on fragment's on-enter!
-; on-resolve! is a lambda that's run when the decision is resolved
-(serializable-struct
- decision
- (title
-  description
-  next-fragment
-  requirement
-  on-resolve!)
- #:constructor-name decision*)
-
-(define
-  (make-decision #:title title
-                 #:description description
-                 #:next-fragment next-fragment
-                 #:requirement [requirement (λ () '())]
-                 #:on-resolve![on-resolve! (λ () '())])
-
-  (decision* title
-             description
-             next-fragment
-             requirement
-             on-resolve!))
-
 ; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere.
+
+(define *story-fragments* (make-hash))
+
+(define (fragment
+         id
+         description
+         #:decisions decisions ; initialize to "confirm to exit", or treat '() as such
+         #:on-enter! [on-enter! (λ () '())])
+  (define frag
+    (story-fragment
+     id
+     description
+     decisions
+     on-enter!))
+  (hash-set! *story-fragments* id frag))
+
+(define (get-fragment id)
+  (hash-ref *story-fragments* id))

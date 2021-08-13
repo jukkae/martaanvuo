@@ -58,11 +58,14 @@
   (newline))
 
 (define (paragraph . args)
-  (define str (string-append* args))
-  (define s (format-for-printing str #:width 84 #:indent 4))
-  (set-last-paragraph! str)
-  (write-paragraph-to-log str)
-  (print-paragraph s))
+  (cond ((not (equal? paragraph ""))
+         (define str (string-append* args))
+         (define s (format-for-printing str #:width 84 #:indent 4))
+         (set-last-paragraph! str)
+         (write-paragraph-to-log str)
+         (print-paragraph s))
+        (else ; don't do anything with empty input
+         '())))
 
 (define (notice . args)
   (define str (string-append* args))
@@ -93,7 +96,6 @@
   ; if the input begins with a newline, then it is important and should be preserved
   (define first-char (string-ref input-string 0))
   (when (= 10 (char->integer first-char))
-    #;(displayln "HELLO YEAH")
     (set! final-output "\n"))
   
   (define pre-broken-lines (string-split input-string "\n"))

@@ -3,6 +3,9 @@
 (provide (all-defined-out))
 
 (require "io.rkt")
+(require "pc.rkt")
+(require "quest.rkt")
+(require "quests.rkt")
 (require "round-resolver.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -14,6 +17,8 @@
 ; but figure out where this should be called from
 ; engine / run-resolver
 (define (narrate-begin-run)
+  (next-chapter!)
+  
   ; Don't show this until the second run!
   (when (not (= 1 (situation-run *situation*)))
     (info-card
@@ -21,20 +26,21 @@
       (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
      (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
-  (next-chapter!)
+  
   (case (situation-run *situation*)
     [(1)
-     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. At least somebody has been here, once. Did they make it back?")
+     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far. Somebody has been here, once.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     #;[(2)
-     (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
+       (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
 
 ; engine / run-resolver
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   (set-situation-round! *situation* 0)
+  (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)
   )
@@ -53,21 +59,47 @@
      "Otava finds passage through the swamps and disappears to the other side of the unnamed mountain range, to begin a new life herding the reindeer."
      ))))
 
-(define (narrate-end-run exit-status)
-  (info-card
-   (list
-    (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-   (string-append "End run number " (number->string (situation-run *situation*))))
+
+(define (on-end-run exit-status)
+  (when (not (eq? exit-status 'restart))
+    (cond ((> (pc-gold-amount) 0)
+           (define debt-quest (find-quest 'pay-off-debt))
+           (define gold-collected (pc-gold-amount))
+           (reduce-debt-by! gold-collected)
+           (remove-item! 'gold)
+         
+         
+
+           (displayln "Quest:")
+           (displayln debt-quest)
+         
+           (info-card
+            (list
+             (list " run "
+                   (string-append " " (number->string (situation-run *situation*)) " "))
+             (list " gold collected "
+                   (string-append " " (number->string (pc-gold-amount)) " grams "))
+             (list " debt still owed "
+                   (string-append " " (number->string (quest-details debt-quest)) " grams ")))
+            (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
+
+        
+          (else
+           (displayln "FAILED RUN")
+           (info-card
+            (list
+             (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+            (string-append "End run number " (number->string (situation-run *situation*)))))))
+
+  
+  
   (case exit-status
     ['end-run
      (paragraph "She's still alive.")]
     ['restart
      (narrate-restart)]
     [else
-     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))]))
-
-(define (on-end-run exit-status)
-  (narrate-end-run exit-status)
+     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
   (wait-for-confirm))
 
 ; engine / run-resolver

@@ -87,14 +87,29 @@
 ; TODO dispatching based on type should be done elsewhere,
 ; this should really be only concerned with adding an existing item
 ; but this works for now
-(define (add-item! item)
+(define (add-item!
+         item
+         #:amount [amount 1]
+         #:title [title "Item added"])
   (define actor (pc))
   (cond ((symbol? item)
-         (define new-item (make-item item))
-         (add-item-to-inventory! actor new-item))
+         (define new-item (make-item item #:amount amount))
+         (add-item-to-inventory! actor new-item)
+         (item-info-card new-item #:title title))
         ((item? item)
-         (add-item-to-inventory! actor item))
-        (else (error "Unknown item type in add-item!"))))
+         (add-item-to-inventory! actor item)
+         (item-info-card item #:title title))
+        (else (error "Error: add-item! expects symbol or item"))))
+
+(define (remove-item! id)
+  (define items (actor-inventory (pc)))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+         items)
+  (set-actor-inventory! (pc)
+                        (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                (actor-inventory (pc))
+                                ))
+  (displayln "removing item"))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
@@ -113,6 +128,14 @@
   (define items (actor-inventory (pc)))
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
          items))
+
+(define (pc-gold-amount)
+  (define items (actor-inventory (pc)))
+  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+                       items))
+  (if gold?
+      (item-details gold?)
+      0))
 
 (define (pc-has-ammo-left?)
   (define items (actor-inventory (pc)))
@@ -143,8 +166,8 @@
               (string-append " " (~v (item-details item)) " ")))
             (else
              (list
-                   (string-append " " (symbol->string item) " ")
-                   (string-append " " " " " "))))
+              (string-append " " (symbol->string item) " ")
+              (string-append " " " " " "))))
       ))
   
   (define sheet
@@ -156,3 +179,4 @@
    sheet
    "Inventory"
    ))
+
