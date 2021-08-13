@@ -3,6 +3,7 @@
 (provide (all-defined-out))
 
 (require "io.rkt")
+(require "location.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
 (require "quests.rkt")
@@ -61,6 +62,7 @@
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
   #;(set-situation-round! *situation* 0)
   (remove-flag 'ending-run-allowed)
+  (add-feature-to-location! (find-place-by-id 'martaanvuo-docks) 'stiltman)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-recurse-run)
   )
