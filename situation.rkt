@@ -225,6 +225,14 @@
     )
   )
 
+(define (update-quest-details! id details)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-details! quest details)
+    )
+  )
+
 
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
