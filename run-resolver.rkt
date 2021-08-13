@@ -98,7 +98,11 @@
     ['end-run
      (paragraph "She's still alive.")]
     ['recurse
-     (paragraph "Reality twists and warps.")]
+     (define title-string
+       (string-append "M A R T A A N V U O"
+                      "\n"
+                      "==================="))
+     (paragraph title-string)]
     ['restart
      (narrate-restart)]
     [else

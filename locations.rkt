@@ -183,7 +183,7 @@
                (make-decision
                 #:title "Turn on the terminal."
                 #:on-resolve! (proc
-                               (paragraph "Otava turns on the terminal with the Martaanvuo sticker."))
+                               (paragraph "Otava turns on the terminal. It greets her:"))
                 #:next-fragment 'recurse
                 ))
 
