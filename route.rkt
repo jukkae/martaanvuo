@@ -44,38 +44,38 @@
          ['magpie-hill "Magpie and the rocky slope."]
          ['martaanvuo-swamp "Ants and the swamp."]
          [else (string-append "["
-                      (symbol->string (location-id start-location))
-                      " to "
-                      (symbol->string (location-id (route-other-end-from route start-location)))
-                      "]")])]
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
          ['perimeter "Rocky stairs."]
          ['martaanvuo-swamp "Down, toward the swamp."]
          ['power-plant-ruins "Decrepit building."]
          [else (string-append "["
-                      (symbol->string (location-id start-location))
-                      " to "
-                      (symbol->string (location-id (route-other-end-from route start-location)))
-                      "]")])]
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill "The hill."]
          ['perimeter "The path."]
          [else (string-append "["
-                      (symbol->string (location-id start-location))
-                      " to "
-                      (symbol->string (location-id (route-other-end-from route start-location)))
-                      "]")])]
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill "Magpie and the rocky slope."]
          ['perimeter "Rocky stairs."]
          [else (string-append "["
-                      (symbol->string (location-id start-location))
-                      " to "
-                      (symbol->string (location-id (route-other-end-from route start-location)))
-                      "]")])]
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       [else
        
        (string-append "["
@@ -91,10 +91,12 @@
          (case direction
            ['a-to-b
             (define to-name (get-location-name-from-location (route-b route)))
-            (string-append "Go back to " to-name ".")]
+            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            (string-append "Go to " to-name ".")]
            ['b-to-a
             (define to-name (get-location-name-from-location (route-a route)))
-            (string-append "Go back to " to-name ".")]))
+            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            (string-append "Go to " to-name ".")]))
         (else
          (get-route-short-description))))
 
@@ -108,8 +110,8 @@
            'b)))
   (define endpoint
     (case start
-    ['a (route-b route)]
-    ['b (route-a route)]))
+      ['a (route-b route)]
+      ['b (route-a route)]))
   endpoint)
 
 
