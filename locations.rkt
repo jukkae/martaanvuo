@@ -110,8 +110,8 @@
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
-        (paragraph "Decaying docks slowly appear from the mist, and the smell of rotting fish gets stronger, until it is almost unbearable. Rusty rebar sticks out from vast broken concrete slabs. Most portside buildings are completely ruined, but some piers are still in one piece. Rebar steel looks good for welding – if only she could transport it.")
-        (paragraph "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a pile of rubble and rusty rebar. It is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
+        (paragraph "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and old, decaying docks slowly appear from the fog. There's a secluded cove, surrounded by cliffs, a couple of sheds by the shoreline, and a few berths. A small fishing boat with a pile of fish on the deck explains the smell.")
+        (paragraph "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a webbing that's hanging from a winch. The figure is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
        [else
         (paragraph
          "The docks slowly appear from the mist.")])]

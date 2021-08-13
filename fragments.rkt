@@ -172,7 +172,11 @@
   ; -> the mission is to find the monograph
   (make-decision
    #:title "Ask about the Monograph."
-   #:description "\"The Monograph?\", Otava asks."
+   #:on-resolve!
+   (proc
+    (paragraph "\"The Monograph?\", Otava asks.")
+    (paragraph "\"– we all got stuck, as it were – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book –\" Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! –\" is the last Otava hears of Stiltman.")
+    )
    #:next-fragment 'exit
    )
   ; -> the mission is to destroy the monograph
