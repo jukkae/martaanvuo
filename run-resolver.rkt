@@ -35,6 +35,18 @@
     #;[(2)
        (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
+(define (narrate-begin-recurse-run)
+  (next-chapter!)
+  
+  ; Don't show this when recursing
+  #;(when (not (= 1 (situation-run *situation*)))
+    (info-card
+     (list
+      (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+     (string-append "Begin run number " (number->string (situation-run *situation*)))))
+
+  (paragraph "Otava follows Broker's trail through the foggy woods and gets to the fork."))
+
 
 ; engine / run-resolver
 (define (on-begin-run)
@@ -43,6 +55,14 @@
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)
+  )
+
+(define (on-begin-recurse-run)
+  (set-situation-run! *situation* (add1 (situation-run *situation*)))
+  #;(set-situation-round! *situation* 0)
+  (remove-flag 'ending-run-allowed)
+  (move-pc-to-location! (find-place-by-id 'perimeter))
+  (narrate-begin-recurse-run)
   )
 
 (define (on-continue-run)
@@ -116,7 +136,7 @@
     ['continue (on-continue-run)]
     ['begin (on-begin-run)]
     
-    ['recurse (on-begin-run)])
+    ['recurse (on-begin-recurse-run)])
   
   (define run-exit-status
     (let/ec end-run
