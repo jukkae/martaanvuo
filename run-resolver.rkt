@@ -97,6 +97,8 @@
   (case exit-status
     ['end-run
      (paragraph "She's still alive.")]
+    ['recurse
+     (paragraph "Reality twists and warps.")]
     ['restart
      (narrate-restart)]
     [else
