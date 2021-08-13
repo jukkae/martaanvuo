@@ -66,6 +66,10 @@
            ((eq? 'exit next-fragment)
             ; TODO: call this unset-current-fragment! or something
             (set-situation-current-fragment-number! *situation* '()))
+
+           ((eq? 'recurse next-fragment)
+            (set-situation-current-fragment-number! *situation* '())
+            'recurse) ; !! important
            
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))
@@ -171,7 +175,8 @@
            (string-append
             " "
             #;(get-location-name-from-location (current-location))
-            (if (not (null? (current-location)))
+            (if (and (not (null? (current-location)))
+                     (not (void? (current-location))))
                 (get-location-short-description (current-location))
                 "N/A")
             " "))
@@ -390,6 +395,8 @@
            (end-round-early-with-round-status 'ok))
           ((eq? pc-action 'restart)
            (end-round-early-with-round-status 'restart))
+          ((eq? pc-action 'recurse)
+           (end-round-early-with-round-status 'recurse))
           ((eq? pc-action 'end-chapter)
            (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
            (next-chapter!)
@@ -849,9 +856,12 @@
       (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
             ((fragment-decision-valid? decisions-with-keys input)
              (begin
-               (handle-fragment-decision decisions-with-keys input)
+               (define fragment-decision-result (handle-fragment-decision decisions-with-keys input))
                
-               produce-action 'end-round-early))
+               (define result 'end-round-early)
+               (when (eq? fragment-decision-result 'recurse)
+                 (set! result 'recurse))
+               produce-action result))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))
 

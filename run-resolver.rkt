@@ -35,6 +35,18 @@
     #;[(2)
        (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
+(define (narrate-begin-recurse-run)
+  (next-chapter!)
+  
+  ; Don't show this when recursing
+  #;(when (not (= 1 (situation-run *situation*)))
+    (info-card
+     (list
+      (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
+     (string-append "Begin run number " (number->string (situation-run *situation*)))))
+
+  (paragraph "Otava follows Broker's trail through the foggy woods and gets to the fork."))
+
 
 ; engine / run-resolver
 (define (on-begin-run)
@@ -43,6 +55,14 @@
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)
+  )
+
+(define (on-begin-recurse-run)
+  (set-situation-run! *situation* (add1 (situation-run *situation*)))
+  #;(set-situation-round! *situation* 0)
+  (remove-flag 'ending-run-allowed)
+  (move-pc-to-location! (find-place-by-id 'perimeter))
+  (narrate-begin-recurse-run)
   )
 
 (define (on-continue-run)
@@ -61,7 +81,8 @@
 
 
 (define (on-end-run exit-status)
-  (when (not (eq? exit-status 'restart))
+  (when (and (not (eq? exit-status 'restart))
+             (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
            (define debt-quest (find-quest 'pay-off-debt))
            (define gold-collected (pc-gold-amount))
@@ -96,6 +117,12 @@
   (case exit-status
     ['end-run
      (paragraph "She's still alive.")]
+    ['recurse
+     (define title-string
+       (string-append "M A R T A A N V U O"
+                      "\n"
+                      "==================="))
+     (paragraph title-string)]
     ['restart
      (narrate-restart)]
     [else
@@ -104,9 +131,12 @@
 
 ; engine / run-resolver
 (define (resolve-run mode)
-  (if (eq? mode 'continue)
-      (on-continue-run)
-      (on-begin-run))
+
+  (case mode
+    ['continue (on-continue-run)]
+    ['begin (on-begin-run)]
+    
+    ['recurse (on-begin-recurse-run)])
   
   (define run-exit-status
     (let/ec end-run
@@ -118,6 +148,7 @@
         (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? first-round-exit-status 'recurse) (end-run 'recurse))
         (when (eq? first-round-exit-status 'restart) (end-run 'restart))
 
         ; continue
@@ -130,6 +161,7 @@
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? round-exit-status 'recurse) (end-run 'recurse))
         (when (eq? round-exit-status 'restart) (end-run 'restart))
 
         ; continue

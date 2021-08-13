@@ -181,12 +181,10 @@
 
              (when (location-has-feature? location 'martaanvuo-console)
                (make-decision
-                #:title "Turn on the terminal with the Martaanvuo sticker."
+                #:title "Turn on the terminal."
                 #:on-resolve! (proc
-                               (paragraph "Otava turns on the terminal with the Martaanvuo sticker.")
-                               (display-title)
-                               )
-                #:next-fragment 'exit
+                               (paragraph "Otava turns on the terminal. It greets her:"))
+                #:next-fragment 'recurse
                 ))
 
 )))
