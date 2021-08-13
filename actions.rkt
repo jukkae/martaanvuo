@@ -414,7 +414,7 @@
                   (= (situation-run *situation*) 1))
          (make-pc-choice
           #:id 'end-run
-          #:text "Return to the Shack."
+          #:text "Turn back."
           #:duration 0
           #:tags '(downtime)))
 

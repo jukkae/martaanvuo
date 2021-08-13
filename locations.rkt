@@ -177,4 +177,16 @@
                 #:on-resolve! (proc
                                (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption made of lots of levers and rods."))
                 #:next-fragment 'begin-stiltman-dialogue
-                )))))
+                ))
+
+             (when (location-has-feature? location 'martaanvuo-console)
+               (make-decision
+                #:title "Turn on the terminal with the Martaanvuo sticker."
+                #:on-resolve! (proc
+                               (paragraph "Otava turns on the terminal with the Martaanvuo sticker.")
+                               (display-title)
+                               )
+                #:next-fragment 'exit
+                ))
+
+)))

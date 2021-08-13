@@ -68,6 +68,7 @@
    (make-place
     #:id 'workshop
     ;#:features '(hartmann-device)
+    #:features '(martaanvuo-console)
     #:type 'workshop)
 
    (make-place

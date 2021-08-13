@@ -507,7 +507,7 @@
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment-number *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
-                (set-prompt! "It's either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
+                (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
                 (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
