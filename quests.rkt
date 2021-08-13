@@ -16,7 +16,7 @@
     (case quest-symbol
       ['pay-off-debt
        (quest 'pay-off-debt
-              "pay off Debt to Collector"
+              "Debt to Collector"
               "in progress"
               "unsettled: 10,111 g of Martaanvuo gold"
               10111)] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly

@@ -176,9 +176,10 @@
    #:on-resolve!
    (proc
     (paragraph "\"The Monograph?\", Otava asks.")
-    (paragraph "\"– we all got stuck, as it were – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book –\" Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
-    (update-quest-status! 'anthead-monograph "in progress?")
-    (update-quest-notes! 'anthead-monograph "find it -> Stiltman (gold)")
+    (paragraph "\"– we all got stuck, see – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident –\"")
+    (paragraph "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
+    (update-quest-status! 'anthead-monograph "find it")
+    (update-quest-notes! 'anthead-monograph "-> Stiltman; Murkwater-Aegis facility upriver - gold!")
     (define body
       (format-quest-for-card (quest-exists? 'anthead-monograph)))
 
