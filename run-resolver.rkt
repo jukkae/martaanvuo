@@ -111,7 +111,9 @@
   (case mode
     ['continue (on-continue-run)]
     ['begin (on-begin-run)]
-    ['recurse (on-begin-run)]) ;todo
+    ; todo implement this properly
+    ['recurse (setup-world)
+              (on-begin-run)])
   
   (define run-exit-status
     (let/ec end-run
