@@ -78,11 +78,11 @@
     #:type 'docks)
 
    (make-place
-    #:id 'storage-closet)
+    #:id 'storage-closet
+    #:items '(anthead-monograph))
 
    (make-place
-    #:id 'control-room
-    #:items '(anthead-monograph))
+    #:id 'control-room)
 
    (make-place
     #:id 'reactor-room)
