@@ -80,7 +80,7 @@
                            ((eq? (item-id item) 'bolt-cutters)
                             (list
                              (string-append " " (item-name item) " ")
-                             (string-append " " "With a latch to turn them into a nice crowbar." " ")))
+                             (string-append " " "Cuts, breaks, cracks, and in a pinch, levers." " ")))
                            ((item? item)
                             (list
                              (string-append " " (item-name item) " ")

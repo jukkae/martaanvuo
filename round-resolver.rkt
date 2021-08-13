@@ -40,7 +40,6 @@
           (story-fragment-decisions (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
-; move specifics from here to the actual fragment
 (define (current-fragment-handle-decision! decision)
 
   
@@ -60,23 +59,19 @@
   (cond ((number? next-fragment)
          (go-to-story-fragment next-fragment)
          )
+        
         ((symbol? next-fragment)
          (cond
            ; it can either be a special symbol...
            ((eq? 'exit next-fragment)
             ; TODO: call this unset-current-fragment! or something
             (set-situation-current-fragment-number! *situation* '()))
-           ((eq? 'exit-and-set-build-desperate next-fragment)
-            (set-build! 'desperate)
-            (set-situation-current-fragment-number! *situation* '()))
-           ((eq? 'exit-and-set-build-bruiser next-fragment)
-            (set-build! 'bruiser)
-            (set-situation-current-fragment-number! *situation* '()))
+           
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))
            ))
-        (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type."))))
-  )
+        
+        (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type.")))))
 
 ; fragment handler
 (define (current-fragment-on-end-round!)
