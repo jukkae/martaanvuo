@@ -77,6 +77,10 @@
                             (list
                              (string-append " " (item-name item) " ")
                              (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
+                           ((eq? (item-id item) 'bolt-cutters)
+                            (list
+                             (string-append " " (item-name item) " ")
+                             (string-append " " "With a latch to turn them into a nice crowbar." " ")))
                            ((item? item)
                             (list
                              (string-append " " (item-name item) " ")

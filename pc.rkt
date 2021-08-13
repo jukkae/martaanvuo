@@ -43,7 +43,7 @@
      (set-trait! (pc) "melee-attack-skill" 0)
      (set-trait! (pc) "wrestle-attack-skill" 1)
      (set-trait! (pc) "defense" 1)
-     (add-item! 'revolver)
+     (add-item! 'revolver #:silent? #t)
      ]
     
     ['bruiser
@@ -74,7 +74,9 @@
      (set-trait! (pc) "athletics-skill" 1)
      (set-trait! (pc) "melee-attack-skill" 3)
      (set-trait! (pc) "wrestle-attack-skill" -1)
-     (set-trait! (pc) "defense" 1)]
+     (set-trait! (pc) "defense" 1)
+     (add-item! 'bolt-cutters #:silent? #t)
+     ]
 
     [else (error (string-append "set-build!: unknown build type " (symbol->string build)))])
 
@@ -90,15 +92,18 @@
 (define (add-item!
          item
          #:amount [amount 1]
-         #:title [title "Item added"])
+         #:title [title "Item added"]
+         #:silent? [silent? #f])
   (define actor (pc))
   (cond ((symbol? item)
          (define new-item (make-item item #:amount amount))
          (add-item-to-inventory! actor new-item)
-         (item-info-card new-item #:title title))
+         (when (not silent?)
+           (item-info-card new-item #:title title)))
         ((item? item)
          (add-item-to-inventory! actor item)
-         (item-info-card item #:title title))
+         (when (not silent?)
+           (item-info-card item #:title title)))
         (else (error "Error: add-item! expects symbol or item"))))
 
 (define (remove-item! id)
@@ -160,6 +165,10 @@
              (list
               (string-append " " (item-name item) " ")
               (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
+            ((eq? (item-id item) 'bolt-cutters)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " "With a latch to turn them into a nice crowbar." " ")))
             ((item? item)
              (list
               (string-append " " (item-name item) " ")
