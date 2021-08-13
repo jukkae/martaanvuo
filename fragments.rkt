@@ -13,6 +13,7 @@
 (require "io.rkt")
 (require "item.rkt")
 (require "pc.rkt")
+(require "quest.rkt")
 (require "quests.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
@@ -175,7 +176,17 @@
    #:on-resolve!
    (proc
     (paragraph "\"The Monograph?\", Otava asks.")
-    (paragraph "\"– we all got stuck, as it were – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book –\" Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! –\" is the last Otava hears of Stiltman.")
+    (paragraph "\"– we all got stuck, as it were – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book –\" Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
+    (update-quest-status! 'anthead-monograph "in progress?")
+    (update-quest-notes! 'anthead-monograph "find it -> Stiltman (gold)")
+    (define body
+      (format-quest-for-card (quest-exists? 'anthead-monograph)))
+
+    (info-card
+     (list body)
+     "Quest updated")
+
+    (wait-for-confirm)
     )
    #:next-fragment 'exit
    )
@@ -185,7 +196,7 @@
    #:on-resolve!
    (proc
     (paragraph "\"The fee, what is it for?\", Otava asks.")
-    (paragraph "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – Uncolor is looking for it and she must not get it – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– watch out for the Magpie! –\", he shouts, disappearing in the mist")
+    (paragraph "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – Uncolor is looking for it and she must not get it – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– she went insane from reading it, rambling about the Anthead – do not read it! –\", he shouts, disappearing in the mist")
     )
    #:next-fragment 'exit
    )))

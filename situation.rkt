@@ -207,6 +207,24 @@
   (define quests (situation-quests *situation*))
   (findf (λ (quest) (eq? id (quest-id quest))) quests))
 
+; set-quest-status! is obviously reserved
+(define (update-quest-status! id status)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-status! quest status)
+    )
+  )
+
+; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
+(define (update-quest-notes! id notes)
+  (define quests (situation-quests *situation*))
+  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (when quest
+    (set-quest-notes! quest notes)
+    )
+  )
+
 
 ;;; plumbing for round-resolver
 (define (get-continue-pending-action-name)
