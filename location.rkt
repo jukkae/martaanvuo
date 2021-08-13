@@ -168,7 +168,8 @@
                                    (cond ((number? id) (number->string id))
                                          ((symbol? id) (symbol->string id)))
                                    " ")))
-            (when (not (null? (place-type location)))
+            (when (and (null? (place-id location))
+                       (not (null? (place-type location))))
               (list (string-append " "
                                    "type"
                                    " ")

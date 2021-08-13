@@ -66,6 +66,11 @@
            ((eq? 'exit next-fragment)
             ; TODO: call this unset-current-fragment! or something
             (set-situation-current-fragment-number! *situation* '()))
+
+           ((eq? 'recurse next-fragment)
+            (displayln "RECURSE HERE")
+            ; TODO: call this unset-current-fragment! or something
+            (set-situation-current-fragment-number! *situation* '()))
            
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))

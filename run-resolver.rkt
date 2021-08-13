@@ -61,7 +61,8 @@
 
 
 (define (on-end-run exit-status)
-  (when (not (eq? exit-status 'restart))
+  (when (and (not (eq? exit-status 'restart))
+             (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
            (define debt-quest (find-quest 'pay-off-debt))
            (define gold-collected (pc-gold-amount))
@@ -104,9 +105,11 @@
 
 ; engine / run-resolver
 (define (resolve-run mode)
-  (if (eq? mode 'continue)
-      (on-continue-run)
-      (on-begin-run))
+
+  (case mode
+    ['continue (on-continue-run)]
+    ['begin (on-begin-run)]
+    ['recurse (on-begin-run)]) ;todo
   
   (define run-exit-status
     (let/ec end-run
@@ -118,6 +121,7 @@
         (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? first-round-exit-status 'recurse) (end-run 'recurse))
         (when (eq? first-round-exit-status 'restart) (end-run 'restart))
 
         ; continue
@@ -130,6 +134,7 @@
         (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
         (when (eq? round-exit-status 'win-game) (end-run 'win-game))
         (when (eq? round-exit-status 'end-run) (end-run 'end-run))
+        (when (eq? round-exit-status 'recurse) (end-run 'recurse))
         (when (eq? round-exit-status 'restart) (end-run 'restart))
 
         ; continue
