@@ -28,7 +28,7 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Still, someone's been there, and so will she. And she'll make it back, too."
+ "Still, it can't be worse than Sysimantu. Besides, she has reason for confidence."
  #:decisions
  (list
   (make-decision
