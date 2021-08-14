@@ -46,7 +46,7 @@
       (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
      (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
-  (paragraph "Otava follows Broker's trail through the foggy woods and gets to the fork."))
+  (paragraph "Otava is again following the Broker's trail through the foggy woods. This time, she's better prepared, she knows what lies ahead. She gets to the fork."))
 
 
 ; engine / run-resolver

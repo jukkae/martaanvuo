@@ -178,7 +178,7 @@
                       (make-decision
                        #:title "Talk to the stilted figure."
                        #:on-resolve! (proc
-                                      (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption made of lots of levers and rods."))
+                                      (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption of rods and springs and wire."))
                        #:next-fragment 'begin-stiltman-dialogue
                        ))
                      (else
@@ -193,8 +193,8 @@
                (make-decision
                 #:title "Turn on the terminal."
                 #:on-resolve! (proc
-                               (paragraph "Otava turns on the terminal. It greets her:"))
-                #:next-fragment 'recurse
+                               (paragraph "Otava turns on the terminal. It clicks and whirrs, then the display comes to life."))
+                #:next-fragment 'turn-on-martaanvuo-terminal
                 ))
 
              )))

@@ -980,9 +980,6 @@
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
 
-
-
-
 ; UI? meta? scripting api? return value tied to round resolution
 (define (quit)
   (displayln "Really quit Martaanvuo? [Q] to quit, anything else to continue.")
@@ -998,7 +995,9 @@
          #t))) ; mark input as handled
 
 (define (restart)
-  (displayln "Really restart? [R] to restart, anything else to continue.")
+  (displayln
+   (string-append
+    "Really restart? [R] to restart, anything else to continue."))
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "R")
