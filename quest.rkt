@@ -10,7 +10,8 @@
   [title #:mutable]
   [status #:mutable]
   [notes #:mutable]
-  [details #:mutable]))
+  [details #:mutable])
+ #:transparent)
 
 (define (format-quest-for-card q)
   (list (string-append " "

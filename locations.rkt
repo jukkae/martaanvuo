@@ -19,7 +19,8 @@
                 times-cancel-traverse-narrated
                 times-cancel-traverse-narrated++
                 set-flag
-                next-chapter!)])
+                next-chapter!
+                quest-exists?)])
 
 (lazy-require ["decision.rkt"
                (decision
@@ -172,12 +173,21 @@
 
              ; definition / content goes to -> features, or world, or something
              (when (location-has-feature? location 'stiltman)
-               (make-decision
-                #:title "Talk to the stilted figure."
-                #:on-resolve! (proc
-                               (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption made of lots of levers and rods."))
-                #:next-fragment 'begin-stiltman-dialogue
-                ))
+               (define manuscript-quest (quest-exists? 'anthead-monograph))
+               (cond ((not manuscript-quest)
+                      (make-decision
+                       #:title "Talk to the stilted figure."
+                       #:on-resolve! (proc
+                                      (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption made of lots of levers and rods."))
+                       #:next-fragment 'begin-stiltman-dialogue
+                       ))
+                     (else
+                      (make-decision
+                       #:title "Talk to Stiltman."
+                       #:on-resolve! (proc
+                                      (paragraph "Stiltman flickers and flails above water, and Otava shouts out to him."))
+                       #:next-fragment 'stiltman-continue-dialogue
+                       ))))
 
              (when (location-has-feature? location 'martaanvuo-console)
                (make-decision
@@ -187,4 +197,4 @@
                 #:next-fragment 'recurse
                 ))
 
-)))
+             )))
