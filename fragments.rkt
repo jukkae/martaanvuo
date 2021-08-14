@@ -143,25 +143,31 @@
 (fragment
  'magpie
  (string-append
-  "The magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am old and wise, and I am the guardian of the forest, and I need help.\""
-  "\n\n"
-  "\"Hello, Magpie, I am Otava. How can I help?\""
-  "\n\n"
-  "\"I am hurt, and I need food to get stronger.\""
-  )
+  "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help.\"")
 
- #:on-enter!
- (proc
-  '())
- 
  #:decisions
  (list
   (make-decision
-   #:title "Give it food."
-   #:on-resolve!
-   (proc
-    (displayln "todo: food given")
-    )
+   #:title "Just Otava."
+   #:description "Hello Magpie, I am Otava."
+   #:next-fragment 'magpie-just-otava
+   )
+  (make-decision
+   #:title "Otava the Hero."
+   #:description "Hello, Magpie, King of Magpies, I am Otava the Hero."
+   #:next-fragment 'magpie-hero
+   )))
+
+(fragment
+ 'magpie-hero
+ (string-append
+  "\"Otava the Hero, hm? Well, what have you done to earn the epithet?\"")
+
+ #:decisions
+ (list
+  (make-decision
+   #:title "Nothing."
+   #:description "Nothing, yet. But is a hero truly defined by his outward deeds, or by the character of his heart?"
    #:next-fragment 'exit
    )))
 
