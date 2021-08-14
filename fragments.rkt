@@ -141,6 +141,35 @@
 
 
 (fragment
+ 'magpie
+ (string-append
+  "The magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am old and wise, and I am the guardian of the forest, and I need help.\""
+  "\n\n"
+  "\"Hello, Magpie, I am Otava. How can I help?\""
+  "\n\n"
+  "\"I am hurt, and I need food to get stronger.\""
+  )
+
+ #:on-enter!
+ (proc
+  '())
+ 
+ #:decisions
+ (list
+  (make-decision
+   #:title "Give it food."
+   #:on-resolve!
+   (proc
+    (displayln "todo: food given")
+    )
+   #:next-fragment 'exit
+   )))
+
+
+
+
+
+(fragment
  'begin-stiltman-dialogue
  "Stiltman goes quiet and seems to struggle against an unseen wind."
 

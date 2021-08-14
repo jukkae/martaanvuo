@@ -123,7 +123,7 @@
   (set! *places* (make-places))
   
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
-  (make-path-between 'perimeter 'magpie-hill)
+  (make-path-between 'perimeter 'magpie-hill #:no-encounters? #t)
   (make-path-between 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
   (make-path-between 'martaanvuo-swamp 'crematory)
   (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)

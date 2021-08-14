@@ -389,10 +389,10 @@
             ['magpie-effigy
              (make-choice
               'follow-the-magpie
-              "Follow the magpie's call"
+              "Magpie."
               (λ ()
-                (paragraph "There is something compelling in the sound, and Otava's feet take her deeper in the dense fog of the monochrome forest on the malevolent hilltop.")
-                (go-to-story-fragment 20)
+                (paragraph "Despite the worsening rain, Otava goes into the monochrome bush.")
+                (go-to-story-fragment 'magpie)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
