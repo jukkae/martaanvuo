@@ -143,33 +143,54 @@
 (fragment
  'magpie
  (string-append
-  "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help.\"")
+  "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help. After the skies bled, a Menace rose from the Facility, and we are the only thing between it and the World. Yet we are few, and we are hungry and weary. Can you help us?\"")
 
  #:decisions
  (list
   (make-decision
-   #:title "Just Otava."
-   #:description "Hello Magpie, I am Otava."
-   #:next-fragment 'magpie-just-otava
+   #:title "Donate a lot."
+   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I don't have much, but you can have this.\""
+   #:next-fragment 'magpie-donate-a-lot
    )
   (make-decision
-   #:title "Otava the Hero."
-   #:description "Hello, Magpie, King of Magpies, I am Otava the Hero."
-   #:next-fragment 'magpie-hero
-   )))
+   #:title "Donate a bit."
+   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I don't have much, but this I can spare.\""
+   #:next-fragment 'magpie-donate-a-bit
+   )
+  (make-decision
+   #:title "Do not donate."
+   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I am sorry, but I don't have much.\""
+   #:next-fragment 'magpie-do-not-donate
+   )
+  ))
 
 (fragment
- 'magpie-hero
+ 'magpie-donate-a-lot
  (string-append
-  "\"Otava the Hero, hm? Well, what have you done to earn the epithet?\"")
+  "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby dub thee Otava the Altruist.\"")
 
  #:decisions
- (list
-  (make-decision
-   #:title "Nothing."
-   #:description "Nothing, yet. But is a hero truly defined by his outward deeds, or by the character of his heart?"
-   #:next-fragment 'exit
-   )))
+ '())
+
+(fragment
+ 'magpie-donate-a-bit
+ (string-append
+  "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies. I hereby dub thee Otava the Friend.\"")
+
+ #:decisions
+ '())
+
+(fragment
+ 'magpie-do-not-donate
+ (string-append
+  "\"I hope future brings you good fortune\", Magpie says.")
+
+ #:decisions
+ '())
+
+
+
+
 
 
 
