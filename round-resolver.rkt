@@ -31,7 +31,8 @@
 
 ; fragment handler
 (define (current-fragment-on-begin-round!)
-  (paragraph (story-fragment-description (get-fragment (situation-current-fragment-number *situation*)))))
+  (paragraph (story-fragment-description (get-fragment (situation-current-fragment-number *situation*))))
+  ((story-fragment-on-begin-round! (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
 (define (current-fragment-get-decisions)

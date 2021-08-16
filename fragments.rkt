@@ -193,7 +193,7 @@
 (fragment
  'anthill-1
  (string-append
-  "The huge anthill is bustling with commotion. There's an area higher up on the hill where the bustling and commotion seems more organized somehow, as if the ants were trying to say something. It is a shifting, geometric form of writing."
+  "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, some of the ants"
   "\n\n"
   "\"WHAT-IS: its type / identity?\", Anthill asks."
   "\n\n"
@@ -204,27 +204,61 @@
  #:decisions
  (list
   (make-decision
-   #:title "gold."
-   #:description "\"gold.\""
-   #:next-fragment 'exit
+   #:title "gold, REQUEST: work."
+   #:description "\"GOAL: gold. REQUEST: work-for-gold <or: equivalent>\""
+   #:next-fragment 'anthill-work
    )
   (make-decision
-   #:title "freedom."
-   #:description "\"freedom.\""
-   #:next-fragment 'exit
+   #:title "freedom, REQUEST: help."
+   #:description "\"GOAL: freedom. REQUEST: help <or: information, or: equivalent>\""
+   #:next-fragment 'anthill-help
    )
   (make-decision
-   #:title "private-reason."
-   #:description "\"private-reason.\""
-   #:next-fragment 'exit
+   #:title "secret, REQUEST: passage."
+   #:description "\"GOAL: secret. REQUEST: passage.\""
+   #:next-fragment 'anthill-passage
    )
   (make-decision
-   #:title "anthead-monograph."
-   #:description "\"anthead-monograph.\""
-   #:next-fragment 'exit
+   #:title "anthead-monograph, REQUEST: information."
+   #:description "\"GOAL: anthead-monograph. REQUEST: information.\""
+   #:next-fragment 'anthill-monograph
    #:requirement (λ () (quest-exists? 'anthead-monograph))
    )
   ))
+
+(fragment
+ 'anthill-work
+ (string-append
+  "\"NEED: 4 grabberkin-fingers, PAYMENT: 29 standard-human-weight-units gold each.\", Anthill says.")
+ #:on-begin-round!
+ (λ ()
+   (displayln "anthill-work fragment on-begin-round"))
+ #:decisions
+ '())
+
+(fragment
+ 'anthill-help
+ (string-append
+  "\"I hope future brings you good fortune\", Magpie says.")
+
+ #:decisions
+ '())
+
+(fragment
+ 'anthill-passage
+ (string-append
+  "\"I hope future brings you good fortune\", Magpie says.")
+
+ #:decisions
+ '())
+
+(fragment
+ 'anthill-monograph
+ (string-append
+  "\"I hope future brings you good fortune\", Magpie says.")
+
+ #:decisions
+ '())
 
 
 

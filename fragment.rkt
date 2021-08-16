@@ -12,7 +12,8 @@
  (id
   description
   decisions
-  on-enter!))
+  on-enter!
+  on-begin-round!))
 
 ; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere.
 
@@ -22,13 +23,15 @@
          id
          description
          #:decisions decisions ; initialize to "confirm to exit", or treat '() as such
-         #:on-enter! [on-enter! (λ () '())])
+         #:on-enter! [on-enter! (λ () '())] ; this is more for setting preconditions
+         #:on-begin-round! [on-begin-round! (λ () '())])
   (define frag
     (story-fragment
      id
      description
      decisions
-     on-enter!))
+     on-enter!
+     on-begin-round!))
   (hash-set! *story-fragments* id frag))
 
 (define (get-fragment id)
