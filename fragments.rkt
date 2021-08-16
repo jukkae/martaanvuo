@@ -193,7 +193,7 @@
 (fragment
  'anthill-1
  (string-append
-  "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, some of the ants"
+  "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and Otava realizes the anthill is talking to her."
   "\n\n"
   "\"WHAT-IS: its type / identity?\", Anthill asks."
   "\n\n"
@@ -215,7 +215,7 @@
    )
   (make-decision
    #:title "secret, REQUEST: passage."
-   #:description "\"GOAL: secret. REQUEST: passage.\""
+   #:description "\"GOAL: redacted. REQUEST: passage.\""
    #:next-fragment 'anthill-passage
    )
   (make-decision
@@ -229,10 +229,14 @@
 (fragment
  'anthill-work
  (string-append
-  "\"NEED: 4 grabberkin-fingers, PAYMENT: 29 standard-human-weight-units gold each.\", Anthill says.")
+  "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
  #:on-begin-round!
  (λ ()
-   (displayln "anthill-work fragment on-begin-round"))
+   (create-quest 'grabberkin-finger)
+   (paragraph "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
+   (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
+   (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
+   (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END COMMUNICATION\", it concludes, and the ants go back to work."))
  #:decisions
  '())
 

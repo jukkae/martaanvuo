@@ -9,7 +9,8 @@
 
 (lazy-require
  ["situation.rkt"
-  (add-quest!)])
+  (add-quest!
+   quest-exists?)])
 
 (define (create-quest quest-symbol)
   (define q
@@ -24,21 +25,27 @@
        (quest 'anthead-monograph
               "Anthead Monograph"
               "???"
-              "a book? who/WHAT is Stiltman?? fee agreed for what?"
+              "a book? who/WHAT is Stiltman?? fee for what?"
+              '())]
+      ['grabberkin-finger
+       (quest 'grabberkin-finger
+              "Grabberkin finger"
+              "in progress"
+              "Anthill: 29 g gold / each"
               '())]))
-  (add-quest! q)
 
-
-  (case quest-symbol
-    ['pay-off-debt
-     (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
+  (when (not (quest-exists? quest-symbol))
+    (add-quest! q)
+    (case quest-symbol
+      ['pay-off-debt
+       (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
   
 
-  (define body
-    (format-quest-for-card q))
+    (define body
+      (format-quest-for-card q))
 
-  (info-card
-   (list body)
-   "New quest")
+    (info-card
+     (list body)
+     "New quest")
 
-  (wait-for-confirm))
+    (wait-for-confirm)))
