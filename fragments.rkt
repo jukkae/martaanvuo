@@ -296,6 +296,15 @@
 
 
 
+(fragment
+ 'anthead-1
+ (string-append
+  "\"Hello, Otava.\" The female voice sounds tinny, as if coming from a speaker. Otava turns around and sees a person dressed in overalls, heavy protective gloves and a fully enclosed helmet. Not a bit of skin is visible. Her voice is coming from a small speaker hanging from her belt. ANTHILL, her name tag says."
+  "\n\n"
+  "Otava glances at the woman's face behind the visor, but instead of a human face, the helmet is occupied by thousands of ants and a mass of other swarming insects."))
+
+
+
 
 
 
