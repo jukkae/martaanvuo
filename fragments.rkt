@@ -190,6 +190,42 @@
 
 
 
+(fragment
+ 'anthill-1
+ (string-append
+  "The huge anthill is bustling with commotion. There's an area higher up on the hill where the bustling and commotion seems more organized somehow, as if the ants were trying to say something. It is a shifting, geometric form of writing."
+  "\n\n"
+  "\"WHAT-IS: its type / identity?\", Anthill asks."
+  "\n\n"
+  "\"human / it-calls-itself-this Otava.\""
+  "\n\n"
+  "\"WHAT-IS: its goal?\"")
+
+ #:decisions
+ (list
+  (make-decision
+   #:title "gold."
+   #:description "\"gold.\""
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "freedom."
+   #:description "\"freedom.\""
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "private-reason."
+   #:description "\"private-reason.\""
+   #:next-fragment 'exit
+   )
+  (make-decision
+   #:title "anthead-monograph."
+   #:description "\"anthead-monograph.\""
+   #:next-fragment 'exit
+   #:requirement (λ () (quest-exists? 'anthead-monograph))
+   )
+  ))
+
 
 
 

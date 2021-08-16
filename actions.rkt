@@ -396,6 +396,16 @@
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
+
+            ['anthill
+             (make-choice
+              'anthill
+              "Take a closer look at the anthill."
+              (λ ()
+                (go-to-story-fragment 'anthill-1)
+                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+
+             ]
            
             [else '()#;(error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
 

@@ -29,7 +29,8 @@
 
    (make-place
     #:id 'martaanvuo-swamp
-    #:type 'swamp)
+    #:type 'swamp
+    #:features '(anthill))
 
    (make-place
     #:id 'magpie-hill

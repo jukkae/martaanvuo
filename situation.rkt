@@ -205,7 +205,9 @@
 
 (define (quest-exists? id)
   (define quests (situation-quests *situation*))
-  (findf (λ (quest) (eq? id (quest-id quest))) quests))
+  (if (null? quests)
+      #f
+      (findf (λ (quest) (eq? id (quest-id quest))) quests)))
 
 ; set-quest-status! is obviously reserved
 (define (update-quest-status! id status)
