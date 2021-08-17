@@ -2,22 +2,24 @@
 
 (provide (all-defined-out))
 
-(require "../fragment.rkt")
 (require "../decision.rkt")
-(require "../situation.rkt")
+(require "../fragment.rkt")
 (require "../io.rkt")
 (require "../quests.rkt")
+(require "../situation.rkt")
+(require "../utils.rkt")
 
 (fragment
  'anthill-1
- (string-append
-  "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her."
-  "\n\n"
-  "\"BEGIN-COMMUNICATION. WHAT-IS: its type / identity?\", Anthill asks."
-  "\n\n"
-  "\"human / it-calls-itself Otava.\""
-  "\n\n"
-  "\"WHAT-IS: its goal?\"")
+ (proc ; if fragment were a macro then this wrapping could be done automgically... but it's not trivial
+  (paragraph
+   "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.")
+  (paragraph
+   "\"BEGIN-COMMUNICATION. WHAT-IS: its type / identity?\", Anthill asks.")
+  (paragraph
+   "\"human / it-calls-itself Otava.\"")
+  (paragraph
+   "\"WHAT-IS: its goal?\""))
 
  #:decisions
  (list
@@ -50,6 +52,16 @@
 
 (fragment
  'anthill-work
+ (proc ; if fragment were a macro then this wrapping could be done automgically... but it's not trivial
+  (paragraph
+   "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.")
+  (paragraph
+   "\"BEGIN-COMMUNICATION. WHAT-IS: its type / identity?\", Anthill asks.")
+  (paragraph
+   "\"human / it-calls-itself Otava.\"")
+  (paragraph
+   "\"WHAT-IS: its goal?\""))
+ 
  (string-append
   "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
  #:on-begin-round!
