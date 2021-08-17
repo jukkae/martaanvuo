@@ -55,18 +55,19 @@
   (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
   (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
   (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
+  (paragraph "She's a bit taken aback by the abruptly ended conversation. Still, 29 grams of gold is good news.")
   )
 
  #:decisions
  (list
   (make-decision
    #:title "A sudden realization hits her."
-   #:description "Almost half the way back, Otava realizes that she has no clue how exactly the anthill talked to her. It wasn't writing, and anthills cannot talk. She walks back to the anthill, but it is not nearly as big as she thought it was, and it is definitely not talking to her."
-   #:next-fragment 'exit
+   #:description "Otava realizes that she has no clue how, exactly, did the anthill talk to her. It wasn't writing, and anthills cannot speak. She decides to circle back to the anthill, but it is not nearly as big as she thought it was, and it is definitely not talking to her."
+   #:next-fragment 'exit ; this should also take some time -> risky!
    )
   (make-decision
-   #:title "A sudden realization does not hit her. TODO: set intelligence here if not set yet, otherwise set flag for meta"
-   #:description "Otava gets back to the trail, without really questioning having a conversation with an anthill."
+   #:title "A sudden realization does not hit her."
+   #:description "Otava gets back to the trail." ; TODO: here, give some meta-reward (or maybe just *not* be risky)
    #:next-fragment 'exit
    )))
 

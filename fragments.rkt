@@ -175,14 +175,14 @@
  'magpie-donate-a-lot
  (proc
   (paragraph
-   "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby dub thee Otava the Altruist.\""
+   "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby name you Otava the Friend.\""
    )))
 
 (fragment
  'magpie-donate-a-bit
  (proc
   (paragraph
-   "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies. I hereby dub thee Otava the Friend.\""
+   "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies.\""
    )))
 
 (fragment
