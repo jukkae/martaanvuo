@@ -52,26 +52,16 @@
 
 (fragment
  'anthill-work
- (proc ; if fragment were a macro then this wrapping could be done automgically... but it's not trivial
+ (proc
   (paragraph
-   "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.")
-  (paragraph
-   "\"BEGIN-COMMUNICATION. WHAT-IS: its type / identity?\", Anthill asks.")
-  (paragraph
-   "\"human / it-calls-itself Otava.\"")
-  (paragraph
-   "\"WHAT-IS: its goal?\""))
- 
- (string-append
-  "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
- #:on-begin-round!
- (λ ()
-   (create-quest 'grabberkin-finger)
-   (paragraph "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
-   (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
-   (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
-   (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
-   )
+   "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
+  (create-quest 'grabberkin-finger)
+  (paragraph "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
+  (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
+  (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
+  (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
+  )
+
  #:decisions
  (list
   (make-decision
@@ -87,32 +77,30 @@
 
 (fragment
  'anthill-help
- (string-append
-  "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
- #:on-begin-round!
- (λ ()
-   (create-quest 'grabberkin-finger)
-   (paragraph "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
-   (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
-   (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
-   (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
-   (anthill-print-end-conversation))
+ (proc
+  (paragraph
+   "anthill-help frag tbd.")
+  )
  #:decisions
  '())
 
 
 (fragment
  'anthill-passage
- (string-append
-  "anthill-passage")
+ (proc
+  (paragraph
+   "anthill-passage frag tbd.")
+  )
 
  #:decisions
  '())
 
 (fragment
  'anthill-monograph
- (string-append
-  "anthill-monograph")
+ (proc
+  (paragraph
+   "anthill-monograph frag tbd.")
+  )
 
  #:decisions
  '())

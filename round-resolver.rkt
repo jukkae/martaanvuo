@@ -84,8 +84,7 @@
 
 ; fragment handler
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment-number! *situation* id)
-  ((story-fragment-on-enter! (get-fragment id))))
+  (set-situation-current-fragment-number! *situation* id))
 
 ; fragment handler
 (define (handle-fragment-decision decisions-with-keys input)
@@ -829,6 +828,9 @@
       (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
+
+      (when (null? fragment-decisions)
+        (wait-for-confirm)) ; what a place for this
 
       ; launch a fragment directly -> no action resolution -> not a choice
       (define location-decisions (if (null? (situation-current-fragment-number *situation*))

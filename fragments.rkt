@@ -30,7 +30,10 @@
 ; and with runs, you select the loadout
 (fragment
  1
- "Still, she has reason for confidence."
+ (proc
+  (paragraph
+   "Still, she has reason for confidence."
+   ))
  #:decisions
  (list
   (make-decision
@@ -67,8 +70,7 @@
                   (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
    #:next-fragment 'exit)
   )
- #:on-enter!
- (λ () '()#;(set-prompt! "Because...")))
+ )
 
 
 
@@ -78,9 +80,10 @@
 
 (fragment
  20
- (string-append
-  "Otava thinks the magpie should be close, but the sound seems to come from a slightly different direction every time."
-  )
+ (proc
+  (paragraph
+   "Otava thinks the magpie should be close, but the sound seems to come from a slightly different direction every time."
+   ))
  
  #:decisions
  (list (make-decision
@@ -105,9 +108,10 @@
 
 (fragment
  100
- (string-append
-  "[post-combat steps to do]"
-  )
+ (proc
+  (paragraph
+   "[post-combat steps to do]"
+   ))
  
  #:decisions
  (list (make-decision
@@ -116,37 +120,43 @@
         #:next-fragment 'exit
         )))
 
-(fragment
- 200
- (string-append
-  "A complicated tangle of wires and pipes fill much of the back half of the room. On a cluttered desk to the side there's a pile of schematics and notes."
-  "\n\n"
-  "Hartmann Device mk. II."
-  "\n\n"
-  "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
-  )
- #:decisions
- (list
-  (make-decision
-   #:title "Power on the device."
-   #:description "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
-   #:next-fragment 'exit
-   #:on-resolve! (λ () (end-game))
-   )
+#;(fragment
+   200
+   (proc
+    (paragraph
+     "[post-combat steps to do]"
+     ))
+   (string-append
+    "A complicated tangle of wires and pipes fill much of the back half of the room. On a cluttered desk to the side there's a pile of schematics and notes."
+    "\n\n"
+    "Hartmann Device mk. II."
+    "\n\n"
+    "The sequence to power on the device is described on a series of handwritten notes scribbled in the margin of one of the myriad of the schematics."
+    )
+   #:decisions
+   (list
+    (make-decision
+     #:title "Power on the device."
+     #:description "Otava dives through the jungle of cables and pipes, connecting what needs to be connected, turning on what needs to be turned on. After an hour of work, the device finally comes to life. Otava flicks the switch to begin the process, and a temperature gauge starts plummeting.\n\nAs soon as the temperature inside the kernel chamber of the device reaches point-triple-zero-one Kelvin, the zero-point field within falls to a lower state of energy, commencing a chain reaction proceeding at the speed of light from the kernel outwards. As the substratum of physical existence unfolds, matter and energy and time and space irreversibly cease to exist. Otava blinks out of existence along with the rest of the universe, never to be born again."
+     #:next-fragment 'exit
+     #:on-resolve! (λ () (end-game))
+     )
 
-  (make-decision
-   #:title "Leave the device be."
-   #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
-   #:next-fragment 'exit
-   )))
+    (make-decision
+     #:title "Leave the device be."
+     #:description "Otava leaves Hartmann Device mk. II alone, wondering what might have been."
+     #:next-fragment 'exit
+     )))
 
 
 
 (fragment
  'magpie
- (string-append
-  "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help. After the skies bled, a Menace rose from the Facility, and we are the only thing between it and the World. Yet we are few, and we are hungry and weary. Can you help us?\"")
-
+ (proc
+  (paragraph
+   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help. After the skies bled, a Menace rose from the Facility, and we are the only thing between it and the World. Yet we are few, and we are hungry and weary. Can you help us?\""
+   ))
+ 
  #:decisions
  (list
   (make-decision
@@ -168,35 +178,29 @@
 
 (fragment
  'magpie-donate-a-lot
- (string-append
-  "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby dub thee Otava the Altruist.\"")
-
- #:decisions
- '())
+ (proc
+  (paragraph
+   "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby dub thee Otava the Altruist.\""
+   )))
 
 (fragment
  'magpie-donate-a-bit
- (string-append
-  "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies. I hereby dub thee Otava the Friend.\"")
-
- #:decisions
- '())
+ (proc
+  (paragraph
+   "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies. I hereby dub thee Otava the Friend.\""
+   )))
 
 (fragment
  'magpie-do-not-donate
- (string-append
-  "\"I hope future brings you good fortune\", Magpie says.")
-
- #:decisions
- '())
+ (proc
+  (paragraph
+   "\"I hope future brings you good fortune\", Magpie says."
+   )))
 
 
 
 (fragment
  'begin-stiltman-dialogue
- "Stiltman goes quiet and seems to struggle against an unseen wind."
-
- #:on-enter!
  (proc
   (next-chapter!)
   (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the cove, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag saying STILTMAN.")
@@ -205,7 +209,10 @@
   (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
   (add-item! 'gold #:amount 11 #:title "Picked up")
   (create-quest 'anthead-monograph)
-  (set-flag 'ending-run-allowed))
+  (set-flag 'ending-run-allowed)
+  (paragraph
+   "Stiltman abruptly quits talking."
+   ))
  
  #:decisions
  (list
@@ -284,9 +291,9 @@
 
 (fragment
  'turn-on-martaanvuo-terminal
- (string-append
-  "The password is written down on a piece of paper. The terminal has access to heating and ventilation systems, including service access to reactor. There is also a lone executable with the name 'Martaanvuo'."
-  )
+ (proc
+  (paragraph
+   "The password is written down on a piece of paper. The terminal has access to heating and ventilation systems, including service access to reactor. There is also a lone executable with the name 'Martaanvuo'."))
  #:decisions
  (list
   (make-decision

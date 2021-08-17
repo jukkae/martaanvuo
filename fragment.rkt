@@ -20,7 +20,7 @@
 (define (fragment
          id
          on-begin-round!
-         #:decisions decisions ; initialize to "confirm to exit", or treat '() as such
+         #:decisions [decisions '()] ; initialize to "confirm to exit", or treat '() as such
          )
   (define frag
     (story-fragment
