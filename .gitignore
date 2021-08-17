@@ -1,6 +1,6 @@
 .DS_Store
 *.rkt~
 *.rkt#*
-/compiled
+compiled/
 save.txt
 save.txt~
