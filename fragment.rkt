@@ -10,28 +10,27 @@
 (serializable-struct
  story-fragment
  (id
-  description
+  on-begin-round!
   decisions
-  on-enter!
-  on-begin-round!))
+  on-enter!))
 
-; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere.
+; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere. (or s11n implemented somehow)
 
 (define *story-fragments* (make-hash))
 
 (define (fragment
          id
-         description
+         on-begin-round!
          #:decisions decisions ; initialize to "confirm to exit", or treat '() as such
-         #:on-enter! [on-enter! (λ () '())] ; this is more for setting preconditions
-         #:on-begin-round! [on-begin-round! (λ () '())])
+         #:on-enter! [on-enter! (λ () '())] ; this is more for setting preconditions - ie., before-on-begin-round!, which should actually not be used
+         )
   (define frag
     (story-fragment
      id
-     description
+     on-begin-round!
      decisions
      on-enter!
-     on-begin-round!))
+     ))
   (hash-set! *story-fragments* id frag))
 
 (define (get-fragment id)
