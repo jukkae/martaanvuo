@@ -10,7 +10,7 @@
   (next-chapter!)
   (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the cove, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag saying STILTMAN.")
   (remove-feature-from-location! (current-location) 'stiltman)
-  (paragraph "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee –\"")
+  (paragraph "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee – it is like a Ophiocordyceps fungus, you know, the mind control –\"")
   (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
   (add-item! 'gold #:amount 11 #:title "Picked up")
   (create-quest 'anthead-monograph)
@@ -29,7 +29,7 @@
    (proc
     (paragraph "\"What do you mean, 'unstably present'?\", Otava asks.")
     (paragraph "\"– I was fishing, thank the heavens you noticed me – \", Stiltman goes, \"– they were manufacturing a special kind of radioactive gold, for medicine and things – I'm just a technician, see, I was doing the night shift when it –\"")
-    (paragraph "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics –\"")
+    (paragraph "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics – no, I don't know what the biologists were doing! –\"")
     (paragraph "\"– so then we ran the simulations, and everything checked out and we were well within the parameter range even in the worst case – so then we could, well, create gold out of thin air –\", Stiltman says, as he's beginning to slip away, like gravity is suddenly sideways for him. \"– so then we modified the reactor and – I've been here for weeks – different causes lead to different effects – I need the book to get back! –\", he stutters, as he disappears in the mist.")
 
     (update-quest-status! 'anthead-monograph "find it")
@@ -52,7 +52,7 @@
    #:on-resolve!
    (proc
     (paragraph "\"The Monograph?\", Otava asks.")
-    (paragraph "\"– we all got stuck, see – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident – nobody asked where did it come from –\"")
+    (paragraph "\"– we all got stuck, see – for all I know they are the ones to blame, and Principal foremost – sorry, that'd be Mx Principal Scientist, known to the staff as... Mx Principal Scientist – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident – nobody asked where did it come from –\"")
     (paragraph "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
 
     (update-quest-status! 'anthead-monograph "find it")
