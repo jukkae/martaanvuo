@@ -2,12 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../decision.rkt")
-(require "../fragment.rkt")
-(require "../io.rkt")
-(require "../quests.rkt")
-(require "../situation.rkt")
-(require "../utils.rkt")
+(require "../api.rkt")
 
 (fragment
  'anthill-1
@@ -70,7 +65,7 @@
    #:next-fragment 'exit
    )
   (make-decision
-   #:title "A sudden realization does not hit her."
+   #:title "A sudden realization does not hit her. TODO: set intelligence here if not set yet, otherwise set flag for meta"
    #:description "Otava gets back to the trail, without really questioning having a conversation with an anthill."
    #:next-fragment 'exit
    )))
