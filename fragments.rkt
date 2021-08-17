@@ -13,11 +13,6 @@
 (require "checks.rkt")
 (require "decision.rkt")
 (require "fragment.rkt")
-(require "io.rkt")
-(require "item.rkt")
-(require "pc.rkt")
-(require "quest.rkt")
-(require "quests.rkt")
 (require "situation.rkt")
 (require "world.rkt")
 
