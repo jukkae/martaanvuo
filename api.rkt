@@ -11,7 +11,8 @@
                        "situation.rkt"
                        "utils.rkt"))
 
-(require racket/lazy-require)
+(provide resolve-pc-action!)
+
 
 (require "decision.rkt"
          "fragment.rkt"
@@ -24,7 +25,10 @@
          "situation.rkt"
          "utils.rkt")
 
+
+(require racket/lazy-require)
+
 (lazy-require
  ["round-resolver.rkt"
   (resolve-pc-action!)])
-(provide resolve-pc-action!)
+

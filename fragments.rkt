@@ -24,7 +24,7 @@
 (fragment
  1
  (proc
-  (paragraph
+  (p
    "Still, she has reason for confidence."
    ))
  #:decisions
