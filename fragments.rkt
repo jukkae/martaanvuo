@@ -18,10 +18,6 @@
 (require "situation.rkt")
 (require "world.rkt")
 
-(lazy-require
- ["round-resolver.rkt"
-  (resolve-pc-action!)])
-
 
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
