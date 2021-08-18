@@ -57,6 +57,7 @@
   (displayln "--------------------------------------------------------------------------------------------")
   (newline))
 
+
 (define (paragraph . args)
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))

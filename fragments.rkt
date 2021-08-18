@@ -149,25 +149,43 @@
  'magpie
  (proc
   (paragraph
-   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest, and I need help. After the skies bled, a Menace rose from the Facility, and we are the only thing between it and the World. Yet we are few, and we are hungry and weary. Can you help us?\""
-   ))
+   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. Who are you and what is your business?\"")
+  )
  
  #:decisions
  (list
   (make-decision
-   #:title "Donate a lot."
-   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I don't have much, but you can have this.\""
-   #:next-fragment 'magpie-donate-a-lot
+   #:title "\"I am Otava. I seek gold.\""
+   #:description "\"I am Otava. I seek gold.\""
+   #:next-fragment 'magpie-help
+   )))
+
+(fragment
+ 'magpie-help
+ (proc
+  (paragraph
+   "\"Chk-chk! Gold! I happen to know quite a bit about gold! In fact, I will tell you about a Cache somewhere in the ruins nearby, if we agree on a deal, chk-chk-chk!\"")
+  (paragraph
+   "\"What's the catch?\", Otava asks.")
+  (paragraph
+   "\"No catch, some hundreds of grams at least, we split 30-70, I just need hands\", Magpie explains.")
+  (paragraph
+   "\"And the risks?\", Otava asks.")
+  (paragraph
+   "\"As long as you don't go into the tunnels or do anything stupid, the worst might be some local wildlife, chk!\", Magpie says.")
+  )
+ 
+ #:decisions
+ (list
+  (make-decision
+   #:title "Agree."
+   #:description "\"Sounds good, tell me more.\""
+   #:next-fragment 'magpie-agree
    )
   (make-decision
-   #:title "Donate a bit."
-   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I don't have much, but this I can spare.\""
-   #:next-fragment 'magpie-donate-a-bit
-   )
-  (make-decision
-   #:title "Do not donate."
-   #:description "\"Hello, Magpie, King of Magpies, Guardian of Forest, I am Otava. I am sorry, but I don't have much.\""
-   #:next-fragment 'magpie-do-not-donate
+   #:title "Find it on your own."
+   #:description "Not worth it, Otava thinks, she already knows enough. \"Nah, I'll find it on my own. But thanks anyway!\""
+   #:next-fragment 'magpie-do-not-agree
    )
   ))
 
