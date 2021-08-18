@@ -42,17 +42,6 @@
    )
 
   (make-decision
-   #:title "She punches really hard."
-   #:description "She can crack a jawbone with her bare hands. The trick is in hitting from the side and from below."
-   #:on-resolve! (proc
-                  (set-build! 'bruiser)
-                  (wait-for-confirm)
-                  (paragraph "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
-                  (paragraph "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
-                  (paragraph "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp."))
-   #:next-fragment 'exit)
-
-  (make-decision
    #:title "She's a survivor."
    #:description "She is a survivor. That's what's kept her alive all these years. That, and her modified bolt cutters."
    #:on-resolve! (proc
