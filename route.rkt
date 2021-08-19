@@ -90,6 +90,15 @@
                               " to "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      ['power-plant-ruins
+       (case (location-id (route-other-end-from route start-location))
+         ['cache "The previously locked door."]
+         ['sewers-1 "The sewers."]
+         [else (string-append "["
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       [else
        
        (string-append "["
@@ -105,12 +114,12 @@
          (case direction
            ['a-to-b
             (define to-name (get-location-name-from-location (route-b route)))
-            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            (string-append "Go to " to-name ".")]
+            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            ]
            ['b-to-a
             (define to-name (get-location-name-from-location (route-a route)))
-            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            (string-append "Go to " to-name ".")]))
+            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            ]))
         (else
          (get-route-short-description))))
 
