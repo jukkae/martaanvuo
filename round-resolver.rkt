@@ -920,9 +920,16 @@
 
 ; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)
-  ; TODO: Should order here based on key
-  (for ([(k v) (in-hash choices-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
+(define choices
+    (for/list ([(k v) (in-hash choices-with-keys)])
+      (cons k v)))
+  
+  (set! choices
+        (sort choices
+              (λ (c1 c2) (< (car c1) (car c2)))))
+  
+  (for ([choice choices])
+    (displayln (string-append "[" (number->string (car choice)) "]: " (choice-name (cdr choice)))))
   (newline))
 
 ; engine / get-next-pc-action
