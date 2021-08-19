@@ -64,16 +64,19 @@
          (cond
            ; it can either be a special symbol...
            ((eq? 'exit next-fragment)
-            ; TODO: call this unset-current-fragment! or something
-            (set-situation-current-fragment-number! *situation* '()))
+            (unset-current-fragment!))
 
            ((eq? 'recurse next-fragment)
-            (set-situation-current-fragment-number! *situation* '())
+            (unset-current-fragment!)
             'recurse) ; !! important
            
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))
            ))
+
+        ((null? next-fragment) ; treat '() as 'exit
+         (unset-current-fragment!)
+         )
         
         (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type.")))))
 
@@ -270,8 +273,7 @@
 
   (when (and (in-combat?)
              (= (length current-enemies) 0))
-    (end-combat!)
-    (go-to-story-fragment 100))
+    (end-combat!))
   #;(wait-for-confirm)
   
   (when (not (null? (situation-current-fragment-number *situation*)))

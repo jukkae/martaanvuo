@@ -189,6 +189,7 @@
 ;;; Direct accessors and mutators
 (define (reset-pending-action!)
   (set-situation-pending-action! *situation* '()))
+
 (define (set-pending-action! action)
   #;(symbol
      actor
@@ -197,6 +198,9 @@
      tags
      details)
   (set-situation-pending-action! *situation* action))
+
+(define (unset-current-fragment!)
+  (set-situation-current-fragment-number! *situation* '()))
 
 (define (add-quest! quest)
   (set-situation-quests!
