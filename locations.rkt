@@ -4,11 +4,11 @@
 
 (require racket/lazy-require)
 
+(require "api.rkt")
+
 (require "action.rkt")
-(require "io.rkt")
 (require "location.rkt")
-(require "route.rkt")
-(require "utils.rkt")
+
 
 (lazy-require ["situation.rkt"
                (current-location
@@ -21,16 +21,6 @@
                 set-flag
                 next-chapter!
                 quest-exists?)])
-
-(lazy-require ["decision.rkt"
-               (decision
-                make-decision)])
-
-(lazy-require ["pc.rkt"
-               (add-item!)])
-
-(lazy-require ["quests.rkt"
-               (create-quest)])
 
 
 (define (describe-begin-traverse-action action)

@@ -8,10 +8,9 @@
                        "pc.rkt"
                        "quest.rkt"
                        "quests.rkt"
+                       "route.rkt"
                        "situation.rkt"
                        "utils.rkt"))
-
-(provide resolve-pc-action!)
 
 
 (require "decision.rkt"
@@ -22,13 +21,9 @@
          "pc.rkt"
          "quest.rkt"
          "quests.rkt"
+         "route.rkt"
          "situation.rkt"
          "utils.rkt")
 
 
 (require racket/lazy-require)
-
-(lazy-require
- ["round-resolver.rkt"
-  (resolve-pc-action!)])
-
