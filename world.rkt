@@ -48,7 +48,6 @@
 
    (make-place
     #:id 'power-plant-ruins
-    #:features '(locked-door)
     #:type 'ruins)
 
    (make-place
@@ -105,13 +104,13 @@
          id-a
          id-b
          #:hidden? [hidden? #f]
-         #:no-encounters? [no-encounters? #f])
+         #:no-encounters? [no-encounters? #f]
+         #:details [details '()])
   
   (define place-a (find-place-by-id id-a))
   (define place-b (find-place-by-id id-b))
   (set! *number-of-routes* (add1 *number-of-routes*))
 
-  (define details '())
   (when no-encounters? (set! details (append-element details 'no-encounters)))
   
   (define actors '())
@@ -136,7 +135,7 @@
   (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; TODO: This is temporary!
   (make-path-between 'martaanvuo-swamp 'magpie-hill)
   (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-  (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t)
+  (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
   (make-path-between 'power-plant-ruins 'sewers-1)
   (make-path-between 'sewers-1 'sewers-2)
   (make-path-between 'sewers-1 'workshop)

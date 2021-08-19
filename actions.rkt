@@ -290,16 +290,49 @@
                    ((eq? (place-id (current-location))
                          (place-id (route-b route)))
                     'b-to-a)))
-           (make-choice
-            'traverse
-            (get-traverse-text route (current-location)) 
-            (λ () (make-action
-                   #:symbol 'traverse
-                   #:actor (situation-pc *situation*)
-                   #:duration 100
-                   #:target route
-                   #:tags '(downtime)
-                   #:details (list direction))))))
+
+           (cond ((memq 'locked (route-details route))
+                  (list
+                   (when (and (pc-has-item? 'revolver)
+                              (pc-has-ammo-left?))
+                     (make-choice
+                      'shoot-the-lock
+                      "Shoot the lock."
+                      (λ ()
+                        (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                        (displayln "TODO: Remove the locked detail.")
+                        
+                        (make-action
+                         #:symbol 'skip
+                         #:actor (situation-pc *situation*)
+                         #:duration 0
+                         #:tags '(downtime)))))
+                   (when (and (pc-has-item? 'bolt-cutters))
+                     (make-choice
+                      'cut-the-lock
+                      "Cut the lock with bolt cutters."
+                      (λ ()
+                        (paragraph "The crude lock yields to Otava's bolt cutters easily.")
+                        (displayln "TODO: Remove the locked detail.")
+                        
+                        (make-action
+                         #:symbol 'skip
+                         #:actor (situation-pc *situation*)
+                         #:duration 0
+                         #:tags '(downtime))))))
+                  )
+                 (else ; route is traversable
+                  (make-choice
+                   'traverse
+                   (get-traverse-text route (current-location)) 
+                   (λ () (make-action
+                          #:symbol 'traverse
+                          #:actor (situation-pc *situation*)
+                          #:duration 100
+                          #:target route
+                          #:tags '(downtime)
+                          #:details (list direction))))))
+           ))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list
@@ -339,52 +372,7 @@
                 (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
                 (end-game)))]
 
-            ['locked-door
-             (list
-              (when (and (pc-has-item? 'revolver)
-                         (pc-has-ammo-left?))
-                (displayln "LOCK")
-                (make-choice
-                 'shoot-the-lock
-                 "Shoot the lock."
-                 (λ ()
-                   (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                   (displayln "TODO: Fix this after location rewrite")
-                   #;(set-location-neighbors!
-                      ruins
-                      (append-element
-                       (location-neighbors ruins)
-                       cache))
-                   #;(set-location-features! ; TODO should ofc check location etc
-                    power-plant-ruins
-                    '())
-                 
-                   (make-action
-                    #:symbol 'skip
-                    #:actor (situation-pc *situation*)
-                    #:duration 0
-                    #:tags '(downtime)))))
-              (when (and (pc-has-item? 'bolt-cutters))
-                (make-choice
-                 'cut-the-lock
-                 "Cut the lock with bolt cutters."
-                 (λ ()
-                   (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
-                   (displayln "TODO: Fix this too")
-                   #;(set-location-neighbors!
-                      ruins
-                      (append-element
-                       (location-neighbors ruins)
-                       cache))
-                   #;(set-location-features! ; TODO should ofc check location etc
-                    power-plant-ruins
-                    '())
-                 
-                   (make-action
-                    #:symbol 'skip
-                    #:actor (situation-pc *situation*)
-                    #:duration 0
-                    #:tags '(downtime))))))]
+            
 
             ['magpie-effigy
              (make-choice
