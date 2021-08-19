@@ -8,16 +8,17 @@
  'begin-stiltman-dialogue
  (proc
   (next-chapter!)
-  (paragraph "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling in the cove, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag saying STILTMAN.")
+  (p "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling above the reeds, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag on the overalls saying STILTMAN.")
   (remove-feature-from-location! (current-location) 'stiltman)
-  (paragraph "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee – it is like a Ophiocordyceps fungus, you know, the mind control –\"")
-  (paragraph "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
+  (p "\"What -\" Otava begins, but Stiltman goes on. \"– the Anthead Monograph, it's an ancient god, there's a lot of metaphysical woo-woo but the logic system is interesting – here's the fee – it is like a Ophiocordyceps fungus, you know, the mind control –\"")
+  (p "Stiltman throws something on the pier, and it lands with the metal clink of coins. Otava kneels to open the bag, while watching Stiltman. There's a handful of small gold coins in the bag.")
   (add-item! 'gold #:amount 11 #:title "Picked up")
   (create-quest 'anthead-monograph)
   (set-flag 'ending-run-allowed)
-  (paragraph
-   "Stiltman abruptly quits talking."
+  (p
+   "Stiltman abruptly goes silent."
    ))
+
  
  #:decisions
  (list

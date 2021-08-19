@@ -6,14 +6,15 @@
 
 (fragment
  'anthill-1
- (proc ; if fragment were a macro then this wrapping could be done automgically... but it's not trivial
-  (paragraph
+ 
+ (proc
+  (p
    "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.")
-  (paragraph
+  (p
    "\"BEGIN-COMMUNICATION. WHAT-IS: its type / identity?\", Anthill asks.")
-  (paragraph
+  (p
    "\"human / it-calls-itself Otava.\"")
-  (paragraph
+  (p
    "\"WHAT-IS: its goal?\""))
 
  #:decisions
