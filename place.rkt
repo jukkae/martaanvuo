@@ -5,8 +5,6 @@
 (require racket/struct)
 (require racket/serialize)
 
-
-(require "io.rkt") ; TODO: this is only needed for the info card thingy, which likely belongs somewhere else
 (require "utils.rkt")
 
 
