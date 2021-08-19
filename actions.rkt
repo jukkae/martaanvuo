@@ -300,7 +300,7 @@
                       "Shoot the lock."
                       (λ ()
                         (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                        (displayln "TODO: Remove the locked detail.")
+                        (route-remove-detail route 'locked)
                         
                         (make-action
                          #:symbol 'skip
@@ -313,7 +313,7 @@
                       "Cut the lock with bolt cutters."
                       (λ ()
                         (paragraph "The crude lock yields to Otava's bolt cutters easily.")
-                        (displayln "TODO: Remove the locked detail.")
+                        (route-remove-detail route 'locked)
                         
                         (make-action
                          #:symbol 'skip

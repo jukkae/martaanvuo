@@ -176,3 +176,15 @@
 
 (define (route-has-detail? route detail)
   (memq detail (route-details route)))
+
+(define (route-add-detail route detail)
+  (when (not (route-has-detail? route detail))
+    (set-route-details! route
+                        (append-element (route-details route)
+                                        detail))))
+
+(define (route-remove-detail route detail)
+  (when (route-has-detail? route detail)
+    (set-route-details! route
+                        (remove detail
+                                (route-details route)))))
