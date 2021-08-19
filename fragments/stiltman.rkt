@@ -28,10 +28,10 @@
    #:title "Ask what he means, 'unstably present'."
    #:on-resolve!
    (proc
-    (paragraph "\"What do you mean, 'unstably present'?\", Otava asks.")
-    (paragraph "\"– I was fishing, thank the heavens you noticed me – \", Stiltman goes, \"– they were manufacturing a special kind of radioactive gold, for medicine and things – I'm just a technician, see, I was doing the night shift when it –\"")
-    (paragraph "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics – no, I don't know what the biologists were doing! –\"")
-    (paragraph "\"– so then we ran the simulations, and everything checked out and we were well within the parameter range even in the worst case – so then we could, well, create gold out of thin air –\", Stiltman says, as he's beginning to slip away, like gravity is suddenly sideways for him. \"– so then we modified the reactor and – I've been here for weeks – different causes lead to different effects – I need the book to get back! –\", he stutters, as he disappears in the mist.")
+    (p "\"What do you mean, 'unstably present'?\", Otava asks.")
+    (p "\"– I was fishing, thank the heavens you noticed me – \", Stiltman goes, \"– they were manufacturing a special kind of radioactive gold, for medicine and things – I'm just a technician, see, I was doing the night shift when it –\"")
+    (p "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics – no, I don't know what the biologists were doing! –\"")
+    (p "\"– so then we ran the simulations, and everything checked out and we were well within the parameter range even in the worst case – so then we could, well, create gold out of thin air –\", Stiltman says, as he's beginning to slip away, like gravity is suddenly sideways for him. \"– so then we modified the reactor and – I've been here for weeks – different causes lead to different effects – I need the book to get back! –\", he stutters, as he disappears in the mist.")
 
     (update-quest-status! 'anthead-monograph "find it")
     (update-quest-notes! 'anthead-monograph "-> Stiltman (lab tech); new kind of physics - gold!")
@@ -52,9 +52,9 @@
    #:title "Ask about the Monograph."
    #:on-resolve!
    (proc
-    (paragraph "\"The Monograph?\", Otava asks.")
-    (paragraph "\"– we all got stuck, see – for all I know they are the ones to blame, and Principal foremost – sorry, that'd be Mx Principal Scientist, affectionately known to her closest ones as... Mx Principal Scientist – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident – nobody asked where did it come from –\"")
-    (paragraph "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
+    (p "\"The Monograph?\", Otava asks.")
+    (p "\"– we all got stuck, see – for all I know they are the ones to blame, and Principal foremost – sorry, that'd be Mx Principal Scientist, affectionately known to her closest ones as... Mx Principal Scientist – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident – nobody asked where did it come from –\"")
+    (p "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
 
     (update-quest-status! 'anthead-monograph "find it")
     (update-quest-notes! 'anthead-monograph "-> Stiltman; Murkwater-Aegis facility upriver - gold!")
@@ -76,8 +76,8 @@
    #:title "Ask about what the fee is for."
    #:on-resolve!
    (proc
-    (paragraph "\"The fee, what is it for?\", Otava asks.")
-    (paragraph "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– they went insane from reading it, rambling about the Anthead  – do not read it! –\", he shouts, disappearing in the mist")
+    (p "\"The fee, what is it for?\", Otava asks.")
+    (p "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– they went insane from reading it, rambling about the Anthead  – do not read it! –\", he shouts, disappearing in the mist")
 
     (update-quest-status! 'anthead-monograph "destroy")
     (update-quest-notes! 'anthead-monograph "-> Stiltman; Murkwater-Aegis facility upriver - gold!")
