@@ -114,8 +114,13 @@
   (define details '())
   (when no-encounters? (set! details (append-element details 'no-encounters)))
   
-  (define actors '()) ; TODO this should be hidden
-  (define r (route *number-of-routes* place-a place-b details actors))
+  (define actors '())
+  (define r (make-route
+             *number-of-routes*
+             place-a
+             place-b
+             #:details details
+             #:actors actors))
   (set-place-routes! place-a (append-element (place-routes place-a) r))
   (set-place-routes! place-b (append-element (place-routes place-b) r))
   (when hidden? (error "Implement hidden paths")))

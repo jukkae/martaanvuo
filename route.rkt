@@ -24,7 +24,21 @@
   [b #:mutable]
   [details #:mutable]
   [actors #:mutable])
- #:transparent)
+ #:transparent
+ #:constructor-name route*)
+
+(define
+  (make-route id
+              a
+              b
+              #:details [details '()]
+              #:actors [actors '()])
+
+  (route* id
+          a
+          b
+          details
+          actors))
 
 
 
