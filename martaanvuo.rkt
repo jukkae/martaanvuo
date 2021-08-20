@@ -24,7 +24,6 @@
   )
 
 
-; TODO sort of bad
 (define (handle-broken-save)
   (newline)
   (displayln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
