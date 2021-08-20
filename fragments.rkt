@@ -60,7 +60,7 @@
 (fragment
  100
  (proc
-  (paragraph
+  (p
    "[post-combat steps to do]"
    ))
  

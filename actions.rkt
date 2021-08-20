@@ -299,7 +299,7 @@
                       'shoot-the-lock
                       "Shoot the lock."
                       (λ ()
-                        (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                        (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
                         (route-remove-detail route 'locked)
                         
                         (make-action
@@ -312,7 +312,7 @@
                       'cut-the-lock
                       "Cut the lock with bolt cutters."
                       (λ ()
-                        (paragraph "The crude lock yields to Otava's bolt cutters easily.")
+                        (p "The crude lock yields to Otava's bolt cutters easily.")
                         (route-remove-detail route 'locked)
                         
                         (make-action
@@ -369,7 +369,7 @@
               'turn-on-device
               "Turn on Hartmann Device."
               (λ ()
-                (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
+                (p "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
                 (end-game)))]
 
             
@@ -379,7 +379,7 @@
               'follow-the-magpie
               "Magpie."
               (λ ()
-                (paragraph "Despite the worsening rain, Otava goes into the monochrome bush.")
+                (p "Despite the worsening rain, Otava goes into the monochrome bush.")
                 (go-to-story-fragment 'magpie)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
@@ -429,5 +429,5 @@
 (define (describe-pc-intention pc-action)
   (when (not (null? pc-action)) ; should be checked at call site but eh
     (case (action-symbol pc-action)
-      ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
-      #;[else (paragraph "TBD")])))
+      ['forage (p "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+      #;[else (p "TBD")])))

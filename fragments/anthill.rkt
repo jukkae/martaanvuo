@@ -43,20 +43,20 @@
   ))
 
 (define (anthill-print-end-conversation)
-  (paragraph "Otava walks away from the anthill, and it is only when she's halfway back to the trail when it hits her: She has no clue how, exactly, the thoughts of the anthill entered her mind. It wasn't writing, and anthills cannot talk.")
-  (paragraph "She plods through the swamp back to the anthill. It is not nearly as big as she thought it was, and it is definitely not talking to her. Dismayed, she returns to the trail"))
+  (p "Otava walks away from the anthill, and it is only when she's halfway back to the trail when it hits her: She has no clue how, exactly, the thoughts of the anthill entered her mind. It wasn't writing, and anthills cannot talk.")
+  (p "She plods through the swamp back to the anthill. It is not nearly as big as she thought it was, and it is definitely not talking to her. Dismayed, she returns to the trail"))
 
 (fragment
  'anthill-work
  (proc
-  (paragraph
+  (p
    "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
   (create-quest 'grabberkin-finger)
-  (paragraph "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
-  (paragraph "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
-  (paragraph "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
-  (paragraph "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
-  (paragraph "She's a bit taken aback by the abruptly ended conversation. Still, 29 grams of gold is good news.")
+  (p "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
+  (p "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
+  (p "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
+  (p "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work.")
+  (p "She's a bit taken aback by the abruptly ended conversation. Still, 29 grams of gold is good news.")
   )
 
  #:decisions
@@ -75,7 +75,7 @@
 (fragment
  'anthill-help
  (proc
-  (paragraph
+  (p
    "anthill-help frag tbd.")
   )
  #:decisions
@@ -85,7 +85,7 @@
 (fragment
  'anthill-passage
  (proc
-  (paragraph
+  (p
    "anthill-passage frag tbd.")
   )
 
@@ -95,7 +95,7 @@
 (fragment
  'anthill-monograph
  (proc
-  (paragraph
+  (p
    "anthill-monograph frag tbd.")
   )
 
