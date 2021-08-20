@@ -11,7 +11,7 @@
 (serializable-struct
  place
  ([id #:mutable] ; has to be mutable for serialization reasons
-  [routes #:mutable] ; TODO: should this be called neighbors and include both routes and places? -> simple adjacencies wouldn't require routes. OTOH, resolvers now assume routes
+  [routes #:mutable]
   [type #:mutable] ; has to be mutable for serialization reasons
   [on-enter-symbol #:mutable] ; symbol, because lambdas cannot be easily serialized
   [features #:mutable]
