@@ -132,7 +132,7 @@
   (make-path-between 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
   (make-path-between 'martaanvuo-swamp 'crematory)
   (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-  (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; TODO: This is temporary!
+  (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
   (make-path-between 'martaanvuo-swamp 'magpie-hill)
   (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
   (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))

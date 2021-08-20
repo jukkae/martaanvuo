@@ -33,7 +33,7 @@
     (player-info)))
 
 (define (on-end-life)
-  (displayln "[Life summary TODO]")
+  (displayln "[Life summary]")
   ; -> serialize run statistics
   (clean-situation!)
   )
