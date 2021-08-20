@@ -152,7 +152,7 @@
 ;;; -> act as a soft gate
 ;;; -> somewhat miniboss-like *at first*
 ; They are greedy. They are clingy. (What do they most wish?)
-; TO DO: Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
+; Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
 ; Idea: Vulnerabilities:
 ; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
 ; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
@@ -167,8 +167,8 @@
 ; - After combat, patching up is possible, but it is risk-free only if you know medicine, which requires finding literature (= doing a Cache-run, in practice) and then leveling up
 
 (define (spawn-grabberkin-encounter!)
-  ; TODO usually grab only one ankle, sometimes both
-  (paragraph "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
+  
+  (p "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
   (begin-combat!)
 
   (define hp 11)

@@ -107,7 +107,7 @@
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed." begin-new-life))
 
-            (paragraph "Proceed?")
+            (p "Proceed?")
             (print-meta-commands-with-keys meta-commands)
             (define input (wait-for-input))
             (serialize-input)
