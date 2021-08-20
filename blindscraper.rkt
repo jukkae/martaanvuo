@@ -133,7 +133,7 @@
 
 
 (define (spawn-blindscraper-encounter!)
-  (paragraph "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
+  (p "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
 
   (begin-combat!)
 
