@@ -151,16 +151,8 @@
        )))
   
   
-  (filter ; TODO this should be extracted, useful, esp. the void check!
-   (λ (x) (and (not (null? x))
-               (not (void? x))))
-   (flatten all-choices)))
+  (condense all-choices))
 
-; TODO this belongs to situation
-(define (actor-has-item? actor item)
-  (define inventory (actor-inventory actor))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
-         inventory))
 
 (define (get-combat-choices)
   (define targets (get-current-enemies))

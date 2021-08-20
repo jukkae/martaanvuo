@@ -311,6 +311,12 @@
                         (append (actor-inventory actor)
                                 (list item))))
 
+(define (actor-has-item? actor item)
+  (define inventory (actor-inventory actor))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
+         inventory))
+
+
 (define (actor-status-card actor title)
   (info-card
    (list
