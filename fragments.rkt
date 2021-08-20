@@ -61,12 +61,12 @@
  100
  (proc
   (p
-   "[post-combat steps to do]"
+   "[post-combat steps]"
    ))
  
  #:decisions
  (list (make-decision
-        #:title "Exit action."
+        #:title "Exit combat."
         #:description "Combat finished."
         #:next-fragment 'exit
         )))
