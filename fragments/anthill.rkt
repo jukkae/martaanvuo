@@ -68,7 +68,7 @@
    )
   (make-decision
    #:title "A sudden realization does not hit her."
-   #:description "Otava gets back to the trail." ; TODO: here, give some meta-reward (or maybe just *not* be risky)
+   #:description "Otava gets back to the trail." ; here some meta-reward could be given (or maybe just *not* be risky)
    #:next-fragment 'exit
    )))
 
