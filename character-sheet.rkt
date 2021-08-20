@@ -9,17 +9,11 @@
 (require "io.rkt")
 (require "utils.rkt")
 
-
 (lazy-require
  ["situation.rkt"
   (pc
-   paragraph
-   in-combat?
-   actor-in-range?
-   move-actor-to-location!
-   current-location
-   stance
-   *enemy-stances*)])
+   )])
+
 
 ; -> PC, or even just character-sheet.rkt
 (define (character-sheet)
