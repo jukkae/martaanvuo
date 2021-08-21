@@ -46,21 +46,6 @@
      (add-item! 'revolver #:silent? #t)
      ]
     
-    ['bruiser
-     (set-actor-strength! (pc) 10)
-     (set-actor-dexterity! (pc) 10)
-     (set-actor-constitution! (pc) 10)
-     (set-actor-intelligence! (pc) 7)
-     (set-actor-charisma! (pc) 7)
-     
-     (set-pc-actor-max-lp! (pc) 0)
-     (set-pc-actor-lp! (pc) 0)
-
-     (set-trait! (pc) "athletics-skill" 1)
-     (set-trait! (pc) "melee-attack-skill" 3)
-     (set-trait! (pc) "wrestle-attack-skill" -1)
-     (set-trait! (pc) "defense" 1)]
-
     ['survivor
      (set-actor-strength! (pc) 7)
      (set-actor-dexterity! (pc) 10)

@@ -189,6 +189,7 @@
 ;;; Direct accessors and mutators
 (define (reset-pending-action!)
   (set-situation-pending-action! *situation* '()))
+
 (define (set-pending-action! action)
   #;(symbol
      actor
@@ -197,6 +198,9 @@
      tags
      details)
   (set-situation-pending-action! *situation* action))
+
+(define (unset-current-fragment!)
+  (set-situation-current-fragment-number! *situation* '()))
 
 (define (add-quest! quest)
   (set-situation-quests!
@@ -511,9 +515,9 @@
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
-                (paragraph "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
+                (p "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (paragraph "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
+                (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
 (define (serialize-state)
   
@@ -533,11 +537,11 @@
   (when (location-has-feature? (current-location) 'locked-door)
     (cond ((and (pc-has-item? 'revolver)
                 (pc-has-ammo-left?))
-           (paragraph "There's a door that's locked with a heavy padlock."))
+           (p "There's a door that's locked with a heavy padlock."))
           ((and (pc-has-item? 'bolt-cutters))
-           (paragraph "There's a door that's locked with a heavy padlock."))
+           (p "There's a door that's locked with a heavy padlock."))
           (else
-           (paragraph "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
+           (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
   (cond
     ((in-combat?) (describe-combat-situation))
     (else (describe-non-combat-situation)))
@@ -635,20 +639,20 @@
   (match (status-type status)
     ['blind
      (displayln "todo: blind should be a condition, not a status")
-     (paragraph "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
      (define roll (d 1 2))
      (wait-for-confirm)
      (case roll
        [(1)
         ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
-        (paragraph "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+        (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
        [(2)
-        (paragraph "A searing pain cuts through her eyes as her vision turns to black.")])
+        (p "A searing pain cuts through her eyes as her vision turns to black.")])
      ]
     ['bound
      (actor-set-status! target (status-type status) (status-lifetime status))
      ]
-    [else (paragraph "todo: unknown status")]))
+    [else (p "todo: unknown status")]))
 
 (define (inflict-condition! target cond)
   (match (condition-type cond)
@@ -666,19 +670,19 @@
          (displayln "Already bleeding."))
      
      ]
-    [else (paragraph "todo: unknown condition")]))
+    [else (p "todo: unknown condition")]))
 
 ; scripting API
 (define (end-game)
   (wait-for-confirm)
-  (paragraph "[The end.]")
+  (p "[The end.]")
   (player-info)
   (wait-for-confirm)
   (exit))
 
 ; api?
 (define (pick-up-items!)
-  (paragraph "Otava picks up everything there is to pick up.")
+  (p "Otava picks up everything there is to pick up.")
   (define all-items (place-items (current-location)))
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
@@ -694,7 +698,7 @@
                    (number->string (situation-current-part *situation*))
                    ", CHAPTER "
                    (number->string (situation-current-chapter *situation*))))
-  (paragraph heading))
+  (p heading))
 
 (define (next-chapter!)
   (when (= (situation-current-part *situation*) 0)

@@ -4,11 +4,11 @@
 
 (require racket/lazy-require)
 
+(require "api.rkt")
+
 (require "action.rkt")
-(require "io.rkt")
 (require "location.rkt")
-(require "route.rkt")
-(require "utils.rkt")
+
 
 (lazy-require ["situation.rkt"
                (current-location
@@ -21,16 +21,6 @@
                 set-flag
                 next-chapter!
                 quest-exists?)])
-
-(lazy-require ["decision.rkt"
-               (decision
-                make-decision)])
-
-(lazy-require ["pc.rkt"
-               (add-item!)])
-
-(lazy-require ["quests.rkt"
-               (create-quest)])
 
 
 (define (describe-begin-traverse-action action)
@@ -59,20 +49,20 @@
     ['(perimeter magpie-hill)
      (case n
        [(1)
-        (paragraph
+        (p
          "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
        [else
-        (paragraph
+        (p
          "Otava climbs the natural stairs up to Magpie Hill.")])
      ]
     ['(perimeter martaanvuo-swamp)
      (case n
        [(1)
-        (paragraph
-         "Otava decides to follow the ants.")]
+        (p
+         "Otava follows the ants and takes the right-hand path. The trail descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns soggy, and the smell of wild rosemary fills the air as the forested swamp turns into an open marsh.")]
        [else
-        (paragraph
-         "Otava follows the ants.")])
+        (p
+         "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
      ])
   )
 
@@ -102,23 +92,33 @@
     ['(perimeter magpie-hill)
      (case n
        [(1)
-        (paragraph "Otava comes to a slab of stone with a painting of a human figure on it. The being has the head of an ant, and its six arms are contorted in a mad dance, one pair of hands gesturing wildly with the control rods of a puppeteer. The bottom of the painting is washed away. The figure's unsettling gaze follows Otava as she goes past the painting and fills her with apprehension. It begins to drizzle.")
-        (paragraph "Soon after the dreadful painting, the rocky stairs turn back to a trail that levels out. The thick fog and the drizzle that's now a steady rain obscure much of the view. Otava is at the edge of a large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")]
+        (p "Otava comes to a slab of stone with a painting of a human figure on it. The being has the head of an ant, and its six arms are contorted in a mad dance, one pair of hands gesturing wildly with the control rods of a puppeteer. The bottom of the painting is washed away. The figure's unsettling gaze follows Otava as she goes past the painting and fills her with apprehension. It begins to drizzle.")
+        (p "Soon after the dreadful painting, the rocky stairs turn back to a trail that levels out. The thick fog and the drizzle that's now a steady rain obscure much of the view. Otava is at the edge of a large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")]
        [else
-        (paragraph
+        (p
          "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
+
+    ['(perimeter martaanvuo-swamp)
+     (case n
+       [(1)
+        (p
+         "After the barely-traversable marsh, Otava finds a footpath to follow once again. Soon, the hills come closer to her on her left again, and there is a fork in the path.")
+        ]
+       [else
+        (p
+         "Otava comes to Martaanvuo Fork.")])]
     
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
-        (paragraph "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and old, decaying docks slowly appear from the fog. There's a secluded cove, surrounded by cliffs, a couple of sheds by the shoreline, and a few berths. A small fishing boat with a pile of fish on the deck explains the smell.")
-        (paragraph "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a webbing that's hanging from a winch. The figure is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
+        (p "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and old, decaying docks slowly appear from the fog. There's a secluded cove, surrounded by cliffs, a couple of sheds by the shoreline, and a few berths. A small fishing boat with a pile of fish on the deck explains the smell.")
+        (p "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a webbing that's hanging from a winch. The figure is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
        [else
-        (paragraph
+        (p
          "The docks slowly appear from the mist.")])]
 
     [else
-     (displayln "unknown key:")
+     (displayln "describe-finish-traverse-action: unknown key:")
      (displayln key)]
 
     
@@ -153,9 +153,9 @@
     ['(perimeter magpie-hill)
      (case n
        [(1)
-        (paragraph "Otava comes back to the fork in the path somewhere in Perimeter.")]
+        (p "Otava comes back to the fork in the path somewhere in Perimeter.")]
        [else
-        (paragraph "Otava comes back to the fork in Perimeter.")])
+        (p "Otava comes back to the fork in Perimeter.")])
 
      
      ])
@@ -178,14 +178,14 @@
                       (make-decision
                        #:title "Talk to the stilted figure."
                        #:on-resolve! (proc
-                                      (paragraph "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption of rods and springs and wire."))
+                                      (p "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption of rods and springs and wire."))
                        #:next-fragment 'begin-stiltman-dialogue
                        ))
                      (else
                       (make-decision
                        #:title "Talk to Stiltman."
                        #:on-resolve! (proc
-                                      (paragraph "Stiltman flickers and flails above water, and Otava shouts out to him."))
+                                      (p "Stiltman flickers and flails above water, and Otava shouts out to him."))
                        #:next-fragment 'stiltman-continue-dialogue
                        ))))
 
@@ -193,7 +193,7 @@
                (make-decision
                 #:title "Turn on the terminal."
                 #:on-resolve! (proc
-                               (paragraph "Otava turns on the terminal. It clicks and whirrs, then the display comes to life."))
+                               (p "Otava turns on the terminal. It clicks and whirrs, then the display comes to life."))
                 #:next-fragment 'turn-on-martaanvuo-terminal
                 ))
 

@@ -31,7 +31,6 @@
 
 ; fragment handler
 (define (current-fragment-on-begin-round!)
-  (paragraph (story-fragment-description (get-fragment (situation-current-fragment-number *situation*))))
   ((story-fragment-on-begin-round! (get-fragment (situation-current-fragment-number *situation*)))))
 
 ; fragment handler
@@ -46,7 +45,7 @@
   
   (when (and (not (null? (decision-description decision)))
              (not (equal? (decision-description decision) "")))
-    (paragraph (decision-description decision)))
+    (p (decision-description decision)))
   
 
   (when (not (null? (decision-on-resolve! decision)))
@@ -65,16 +64,19 @@
          (cond
            ; it can either be a special symbol...
            ((eq? 'exit next-fragment)
-            ; TODO: call this unset-current-fragment! or something
-            (set-situation-current-fragment-number! *situation* '()))
+            (unset-current-fragment!))
 
            ((eq? 'recurse next-fragment)
-            (set-situation-current-fragment-number! *situation* '())
+            (unset-current-fragment!)
             'recurse) ; !! important
            
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))
            ))
+
+        ((null? next-fragment) ; treat '() as 'exit
+         (unset-current-fragment!)
+         )
         
         (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type.")))))
 
@@ -85,8 +87,7 @@
 
 ; fragment handler
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment-number! *situation* id)
-  ((story-fragment-on-enter! (get-fragment id))))
+  (set-situation-current-fragment-number! *situation* id))
 
 ; fragment handler
 (define (handle-fragment-decision decisions-with-keys input)
@@ -187,6 +188,7 @@
   (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   (display-location-info-card (current-location) "Current location")
   
+  
   (set! action-queue '())
   
   (when (not (null? (situation-current-fragment-number *situation*)))
@@ -220,7 +222,7 @@
   (display-location-info-card (current-location) "Current location")
   
   (set! action-queue '())
-  #;(repeat-last-paragraph)
+  #;(repeat-last-p)
   #;(when (not (null? (situation-current-fragment-number *situation*)))
       (current-fragment-on-begin-round!))
   )
@@ -272,8 +274,7 @@
 
   (when (and (in-combat?)
              (= (length current-enemies) 0))
-    (end-combat!)
-    (go-to-story-fragment 100))
+    (end-combat!))
   #;(wait-for-confirm)
   
   (when (not (null? (situation-current-fragment-number *situation*)))
@@ -440,17 +441,17 @@
                    ; TODO this is heavy on narration -> is this a fragment?
                    (cond ((eq? (action-symbol action) 'end-run)
                           (cond ((flag-set? 'ending-run-allowed)
-                                 #;(paragraph "At least it's something.")
+                                 #;(p "At least it's something.")
                                  (return 'end-run))
                                 (else
                                  (set-flag 'tried-to-go-back)
-                                 (paragraph "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
+                                 (p "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
                                  (wait-for-confirm)
                                  (next-chapter!) ; end chapter
-                                 (paragraph "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
+                                 (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
                                  (wait-for-confirm)
-                                 (paragraph "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")
-                                 (paragraph "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
+                                 (p "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")
+                                 (p "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
                                  (return 'failure)
                                  )))
                          ((eq? (action-symbol action) 'win-game)
@@ -678,7 +679,7 @@
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'flee)
-      (paragraph "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
+      (p "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
       (award-xp! 1)
       (remove-all-enemies-and-end-combat!)
       (end-round-early))
@@ -710,7 +711,7 @@
 
         ; TODO: As always, description belongs in the action
         ['grip-released
-         (paragraph "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
+         (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
          (award-xp! 3 "for surviving an encounter with a Grabberkin")
          (remove-enemy actor)
          ]
@@ -831,6 +832,9 @@
                                      '()
                                      (current-fragment-get-decisions)))
 
+      (when (null? fragment-decisions)
+        (wait-for-confirm)) ; what a place for this
+
       ; launch a fragment directly -> no action resolution -> not a choice
       (define location-decisions (if (null? (situation-current-fragment-number *situation*))
                                      (get-location-decisions (current-location))
@@ -917,9 +921,16 @@
 
 ; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)
-  ; TODO: Should order here based on key
-  (for ([(k v) (in-hash choices-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (choice-name v))))
+  (define choices
+    (for/list ([(k v) (in-hash choices-with-keys)])
+      (cons k v)))
+  
+  (set! choices
+        (sort choices
+              (λ (c1 c2) (< (car c1) (car c2)))))
+  
+  (for ([choice choices])
+    (displayln (string-append "[" (number->string (car choice)) "]: " (choice-name (cdr choice)))))
   (newline))
 
 ; engine / get-next-pc-action
@@ -974,8 +985,8 @@
          (newline)
          )
         (else
-         (newline) ; This is extra spacing, should pass a param to paragraph
-         #;(paragraph "What do you do?")
+         (newline) ; This is the extra space, should pass a param to print call perhaps instead?
+         #;(p "What do you do?")
          (print-decisions-with-keys fragment-decisions-with-keys)
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
@@ -988,8 +999,8 @@
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
          (define session-score (d 1 4))
-         (paragraph (string-append "Your session score was " (number->string session-score) "."))
-         (paragraph "Martaanvuo expects your return.")
+         (p (string-append "Your session score was " (number->string session-score) "."))
+         (p "Martaanvuo expects your return.")
          (exit))
         (else
          (newline)

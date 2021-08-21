@@ -83,9 +83,9 @@
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
     (if (not (pc-actor? (action-target action)))
-        (paragraph "The " (actor-name (action-target action)) " is dead.")
+        (p "The " (actor-name (action-target action)) " is dead.")
         (begin
-          (paragraph "Otava is dead.")
+          (p "Otava is dead.")
           (set! action-result 'pc-dead))))
 
   action-result
@@ -163,9 +163,9 @@
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
     (if (not (pc-actor? (action-target action)))
-        (paragraph "The " (actor-name (action-target action)) " is dead.")
+        (p "The " (actor-name (action-target action)) " is dead.")
         (begin
-          (paragraph "Otava is dead.")
+          (p "Otava is dead.")
           (set! action-result 'pc-dead))))
 
   action-result
@@ -176,7 +176,7 @@
   (define target (action-target action))
   (define gun (get-firearm actor))
   (case (ranged-weapon-ammo-left gun)
-    [(0) (paragraph "Click. Out of ammo.")
+    [(0) (p "Click. Out of ammo.")
          (award-xp! 1 "Whoops.")
          (add-combat-flag 'aware-of-being-out-of-ammo)
          (increment-achievement! 'forgetful)
@@ -191,11 +191,11 @@
 
 ; ability-like attack
 (define (resolve-pull-under-action! action)
-  (paragraph "The hands grasping her ankle – the thing with the hands – shift in the waters under the floating raft of moss. The thing pulls Otava through the moss, through a thick layer of algae, into the cloudy waters. The heavy, dark water closes in around her.")
-  (paragraph "The thing pulls her deeper. She fights back, but her arms get caught in the massive algae congesting the grimy waters. She cannot hold her breath much longer.") ; -> fragments -> saving throw, not direct death
+  (p "The hands grasping her ankle – the thing with the hands – shift in the waters under the floating raft of moss. The thing pulls Otava through the moss, through a thick layer of algae, into the cloudy waters. The heavy, dark water closes in around her.")
+  (p "The thing pulls her deeper. She fights back, but her arms get caught in the massive algae congesting the grimy waters. She cannot hold her breath much longer.") ; -> fragments -> saving throw, not direct death
   (wait-for-confirm)
 
-  (paragraph "Otava opens her mouth and drowns four feet under the surface of a nameless pool in Martaanvuo.") ; -> todo: name it 'the drowning pools' in subsequent rounds
+  (p "Otava opens her mouth and drowns four feet under the surface of a nameless pool in Martaanvuo.") ; -> todo: name it 'the drowning pools' in subsequent rounds
   (kill (pc) 'drowned)
   )
 
@@ -219,10 +219,10 @@
 (define (resolve-anklebreaker-action! action)
   (define target (action-target action))
   (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
-         (paragraph "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
+         (p "The hands tighten their vice-like hold on Otava's ankle. There's a wet, crunchy sound as bones shatter and tear through the surrounding muscle.")
          (define critical? (roll-crit? 4))
          (when critical?
-           (paragraph "A shard of bone sticks out through a gash in her ankle. Blood starts to flow."))
+           (p "A shard of bone sticks out through a gash in her ankle. Blood starts to flow."))
          (define action-result (take-damage target 1 'trauma))
          (case action-result
            ('hit
@@ -247,11 +247,11 @@
 
         ; second ankle
         (else
-         (paragraph "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes the bones in Otava's other ankle, too.")
+         (p "The Grabberkin shifts its hands onto Otava's other ankle with ease, as if it's slowly waking up, and crushes the bones in Otava's other ankle, too.")
 
          (define critical? (roll-crit? 4))
          (when critical?
-           (paragraph "A sharp edge of a broken bone punctures an artery and blood gushes out."))
+           (p "A sharp edge of a broken bone punctures an artery and blood gushes out."))
 
          (define action-result (take-damage (action-target action) 1 'trauma))
          (display-combatant-info (action-target action))
@@ -300,14 +300,14 @@
            
   (if success?
       (begin
-        (paragraph "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
         (remove-stance! (action-actor action))
                  
         (let ([enemy-stance (stance (action-actor action) "α" 'engaged "right")])
           (add-stance! enemy-stance)))
         
       (begin
-        (paragraph "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+        (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
         (displayln "[-1 LP]")
         (set-pc-actor-lp! (situation-pc *situation*)
                           (- (pc-actor-lp (situation-pc *situation*))
@@ -324,7 +324,7 @@
   (define lp (pc-actor-lp (situation-pc *situation*)))
   (define dex (actor-dexterity (action-actor action)))
            
-  (paragraph "The Blindscraper skitters towards Otava.")
+  (p "The Blindscraper skitters towards Otava.")
   (remove-stance! (action-actor action))
                  
   (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
@@ -357,13 +357,13 @@
               (string-append " " amount-string " "))
              )
             "Forage results roll")
-           (paragraph "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
            (define item (list 'food (list amount)))
            (add-item-to-inventory! (situation-pc *situation*) item)
            )
           (else
            (begin
-             (paragraph "Despite spending a while, Otava can't find anything to eat.")
+             (p "Despite spending a while, Otava can't find anything to eat.")
              (define luck-roll (d 1 20))
              (info-card
               (list
@@ -440,7 +440,7 @@
 ; skinnable, but in a sense generic action
 (define (resolve-flee-action! action)
   (cond ((pc-actor? (action-actor action))
-         (paragraph "Otava turns her back to run.")
+         (p "Otava turns her back to run.")
          (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
          (define stance-range-values '())
@@ -456,16 +456,16 @@
          (define success? (skill-check "Athletics" skill target-number))
          (if success?
              (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
-               (paragraph "She dives behind a small bush and waits.")
+               (p "She dives behind a small bush and waits.")
                (wait-for-confirm)
                (if (luck-check)
-                   (paragraph "PASS")
-                   (paragraph "FAIL"))
-               (paragraph "Nothing seems to be following her.")
+                   (p "PASS")
+                   (p "FAIL"))
+               (p "Nothing seems to be following her.")
                (award-xp! 3 "for a working survival instinct")
                'end-combat)
              (begin
-               (paragraph "Otava's foot gets caught on a root. She falls face down in the mud.")
+               (p "Otava's foot gets caught on a root. She falls face down in the mud.")
                (actor-add-status! (pc) (status 'fallen 1))
                (display-pc-combatant-info (pc))
                (wait-for-confirm)
@@ -473,7 +473,7 @@
          )
 
         (else ; not a pc actor
-         (paragraph
+         (p
           (string-append
            (get-combatant-name (action-actor action))
            " tries to run."))
@@ -489,11 +489,11 @@
          (if success?
              ; TODO this fails if there are multiple enemies!
              (begin
-               (paragraph "The Blindscraper skitters away and disappears in the foliage.")
+               (p "The Blindscraper skitters away and disappears in the foliage.")
                (award-xp! 1)
                'escape-from-combat)
              (begin
-               (paragraph "It is fast, but not fast enough.")
+               (p "It is fast, but not fast enough.")
                (actor-add-status! (action-actor action) (status 'fallen 1))
                (display-combatant-info (action-actor action))
                'failure))
@@ -540,7 +540,7 @@
                'failure
                ))
           ((eq? (action-symbol action) 'sleep)
-           (paragraph "Otava turns in for the night. Get some rest.")
+           (p "Otava turns in for the night. Get some rest.")
            'ok)
           ((eq? (action-symbol action) 'flee)
            (resolve-flee-action! action)
@@ -558,7 +558,7 @@
            (define target (action-target action))
            (define status (car (action-details action)))
            (when (eq? (status-type status) 'bound)
-             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
            (inflict-status! target status)
            'ok
            )
@@ -567,7 +567,7 @@
            (define target (action-target action))
            (define status (car (action-details action)))
            (when (eq? (status-type status) 'bound) ; this is shit, refactor
-             (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
              (define amount (status-lifetime status))
              (modify-actor-status-lifetime target 'bound amount)
              )
@@ -579,7 +579,7 @@
            (define condition (car (action-details action)))
            (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
            #;(when (eq? (status-type status) 'bound)
-               (paragraph "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+               (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
            #;(inflict-status! target status)
            'ok
            )

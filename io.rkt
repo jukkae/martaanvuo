@@ -66,6 +66,7 @@
          (print-paragraph s))
         (else ; don't do anything with empty input
          '())))
+(define p paragraph)
 
 (define (notice . args)
   (define str (string-append* args))

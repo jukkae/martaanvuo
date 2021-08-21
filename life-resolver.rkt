@@ -28,12 +28,12 @@
 (define (on-begin-life)
   (set-situation-life! *situation* (add1 (situation-life *situation*)))
   (set-situation-pc! *situation* (make-new-pc))
-  (go-to-story-fragment 1)
+  (go-to-story-fragment 'select-build)
   (when (not (= 1 (situation-life *situation*)))
     (player-info)))
 
 (define (on-end-life)
-  (displayln "[Life summary TODO]")
+  (displayln "[Life summary]")
   ; -> serialize run statistics
   (clean-situation!)
   )

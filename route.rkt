@@ -5,6 +5,7 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require "io.rkt")
 (require "utils.rkt")
 
 (lazy-require
@@ -24,7 +25,21 @@
   [b #:mutable]
   [details #:mutable]
   [actors #:mutable])
- #:transparent)
+ #:transparent
+ #:constructor-name route*)
+
+(define
+  (make-route id
+              a
+              b
+              #:details [details '()]
+              #:actors [actors '()])
+
+  (route* id
+          a
+          b
+          details
+          actors))
 
 
 
@@ -76,6 +91,15 @@
                               " to "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      ['power-plant-ruins
+       (case (location-id (route-other-end-from route start-location))
+         ['cache "The previously locked door."]
+         ['sewers-1 "The sewers."]
+         [else (string-append "["
+                              (symbol->string (location-id start-location))
+                              " to "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       [else
        
        (string-append "["
@@ -91,12 +115,12 @@
          (case direction
            ['a-to-b
             (define to-name (get-location-name-from-location (route-b route)))
-            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            (string-append "Go to " to-name ".")]
+            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            ]
            ['b-to-a
             (define to-name (get-location-name-from-location (route-a route)))
-            #;(string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            (string-append "Go to " to-name ".")]))
+            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+            ]))
         (else
          (get-route-short-description))))
 
@@ -162,3 +186,36 @@
 
 (define (route-has-detail? route detail)
   (memq detail (route-details route)))
+
+(define (route-add-detail route detail)
+  (when (not (route-has-detail? route detail))
+    (set-route-details! route
+                        (append-element (route-details route)
+                                        detail))))
+
+(define (route-remove-detail route detail)
+  (when (route-has-detail? route detail)
+    (set-route-details! route
+                        (remove detail
+                                (route-details route)))))
+
+
+(define (display-route-info-card route)
+  (define id (route-id route))
+  (define title "Location (en route)")
+  (define body
+    (list
+     (list " aa " " bb "))
+    #;(prune (list
+            (when (not (null? id))
+              (list (string-append " "
+                                   "id"
+                                   " ")
+                    (string-append " "
+                                   (cond ((number? id) (number->string id))
+                                         ((symbol? id) (symbol->string id)))
+                                   " ")))
+            )))
+  (info-card body title))
+
+

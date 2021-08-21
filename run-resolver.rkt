@@ -30,11 +30,11 @@
   
   (case (situation-run *situation*)
     [(1)
-     (paragraph "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far.")
+     (p "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     #;[(2)
-       (paragraph "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
+       (p "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
 
 (define (narrate-begin-recurse-run)
   (next-chapter!)
@@ -46,7 +46,7 @@
       (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
      (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
-  (paragraph "Otava is again following the Broker's trail through the foggy woods. This time, she's better prepared, she knows what lies ahead. She gets to the fork."))
+  (p "Otava is again following the Broker's trail through the foggy woods. This time, she's better prepared, she knows what lies ahead. She gets to the fork."))
 
 
 ; engine / run-resolver
@@ -72,7 +72,7 @@
   )
 
 (define (narrate-restart)
-  (paragraph
+  (p
    (take-random
     (list
      "Otava wanders Martaanvuo the rest of her life without finding what she's looking for."
@@ -118,17 +118,17 @@
   
   (case exit-status
     ['end-run
-     (paragraph "She's still alive.")]
+     (p "She's still alive.")]
     ['recurse
      (define title-string
        (string-append "M A R T A A N V U O"
                       "\n"
                       "==================="))
-     (paragraph title-string)]
+     (p title-string)]
     ['restart
      (narrate-restart)]
     [else
-     (paragraph "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
+     (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
   (wait-for-confirm))
 
 ; engine / run-resolver

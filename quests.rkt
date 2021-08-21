@@ -38,7 +38,7 @@
     (add-quest! q)
     (case quest-symbol
       ['pay-off-debt
-       (paragraph "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
+       (p "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
   
 
     (define body

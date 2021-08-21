@@ -33,7 +33,7 @@
 
 ; implementation detail
 (define (get-nighttime-choices world actor)
-  (displayln "get-night-time-choices: TODO not implemented yet")
+  (displayln "get-night-time-choices: not implemented yet")
   (list
    (make-choice
     'sleep
@@ -151,16 +151,8 @@
        )))
   
   
-  (filter ; TODO this should be extracted, useful, esp. the void check!
-   (λ (x) (and (not (null? x))
-               (not (void? x))))
-   (flatten all-choices)))
+  (condense all-choices))
 
-; TODO this belongs to situation
-(define (actor-has-item? actor item)
-  (define inventory (actor-inventory actor))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
-         inventory))
 
 (define (get-combat-choices)
   (define targets (get-current-enemies))
@@ -290,16 +282,45 @@
                    ((eq? (place-id (current-location))
                          (place-id (route-b route)))
                     'b-to-a)))
-           (make-choice
-            'traverse
-            (get-traverse-text route (current-location)) 
-            (λ () (make-action
-                   #:symbol 'traverse
-                   #:actor (situation-pc *situation*)
-                   #:duration 100
-                   #:target route
-                   #:tags '(downtime)
-                   #:details (list direction))))))
+
+           (cond ((memq 'locked (route-details route))
+                  (list
+                   (when (and (pc-has-item? 'revolver)
+                              (pc-has-ammo-left?))
+                     (make-choice
+                      'shoot-the-lock
+                      "Shoot the lock."
+                      (λ ()
+                        (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                        (consume-ammo!)
+                        (route-remove-detail route 'locked)
+                        (make-empty-action))))
+                   (when (and (pc-has-item? 'bolt-cutters))
+                     (make-choice
+                      'cut-the-lock
+                      "Cut the lock with bolt cutters."
+                      (λ ()
+                        (p "The crude lock yields to Otava's bolt cutters easily.")
+                        (route-remove-detail route 'locked)
+                        
+                        (make-action
+                         #:symbol 'skip
+                         #:actor (situation-pc *situation*)
+                         #:duration 0
+                         #:tags '(downtime))))))
+                  )
+                 (else ; route is traversable
+                  (make-choice
+                   'traverse
+                   (get-traverse-text route (current-location)) 
+                   (λ () (make-action
+                          #:symbol 'traverse
+                          #:actor (situation-pc *situation*)
+                          #:duration 100
+                          #:target route
+                          #:tags '(downtime)
+                          #:details (list direction))))))
+           ))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list
@@ -336,62 +357,17 @@
               'turn-on-device
               "Turn on Hartmann Device."
               (λ ()
-                (paragraph "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
+                (p "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
                 (end-game)))]
 
-            ['locked-door
-             (list
-              (when (and (pc-has-item? 'revolver)
-                         (pc-has-ammo-left?))
-                (displayln "LOCK")
-                (make-choice
-                 'shoot-the-lock
-                 "Shoot the lock."
-                 (λ ()
-                   (paragraph "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                   (displayln "TODO: Fix this after location rewrite")
-                   #;(set-location-neighbors!
-                      ruins
-                      (append-element
-                       (location-neighbors ruins)
-                       cache))
-                   #;(set-location-features! ; TODO should ofc check location etc
-                    power-plant-ruins
-                    '())
-                 
-                   (make-action
-                    #:symbol 'skip
-                    #:actor (situation-pc *situation*)
-                    #:duration 0
-                    #:tags '(downtime)))))
-              (when (and (pc-has-item? 'bolt-cutters))
-                (make-choice
-                 'cut-the-lock
-                 "Cut the lock with bolt cutters."
-                 (λ ()
-                   (paragraph "The lock isn't anything special, and yields to Otava's bolt cutters easily.")
-                   (displayln "TODO: Fix this too")
-                   #;(set-location-neighbors!
-                      ruins
-                      (append-element
-                       (location-neighbors ruins)
-                       cache))
-                   #;(set-location-features! ; TODO should ofc check location etc
-                    power-plant-ruins
-                    '())
-                 
-                   (make-action
-                    #:symbol 'skip
-                    #:actor (situation-pc *situation*)
-                    #:duration 0
-                    #:tags '(downtime))))))]
+            
 
             ['magpie-effigy
              (make-choice
               'follow-the-magpie
               "Magpie."
               (λ ()
-                (paragraph "Despite the worsening rain, Otava goes into the monochrome bush.")
+                (p "Despite the worsening rain, Otava goes into the monochrome bush.")
                 (go-to-story-fragment 'magpie)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
@@ -441,5 +417,5 @@
 (define (describe-pc-intention pc-action)
   (when (not (null? pc-action)) ; should be checked at call site but eh
     (case (action-symbol pc-action)
-      ['forage (paragraph "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
-      #;[else (paragraph "TBD")])))
+      ['forage (p "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+      #;[else (p "TBD")])))

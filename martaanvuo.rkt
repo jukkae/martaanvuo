@@ -24,7 +24,6 @@
   )
 
 
-; TODO sort of bad
 (define (handle-broken-save)
   (newline)
   (displayln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
@@ -107,7 +106,7 @@
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed." begin-new-life))
 
-            (paragraph "Proceed?")
+            (p "Proceed?")
             (print-meta-commands-with-keys meta-commands)
             (define input (wait-for-input))
             (serialize-input)
