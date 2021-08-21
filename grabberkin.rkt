@@ -183,7 +183,7 @@
 
   (inflict-status! (pc) (status 'bound 10))
 
-  (define index
+  (define sign
     (case i
       [(0) "α"]
       [(1) "β"]
@@ -191,9 +191,9 @@
       [(3) "δ"]
       [else ""]))
   (define range 'engaged)
-  (define location "grabbing Otava's ankle")
+  (define description "grabbing Otava's ankle")
   (define enemy-stance
-    (stance enemy index range location))
+    (stance sign range description))
            
-  (add-stance! enemy-stance)
+  (set-actor-stance! enemy enemy-stance)
   )

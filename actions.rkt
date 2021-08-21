@@ -57,7 +57,7 @@
   (define combat-choices '())
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
-    (define stance (find-stance target))
+    (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
            (define damage-roll (λ () (d 1 2)))
@@ -93,7 +93,7 @@
   (define all-choices
     (for/list ([i (in-range 0 (length targets))])
       (define target (list-ref targets i))
-      (define stance (find-stance target))
+      (define stance (actor-stance target))
 
       (list
        (when (and (not (member 'aware-of-being-out-of-ammo *combat-flags*))

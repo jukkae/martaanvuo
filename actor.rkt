@@ -14,6 +14,7 @@
 (require "condition.rkt")
 (require "io.rkt")
 (require "item.rkt")
+(require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 
@@ -41,7 +42,8 @@
   [conditions #:mutable] ; (semi)permanent
   
   [inventory #:mutable]
-  [location #:mutable])
+  [location #:mutable]
+  [stance #:mutable]) ; only NPCs
  #:constructor-name actor*)
 
 (serializable-struct
@@ -61,7 +63,7 @@
           ; attributes
           '() '() '() '() '()
           ; traits etc
-          (make-hash) '() '() '() '()))
+          (make-hash) '() '() '() '() '()))
 
 (define (make-pc-actor
          name
@@ -72,7 +74,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() max-lp max-lp 6 #t 0))
+   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t 0))
 
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))

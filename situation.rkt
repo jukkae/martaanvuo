@@ -35,7 +35,6 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [enemy-stances #:mutable]
   [current-fragment-number #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
@@ -116,7 +115,6 @@
                      0
                      #f
                      '()
-                     '()
                      quests
                      persistent-quests
                      0
@@ -139,24 +137,6 @@
   (define deserialized (deserialize situation))
   (set! *situation* deserialized))
 
-(define (add-stance! stance)
-  (set-situation-enemy-stances!
-   *situation*
-   (append-element (situation-enemy-stances *situation*) stance)))
-
-(define (remove-stance! enemy)
-  (set-situation-enemy-stances!
-   *situation*
-   (filter
-    (λ (stance) (not (equal? (stance-enemy stance)
-                             enemy))) ; equal? compares opaque structs by identity
-    (situation-enemy-stances *situation*))))
-
-(define (find-stance enemy)
-  (findf
-   (λ (stance) (equal? (stance-enemy stance)
-                       enemy)) ; equal? compares opaque structs by identity
-   (situation-enemy-stances *situation*)))
 
 
 
@@ -350,19 +330,19 @@
   (cond ((pc-actor? actor)
          "Otava")
         (else
-         (define stance (find-stance actor))
-         (cond ((= (length (situation-enemy-stances *situation*)) 1)
+         (define stance (actor-stance actor))
+         (cond ((= (length (get-current-enemies)) 1)
                 (append-string (actor-name actor)))
                (else
                 (define name (actor-name actor))
-                (define index
+                (define sign
                   (if stance
-                      (stance-index stance)
+                      (stance-sign stance)
                       ""))
-                (append-string name " " index))))))
+                (append-string name " " sign))))))
 
 (define (display-non-pc-combatant-info actor)
-  (define stance (find-stance actor))
+  (define stance (actor-stance actor))
   (define name (get-combatant-name actor))
   (define hide-hp?
     (if (hash-ref (actor-traits actor) "hp-hidden" #f)
@@ -417,9 +397,12 @@
 ; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
-  (for ([stance (situation-enemy-stances *situation*)])
-    (when (eq? (stance-range stance) 'engaged)
-      (set! any-enemy-engaged? #t)))
+  
+  (for ([enemy (get-current-enemies)])
+    (let ([stance (actor-stance enemy)])
+      (when (eq? (stance-range stance) 'engaged)
+        (set! any-enemy-engaged? #t)))
+    )
   any-enemy-engaged?)
 
 ; API
@@ -428,7 +411,7 @@
   (define enemies-shuffled (shuffle current-enemies))
   (define enemy-in-range '())
   (for ([enemy enemies-shuffled])
-    (define stance (find-stance enemy))
+    (define stance (actor-stance enemy))
     (when (eq? (stance-range stance) range)
       (set! enemy-in-range enemy)))
   enemy-in-range)
@@ -438,7 +421,7 @@
   (define current-enemies (get-current-enemies))
   (define enemies-in-range '())
   (for ([enemy current-enemies])
-    (define stance (find-stance enemy))
+    (define stance (actor-stance enemy))
     (when (eq? (stance-range stance) range)
       (set! enemies-in-range (append-element enemies-in-range enemy))))
   enemies-in-range)
@@ -568,7 +551,6 @@
 ; TODO this should also purge action queue -> round-resolver needs to be informed when this gets called
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
-    (remove-stance! enemy)
     (remove-actor-from-location! (actor-location enemy) enemy))
   (end-combat!)
   (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
@@ -576,13 +558,12 @@
 
 ; scripting API
 (define (remove-enemy enemy)
-  (remove-stance! enemy)
   (remove-actor-from-location! (actor-location enemy) enemy))
 
 ; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
-  (define stance (find-stance enemy))
+  (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
 
 ; infrastructure / location?
@@ -606,7 +587,6 @@
 ; infrastructure, not scripting api
 (provide clean-up-dead-actor!)
 (define (clean-up-dead-actor! actor)
-  (remove-stance! actor)
   (remove-actor-from-location! (current-location) actor)
   (define corpse (cons 'corpse "Corpse (TODO)"))
   (displayln "clean-up-dead-actor!: todo: add corpse")
