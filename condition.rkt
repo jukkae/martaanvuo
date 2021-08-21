@@ -35,5 +35,6 @@
             (displayln (string-append "[Bleed check: 1d6 = 1: ["
                                       (number->string bleed-damage-roll)
                                       "]]"))))]
-    [else (error "process-condition-on-end-turn: unknown condition")])
+    ['ankle-broken '()]
+    [else (displayln "process-condition-on-end-turn: unknown condition")])
   )

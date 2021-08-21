@@ -556,8 +556,10 @@
           ((eq? (action-symbol action) 'inflict-status)
            (define target (action-target action))
            (define status (car (action-details action)))
-           (when (eq? (status-type status) 'bound)
-             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+           (when (status? status)
+             (when (eq? (status-type status) 'bound)
+             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
+           
            (inflict-status! target status)
            'ok
            )

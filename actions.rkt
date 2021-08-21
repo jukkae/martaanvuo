@@ -118,7 +118,7 @@
           (λ ()
             (make-action
              #:symbol 'shoot
-             #:actor (situation-pc *situation*)
+             #:actor (pc)
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
@@ -143,7 +143,7 @@
           (λ ()
             (make-action
              #:symbol 'melee
-             #:actor (situation-pc *situation*)
+             #:actor (pc)
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
@@ -284,6 +284,9 @@
                     'b-to-a)))
 
            (cond ((memq 'locked (route-details route))
+                  (when (not (pc-has-ammo-left?))
+                    (p
+                     "Out of ammo, can't shoot the lock. Damn."))
                   (list
                    (when (and (pc-has-item? 'revolver)
                               (pc-has-ammo-left?))

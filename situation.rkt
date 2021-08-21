@@ -616,7 +616,7 @@
 
 ; Scripting API
 (define (inflict-status! target status)
-  (match (status-type status)
+  (match status
     ['blind
      (displayln "todo: blind should be a condition, not a status")
      (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")

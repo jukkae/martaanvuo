@@ -20,7 +20,7 @@
 
 (define (remove-actor-from-location! location actor)
   (cond ((route? location)
-         (set-route-actors! location (cons actor (route-actors location))))
+         (set-route-actors! location (remove actor (route-actors location))))
         ((place? location)
          (set-place-actors! location (remove actor (place-actors location)))))
   )
