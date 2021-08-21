@@ -145,7 +145,7 @@
   (set-trait! enemy "size" "small")
   (move-actor-to-location! enemy (current-location))
 
-  (define index
+  (define sign
     (case i
       [(0) "α"]
       [(1) "β"]
@@ -157,12 +157,12 @@
     (if (= i 0)
         'close
         'mid))
-  (define location
+  (define description
     (case i
       [(0) "right"]
       [(1) "left"]
       [else "right"]))
   (define enemy-stance
-    (stance enemy index range location))
+    (stance sign range description))
            
-  (add-stance! enemy-stance))
+  (set-actor-stance! enemy enemy-stance))

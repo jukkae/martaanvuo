@@ -301,10 +301,9 @@
   (if success?
       (begin
         (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-        (remove-stance! (action-actor action))
                  
-        (let ([enemy-stance (stance (action-actor action) "α" 'engaged "right")])
-          (add-stance! enemy-stance)))
+        (let ([enemy-stance (stance "α" 'engaged "right")])
+          (set-actor-stance! (action-actor action) enemy-stance)))
         
       (begin
         (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
@@ -325,10 +324,9 @@
   (define dex (actor-dexterity (action-actor action)))
            
   (p "The Blindscraper skitters towards Otava.")
-  (remove-stance! (action-actor action))
-                 
-  (let ([enemy-stance (stance (action-actor action) "α" 'close "right")])
-    (add-stance! enemy-stance))
+  
+  (let ([enemy-stance (stance "α" 'close "right")])
+          (set-actor-stance! (action-actor action) enemy-stance))
   'ok
   )
 
@@ -384,7 +382,7 @@
   (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
 
   (define target (action-target action))
-  (define target-stance (find-stance target))
+  (define target-stance (actor-stance target))
 
   
   (define statuses (actor-statuses actor))
@@ -444,7 +442,8 @@
          (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
 
          (define stance-range-values '())
-         (for ([stance (situation-enemy-stances *situation*)])
+         (for ([enemy (get-current-enemies)])
+           (define stance (actor-stance enemy))
            (define value (get-stance-range-numeric-value (stance-range stance)))
            (set! stance-range-values (append-element stance-range-values value)))
          (define target-number
@@ -478,13 +477,13 @@
            (get-combatant-name (action-actor action))
            " tries to run."))
          (define skill 1)
-         (define stance (find-stance (action-actor action)))
+         (define stance (actor-stance (action-actor action)))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)
                10
                8))
-           
+
          (define success? (skill-check "Athletics" skill target-number))
          (if success?
              ; TODO this fails if there are multiple enemies!
