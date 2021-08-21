@@ -188,6 +188,7 @@
   (info-card round-summary (string-append "Begin round " (number->string (situation-round *situation*))))
   (display-location-info-card (current-location) "Current location")
   
+  
   (set! action-queue '())
   
   (when (not (null? (situation-current-fragment-number *situation*)))
@@ -920,7 +921,7 @@
 
 ; engine / get-next-pc-action
 (define (print-choices-with-keys choices-with-keys)
-(define choices
+  (define choices
     (for/list ([(k v) (in-hash choices-with-keys)])
       (cons k v)))
   

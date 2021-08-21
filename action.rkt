@@ -2,10 +2,14 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
 (require racket/serialize)
 (require lens)
 
 (require "utils.rkt")
+
+(lazy-require ["situation.rkt"
+               (pc)])
 
 (serializable-struct action
  
@@ -27,6 +31,13 @@
          #:tags [tags '()]
          #:details [details '()])
   (action* symbol actor duration target tags details))
+
+(define (make-empty-action)
+  (make-action
+   #:symbol 'skip
+   #:actor (pc)
+   #:duration 0
+   #:tags '(downtime)))
 
 (define (visible-in-combat? action)
   (if (or (member 'combat (action-tags action))

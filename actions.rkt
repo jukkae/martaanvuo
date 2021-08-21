@@ -292,13 +292,9 @@
                       "Shoot the lock."
                       (λ ()
                         (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                        (consume-ammo!)
                         (route-remove-detail route 'locked)
-                        
-                        (make-action
-                         #:symbol 'skip
-                         #:actor (situation-pc *situation*)
-                         #:duration 0
-                         #:tags '(downtime)))))
+                        (make-empty-action))))
                    (when (and (pc-has-item? 'bolt-cutters))
                      (make-choice
                       'cut-the-lock

@@ -5,6 +5,7 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require "io.rkt")
 (require "utils.rkt")
 
 (lazy-require
@@ -197,3 +198,24 @@
     (set-route-details! route
                         (remove detail
                                 (route-details route)))))
+
+
+(define (display-route-info-card route)
+  (define id (route-id route))
+  (define title "Location (en route)")
+  (define body
+    (list
+     (list " aa " " bb "))
+    #;(prune (list
+            (when (not (null? id))
+              (list (string-append " "
+                                   "id"
+                                   " ")
+                    (string-append " "
+                                   (cond ((number? id) (number->string id))
+                                         ((symbol? id) (symbol->string id)))
+                                   " ")))
+            )))
+  (info-card body title))
+
+
