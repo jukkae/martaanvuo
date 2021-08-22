@@ -55,6 +55,17 @@
   (nop)
   (λ () '()))
 
+; __FILE__ and __LINE__ all in one
+(define-syntax (here stx)
+  (with-syntax ([file (syntax-source stx)]
+                [line (syntax-line stx)])
+    (syntax-case stx ()
+      [_ #'(begin
+             (displayln "HERE")
+             (displayln line)
+             (displayln file))])))
+
+
 ; various container stuff
 (define (collect-similar lst)
   (hash->list

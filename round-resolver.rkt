@@ -163,6 +163,7 @@
 
 ; engine / round resolver
 (define (on-begin-round)
+  (here)
   (set-situation-round! *situation* (add1 (situation-round *situation*)))
 
   ; ROUND SUMMARY
