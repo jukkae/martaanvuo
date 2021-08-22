@@ -17,6 +17,7 @@
 (require "route.rkt")
 (require "situation.rkt")
 (require "stance.rkt")
+(require "time.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 

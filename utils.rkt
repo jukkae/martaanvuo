@@ -2,6 +2,8 @@
 
 (provide (all-defined-out))
 
+(require racket/path) ; used in (here)
+
 ; dice shorthand
 (define (d n sides)
   (for/sum ([i n])
@@ -63,7 +65,21 @@
       [_ #'(begin
              (displayln "HERE")
              (displayln line)
-             (displayln file))])))
+             (displayln (file-name-from-path file)))])))
+
+(define-syntax (debug-message stx)
+  (with-syntax ([file (syntax-source stx)]
+                [line (syntax-line stx)])
+    (syntax-case stx ()
+      [(debub-message message)
+       #'(begin
+           (displayln
+            (string-append "<"
+                           (path->string (find-relative-path (current-directory) file))
+                           ":"
+                           (number->string line)
+                           "> "
+                           message)))])))
 
 
 ; various container stuff
@@ -73,15 +89,3 @@
             (hash-update ht key add1 0))
           '#hash()
           lst)))
-
-
-; Martaanvuo specific things that are still looking for their place
-(define (time-of-day-from-jiffies jiffies)
-  (define jiffies-of-current-day (remainder jiffies 400))
-  (define time-of-day
-    (cond ((< jiffies-of-current-day 100) 'morning)
-          ((< jiffies-of-current-day 200) 'afternoon)
-          ((< jiffies-of-current-day 300) 'evening)
-          ((< jiffies-of-current-day 400) 'night)))
-  time-of-day
-  )

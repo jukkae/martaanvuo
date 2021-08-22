@@ -26,6 +26,7 @@
 (require "quest.rkt")
 (require "route.rkt")
 (require "situation.rkt")
+(require "time.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -163,7 +164,6 @@
 
 ; engine / round resolver
 (define (on-begin-round)
-  (here)
   (set-situation-round! *situation* (add1 (situation-round *situation*)))
 
   ; ROUND SUMMARY
