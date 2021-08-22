@@ -6,8 +6,11 @@
 
 (require "api.rkt")
 
-(require "action.rkt")
-(require "location.rkt")
+(require "action.rkt"
+         "blindscraper.rkt"
+         "grabberkin.rkt"
+         "location.rkt"
+         "place.rkt")
 
 
 (lazy-require ["situation.rkt"
@@ -198,3 +201,33 @@
                 ))
 
              )))
+
+
+
+(define (spawn-enemies location)
+  (define encounter-types '(blindscraper grabberkin))
+
+  (define
+    encounter-type
+    (cond ((place? location)
+           (cond ((eq? (place-type location) 'ridges)
+                  'blindscraper)
+                 ((eq? (place-type location) 'valleys)
+                  'grabberkin)
+                 (else (take-random encounter-types))))
+          ((route? location)
+           'blindscraper)))
+
+  (case encounter-type
+    ['grabberkin
+
+     (spawn-grabberkin-encounter!)
+     ; TODO this should happen at the end of the encounter for it to make sense narratively -> basically, combat timeline handling
+     (set-situation-grabberkin-encounters!
+      *situation*
+      (add1 (situation-grabberkin-encounters *situation*)))
+     #;(player-info)]
+    ['blindscraper
+     (spawn-blindscraper-encounter!)
+     ]
+    ))

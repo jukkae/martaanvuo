@@ -623,34 +623,7 @@
 ; engine / round resolver
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (define encounter-types '(blindscraper grabberkin))
-
-         (define
-           encounter-type
-           (cond ((location? (current-location))
-                  (cond ((eq? (location-type (current-location)) 'ridges)
-                         'blindscraper)
-                        ((eq? (location-type (current-location)) 'valleys)
-                         'grabberkin)
-                        (else (take-random encounter-types))))
-                 ((route? (current-location))
-                  'blindscraper)) ; TODO this should be gotten from content tables
-
-           )
-
-         (case encounter-type
-           ['grabberkin
-
-            (spawn-grabberkin-encounter!)
-            ; TODO this should happen at the end of the encounter for it to make sense narratively -> basically, combat timeline handling
-            (set-situation-grabberkin-encounters!
-             *situation*
-             (add1 (situation-grabberkin-encounters *situation*)))
-            #;(player-info)]
-           ['blindscraper
-            (spawn-blindscraper-encounter!)
-            ]
-           )
+         (spawn-enemies (current-location))
          )
         (else
          (displayln "handle-interrupting-event!: unknown event type")))

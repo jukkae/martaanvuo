@@ -285,7 +285,7 @@
 
            (cond ((memq 'locked (route-details route))
                   (when (not (pc-has-ammo-left?))
-                    (p
+                    (p ; this belongs elsewhere
                      "Out of ammo, can't shoot the lock. Damn."))
                   (list
                    (when (and (pc-has-item? 'revolver)
