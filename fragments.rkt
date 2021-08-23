@@ -18,7 +18,6 @@
 (require "situation.rkt")
 (require "world.rkt")
 
-
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
 (fragment

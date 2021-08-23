@@ -2,6 +2,7 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
 (require racket/struct)
 (require racket/serialize)
 
@@ -11,6 +12,12 @@
 (require "place.rkt")
 (require "route.rkt")
 (require "utils.rkt")
+
+(lazy-require
+ ["situation.rkt" (pc)])
+
+(lazy-require
+ ["world.rkt" (remove-actor-from-its-current-location!)])
 
 (define (add-actor-to-location! location actor)
   (cond ((route? location)
@@ -165,3 +172,18 @@
          (displayln "location-info-card: unknown location:")
          (displayln location))))
 
+
+(define (move-pc-to-location! location)
+  ; TODO: location on-exit / on-enter triggers here
+  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
+  (remove-actor-from-its-current-location! (pc))
+  (set-actor-location! (pc) location)
+  (add-actor-to-location! location (pc))
+  (when (place? location)
+    (set-place-visited?! location #t)
+    (for ([route (place-routes location)])
+      (when #t ; if not hidden
+        (set-route-endpoint-visited! route location)
+        ))
+      
+    ))

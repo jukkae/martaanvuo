@@ -13,7 +13,8 @@
    append-to-log
    get-log
    get-last-paragraph
-   set-last-paragraph!)])
+   set-last-paragraph!
+   get-prompt)])
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
@@ -42,6 +43,10 @@
   (displayln "[END LOG]")
   (newline)
   (wait-for-confirm))
+
+(define (display-prompt)
+  (newline)
+  (displayln (get-prompt)))
 
 ; implementation detail
 (define (print-paragraph formatted-text)

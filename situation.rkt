@@ -35,7 +35,7 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-fragment-number #:mutable]
+  [current-fragment-id #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -179,8 +179,11 @@
      details)
   (set-situation-pending-action! *situation* action))
 
-(define (unset-current-fragment!)
-  (set-situation-current-fragment-number! *situation* '()))
+(define (unset-current-fragment-id!)
+  (set-situation-current-fragment-id! *situation* '()))
+
+(define (set-current-fragment-id! id)
+  (set-situation-current-fragment-id! *situation* id))
 
 (define (add-quest! quest)
   (set-situation-quests!
@@ -494,21 +497,13 @@
   )
 
 (define (describe-non-combat-situation)
-  (cond ((null? (situation-current-fragment-number *situation*))
+  (cond ((null? (situation-current-fragment-id *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
                 (p "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
-
-(define (serialize-state)
-  
-  '())
-
-(define (serialize-input)
-  '())
-
 
 (define (clean-situation!)
   (displayln "<< clean-situation! >>")
@@ -564,23 +559,6 @@
 (define (actor-in-range? enemy range)
   (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
-
-; infrastructure / location?
-(provide move-pc-to-location!)
-(define (move-pc-to-location! location)
-  ; TODO: location on-exit / on-enter triggers here
-  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
-  (remove-actor-from-its-current-location! (situation-pc *situation*))
-  (set-actor-location! (situation-pc *situation*) location)
-  (add-actor-to-location! location (situation-pc *situation*))
-  (when (place? location)
-    (set-place-visited?! location #t)
-    (for ([route (place-routes location)])
-      (when #t ; if not hidden
-        (set-route-endpoint-visited! route location)
-        ))
-      
-    ))
 
 
 ; infrastructure, not scripting api
