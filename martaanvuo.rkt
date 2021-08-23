@@ -2,7 +2,7 @@
 
 (require "io.rkt")
 (require "life-resolver.rkt")
-(require "round-resolver.rkt")
+(require "round-resolver/round-resolver.rkt")
 (require "situation.rkt")
 (require "world.rkt")
 

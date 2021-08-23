@@ -11,9 +11,10 @@
          "../round-summary.rkt"
          "../situation.rkt")
 
-(require "fragment-handler.rkt")
+(require "action-queue.rkt"
+         "fragment-handler.rkt")
 
-(lazy-require
+#;(lazy-require
  ["round-resolver.rkt"
   (clear-action-queue!
    )])

@@ -28,7 +28,7 @@
    )])
 
 (lazy-require
- ["round-resolver.rkt"
+ ["round-resolver/round-resolver.rkt"
   (go-to-story-fragment
    )])
 

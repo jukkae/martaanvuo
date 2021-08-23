@@ -7,7 +7,7 @@
 (require "pc.rkt")
 (require "quest.rkt")
 (require "quests.rkt")
-(require "round-resolver.rkt")
+(require "round-resolver/round-resolver.rkt")
 (require "situation.rkt")
 (require "utils.rkt")
 (require "world.rkt")
