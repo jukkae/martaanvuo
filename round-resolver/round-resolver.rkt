@@ -1,7 +1,8 @@
 #lang racket
 
 (provide (all-defined-out))
-(provide (all-from-out "fragment-handler.rkt"))
+(provide (all-from-out "fragment-handler.rkt"
+                       "ui.rkt"))
 
 (require racket/serialize)
 
@@ -726,13 +727,7 @@
             (else (what-do-you-do 'abbreviated))))))
 
 
-; engine / get-next-pc-action
-(define (meta-command-valid? meta-commands-with-keys input)
-  (set! input (string-upcase input))
-  (define meta-command (hash-ref meta-commands-with-keys input '()))
-  (if (not (null? meta-command))
-      meta-command
-      #f))
+
 
 ; engine / get-next-pc-action
 (define (choice-valid? choices-with-keys input)
@@ -847,62 +842,6 @@
          (print-meta-commands-with-keys meta-commands-with-keys))))
 
 
-; UI? meta? scripting api? return value tied to round resolution
-(define (quit)
-  (displayln "Really quit Martaanvuo? [Q] to quit, anything else to continue.")
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "Q")
-         (define session-score (d 1 4))
-         (p (string-append "Your session score was " (number->string session-score) "."))
-         (p "Martaanvuo expects your return.")
-         (exit))
-        (else
-         (newline)
-         #t))) ; mark input as handled
-
-(define (restart)
-  (displayln
-   (string-append
-    "Really restart? [R] to restart, anything else to continue."))
-  (define input (wait-for-input))
-  (set! input (string-upcase input))
-  (cond ((equal? input "R")
-         'restart)
-        (else
-         (newline)
-         #t))) ; mark input as handled
-
-; UI? meta? scripting api? return value tied to round resolution
-(define (menu)
-  (define (handle-meta-command meta-commands-with-keys input)
-    (set! input (string-upcase input))
-    (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-    (define meta-command (cdr meta-command-with-key))
-    (meta-command))
-  (define (close-menu) #t) ; hacky but eh
-  
-  (displayln "[Menu]")
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
-  ;(hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
-  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
-  (hash-set! meta-commands "R" (cons "[R]: Restart." restart))
-  
-
-  (for ([(k v) (in-hash meta-commands)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline)
-  (define input (wait-for-input))
-  (serialize-input)
-
-  (newline)
-
-  (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
-        (else (menu))))
 
 
 (define (save)
