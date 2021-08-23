@@ -41,6 +41,7 @@
          "fragment-handler.rkt"
          "get-next-pc-action.rkt"
          "round.rkt"
+         "simulation.rkt"
          "timeline.rkt"
          "ui.rkt")
 
@@ -79,14 +80,14 @@
     (define pc-action (get-next-pc-action))
     
     (cond ((eq? pc-action 'end-round-early)
-           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (on-end-round)
            (end-round-early-with-round-status 'ok))
           ((eq? pc-action 'restart)
            (end-round-early-with-round-status 'restart))
           ((eq? pc-action 'recurse)
            (end-round-early-with-round-status 'recurse))
           ((eq? pc-action 'end-chapter)
-           (on-end-round) ; TODO move on-end-round to the escape continuation where it belongs!
+           (on-end-round)
            (next-chapter!)
            (end-round-early-with-round-status 'ok))
           (else
@@ -383,54 +384,6 @@
     ))
    
 
-; engine / low-level "world-as-simulation" sub-resolver
-; or perhaps world?
-; or perhaps just round-resolver?
-
-; increment world time
-; return a list of events that occur at new timestamp
-(define (advance-time-by-a-jiffy!)
-  (define events '())
-  (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
-  (set-world-elapsed-time!
-   (situation-world *situation*)
-   new-elapsed-time)
-
-  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
-    (define suspend-action?
-      (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
-           'night))
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) suspend-action?))
-    (set! events (append-element events ev)))
-
-
-  (when (not (in-combat?))
-    (cond
-      ;; Currently, only spawn enemies at daytime
-      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
-                 'night))
-       (define dice-sides 300) ; tweak on a per-location basis
-       (define roll (d 1 dice-sides))
-
-       (cond ((= roll 1)
-              (define title "Luck roll failure")
-              (info-card
-               (list (list
-                      (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
-                      (string-append " 1d" (number->string dice-sides) " = 1 ")
-                      " failure: hostile encounter, spawning enemies "))
-               title)
-              (define ev
-                (make-event 'spawn-enemies
-                            '() ; pack info about enemies / event here
-                            #t))
-              (set! events (append-element events ev))
-              (wait-for-confirm)))
-       )))
-  events
-  )
-
-
 ; engine / round resolver
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,
@@ -442,7 +395,7 @@
   (let/ec break
     (for ([t jiffies])
       (set! counter (add1 counter))
-      (define possible-events-at-t (advance-time-by-a-jiffy!))
+      (define possible-events-at-t (time++))
       (define events-at-t possible-events-at-t) ; they are real events
       (set! events (append events events-at-t))
         
