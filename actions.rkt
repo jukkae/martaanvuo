@@ -32,6 +32,12 @@
   (go-to-story-fragment
    )])
 
+(lazy-require
+ ["state/combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   )])
+
 ; implementation detail
 (define (get-nighttime-choices world actor)
   (displayln "get-night-time-choices: not implemented yet")

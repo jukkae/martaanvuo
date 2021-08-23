@@ -19,6 +19,8 @@
 (require "../utils.rkt")
 (require "../world.rkt")
 
+(require "combat.rkt")
+
 
 ; Think about breaking this apart:
 ; - run-specific
@@ -327,76 +329,6 @@
   
   '())
 
-
-; combat?
-(define (get-combatant-name actor)
-  (cond ((pc-actor? actor)
-         "Otava")
-        (else
-         (define stance (actor-stance actor))
-         (cond ((= (length (get-current-enemies)) 1)
-                (append-string (actor-name actor)))
-               (else
-                (define name (actor-name actor))
-                (define sign
-                  (if stance
-                      (stance-sign stance)
-                      ""))
-                (append-string name " " sign))))))
-
-(define (display-non-pc-combatant-info actor)
-  (define stance (actor-stance actor))
-  (define name (get-combatant-name actor))
-  (define hide-hp?
-    (if (hash-ref (actor-traits actor) "hp-hidden" #f)
-        #t
-        #f))
-
-  (define body
-    (case (actor-name actor)
-      [("Grabberkin")
-       (list
-        (list
-         " HP "
-         (if hide-hp?
-             " ??? "
-             (string-append " "
-                            (number->string (actor-hp actor))
-                            "/"
-                            (number->string (actor-max-hp actor))
-                            " "
-                            ))))]
-      [("Blindscraper")
-       (list
-        (list
-         " size "
-         (string-append " "
-                        (get-trait actor "size")
-                        " "
-                        ))
-        #;(list
-           " location "
-           (string-append " " (stance-location stance) " "))
-        (if (not (null? stance))
-            (list
-             " range "
-             (string-append " " (symbol->string (stance-range stance)) " "))
-            (list
-             " range "
-             (string-append " " "N/A" " ")))
-        
-
-        )]))
-
-  (when (not (null? (actor-statuses actor)))
-    (define statuses (actor-statuses actor))
-    (define statuses-list
-      (list " statuses " (~s statuses)))
-    (set! body (append-element body statuses-list)))
-  (info-card
-   body
-   name))
-
 ; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
@@ -435,66 +367,6 @@
     ['melee #t]
     [else (displayln "in-range? not implemented yet for this attack mode")]))
 
-; Combat?
-(define (display-pc-combatant-info actor)
-  (define name (get-combatant-name actor))
-  (define body
-    (list
-     (list
-      " HP "
-      (string-append " "
-                     (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     " "
-                     ))))
-
-  (when (not (null? (actor-statuses actor)))
-    (define statuses (actor-statuses actor))
-    (define statuses-strings
-      (for/list ([status statuses])
-        (string-append "["
-                       (symbol->string (status-type status))
-                       " ("
-                       (number->string (status-lifetime status))
-                       ")]")))
-    
-    (define statuses-list
-      (list " statuses "
-            (string-append " " (string-join statuses-strings) " ")))
-    (set! body (append-element body statuses-list)))
-
-  (when (not (null? (actor-conditions actor)))
-    (define conditions (actor-conditions actor))
-    (define conditions-strings
-      (for/list ([condition conditions])
-        (string-append "["
-                       (symbol->string (condition-type condition))
-                       "]")))
-    
-    (define conditions-list
-      (list " conditions "
-            (string-append " " (string-join conditions-strings) " ")))
-    (set! body (append-element body conditions-list)))
-  (info-card
-   body
-   name))
-
-; Combat?
-(define (display-combatant-info actor)
-  (if (pc-actor? actor)
-      (display-pc-combatant-info actor)
-      (when (actor-alive? actor)
-        (display-non-pc-combatant-info actor))))
-
-(define (describe-combat-situation)
-  (notice "Otava is in combat.")
-  (for ([enemy (get-current-enemies)])
-    (display-combatant-info enemy)
-    
-    )
-  (display-pc-combatant-info (situation-pc *situation*))
-  )
 
 (define (describe-non-combat-situation)
   (cond ((null? (situation-current-fragment-id *situation*))
@@ -560,14 +432,6 @@
   (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
 
-
-; infrastructure, not scripting api
-(provide clean-up-dead-actor!)
-(define (clean-up-dead-actor! actor)
-  (remove-actor-from-location! (current-location) actor)
-  (define corpse (cons 'corpse "Corpse (TODO)"))
-  (displayln "clean-up-dead-actor!: todo: add corpse")
-  #;(displayln corpse))
 
 ; scripting API
 (provide award-xp!)

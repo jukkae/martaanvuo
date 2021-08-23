@@ -19,6 +19,13 @@
 (require "utils.rkt")
 (require "world.rkt")
 
+(lazy-require
+ ["state/combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   display-pc-combatant-info
+   )])
+
 ; "generic" attack with type
 (define (resolve-melee-action! action)
   (define actor (action-actor action))
