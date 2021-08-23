@@ -1,6 +1,8 @@
 #lang racket
 
 (provide build-keys-to-choices-map
+         choice-valid?
+         fragment-decision-valid?
          get-meta-commands-with-keys
          meta-command-valid?
          print-choices-and-meta-commands-with-keys
@@ -32,6 +34,18 @@
    )])
 
 
+(define (choice-valid? choices-with-keys input)
+  (define choice (hash-ref choices-with-keys (string->number input) '()))
+  (if (not (null? choice))
+      choice
+      #f))
+
+(define (fragment-decision-valid? decisions-with-keys input)
+  (define decision (hash-ref decisions-with-keys (string->number input) '()))
+  (if (not (null? decision))
+      decision
+      #f))
+
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
 
@@ -53,7 +67,6 @@
   
   action)
 
-; engine / get-next-pc-action
 (define (choice-as-resolution-effect choices-with-keys input)
   (choice-resolution-effect (hash-ref choices-with-keys (string->number input) '())))
 
@@ -63,7 +76,6 @@
         ((= i 9) 0)
         ((> i 9) (error "too many things to do!"))))
 
-; engine / get-next-pc-action
 (define (build-keys-to-choices-map choices first-index)
   (define choices-with-keys (make-hash))
   (for ([i (in-range (length choices))])

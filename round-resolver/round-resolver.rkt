@@ -730,22 +730,6 @@
 
 
 
-; engine / get-next-pc-action
-(define (choice-valid? choices-with-keys input)
-  (define choice (hash-ref choices-with-keys (string->number input) '()))
-  (if (not (null? choice))
-      choice
-      #f))
-
-; engine / get-next-pc-action
-(define (fragment-decision-valid? decisions-with-keys input)
-  (define decision (hash-ref decisions-with-keys (string->number input) '()))
-  (if (not (null? decision))
-      decision
-      #f))
-
-
-
   
 
 
