@@ -55,7 +55,7 @@
       (redescribe-situation)
       (describe-situation))
   
-  (save)
+  (save-situation *situation*)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     
@@ -72,12 +72,9 @@
            (on-end-round)
            (next-chapter!)
            (end-round-early-with-round-status 'ok))
+
           (else
-
            (describe-pc-intention pc-action)
-  
-           
-
            (define round-exit-status 'ok)
            (cond ((initiative-based-resolution? pc-action)
                   (add-to-action-queue pc-action)
@@ -88,6 +85,7 @@
                   (define pc-action-result (resolve-pc-action! pc-action))
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+
            (on-end-round)
            (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
            round-exit-status
@@ -99,6 +97,3 @@
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
       (add-to-action-queue next-action))))
-
-(define (save)
-  (save-situation *situation*))
