@@ -37,7 +37,6 @@
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   [pending-action #:mutable]
-  [last-paragraph #:mutable]
   [current-part #:mutable]
   [current-chapter #:mutable]
   [prompt #:mutable]
@@ -51,6 +50,7 @@
  #:transparent)
 
 (define current-log (make-parameter '()))
+(define current-last-paragraph (make-parameter '()))
 
 ;; name: hmm
 (define (times-begin-traverse-narrated++ key) 
@@ -116,7 +116,6 @@
                      quests
                      persistent-quests
                      0
-                     '()
                      '()
                      0
                      0
@@ -464,12 +463,7 @@
   (set-situation-current-chapter! *situation* 0)
   (print-heading))
 
-(define (get-last-paragraph)
-  (situation-last-paragraph *situation*))
 
-(define (set-last-paragraph! paragraph)
-  (set-situation-last-paragraph! *situation* paragraph)
-  )
 
 (define (set-prompt! prompt)
   (set-situation-prompt! *situation* prompt))
@@ -501,7 +495,8 @@
 
 (serializable-struct state
                      ([situation #:mutable]
-                      [log #:mutable]))
+                      [log #:mutable]
+                      [last-paragraph #:mutable]))
 
 (define (save-situation s)
   
@@ -510,7 +505,10 @@
 
   (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
 
-  (define st (state *situation* (current-log)))
+  (define st (state
+              *situation*
+              (current-log)
+              (current-last-paragraph)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -532,4 +530,5 @@
   (define situation (state-situation deserialized-state))
   
   (current-log (state-log deserialized-state))
+  (current-last-paragraph (state-last-paragraph deserialized-state))
   (set! *situation* situation))

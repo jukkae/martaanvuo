@@ -12,8 +12,8 @@
   (current-part
    current-chapter
    current-log
-   get-last-paragraph
-   set-last-paragraph!
+   current-last-paragraph
+   
    get-prompt)])
 
 (lazy-require
@@ -68,7 +68,7 @@
 
 (define (repeat-last-paragraph)
   (hr)
-  (print-paragraph (format-for-printing (get-last-paragraph) #:width 84 #:indent 4)))
+  (print-paragraph (format-for-printing (current-last-paragraph) #:width 84 #:indent 4)))
 
 (define (hr)
   ; (displayln "---")
@@ -79,7 +79,7 @@
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))
          (define s (format-for-printing str #:width 84 #:indent 4))
-         (set-last-paragraph! str)
+         (current-last-paragraph str)
          (write-paragraph-to-log str)
          (print-paragraph s))
         (else ; don't do anything with empty input
