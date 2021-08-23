@@ -4,6 +4,7 @@
          choice-valid?
          fragment-decision-valid?
          get-meta-commands-with-keys
+         get-next-pc-action
          meta-command-valid?
          print-choices-and-meta-commands-with-keys
          print-meta-commands-with-keys
@@ -12,12 +13,16 @@
 (require racket/lazy-require)
 
 (require "../action.rkt"
+         "../actions.rkt"
          "../actor.rkt"
          "../character-sheet.rkt"
          "../choice.rkt"
          "../decision.rkt"
          "../io.rkt"
+         "../locations.rkt"
          "../situation.rkt")
+
+(require "fragment-handler.rkt")
 
 (lazy-require
  ["../situation.rkt"
@@ -32,6 +37,72 @@
    quit
    restart
    )])
+
+
+; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
+; this pokes a hole through abstraction layers (as it should)
+; (sort of like IO monad)
+(define (get-next-pc-action)
+  (let/ec produce-action
+    (let what-do-you-do ([verbosity 'verbose])
+      (define (handle-meta-command meta-commands-with-keys input)
+        (set! input (string-upcase input))
+        (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+        (define meta-command (cdr meta-command-with-key))
+        (define meta-command-result (meta-command))
+        (when (eq? meta-command-result 'restart) (produce-action 'restart))
+        
+        
+        (redescribe-situation)
+        (what-do-you-do 'verbose))
+      
+      (define actor (situation-pc *situation*))
+
+
+      (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
+                                     '()
+                                     (current-fragment-get-decisions)))
+
+      (when (null? fragment-decisions)
+        (wait-for-confirm)) ; what a place for this
+
+      ; launch a fragment directly -> no action resolution -> not a choice
+      (define location-decisions (if (null? (situation-current-fragment-number *situation*))
+                                     (get-location-decisions (current-location))
+                                     '()))
+      
+      (define world-choices (get-world-choices (situation-world *situation*) actor))
+      
+      (define choices (if (null? fragment-decisions)
+                          world-choices
+                          '()))
+
+      (define all-decisions (append fragment-decisions location-decisions))
+      (define decisions-with-keys (build-keys-to-choices-map all-decisions 1))
+      (define first-free-index (add1 (length all-decisions)))
+      (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
+      (define meta-commands-with-keys (get-meta-commands-with-keys))
+      
+      (when (not (eq? "" (get-prompt)))
+        (display-prompt))
+
+      (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
+
+      (define input (wait-for-input))
+
+      (newline)
+
+      (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
+            ((fragment-decision-valid? decisions-with-keys input)
+             (begin
+               (define fragment-decision-result (handle-fragment-decision decisions-with-keys input))
+               
+               (define result 'end-round-early)
+               (when (eq? fragment-decision-result 'recurse)
+                 (set! result 'recurse))
+               produce-action result))
+            ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
+            (else (what-do-you-do 'abbreviated))))))
 
 
 (define (choice-valid? choices-with-keys input)
