@@ -164,48 +164,18 @@
 
 
 ; engine / round resolver
-(define (on-begin-round)
-  (set-situation-round! *situation* (add1 (situation-round *situation*)))
-
-  (round-summary *situation*)
-  
-  (set! action-queue '())
-  
-  (when (not (null? (situation-current-fragment-number *situation*)))
-    (current-fragment-on-begin-round!))
-  )
-
-; TODO DUPLICATION BAD!!!
-(define (on-continue-round)
-  #;(set-situation-round! *situation* (add1 (situation-round *situation*)))
-
-  ; ROUND SUMMARY
-  (define round-summary
-    (list
-     (list " round "
-           (string-append
-            " "
-            (number->string (situation-round *situation*))
-            " "))
-     (list " current location "
-           (string-append
-            " "
-            #;(get-location-name-from-location (current-location))
-            (if (not (null? (current-location)))
-                (get-location-short-description (current-location))
-                "N/A")
-            " "))
-     (list " time of day " (string-append " " (symbol->string (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))) " "))
-     (list " elapsed time (total) " (string-append " " (number->string (world-elapsed-time (situation-world *situation*))) " "))
-     ))
-  (info-card round-summary (string-append "Continue round " (number->string (situation-round *situation*))))
-  (display-location-info-card (current-location) "Current location")
-  
-  (set! action-queue '())
-  #;(repeat-last-p)
-  #;(when (not (null? (situation-current-fragment-number *situation*)))
-      (current-fragment-on-begin-round!))
-  )
+(define (on-begin-round mode)
+  (case mode
+    ['begin
+     (set-situation-round! *situation* (add1 (situation-round *situation*)))
+     (round-summary *situation*)
+     (set! action-queue '())
+     (when (not (null? (situation-current-fragment-number *situation*)))
+       (current-fragment-on-begin-round!))]
+    
+    ['continue
+     (round-summary *situation*)
+     (set! action-queue '())]))
 
 ; engine / round resolver / -> ai?
 (define (get-next-action actor)
@@ -356,11 +326,7 @@
 ; engine / round resolver
 ; MAIN RESOLVER ENTRYPOINT
 (define (resolve-round mode)
-
-  ; assume 'begin, be explicit about 'continue
-  (if (eq? mode 'continue)
-      (on-continue-round)
-      (on-begin-round))
+  (on-begin-round mode)
   
   (enqueue-npc-actions)
   
