@@ -62,13 +62,7 @@
   )
 
 (define (go-to-story-fragment id)
-  (dev-note "HELLO")
-  (dev-note (symbol->string id))
-  (set-current-fragment-id! id)
-  (dev-note (cond ((number? [situation-current-fragment-id *situation*])
-                   (number->string [situation-current-fragment-id *situation*]))
-                  ((null? [situation-current-fragment-id *situation*])
-                   ("'()")))))
+  (set-current-fragment-id! id))
 
 (define (handle-fragment-decision decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input)))
