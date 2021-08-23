@@ -34,7 +34,7 @@
       (redescribe-situation)
       (describe-situation))
   
-  (save-situation *situation*)
+  (save)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     
