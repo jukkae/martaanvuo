@@ -11,12 +11,14 @@
  ["situation.rkt"
   (current-part
    current-chapter
-   situation-log
-   append-to-log
-   get-log
+   current-log
    get-last-paragraph
    set-last-paragraph!
    get-prompt)])
+
+(lazy-require
+ ["state/logging.rkt"
+  (append-to-log)])
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
@@ -39,8 +41,8 @@
   (displayln "[BEGIN LOG]")
   (newline)
   (display-title)
-  #;(displayln (get-log))
-  (for ([entry (get-log)])
+  #;(displayln (current-log))
+  (for ([entry (current-log)])
     (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
   (displayln "[END LOG]")
   (newline)

@@ -19,7 +19,8 @@
 (require "../utils.rkt")
 (require "../world.rkt")
 
-(require "combat.rkt")
+(require "combat.rkt"
+         "logging.rkt")
 
 
 (serializable-struct
@@ -36,7 +37,6 @@
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   [pending-action #:mutable]
-  [log #:mutable]
   [last-paragraph #:mutable]
   [current-part #:mutable]
   [current-chapter #:mutable]
@@ -50,7 +50,7 @@
   )
  #:transparent)
 
-(define current-log (make-parameter 42))
+(define current-log (make-parameter '()))
 
 ;; name: hmm
 (define (times-begin-traverse-narrated++ key) 
@@ -116,7 +116,6 @@
                      quests
                      persistent-quests
                      0
-                     '()
                      '()
                      '()
                      0
@@ -465,12 +464,6 @@
   (set-situation-current-chapter! *situation* 0)
   (print-heading))
 
-(define (append-to-log paragraph)
-  (set-situation-log! *situation* (append-element (situation-log *situation*) paragraph)))
-
-(define (get-log)
-  (situation-log *situation*))
-
 (define (get-last-paragraph)
   (situation-last-paragraph *situation*))
 
@@ -501,6 +494,8 @@
   (displayln (situation-flags *situation*)))
 
 
+
+
 (define (save)
   (save-situation *situation*))
 
@@ -519,8 +514,6 @@
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
-  (dev-note "saving...")
-  (displayln (current-log))
   
   #;(write serialized-situation output-file)
   (close-output-port output-file))
@@ -532,11 +525,11 @@
   (define deserialized (deserialize situation))
   (set! *situation* deserialized))
 
+
 (define (load-situation-from-state serialized-state)
   #;(displayln situation)
   (define deserialized-state (deserialize serialized-state))
   (define situation (state-situation deserialized-state))
-  (dev-note "loading")
-  (displayln (state-log deserialized-state))
+  
   (current-log (state-log deserialized-state))
   (set! *situation* situation))

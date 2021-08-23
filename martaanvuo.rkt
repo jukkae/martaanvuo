@@ -81,7 +81,7 @@
     ['restart (on-begin-playthrough)]
     
     ['continue
-     (for ([entry (get-log)])
+     (for ([entry (current-log)])
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 

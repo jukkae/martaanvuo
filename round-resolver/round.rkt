@@ -25,11 +25,6 @@
    )])
 
 (define (on-begin-round mode)
-  (dev-note "current log")
-  (dev-note (cond ((not (null? (current-log)))
-                   (number->string (current-log)))
-                  (else
-                   "null")))
   (case mode
     ['begin
      (set-situation-round! *situation* (add1 (situation-round *situation*)))
