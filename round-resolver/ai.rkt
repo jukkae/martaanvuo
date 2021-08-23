@@ -7,7 +7,10 @@
 (require "../action.rkt"
          "../actor.rkt"
          "../blindscraper.rkt"
-         "../grabberkin.rkt")
+         "../grabberkin.rkt"
+         "../situation.rkt")
+
+(require "action-queue.rkt")
 
 (lazy-require
  ["round-resolver.rkt"
@@ -43,3 +46,20 @@
   (define actor (action-target action))
   ; this is a chance for the target of an already-resolved action to react
   '())
+
+(define (update-npc-reactions pc-action)
+  (define npcs (get-current-enemies))
+  (when (and (aggressive? pc-action)
+             (not (in-combat?)))
+    ; remove own actions from queue
+    (for ([actor npcs])
+      (define actions (filter
+                       (λ (action) (eq? actor (action-actor action)))
+                       action-queue))
+      (remove-from-action-queue actions)
+      ; blam blam
+      #;(define action (make-shoot-action actor))
+      (define action '())
+      (add-to-action-queue action))
+    )
+  )

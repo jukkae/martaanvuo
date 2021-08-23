@@ -387,23 +387,3 @@
 
 (define (save)
   (save-situation *situation*))
-
-
-
-; some sort of generic ai module?
-(define (update-npc-reactions pc-action)
-  (define npcs (get-current-enemies))
-  (when (and (aggressive? pc-action)
-             (not (in-combat?)))
-    ; remove own actions from queue
-    (for ([actor npcs])
-      (define actions (filter
-                       (λ (action) (eq? actor (action-actor action)))
-                       action-queue))
-      (remove-from-action-queue actions)
-      ; blam blam
-      #;(define action (make-shoot-action actor))
-      (define action '())
-      (add-to-action-queue action))
-    )
-  )
