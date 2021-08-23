@@ -502,14 +502,6 @@
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
-(define (serialize-state)
-  
-  '())
-
-(define (serialize-input)
-  '())
-
-
 (define (clean-situation!)
   (displayln "<< clean-situation! >>")
   (reset-pending-action!)

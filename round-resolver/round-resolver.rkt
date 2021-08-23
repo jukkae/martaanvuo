@@ -36,51 +36,13 @@
 (require "../world.rkt")
 
 (require "action-queue.rkt"
+         "ai.rkt"
          "event.rkt"
          "fragment-handler.rkt"
          "get-next-pc-action.rkt"
          "round.rkt"
          "timeline.rkt"
          "ui.rkt")
-
-
-; engine / round resolver: ai dispatching
-(define (get-next-npc-action actor)
-  (case (actor-name actor)
-    (["Blindscraper"] (get-blindscraper-action actor))
-    (["Grabberkin"] (get-grabberkin-action actor))
-    (else (displayln "get-next-npc-action: unknown actor"))))
-
-
-; engine / round resolver / -> ai?
-(define (get-next-action actor)
-  (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
-        (else
-         (serialize-state)
-         (get-next-pc-action)
-         ))
-  )
-
-; engine / round resolver / -> ai?
-(define (get-pre-action-reaction action)
-  (define actor (action-actor action))
-  (cond ((not (pc-actor? actor))
-         (cond ((equal? (actor-name actor) "Grabberkin")
-                (get-grabberkin-reaction actor))
-               (else
-                (displayln "unknown non-pc-actor type for reaction")
-                '())))
-        (else
-         (serialize-state)
-         ; TODO
-         ; (displayln "PC REACTION")    
-         '())))
-
-(define (get-post-action-reaction action result)
-  (define actor (action-target action))
-  ; TODO
-  ; this is a chance for the target of an already-resolved action to react
-  '())
 
 
 ; engine / round resolver
@@ -495,9 +457,10 @@
       ))
   (timeline metadata events counter))
 
-; engine / get-next-pc-action
+; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
+; this pokes a hole through abstraction layers (as it should)
+; (sort of like IO monad)
 (define (get-next-pc-action)
-  (serialize-state)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
       (define (handle-meta-command meta-commands-with-keys input)
@@ -544,8 +507,6 @@
       (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
 
       (define input (wait-for-input))
-
-      (serialize-input)
 
       (newline)
 

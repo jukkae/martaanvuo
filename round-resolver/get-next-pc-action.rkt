@@ -106,7 +106,6 @@
   (newline)
   (newline)
   (define input (wait-for-input))
-  (serialize-input)
 
   (newline)
 

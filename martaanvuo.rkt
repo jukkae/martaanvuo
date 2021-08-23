@@ -109,8 +109,7 @@
             (p "Proceed?")
             (print-meta-commands-with-keys meta-commands)
             (define input (wait-for-input))
-            (serialize-input)
-
+            
             (newline)
 
             (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
