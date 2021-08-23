@@ -164,7 +164,6 @@
 (define (begin-combat!)
   (dev-note "begin combat is broken!")
   #;(set-situation-in-combat?! *situation* #t)
-  (current-log 43)
   (set! *combat-flags* '()))
 
 (define (end-combat!)

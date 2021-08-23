@@ -226,7 +226,7 @@
 
 (define (get-downtime-choices world actor)
   (define (show-based-on-pending-choice? choice)
-    (if (null? (situation-pending-action *situation*))
+    (if (null? (current-pending-action))
         #t
         (begin
           (cond
@@ -237,7 +237,7 @@
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
             ; plot twist: it is shit and has to be fixed
-            ((eq? (choice-symbol choice) (action-symbol (situation-pending-action *situation*)))
+            ((eq? (choice-symbol choice) (action-symbol (current-pending-action)))
              #f)
             
             ; show anything else
@@ -251,14 +251,14 @@
      (condense
       (list
     
-       (when (not (null? (situation-pending-action *situation*)))
+       (when (not (null? (current-pending-action)))
          (choice
-          (action-symbol (situation-pending-action *situation*))
+          (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
      
           (λ ()
             (begin0
-              (situation-pending-action *situation*)
+              (current-pending-action)
               (reset-pending-action!)))))
 
        ; route traversal can be canceled
@@ -266,11 +266,11 @@
          (define destination
            (get-cancel-and-go-back-destination
             (current-location)
-            (situation-pending-action *situation*)))
+            (current-pending-action)))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
-          (get-cancel-pending-action-and-go-back-name (current-location) (situation-pending-action *situation*)) 
+          (get-cancel-pending-action-and-go-back-name (current-location) (current-pending-action)) 
           (λ () (make-action
                  #:symbol 'cancel-traverse
                  #:actor (situation-pc *situation*)

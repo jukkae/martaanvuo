@@ -2,6 +2,8 @@
 
 (provide (all-defined-out))
 
+(provide (all-from-out "pending-action.rkt"))
+
 (require racket/lazy-require)
 (require racket/serialize)
 
@@ -20,7 +22,8 @@
 (require "../world.rkt")
 
 (require "combat.rkt"
-         "logging.rkt")
+         "logging.rkt"
+         "pending-action.rkt")
 
 
 (serializable-struct
@@ -36,7 +39,6 @@
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
-  [pending-action #:mutable]
   [prompt #:mutable]
   [flags #:mutable]
 
@@ -51,6 +53,8 @@
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
 (define current-last-paragraph (make-parameter ""))
+
+(define current-pending-action (make-parameter '()))
 
 ;; name: hmm
 (define (times-begin-traverse-narrated++ key) 
@@ -116,17 +120,11 @@
                      quests
                      persistent-quests
                      0
-                     '()
                      ""
                      '()
                      (make-hash)
                      (make-hash)
                      (make-hash)))))
-
-
-
-
-
 
 
 ;;; Meta progression / achievements
@@ -136,20 +134,6 @@
     [else
      (displayln "increment-achievement!: unknown achievement:")
      (displayln achievement)]))
-
-
-;;; Direct accessors and mutators
-(define (reset-pending-action!)
-  (set-situation-pending-action! *situation* '()))
-
-(define (set-pending-action! action)
-  #;(symbol
-     actor
-     duration
-     target
-     tags
-     details)
-  (set-situation-pending-action! *situation* action))
 
 (define (unset-current-fragment-id!)
   (set-situation-current-fragment-id! *situation* '()))
@@ -193,72 +177,6 @@
     (set-quest-details! quest details)
     )
   )
-
-
-;;; plumbing for round-resolver
-(define (get-continue-pending-action-name)
-  (define pending-action (situation-pending-action *situation*))
-  (cond ((eq? (action-symbol pending-action) 'go-to-location)
-         (string-append
-          "[continue] Continue towards "
-          (get-location-name-from-location (action-target pending-action))
-          "."))
-        ((eq? (action-symbol pending-action) 'traverse)
-         (define target (action-target pending-action))
-         
-         (define details (action-details pending-action))
-         
-         (define direction
-           (if (memq 'a-to-b details)
-               'a-to-b
-               'b-to-a))
-
-         (define endpoint
-           (case direction
-             ['a-to-b (route-b target)]
-             ['b-to-a (route-a target)]))
-         
-         (string-append
-          "[continue] Continue towards "
-          (get-location-name-from-location endpoint)
-          "."))
-        ((eq? (action-symbol pending-action) 'search-for-paths)
-         (string-append
-          "[continue] Search for paths."))
-        (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
-
-(define (get-cancel-pending-action-and-go-back-name
-         route
-         pending-action)
-  ; this assumes that pending-action is 'traverse, which might not be the case
-  ;(define end-location (action-target pending-action))
-  ; not very robust... anyhow, cancel direction is opposite to the pending action direction
-  (define cancel-traverse-direction
-    (if (memq 'b-to-a (action-details pending-action))
-        'a-to-b
-        'b-to-a))
-
-  (define cancel-traverse-endpoint
-    (case cancel-traverse-direction
-      ['a-to-b (route-b route)]
-      ['b-to-a (route-a route)]))
-  
-  (string-append "Go back to " (get-location-name-from-location cancel-traverse-endpoint) "."))
-
-(define (get-cancel-and-go-back-destination
-         route
-         pending-action)
-  (define cancel-traverse-direction
-    (if (memq 'b-to-a (action-details pending-action))
-        'a-to-b
-        'b-to-a))
-
-  (define cancel-traverse-endpoint
-    (case cancel-traverse-direction
-      ['a-to-b (route-b route)]
-      ['b-to-a (route-a route)]))
-  cancel-traverse-endpoint)
-
 
 ; api
 (define (current-location)
@@ -478,7 +396,8 @@
                       [log #:mutable]
                       [last-paragraph #:mutable]
                       [part #:mutable]
-                      [chapter #:mutable]))
+                      [chapter #:mutable]
+                      [pending-action #:mutable]))
 
 (define (save-situation s)
   
@@ -492,7 +411,8 @@
               (current-log)
               (current-last-paragraph)
               (current-part)
-              (current-chapter)))
+              (current-chapter)
+              (current-pending-action)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -517,5 +437,6 @@
   (current-last-paragraph (state-last-paragraph deserialized-state))
   (current-part (state-part deserialized-state))
   (current-chapter (state-chapter deserialized-state))
+  (current-pending-action (state-pending-action deserialized-state))
   
   (set! *situation* situation))
