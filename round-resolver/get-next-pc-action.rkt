@@ -59,7 +59,7 @@
       (define actor (situation-pc *situation*))
 
 
-      (define fragment-decisions (if (null? (situation-current-fragment-number *situation*))
+      (define fragment-decisions (if (null? (situation-current-fragment-id *situation*))
                                      '()
                                      (current-fragment-get-decisions)))
 
@@ -67,7 +67,7 @@
         (wait-for-confirm)) ; what a place for this
 
       ; launch a fragment directly -> no action resolution -> not a choice
-      (define location-decisions (if (null? (situation-current-fragment-number *situation*))
+      (define location-decisions (if (null? (situation-current-fragment-id *situation*))
                                      (get-location-decisions (current-location))
                                      '()))
       

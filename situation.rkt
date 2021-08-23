@@ -35,7 +35,7 @@
   [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [current-fragment-number #:mutable]
+  [current-fragment-id #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
@@ -179,8 +179,11 @@
      details)
   (set-situation-pending-action! *situation* action))
 
-(define (unset-current-fragment!)
-  (set-situation-current-fragment-number! *situation* '()))
+(define (unset-current-fragment-id!)
+  (set-situation-current-fragment-id! *situation* '()))
+
+(define (set-current-fragment-id! id)
+  (set-situation-current-fragment-id! *situation* id))
 
 (define (add-quest! quest)
   (set-situation-quests!
@@ -494,7 +497,7 @@
   )
 
 (define (describe-non-combat-situation)
-  (cond ((null? (situation-current-fragment-number *situation*))
+  (cond ((null? (situation-current-fragment-id *situation*))
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)

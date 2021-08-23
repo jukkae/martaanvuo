@@ -5,16 +5,17 @@
 (require "../decision.rkt"
          "../fragment.rkt"
          "../io.rkt"
-         "../situation.rkt")
+         "../situation.rkt"
+         "../utils.rkt")
 
 
 (define (current-fragment-on-begin-round!)
-  ((story-fragment-on-begin-round! (get-fragment (situation-current-fragment-number *situation*)))))
+  ((story-fragment-on-begin-round! (get-fragment (situation-current-fragment-id *situation*)))))
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
-          (story-fragment-decisions (get-fragment (situation-current-fragment-number *situation*)))))
+          (story-fragment-decisions (get-fragment (situation-current-fragment-id *situation*)))))
 
 (define (current-fragment-handle-decision! decision)
 
@@ -40,10 +41,10 @@
          (cond
            ; it can either be a special symbol...
            ((eq? 'exit next-fragment)
-            (unset-current-fragment!))
+            (unset-current-fragment-id!))
 
            ((eq? 'recurse next-fragment)
-            (unset-current-fragment!)
+            (unset-current-fragment-id!)
             'recurse) ; !! important
            
            ; ... or it can be just a label
@@ -51,7 +52,7 @@
            ))
 
         ((null? next-fragment) ; treat '() as 'exit
-         (unset-current-fragment!)
+         (unset-current-fragment-id!)
          )
         
         (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type.")))))
@@ -61,7 +62,13 @@
   )
 
 (define (go-to-story-fragment id)
-  (set-situation-current-fragment-number! *situation* id))
+  (dev-note "HELLO")
+  (dev-note (symbol->string id))
+  (set-current-fragment-id! id)
+  (dev-note (cond ((number? [situation-current-fragment-id *situation*])
+                   (number->string [situation-current-fragment-id *situation*]))
+                  ((null? [situation-current-fragment-id *situation*])
+                   ("'()")))))
 
 (define (handle-fragment-decision decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input)))
