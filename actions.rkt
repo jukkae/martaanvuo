@@ -36,6 +36,7 @@
  ["state/combat.rkt"
   (get-combatant-name
    display-combatant-info
+   *combat-flags*
    )])
 
 ; implementation detail

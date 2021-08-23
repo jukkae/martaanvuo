@@ -14,9 +14,11 @@
          "../utils.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-location
+ ["../situation.rkt" (*situation*
+                      current-location
                       get-current-enemies
-                      pc)])
+                      pc
+                      set-situation-in-combat?!)])
 
 (define (clean-up-dead-actor! actor)
   (remove-actor-from-location! (current-location) actor)
@@ -152,3 +154,19 @@
   (info-card
    body
    name))
+
+
+(define *combat-flags* '())
+(define (add-combat-flag flag)
+  (set! *combat-flags* (append-element *combat-flags* flag)))
+
+(define (begin-combat!)
+  #;(displayln "BEGIN COMBAT")
+  (set-situation-in-combat?! *situation* #t)
+  (set! *combat-flags* '()))
+
+(define (end-combat!)
+  #;(displayln "END COMBAT")
+  (notice "Combat finished.")
+  (set-situation-in-combat?! *situation* #f)
+  (set! *combat-flags* '()))

@@ -5,6 +5,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require "state/combat.rkt")
+
 (require "action-resolver.rkt")
 (require "action.rkt")
 (require "actor.rkt")

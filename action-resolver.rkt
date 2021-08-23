@@ -24,6 +24,7 @@
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
+   add-combat-flag
    )])
 
 ; "generic" attack with type

@@ -14,11 +14,13 @@
 (require "action-queue.rkt"
          "fragment-handler.rkt")
 
+
 (lazy-require
  ["state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
+   end-combat!
    )])
 
 (define (on-begin-round mode)

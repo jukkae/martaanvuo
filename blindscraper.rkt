@@ -4,6 +4,8 @@
 
 (require racket/serialize)
 
+(require "state/combat.rkt")
+
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
