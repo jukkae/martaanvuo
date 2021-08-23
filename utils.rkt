@@ -67,7 +67,7 @@
              (displayln line)
              (displayln (file-name-from-path file)))])))
 
-(define-syntax (debug-message stx)
+(define-syntax (dev-note stx)
   (with-syntax ([file (syntax-source stx)]
                 [line (syntax-line stx)])
     (syntax-case stx ()
