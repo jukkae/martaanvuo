@@ -209,8 +209,12 @@
 ; API
 (define (in-range? target attack-mode)
   (case attack-mode
-    ['melee #t]
-    [else (displayln "in-range? not implemented yet for this attack mode")]))
+    ['melee
+     (dev-note "in-range? tbd")
+     #t]
+    [else
+     (dev-note "in-range? tbd")
+     #f]))
 
 
 (define (describe-non-combat-situation)
