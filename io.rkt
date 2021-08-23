@@ -13,8 +13,7 @@
    current-chapter
    current-log
    current-last-paragraph
-   
-   get-prompt)])
+   current-prompt)])
 
 (lazy-require
  ["state/logging.rkt"
@@ -50,7 +49,7 @@
 
 (define (display-prompt)
   (newline)
-  (displayln (get-prompt)))
+  (displayln (current-prompt)))
 
 (define (print-heading)
   (define heading

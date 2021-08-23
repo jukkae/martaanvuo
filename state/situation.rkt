@@ -2,7 +2,8 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out "pending-action.rkt"))
+(provide (all-from-out "pending-action.rkt"
+                       "resolve-counts.rkt"))
 
 (require racket/lazy-require)
 (require racket/serialize)
@@ -23,7 +24,8 @@
 
 (require "combat.rkt"
          "logging.rkt"
-         "pending-action.rkt")
+         "pending-action.rkt"
+         "resolve-counts.rkt")
 
 
 (serializable-struct
@@ -48,6 +50,7 @@
   )
  #:transparent)
 
+; logging
 (define current-log (make-parameter '()))
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
@@ -56,48 +59,9 @@
 
 (define current-pending-action (make-parameter '()))
 
-;; name: hmm
-(define (times-begin-traverse-narrated++ key) 
-  (when (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
-    (hash-set! (situation-times-begin-traverse-narrated *situation*) key 0))
-  (hash-set! (situation-times-begin-traverse-narrated *situation*)
-             key
-             (add1 (hash-ref (situation-times-begin-traverse-narrated *situation*)
-                             key))))
-
-(define (times-begin-traverse-narrated key) 
-  (if (not (hash-has-key? (situation-times-begin-traverse-narrated *situation*) key))
-      #f
-      (hash-ref (situation-times-begin-traverse-narrated *situation*)
-                key)))
-
-(define (times-finish-traverse-narrated++ key) 
-  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
-    (hash-set! (situation-times-finish-traverse-narrated *situation*) key 0))
-  (hash-set! (situation-times-finish-traverse-narrated *situation*)
-             key
-             (add1 (hash-ref (situation-times-finish-traverse-narrated *situation*)
-                             key))))
-
-(define (times-finish-traverse-narrated key) 
-  (when (not (hash-has-key? (situation-times-finish-traverse-narrated *situation*) key))
-    #f)
-  (hash-ref (situation-times-finish-traverse-narrated *situation*)
-            key))
-
-(define (times-cancel-traverse-narrated++ key) 
-  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
-    (hash-set! (situation-times-cancel-traverse-narrated *situation*) key 0))
-  (hash-set! (situation-times-cancel-traverse-narrated *situation*)
-             key
-             (add1 (hash-ref (situation-times-cancel-traverse-narrated *situation*)
-                             key))))
-
-(define (times-cancel-traverse-narrated key) 
-  (when (not (hash-has-key? (situation-times-cancel-traverse-narrated *situation*) key))
-    #f)
-  (hash-ref (situation-times-cancel-traverse-narrated *situation*)
-            key))
+(define current-times-begin-traverse-narrated (make-parameter (make-hash)))
+(define current-times-finish-traverse-narrated (make-parameter (make-hash)))
+(define current-times-cancel-traverse-narrated (make-parameter (make-hash)))
 
 
 ;;; Actual state variables
@@ -265,7 +229,7 @@
                 (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
 (define (clean-situation!)
-  (displayln "<< clean-situation! >>")
+  (dev-note "cleaning situation...")
   (reset-pending-action!)
   (set-situation-quests! *situation* '()))
 
@@ -389,7 +353,11 @@
                       [part #:mutable]
                       [chapter #:mutable]
                       [prompt #:mutable]
-                      [pending-action #:mutable]))
+                      [pending-action #:mutable]
+                      [times-begin-traverse-narrated #:mutable]
+                      [times-finish-traverse-narrated #:mutable]
+                      [times-cancel-traverse-narrated #:mutable]
+                      ))
 
 (define (save-situation s)
   
@@ -405,7 +373,10 @@
               (current-part)
               (current-chapter)
               (current-prompt)
-              (current-pending-action)))
+              (current-pending-action)
+              (current-times-begin-traverse-narrated)
+              (current-times-finish-traverse-narrated)
+              (current-times-cancel-traverse-narrated)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -432,5 +403,8 @@
   (current-chapter (state-chapter deserialized-state))
   (current-prompt (state-prompt deserialized-state))
   (current-pending-action (state-pending-action deserialized-state))
+  (current-times-begin-traverse-narrated (state-times-begin-traverse-narrated deserialized-state))
+  (current-times-finish-traverse-narrated (state-times-finish-traverse-narrated deserialized-state))
+  (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated deserialized-state))
   
   (set! *situation* situation))
