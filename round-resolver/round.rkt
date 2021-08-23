@@ -24,6 +24,11 @@
    end-combat!
    )])
 
+(lazy-require
+ ["../state/logging.rkt"
+  (set-prompt!
+   )])
+
 (define (on-begin-round mode)
   (case mode
     ['begin

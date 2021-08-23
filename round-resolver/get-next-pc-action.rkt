@@ -26,7 +26,8 @@
 
 (lazy-require
  ["../situation.rkt"
-  (player-info
+  (current-prompt
+   player-info
    )])
 
 (lazy-require
@@ -83,7 +84,7 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
-      (when (not (eq? "" (get-prompt)))
+      (when (not (eq? "" (current-prompt)))
         (display-prompt))
 
       (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)

@@ -39,7 +39,6 @@
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
-  [prompt #:mutable]
   [flags #:mutable]
 
   ; these are place-place pairs, from-to
@@ -53,6 +52,7 @@
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
 (define current-last-paragraph (make-parameter ""))
+(define current-prompt (make-parameter ""))
 
 (define current-pending-action (make-parameter '()))
 
@@ -120,7 +120,6 @@
                      quests
                      persistent-quests
                      0
-                     ""
                      '()
                      (make-hash)
                      (make-hash)
@@ -362,14 +361,6 @@
   (print-inventory))
 
 
-
-(define (set-prompt! prompt)
-  (set-situation-prompt! *situation* prompt))
-
-(define (get-prompt)
-  (situation-prompt *situation*))
-
-
 (define (set-flag flag)
   (when (not (flag-set? flag))
     (set-situation-flags! *situation* (append-element (situation-flags *situation*) flag))))
@@ -397,6 +388,7 @@
                       [last-paragraph #:mutable]
                       [part #:mutable]
                       [chapter #:mutable]
+                      [prompt #:mutable]
                       [pending-action #:mutable]))
 
 (define (save-situation s)
@@ -412,6 +404,7 @@
               (current-last-paragraph)
               (current-part)
               (current-chapter)
+              (current-prompt)
               (current-pending-action)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
@@ -437,6 +430,7 @@
   (current-last-paragraph (state-last-paragraph deserialized-state))
   (current-part (state-part deserialized-state))
   (current-chapter (state-chapter deserialized-state))
+  (current-prompt (state-prompt deserialized-state))
   (current-pending-action (state-pending-action deserialized-state))
   
   (set! *situation* situation))

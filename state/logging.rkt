@@ -10,7 +10,8 @@
 (lazy-require
  ["../situation.rkt" (current-log
                       current-part
-                      current-chapter)])
+                      current-chapter
+                      current-prompt)])
 
 (define (append-to-log paragraph)
   (current-log (append-element (current-log) paragraph)))
@@ -27,3 +28,6 @@
   (current-part (add1 (current-part)))
   (current-chapter 0)
   (print-heading))
+
+(define (set-prompt! prompt)
+  (current-prompt prompt))
