@@ -42,35 +42,7 @@
          #t))) ; mark input as handled
 
 
-(define (menu)
-  (define (handle-meta-command meta-commands-with-keys input)
-    (set! input (string-upcase input))
-    (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-    (define meta-command (cdr meta-command-with-key))
-    (meta-command))
-  (define (close-menu) #t) ; hacky but eh
-  
-  (displayln "[Menu]")
-  (define meta-commands (make-hash))
-  (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
-  ;(hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
-  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
-  (hash-set! meta-commands "R" (cons "[R]: Restart." restart))
-  
 
-  (for ([(k v) (in-hash meta-commands)])
-    (display (car v))
-    (display " "))
-  (newline)
-  (newline)
-  (define input (wait-for-input))
-  (serialize-input)
-
-  (newline)
-
-  (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
-        (else (menu))))
 
 (define (inventory)
   (print-inventory)
