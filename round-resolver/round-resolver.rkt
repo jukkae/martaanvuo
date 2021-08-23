@@ -744,31 +744,6 @@
       decision
       #f))
 
-; engine / get-next-pc-action
-(define (resolve-choice-and-produce-action! choices-with-keys input)
-  (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
-
-  (define action
-    (cond ((procedure? resolution-effect) (resolution-effect))
-          ((action? resolution-effect) resolution-effect)
-          (else (error "resolve-choice-and-produce-action!: unknown type"))))
-
-  ; dirty to do this here like this but eh
-  (define pending-choice-available? #f)
-  (for/hash ([(k v) (in-hash choices-with-keys)])
-    (values k
-            (begin
-              (when (string-prefix? (choice-name v) "[continue]")
-                (set! pending-choice-available? #t)))))
-  
-  ; choice either is pending (= resolve it) or is not, in which case discard pending action
-  (when pending-choice-available? (reset-pending-action!))
-  
-  action)
-
-; engine / get-next-pc-action
-(define (choice-as-resolution-effect choices-with-keys input)
-  (choice-resolution-effect (hash-ref choices-with-keys (string->number input) '())))
 
 
   
