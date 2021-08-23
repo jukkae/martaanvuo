@@ -10,7 +10,9 @@
                        "quests.rkt"
                        "route.rkt"
                        "situation.rkt"
-                       "utils.rkt"))
+                       "time.rkt"
+                       "utils.rkt"
+                       "world.rkt"))
 
 
 (require "decision.rkt"
@@ -23,7 +25,9 @@
          "quests.rkt"
          "route.rkt"
          "situation.rkt"
-         "utils.rkt")
+         "time.rkt"
+         "utils.rkt"
+         "world.rkt")
 
 
 (require racket/lazy-require)
