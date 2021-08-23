@@ -22,7 +22,7 @@
   (make-decision
    #:title "GOAL: gold, REQUEST: work."
    #:description "\"GOAL: gold. REQUEST: work-for-gold <or: equivalent>\""
-   #:next-fragment 'anthill-work
+   #:next-fragment 'anthill-quest
    )
   (make-decision
    #:title "GOAL: freedom, REQUEST: help."
@@ -43,7 +43,7 @@
   ))
 
 (fragment
- 'anthill-work
+ 'anthill-quest
  (proc
   (p
    "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
@@ -51,8 +51,7 @@
   (p "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
   (p "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
   (p "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")
-  
-  )
+  (p "\"DENIED: not-relevant\", Anthill replies. \"END-COMMUNICATION\", it concludes, and the ants go back to work."))
 
  #:decisions
  (list
