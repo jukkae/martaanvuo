@@ -1,14 +1,12 @@
 #lang racket
 
-(provide (all-defined-out))
+(provide resolve-round)
 (provide (all-from-out "fragment-handler.rkt"
                        "ui.rkt"))
 (provide print-meta-commands-with-keys
          meta-command-valid?)
 
 (require racket/serialize)
-
-(require lens)
 
 (require "../action-resolver.rkt")
 (require "../action.rkt")
@@ -45,24 +43,6 @@
          "simulation.rkt"
          "timeline.rkt"
          "ui.rkt")
-
-
-; engine / round resolver
-(define (enqueue-npc-actions)
-  (define actors (location-actors (current-location)))
-  (for ([actor actors])
-    (when (not (pc-actor? actor))
-      (define next-action (get-next-action actor))
-      (add-to-action-queue next-action))))
-
-; engine / round resolver
-(define (resolve-turn! world action)
-  (if (pc-actor? (action-actor action))
-      (resolve-pc-action! action)
-      (resolve-npc-action! action))
-  )
-
-
 
 
 ; engine / round resolver
@@ -112,15 +92,24 @@
            round-exit-status
            ))))
 
-; engine / round resolver
-(define (resolve-npc-action! action)
-  (resolve-action! action))
+(define (enqueue-npc-actions)
+  (define actors (location-actors (current-location)))
+  (for ([actor actors])
+    (when (not (pc-actor? actor))
+      (define next-action (get-next-action actor))
+      (add-to-action-queue next-action))))
+
+
+(define (resolve-turn! world action)
+  (if (pc-actor? (action-actor action))
+      (resolve-pc-action! action)
+      (resolve-action! action)))
+
 
 (define (end-combat)
   (remove-all-enemies-and-end-combat!)
   (clear-action-queue!))
 
-; engine / round resolver
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'flee)
