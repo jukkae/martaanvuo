@@ -12,6 +12,8 @@
 (require "utils.rkt")
 (require "world.rkt")
 
+(require "state/logging.rkt")
+
 
 ; content should be provided "somewhere"
 ; content is game-specific, not engine stuff

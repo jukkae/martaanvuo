@@ -8,6 +8,7 @@
 
 (require racket/serialize)
 
+(require "../state/logging.rkt")
 
 (require "../action.rkt")
 (require "../actions.rkt")

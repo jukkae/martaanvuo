@@ -37,8 +37,6 @@
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   [pending-action #:mutable]
-  [current-part #:mutable]
-  [current-chapter #:mutable]
   [prompt #:mutable]
   [flags #:mutable]
 
@@ -50,7 +48,9 @@
  #:transparent)
 
 (define current-log (make-parameter '()))
-(define current-last-paragraph (make-parameter '()))
+(define current-part (make-parameter 0))
+(define current-chapter (make-parameter 0))
+(define current-last-paragraph (make-parameter ""))
 
 ;; name: hmm
 (define (times-begin-traverse-narrated++ key) 
@@ -117,8 +117,6 @@
                      persistent-quests
                      0
                      '()
-                     0
-                     0
                      ""
                      '()
                      (make-hash)
@@ -446,24 +444,6 @@
   (print-inventory))
 
 
-(define (current-chapter)
-  (situation-current-chapter *situation*))
-
-(define (current-part)
-  (situation-current-part *situation*))
-
-(define (next-chapter!)
-  (when (= (situation-current-part *situation*) 0)
-    (set-situation-current-part! *situation* 1))
-  (set-situation-current-chapter! *situation* (add1 (situation-current-chapter *situation*)))
-  (print-heading))
-
-(define (next-part!)
-  (set-situation-current-part! *situation* (add1 (situation-current-part *situation*)))
-  (set-situation-current-chapter! *situation* 0)
-  (print-heading))
-
-
 
 (define (set-prompt! prompt)
   (set-situation-prompt! *situation* prompt))
@@ -496,7 +476,9 @@
 (serializable-struct state
                      ([situation #:mutable]
                       [log #:mutable]
-                      [last-paragraph #:mutable]))
+                      [last-paragraph #:mutable]
+                      [part #:mutable]
+                      [chapter #:mutable]))
 
 (define (save-situation s)
   
@@ -508,7 +490,9 @@
   (define st (state
               *situation*
               (current-log)
-              (current-last-paragraph)))
+              (current-last-paragraph)
+              (current-part)
+              (current-chapter)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -531,4 +515,7 @@
   
   (current-log (state-log deserialized-state))
   (current-last-paragraph (state-last-paragraph deserialized-state))
+  (current-part (state-part deserialized-state))
+  (current-chapter (state-chapter deserialized-state))
+  
   (set! *situation* situation))

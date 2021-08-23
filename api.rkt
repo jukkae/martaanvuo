@@ -12,7 +12,9 @@
                        "situation.rkt"
                        "time.rkt"
                        "utils.rkt"
-                       "world.rkt"))
+                       "world.rkt"
+
+                       "state/logging.rkt"))
 
 
 (require "decision.rkt"
@@ -28,6 +30,8 @@
          "time.rkt"
          "utils.rkt"
          "world.rkt")
+
+(require "state/logging.rkt")
 
 
 (require racket/lazy-require)

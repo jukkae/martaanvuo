@@ -2,6 +2,8 @@
 
 (provide resolve-pc-action!)
 
+(require "../state/logging.rkt")
+
 (require "../action.rkt"
          "../action-resolver.rkt"
          "../io.rkt"
