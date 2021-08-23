@@ -22,12 +22,6 @@
 (require "combat.rkt")
 
 
-; Think about breaking this apart:
-; - run-specific
-; - life-specific
-; - playthrough-specific
-; - in-world / out-of-world (ie., narration)
-; - player knowledge vs character knowledge
 (serializable-struct
  situation
  ([world #:mutable]
@@ -55,6 +49,8 @@
   [times-cancel-traverse-narrated #:mutable]
   )
  #:transparent)
+
+(define current-log (make-parameter 42))
 
 ;; name: hmm
 (define (times-begin-traverse-narrated++ key) 
@@ -132,12 +128,7 @@
                      (make-hash)))))
 
 
-; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
-; - https://docs.racket-lang.org/reference/serialization.html
-(define (load-situation situation)
-  #;(displayln situation)
-  (define deserialized (deserialize situation))
-  (set! *situation* deserialized))
+
 
 
 
@@ -513,10 +504,39 @@
 (define (save)
   (save-situation *situation*))
 
+(serializable-struct state
+                     ([situation #:mutable]
+                      [log #:mutable]))
+
 (define (save-situation s)
-  ; prng can be stored as vector:
-  ; https://docs.racket-lang.org/reference/generic-numbers.html#%28def._%28%28quote._~23~25kernel%29._pseudo-random-generator-~3evector%29%29
-  ; NOTE: By storing the prng in savefile, you essentially get predestination
-  ; -> this opens the possibility for deliberately using this as a mechanic
+  
   (define serialized-situation (serialize s))
-  (write-save-file serialized-situation))
+  #;(write-save-file serialized-situation)
+
+  (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
+
+  (define st (state *situation* (current-log)))
+  (define serialized-state (serialize st))
+  (write serialized-state output-file)
+
+  (dev-note "saving...")
+  (displayln (current-log))
+  
+  #;(write serialized-situation output-file)
+  (close-output-port output-file))
+
+; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
+; - https://docs.racket-lang.org/reference/serialization.html
+(define (load-situation situation)
+  #;(displayln situation)
+  (define deserialized (deserialize situation))
+  (set! *situation* deserialized))
+
+(define (load-situation-from-state serialized-state)
+  #;(displayln situation)
+  (define deserialized-state (deserialize serialized-state))
+  (define situation (state-situation deserialized-state))
+  (dev-note "loading")
+  (displayln (state-log deserialized-state))
+  (current-log (state-log deserialized-state))
+  (set! *situation* situation))

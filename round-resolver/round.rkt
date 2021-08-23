@@ -9,14 +9,15 @@
          "../condition.rkt"
          "../fragment.rkt"
          "../round-summary.rkt"
-         "../situation.rkt")
+         "../situation.rkt"
+         "../utils.rkt")
 
 (require "action-queue.rkt"
          "fragment-handler.rkt")
 
 
 (lazy-require
- ["state/combat.rkt"
+ ["../state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
@@ -24,6 +25,11 @@
    )])
 
 (define (on-begin-round mode)
+  (dev-note "current log")
+  (dev-note (cond ((not (null? (current-log)))
+                   (number->string (current-log)))
+                  (else
+                   "null")))
   (case mode
     ['begin
      (set-situation-round! *situation* (add1 (situation-round *situation*)))
