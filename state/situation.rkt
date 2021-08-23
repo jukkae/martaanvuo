@@ -2,7 +2,8 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out "pending-action.rkt"
+(provide (all-from-out "mutators.rkt"
+                       "pending-action.rkt"
                        "resolve-counts.rkt"))
 
 (require racket/lazy-require)
@@ -24,6 +25,7 @@
 
 (require "combat.rkt"
          "logging.rkt"
+         "mutators.rkt"
          "pending-action.rkt"
          "resolve-counts.rkt")
 
@@ -42,11 +44,6 @@
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
   [flags #:mutable]
-
-  ; these are place-place pairs, from-to
-  [times-begin-traverse-narrated #:mutable]
-  [times-finish-traverse-narrated #:mutable]
-  [times-cancel-traverse-narrated #:mutable]
   )
  #:transparent)
 
@@ -84,10 +81,7 @@
                      quests
                      persistent-quests
                      0
-                     '()
-                     (make-hash)
-                     (make-hash)
-                     (make-hash)))))
+                     '()))))
 
 
 ;;; Meta progression / achievements
