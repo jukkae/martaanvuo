@@ -772,20 +772,6 @@
 
 
   
-; engine / get-next-pc-action
-(define (key-from-index i)
-  (cond ((< i 0) (error "negative index!"))
-        ((<= i 8) (add1 i))
-        ((= i 9) 0)
-        ((> i 9) (error "too many things to do!"))))
-
-; engine / get-next-pc-action
-(define (build-keys-to-choices-map choices first-index)
-  (define choices-with-keys (make-hash))
-  (for ([i (in-range (length choices))])
-    (define key (key-from-index (+ first-index i -1)))
-    (hash-set! choices-with-keys key (list-ref choices i)))
-  choices-with-keys)
 
 
 

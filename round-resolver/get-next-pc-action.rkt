@@ -1,6 +1,7 @@
 #lang racket
 
-(provide get-meta-commands-with-keys
+(provide build-keys-to-choices-map
+         get-meta-commands-with-keys
          print-choices-and-meta-commands-with-keys
          print-meta-commands-with-keys
          meta-command-valid?)
@@ -29,6 +30,19 @@
    )])
 
 
+(define (key-from-index i)
+  (cond ((< i 0) (error "negative index!"))
+        ((<= i 8) (add1 i))
+        ((= i 9) 0)
+        ((> i 9) (error "too many things to do!"))))
+
+; engine / get-next-pc-action
+(define (build-keys-to-choices-map choices first-index)
+  (define choices-with-keys (make-hash))
+  (for ([i (in-range (length choices))])
+    (define key (key-from-index (+ first-index i -1)))
+    (hash-set! choices-with-keys key (list-ref choices i)))
+  choices-with-keys)
 
 (define (menu)
   (define (handle-meta-command meta-commands-with-keys input)
