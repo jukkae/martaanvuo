@@ -8,18 +8,13 @@
          "../situation.rkt"
          "../utils.rkt")
 
+(require "get-next-pc-action.rkt")
+
 ; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.
 ; This is because at the time of writing this, cleaning up round-resolver.rkt is priority.
 ; TODO: clean up!
 ; Return value is tied to round resolution.
 
-; engine / get-next-pc-action
-(define (meta-command-valid? meta-commands-with-keys input)
-  (set! input (string-upcase input))
-  (define meta-command (hash-ref meta-commands-with-keys input '()))
-  (if (not (null? meta-command))
-      meta-command
-      #f))
 
 (define (quit)
   (displayln "Really quit Martaanvuo? [Q] to quit, anything else to continue.")
