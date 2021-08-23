@@ -9,7 +9,10 @@
 
 (lazy-require
  ["situation.rkt"
-  (situation-log
+  (*situation*
+   situation-current-part
+   situation-current-chapter
+   situation-log
    append-to-log
    get-log
    get-last-paragraph
@@ -47,6 +50,15 @@
 (define (display-prompt)
   (newline)
   (displayln (get-prompt)))
+
+(define (print-heading)
+  (define heading
+    (string-append "\n"
+                   "PART "
+                   (number->string (situation-current-part *situation*))
+                   ", CHAPTER "
+                   (number->string (situation-current-chapter *situation*))))
+  (p heading))
 
 ; implementation detail
 (define (print-paragraph formatted-text)

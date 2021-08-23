@@ -610,16 +610,6 @@
   (print-inventory))
 
 
-; This belongs... somewhere
-(define (print-heading)
-  (define heading
-    (string-append "\n"
-                   "PART "
-                   (number->string (situation-current-part *situation*))
-                   ", CHAPTER "
-                   (number->string (situation-current-chapter *situation*))))
-  (p heading))
-
 (define (next-chapter!)
   (when (= (situation-current-part *situation*) 0)
     (set-situation-current-part! *situation* 1))
