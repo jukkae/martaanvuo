@@ -161,7 +161,7 @@
   (set! *combat-flags* (append-element *combat-flags* flag)))
 
 (define (begin-combat!)
-  #;(displayln "BEGIN COMBAT")
+  (dev-note "begin combat is broken!")
   (set-situation-in-combat?! *situation* #t)
   (set! *combat-flags* '()))
 

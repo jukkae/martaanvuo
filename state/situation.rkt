@@ -457,6 +457,12 @@
   (print-inventory))
 
 
+(define (current-chapter)
+  (situation-current-chapter *situation*))
+
+(define (current-part)
+  (situation-current-part *situation*))
+
 (define (next-chapter!)
   (when (= (situation-current-part *situation*) 0)
     (set-situation-current-part! *situation* 1))

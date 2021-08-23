@@ -9,9 +9,8 @@
 
 (lazy-require
  ["situation.rkt"
-  (*situation*
-   situation-current-part
-   situation-current-chapter
+  (current-part
+   current-chapter
    situation-log
    append-to-log
    get-log
@@ -55,9 +54,9 @@
   (define heading
     (string-append "\n"
                    "PART "
-                   (number->string (situation-current-part *situation*))
+                   (number->string (current-part))
                    ", CHAPTER "
-                   (number->string (situation-current-chapter *situation*))))
+                   (number->string (current-chapter))))
   (p heading))
 
 ; implementation detail

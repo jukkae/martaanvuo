@@ -21,6 +21,8 @@
 (require "utils.rkt")
 (require "world.rkt")
 
+(require "state/combat.rkt")
+
 (lazy-require
  ["martaanvuo.rkt"
   (actor-in-range?
