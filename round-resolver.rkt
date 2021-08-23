@@ -111,6 +111,8 @@
 ; engine / round resolver
 (define (remove-from-action-queue actions)
   (set! action-queue (remq* actions action-queue)))
+(define (clear-action-queue!)
+  (set! action-queue '()))
 ; engine / round resolver
 (define (sort-action-queue)
   
@@ -594,13 +596,17 @@
 (define (resolve-npc-action! action)
   (resolve-action! action))
 
+(define (end-combat)
+  (remove-all-enemies-and-end-combat!)
+  (clear-action-queue!))
+
 ; engine / round resolver
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'flee)
       (p "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
       (award-xp! 1)
-      (remove-all-enemies-and-end-combat!)
+      (end-combat)
       (end-round-early))
     (for ([action action-queue])
 
@@ -624,7 +630,7 @@
          (end-round-early)]
         
         ['end-combat
-         (remove-all-enemies-and-end-combat!)
+         (end-combat)
          (end-round-early)
          ]
 
