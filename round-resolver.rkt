@@ -777,17 +777,15 @@
 
 
 
-
+(define (display-prompt)
+  (newline)
+  (displayln (get-prompt)))
 
 ; engine / get-next-pc-action
 (define (get-next-pc-action)
   (serialize-state)
   (let/ec produce-action
     (let what-do-you-do ([verbosity 'verbose])
-      (when (not (eq? "" (get-prompt)))
-        (newline)
-        (displayln (get-prompt)))
-      
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
@@ -826,8 +824,13 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
+      (when (not (eq? "" (get-prompt)))
+        (display-prompt))
+
       (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
+
       (define input (wait-for-input))
+
       (serialize-input)
 
       (newline)
