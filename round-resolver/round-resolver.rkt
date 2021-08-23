@@ -384,32 +384,6 @@
     ))
    
 
-; engine / round resolver
-; breaks on first action-suspending event
-; and finishes after duration of jiffies,
-; returns a timeline of events that occurred with metadata
-(define (advance-time-until-next-interesting-event! jiffies)
-  (define metadata '())
-  (define events '())
-  (define counter 0)
-  (let/ec break
-    (for ([t jiffies])
-      (set! counter (add1 counter))
-      (define possible-events-at-t (time++))
-      (define events-at-t possible-events-at-t) ; they are real events
-      (set! events (append events events-at-t))
-        
-      ; If any of the events suspends action, then return early
-      (define contains-action-suspending-event?
-        (memf (λ (event) (event-interrupting? event)) possible-events-at-t))
-
-      ; early-exit
-      (when contains-action-suspending-event?
-        (set! metadata 'interrupted)
-        (break))
-      ))
-  (timeline metadata events counter))
-
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
 ; this pokes a hole through abstraction layers (as it should)
 ; (sort of like IO monad)

@@ -1,6 +1,6 @@
 #lang racket
 
-(provide time++)
+(provide advance-time-until-next-interesting-event!)
 
 (require "../io.rkt"
          "../situation.rkt"
@@ -8,7 +8,8 @@
          "../utils.rkt"
          "../world.rkt")
 
-(require "event.rkt")
+(require "event.rkt"
+         "timeline.rkt")
 
 ; increment world time
 ; return a list of events that occur at new timestamp
@@ -52,3 +53,28 @@
        )))
   events
   )
+
+; breaks on first action-suspending event
+; and finishes after duration of jiffies,
+; returns a timeline of events that occurred with metadata
+(define (advance-time-until-next-interesting-event! jiffies)
+  (define metadata '())
+  (define events '())
+  (define counter 0)
+  (let/ec break
+    (for ([t jiffies])
+      (set! counter (add1 counter))
+      (define possible-events-at-t (time++))
+      (define events-at-t possible-events-at-t) ; they are real events
+      (set! events (append events events-at-t))
+        
+      ; If any of the events suspends action, then return early
+      (define contains-action-suspending-event?
+        (memf (λ (event) (event-interrupting? event)) possible-events-at-t))
+
+      ; early-exit
+      (when contains-action-suspending-event?
+        (set! metadata 'interrupted)
+        (break))
+      ))
+  (timeline metadata events counter))
