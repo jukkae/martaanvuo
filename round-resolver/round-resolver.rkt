@@ -658,19 +658,6 @@
       ))
   (timeline metadata events counter))
 
-
-
-
-
-
-
-
-
-
-(define (display-prompt)
-  (newline)
-  (displayln (get-prompt)))
-
 ; engine / get-next-pc-action
 (define (get-next-pc-action)
   (serialize-state)
