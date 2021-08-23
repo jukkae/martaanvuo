@@ -37,6 +37,7 @@
          "fragment-handler.rkt"
          "get-next-pc-action.rkt"
          "round.rkt"
+         "timeline.rkt"
          "ui.rkt")
 
 
@@ -155,13 +156,6 @@
       (resolve-npc-action! action))
   )
 
-; engine / round resolver
-; timeline of interesting events
-(serializable-struct
- timeline
- (metadata
-  events
-  duration))
 
 
 
