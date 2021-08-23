@@ -43,7 +43,6 @@
   [quests #:mutable]
   [persistent-quests #:mutable]
   [grabberkin-encounters #:mutable]
-  [flags #:mutable]
   )
  #:transparent)
 
@@ -59,6 +58,8 @@
 (define current-times-begin-traverse-narrated (make-parameter (make-hash)))
 (define current-times-finish-traverse-narrated (make-parameter (make-hash)))
 (define current-times-cancel-traverse-narrated (make-parameter (make-hash)))
+
+(define current-flags (make-parameter '()))
 
 
 ;;; Actual state variables
@@ -80,8 +81,7 @@
                      '()
                      quests
                      persistent-quests
-                     0
-                     '()))))
+                     0))))
 
 
 ;;; Meta progression / achievements
@@ -319,23 +319,6 @@
   (print-inventory))
 
 
-(define (set-flag flag)
-  (when (not (flag-set? flag))
-    (set-situation-flags! *situation* (append-element (situation-flags *situation*) flag))))
-
-(define (remove-flag flag)
-  (when (flag-set? flag)
-    (set-situation-flags! *situation* (remq flag (situation-flags *situation*)))))
-
-(define (flag-set? flag)
-  (memq flag (situation-flags *situation*)))
-
-(define (print-flags)
-  (displayln "print-flags:")
-  (displayln (situation-flags *situation*)))
-
-
-
 
 (define (save)
   (save-situation *situation*))
@@ -351,6 +334,7 @@
                       [times-begin-traverse-narrated #:mutable]
                       [times-finish-traverse-narrated #:mutable]
                       [times-cancel-traverse-narrated #:mutable]
+                      [flags #:mutable]
                       ))
 
 (define (save-situation s)
@@ -370,7 +354,8 @@
               (current-pending-action)
               (current-times-begin-traverse-narrated)
               (current-times-finish-traverse-narrated)
-              (current-times-cancel-traverse-narrated)))
+              (current-times-cancel-traverse-narrated)
+              (current-flags)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -400,5 +385,6 @@
   (current-times-begin-traverse-narrated (state-times-begin-traverse-narrated deserialized-state))
   (current-times-finish-traverse-narrated (state-times-finish-traverse-narrated deserialized-state))
   (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated deserialized-state))
+  (current-flags (state-flags deserialized-state))
   
   (set! *situation* situation))
