@@ -32,7 +32,8 @@
 (require "../utils.rkt")
 (require "../world.rkt")
 
-(require "fragment-handler.rkt")
+(require "fragment-handler.rkt"
+         "ui.rkt")
 
 
 ; engine / round resolver: ai dispatching
@@ -903,44 +904,6 @@
   (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
         (else (menu))))
 
-; pc? meta? api?
-(define (inventory)
-  (print-inventory)
-  #t
-  )
-
-; player state
-(define (notes)
-  (define actor (pc))
-  
-  (define list-items
-    (list
-     (list " Martaanvuo " " The anomaly is very strong here. ")))
-
-  
-  (info-card
-   list-items
-   "Notes"
-   )
-  #t
-  )
-
-; pc? meta?
-(define (display-quests)
-  (define body
-    (for/list ([q (quests)])
-      (format-quest-for-card q)))
-  (define sheet
-    (append
-     (list
-      (list " quest " " status " " notes ")
-      )
-     body
-     ))
-  (info-card
-   sheet
-   "Quests")
-  )
 
 (define (save)
   (save-situation *situation*))
