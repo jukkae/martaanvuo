@@ -71,7 +71,7 @@
   (with-syntax ([file (syntax-source stx)]
                 [line (syntax-line stx)])
     (syntax-case stx ()
-      [(debub-message message)
+      [(dev-note message)
        #'(begin
            (displayln
             (string-append "<"
