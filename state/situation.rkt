@@ -37,7 +37,6 @@
   [life #:mutable]
   [run #:mutable]
   [elapsed-time #:mutable]
-  [in-combat? #:mutable]
   [current-fragment-id #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
@@ -62,6 +61,8 @@
 
 (define current-round (make-parameter 0))
 
+(define current-in-combat? (make-parameter #f))
+
 
 ;;; Actual state variables
 (define *situation* '())
@@ -77,7 +78,6 @@
                      0
                      0
                      0
-                     #f
                      '()
                      quests
                      persistent-quests
@@ -242,13 +242,13 @@
           (else
            (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
   (cond
-    ((in-combat?) (describe-combat-situation))
+    ((current-in-combat?) (describe-combat-situation))
     (else (describe-non-combat-situation)))
   )
 
 (define (redescribe-situation)
   (cond
-    ((in-combat?) (describe-combat-situation))
+    ((current-in-combat?) (describe-combat-situation))
     (else (repeat-last-paragraph)))
   )
 
@@ -256,12 +256,6 @@
 (provide pc)
 (define (pc)
   (situation-pc *situation*))
-
-; scripting API / situation
-(provide in-combat?)
-(define (in-combat?)
-  (situation-in-combat? *situation*))
-
 
 ; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
@@ -340,6 +334,7 @@
                       [times-cancel-traverse-narrated #:mutable]
                       [flags #:mutable]
                       [round #:mutable]
+                      [in-combat? #:mutable]
                       ))
 
 (define (save-situation s)
@@ -361,7 +356,8 @@
               (current-times-finish-traverse-narrated)
               (current-times-cancel-traverse-narrated)
               (current-flags)
-              (current-round)))
+              (current-round)
+              (current-in-combat?)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -393,5 +389,6 @@
   (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated deserialized-state))
   (current-flags (state-flags deserialized-state))
   (current-round (state-round deserialized-state))
+  (current-in-combat? (state-in-combat? deserialized-state))
   
   (set! *situation* situation))

@@ -8,7 +8,10 @@
 (require "../utils.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-flags)])
+ ["../situation.rkt" (current-flags
+                      current-in-combat?)])
+
+;; bad name for this file, this is sort of "misc"
 
 (define (set-flag flag)
   (when (not (flag-set? flag))
@@ -24,3 +27,6 @@
 (define (print-flags)
   (dev-note "print-flags:")
   (displayln (current-flags)))
+
+
+(define (in-combat?) (current-in-combat?))
