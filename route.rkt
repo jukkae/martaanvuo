@@ -240,13 +240,20 @@
            (list
             (list
              (string-append " "
-                            "from "
                             (get-location-name-from-location startpoint)
+                            " – "
+                            (get-location-name-from-location endpoint)
                             " ")
              (string-append " "
-                            "to "
-                            (get-location-name-from-location endpoint)
-                            " "))))
+                            "[route]"
+                            " "))
+            (when (not (null? (route-features route)))
+              (list (string-append " "
+                                   "features"
+                                   " ")
+                    (string-append " "
+                                   (~v (route-features route))
+                                   " ")))))
           (else
            (list
             (list " aa " " bb ")))))
