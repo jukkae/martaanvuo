@@ -62,19 +62,7 @@
                        (advance-time-until-next-interesting-event! (action-duration action)))
                      (set! elapsed-time (timeline-duration timeline))
 
-                     ; display events
-                     (define
-                       displayable-events
-                       (map
-                        format-event-for-display
-                        (timeline-events timeline)))
-                     #;(info-card
-                        (append
-                         (list (list " at " " type " " details " " interrupts action? "))
-                         displayable-events)
-                        (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
-                     (for ([event (timeline-events timeline)])
-                       (narrate-event event))
+                     #;(narrate-timeline timeline)
 
                      ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
                      (when (eq? (timeline-metadata timeline) 'interrupted)
@@ -134,18 +122,7 @@
 
                                      ; DUPLICATION, clean up
                                      ; display events
-                                     (define
-                                       displayable-events
-                                       (map
-                                        format-event-for-display
-                                        (timeline-events tl)))
-                                     #;(info-card
-                                        (append
-                                         (list (list " at " " type " " details " " interrupts action? "))
-                                         displayable-events)
-                                        (string-append "Timeline, duration " (number->string (timeline-duration tl))))
-                                     (for ([event (timeline-events tl)])
-                                       (narrate-event event))
+                                     #;(narrate-timeline tl)
 
                                      ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
                                      (when (eq? (timeline-metadata tl) 'interrupted)
