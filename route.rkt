@@ -16,6 +16,7 @@
 (lazy-require
  ["place.rkt"
   (place-id
+   place-shortname
    place-visited?)])
 
 (lazy-require
@@ -24,7 +25,8 @@
 
 (lazy-require
  ["state/state.rkt"
-  (current-pending-action)])
+  (current-pending-action
+   get-pending-traverse-direction)])
 
 (serializable-struct
  route
@@ -243,6 +245,31 @@
                         (remove detail
                                 (route-details route)))))
 
+(define (route-shortname route)
+  (define direction (get-pending-traverse-direction))
+
+  (define startpoint
+    (case direction
+      ['a-to-b (route-a route)]
+      ['b-to-a (route-b route)]))
+  (define endpoint
+    (case direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+
+  
+  
+  (cond ((route-fully-known? route)
+         (string-append " "
+                        (place-shortname startpoint)
+                        " – "
+                        (place-shortname endpoint)
+                        " "))
+        (string-append " "
+                       (place-shortname startpoint)
+                       " – "
+                       "???"
+                       " ")))
 
 ; this should be broken up; action handling elsewhere
 (define (display-route-info-card route)
@@ -274,9 +301,9 @@
             (list
              (list
               (string-append " "
-                             (get-location-name-from-location startpoint)
+                             (place-shortname startpoint)
                              " – "
-                             (get-location-name-from-location endpoint)
+                             (place-shortname endpoint)
                              " ")
               (string-append " "
                              "[route]"

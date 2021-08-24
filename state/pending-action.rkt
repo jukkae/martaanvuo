@@ -6,6 +6,7 @@
 
 (require "../action.rkt"
          "../location.rkt"
+         "../place.rkt"
          "../route.rkt")
 
 (lazy-require
@@ -18,12 +19,28 @@
 (define (set-pending-action! action)
   (current-pending-action action))
 
+(define (get-pending-traverse-direction)
+  (define pending-action (current-pending-action))
+  (cond 
+        ((eq? (action-symbol pending-action) 'traverse)
+         (define target (action-target pending-action))
+         
+         (define details (action-details pending-action))
+         
+         (define direction
+           (if (memq 'a-to-b details)
+               'a-to-b
+               'b-to-a))
+
+         direction)
+        ))
+
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (string-append
           "[continue] Continue towards "
-          (get-location-name-from-location (action-target pending-action))
+          (place-shortname (action-target pending-action))
           "."))
         ((eq? (action-symbol pending-action) 'traverse)
          (define target (action-target pending-action))
@@ -42,7 +59,7 @@
          
          (string-append
           "[continue] Continue towards "
-          (get-location-name-from-location endpoint)
+          (place-shortname endpoint)
           "."))
         ((eq? (action-symbol pending-action) 'search-for-paths)
          (string-append
@@ -65,7 +82,7 @@
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
   
-  (string-append "Go back to " (get-location-name-from-location cancel-traverse-endpoint) "."))
+  (string-append "Go back to " (place-shortname cancel-traverse-endpoint) "."))
 
 (define (get-cancel-and-go-back-destination
          route

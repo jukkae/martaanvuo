@@ -132,29 +132,14 @@
          (displayln "location-is?: identifier is not symbol"))
         ))
 
-; internal impl. detail
-(define (get-location-name-from-location location)
-  (define id
-    (cond ((route? location)
-           (route-id location))
-          ((place? location)
-           (place-id location))))
-  
-  (cond ((and id
-              (symbol? id))
-         (cond ((eq? id 'magpie-hill) "Magpie Hill")
-               ((eq? id 'martaanvuo-swamp) "Martaanvuo Swamp")
-               ((eq? id 'perimeter) "Perimeter")
-               ((eq? id 'power-plant-ruins) "Ruins")
-               (else (symbol->string id))))
-
-        ((number? id)
-         "id is number, check get-location-name-from-location")
-        ))
-
 ; internal
 (define (get-location-short-description location)
-  (define name (get-location-name-from-location location))
+  (define name
+    (cond ((place? location)
+         (place-shortname location))
+          ((route? location)
+         (route-shortname location))
+        ))
   (define features-str
     ; Disabled for now, just do empty string
     #;(cond ((not (null? (location-features location)))
