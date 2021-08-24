@@ -103,7 +103,7 @@
                           (location-on-enter! (current-location))
 
                           (describe-finish-traverse-action action)
-                          (display-location-info-card (current-location))
+                          
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
                           ))
@@ -183,7 +183,7 @@
 
 
                           (describe-finish-traverse-action action)
-                          (display-location-info-card (current-location))
+                          
                           (when (not (null? (location-items (action-target action))))
                             (pick-up-items!))
                           ))
