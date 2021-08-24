@@ -66,17 +66,7 @@
                      (define
                        displayable-events
                        (map
-                        (λ (event)
-                          (list
-                           (string-append " " (number->string (event-at event)) " ")
-                           (string-append " " (symbol->string (event-type event)) " ")
-                           (string-append " " (~s (event-details event)) " ")
-                           (string-append " "
-                                          (if (event-interrupting? event)
-                                              "yes"
-                                              "no")
-                                          " ")
-                           ))
+                        format-event-for-display
                         (timeline-events timeline)))
                      #;(info-card
                         (append
@@ -147,17 +137,7 @@
                                      (define
                                        displayable-events
                                        (map
-                                        (λ (event)
-                                          (list
-                                           (string-append " " (number->string (event-at event)) " ")
-                                           (string-append " " (symbol->string (event-type event)) " ")
-                                           (string-append " " (~s (event-details event)) " ")
-                                           (string-append " "
-                                                          (if (event-interrupting? event)
-                                                              "yes"
-                                                              "no")
-                                                          " ")
-                                           ))
+                                        format-event-for-display
                                         (timeline-events tl)))
                                      #;(info-card
                                         (append
