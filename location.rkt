@@ -96,22 +96,28 @@
          (place-items location))))
 
 (define (add-feature-to-location! location feature)
-  (set-place-features! location (cons feature (place-features location))))
+  (cond ((route? location)
+         (set-route-features! location (cons feature (route-features location))))
+        ((place? location)
+         (set-place-features! location (cons feature (place-features location))))))
 
 (define (remove-feature-from-location! location feature)
-  (set-place-features! location (remove feature (place-features location))))
+  (cond ((route? location)
+         (set-route-features! location (remove feature (route-features location))))
+        ((place? location)
+         (set-place-features! location (remove feature (place-features location))))))
+
+(define (location-has-feature? location feature)
+  (cond ((route? location)
+         (memq feature (route-features location)))
+        ((place? location)
+         (memq feature (place-features location)))))
 
 (define (location-has-tag? location tag)
   (cond ((route? location)
          #f)
         ((place? location)
          (memq tag (place-tags location)))))
-
-(define (location-has-feature? location feature)
-  (cond ((route? location)
-         #f)
-        ((place? location)
-         (memq feature (place-features location)))))
 
 ; API
 (define (location-is? identifier location)

@@ -23,8 +23,7 @@
 (define (clean-up-dead-actor! actor)
   (remove-actor-from-location! (current-location) actor)
   (define corpse (cons 'corpse "Corpse (TODO)"))
-  (displayln "clean-up-dead-actor!: todo: add corpse")
-  #;(displayln corpse))
+  (add-feature-to-location! (current-location) corpse))
 
 
 (define (display-pc-combatant-info actor)

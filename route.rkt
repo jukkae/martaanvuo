@@ -24,7 +24,8 @@
   [a #:mutable]
   [b #:mutable]
   [details #:mutable]
-  [actors #:mutable])
+  [actors #:mutable]
+  [features #:mutable])
  #:transparent
  #:constructor-name route*)
 
@@ -33,13 +34,15 @@
               a
               b
               #:details [details '()]
-              #:actors [actors '()])
+              #:actors [actors '()]
+              #:features [features '()])
 
   (route* id
           a
           b
           details
-          actors))
+          actors
+          features))
 
 
 
