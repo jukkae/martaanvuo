@@ -165,6 +165,7 @@
   result
   )
 
+
 (define (set-pending-action! action elapsed-time)
   (define time-left (- (action-duration action) elapsed-time))
   (define pending-action action)
@@ -183,5 +184,5 @@
          (handle-interrupting-event! event)
          )
         (else
-         (displayln "handle-pc-action-interrupted!: unexpected amount of interrupting events")))
+         (dev-note "handle-pc-action-interrupted!: unexpected amount of interrupting events.")))
   )
