@@ -256,26 +256,20 @@
                                    " ")))))
           (else
            (list
-            (list " aa " " bb ")))))
+            (list
+             (string-append " "
+                            (get-location-name-from-location startpoint)
+                            " – "
+                            "???"
+                            " ")
+             (string-append " "
+                            "[route]"
+                            " "))
+            (when (not (null? (route-features route)))
+              (list (string-append " "
+                                   "features"
+                                   " ")
+                    (string-append " "
+                                   (~v (route-features route))
+                                   " ")))))))
   (info-card body title))
-
-
-#;((eq? (action-symbol pending-action) 'traverse)
-   (define target (action-target pending-action))
-         
-   (define details (action-details pending-action))
-         
-   (define direction
-     (if (memq 'a-to-b details)
-         'a-to-b
-         'b-to-a))
-
-   (define endpoint
-     (case direction
-       ['a-to-b (route-b target)]
-       ['b-to-a (route-a target)]))
-         
-   (string-append
-    "[continue] Continue towards "
-    (get-location-name-from-location endpoint)
-    "."))

@@ -123,7 +123,7 @@
                               (displayln "encounter roll: ")
                               (displayln encounter-roll)
                               (define encounter-event
-                                (if (< 4 encounter-roll)
+                                (if (< encounter-roll 4)
                                     (make-event 'spawn-enemies
                                                 '() ; pack info about enemies / event here
                                                 #t)
