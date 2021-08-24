@@ -86,9 +86,18 @@
       
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
-         ['perimeter "Rocky stairs."]
-         ['martaanvuo-swamp "Down, toward the swamp."]
-         ['power-plant-ruins "Decrepit building."]
+         ['perimeter
+          (if (route-fully-known? route)
+              "Rocky stairs to Perimeter"
+              "The steep descent.")]
+         ['martaanvuo-swamp
+          (if (route-fully-known? route)
+              "The path to the fork in Martaanvuo Swamp."
+              "The downhill path.")]
+         ['power-plant-ruins
+          (if (route-fully-known? route)
+              "The power plant ruins."
+              "The decrepit building.")]
          [else (string-append "["
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
@@ -107,7 +116,7 @@
          ['crematory
           (if (route-fully-known? route)
               "Crematory."
-              "The small paved path to the right.")]
+              "The small side path to the right.")]
          ['martaanvuo-docks
           (if (route-fully-known? route)
               "The Docks."
@@ -136,25 +145,25 @@
                               "]")])]
 
       [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")]))
+                           "go to: "
+                           (symbol->string (location-id (route-other-end-from route start-location)))
+                           "]")]))
   
 
   
   #;(cond ((route-fully-known? route)
-         ; Currently, "fully known" implies having been at the other end, fix as needed
-         (case direction
-           ['a-to-b
-            (define to-name (get-location-name-from-location (route-b route)))
-            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            ]
-           ['b-to-a
-            (define to-name (get-location-name-from-location (route-a route)))
-            (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
-            ]))
-        (else
-         (get-route-short-description)))
+           ; Currently, "fully known" implies having been at the other end, fix as needed
+           (case direction
+             ['a-to-b
+              (define to-name (get-location-name-from-location (route-b route)))
+              (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+              ]
+             ['b-to-a
+              (define to-name (get-location-name-from-location (route-a route)))
+              (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+              ]))
+          (else
+           (get-route-short-description)))
   (get-route-short-description))
 
 (define (route-other-end-from route start-location)
@@ -247,14 +256,14 @@
         'b-to-a))
 
   (define endpoint
-     (case traverse-direction
-       ['a-to-b (route-b route)]
-       ['b-to-a (route-a route)]))
+    (case traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
 
   (define startpoint
-     (case traverse-direction
-       ['a-to-b (route-a route)]
-       ['b-to-a (route-b route)]))
+    (case traverse-direction
+      ['a-to-b (route-a route)]
+      ['b-to-a (route-b route)]))
 
   
   (define body

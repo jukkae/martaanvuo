@@ -20,7 +20,8 @@
   [visited? #:mutable]
   [items #:mutable]
   [actions-provided #:mutable]
-  [tags #:mutable])
+  [tags #:mutable]
+  [shortname #:mutable])
 
  #:constructor-name place*
 
@@ -49,15 +50,21 @@
          #:actors [actors '()]
          #:items [items '()]
          #:actions-provided [actions-provided '()]
-         #:tags [tags '()])
+         #:tags [tags '()]
+         #:shortname [shortname ""])
   (set! *number-of-places* (add1 *number-of-places*))
-  (place* id routes type on-enter-symbol features actors #f items actions-provided tags))
+  (place* id routes type on-enter-symbol features actors #f items actions-provided tags shortname))
 
 
 (define (display-place-info-card location [title "Location"])
   (define id (place-id location))
   (define body
     (prune (list
+            (when (not (eq? (place-shortname location) ""))
+              (list (string-append " "
+                                   (place-shortname location)
+                                   " ")
+                    "  "))
             (when (not (null? (place-id location)))
               (list (string-append " "
                                    "id"

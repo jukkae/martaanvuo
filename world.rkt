@@ -25,21 +25,25 @@
    
    (make-place
     #:id 'perimeter
-    #:type 'perimeter)
+    #:type 'perimeter
+    #:shortname "Perimeter")
 
    (make-place
     #:id 'martaanvuo-swamp
     #:type 'swamp
-    #:features '(anthill))
+    #:features '(anthill)
+    #:shortname "Martaanvuo Swamp")
 
    (make-place
     #:id 'magpie-hill
     #:features '(magpie-effigy)
-    #:type 'mountains)
+    #:type 'mountains
+    #:shortname "Magpie Hill")
 
    (make-place
     #:id 'crematory
-    #:type 'crematory)
+    #:type 'crematory
+    #:shortname "Crematory")
 
    (make-place
     #:id 'martaanvuo-docks
