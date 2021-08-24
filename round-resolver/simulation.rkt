@@ -3,10 +3,11 @@
 (provide advance-time-until-next-interesting-event!)
 
 (require "../io.rkt"
-         "../situation.rkt"
          "../time.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world.rkt"
+         
+         "../state/state.rkt")
 
 (require "event.rkt"
          "timeline.rkt")
@@ -15,23 +16,23 @@
 ; return a list of events that occur at new timestamp
 (define (time++)
   (define events '())
-  (define new-elapsed-time (add1 (world-elapsed-time (situation-world *situation*))))
+  (define new-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
-   (situation-world *situation*)
+   (current-world)
    new-elapsed-time)
 
-  (when (= (modulo (world-elapsed-time (situation-world *situation*)) 100) 0)
+  (when (= (modulo (world-elapsed-time (current-world)) 100) 0)
     (define suspend-action?
-      (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+      (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
            'night))
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) suspend-action?))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) suspend-action?))
     (set! events (append-element events ev)))
 
 
   (when (not (in-combat?))
     (cond
       ;; Currently, only spawn enemies at daytime
-      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*)))
+      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
                  'night))
        (define dice-sides 300) ; tweak on a per-location basis
        (define roll (d 1 dice-sides))
@@ -40,7 +41,7 @@
               (define title "Luck roll failure")
               (info-card
                (list (list
-                      (string-append " at world time " (number->string (world-elapsed-time (situation-world *situation*))) " ")
+                      (string-append " at world time " (number->string (world-elapsed-time (current-world))) " ")
                       (string-append " 1d" (number->string dice-sides) " = 1 ")
                       " failure: hostile encounter, spawning enemies "))
                title)

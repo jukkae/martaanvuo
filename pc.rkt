@@ -8,11 +8,10 @@
 (require "character-sheet.rkt")
 (require "io.rkt")
 (require "item.rkt")
-;(require "situation.rkt")
 (require "utils.rkt")
 
 (lazy-require
- ["situation.rkt"
+ ["state/state.rkt"
   (pc
    )])
 
@@ -174,3 +173,11 @@
    "Inventory"
    ))
 
+(provide award-xp!)
+(define (award-xp! amount . reason)
+  (if (null? reason)
+      (displayln (string-append "[+" (number->string amount) " xp]"))
+      (displayln (string-append "[+" (number->string amount) " xp: " (car reason) "]")))
+  (set-pc-actor-xp! (pc)
+                    (+ (pc-actor-xp (pc))
+                       amount)))

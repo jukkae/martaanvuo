@@ -4,7 +4,7 @@
 
 (require racket/lazy-require)
 (lazy-require
- ["situation.rkt"
+ ["state/state.rkt"
   (clean-up-dead-actor!
    pc
    )])
@@ -334,3 +334,40 @@
       (number->string (actor-max-hp actor))
       " ")))
    title))
+
+(define (inflict-status! target status)
+  (match status
+    ['blind
+     (displayln "todo: blind should be a condition, not a status")
+     (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (define roll (d 1 2))
+     (wait-for-confirm)
+     (case roll
+       [(1)
+        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+        (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+       [(2)
+        (p "A searing pain cuts through her eyes as her vision turns to black.")])
+     ]
+    ['bound
+     (actor-set-status! target (status-type status) (status-lifetime status))
+     ]
+    [else (p "todo: unknown status")]))
+
+(define (inflict-condition! target cond)
+  (match (condition-type cond)
+    ['ankle-broken
+     (if (actor-has-condition-of-type? target 'ankle-broken)
+         (begin
+           (actor-remove-condition-of-type! target 'ankle-broken)
+           (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
+           )
+         (actor-add-condition! target cond))
+     ]
+    ['bleeding
+     (if (not (actor-has-condition-of-type? target 'bleeding))
+         (actor-add-condition! target cond)
+         (displayln "Already bleeding."))
+     
+     ]
+    [else (p "todo: unknown condition")]))

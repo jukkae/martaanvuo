@@ -5,11 +5,13 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
+(require "state/combat.rkt"
+         "state/state.rkt")
+
 (require "action-resolver.rkt")
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
-(require "situation.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")

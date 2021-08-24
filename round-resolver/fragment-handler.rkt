@@ -5,17 +5,17 @@
 (require "../decision.rkt"
          "../fragment.rkt"
          "../io.rkt"
-         "../situation.rkt"
+         "../state/state.rkt"
          "../utils.rkt")
 
 
 (define (current-fragment-on-begin-round!)
-  ((story-fragment-on-begin-round! (get-fragment (situation-current-fragment-id *situation*)))))
+  ((story-fragment-on-begin-round! (get-fragment (current-fragment-id)))))
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
             ((decision-requirement potential-decision)))
-          (story-fragment-decisions (get-fragment (situation-current-fragment-id *situation*)))))
+          (story-fragment-decisions (get-fragment (current-fragment-id)))))
 
 (define (current-fragment-handle-decision! decision)
 
@@ -62,7 +62,7 @@
   )
 
 (define (go-to-story-fragment id)
-  (set-current-fragment-id! id))
+  (current-fragment-id id))
 
 (define (handle-fragment-decision decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input)))

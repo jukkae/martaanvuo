@@ -1,6 +1,7 @@
 #lang racket
 
 (require "action.rkt")
+(require "choice.rkt")
 
 (define (choice-from-symbol world pc symbol)
   (case symbol

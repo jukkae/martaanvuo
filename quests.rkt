@@ -8,7 +8,7 @@
 (require "quest.rkt")
 
 (lazy-require
- ["situation.rkt"
+ ["state/state.rkt"
   (add-quest!
    quest-exists?)])
 

@@ -6,7 +6,8 @@
 (require "pc.rkt")
 (require "round-resolver/round-resolver.rkt")
 (require "run-resolver.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
+(require "utils.rkt")
 
 
 (define (resolve-life mode)
@@ -26,14 +27,14 @@
 
 
 (define (on-begin-life)
-  (set-situation-life! *situation* (add1 (situation-life *situation*)))
-  (set-situation-pc! *situation* (make-new-pc))
+  (current-life (add1 (current-life)))
+  (current-pc (make-new-pc))
   (go-to-story-fragment 'select-build)
-  (when (not (= 1 (situation-life *situation*)))
+  (when (not (= 1 (current-life)))
     (player-info)))
 
 (define (on-end-life)
   (displayln "[Life summary]")
   ; -> serialize run statistics
-  (clean-situation!)
+  (dev-note "think about what bits of state need to be reset")
   )

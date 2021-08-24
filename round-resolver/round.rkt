@@ -9,27 +9,38 @@
          "../condition.rkt"
          "../fragment.rkt"
          "../round-summary.rkt"
-         "../situation.rkt")
+         "../utils.rkt"
+
+         "../state/state.rkt")
 
 (require "action-queue.rkt"
          "fragment-handler.rkt")
 
-#;(lazy-require
- ["round-resolver.rkt"
-  (clear-action-queue!
+
+(lazy-require
+ ["../state/combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   display-pc-combatant-info
+   end-combat!
+   )])
+
+(lazy-require
+ ["../state/logging.rkt"
+  (set-prompt!
    )])
 
 (define (on-begin-round mode)
   (case mode
     ['begin
-     (set-situation-round! *situation* (add1 (situation-round *situation*)))
-     (round-summary *situation*)
+     (current-round (add1 (current-round)))
+     (round-summary mode)
      (clear-action-queue!)
-     (when (not (null? (situation-current-fragment-id *situation*)))
+     (when (not (null? (current-fragment-id)))
        (current-fragment-on-begin-round!))]
     
     ['continue
-     (round-summary *situation*)
+     (round-summary mode)
      (clear-action-queue!)]))
 
 (define (on-end-round)
@@ -42,7 +53,7 @@
     (end-combat!))
   #;(wait-for-confirm)
   
-  (when (not (null? (situation-current-fragment-id *situation*)))
+  (when (not (null? (current-fragment-id)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
   ; remove statuses
@@ -66,14 +77,14 @@
       (decrement-actor-status-lifetimes! enemy)))
 
   ; urgh
-  (when (not (null? (actor-statuses (situation-pc *situation*))))
-    (define name (get-combatant-name (situation-pc *situation*)))
-    (define description (~s (actor-statuses (situation-pc *situation*))))
+  (when (not (null? (actor-statuses (pc))))
+    (define name (get-combatant-name (pc)))
+    (define description (~s (actor-statuses (pc))))
     
     (define description-prefix
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
-    (decrement-actor-status-lifetimes! (situation-pc *situation*)))
+    (decrement-actor-status-lifetimes! (pc)))
 
   
   ; proc conditions - TODO this is currently only for PC, fix if needed!

@@ -5,8 +5,9 @@
 (require "../pc.rkt"
          "../io.rkt"
          "../quest.rkt"
-         "../situation.rkt"
-         "../utils.rkt")
+         "../utils.rkt"
+
+         "../state/state.rkt")
 
 (require "get-next-pc-action.rkt")
 

@@ -5,7 +5,8 @@
 (require "io.rkt")
 (require "life-resolver.rkt")
 (require "round-resolver/round-resolver.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
+(require "utils.rkt")
 (require "world.rkt")
 
 
@@ -63,13 +64,13 @@
     
     ['continue
      (define input-file (open-input-file "save.txt"))
-     (define serialized-situation (read input-file))
- 
+     (define serialized-state (read input-file))
+     
      (with-handlers ([exn:fail:contract:arity?
                       (λ (exn)
                         (handle-broken-save)
                         (set! mode 'begin))])
-       (load-situation serialized-situation)
+       (load-situation-from-state serialized-state)
        (newline)
        (displayln "Progress loaded."))])
   
@@ -80,7 +81,7 @@
     ['restart (on-begin-playthrough)]
     
     ['continue
-     (for ([entry (get-log)])
+     (for ([entry (current-log)])
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 

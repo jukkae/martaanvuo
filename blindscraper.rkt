@@ -4,10 +4,13 @@
 
 (require racket/serialize)
 
+(require "state/combat.rkt"
+         "state/state.rkt")
+
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
 (require "stance.rkt")
 (require "utils.rkt")
 (require "world.rkt")

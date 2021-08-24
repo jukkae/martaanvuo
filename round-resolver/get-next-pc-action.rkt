@@ -20,13 +20,17 @@
          "../decision.rkt"
          "../io.rkt"
          "../locations.rkt"
-         "../situation.rkt")
+         "../state/state.rkt")
 
 (require "fragment-handler.rkt")
 
-(lazy-require
- ["../situation.rkt"
-  (player-info
+#;(lazy-require
+ ["../state/state.rkt"
+  (current-prompt
+   player-info
+   redescribe-situation
+   pc
+   current-fragment-id
    )])
 
 (lazy-require
@@ -56,10 +60,10 @@
         (redescribe-situation)
         (what-do-you-do 'verbose))
       
-      (define actor (situation-pc *situation*))
+      (define actor (pc))
 
 
-      (define fragment-decisions (if (null? (situation-current-fragment-id *situation*))
+      (define fragment-decisions (if (null? (current-fragment-id))
                                      '()
                                      (current-fragment-get-decisions)))
 
@@ -67,11 +71,11 @@
         (wait-for-confirm)) ; what a place for this
 
       ; launch a fragment directly -> no action resolution -> not a choice
-      (define location-decisions (if (null? (situation-current-fragment-id *situation*))
+      (define location-decisions (if (null? (current-fragment-id))
                                      (get-location-decisions (current-location))
                                      '()))
       
-      (define world-choices (get-world-choices (situation-world *situation*) actor))
+      (define world-choices (get-world-choices (current-world) actor))
       
       (define choices (if (null? fragment-decisions)
                           world-choices
@@ -83,7 +87,7 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
       
-      (when (not (eq? "" (get-prompt)))
+      (when (not (eq? "" (current-prompt)))
         (display-prompt))
 
       (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)

@@ -15,11 +15,14 @@
 (require "pc.rkt")
 (require "place.rkt")
 (require "route.rkt")
-(require "situation.rkt")
+
 (require "stance.rkt")
 (require "time.rkt")
 (require "utils.rkt")
 (require "world.rkt")
+
+(require "state/combat.rkt")
+(require "state/state.rkt")
 
 (lazy-require
  ["martaanvuo.rkt"
@@ -30,6 +33,13 @@
 (lazy-require
  ["round-resolver/round-resolver.rkt"
   (go-to-story-fragment
+   )])
+
+#;(lazy-require
+ ["state/combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   *combat-flags*
    )])
 
 ; implementation detail
@@ -48,7 +58,7 @@
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
@@ -78,7 +88,7 @@
               (λ ()
                 (make-action
                  #:symbol 'melee
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 1
                  #:target target
                  #:tags '(initiative-based-resolution)
@@ -177,7 +187,7 @@
             (λ ()
               (make-action
                #:symbol 'flee
-               #:actor (situation-pc *situation*)
+               #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)))))
          (set! combat-choices (append-element combat-choices run-choice))))
@@ -203,7 +213,7 @@
             (λ ()
               (make-action
                #:symbol 'break-free
-               #:actor (situation-pc *situation*)
+               #:actor (pc)
                #:duration 1
                #:target (take-random engaged-grabberkin)
                #:tags '(initiative-based-resolution fast)
@@ -217,7 +227,7 @@
 
 (define (get-downtime-choices world actor)
   (define (show-based-on-pending-choice? choice)
-    (if (null? (situation-pending-action *situation*))
+    (if (null? (current-pending-action))
         #t
         (begin
           (cond
@@ -228,7 +238,7 @@
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
             ; plot twist: it is shit and has to be fixed
-            ((eq? (choice-symbol choice) (action-symbol (situation-pending-action *situation*)))
+            ((eq? (choice-symbol choice) (action-symbol (current-pending-action)))
              #f)
             
             ; show anything else
@@ -242,14 +252,14 @@
      (condense
       (list
     
-       (when (not (null? (situation-pending-action *situation*)))
+       (when (not (null? (current-pending-action)))
          (choice
-          (action-symbol (situation-pending-action *situation*))
+          (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
      
           (λ ()
             (begin0
-              (situation-pending-action *situation*)
+              (current-pending-action)
               (reset-pending-action!)))))
 
        ; route traversal can be canceled
@@ -257,21 +267,21 @@
          (define destination
            (get-cancel-and-go-back-destination
             (current-location)
-            (situation-pending-action *situation*)))
+            (current-pending-action)))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
-          (get-cancel-pending-action-and-go-back-name (current-location) (situation-pending-action *situation*)) 
+          (get-cancel-pending-action-and-go-back-name (current-location) (current-pending-action)) 
           (λ () (make-action
                  #:symbol 'cancel-traverse
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 100
                  #:target destination
                  #:tags '(downtime)))))
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
                 '()))
       
          (for/list ([route (location-routes (current-location))])
@@ -309,7 +319,7 @@
                         
                         (make-action
                          #:symbol 'skip
-                         #:actor (situation-pc *situation*)
+                         #:actor (pc)
                          #:duration 0
                          #:tags '(downtime))))))
                   )
@@ -319,7 +329,7 @@
                    (get-traverse-text route (current-location)) 
                    (λ () (make-action
                           #:symbol 'traverse
-                          #:actor (situation-pc *situation*)
+                          #:actor (pc)
                           #:duration 100
                           #:target route
                           #:tags '(downtime)
@@ -333,7 +343,7 @@
            (string-append "Forage.")
            (λ () (make-action
                   #:symbol 'forage
-                  #:actor (situation-pc *situation*)
+                  #:actor (pc)
                   #:duration 100
                   #:tags '(downtime))))))
 
@@ -345,7 +355,7 @@
              "Search for paths."
              (λ () (make-action
                     #:symbol 'search-for-paths
-                    #:actor (situation-pc *situation*)
+                    #:actor (pc)
                     #:duration 100
                     #:tags '(downtime))))]
            [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
@@ -395,13 +405,13 @@
           "Dive in the spring."
           (λ () (make-action
                  #:symbol 'win-game
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 0
                  #:tags '(downtime)))))
        
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (not (flag-set? 'tried-to-go-back))
-                  (= (situation-run *situation*) 1))
+                  (= (current-run) 1))
          (make-pc-choice
           #:id 'end-run
           #:text "Turn back."

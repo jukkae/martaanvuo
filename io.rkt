@@ -8,13 +8,16 @@
 (require "utils.rkt")
 
 (lazy-require
- ["situation.rkt"
-  (situation-log
-   append-to-log
-   get-log
-   get-last-paragraph
-   set-last-paragraph!
-   get-prompt)])
+ ["state/state.rkt"
+  (current-part
+   current-chapter
+   current-log
+   current-last-paragraph
+   current-prompt)])
+
+(lazy-require
+ ["state/logging.rkt"
+  (append-to-log)])
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
@@ -37,8 +40,8 @@
   (displayln "[BEGIN LOG]")
   (newline)
   (display-title)
-  #;(displayln (get-log))
-  (for ([entry (get-log)])
+  #;(displayln (current-log))
+  (for ([entry (current-log)])
     (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
   (displayln "[END LOG]")
   (newline)
@@ -46,7 +49,16 @@
 
 (define (display-prompt)
   (newline)
-  (displayln (get-prompt)))
+  (displayln (current-prompt)))
+
+(define (print-heading)
+  (define heading
+    (string-append "\n"
+                   "PART "
+                   (number->string (current-part))
+                   ", CHAPTER "
+                   (number->string (current-chapter))))
+  (p heading))
 
 ; implementation detail
 (define (print-paragraph formatted-text)
@@ -55,7 +67,7 @@
 
 (define (repeat-last-paragraph)
   (hr)
-  (print-paragraph (format-for-printing (get-last-paragraph) #:width 84 #:indent 4)))
+  (print-paragraph (format-for-printing (current-last-paragraph) #:width 84 #:indent 4)))
 
 (define (hr)
   ; (displayln "---")
@@ -66,7 +78,7 @@
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))
          (define s (format-for-printing str #:width 84 #:indent 4))
-         (set-last-paragraph! str)
+         (current-last-paragraph str)
          (write-paragraph-to-log str)
          (print-paragraph s))
         (else ; don't do anything with empty input

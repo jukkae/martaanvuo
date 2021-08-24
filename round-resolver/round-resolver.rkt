@@ -8,12 +8,13 @@
 
 (require racket/serialize)
 
+(require "../state/logging.rkt"
+         "../state/state.rkt")
 
-(require "../action.rkt")
-(require "../actions.rkt")
-(require "../actor.rkt")
-(require "../location.rkt")
-(require "../situation.rkt")
+(require "../action.rkt"
+         "../actions.rkt"
+         "../actor.rkt"
+         "../location.rkt")
 
 (require "action-queue.rkt"
          "ai.rkt"
@@ -34,7 +35,7 @@
       (redescribe-situation)
       (describe-situation))
   
-  (save-situation *situation*)
+  (save)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     

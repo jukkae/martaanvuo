@@ -5,8 +5,9 @@
 (require racket/serialize)
 
 (require "../io.rkt"
-         "../situation.rkt"
-         "../world.rkt")
+         "../world.rkt"
+
+         "../state/state.rkt")
 
 (serializable-struct
  event
@@ -21,7 +22,7 @@
          type
          details
          interrupting?)
-  (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
+  (event* type details interrupting? (world-elapsed-time (current-world))))
 
 ; narration content to event,
 ; function to call narration in engine / round-resolver
