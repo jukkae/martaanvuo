@@ -21,8 +21,9 @@
 
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
-  (print-table content #:row-sep? #f)
-  (newline))
+  (when (not (null? (prune content)))
+    (print-table content #:row-sep? #f)
+    (newline)))
 
 (define (write-paragraph-to-log paragraph)
   (append-to-log paragraph))

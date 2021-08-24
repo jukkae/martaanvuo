@@ -270,39 +270,41 @@
   
   (define body
     (cond ((route-fully-known? route)
-           (list
+           (prune
             (list
-             (string-append " "
-                            (get-location-name-from-location startpoint)
-                            " – "
-                            (get-location-name-from-location endpoint)
-                            " ")
-             (string-append " "
-                            "[route]"
-                            " "))
-            (when (not (null? (route-features route)))
-              (list (string-append " "
-                                   "features"
-                                   " ")
-                    (string-append " "
-                                   (~v (route-features route))
-                                   " ")))))
+             (list
+              (string-append " "
+                             (get-location-name-from-location startpoint)
+                             " – "
+                             (get-location-name-from-location endpoint)
+                             " ")
+              (string-append " "
+                             "[route]"
+                             " "))
+             (when (not (null? (route-features route)))
+               (list (string-append " "
+                                    "features"
+                                    " ")
+                     (string-append " "
+                                    (~v (route-features route))
+                                    " "))))))
           (else
-           (list
+           (prune
             (list
-             (string-append " "
-                            (get-location-name-from-location startpoint)
-                            " – "
-                            "???"
-                            " ")
-             (string-append " "
-                            "[route]"
-                            " "))
-            (when (not (null? (route-features route)))
-              (list (string-append " "
-                                   "features"
-                                   " ")
-                    (string-append " "
-                                   (~v (route-features route))
-                                   " ")))))))
+             (list
+              (string-append " "
+                             (get-location-name-from-location startpoint)
+                             " – "
+                             "???"
+                             " ")
+              (string-append " "
+                             "[route]"
+                             " "))
+             (when (not (null? (route-features route)))
+               (list (string-append " "
+                                    "features"
+                                    " ")
+                     (string-append " "
+                                    (~v (route-features route))
+                                    " "))))))))
   (info-card body title))
