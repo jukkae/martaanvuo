@@ -23,14 +23,14 @@
   (next-chapter!)
   
   ; Don't show this until the second run!
-  (when (not (= 1 (situation-run *situation*)))
+  (when (not (= 1 (current-run)))
     (info-card
      (list
-      (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-     (string-append "Begin run number " (number->string (situation-run *situation*)))))
+      (list " run " (string-append " " (number->string (current-run)) " ")))
+     (string-append "Begin run number " (number->string (current-run)))))
 
   
-  (case (situation-run *situation*)
+  (case (current-run)
     [(1)
      (p "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far.")
      (when (not (quest-exists? 'pay-off-debt))
@@ -53,7 +53,7 @@
 
 ; engine / run-resolver
 (define (on-begin-run)
-  (set-situation-run! *situation* (add1 (situation-run *situation*)))
+  (current-run (add1 (current-run)))
   (current-round 0)
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
@@ -61,7 +61,7 @@
   )
 
 (define (on-begin-recurse-run)
-  (set-situation-run! *situation* (add1 (situation-run *situation*)))
+  (current-run (add1 (current-run)))
   #;(set-situation-round! *situation* 0)
   (remove-flag 'ending-run-allowed)
   (add-feature-to-location! (find-place-by-id 'martaanvuo-docks) 'stiltman)
@@ -101,20 +101,20 @@
            (info-card
             (list
              (list " run "
-                   (string-append " " (number->string (situation-run *situation*)) " "))
+                   (string-append " " (number->string (current-run)) " "))
              (list " gold collected "
                    (string-append " " (number->string (pc-gold-amount)) " grams "))
              (list " debt still owed "
                    (string-append " " (number->string (quest-details debt-quest)) " grams ")))
-            (string-append "Run number " (number->string (situation-run *situation*)) " ended")))
+            (string-append "Run number " (number->string (current-run)) " ended")))
 
         
           (else
            (displayln "FAILED RUN")
            (info-card
             (list
-             (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-            (string-append "End run number " (number->string (situation-run *situation*)))))))
+             (list " run " (string-append " " (number->string (current-run)) " ")))
+            (string-append "End run number " (number->string (current-run)))))))
 
   
   

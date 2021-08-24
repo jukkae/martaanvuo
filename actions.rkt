@@ -410,7 +410,7 @@
        
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (not (flag-set? 'tried-to-go-back))
-                  (= (situation-run *situation*) 1))
+                  (= (current-run) 1))
          (make-pc-choice
           #:id 'end-run
           #:text "Turn back."

@@ -33,8 +33,6 @@
 (serializable-struct
  situation
  ([world #:mutable]
-  [run #:mutable]
-  [elapsed-time #:mutable]
   [current-fragment-id #:mutable]
   )
  #:transparent)
@@ -55,6 +53,8 @@
 (define current-flags (make-parameter '()))
 
 (define current-round (make-parameter 0))
+(define current-run (make-parameter 0))
+(define current-elapsed-time (make-parameter 0))
 
 (define current-in-combat? (make-parameter #f))
 
@@ -73,8 +73,6 @@
         (let ([new-world (world 0 0)]
               )
           (situation new-world
-                     0
-                     0
                      '()
                      )))
   (current-log '())
@@ -89,6 +87,8 @@
   (current-times-species-encountered (make-hash))
   (current-flags '())
   (current-round 0)
+  (current-run 0)
+  (current-elapsed-time 0)
   (current-in-combat? #f)
   (current-quests '())
   (current-persistent-quests '())
@@ -154,6 +154,8 @@
                       [times-species-encountered #:mutable]
                       [flags #:mutable]
                       [round #:mutable]
+                      [run #:mutable]
+                      [elapsed-time #:mutable]
                       [in-combat? #:mutable]
                       [quests #:mutable]
                       [persistent-quests #:mutable]
@@ -182,6 +184,8 @@
               (current-times-species-encountered)
               (current-flags)
               (current-round)
+              (current-run)
+              (current-elapsed-time)
               (current-in-combat?)
               (current-quests)
               (current-persistent-quests)
@@ -219,6 +223,8 @@
   (current-times-species-encountered (state-times-species-encountered deserialized-state))
   (current-flags (state-flags deserialized-state))
   (current-round (state-round deserialized-state))
+  (current-run (state-run deserialized-state))
+  (current-elapsed-time (state-elapsed-time deserialized-state))
   (current-in-combat? (state-in-combat? deserialized-state))
   (current-quests (state-quests deserialized-state))
   (current-persistent-quests (state-persistent-quests deserialized-state))
