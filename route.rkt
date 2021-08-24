@@ -64,64 +64,85 @@
            'b-to-a)))
 
   (define (get-route-short-description)
+
     (case (location-id start-location)
+
       ['perimeter
        (case (location-id (route-other-end-from route start-location))
-         ['magpie-hill "Magpie and the rocky slope."]
-         ['martaanvuo-swamp "Ants and the swamp."]
+
+         ['magpie-hill
+          (if (route-fully-known? route)
+              "Rocky stairs up Magpie Hill."
+              "Magpie and the rocky slope.")]
+         
+         ['martaanvuo-swamp
+          (if (route-fully-known? route)
+              "Martaanvuo Swamp."
+              "Ants and the swamp.")]
          [else (string-append "["
-                              (symbol->string (location-id start-location))
-                              " to "
+                              "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
          ['perimeter "Rocky stairs."]
          ['martaanvuo-swamp "Down, toward the swamp."]
          ['power-plant-ruins "Decrepit building."]
          [else (string-append "["
-                              (symbol->string (location-id start-location))
-                              " to "
+                              "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
-         ['magpie-hill "The hill."]
-         ['perimeter "The path."]
+         ['magpie-hill
+          (if (route-fully-known? route)
+              "Magpie Hill."
+              "The path uphill and to the left.")]
+         ['perimeter
+          (if (route-fully-known? route)
+              "Go back to Perimeter."
+              "The lone path away from the fork.")]
+         ['crematory
+          (if (route-fully-known? route)
+              "Crematory."
+              "The small paved path to the right.")]
+         ['martaanvuo-docks
+          (if (route-fully-known? route)
+              "The Docks."
+              "The broader path straight ahead.")]
          [else (string-append "["
-                              (symbol->string (location-id start-location))
-                              " to "
+                              "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill "Magpie and the rocky slope."]
          ['perimeter "Rocky stairs."]
          [else (string-append "["
-                              (symbol->string (location-id start-location))
-                              " to "
+                              "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+      
       ['power-plant-ruins
        (case (location-id (route-other-end-from route start-location))
          ['cache "The previously locked door."]
          ['sewers-1 "The sewers."]
          [else (string-append "["
-                              (symbol->string (location-id start-location))
-                              " to "
+                              "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
-      [else
-       
-       (string-append "["
-                      (symbol->string (location-id start-location))
-                      " to "
-                      (symbol->string (location-id (route-other-end-from route start-location)))
-                      "]")]))
+
+      [else (string-append "["
+                              "go to: "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")]))
   
 
   
-  (cond ((route-fully-known? route)
+  #;(cond ((route-fully-known? route)
          ; Currently, "fully known" implies having been at the other end, fix as needed
          (case direction
            ['a-to-b
@@ -133,7 +154,8 @@
             (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
             ]))
         (else
-         (get-route-short-description))))
+         (get-route-short-description)))
+  (get-route-short-description))
 
 (define (route-other-end-from route start-location)
   (define start
