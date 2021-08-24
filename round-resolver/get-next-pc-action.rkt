@@ -72,7 +72,7 @@
                                      (get-location-decisions (current-location))
                                      '()))
       
-      (define world-choices (get-world-choices (situation-world *situation*) actor))
+      (define world-choices (get-world-choices (current-world) actor))
       
       (define choices (if (null? fragment-decisions)
                           world-choices

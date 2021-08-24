@@ -29,13 +29,7 @@
          "pending-action.rkt"
          "resolve-counts.rkt")
 
-
-(serializable-struct
- situation
- ([world #:mutable]
-  )
- #:transparent)
-
+(define current-world (make-parameter '()))
 (define current-log (make-parameter '()))
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
@@ -65,15 +59,9 @@
 
 (define current-fragment-id (make-parameter '()))
 
-;;; Actual state variables
-(define *situation* '())
 
 (define (reset-situation!)
-  (set! *situation*
-        (let ([new-world (world 0 0)]
-              )
-          (situation new-world
-                     )))
+  (current-world (world 0 0))
   (current-log '())
   (current-last-paragraph "")
   (current-part 0)
@@ -130,11 +118,8 @@
 
 
 
-(define (save)
-  (save-situation *situation*))
-
 (serializable-struct state
-                     ([situation #:mutable]
+                     ([world #:mutable]
                       [log #:mutable]
                       [last-paragraph #:mutable]
                       [part #:mutable]
@@ -157,15 +142,11 @@
                       [current-fragment-id #:mutable]
                       ))
 
-(define (save-situation s)
-  
-  (define serialized-situation (serialize s))
-  #;(write-save-file serialized-situation)
-
+(define (save)
   (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
 
   (define st (state
-              *situation*
+              (current-world)
               (current-log)
               (current-last-paragraph)
               (current-part)
@@ -193,19 +174,13 @@
   #;(write serialized-situation output-file)
   (close-output-port output-file))
 
+
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
 ; - https://docs.racket-lang.org/reference/serialization.html
-(define (load-situation situation)
-  #;(displayln situation)
-  (define deserialized (deserialize situation))
-  (set! *situation* deserialized))
-
-
 (define (load-situation-from-state serialized-state)
-  #;(displayln situation)
   (define deserialized-state (deserialize serialized-state))
-  (define situation (state-situation deserialized-state))
   
+  (current-world (state-world deserialized-state))
   (current-log (state-log deserialized-state))
   (current-last-paragraph (state-last-paragraph deserialized-state))
   (current-part (state-part deserialized-state))
@@ -227,4 +202,4 @@
   (current-life (state-life deserialized-state))
   (current-fragment-id (state-current-fragment-id deserialized-state))
   
-  (set! *situation* situation))
+  )

@@ -21,7 +21,7 @@
          type
          details
          interrupting?)
-  (event* type details interrupting? (world-elapsed-time (situation-world *situation*))))
+  (event* type details interrupting? (world-elapsed-time (current-world))))
 
 ; narration content to event,
 ; function to call narration in engine / round-resolver

@@ -33,13 +33,13 @@
   (case mode
     ['begin
      (current-round (add1 (current-round)))
-     (round-summary *situation* mode)
+     (round-summary mode)
      (clear-action-queue!)
      (when (not (null? (current-fragment-id)))
        (current-fragment-on-begin-round!))]
     
     ['continue
-     (round-summary *situation* mode)
+     (round-summary mode)
      (clear-action-queue!)]))
 
 (define (on-end-round)

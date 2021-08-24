@@ -57,7 +57,7 @@
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
@@ -280,7 +280,7 @@
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (situation-world *situation*))) 'night)
+         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
                 '()))
       
          (for/list ([route (location-routes (current-location))])
