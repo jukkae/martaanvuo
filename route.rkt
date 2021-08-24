@@ -125,11 +125,13 @@
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
-      
-      ['martaanvuo-swamp
+
+      ['crematory
        (case (location-id (route-other-end-from route start-location))
-         ['magpie-hill "Magpie and the rocky slope."]
-         ['perimeter "Rocky stairs."]
+         ['martaanvuo-swamp
+          (if (route-fully-known? route)
+              "Back to Martaanvuo Swamp."
+              "The lone path.")]
          [else (string-append "["
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
