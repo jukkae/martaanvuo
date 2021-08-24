@@ -15,7 +15,7 @@
 (require "checks.rkt")
 (require "decision.rkt")
 (require "fragment.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
 (require "world.rkt")
 
 ; This should happen on the beginning of a life

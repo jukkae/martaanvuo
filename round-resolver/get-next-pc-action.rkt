@@ -20,14 +20,17 @@
          "../decision.rkt"
          "../io.rkt"
          "../locations.rkt"
-         "../situation.rkt")
+         "../state/state.rkt")
 
 (require "fragment-handler.rkt")
 
-(lazy-require
- ["../situation.rkt"
+#;(lazy-require
+ ["../state/state.rkt"
   (current-prompt
    player-info
+   redescribe-situation
+   pc
+   current-fragment-id
    )])
 
 (lazy-require

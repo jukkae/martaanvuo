@@ -8,7 +8,7 @@
 (require "quest.rkt")
 (require "quests.rkt")
 (require "round-resolver/round-resolver.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
@@ -41,12 +41,6 @@
 (define (narrate-begin-recurse-run)
   (next-chapter!)
   
-  ; Don't show this when recursing
-  #;(when (not (= 1 (situation-run *situation*)))
-    (info-card
-     (list
-      (list " run " (string-append " " (number->string (situation-run *situation*)) " ")))
-     (string-append "Begin run number " (number->string (situation-run *situation*)))))
 
   (p "Otava is again following the Broker's trail through the foggy woods. This time, she's better prepared, she knows what lies ahead. She gets to the fork."))
 
@@ -62,7 +56,7 @@
 
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
-  #;(set-situation-round! *situation* 0)
+  #;(current-round 0)
   (remove-flag 'ending-run-allowed)
   (add-feature-to-location! (find-place-by-id 'martaanvuo-docks) 'stiltman)
   (move-pc-to-location! (find-place-by-id 'perimeter))

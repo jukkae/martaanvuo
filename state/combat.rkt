@@ -14,13 +14,11 @@
          "../utils.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-in-combat?
-                      current-log
-                      *situation*
-                      current-location
-                      get-current-enemies
-                      pc
-                      set-situation-in-combat?!)])
+ ["state.rkt" (current-in-combat?
+               current-log
+               current-location
+               get-current-enemies
+               pc)])
 
 (define (clean-up-dead-actor! actor)
   (remove-actor-from-location! (current-location) actor)

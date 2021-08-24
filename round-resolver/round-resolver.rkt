@@ -8,13 +8,13 @@
 
 (require racket/serialize)
 
-(require "../state/logging.rkt")
+(require "../state/logging.rkt"
+         "../state/state.rkt")
 
-(require "../action.rkt")
-(require "../actions.rkt")
-(require "../actor.rkt")
-(require "../location.rkt")
-(require "../situation.rkt")
+(require "../action.rkt"
+         "../actions.rkt"
+         "../actor.rkt"
+         "../location.rkt")
 
 (require "action-queue.rkt"
          "ai.rkt"

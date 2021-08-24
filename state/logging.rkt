@@ -8,10 +8,10 @@
 (require "../utils.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-log
-                      current-part
-                      current-chapter
-                      current-prompt)])
+ ["state.rkt" (current-log
+                  current-part
+                  current-chapter
+                  current-prompt)])
 
 (define (append-to-log paragraph)
   (current-log (append-element (current-log) paragraph)))

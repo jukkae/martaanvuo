@@ -3,7 +3,7 @@
 (provide handle-interrupting-event!)
 
 (require "../locations.rkt"
-         "../situation.rkt")
+         "../state/state.rkt")
 
 (require "event.rkt")
 

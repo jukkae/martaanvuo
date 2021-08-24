@@ -8,11 +8,10 @@
 (require "character-sheet.rkt")
 (require "io.rkt")
 (require "item.rkt")
-;(require "situation.rkt")
 (require "utils.rkt")
 
 (lazy-require
- ["situation.rkt"
+ ["state/state.rkt"
   (pc
    )])
 

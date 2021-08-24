@@ -8,7 +8,7 @@
 
 (require "utils.rkt")
 
-(lazy-require ["situation.rkt"
+(lazy-require ["state/state.rkt"
                (pc)])
 
 (serializable-struct action

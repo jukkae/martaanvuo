@@ -13,7 +13,7 @@
 (require "io.rkt")
 (require "item.rkt")
 (require "pc.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")

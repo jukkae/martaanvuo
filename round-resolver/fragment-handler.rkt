@@ -5,7 +5,7 @@
 (require "../decision.rkt"
          "../fragment.rkt"
          "../io.rkt"
-         "../situation.rkt"
+         "../state/state.rkt"
          "../utils.rkt")
 
 

@@ -3,10 +3,11 @@
 (provide advance-time-until-next-interesting-event!)
 
 (require "../io.rkt"
-         "../situation.rkt"
          "../time.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world.rkt"
+         
+         "../state/state.rkt")
 
 (require "event.rkt"
          "timeline.rkt")

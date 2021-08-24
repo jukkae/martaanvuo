@@ -6,7 +6,8 @@
          "../actor.rkt"
          "../io.rkt"
          "../pc.rkt"
-         "../situation.rkt")
+         
+         "../state/state.rkt")
 
 (require "ai.rkt"
          "action-queue.rkt"

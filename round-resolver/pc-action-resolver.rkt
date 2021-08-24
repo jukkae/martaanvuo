@@ -2,7 +2,8 @@
 
 (provide resolve-pc-action!)
 
-(require "../state/logging.rkt")
+(require "../state/logging.rkt"
+         "../state/state.rkt")
 
 (require "../action.rkt"
          "../action-resolver.rkt"
@@ -10,7 +11,6 @@
          "../location.rkt"
          "../locations.rkt"
          "../route.rkt"
-         "../situation.rkt"
          "../utils.rkt")
 
 (require "event.rkt"

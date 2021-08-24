@@ -8,7 +8,8 @@
          "../actor.rkt"
          "../blindscraper.rkt"
          "../grabberkin.rkt"
-         "../situation.rkt")
+
+         "../state/state.rkt")
 
 (require "action-queue.rkt")
 

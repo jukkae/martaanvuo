@@ -15,13 +15,14 @@
 (require "pc.rkt")
 (require "place.rkt")
 (require "route.rkt")
-(require "situation.rkt")
+
 (require "stance.rkt")
 (require "time.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 
 (require "state/combat.rkt")
+(require "state/state.rkt")
 
 (lazy-require
  ["martaanvuo.rkt"
@@ -34,7 +35,7 @@
   (go-to-story-fragment
    )])
 
-(lazy-require
+#;(lazy-require
  ["state/combat.rkt"
   (get-combatant-name
    display-combatant-info

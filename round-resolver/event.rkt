@@ -5,8 +5,9 @@
 (require racket/serialize)
 
 (require "../io.rkt"
-         "../situation.rkt"
-         "../world.rkt")
+         "../world.rkt"
+
+         "../state/state.rkt")
 
 (serializable-struct
  event

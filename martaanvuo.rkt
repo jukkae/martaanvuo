@@ -5,7 +5,7 @@
 (require "io.rkt")
 (require "life-resolver.rkt")
 (require "round-resolver/round-resolver.rkt")
-(require "situation.rkt")
+(require "state/state.rkt")
 (require "utils.rkt")
 (require "world.rkt")
 

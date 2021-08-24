@@ -9,7 +9,7 @@
          "../route.rkt")
 
 (lazy-require
- ["situation.rkt" (current-pending-action)])
+ ["state.rkt" (current-pending-action)])
 
 
 (define (reset-pending-action!)

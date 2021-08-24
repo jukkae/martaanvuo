@@ -16,13 +16,13 @@
 (require "logging.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-flags
-                      current-fragment-id
-                      current-in-combat?
-                      current-life
-                      current-location
-                      current-pc
-                      current-quests)])
+ ["state.rkt" (current-flags
+               current-fragment-id
+               current-in-combat?
+               current-life
+               current-location
+               current-pc
+               current-quests)])
 
 (lazy-require
  ["combat.rkt" (describe-combat-situation)])

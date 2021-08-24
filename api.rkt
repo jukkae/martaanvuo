@@ -9,12 +9,12 @@
                        "quest.rkt"
                        "quests.rkt"
                        "route.rkt"
-                       "situation.rkt"
                        "time.rkt"
                        "utils.rkt"
                        "world.rkt"
 
-                       "state/logging.rkt"))
+                       "state/logging.rkt"
+                       "state/state.rkt"))
 
 
 (require "decision.rkt"
@@ -26,12 +26,12 @@
          "quest.rkt"
          "quests.rkt"
          "route.rkt"
-         "situation.rkt"
          "time.rkt"
          "utils.rkt"
          "world.rkt")
 
-(require "state/logging.rkt")
+(require "state/logging.rkt"
+         "state/state.rkt")
 
 
 (require racket/lazy-require)

@@ -9,8 +9,9 @@
          "../condition.rkt"
          "../fragment.rkt"
          "../round-summary.rkt"
-         "../situation.rkt"
-         "../utils.rkt")
+         "../utils.rkt"
+
+         "../state/state.rkt")
 
 (require "action-queue.rkt"
          "fragment-handler.rkt")
