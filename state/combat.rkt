@@ -14,7 +14,8 @@
          "../utils.rkt")
 
 (lazy-require
- ["../situation.rkt" (current-log
+ ["../situation.rkt" (current-in-combat?
+                      current-log
                       *situation*
                       current-location
                       get-current-enemies
@@ -162,13 +163,12 @@
   (set! *combat-flags* (append-element *combat-flags* flag)))
 
 (define (begin-combat!)
-  (dev-note "begin combat is broken!")
-  #;(set-situation-in-combat?! *situation* #t)
+  (dev-note "combat flags are broken!")
+  (current-in-combat? #t)
   (set! *combat-flags* '()))
 
 (define (end-combat!)
-  #;(displayln "END COMBAT")
   (notice "Combat finished.")
-  (dev-note "end combat is broken!")
-  #;(set-situation-in-combat?! *situation* #f)
+  (dev-note "combat flags are broken!")
+  (current-in-combat? #f)
   (set! *combat-flags* '()))

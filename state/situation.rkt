@@ -44,7 +44,6 @@
   )
  #:transparent)
 
-; logging
 (define current-log (make-parameter '()))
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
@@ -81,7 +80,19 @@
                      '()
                      quests
                      persistent-quests
-                     0))))
+                     0)))
+  (current-log '())
+  (current-last-paragraph "")
+  (current-part 0)
+  (current-chapter 0)
+  (current-prompt "")
+  (current-pending-action '())
+  (current-times-begin-traverse-narrated (make-hash))
+  (current-times-finish-traverse-narrated (make-hash))
+  (current-times-cancel-traverse-narrated (make-hash))
+  (current-flags '())
+  (current-round 0)
+  (current-in-combat? #f))
 
 
 ;;; Meta progression / achievements
