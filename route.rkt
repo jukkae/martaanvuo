@@ -18,6 +18,14 @@
   (place-id
    place-visited?)])
 
+(lazy-require
+ ["action.rkt"
+  (action-details)])
+
+(lazy-require
+ ["state/state.rkt"
+  (current-pending-action)])
+
 (serializable-struct
  route
  ([id #:mutable] ; mutable for s11n, but should not be mutated
@@ -203,22 +211,64 @@
                                 (route-details route)))))
 
 
+; this should be broken up; action handling elsewhere
 (define (display-route-info-card route)
   (define id (route-id route))
   (define title "Location (en route)")
+
+  (define pending-action (current-pending-action))
+  (define details (action-details pending-action))
+         
+  (define traverse-direction
+    (if (memq 'a-to-b details)
+        'a-to-b
+        'b-to-a))
+
+  (define endpoint
+     (case traverse-direction
+       ['a-to-b (route-b route)]
+       ['b-to-a (route-a route)]))
+
+  (define startpoint
+     (case traverse-direction
+       ['a-to-b (route-a route)]
+       ['b-to-a (route-b route)]))
+
+  
   (define body
-    (list
-     (list " aa " " bb "))
-    #;(prune (list
-            (when (not (null? id))
-              (list (string-append " "
-                                   "id"
-                                   " ")
-                    (string-append " "
-                                   (cond ((number? id) (number->string id))
-                                         ((symbol? id) (symbol->string id)))
-                                   " ")))
-            )))
+    (cond ((route-fully-known? route)
+           (list
+            (list
+             (string-append " "
+                            "from "
+                            (get-location-name-from-location startpoint)
+                            " ")
+             (string-append " "
+                            "to "
+                            (get-location-name-from-location endpoint)
+                            " "))))
+          (else
+           (list
+            (list " aa " " bb ")))))
   (info-card body title))
 
 
+#;((eq? (action-symbol pending-action) 'traverse)
+   (define target (action-target pending-action))
+         
+   (define details (action-details pending-action))
+         
+   (define direction
+     (if (memq 'a-to-b details)
+         'a-to-b
+         'b-to-a))
+
+   (define endpoint
+     (case direction
+       ['a-to-b (route-b target)]
+       ['b-to-a (route-a target)]))
+         
+   (string-append
+    "[continue] Continue towards "
+    (get-location-name-from-location endpoint)
+    "."))
