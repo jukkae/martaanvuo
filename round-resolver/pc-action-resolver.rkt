@@ -98,8 +98,9 @@
                                   #f))
 
                             (when encounter-roll
-                              (displayln "encounter roll: ")
-                              (displayln encounter-roll)
+                              (define msg (string-append "Encounter roll: "
+                                                         (number->string encounter-roll)))
+                              (notice msg)
                               (define encounter-event
                                 (if (< encounter-roll 4)
                                     (make-event 'spawn-enemies
@@ -131,7 +132,7 @@
                           
 
 
-                          (set-route-traversed! (action-target action)) ; I think this should work
+                          (set-route-traversed! (action-target action))
 
                           (define next-location (if (memq 'a-to-b (action-details action))
                                                     (route-b (action-target action))
