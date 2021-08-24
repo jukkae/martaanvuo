@@ -6,9 +6,13 @@
 (lazy-require
  ["state/state.rkt"
   (pc
+   current-location
    )]
- ["state/combat.rkt"
-  (clean-up-dead-actor!
+ ["world.rkt"
+  (remove-actor-from-its-current-location!
+   )]
+ ["location.rkt"
+  (add-feature-to-location!
    )])
 
 
@@ -278,7 +282,7 @@
         'hit))
 
   (when (eq? result 'dead)
-    (clean-up-dead-actor! actor))
+    (kill actor))
 
   ; TODO this belongs to grabberkin.rkt
   ; -> subtype grabberkin-actor from actor?
@@ -296,18 +300,23 @@
       (pc-take-damage! actor damage damage-type)
       (non-pc-take-damage! actor damage damage-type)))
 
-(define (kill actor cause-of-death)
+(define (kill actor . cause-of-death)
   (set-actor-hp! actor 0)
-  (displayln
-   (string-append "["
-                  (actor-name actor)
-                  " is dead. Cause of death: "
-                  (symbol->string cause-of-death)
-                  "]"))
+  (notice
+   (if (null? cause-of-death)
+       (string-append (actor-name actor)
+                      " is dead.")
+       (string-append (actor-name actor)
+                      " is dead. Cause of death: "
+                      #;(symbol->string cause-of-death)
+                      cause-of-death)))
+  
   (cond ((pc-actor? actor)
          (set-pc-actor-alive?! actor #f))
         (else
-         (clean-up-dead-actor! actor))))
+         (remove-actor-from-its-current-location! actor)
+         (define corpse (cons 'corpse "Corpse (TODO)"))
+         (add-feature-to-location! (current-location) corpse))))
 
 
 (define (add-item-to-inventory! actor item)

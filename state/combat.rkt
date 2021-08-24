@@ -20,12 +20,6 @@
                get-current-enemies
                pc)])
 
-(define (clean-up-dead-actor! actor)
-  (remove-actor-from-location! (current-location) actor)
-  (define corpse (cons 'corpse "Corpse (TODO)"))
-  (add-feature-to-location! (current-location) corpse))
-
-
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body

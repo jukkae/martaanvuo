@@ -171,9 +171,10 @@
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
     (if (not (pc-actor? (action-target action)))
-        (p "The " (actor-name (action-target action)) " is dead.")
+        #;(p "The " (actor-name (action-target action)) " is dead.")
+        '()
         (begin
-          (p "Otava is dead.")
+          #;(p "Otava is dead.")
           (set! action-result 'pc-dead))))
 
   action-result
