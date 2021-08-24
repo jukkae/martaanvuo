@@ -3,6 +3,7 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
+(require racket/serialize)
 
 (require "../actor.rkt"
          "../condition.rkt"
@@ -11,12 +12,15 @@
          "../pc.rkt"
          "../stance.rkt"
          "../status.rkt"
-         "../utils.rkt")
+         "../utils.rkt"
+         "../world.rkt")
 
 (lazy-require
  ["state.rkt" (current-in-combat?
                current-log
                current-location
+               current-combat-timeline
+               current-world
                get-current-enemies
                pc)])
 
@@ -149,17 +153,27 @@
    name))
 
 
-(define *combat-flags* '())
-(define (add-combat-flag flag)
-  (set! *combat-flags* (append-element *combat-flags* flag)))
+(serializable-struct
+ combat-event
+ (details
+  at)
+ #:constructor-name combat-event*)
+
+(define (make-combat-event
+         details)
+  (combat-event* details (world-elapsed-time (current-world))))
+
+
+(define (add-combat-event text)
+  (current-combat-timeline (append-element (current-combat-timeline) (make-combat-event text))))
 
 (define (begin-combat!)
-  (dev-note "combat flags are broken!")
   (current-in-combat? #t)
-  (set! *combat-flags* '()))
+  (add-combat-event "combat started!"))
 
 (define (end-combat!)
   (notice "Combat finished.")
-  (dev-note "combat flags are broken!")
+  (dev-note "timeline:")
+  (displayln (current-combat-timeline))
   (current-in-combat? #f)
-  (set! *combat-flags* '()))
+  (current-combat-timeline '()))

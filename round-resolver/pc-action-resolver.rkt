@@ -108,7 +108,7 @@
                (if (< encounter-roll 4)
                    (make-event 'spawn-enemies
                                '() ; pack info about enemies / event here
-                               #t)
+                               #:interrupting? #t)
                    '()))
 
              (cond ((not (null? encounter-event))
@@ -117,7 +117,7 @@
                       (list
                        (make-event 'spawn-enemies
                                    '() ; pack info about enemies / event here
-                                   #t)))
+                                   #:interrupting? #t)))
                     (define metadata 'interrupted)
                     (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
                     (define tl (timeline metadata events duration))

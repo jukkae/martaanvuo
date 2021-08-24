@@ -107,7 +107,7 @@
       (define stance (actor-stance target))
 
       (list
-       (when (and (not (member 'aware-of-being-out-of-ammo *combat-flags*))
+       (when (and (not (flag-set? 'aware-of-being-out-of-ammo))
                   (or (eq? (stance-range stance) 'far) ; always require roll
                       (eq? (stance-range stance) 'mid) ; require roll if no proficiency
                       (eq? (stance-range stance) 'close) ; never require roll

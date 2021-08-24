@@ -17,11 +17,10 @@
   at)
  #:constructor-name event*)
 
-; type used in engine / round-resolver
 (define (make-event
          type
          details
-         interrupting?)
+         #:interrupting? interrupting?)
   (event* type details interrupting? (world-elapsed-time (current-world))))
 
 ; narration content to event,
