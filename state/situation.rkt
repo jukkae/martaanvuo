@@ -2,7 +2,8 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out "mutators.rkt"
+(provide (all-from-out "describe-situation.rkt"
+                       "mutators.rkt"
                        "pending-action.rkt"
                        "resolve-counts.rkt"))
 
@@ -24,6 +25,7 @@
 (require "../world.rkt")
 
 (require "combat.rkt"
+         "describe-situation.rkt"
          "logging.rkt"
          "mutators.rkt"
          "pending-action.rkt"
@@ -81,41 +83,6 @@
   (current-persistent-quests '())
   (current-pc (make-new-pc))
   (current-fragment-id '()))
-
-
-(define (describe-non-combat-situation)
-  (cond ((null? (current-fragment-id))
-         (cond ((eq? (location-id (current-location)) 'perimeter)
-                (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
-               ((eq? (location-id (current-location)) 'magpie-hill)
-                (p "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
-         (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
-
-
-
-(define (describe-situation)
-  (when (location-has-feature? (current-location) 'locked-door)
-    (cond ((and (pc-has-item? 'revolver)
-                (pc-has-ammo-left?))
-           (p "There's a door that's locked with a heavy padlock."))
-          ((and (pc-has-item? 'bolt-cutters))
-           (p "There's a door that's locked with a heavy padlock."))
-          (else
-           (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
-  (cond
-    ((current-in-combat?) (describe-combat-situation))
-    (else (describe-non-combat-situation)))
-  )
-
-(define (redescribe-situation)
-  (cond
-    ((current-in-combat?) (describe-combat-situation))
-    (else (repeat-last-paragraph)))
-  )
-
-
-
 
 
 (serializable-struct state
