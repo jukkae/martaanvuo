@@ -54,7 +54,7 @@
 ; engine / run-resolver
 (define (on-begin-run)
   (set-situation-run! *situation* (add1 (situation-run *situation*)))
-  (set-situation-round! *situation* 0)
+  (current-round 0)
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id 'perimeter))
   (narrate-begin-run)

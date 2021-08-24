@@ -32,14 +32,14 @@
 (define (on-begin-round mode)
   (case mode
     ['begin
-     (set-situation-round! *situation* (add1 (situation-round *situation*)))
-     (round-summary *situation*)
+     (current-round (add1 (current-round)))
+     (round-summary *situation* mode)
      (clear-action-queue!)
      (when (not (null? (situation-current-fragment-id *situation*)))
        (current-fragment-on-begin-round!))]
     
     ['continue
-     (round-summary *situation*)
+     (round-summary *situation* mode)
      (clear-action-queue!)]))
 
 (define (on-end-round)

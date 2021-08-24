@@ -36,7 +36,6 @@
   [pc #:mutable]
   [life #:mutable]
   [run #:mutable]
-  [round #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
   [current-fragment-id #:mutable]
@@ -61,6 +60,8 @@
 
 (define current-flags (make-parameter '()))
 
+(define current-round (make-parameter 0))
+
 
 ;;; Actual state variables
 (define *situation* '())
@@ -73,7 +74,6 @@
               [persistent-quests '()])
           (situation new-world
                      pc
-                     0
                      0
                      0
                      0
@@ -339,6 +339,7 @@
                       [times-finish-traverse-narrated #:mutable]
                       [times-cancel-traverse-narrated #:mutable]
                       [flags #:mutable]
+                      [round #:mutable]
                       ))
 
 (define (save-situation s)
@@ -359,7 +360,8 @@
               (current-times-begin-traverse-narrated)
               (current-times-finish-traverse-narrated)
               (current-times-cancel-traverse-narrated)
-              (current-flags)))
+              (current-flags)
+              (current-round)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -390,5 +392,6 @@
   (current-times-finish-traverse-narrated (state-times-finish-traverse-narrated deserialized-state))
   (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated deserialized-state))
   (current-flags (state-flags deserialized-state))
+  (current-round (state-round deserialized-state))
   
   (set! *situation* situation))
