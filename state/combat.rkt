@@ -157,7 +157,8 @@
  combat-event
  (details
   at)
- #:constructor-name combat-event*)
+ #:constructor-name combat-event*
+ #:transparent)
 
 (define (make-combat-event
          details)

@@ -66,7 +66,10 @@
        [else
         (p
          "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
-     ])
+     ]
+    [else
+     (dev-note "describe-begin-traverse-action: unknown key:")
+     (displayln key)])
   )
 
 (define (describe-finish-traverse-action action)
@@ -121,7 +124,7 @@
          "The docks slowly appear from the mist.")])]
 
     [else
-     (displayln "describe-finish-traverse-action: unknown key:")
+     (dev-note "describe-finish-traverse-action: unknown key:")
      (displayln key)]
 
     
