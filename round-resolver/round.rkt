@@ -76,14 +76,14 @@
       (decrement-actor-status-lifetimes! enemy)))
 
   ; urgh
-  (when (not (null? (actor-statuses (situation-pc *situation*))))
-    (define name (get-combatant-name (situation-pc *situation*)))
-    (define description (~s (actor-statuses (situation-pc *situation*))))
+  (when (not (null? (actor-statuses (pc))))
+    (define name (get-combatant-name (pc)))
+    (define description (~s (actor-statuses (pc))))
     
     (define description-prefix
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
-    (decrement-actor-status-lifetimes! (situation-pc *situation*)))
+    (decrement-actor-status-lifetimes! (pc)))
 
   
   ; proc conditions - TODO this is currently only for PC, fix if needed!

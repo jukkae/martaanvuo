@@ -57,7 +57,7 @@
         (redescribe-situation)
         (what-do-you-do 'verbose))
       
-      (define actor (situation-pc *situation*))
+      (define actor (pc))
 
 
       (define fragment-decisions (if (null? (situation-current-fragment-id *situation*))

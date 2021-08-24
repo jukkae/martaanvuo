@@ -298,7 +298,7 @@
 
 ; ability-like attack
 (define (resolve-go-to-engaged-action! action)
-  (define lp (pc-actor-lp (situation-pc *situation*)))
+  (define lp (pc-actor-lp (pc)))
   (define dex (actor-dexterity (action-actor action)))
   (define success?
     (cond ((positive? lp)
@@ -316,19 +316,19 @@
       (begin
         (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
         (displayln "[-1 LP]")
-        (set-pc-actor-lp! (situation-pc *situation*)
-                          (- (pc-actor-lp (situation-pc *situation*))
+        (set-pc-actor-lp! (pc)
+                          (- (pc-actor-lp (pc))
                              1))
-        (when (< (pc-actor-lp (situation-pc *situation*)) 0)
-          (set-pc-actor-lp! (situation-pc *situation*)
+        (when (< (pc-actor-lp (pc)) 0)
+          (set-pc-actor-lp! (pc)
                             0))
-        (displayln (pc-actor-lp (situation-pc *situation*)))
+        (displayln (pc-actor-lp (pc)))
         'failure))
   'ok
   )
 
 (define (resolve-go-to-close-action! action)
-  (define lp (pc-actor-lp (situation-pc *situation*)))
+  (define lp (pc-actor-lp (pc)))
   (define dex (actor-dexterity (action-actor action)))
            
   (p "The Blindscraper skitters towards Otava.")
@@ -365,7 +365,7 @@
             "Forage results roll")
            (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
            (define item (list 'food (list amount)))
-           (add-item-to-inventory! (situation-pc *situation*) item)
+           (add-item-to-inventory! (pc) item)
            )
           (else
            (begin
@@ -447,7 +447,7 @@
 (define (resolve-flee-action! action)
   (cond ((pc-actor? (action-actor action))
          (p "Otava turns her back to run.")
-         (define skill (get-trait (situation-pc *situation*) "athletics-skill"))
+         (define skill (get-trait (pc) "athletics-skill"))
 
          (define stance-range-values '())
          (for ([enemy (get-current-enemies)])
@@ -537,7 +537,7 @@
            'ok
            )
           ((eq? (action-symbol action) 'search-for-paths)
-           (define exploration-skill (get-trait (situation-pc *situation*) "exploration-skill"))
+           (define exploration-skill (get-trait (pc) "exploration-skill"))
            (define target-number 9)
            (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
            #;(when exploration-check-result (expose-neighbor! (current-location)))

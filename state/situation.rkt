@@ -33,13 +33,9 @@
 (serializable-struct
  situation
  ([world #:mutable]
-  [pc #:mutable]
-  [life #:mutable]
   [run #:mutable]
   [elapsed-time #:mutable]
   [current-fragment-id #:mutable]
-  [quests #:mutable]
-  [persistent-quests #:mutable]
   )
  #:transparent)
 
@@ -62,6 +58,12 @@
 
 (define current-in-combat? (make-parameter #f))
 
+(define current-quests (make-parameter '()))
+(define current-persistent-quests (make-parameter '()))
+
+(define current-pc (make-parameter '()))
+(define current-life (make-parameter 0))
+
 
 ;;; Actual state variables
 (define *situation* '())
@@ -69,17 +71,12 @@
 (define (reset-situation!)
   (set! *situation*
         (let ([new-world (world 0 0)]
-              [pc (make-new-pc)]
-              [quests '()]
-              [persistent-quests '()])
+              )
           (situation new-world
-                     pc
-                     0
                      0
                      0
                      '()
-                     quests
-                     persistent-quests)))
+                     )))
   (current-log '())
   (current-last-paragraph "")
   (current-part 0)
@@ -92,140 +89,17 @@
   (current-times-species-encountered (make-hash))
   (current-flags '())
   (current-round 0)
-  (current-in-combat? #f))
+  (current-in-combat? #f)
+  (current-quests '())
+  (current-persistent-quests '())
+  (current-pc (make-new-pc)))
 
-
-;;; Meta progression / achievements
-(define (increment-achievement! achievement)
-  (case achievement
-    ['forgetful (displayln "forgetful achievement incremented")]
-    [else
-     (displayln "increment-achievement!: unknown achievement:")
-     (displayln achievement)]))
 
 (define (unset-current-fragment-id!)
   (set-situation-current-fragment-id! *situation* '()))
 
 (define (set-current-fragment-id! id)
   (set-situation-current-fragment-id! *situation* id))
-
-(define (add-quest! quest)
-  (set-situation-quests!
-   *situation*
-   (append-element (situation-quests *situation*) quest)))
-
-(define (quest-exists? id)
-  (define quests (situation-quests *situation*))
-  (if (null? quests)
-      #f
-      (findf (λ (quest) (eq? id (quest-id quest))) quests)))
-
-; set-quest-status! is obviously reserved
-(define (update-quest-status! id status)
-  (define quests (situation-quests *situation*))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-status! quest status)
-    )
-  )
-
-; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
-(define (update-quest-notes! id notes)
-  (define quests (situation-quests *situation*))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-notes! quest notes)
-    )
-  )
-
-(define (update-quest-details! id details)
-  (define quests (situation-quests *situation*))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-details! quest details)
-    )
-  )
-
-; api
-(define (current-location)
-  (actor-location (pc)))
-
-
-; api
-(define (get-current-enemies)
-  (filter
-   (λ (actor) (and (actor-alive? actor)
-                   (not (pc-actor? actor))))
-   (location-actors (current-location))))
-
-; api
-(define (quests)
-  (situation-quests *situation*))
-
-(define (find-quest id)
-  (findf (λ (q) (eq? (quest-id q) id))
-         (situation-quests *situation*)))
-
-
-
-(define (reduce-debt-by! amount)
-  (define debt-quest (find-quest 'pay-off-debt))
-  
-  (define old-debt-amount (quest-details debt-quest))
-  (define new-debt-amount (- old-debt-amount amount))
-  (set-quest-details! debt-quest new-debt-amount)
-  (set-quest-notes! debt-quest
-                    (string-append
-                     "unsettled: "
-                     (number->string new-debt-amount)
-                     " g of Martaanvuo gold"))
-  (displayln "new-debt-amount:")
-  #;(displayln (~r new-debt-amount)) ; formatting todo
-  (displayln new-debt-amount)
-  
-  '())
-
-; API
-(define (engaged?)
-  (define any-enemy-engaged? #f)
-  
-  (for ([enemy (get-current-enemies)])
-    (let ([stance (actor-stance enemy)])
-      (when (eq? (stance-range stance) 'engaged)
-        (set! any-enemy-engaged? #t)))
-    )
-  any-enemy-engaged?)
-
-; API
-(define (get-an-enemy-at-range range)
-  (define current-enemies (get-current-enemies))
-  (define enemies-shuffled (shuffle current-enemies))
-  (define enemy-in-range '())
-  (for ([enemy enemies-shuffled])
-    (define stance (actor-stance enemy))
-    (when (eq? (stance-range stance) range)
-      (set! enemy-in-range enemy)))
-  enemy-in-range)
-
-; API
-(define (get-enemies-at-range range)
-  (define current-enemies (get-current-enemies))
-  (define enemies-in-range '())
-  (for ([enemy current-enemies])
-    (define stance (actor-stance enemy))
-    (when (eq? (stance-range stance) range)
-      (set! enemies-in-range (append-element enemies-in-range enemy))))
-  enemies-in-range)
-
-; API
-(define (in-range? target attack-mode)
-  (case attack-mode
-    ['melee
-     (dev-note "in-range? tbd")
-     #t]
-    [else
-     (dev-note "in-range? tbd")
-     #f]))
 
 
 (define (describe-non-combat-situation)
@@ -237,10 +111,6 @@
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
-(define (clean-situation!)
-  (dev-note "cleaning situation...")
-  (reset-pending-action!)
-  (set-situation-quests! *situation* '()))
 
 
 (define (describe-situation)
@@ -263,57 +133,7 @@
     (else (repeat-last-paragraph)))
   )
 
-; scripting API / situation
-(provide pc)
-(define (pc)
-  (situation-pc *situation*))
 
-; scripting API / situation / implementation detail
-(define (remove-all-enemies-and-end-combat!)
-  (for ([enemy (get-current-enemies)])
-    (remove-actor-from-location! (actor-location enemy) enemy))
-  (end-combat!)
-  (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
-  )
-
-; scripting API
-(define (remove-enemy enemy)
-  (remove-actor-from-location! (actor-location enemy) enemy))
-
-; scripting API
-(provide actor-in-range?)
-(define (actor-in-range? enemy range)
-  (define stance (actor-stance enemy))
-  (eq? (stance-range stance) range))
-
-
-; scripting API?
-(define (player-info)
-  (define player-status
-    (list
-     (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
-     ))
-     
-  (info-card player-status (string-append "Player status"))
-  )
-
-
-; scripting API
-(define (end-game)
-  (wait-for-confirm)
-  (p "[The end.]")
-  (player-info)
-  (wait-for-confirm)
-  (exit))
-
-; api?
-(define (pick-up-items!)
-  (p "Otava picks up everything there is to pick up.")
-  (define all-items (place-items (current-location)))
-  (for ([item all-items])
-    (remove-item-from-location! (current-location) item)
-    (add-item-to-inventory! (pc) item))
-  (print-inventory))
 
 
 
@@ -335,6 +155,10 @@
                       [flags #:mutable]
                       [round #:mutable]
                       [in-combat? #:mutable]
+                      [quests #:mutable]
+                      [persistent-quests #:mutable]
+                      [pc #:mutable]
+                      [life #:mutable]
                       ))
 
 (define (save-situation s)
@@ -358,7 +182,11 @@
               (current-times-species-encountered)
               (current-flags)
               (current-round)
-              (current-in-combat?)))
+              (current-in-combat?)
+              (current-quests)
+              (current-persistent-quests)
+              (current-pc)
+              (current-life)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -392,5 +220,9 @@
   (current-flags (state-flags deserialized-state))
   (current-round (state-round deserialized-state))
   (current-in-combat? (state-in-combat? deserialized-state))
+  (current-quests (state-quests deserialized-state))
+  (current-persistent-quests (state-persistent-quests deserialized-state))
+  (current-pc (state-pc deserialized-state))
+  (current-life (state-life deserialized-state))
   
   (set! *situation* situation))

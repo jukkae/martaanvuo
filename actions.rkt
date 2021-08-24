@@ -87,7 +87,7 @@
               (λ ()
                 (make-action
                  #:symbol 'melee
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 1
                  #:target target
                  #:tags '(initiative-based-resolution)
@@ -186,7 +186,7 @@
             (λ ()
               (make-action
                #:symbol 'flee
-               #:actor (situation-pc *situation*)
+               #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)))))
          (set! combat-choices (append-element combat-choices run-choice))))
@@ -212,7 +212,7 @@
             (λ ()
               (make-action
                #:symbol 'break-free
-               #:actor (situation-pc *situation*)
+               #:actor (pc)
                #:duration 1
                #:target (take-random engaged-grabberkin)
                #:tags '(initiative-based-resolution fast)
@@ -273,7 +273,7 @@
           (get-cancel-pending-action-and-go-back-name (current-location) (current-pending-action)) 
           (λ () (make-action
                  #:symbol 'cancel-traverse
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 100
                  #:target destination
                  #:tags '(downtime)))))
@@ -318,7 +318,7 @@
                         
                         (make-action
                          #:symbol 'skip
-                         #:actor (situation-pc *situation*)
+                         #:actor (pc)
                          #:duration 0
                          #:tags '(downtime))))))
                   )
@@ -328,7 +328,7 @@
                    (get-traverse-text route (current-location)) 
                    (λ () (make-action
                           #:symbol 'traverse
-                          #:actor (situation-pc *situation*)
+                          #:actor (pc)
                           #:duration 100
                           #:target route
                           #:tags '(downtime)
@@ -342,7 +342,7 @@
            (string-append "Forage.")
            (λ () (make-action
                   #:symbol 'forage
-                  #:actor (situation-pc *situation*)
+                  #:actor (pc)
                   #:duration 100
                   #:tags '(downtime))))))
 
@@ -354,7 +354,7 @@
              "Search for paths."
              (λ () (make-action
                     #:symbol 'search-for-paths
-                    #:actor (situation-pc *situation*)
+                    #:actor (pc)
                     #:duration 100
                     #:tags '(downtime))))]
            [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
@@ -404,7 +404,7 @@
           "Dive in the spring."
           (λ () (make-action
                  #:symbol 'win-game
-                 #:actor (situation-pc *situation*)
+                 #:actor (pc)
                  #:duration 0
                  #:tags '(downtime)))))
        
