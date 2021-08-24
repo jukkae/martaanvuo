@@ -16,9 +16,6 @@
 (define (reset-pending-action!)
   (current-pending-action '()))
 
-(define (set-pending-action! action)
-  (current-pending-action action))
-
 (define (get-pending-traverse-direction)
   (define pending-action (current-pending-action))
   (cond 
