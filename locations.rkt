@@ -220,13 +220,8 @@
 
   (case encounter-type
     ['grabberkin
-
      (spawn-grabberkin-encounter!)
-     ; TODO this should happen at the end of the encounter for it to make sense narratively -> basically, combat timeline handling
-     (set-situation-grabberkin-encounters!
-      *situation*
-      (add1 (situation-grabberkin-encounters *situation*)))
-     #;(player-info)]
+     ]
     ['blindscraper
      (spawn-blindscraper-encounter!)
      ]

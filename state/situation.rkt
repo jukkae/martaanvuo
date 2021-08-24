@@ -40,7 +40,6 @@
   [current-fragment-id #:mutable]
   [quests #:mutable]
   [persistent-quests #:mutable]
-  [grabberkin-encounters #:mutable]
   )
  #:transparent)
 
@@ -55,6 +54,7 @@
 (define current-times-begin-traverse-narrated (make-parameter (make-hash)))
 (define current-times-finish-traverse-narrated (make-parameter (make-hash)))
 (define current-times-cancel-traverse-narrated (make-parameter (make-hash)))
+(define current-times-species-encountered (make-parameter (make-hash)))
 
 (define current-flags (make-parameter '()))
 
@@ -79,8 +79,7 @@
                      0
                      '()
                      quests
-                     persistent-quests
-                     0)))
+                     persistent-quests)))
   (current-log '())
   (current-last-paragraph "")
   (current-part 0)
@@ -90,6 +89,7 @@
   (current-times-begin-traverse-narrated (make-hash))
   (current-times-finish-traverse-narrated (make-hash))
   (current-times-cancel-traverse-narrated (make-hash))
+  (current-times-species-encountered (make-hash))
   (current-flags '())
   (current-round 0)
   (current-in-combat? #f))
@@ -303,7 +303,6 @@
   (define player-status
     (list
      (list " life " (string-append " " (number->string (situation-life *situation*)) " "))
-     (list " grabberkin encounters " (string-append " " (number->string (situation-grabberkin-encounters *situation*)) " "))
      ))
      
   (info-card player-status (string-append "Player status"))
@@ -343,6 +342,7 @@
                       [times-begin-traverse-narrated #:mutable]
                       [times-finish-traverse-narrated #:mutable]
                       [times-cancel-traverse-narrated #:mutable]
+                      [times-species-encountered #:mutable]
                       [flags #:mutable]
                       [round #:mutable]
                       [in-combat? #:mutable]
@@ -366,6 +366,7 @@
               (current-times-begin-traverse-narrated)
               (current-times-finish-traverse-narrated)
               (current-times-cancel-traverse-narrated)
+              (current-times-species-encountered)
               (current-flags)
               (current-round)
               (current-in-combat?)))
@@ -398,6 +399,7 @@
   (current-times-begin-traverse-narrated (state-times-begin-traverse-narrated deserialized-state))
   (current-times-finish-traverse-narrated (state-times-finish-traverse-narrated deserialized-state))
   (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated deserialized-state))
+  (current-times-species-encountered (state-times-species-encountered deserialized-state))
   (current-flags (state-flags deserialized-state))
   (current-round (state-round deserialized-state))
   (current-in-combat? (state-in-combat? deserialized-state))
