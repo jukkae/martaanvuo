@@ -260,12 +260,12 @@
   
   
   (cond ((route-fully-known? route)
-         (string-append " "
+         (string-append "En route: "
                         (place-shortname startpoint)
                         " – "
                         (place-shortname endpoint)
                         " "))
-        (string-append " "
+        (string-append "En route: "
                        (place-shortname startpoint)
                        " – "
                        "???"
