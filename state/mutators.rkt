@@ -16,6 +16,7 @@
 
 (lazy-require
  ["../situation.rkt" (current-flags
+                      current-fragment-id
                       current-in-combat?
                       current-life
                       current-pc
@@ -220,3 +221,6 @@
     [else
      (displayln "increment-achievement!: unknown achievement:")
      (displayln achievement)]))
+
+(define (unset-current-fragment-id!)
+  (current-fragment-id '()))

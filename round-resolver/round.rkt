@@ -35,7 +35,7 @@
      (current-round (add1 (current-round)))
      (round-summary *situation* mode)
      (clear-action-queue!)
-     (when (not (null? (situation-current-fragment-id *situation*)))
+     (when (not (null? (current-fragment-id)))
        (current-fragment-on-begin-round!))]
     
     ['continue
@@ -52,7 +52,7 @@
     (end-combat!))
   #;(wait-for-confirm)
   
-  (when (not (null? (situation-current-fragment-id *situation*)))
+  (when (not (null? (current-fragment-id)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
   ; remove statuses

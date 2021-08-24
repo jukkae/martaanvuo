@@ -33,7 +33,6 @@
 (serializable-struct
  situation
  ([world #:mutable]
-  [current-fragment-id #:mutable]
   )
  #:transparent)
 
@@ -64,6 +63,7 @@
 (define current-pc (make-parameter '()))
 (define current-life (make-parameter 0))
 
+(define current-fragment-id (make-parameter '()))
 
 ;;; Actual state variables
 (define *situation* '())
@@ -73,7 +73,6 @@
         (let ([new-world (world 0 0)]
               )
           (situation new-world
-                     '()
                      )))
   (current-log '())
   (current-last-paragraph "")
@@ -92,18 +91,12 @@
   (current-in-combat? #f)
   (current-quests '())
   (current-persistent-quests '())
-  (current-pc (make-new-pc)))
-
-
-(define (unset-current-fragment-id!)
-  (set-situation-current-fragment-id! *situation* '()))
-
-(define (set-current-fragment-id! id)
-  (set-situation-current-fragment-id! *situation* id))
+  (current-pc (make-new-pc))
+  (current-fragment-id '()))
 
 
 (define (describe-non-combat-situation)
-  (cond ((null? (situation-current-fragment-id *situation*))
+  (cond ((null? (current-fragment-id))
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
@@ -161,6 +154,7 @@
                       [persistent-quests #:mutable]
                       [pc #:mutable]
                       [life #:mutable]
+                      [current-fragment-id #:mutable]
                       ))
 
 (define (save-situation s)
@@ -190,7 +184,8 @@
               (current-quests)
               (current-persistent-quests)
               (current-pc)
-              (current-life)))
+              (current-life)
+              (current-fragment-id)))
   (define serialized-state (serialize st))
   (write serialized-state output-file)
 
@@ -230,5 +225,6 @@
   (current-persistent-quests (state-persistent-quests deserialized-state))
   (current-pc (state-pc deserialized-state))
   (current-life (state-life deserialized-state))
+  (current-fragment-id (state-current-fragment-id deserialized-state))
   
   (set! *situation* situation))
