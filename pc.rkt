@@ -174,3 +174,11 @@
    "Inventory"
    ))
 
+(provide award-xp!)
+(define (award-xp! amount . reason)
+  (if (null? reason)
+      (displayln (string-append "[+" (number->string amount) " xp]"))
+      (displayln (string-append "[+" (number->string amount) " xp: " (car reason) "]")))
+  (set-pc-actor-xp! (pc)
+                    (+ (pc-actor-xp (pc))
+                       amount)))
