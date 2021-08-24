@@ -5,9 +5,12 @@
 (require racket/lazy-require)
 (lazy-require
  ["state/state.rkt"
+  (pc
+   )]
+ ["state/combat.rkt"
   (clean-up-dead-actor!
-   pc
    )])
+
 
 (require racket/serialize)
 
