@@ -13,10 +13,12 @@
 
 ; game-specific, not engine!
 (define (title)
-  (newline)
-  ;(displayln "--------------------------------------------------------------------------------") ; 80
-  (displayln "--------------------------------------------------------------------------------------------") ; 92
-  (newline)
+  (define width 92) ; 80?
+  
+  (br)
+  (prln (string-append* "" (make-list width "-")))
+  (br)
+
   (display-title))
 
 
@@ -28,37 +30,37 @@
 
 
 (define (handle-broken-save)
-  (newline)
-  (displayln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
+  (br)
+  (prln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
   
   (define input (wait-for-input))
   (set! input (string-upcase input))
   
   (cond ((equal? input "D")
          (delete-save-file)
-         (newline)
-         (displayln "Progress deleted. Starting from the beginning. Progress is saved automatically."))
+         (br)
+         (prln "Progress deleted. Starting from the beginning. Progress is saved automatically."))
 
         ((equal? input "Q")
-         (newline)
-         (displayln "Saved progress was not deleted, but it is still corrupt or incompatible.")
-         (newline)
-         (displayln "Come back soon. Martaanvuo is eager for your return.")
+         (br)
+         (prln "Saved progress was not deleted, but it is still corrupt or incompatible.")
+         (br)
+         (prln "Come back soon. Martaanvuo is eager for your return.")
          (exit))
           
         (else
-         (newline)
-         (displayln "It was [D] or [Q], but nevermind. Your saved progress was not deleted, but it is still corrupt or incompatible.")
-         (newline)
-         (displayln "Martaanvuo awaits your return.")
+         (br)
+         (prln "It was [D] or [Q], but nevermind. Your saved progress was not deleted, but it is still corrupt or incompatible.")
+         (br)
+         (prln "Martaanvuo awaits your return.")
          (exit))))
 
 
 (define (resolve-game mode)
   (case mode
     ['begin
-     (newline)
-     (displayln "Progress is saved automatically.")]
+     (br)
+     (prln "Progress is saved automatically.")]
 
     ['restart '()] ; If the player restarts, they should know that progress is saved automatically.
     
@@ -71,8 +73,9 @@
                         (handle-broken-save)
                         (set! mode 'begin))])
        (load-situation-from-state serialized-state)
-       (newline)
-       (displayln "Progress loaded."))])
+
+       (br)
+       (prln "Progress loaded."))])
   
   (title)
 
@@ -125,7 +128,8 @@
     ['restart
      (delete-save-file)
      (reset-situation!)
-     (displayln "Progress deleted. Starting from the beginning. Progress is saved automatically.")
+     
+     (prln "Progress deleted. Starting from the beginning. Progress is saved automatically.")
      (resolve-game 'restart)]))
 
 ; engine / game-resolver?

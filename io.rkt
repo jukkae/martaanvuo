@@ -19,6 +19,9 @@
  ["state/logging.rkt"
   (append-to-log)])
 
+(define prln displayln)
+(define br newline)
+
 (define (info-card content title)
   (when (not (null? title)) (displayln (string-append "[" title "]")))
   (when (not (null? (prune content)))
