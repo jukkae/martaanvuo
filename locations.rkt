@@ -89,6 +89,10 @@
     ['(martaanvuo-swamp crematory)
      (p "Otava takes the small side path. Some of the trees look burned, and there's a lingering smell of acrid smoke and ash in the air.")
      ]
+
+    ['(crematory martaanvuo-swamp)
+     (p "Otava goes from the dreary lime courtyard of the crematory to the small path.")
+     ]
     
     [else
      (dev-note "describe-begin-traverse-action: unknown key:")
@@ -158,6 +162,10 @@
        [else
         (p
          "Otava comes to the Crematory.")])]
+
+    ['(crematory martaanvuo-swamp)
+     (p "The path leads Otava to the fork in Martaanvuo swamp.")
+     ]
 
     [else
      (dev-note "describe-finish-traverse-action: unknown key:")
