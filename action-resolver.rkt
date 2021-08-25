@@ -22,8 +22,10 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-(require "round-resolver/event.rkt")
-(require "round-resolver/timeline.rkt")
+(require "round-resolver/event.rkt"
+         "round-resolver/simulation.rkt"
+         "round-resolver/timeline.rkt")
+
 
 (lazy-require
  ["state/combat.rkt"
@@ -38,6 +40,7 @@
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
+   location-on-enter!
    )])
 
 (lazy-require
@@ -68,7 +71,7 @@
               ))]
       ['back-off 'ok]
       ['win-game 'win-game]
-      ['go-to-location 'ok]
+      ['go-to-location (resolve-go-to-action! action)]
       ['traverse (resolve-traverse-action! action)]
       ['cancel-traverse 'ok]
       ['skip
@@ -128,6 +131,39 @@
       [else
        (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))])))
 
+
+(define (resolve-go-to-action! action)
+  (define elapsed-time 0)
+  (cond ((not (pending? action))
+         (describe-begin-traverse-action action)))
+
+  (define result
+    (let/ec return
+      (begin
+        ; begin advancing time
+      (define timeline
+        (advance-time-until-next-interesting-event! (action-duration action)))
+      (set! elapsed-time (timeline-duration timeline))
+
+      #;(narrate-timeline timeline)
+
+      (when (eq? (timeline-metadata timeline) 'interrupted)
+        (handle-pc-action-interrupted! timeline)
+        (return 'interrupted))
+
+
+      (define next-location (action-target action))
+      (move-pc-to-location! next-location)
+      (location-on-enter! (current-location))
+
+      (describe-finish-traverse-action action)
+                          
+      (when (not (null? (location-items (action-target action))))
+        (pick-up-items!))
+
+      'ok)
+      ))
+  result)
 
 
 
@@ -194,6 +230,8 @@
                           
       (when (not (null? (location-items (action-target action))))
         (pick-up-items!))
+
+      'ok
 
 
       ))

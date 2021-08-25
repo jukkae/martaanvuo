@@ -36,21 +36,7 @@
         ['cancel-traverse
          (dev-note "cancel-traverse broken")]
 
-        [else
-         (when (and (not (eq? (action-symbol action) 'traverse))
-                    (not (eq? (action-symbol action) 'cancel-traverse)))
-           ; begin advancing time
-           (define timeline
-             (advance-time-until-next-interesting-event! (action-duration action)))
-           (set! elapsed-time (timeline-duration timeline))
-
-           #;(narrate-timeline timeline)
-
-           ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-           (when (eq? (timeline-metadata timeline) 'interrupted)
-             (handle-pc-action-interrupted! timeline)
-             (return 'interrupted))
-           )])
+        )
                    
       ; should check results maybe here?
       (define action-result (resolve-action! action))
@@ -58,18 +44,6 @@
       ; post-resolve
 
       (case (action-symbol action)
-        ['go-to-location
-         (define next-location (action-target action))
-         (move-pc-to-location! next-location)
-         (location-on-enter! (current-location))
-
-         (describe-finish-traverse-action action)
-                          
-         (when (not (null? (location-items (action-target action))))
-           (pick-up-items!))]
-        
-        
-        
         ['cancel-traverse
          (reset-pending-action!)
          (move-pc-to-location! (action-target action))
