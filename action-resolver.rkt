@@ -12,13 +12,18 @@
 (require "condition.rkt")
 (require "io.rkt")
 (require "item.rkt")
+(require "location.rkt")
 (require "pc.rkt")
+(require "route.rkt")
 (require "state/state.rkt")
 (require "state/logging.rkt")
 (require "stance.rkt")
 (require "status.rkt")
 (require "utils.rkt")
 (require "world.rkt")
+
+(require "round-resolver/event.rkt")
+(require "round-resolver/timeline.rkt")
 
 (lazy-require
  ["state/combat.rkt"
@@ -27,6 +32,193 @@
    display-pc-combatant-info
    add-combat-flag
    )])
+
+(lazy-require
+ ["locations.rkt"
+  (describe-begin-traverse-action
+   describe-finish-traverse-action
+   describe-cancel-traverse-action
+   )])
+
+(lazy-require
+ ["round-resolver/event-handler.rkt"
+  (handle-interrupting-event!
+   )])
+
+
+; what all should this return?
+(define (resolve-action! action)
+  (when (actor-alive? (action-actor action))
+    (case (action-symbol action)
+      ; "special" actions first
+      ['end-run
+       (cond ((flag-set? 'ending-run-allowed)
+              #;(p "At least it's something.")
+              'end-run)
+             (else
+              (set-flag 'tried-to-go-back)
+              (p "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
+              (wait-for-confirm)
+              (next-chapter!) ; end chapter
+              (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
+              (wait-for-confirm)
+              (p "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")
+              (p "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
+              'failure
+              ))]
+      ['back-off 'ok]
+      ['win-game 'win-game]
+      ['go-to-location 'ok]
+      ['traverse (resolve-traverse-action! action)]
+      ['cancel-traverse 'ok]
+      ['skip
+       (cond ((member 'silent (action-details action))
+              'ok)
+             (else
+              'ok))]
+      
+      ; the rest
+      ['melee (resolve-melee-action! action)]
+      ['shoot (resolve-shoot-action! action)]
+      ['forage (resolve-forage-action! action)]
+      ['sleep
+       (p "Otava makes camp.")
+       'ok]
+      
+      ['flee (resolve-flee-action! action)]
+      ['break-free (resolve-break-free-action! action)]
+
+      ['anklebreaker (resolve-anklebreaker-action! action)]
+      ['pull-under (resolve-pull-under-action! action)]
+      ['release-grip 'grip-released]
+
+      ['go-to-engaged (resolve-go-to-engaged-action! action)]
+      ['go-to-close (resolve-go-to-close-action! action)]
+
+
+      ['inflict-status
+       (define target (action-target action))
+       (define status (car (action-details action)))
+       (when (status? status)
+         (when (eq? (status-type status) 'bound)
+           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
+           
+       (inflict-status! target status)
+       'ok]
+
+      ['modify-status
+       (define target (action-target action))
+       (define status (car (action-details action)))
+       (when (eq? (status-type status) 'bound) ; this is shit, refactor
+         (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+         (define amount (status-lifetime status))
+         (modify-actor-status-lifetime target 'bound amount)
+         )
+       'ok]
+
+      ['inflict-condition
+       (define target (action-target action))
+       (define condition (car (action-details action)))
+       (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
+       #;(when (eq? (status-type status) 'bound)
+           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+       #;(inflict-status! target status)
+       'ok]
+
+      [else
+       (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))])))
+
+
+
+
+(define (resolve-traverse-action! action)
+  (define elapsed-time 0)
+  (cond ((not (pending? action))
+         (describe-begin-traverse-action action)))
+
+  (define result
+    (let/ec return
+      (move-pc-to-location! (action-target action))
+      (when (not (pending? action))
+        ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
+
+        (define encounter-roll
+          (if (not (route-has-detail? (current-location) 'no-encounters))
+              (d 1 6)
+              #f))
+
+        (when encounter-roll
+          (define msg (string-append "Encounter roll: "
+                                     (number->string encounter-roll)))
+          (notice msg)
+          (define encounter-event
+            (if (< encounter-roll 4)
+                (make-event 'spawn-enemies
+                            '() ; pack info about enemies / event here
+                            #:interrupting? #t)
+                '()))
+
+          (cond ((not (null? encounter-event))
+                 ; create timeline to leverage existing code
+                 (define events
+                   (list
+                    (make-event 'spawn-enemies
+                                '() ; pack info about enemies / event here
+                                #:interrupting? #t)))
+                 (define metadata 'interrupted)
+                 (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
+                 (define tl (timeline metadata events duration))
+
+                 (set! elapsed-time (timeline-duration tl))
+
+                 ; DUPLICATION, clean up
+                 ; display events
+                 #;(narrate-timeline tl)
+
+                 ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
+                 (when (eq? (timeline-metadata tl) 'interrupted)
+                   (handle-pc-action-interrupted! tl)
+                   (return 'interrupted))))))
+                          
+
+
+      (set-route-traversed! (action-target action))
+
+      (define next-location (if (memq 'a-to-b (action-details action))
+                                (route-b (action-target action))
+                                (route-a (action-target action))))
+      (move-pc-to-location! next-location)
+
+
+      (describe-finish-traverse-action action)
+                          
+      (when (not (null? (location-items (action-target action))))
+        (pick-up-items!))
+
+
+      ))
+
+  
+  
+
+  result
+  )
+
+
+(define (handle-pc-action-interrupted! timeline)
+  (define interrupting-events
+    (filter
+     (λ (event) (event-interrupting? event))
+     (timeline-events timeline)))
+  
+  (cond ((eq? (length interrupting-events) 1)
+         (define event (car interrupting-events))
+         (handle-interrupting-event! event)
+         )
+        (else
+         (dev-note "handle-pc-action-interrupted!: unexpected amount of interrupting events.")))
+  )
+
 
 ; "generic" attack with type
 (define (resolve-melee-action! action)
@@ -507,87 +699,3 @@
                (display-combatant-info (action-actor action))
                'failure))
          )))
-
-
-
-; what all should this return?
-(define (resolve-action! action)
-  (when (actor-alive? (action-actor action))
-    (case (action-symbol action)
-      ; "special" actions first
-      ['end-run
-         (cond ((flag-set? 'ending-run-allowed)
-                #;(p "At least it's something.")
-                'end-run)
-               (else
-                (set-flag 'tried-to-go-back)
-                (p "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
-                (wait-for-confirm)
-                (next-chapter!) ; end chapter
-                (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
-                (wait-for-confirm)
-                (p "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")
-                (p "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
-                'failure
-                ))]
-      ['back-off 'ok]
-      ['win-game 'win-game]
-      ['go-to-location 'ok]
-      ['traverse 'ok]
-      ['cancel-traverse 'ok]
-      ['skip
-       (cond ((member 'silent (action-details action))
-              'ok)
-             (else
-              'ok))]
-      
-      ; the rest
-      ['melee (resolve-melee-action! action)]
-      ['shoot (resolve-shoot-action! action)]
-      ['forage (resolve-forage-action! action)]
-      ['sleep
-       (p "Otava makes camp.")
-       'ok]
-      
-      ['flee (resolve-flee-action! action)]
-      ['break-free (resolve-break-free-action! action)]
-
-      ['anklebreaker (resolve-anklebreaker-action! action)]
-      ['pull-under (resolve-pull-under-action! action)]
-      ['release-grip 'grip-released]
-
-      ['go-to-engaged (resolve-go-to-engaged-action! action)]
-      ['go-to-close (resolve-go-to-close-action! action)]
-
-
-      ['inflict-status
-       (define target (action-target action))
-       (define status (car (action-details action)))
-       (when (status? status)
-         (when (eq? (status-type status) 'bound)
-           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
-           
-       (inflict-status! target status)
-       'ok]
-
-      ['modify-status
-       (define target (action-target action))
-       (define status (car (action-details action)))
-       (when (eq? (status-type status) 'bound) ; this is shit, refactor
-         (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-         (define amount (status-lifetime status))
-         (modify-actor-status-lifetime target 'bound amount)
-         )
-       'ok]
-
-      ['inflict-condition
-       (define target (action-target action))
-       (define condition (car (action-details action)))
-       (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
-       #;(when (eq? (status-type status) 'bound)
-           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
-       #;(inflict-status! target status)
-       'ok]
-
-      [else
-       (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))])))
