@@ -67,6 +67,24 @@
         (p
          "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
      ]
+    ['(martaanvuo-swamp martaanvuo-docks)
+     (case n
+       [(1)
+        (p
+         "The trail disappears for a bit in the middle of sharp rocks.")]
+       [else
+        (p
+         "Otava comes to the sharp rocks.")])
+     ]
+    ['(martaanvuo-docks martaanvuo-swamp)
+     (case n
+       [(1)
+        (p
+         "The smell of rotting fish slowly disappears as Otava climbs up the vehicle trail.")]
+       [else
+        (p
+         "Otava climbs up the vehicle trail, away from the docks and the river.")])
+     ]
     [else
      (dev-note "describe-begin-traverse-action: unknown key:")
      (displayln key)])
@@ -122,6 +140,11 @@
        [else
         (p
          "The docks slowly appear from the mist.")])]
+
+    ['(martaanvuo-docks martaanvuo-swamp)
+     (p
+         "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
+     ]
 
     [else
      (dev-note "describe-finish-traverse-action: unknown key:")
