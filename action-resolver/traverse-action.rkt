@@ -2,7 +2,8 @@
 
 (provide
  resolve-cancel-traverse-action!
- resolve-traverse-action!)
+ resolve-traverse-action!
+ resolve-go-to-action!)
 
 (require racket/lazy-require)
 
@@ -108,3 +109,36 @@
 
   result
   )
+
+
+(define (resolve-go-to-action! action)
+  (define elapsed-time 0)
+  (cond ((not (pending? action))
+         (describe-begin-traverse-action action)))
+
+  (define result
+    (let/ec return
+      (begin
+        ; begin advancing time
+        (define timeline
+          (advance-time-until-next-interesting-event! (action-duration action)))
+        (set! elapsed-time (timeline-duration timeline))
+
+        #;(narrate-timeline timeline)
+
+        (when (eq? (timeline-metadata timeline) 'interrupted)
+          (return timeline))
+
+
+        (define next-location (action-target action))
+        (move-pc-to-location! next-location)
+        (location-on-enter! (current-location))
+
+        (describe-finish-traverse-action action)
+                          
+        (when (not (null? (location-items (action-target action))))
+          (pick-up-items!))
+
+        'ok)
+      ))
+  result)
