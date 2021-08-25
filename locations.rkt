@@ -87,7 +87,7 @@
      ]
 
     ['(martaanvuo-swamp crematory)
-     '()
+     (p "Otava takes the small side path. Some of the trees look burned, and there's a lingering smell of acrid smoke and ash in the air.")
      ]
     
     [else
