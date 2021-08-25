@@ -5,8 +5,8 @@
 (require racket/struct)
 (require racket/serialize)
 
-(require "io.rkt")
-(require "utils.rkt")
+(require "../io.rkt")
+(require "../utils.rkt")
 
 
 (serializable-struct

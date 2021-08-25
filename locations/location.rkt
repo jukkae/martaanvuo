@@ -6,18 +6,18 @@
 (require racket/struct)
 (require racket/serialize)
 
-(require "actor.rkt")
-(require "action.rkt")
-(require "io.rkt") ; TODO: this is only needed for the info card thingy, which likely belongs somewhere else
+(require "../actor.rkt")
+(require "../action.rkt")
+(require "../io.rkt") ; TODO: this is only needed for the info card thingy, which likely belongs somewhere else
 (require "place.rkt")
 (require "route.rkt")
-(require "utils.rkt")
+(require "../utils.rkt")
 
 (lazy-require
- ["state/state.rkt" (pc)])
+ ["../state/state.rkt" (pc)])
 
 (lazy-require
- ["world.rkt" (remove-actor-from-its-current-location!)])
+ ["../world.rkt" (remove-actor-from-its-current-location!)])
 
 (define (add-actor-to-location! location actor)
   (cond ((route? location)

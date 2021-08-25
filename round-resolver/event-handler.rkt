@@ -2,7 +2,7 @@
 
 (provide handle-interrupting-event!)
 
-(require "../locations.rkt"
+(require "../locations/locations.rkt"
          "../state/state.rkt")
 
 (require "event.rkt")

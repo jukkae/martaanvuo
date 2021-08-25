@@ -11,10 +11,10 @@
 (require "choice.rkt")
 (require "io.rkt")
 (require "item.rkt")
-(require "location.rkt")
+(require "locations/location.rkt")
 (require "pc.rkt")
-(require "place.rkt")
-(require "route.rkt")
+(require "locations/place.rkt")
+(require "locations/route.rkt")
 
 (require "stance.rkt")
 (require "time.rkt")

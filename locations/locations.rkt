@@ -4,16 +4,16 @@
 
 (require racket/lazy-require)
 
-(require "api.rkt")
+(require "../api.rkt")
 
-(require "action.rkt"
-         "blindscraper.rkt"
-         "grabberkin.rkt"
+(require "../action.rkt"
+         "../blindscraper.rkt"
+         "../grabberkin.rkt"
          "location.rkt"
          "place.rkt")
 
 
-(lazy-require ["state/state.rkt"
+(lazy-require ["../state/state.rkt"
                (current-location
                 times-begin-traverse-narrated
                 times-begin-traverse-narrated++
@@ -24,7 +24,7 @@
                 set-flag
                 quest-exists?)])
 
-(lazy-require ["state/logging.rkt"
+(lazy-require ["../state/logging.rkt"
                (next-chapter!)])
 
 

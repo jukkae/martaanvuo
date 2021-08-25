@@ -11,7 +11,7 @@
  ["world.rkt"
   (remove-actor-from-its-current-location!
    )]
- ["location.rkt"
+ ["locations/location.rkt"
   (add-feature-to-location!
    )])
 

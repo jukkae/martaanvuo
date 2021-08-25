@@ -8,7 +8,7 @@
 (require "../actor.rkt"
          "../condition.rkt"
          "../io.rkt"
-         "../location.rkt"
+         "../locations/location.rkt"
          "../pc.rkt"
          "../stance.rkt"
          "../status.rkt"

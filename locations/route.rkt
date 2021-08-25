@@ -5,8 +5,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "io.rkt")
-(require "utils.rkt")
+(require "../io.rkt")
+(require "../utils.rkt")
 
 (lazy-require
  ["location.rkt"
@@ -20,7 +20,7 @@
    place-visited?)])
 
 (lazy-require
- ["action.rkt"
+ ["../action.rkt"
   (action-details)])
 
 (lazy-require

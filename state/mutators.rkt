@@ -7,9 +7,9 @@
 
 (require "../actor.rkt")
 (require "../io.rkt")
-(require "../location.rkt")
+(require "../locations/location.rkt")
 (require "../pc.rkt")
-(require "../place.rkt")
+(require "../locations/place.rkt")
 (require "../quest.rkt")
 (require "../stance.rkt")
 (require "../utils.rkt")

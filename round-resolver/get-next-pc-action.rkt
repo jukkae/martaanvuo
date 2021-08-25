@@ -19,7 +19,7 @@
          "../choice.rkt"
          "../decision.rkt"
          "../io.rkt"
-         "../locations.rkt"
+         "../locations/locations.rkt"
          "../state/state.rkt")
 
 (require "fragment-handler.rkt")

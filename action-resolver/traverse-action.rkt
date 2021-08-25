@@ -9,8 +9,8 @@
 
 (require "../action.rkt"
          "../io.rkt"
-         "../location.rkt"
-         "../route.rkt"
+         "../locations/location.rkt"
+         "../locations/route.rkt"
          "../state/state.rkt"
          "../utils.rkt"
          "../world.rkt")
@@ -20,7 +20,7 @@
          "../round-resolver/timeline.rkt")
 
 (lazy-require
- ["../locations.rkt"
+ ["../locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action

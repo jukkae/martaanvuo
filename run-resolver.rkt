@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require "io.rkt")
-(require "location.rkt")
+(require "locations/location.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
 (require "quests.rkt")
