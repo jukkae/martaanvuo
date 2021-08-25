@@ -18,7 +18,7 @@
          "../round-resolver/timeline.rkt")
 
 (lazy-require
- ["locations.rkt"
+ ["../locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
