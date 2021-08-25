@@ -275,3 +275,126 @@
      (spawn-blindscraper-encounter!)
      ]
     ))
+
+
+
+; internal
+(define (get-location-short-description location)
+  (define name
+    (cond ((place? location)
+           (place-shortname location))
+          ((route? location)
+           (route-shortname location))
+          ))
+  (define features-str
+    ; Disabled for now, just do empty string
+    #;(cond ((not (null? (location-features location)))
+             (cond ((memq 'magpie-effigy (location-features location))
+                    "Magpie Effigy")
+                   (else "Unknown features TODO")))
+            (else ; no features
+             ""))
+    "")
+  (string-append name
+                 features-str)
+  )
+
+
+(define (display-location-info-card location [title "Location"])
+  (cond ((place? location)
+         (display-place-info-card location))
+        ((route? location)
+         (display-route-info-card location))
+        (else
+         (displayln "location-info-card: unknown location:")
+         (displayln location))))
+
+
+(define (move-pc-to-location! location)
+  ; TODO: location on-exit / on-enter triggers here
+  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
+  (remove-actor-from-its-current-location! (pc))
+  (set-actor-location! (pc) location)
+  (add-actor-to-location! location (pc))
+  (when (place? location)
+    (set-place-visited?! location #t)
+    (for ([route (place-routes location)])
+      (when #t ; if not hidden
+        (set-route-endpoint-visited! route location)
+        ))
+      
+    ))
+
+
+(define (location-neighbors location)
+  (cond ((route? location)
+         (list
+          (route-a location)
+          (route-b location)))
+        ((place? location)
+         (place-routes location))))
+
+
+(define (display-route-info-card route)
+  (define id (route-id route))
+  (define title "Location (en route)")
+
+  (define pending-action (current-pending-action))
+  (define details (action-details pending-action))
+         
+  (define traverse-direction
+    (if (memq 'a-to-b details)
+        'a-to-b
+        'b-to-a))
+
+  (define endpoint
+    (case traverse-direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+
+  (define startpoint
+    (case traverse-direction
+      ['a-to-b (route-a route)]
+      ['b-to-a (route-b route)]))
+
+  
+  (define body
+    (cond ((route-fully-known? route)
+           (prune
+            (list
+             (list
+              (string-append " "
+                             (place-shortname startpoint)
+                             " – "
+                             (place-shortname endpoint)
+                             " ")
+              (string-append " "
+                             "[route]"
+                             " "))
+             (when (not (null? (route-features route)))
+               (list (string-append " "
+                                    "features"
+                                    " ")
+                     (string-append " "
+                                    (~v (route-features route))
+                                    " "))))))
+          (else
+           (prune
+            (list
+             (list
+              (string-append " "
+                             (get-location-name-from-location startpoint)
+                             " – "
+                             "???"
+                             " ")
+              (string-append " "
+                             "[route]"
+                             " "))
+             (when (not (null? (route-features route)))
+               (list (string-append " "
+                                    "features"
+                                    " ")
+                     (string-append " "
+                                    (~v (route-features route))
+                                    " "))))))))
+  (info-card body title))

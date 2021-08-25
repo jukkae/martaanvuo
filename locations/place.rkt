@@ -11,16 +11,11 @@
 
 (serializable-struct
  place
- ([id #:mutable] ; has to be mutable for serialization reasons
-  [routes #:mutable]
+ ([routes #:mutable]
   [type #:mutable] ; has to be mutable for serialization reasons
   [on-enter-symbol #:mutable] ; symbol, because lambdas cannot be easily serialized
-  [features #:mutable]
-  [actors #:mutable]
   [visited? #:mutable]
-  [items #:mutable]
   [actions-provided #:mutable]
-  [tags #:mutable]
   [shortname #:mutable])
 
  #:constructor-name place*

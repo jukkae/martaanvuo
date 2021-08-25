@@ -5,13 +5,7 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "../io.rkt")
-(require "../utils.rkt")
-
-(lazy-require
- ["location.rkt"
-  (get-location-name-from-location
-   location-id)])
+(require "location.rkt")
 
 (lazy-require
  ["place.rkt"
@@ -20,22 +14,14 @@
    place-visited?)])
 
 (lazy-require
- ["../action.rkt"
-  (action-details)])
-
-(lazy-require
  ["state/state.rkt"
-  (current-pending-action
-   get-pending-traverse-direction)])
+  (get-pending-traverse-direction)])
 
 (serializable-struct
  route
- ([id #:mutable] ; mutable for s11n, but should not be mutated
-  [a #:mutable]
-  [b #:mutable]
-  [details #:mutable]
-  [actors #:mutable]
-  [features #:mutable])
+ location
+ ([a #:mutable]
+  [b #:mutable])
  #:transparent
  #:constructor-name route*)
 
@@ -206,19 +192,17 @@
                 (place-id (route-b route)))
            'b)))
   (case endpoint
-    ['a (set-route-details! route
-                            (append-element (route-details route) 'a-visited))]
-    ['b (set-route-details! route
-                            (append-element (route-details route) 'b-visited))]))
+    ['a (add-detail-to-location! route 'a-visited)]
+    ['b (add-detail-to-location! route 'b-visited)]))
 
 (define (route-traversed? route)
-  (memq 'traversed (route-details route)))
+  (location-has-detail? route 'traversed))
 
 (define (route-a-visited? route)
-  (memq 'a-visited (route-details route)))
+  (location-has-detail? route 'a-visited))
 
 (define (route-b-visited? route)
-  (memq 'b-visited (route-details route)))
+  (location-has-detail? route 'b-visited))
 
 (define (route-place-known? route place)
   (define endpoint
@@ -234,27 +218,14 @@
   )
 
 (define (set-route-traversed! route)
-  (set-route-details! route (append-element (route-details route) 'traversed)))
+  (add-detail-to-location! route 'traversed))
 
 (define (route-fully-known? route)
   (and (route-a-visited? route)
        (route-b-visited? route)
        (route-traversed? route)))
 
-(define (route-has-detail? route detail)
-  (memq detail (route-details route)))
 
-(define (route-add-detail route detail)
-  (when (not (route-has-detail? route detail))
-    (set-route-details! route
-                        (append-element (route-details route)
-                                        detail))))
-
-(define (route-remove-detail route detail)
-  (when (route-has-detail? route detail)
-    (set-route-details! route
-                        (remove detail
-                                (route-details route)))))
 
 (define (route-shortname route)
   (define direction (get-pending-traverse-direction))
@@ -281,68 +252,3 @@
                        " – "
                        "???"
                        " ")))
-
-; this should be broken up; action handling elsewhere
-(define (display-route-info-card route)
-  (define id (route-id route))
-  (define title "Location (en route)")
-
-  (define pending-action (current-pending-action))
-  (define details (action-details pending-action))
-         
-  (define traverse-direction
-    (if (memq 'a-to-b details)
-        'a-to-b
-        'b-to-a))
-
-  (define endpoint
-    (case traverse-direction
-      ['a-to-b (route-b route)]
-      ['b-to-a (route-a route)]))
-
-  (define startpoint
-    (case traverse-direction
-      ['a-to-b (route-a route)]
-      ['b-to-a (route-b route)]))
-
-  
-  (define body
-    (cond ((route-fully-known? route)
-           (prune
-            (list
-             (list
-              (string-append " "
-                             (place-shortname startpoint)
-                             " – "
-                             (place-shortname endpoint)
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
-             (when (not (null? (route-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (route-features route))
-                                    " "))))))
-          (else
-           (prune
-            (list
-             (list
-              (string-append " "
-                             (get-location-name-from-location startpoint)
-                             " – "
-                             "???"
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
-             (when (not (null? (route-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (route-features route))
-                                    " "))))))))
-  (info-card body title))
