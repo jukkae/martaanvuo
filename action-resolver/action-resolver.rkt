@@ -41,16 +41,10 @@
    add-combat-flag
    )])
 
-(lazy-require
- ["locations.rkt"
-  (describe-begin-traverse-action
-   describe-finish-traverse-action
-   describe-cancel-traverse-action
-   location-on-enter!
-   )])
+
 
 (lazy-require
- ["round-resolver/event-handler.rkt"
+ ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 

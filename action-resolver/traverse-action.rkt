@@ -77,6 +77,12 @@
 
                  (set! elapsed-time (timeline-duration tl))
 
+                 (define new-elapsed-time (+ (world-elapsed-time (current-world))
+                                             elapsed-time))
+                 (set-world-elapsed-time!
+                  (current-world)
+                  new-elapsed-time)
+
                  ; DUPLICATION, clean up
                  ; display events
                  #;(narrate-timeline tl)
