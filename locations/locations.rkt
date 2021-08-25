@@ -4,21 +4,25 @@
 
 (require racket/lazy-require)
 
+(require "location.rkt"
+         "place.rkt"
+         "route.rkt")
 
-(lazy-require
+(require "../action.rkt")
+
+
+#;(lazy-require
  ["state/state.rkt"
   (get-pending-traverse-direction)])
 
-(require "../api.rkt")
+(require "../api.rkt"
+         "../actor.rkt")
 
-(require "../action.rkt"
-         "../blindscraper.rkt"
-         "../grabberkin.rkt"
-         "location.rkt"
-         "place.rkt")
+(require "../blindscraper.rkt"
+         "../grabberkin.rkt")
 
 
-(lazy-require ["../state/state.rkt"
+#;(lazy-require ["../state/state.rkt"
                (current-location
                 times-begin-traverse-narrated
                 times-begin-traverse-narrated++
@@ -29,7 +33,7 @@
                 set-flag
                 quest-exists?)])
 
-(lazy-require ["../state/logging.rkt"
+#;(lazy-require ["../state/logging.rkt"
                (next-chapter!)])
 
 
@@ -264,9 +268,9 @@
   (define
     encounter-type
     (cond ((place? location)
-           (cond ((eq? (place-type location) 'ridges)
+           (cond ((eq? (location-type location) 'ridges)
                   'blindscraper)
-                 ((eq? (place-type location) 'valleys)
+                 ((eq? (location-type location) 'valleys)
                   'grabberkin)
                  (else (take-random encounter-types))))
           ((route? location)
@@ -341,7 +345,7 @@
 
 
 (define (display-route-info-card route)
-  (define id (route-id route))
+  (define id (location-id route))
   (define title "Location (en route)")
 
   (define pending-action (current-pending-action))
@@ -376,36 +380,36 @@
               (string-append " "
                              "[route]"
                              " "))
-             (when (not (null? (route-features route)))
+             (when (not (null? (location-features route)))
                (list (string-append " "
                                     "features"
                                     " ")
                      (string-append " "
-                                    (~v (route-features route))
+                                    (~v (location-features route))
                                     " "))))))
           (else
            (prune
             (list
              (list
               (string-append " "
-                             (get-location-name-from-location startpoint)
+                             (place-shortname startpoint)
                              " – "
                              "???"
                              " ")
               (string-append " "
                              "[route]"
                              " "))
-             (when (not (null? (route-features route)))
+             (when (not (null? (location-features route)))
                (list (string-append " "
                                     "features"
                                     " ")
                      (string-append " "
-                                    (~v (route-features route))
+                                    (~v (location-features route))
                                     " "))))))))
   (info-card body title))
 
 (define (display-place-info-card location [title "Location"])
-  (define id (place-id location))
+  (define id (location location))
   (define body
     (prune (list
             (when (not (eq? (place-shortname location) ""))
@@ -413,7 +417,7 @@
                                    (place-shortname location)
                                    " ")
                     "  "))
-            (when (not (null? (place-id location)))
+            (when (not (null? (location-id location)))
               (list (string-append " "
                                    "id"
                                    " ")
@@ -421,27 +425,27 @@
                                    (cond ((number? id) (number->string id))
                                          ((symbol? id) (symbol->string id)))
                                    " ")))
-            (when (and (null? (place-id location))
-                       (not (null? (place-type location))))
+            (when (and (null? (location-id location))
+                       (not (null? (location-type location))))
               (list (string-append " "
                                    "type"
                                    " ")
                     (string-append " "
-                                   (symbol->string (place-type location))
+                                   (symbol->string (location-type location))
                                    " ")))
-            (when (not (null? (place-items location)))
+            (when (not (null? (location-items location)))
               (list (string-append " "
                                    "items"
                                    " ")
                     (string-append " "
-                                   (~v (place-items location))
+                                   (~v (location-items location))
                                    " ")))
-            (when (not (null? (place-features location)))
+            (when (not (null? (location-features location)))
               (list (string-append " "
                                    "features"
                                    " ")
                     (string-append " "
-                                   (~v (place-features location))
+                                   (~v (location-features location))
                                    " ")))
             )))
   (info-card body title))
@@ -450,11 +454,11 @@
 
 (define (get-traverse-text route start-location)
   (define direction
-    (cond ((eq? (place-id start-location)
-                (place-id (route-a route)))
+    (cond ((eq? (location-id start-location)
+                (location-id (route-a route)))
            'a-to-b)
-          ((eq? (place-id start-location)
-                (place-id (route-b route)))
+          ((eq? (location-id start-location)
+                (location-id (route-b route)))
            'b-to-a)))
 
   (define (get-route-short-description)
@@ -575,11 +579,11 @@
 
 (define (route-other-end-from route start-location)
   (define start
-    (cond ((eq? (place-id start-location)
-                (place-id (route-a route)))
+    (cond ((eq? (location-id start-location)
+                (location-id (route-a route)))
            'a)
-          ((eq? (place-id start-location)
-                (place-id (route-b route)))
+          ((eq? (location-id start-location)
+                (location-id (route-b route)))
            'b)))
   (define endpoint
     (case start
@@ -591,11 +595,11 @@
 
 (define (set-route-endpoint-visited! route location)
   (define endpoint
-    (cond ((eq? (place-id location)
-                (place-id (route-a route)))
+    (cond ((eq? (location-id location)
+                (location-id (route-a route)))
            'a)
-          ((eq? (place-id location)
-                (place-id (route-b route)))
+          ((eq? (location-id location)
+                (location-id (route-b route)))
            'b)))
   (case endpoint
     ['a (add-detail-to-location! route 'a-visited)]
@@ -604,11 +608,11 @@
 
 (define (route-place-known? route place)
   (define endpoint
-    (cond ((eq? (place-id place)
-                (place-id (route-a route)))
+    (cond ((eq? (location-id place)
+                (location-id (route-a route)))
            'a)
-          ((eq? (place-id place)
-                (place-id (route-b route)))
+          ((eq? (location-id place)
+                (location-id (route-b route)))
            'b)))
   (case endpoint
     ['a (place-visited? (route-a route))]
