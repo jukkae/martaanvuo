@@ -26,7 +26,8 @@
          "../round-resolver/simulation.rkt"
          "../round-resolver/timeline.rkt")
 
-(require "special-actions.rkt")
+(require "special-actions.rkt"
+         "traverse-action.rkt")
 
 
 (lazy-require
@@ -60,19 +61,12 @@
       (case (action-symbol action)
       ; "special" actions first
       ['end-run (resolve-special-action! action)]
-      ['back-off 'ok]
-      ['win-game 'win-game]
+      ['back-off (resolve-special-action! action)]
+      ['win-game (resolve-special-action! action)]
+        
       ['go-to-location (resolve-go-to-action! action)]
       ['traverse (resolve-traverse-action! action)]
-      ['cancel-traverse
-       (reset-pending-action!)
-       (move-pc-to-location! (action-target action))
-
-       (describe-cancel-traverse-action action)
-       (display-location-info-card (current-location))
-       (when (not (null? (location-items (action-target action))))
-         (pick-up-items!))
-       'ok]
+      ['cancel-traverse (resolve-cancel-traverse-action! action)]
       ['skip
        (cond ((member 'silent (action-details action))
               'ok)
