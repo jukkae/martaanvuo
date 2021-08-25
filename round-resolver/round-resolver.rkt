@@ -12,7 +12,7 @@
          "../state/state.rkt")
 
 (require "../action.rkt"
-         "../action-resolver.rkt"
+         "../action-resolver/action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
          "../location.rkt")

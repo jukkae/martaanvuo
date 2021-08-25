@@ -2,7 +2,7 @@
 
 
 (require "../action.rkt"
-         "../action-resolver.rkt"
+         "../action-resolver/action-resolver.rkt"
          "../actor.rkt"
          "../io.rkt"
          "../pc.rkt"
