@@ -294,8 +294,12 @@
       
       ['power-plant-ruins
        (case (location-id (route-other-end-from route start-location))
-         ['cache "The previously locked door."]
+         ['cache
+          (if (route-fully-known? route)
+              "The cache."
+              "The previously locked door.")]
          ['sewers-1 "The sewers."]
+         ['magpie-hill "Go outside."]
          [else (string-append "["
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
