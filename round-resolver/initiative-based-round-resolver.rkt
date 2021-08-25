@@ -2,7 +2,7 @@
 
 
 (require "../action.rkt"
-         "../action-resolver.rkt"
+         "../action-resolver/action-resolver.rkt"
          "../actor.rkt"
          "../io.rkt"
          "../pc.rkt"
@@ -10,8 +10,7 @@
          "../state/state.rkt")
 
 (require "ai.rkt"
-         "action-queue.rkt"
-         "pc-action-resolver.rkt")
+         "action-queue.rkt")
 
 
 (provide resolve-turns!)
@@ -59,9 +58,7 @@
     ))
 
 (define (resolve-turn! action)
-  (if (pc-actor? (action-actor action))
-      (resolve-pc-action! action)
-      (resolve-action! action)))
+  (resolve-action! action))
 
 (define (end-combat)
   (remove-all-enemies-and-end-combat!)

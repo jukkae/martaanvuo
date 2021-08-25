@@ -8,7 +8,6 @@
 (require "state/combat.rkt"
          "state/state.rkt")
 
-(require "action-resolver.rkt")
 (require "action.rkt")
 (require "actor.rkt")
 (require "io.rkt")

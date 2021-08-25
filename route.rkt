@@ -138,6 +138,17 @@
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
+
+      ['martaanvuo-docks
+       (case (location-id (route-other-end-from route start-location))
+         ['martaanvuo-swamp
+          (if (route-fully-known? route)
+              "Back to Martaanvuo Swamp."
+              "The vehicle trail out.")]
+         [else (string-append "["
+                              "go to: "
+                              (symbol->string (location-id (route-other-end-from route start-location)))
+                              "]")])]
       
       ['power-plant-ruins
        (case (location-id (route-other-end-from route start-location))

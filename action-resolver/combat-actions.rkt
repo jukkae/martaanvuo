@@ -1,23 +1,32 @@
 #lang racket
 
-(provide (all-defined-out))
+(provide
+ (all-defined-out))
 
 (require racket/lazy-require)
 
 (require rebellion/collection/association-list)
 
-(require "action.rkt")
-(require "actor.rkt")
-(require "checks.rkt")
-(require "condition.rkt")
-(require "io.rkt")
-(require "item.rkt")
-(require "pc.rkt")
-(require "state/state.rkt")
-(require "stance.rkt")
-(require "status.rkt")
-(require "utils.rkt")
-(require "world.rkt")
+(require "../action.rkt")
+(require "../actor.rkt")
+(require "../checks.rkt")
+(require "../condition.rkt")
+(require "../io.rkt")
+(require "../item.rkt")
+(require "../location.rkt")
+(require "../pc.rkt")
+(require "../route.rkt")
+(require "../state/state.rkt")
+(require "../state/logging.rkt")
+(require "../stance.rkt")
+(require "../status.rkt")
+(require "../utils.rkt")
+(require "../world.rkt")
+
+(require "../round-resolver/event.rkt"
+         "../round-resolver/simulation.rkt"
+         "../round-resolver/timeline.rkt")
+
 
 (lazy-require
  ["state/combat.rkt"
@@ -26,6 +35,20 @@
    display-pc-combatant-info
    add-combat-flag
    )])
+
+(lazy-require
+ ["locations.rkt"
+  (describe-begin-traverse-action
+   describe-finish-traverse-action
+   describe-cancel-traverse-action
+   location-on-enter!
+   )])
+
+(lazy-require
+ ["round-resolver/event-handler.rkt"
+  (handle-interrupting-event!
+   )])
+
 
 ; "generic" attack with type
 (define (resolve-melee-action! action)
@@ -278,16 +301,16 @@
                           ;"resolve-anklebreaker-action!: details for 'bleeding todo"
                           '() ; details
                           #;(λ ()
-                            (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                            (cond ((= 1 bleed-damage-roll)
-                                   (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
-                                   (take-damage target 1 'bleed)
-                                   (display-combatant-info target)
-                                   )
-                                  (else
-                                   (displayln (string-append "[Bleed check: 1d6 = 1: ["
-                                                             (number->string bleed-damage-roll)
-                                                             "]]")))))
+                              (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+                              (cond ((= 1 bleed-damage-roll)
+                                     (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
+                                     (take-damage target 1 'bleed)
+                                     (display-combatant-info target)
+                                     )
+                                    (else
+                                     (displayln (string-append "[Bleed check: 1d6 = 1: ["
+                                                               (number->string bleed-damage-roll)
+                                                               "]]")))))
 
 
                           )))
@@ -335,54 +358,9 @@
   (p "The Blindscraper skitters towards Otava.")
   
   (let ([enemy-stance (stance "α" 'close "right")])
-          (set-actor-stance! (action-actor action) enemy-stance))
+    (set-actor-stance! (action-actor action) enemy-stance))
   'ok
   )
-
-; just a skill check in a fancy coat
-(define (resolve-forage-action! action)
-
-  (begin
-    (define skill 0)
-    (define target 8)
-             
-    (define successful? (skill-check "Forage" skill target))
-             
-             
-    (cond (successful?
-           (define amount (d 1 4)) ; portions = days of survival
-           (define amount-string
-             (if (= amount 1)
-                 (string-append (number->string amount) " meal")
-                 (string-append (number->string amount) " meals")))
-
-           (info-card
-            (list
-             (list
-              " 1d4 "
-              " = "
-              (string-append " " amount-string " "))
-             )
-            "Forage results roll")
-           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-           (define item (list 'food (list amount)))
-           (add-item-to-inventory! (pc) item)
-           )
-          (else
-           (begin
-             (p "Despite spending a while, Otava can't find anything to eat.")
-             (define luck-roll (d 1 20))
-             (info-card
-              (list
-               (list
-                " 1d20 "
-                " = "
-                (string-append " " (number->string luck-roll) " " )))
-              "Luck roll")
-             )))
-    (if successful?
-        'successful
-        'failure)))
 
 (define (resolve-break-free-action! action)
   (define actor (action-actor action))
@@ -508,107 +486,32 @@
          )))
 
 
-
-;; This should probably be formalized and eventually provided as a contract or something
-; can return:
-; 'pc-dead  when the pc is dead as a consequence of this action
-; 'ok       when the action is completely resolved and not explicitly successful or failed
-; 'success  when the action is completely resolved and explicitly successful
-; 'failed   when the action is completely resolved and fails
-; this should just dispatch, doing something else smells bad
-(define (resolve-action! action)
-  (when (actor-alive? (action-actor action))
-    (cond ((eq? (action-symbol action) 'melee)
-           (resolve-melee-action! action))
-          ((eq? (action-symbol action) 'shoot)
-           (resolve-shoot-action! action))
-
-          ((eq? (action-symbol action) 'forage)
-           (resolve-forage-action! action))
-          ((eq? (action-symbol action) 'back-off)
-           'ok
-           )
-          ((eq? (action-symbol action) 'go-to-location)
-           'ok
-           )
-          ((eq? (action-symbol action) 'traverse)
-           'ok
-           )
-          ((eq? (action-symbol action) 'cancel-traverse)
-           'ok
-           )
-          ((eq? (action-symbol action) 'search-for-paths)
-           (define exploration-skill (get-trait (pc) "exploration-skill"))
-           (define target-number 9)
-           (define exploration-check-result (skill-check "Exploration" exploration-skill target-number))
-           #;(when exploration-check-result (expose-neighbor! (current-location)))
-           (displayln "TODO: Redo exploration things")
-           (if exploration-check-result
-               'ok
-               'failure
-               ))
-          ((eq? (action-symbol action) 'sleep)
-           (p "Otava turns in for the night. Get some rest.")
-           'ok)
-          ((eq? (action-symbol action) 'flee)
-           (resolve-flee-action! action)
-           )
-
-          ((eq? (action-symbol action) 'break-free)
-           (resolve-break-free-action! action))
-
-          ((eq? (action-symbol action) 'go-to-engaged)
-           (resolve-go-to-engaged-action! action))
-          ((eq? (action-symbol action) 'go-to-close)
-           (resolve-go-to-close-action! action))
-
-          ((eq? (action-symbol action) 'inflict-status)
-           (define target (action-target action))
-           (define status (car (action-details action)))
-           (when (status? status)
-             (when (eq? (status-type status) 'bound)
-             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
+(define (resolve-inflict-status-action! action)
+  (define target (action-target action))
+  (define status (car (action-details action)))
+  (when (status? status)
+    (when (eq? (status-type status) 'bound)
+      (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
            
-           (inflict-status! target status)
-           'ok
-           )
+  (inflict-status! target status)
+  'ok)
 
-          ((eq? (action-symbol action) 'modify-status)
-           (define target (action-target action))
-           (define status (car (action-details action)))
-           (when (eq? (status-type status) 'bound) ; this is shit, refactor
-             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-             (define amount (status-lifetime status))
-             (modify-actor-status-lifetime target 'bound amount)
-             )
-           'ok
-           )
+(define (resolve-modify-status-action! action)
+  (define target (action-target action))
+  (define status (car (action-details action)))
+  (when (eq? (status-type status) 'bound) ; this is shit, refactor
+    (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+    (define amount (status-lifetime status))
+    (modify-actor-status-lifetime target 'bound amount)
+    )
+  'ok)
 
-          ((eq? (action-symbol action) 'inflict-condition)
-           (define target (action-target action))
-           (define condition (car (action-details action)))
-           (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
-           #;(when (eq? (status-type status) 'bound)
-               (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
-           #;(inflict-status! target status)
-           'ok
-           )
+(define (resolve-inflict-condition-action! action)
+  (define target (action-target action))
+  (define condition (car (action-details action)))
+  (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
+  #;(when (eq? (status-type status) 'bound)
+      (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+  #;(inflict-status! target status)
+  'ok)
 
-          
-
-          ((eq? (action-symbol action) 'anklebreaker)
-           (resolve-anklebreaker-action! action))
-
-          ((eq? (action-symbol action) 'pull-under)
-           (resolve-pull-under-action! action))
-          
-          ((eq? (action-symbol action) 'release-grip)
-           'grip-released)
-
-          ((eq? (action-symbol action) 'skip)
-           (cond ((member 'silent (action-details action))
-                  'ok)
-                 (else
-                  'ok)))
-          
-          (else (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))))))
