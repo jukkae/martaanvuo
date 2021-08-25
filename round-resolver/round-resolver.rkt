@@ -12,6 +12,7 @@
          "../state/state.rkt")
 
 (require "../action.rkt"
+         "../action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
          "../location.rkt")
@@ -21,7 +22,6 @@
          "fragment-handler.rkt"
          "get-next-pc-action.rkt"
          "initiative-based-round-resolver.rkt"
-         "pc-action-resolver.rkt"
          "round.rkt"
          "ui.rkt")
 
@@ -62,7 +62,7 @@
                   (sort-action-queue)
                   (resolve-turns!))
                  (else
-                  (define pc-action-result (resolve-pc-action! pc-action))
+                  (define pc-action-result (resolve-action! pc-action))
                   (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
                   (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
 

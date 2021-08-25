@@ -51,8 +51,11 @@
 
 ; what all should this return?
 (define (resolve-action! action)
+  (dev-note "elapsed-time is duplicated and broken, TODO has to be fixed")
+  (define elapsed-time 0)
   (when (actor-alive? (action-actor action))
-    (case (action-symbol action)
+    (define result
+      (case (action-symbol action)
       ; "special" actions first
       ['end-run
        (cond ((flag-set? 'ending-run-allowed)
@@ -73,7 +76,15 @@
       ['win-game 'win-game]
       ['go-to-location (resolve-go-to-action! action)]
       ['traverse (resolve-traverse-action! action)]
-      ['cancel-traverse 'ok]
+      ['cancel-traverse
+       (reset-pending-action!)
+       (move-pc-to-location! (action-target action))
+
+       (describe-cancel-traverse-action action)
+       (display-location-info-card (current-location))
+       (when (not (null? (location-items (action-target action))))
+         (pick-up-items!))
+       'ok]
       ['skip
        (cond ((member 'silent (action-details action))
               'ok)
@@ -129,8 +140,18 @@
        'ok]
 
       [else
-       (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))])))
+       (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
 
+    (when (eq? 'interrupted result) (set-pending-action! action elapsed-time))
+    result
+    ))
+
+(define (set-pending-action! action elapsed-time)
+  (define time-left (- (action-duration action) elapsed-time))
+  (define pending-action action)
+  (set-action-duration! pending-action time-left)
+  (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
+  (current-pending-action pending-action))
 
 (define (resolve-go-to-action! action)
   (define elapsed-time 0)
@@ -141,27 +162,27 @@
     (let/ec return
       (begin
         ; begin advancing time
-      (define timeline
-        (advance-time-until-next-interesting-event! (action-duration action)))
-      (set! elapsed-time (timeline-duration timeline))
+        (define timeline
+          (advance-time-until-next-interesting-event! (action-duration action)))
+        (set! elapsed-time (timeline-duration timeline))
 
-      #;(narrate-timeline timeline)
+        #;(narrate-timeline timeline)
 
-      (when (eq? (timeline-metadata timeline) 'interrupted)
-        (handle-pc-action-interrupted! timeline)
-        (return 'interrupted))
+        (when (eq? (timeline-metadata timeline) 'interrupted)
+          (handle-pc-action-interrupted! timeline)
+          (return 'interrupted))
 
 
-      (define next-location (action-target action))
-      (move-pc-to-location! next-location)
-      (location-on-enter! (current-location))
+        (define next-location (action-target action))
+        (move-pc-to-location! next-location)
+        (location-on-enter! (current-location))
 
-      (describe-finish-traverse-action action)
+        (describe-finish-traverse-action action)
                           
-      (when (not (null? (location-items (action-target action))))
-        (pick-up-items!))
+        (when (not (null? (location-items (action-target action))))
+          (pick-up-items!))
 
-      'ok)
+        'ok)
       ))
   result)
 
