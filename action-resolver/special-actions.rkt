@@ -5,7 +5,8 @@
 (require racket/lazy-require)
 
 (require "../action.rkt"
-         "../io.rkt")
+         "../io.rkt"
+         "../utils.rkt")
 
 (lazy-require
  ["state/mutators.rkt"
@@ -37,6 +38,12 @@
             ))]
     
     ['back-off 'ok]
-    ['win-game 'win-game])
+    ['win-game 'win-game]
+    ['skip(cond ((member 'silent (action-details action))
+              'ok)
+             (else
+              'ok))]
+    [else (dev-note "unknown special action:")
+          (displayln action)])
   
   )

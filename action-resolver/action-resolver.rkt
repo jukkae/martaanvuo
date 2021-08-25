@@ -59,70 +59,67 @@
   (when (actor-alive? (action-actor action))
     (define result
       (case (action-symbol action)
-      ; "special" actions first
-      ['end-run (resolve-special-action! action)]
-      ['back-off (resolve-special-action! action)]
-      ['win-game (resolve-special-action! action)]
+        ; "special" actions first
+        ['end-run (resolve-special-action! action)]
+        ['back-off (resolve-special-action! action)]
+        ['win-game (resolve-special-action! action)]
+        ['skip (resolve-special-action! action)]
         
-      ['go-to-location (resolve-go-to-action! action)]
-      ['traverse (resolve-traverse-action! action)]
-      ['cancel-traverse (resolve-cancel-traverse-action! action)]
-      ['skip
-       (cond ((member 'silent (action-details action))
-              'ok)
-             (else
-              'ok))]
+        ['go-to-location (resolve-go-to-action! action)]
+        ['traverse (resolve-traverse-action! action)]
+        ['cancel-traverse (resolve-cancel-traverse-action! action)]
       
-      ; the rest
-      ['melee (resolve-melee-action! action)]
-      ['shoot (resolve-shoot-action! action)]
-      ['forage (resolve-forage-action! action)]
-      ['sleep
-       (p "Otava makes camp.")
-       'ok]
       
-      ['flee (resolve-flee-action! action)]
-      ['break-free (resolve-break-free-action! action)]
+        ; the rest
+        ['melee (resolve-melee-action! action)]
+        ['shoot (resolve-shoot-action! action)]
+        ['forage (resolve-forage-action! action)]
+        ['sleep
+         (p "Otava makes camp.")
+         'ok]
+      
+        ['flee (resolve-flee-action! action)]
+        ['break-free (resolve-break-free-action! action)]
 
-      ['anklebreaker (resolve-anklebreaker-action! action)]
-      ['pull-under (resolve-pull-under-action! action)]
-      ['release-grip 'grip-released]
+        ['anklebreaker (resolve-anklebreaker-action! action)]
+        ['pull-under (resolve-pull-under-action! action)]
+        ['release-grip 'grip-released]
 
-      ['go-to-engaged (resolve-go-to-engaged-action! action)]
-      ['go-to-close (resolve-go-to-close-action! action)]
+        ['go-to-engaged (resolve-go-to-engaged-action! action)]
+        ['go-to-close (resolve-go-to-close-action! action)]
 
 
-      ['inflict-status
-       (define target (action-target action))
-       (define status (car (action-details action)))
-       (when (status? status)
-         (when (eq? (status-type status) 'bound)
-           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
+        ['inflict-status
+         (define target (action-target action))
+         (define status (car (action-details action)))
+         (when (status? status)
+           (when (eq? (status-type status) 'bound)
+             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
            
-       (inflict-status! target status)
-       'ok]
+         (inflict-status! target status)
+         'ok]
 
-      ['modify-status
-       (define target (action-target action))
-       (define status (car (action-details action)))
-       (when (eq? (status-type status) 'bound) ; this is shit, refactor
-         (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-         (define amount (status-lifetime status))
-         (modify-actor-status-lifetime target 'bound amount)
-         )
-       'ok]
+        ['modify-status
+         (define target (action-target action))
+         (define status (car (action-details action)))
+         (when (eq? (status-type status) 'bound) ; this is shit, refactor
+           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+           (define amount (status-lifetime status))
+           (modify-actor-status-lifetime target 'bound amount)
+           )
+         'ok]
 
-      ['inflict-condition
-       (define target (action-target action))
-       (define condition (car (action-details action)))
-       (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
-       #;(when (eq? (status-type status) 'bound)
-           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
-       #;(inflict-status! target status)
-       'ok]
+        ['inflict-condition
+         (define target (action-target action))
+         (define condition (car (action-details action)))
+         (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
+         #;(when (eq? (status-type status) 'bound)
+             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
+         #;(inflict-status! target status)
+         'ok]
 
-      [else
-       (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
+        [else
+         (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
 
     (when (eq? 'interrupted result) (set-pending-action! action elapsed-time))
     result
