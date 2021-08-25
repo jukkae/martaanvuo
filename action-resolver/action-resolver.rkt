@@ -121,6 +121,12 @@
         [else
          (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
 
+
+    ; what a hack
+    (when (timeline? result)
+      (handle-pc-action-interrupted! result)
+      (set! result 'interrupted))
+
     (when (eq? 'interrupted result) (set-pending-action! action elapsed-time))
     result
     ))
@@ -167,80 +173,7 @@
 
 
 
-(define (resolve-traverse-action! action)
-  (define elapsed-time 0)
-  (cond ((not (pending? action))
-         (describe-begin-traverse-action action)))
 
-  (define result
-    (let/ec return
-      (move-pc-to-location! (action-target action))
-      (when (not (pending? action))
-        ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
-
-        (define encounter-roll
-          (if (not (route-has-detail? (current-location) 'no-encounters))
-              (d 1 6)
-              #f))
-
-        (when encounter-roll
-          (define msg (string-append "Encounter roll: "
-                                     (number->string encounter-roll)))
-          (notice msg)
-          (define encounter-event
-            (if (< encounter-roll 4)
-                (make-event 'spawn-enemies
-                            '() ; pack info about enemies / event here
-                            #:interrupting? #t)
-                '()))
-
-          (cond ((not (null? encounter-event))
-                 ; create timeline to leverage existing code
-                 (define events
-                   (list
-                    (make-event 'spawn-enemies
-                                '() ; pack info about enemies / event here
-                                #:interrupting? #t)))
-                 (define metadata 'interrupted)
-                 (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
-                 (define tl (timeline metadata events duration))
-
-                 (set! elapsed-time (timeline-duration tl))
-
-                 ; DUPLICATION, clean up
-                 ; display events
-                 #;(narrate-timeline tl)
-
-                 ; look into https://docs.racket-lang.org/rebellion/Enum_Types.html for enums etc
-                 (when (eq? (timeline-metadata tl) 'interrupted)
-                   (handle-pc-action-interrupted! tl)
-                   (return 'interrupted))))))
-                          
-
-
-      (set-route-traversed! (action-target action))
-
-      (define next-location (if (memq 'a-to-b (action-details action))
-                                (route-b (action-target action))
-                                (route-a (action-target action))))
-      (move-pc-to-location! next-location)
-
-
-      (describe-finish-traverse-action action)
-                          
-      (when (not (null? (location-items (action-target action))))
-        (pick-up-items!))
-
-      'ok
-
-
-      ))
-
-  
-  
-
-  result
-  )
 
 
 (define (handle-pc-action-interrupted! timeline)
