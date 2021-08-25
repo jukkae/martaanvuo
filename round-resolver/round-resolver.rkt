@@ -15,7 +15,7 @@
          "../action-resolver/action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
-         "../location.rkt")
+         "../locations/location.rkt")
 
 (require "action-queue.rkt"
          "ai.rkt"

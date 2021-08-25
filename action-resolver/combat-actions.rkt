@@ -13,9 +13,9 @@
 (require "../condition.rkt")
 (require "../io.rkt")
 (require "../item.rkt")
-(require "../location.rkt")
+(require "../locations/location.rkt")
 (require "../pc.rkt")
-(require "../route.rkt")
+(require "../locations/route.rkt")
 (require "../state/state.rkt")
 (require "../state/logging.rkt")
 (require "../stance.rkt")
@@ -37,7 +37,7 @@
    )])
 
 (lazy-require
- ["../locations.rkt"
+ ["../locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action

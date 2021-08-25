@@ -6,9 +6,9 @@
 
 (require "actor.rkt")
 (require "item.rkt")
-(require "location.rkt")
-(require "place.rkt")
-(require "route.rkt")
+(require "locations/location.rkt")
+(require "locations/place.rkt")
+(require "locations/route.rkt")
 (require "utils.rkt")
 
 (serializable-struct

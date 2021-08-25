@@ -7,9 +7,9 @@
 
 (require "../actor.rkt")
 (require "../io.rkt")
-(require "../location.rkt")
+(require "../locations/location.rkt")
 (require "../pc.rkt")
-(require "../place.rkt")
+(require "../locations/place.rkt")
 (require "../quest.rkt")
 (require "../stance.rkt")
 (require "../utils.rkt")
@@ -173,7 +173,7 @@
 ; api?
 (define (pick-up-items!)
   (p "Otava picks up everything there is to pick up.")
-  (define all-items (place-items (current-location)))
+  (define all-items (location-items (current-location)))
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))

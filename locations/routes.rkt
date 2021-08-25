@@ -1,31 +1,12 @@
 #lang racket
 
-(provide (all-defined-out))
+(provide describe-begin-traverse-action
+         describe-finish-traverse-action
+         describe-cancel-traverse-action)
 
-(require racket/lazy-require)
-
-(require "api.rkt")
-
-(require "action.rkt"
-         "blindscraper.rkt"
-         "grabberkin.rkt"
-         "location.rkt"
-         "place.rkt")
-
-
-(lazy-require ["state/state.rkt"
-               (current-location
-                times-begin-traverse-narrated
-                times-begin-traverse-narrated++
-                times-finish-traverse-narrated
-                times-finish-traverse-narrated++
-                times-cancel-traverse-narrated
-                times-cancel-traverse-narrated++
-                set-flag
-                quest-exists?)])
-
-(lazy-require ["state/logging.rkt"
-               (next-chapter!)])
+(require "route.rkt")
+(require "../api.rkt")
+(require "../action.rkt")
 
 
 (define (describe-begin-traverse-action action)
@@ -212,66 +193,3 @@
      
      ])
   )
-
-
-; This seems to be more content than code, so it's here for now, instead of location.rkt
-(define (location-on-enter! location)
-  (displayln "LOCATION-ON-ENTER")
-  (displayln location))
-
-
-(define (get-location-decisions location)
-  (condense (list
-
-             ; definition / content goes to -> features, or world, or something
-             (when (location-has-feature? location 'stiltman)
-               (define manuscript-quest (quest-exists? 'anthead-monograph))
-               (cond ((not manuscript-quest)
-                      (make-decision
-                       #:title "Talk to the stilted figure."
-                       #:on-resolve! (proc
-                                      (p "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption of rods and springs and wire."))
-                       #:next-fragment 'begin-stiltman-dialogue
-                       ))
-                     (else
-                      (make-decision
-                       #:title "Talk to Stiltman."
-                       #:on-resolve! (proc
-                                      (p "Stiltman flickers and flails above water, and Otava shouts out to him."))
-                       #:next-fragment 'stiltman-continue-dialogue
-                       ))))
-
-             (when (location-has-feature? location 'martaanvuo-console)
-               (make-decision
-                #:title "Turn on the terminal."
-                #:on-resolve! (proc
-                               (p "Otava turns on the terminal. It clicks and whirrs, then the display comes to life."))
-                #:next-fragment 'turn-on-martaanvuo-terminal
-                ))
-
-             )))
-
-
-
-(define (spawn-enemies location)
-  (define encounter-types '(blindscraper grabberkin))
-
-  (define
-    encounter-type
-    (cond ((place? location)
-           (cond ((eq? (place-type location) 'ridges)
-                  'blindscraper)
-                 ((eq? (place-type location) 'valleys)
-                  'grabberkin)
-                 (else (take-random encounter-types))))
-          ((route? location)
-           'blindscraper)))
-
-  (case encounter-type
-    ['grabberkin
-     (spawn-grabberkin-encounter!)
-     ]
-    ['blindscraper
-     (spawn-blindscraper-encounter!)
-     ]
-    ))

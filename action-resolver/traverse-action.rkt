@@ -9,8 +9,10 @@
 
 (require "../action.rkt"
          "../io.rkt"
-         "../location.rkt"
-         "../route.rkt"
+         "../locations/location.rkt"
+         "../locations/locations.rkt"
+         "../locations/route.rkt"
+         "../locations/routes.rkt"
          "../state/state.rkt"
          "../utils.rkt"
          "../world.rkt")
@@ -20,7 +22,7 @@
          "../round-resolver/timeline.rkt")
 
 (lazy-require
- ["../locations.rkt"
+ ["../locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
@@ -49,7 +51,7 @@
         ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
 
         (define encounter-roll
-          (if (not (route-has-detail? (current-location) 'no-encounters))
+          (if (not (location-has-detail? (current-location) 'no-encounters))
               (d 1 6)
               #f))
 
