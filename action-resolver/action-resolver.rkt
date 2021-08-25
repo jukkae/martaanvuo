@@ -28,6 +28,7 @@
 
 (require
   "combat-actions.rkt"
+  "downtime-actions.rkt"
   "special-actions.rkt"
   "traverse-action.rkt")
 
@@ -76,9 +77,7 @@
         ['melee (resolve-melee-action! action)]
         ['shoot (resolve-shoot-action! action)]
         ['forage (resolve-forage-action! action)]
-        ['sleep
-         (p "Otava makes camp.")
-         'ok]
+        ['sleep (resolve-sleep-action! action)]
       
         ['flee (resolve-flee-action! action)]
         ['break-free (resolve-break-free-action! action)]
@@ -91,34 +90,11 @@
         ['go-to-close (resolve-go-to-close-action! action)]
 
 
-        ['inflict-status
-         (define target (action-target action))
-         (define status (car (action-details action)))
-         (when (status? status)
-           (when (eq? (status-type status) 'bound)
-             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
-           
-         (inflict-status! target status)
-         'ok]
+        ['inflict-status (resolve-inflict-status-action! action)]
 
-        ['modify-status
-         (define target (action-target action))
-         (define status (car (action-details action)))
-         (when (eq? (status-type status) 'bound) ; this is shit, refactor
-           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-           (define amount (status-lifetime status))
-           (modify-actor-status-lifetime target 'bound amount)
-           )
-         'ok]
+        ['modify-status (resolve-modify-status-action! action)]
 
-        ['inflict-condition
-         (define target (action-target action))
-         (define condition (car (action-details action)))
-         (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
-         #;(when (eq? (status-type status) 'bound)
-             (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
-         #;(inflict-status! target status)
-         'ok]
+        ['inflict-condition (resolve-inflict-condition-action! action)]
 
         [else
          (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
@@ -132,6 +108,7 @@
     (when (eq? 'interrupted result) (set-pending-action! action elapsed-time))
     result
     ))
+
 
 (define (set-pending-action! action elapsed-time)
   (define time-left (- (action-duration action) elapsed-time))
@@ -194,171 +171,3 @@
 
 
 
-
-; just a skill check in a fancy coat
-(define (resolve-forage-action! action)
-
-  (begin
-    (define skill 0)
-    (define target 8)
-             
-    (define successful? (skill-check "Forage" skill target))
-             
-             
-    (cond (successful?
-           (define amount (d 1 4)) ; portions = days of survival
-           (define amount-string
-             (if (= amount 1)
-                 (string-append (number->string amount) " meal")
-                 (string-append (number->string amount) " meals")))
-
-           (info-card
-            (list
-             (list
-              " 1d4 "
-              " = "
-              (string-append " " amount-string " "))
-             )
-            "Forage results roll")
-           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-           (define item (list 'food (list amount)))
-           (add-item-to-inventory! (pc) item)
-           )
-          (else
-           (begin
-             (p "Despite spending a while, Otava can't find anything to eat.")
-             (define luck-roll (d 1 20))
-             (info-card
-              (list
-               (list
-                " 1d20 "
-                " = "
-                (string-append " " (number->string luck-roll) " " )))
-              "Luck roll")
-             )))
-    (if successful?
-        'successful
-        'failure)))
-
-(define (resolve-break-free-action! action)
-  (define actor (action-actor action))
-  (define details (action-details action))
-
-  (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
-
-  (define target (action-target action))
-  (define target-stance (actor-stance target))
-
-  
-  (define statuses (actor-statuses actor))
-  (define actor-bound-status
-    (findf (λ (status) (eq? (status-type status) 'bound))
-           statuses))
-
-  (define target-number (status-lifetime actor-bound-status))
-
-  (define dice-sides 10)
-  (define bonus str-mod)
-  (define roll (d 1 dice-sides))
-  (define result (+ roll bonus))
-
-  (define success?
-    (cond ((= roll 1) #f)
-          ((= roll dice-sides) #t)
-          (else (> result target-number))))
-
-  (define success-string
-    (if success?
-        "success"
-        "failure"))
-
-  (displayln
-   (string-append "["
-                  "Resolution: "
-                  "1d10 + bonus > TN: "
-                  (number->string roll)
-                  " + "
-                  (number->string bonus)
-                  " = "
-                  (number->string result)
-                  " > "
-                  (number->string target-number)
-                  " - "
-                  success-string
-                  "]"))
-  ; crit = nat MAX = always succeed,
-  ; crit fail = nat 1 = always fail, avoid hard failures?
-  (wait-for-confirm)
-  (if success?
-      (begin
-        (displayln "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
-        (award-xp! 4)
-        'end-combat)
-      (begin
-        (displayln "The grip is still too strong for Otava to break it.")
-        (award-xp! 1)
-        'failed)))
-
-
-; skinnable, but in a sense generic action
-(define (resolve-flee-action! action)
-  (cond ((pc-actor? (action-actor action))
-         (p "Otava turns her back to run.")
-         (define skill (get-trait (pc) "athletics-skill"))
-
-         (define stance-range-values '())
-         (for ([enemy (get-current-enemies)])
-           (define stance (actor-stance enemy))
-           (define value (get-stance-range-numeric-value (stance-range stance)))
-           (set! stance-range-values (append-element stance-range-values value)))
-         (define target-number
-           ; if there's an enemy in engaged range, then more difficult check
-           (if (member 0 stance-range-values)
-               10
-               8))
-           
-         (define success? (skill-check "Athletics" skill target-number))
-         (if success?
-             (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
-               (p "She dives behind a small bush and waits.")
-               (wait-for-confirm)
-               (if (luck-check)
-                   (p "PASS")
-                   (p "FAIL"))
-               (p "Nothing seems to be following her.")
-               (award-xp! 3 "for a working survival instinct")
-               'end-combat)
-             (begin
-               (p "Otava's foot gets caught on a root. She falls face down in the mud.")
-               (actor-add-status! (pc) (status 'fallen 1))
-               (display-pc-combatant-info (pc))
-               (wait-for-confirm)
-               'failure))
-         )
-
-        (else ; not a pc actor
-         (p
-          (string-append
-           (get-combatant-name (action-actor action))
-           " tries to run."))
-         (define skill 1)
-         (define stance (actor-stance (action-actor action)))
-         (define value (get-stance-range-numeric-value (stance-range stance)))
-         (define target-number
-           (if (= value 0)
-               10
-               8))
-
-         (define success? (skill-check "Athletics" skill target-number))
-         (if success?
-             ; TODO this fails if there are multiple enemies!
-             (begin
-               (p "The Blindscraper skitters away and disappears in the foliage.")
-               (award-xp! 1)
-               'escape-from-combat)
-             (begin
-               (p "It is fast, but not fast enough.")
-               (actor-add-status! (action-actor action) (status 'fallen 1))
-               (display-combatant-info (action-actor action))
-               'failure))
-         )))
