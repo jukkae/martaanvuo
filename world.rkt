@@ -32,13 +32,13 @@
     #:id 'martaanvuo-swamp
     #:type 'swamp
     #:features '(anthill)
-    #:shortname "Martaanvuo Swamp")
+    #:shortname "Martaanvuo swamp")
 
    (make-place
     #:id 'magpie-hill
     #:features '(magpie-effigy)
     #:type 'mountains
-    #:shortname "Magpie Hill")
+    #:shortname "Magpie hill")
 
    (make-place
     #:id 'crematory
@@ -48,11 +48,13 @@
    (make-place
     #:id 'martaanvuo-docks
     #:features '(stiltman)
-    #:type 'docks)
+    #:type 'docks
+    #:shortname "Martaanvuo docks")
 
    (make-place
     #:id 'power-plant-ruins
-    #:type 'ruins)
+    #:type 'ruins
+    #:shortname "Ruined power plant")
 
    (make-place
     #:id 'sewers-1
