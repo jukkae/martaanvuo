@@ -29,16 +29,22 @@
   (make-route id
               a
               b
+              #:type [type '()]
               #:details [details '()]
               #:actors [actors '()]
-              #:features [features '()])
+              #:items [items '()]
+              #:features [features '()]
+              #:tags [tags '()])
 
   (route* id
-          a
-          b
+          type
           details
           actors
-          features))
+          items
+          features
+          tags
+          a
+          b))
 
 
 

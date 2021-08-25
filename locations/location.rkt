@@ -11,6 +11,7 @@
 (serializable-struct
  location
  ([id #:mutable] ; mutable for s11n, but should not be mutated
+  [type #:mutable]
   [details #:mutable]
   [actors #:mutable]
   [items #:mutable]

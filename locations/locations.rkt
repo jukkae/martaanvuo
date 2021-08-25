@@ -398,3 +398,45 @@
                                     (~v (route-features route))
                                     " "))))))))
   (info-card body title))
+
+(define (display-place-info-card location [title "Location"])
+  (define id (place-id location))
+  (define body
+    (prune (list
+            (when (not (eq? (place-shortname location) ""))
+              (list (string-append " "
+                                   (place-shortname location)
+                                   " ")
+                    "  "))
+            (when (not (null? (place-id location)))
+              (list (string-append " "
+                                   "id"
+                                   " ")
+                    (string-append " "
+                                   (cond ((number? id) (number->string id))
+                                         ((symbol? id) (symbol->string id)))
+                                   " ")))
+            (when (and (null? (place-id location))
+                       (not (null? (place-type location))))
+              (list (string-append " "
+                                   "type"
+                                   " ")
+                    (string-append " "
+                                   (symbol->string (place-type location))
+                                   " ")))
+            (when (not (null? (place-items location)))
+              (list (string-append " "
+                                   "items"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-items location))
+                                   " ")))
+            (when (not (null? (place-features location)))
+              (list (string-append " "
+                                   "features"
+                                   " ")
+                    (string-append " "
+                                   (~v (place-features location))
+                                   " ")))
+            )))
+  (info-card body title))
