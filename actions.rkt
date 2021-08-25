@@ -11,10 +11,12 @@
 (require "choice.rkt")
 (require "io.rkt")
 (require "item.rkt")
-(require "locations/location.rkt")
 (require "pc.rkt")
+(require "locations/location.rkt")
+(require "locations/locations.rkt")
 (require "locations/place.rkt")
 (require "locations/route.rkt")
+(require "locations/routes.rkt")
 
 (require "stance.rkt")
 (require "time.rkt")
@@ -36,11 +38,11 @@
    )])
 
 #;(lazy-require
- ["state/combat.rkt"
-  (get-combatant-name
-   display-combatant-info
-   *combat-flags*
-   )])
+   ["state/combat.rkt"
+    (get-combatant-name
+     display-combatant-info
+     *combat-flags*
+     )])
 
 ; implementation detail
 (define (get-nighttime-choices world actor)
@@ -284,57 +286,58 @@
          (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
                 '()))
       
-         (for/list ([route (location-routes (current-location))])
+         (when (place? (current-location))
+           (for/list ([route (place-routes (current-location))])
 
-           (define direction
-             (cond ((eq? (place-id (current-location))
-                         (place-id (route-a route)))
-                    'a-to-b)
-                   ((eq? (place-id (current-location))
-                         (place-id (route-b route)))
-                    'b-to-a)))
+             (define direction
+               (cond ((eq? (location-id (current-location))
+                           (location-id (route-a route)))
+                      'a-to-b)
+                     ((eq? (location-id (current-location))
+                           (location-id (route-b route)))
+                      'b-to-a)))
 
-           (cond ((memq 'locked (route-details route))
-                  (when (not (pc-has-ammo-left?))
-                    (p ; this belongs elsewhere
-                     "Out of ammo, can't shoot the lock. Damn."))
-                  (list
-                   (when (and (pc-has-item? 'revolver)
-                              (pc-has-ammo-left?))
-                     (make-choice
-                      'shoot-the-lock
-                      "Shoot the lock."
-                      (λ ()
-                        (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                        (consume-ammo!)
-                        (route-remove-detail route 'locked)
-                        (make-empty-action))))
-                   (when (and (pc-has-item? 'bolt-cutters))
-                     (make-choice
-                      'cut-the-lock
-                      "Cut the lock with bolt cutters."
-                      (λ ()
-                        (p "The crude lock yields to Otava's bolt cutters easily.")
-                        (route-remove-detail route 'locked)
+             (cond ((memq 'locked (location-details route))
+                    (when (not (pc-has-ammo-left?))
+                      (p ; this belongs elsewhere
+                       "Out of ammo, can't shoot the lock. Damn."))
+                    (list
+                     (when (and (pc-has-item? 'revolver)
+                                (pc-has-ammo-left?))
+                       (make-choice
+                        'shoot-the-lock
+                        "Shoot the lock."
+                        (λ ()
+                          (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
+                          (consume-ammo!)
+                          (remove-detail-from-location! route 'locked)
+                          (make-empty-action))))
+                     (when (and (pc-has-item? 'bolt-cutters))
+                       (make-choice
+                        'cut-the-lock
+                        "Cut the lock with bolt cutters."
+                        (λ ()
+                          (p "The crude lock yields to Otava's bolt cutters easily.")
+                          (remove-detail-from-location! route 'locked)
                         
-                        (make-action
-                         #:symbol 'skip
-                         #:actor (pc)
-                         #:duration 0
-                         #:tags '(downtime))))))
-                  )
-                 (else ; route is traversable
-                  (make-choice
-                   'traverse
-                   (get-traverse-text route (current-location)) 
-                   (λ () (make-action
-                          #:symbol 'traverse
-                          #:actor (pc)
-                          #:duration 100
-                          #:target route
-                          #:tags '(downtime)
-                          #:details (list direction))))))
-           ))
+                          (make-action
+                           #:symbol 'skip
+                           #:actor (pc)
+                           #:duration 0
+                           #:tags '(downtime))))))
+                    )
+                   (else ; route is traversable
+                    (make-choice
+                     'traverse
+                     (get-traverse-text route (current-location)) 
+                     (λ () (make-action
+                            #:symbol 'traverse
+                            #:actor (pc)
+                            #:duration 100
+                            #:target route
+                            #:tags '(downtime)
+                            #:details (list direction))))))
+             )))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list
@@ -347,19 +350,20 @@
                   #:duration 100
                   #:tags '(downtime))))))
 
-       (for/list ([action (location-actions-provided (current-location))])
-         (case action
-           ['search-for-paths
-            (make-choice
-             'search-for-paths
-             "Search for paths."
-             (λ () (make-action
-                    #:symbol 'search-for-paths
-                    #:actor (pc)
-                    #:duration 100
-                    #:tags '(downtime))))]
-           [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))]))
-
+       (when (place? (current-location))
+         (for/list ([action (place-actions-provided (current-location))])
+           (case action
+             ['search-for-paths
+              (make-choice
+               'search-for-paths
+               "Search for paths."
+               (λ () (make-action
+                      #:symbol 'search-for-paths
+                      #:actor (pc)
+                      #:duration 100
+                      #:tags '(downtime))))]
+             [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))])))
+       
 
        (filter
         (λ (x) (and (not (null? x))

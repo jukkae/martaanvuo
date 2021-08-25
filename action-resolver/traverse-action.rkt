@@ -10,7 +10,9 @@
 (require "../action.rkt"
          "../io.rkt"
          "../locations/location.rkt"
+         "../locations/locations.rkt"
          "../locations/route.rkt"
+         "../locations/routes.rkt"
          "../state/state.rkt"
          "../utils.rkt"
          "../world.rkt")
@@ -49,7 +51,7 @@
         ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
 
         (define encounter-roll
-          (if (not (route-has-detail? (current-location) 'no-encounters))
+          (if (not (location-has-detail? (current-location) 'no-encounters))
               (d 1 6)
               #f))
 
