@@ -85,6 +85,11 @@
         (p
          "Otava climbs up the vehicle trail, away from the docks and the river.")])
      ]
+
+    ['(martaanvuo-swamp crematory)
+     '()
+     ]
+    
     [else
      (dev-note "describe-begin-traverse-action: unknown key:")
      (displayln key)])
@@ -143,8 +148,16 @@
 
     ['(martaanvuo-docks martaanvuo-swamp)
      (p
-         "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
+      "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
      ]
+
+    ['(martaanvuo-swamp crematory)
+     (case n
+       [(1)
+        (p "The ruins of a lime-white stone building appear from the mist. There's a row of metal rings high along one wall, and the wall is stained dark under the rings.")]
+       [else
+        (p
+         "Otava comes to the Crematory.")])]
 
     [else
      (dev-note "describe-finish-traverse-action: unknown key:")
