@@ -44,7 +44,7 @@
 
 ; implementation detail
 (define (get-nighttime-choices world actor)
-  (displayln "get-night-time-choices: not implemented yet")
+  (dev-note "get-night-time-choices: not implemented yet")
   (list
    (make-choice
     'sleep

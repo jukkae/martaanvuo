@@ -103,9 +103,9 @@
     ; what a hack
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
+      (set-pending-action! action (timeline-duration result))
       (set! result 'interrupted))
 
-    (when (eq? 'interrupted result) (set-pending-action! action elapsed-time))
     result
     ))
 

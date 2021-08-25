@@ -12,7 +12,8 @@
          "../location.rkt"
          "../route.rkt"
          "../state/state.rkt"
-         "../utils.rkt")
+         "../utils.rkt"
+         "../world.rkt")
 
 (require "../round-resolver/event.rkt"
          "../round-resolver/simulation.rkt"
@@ -71,7 +72,7 @@
                                 '() ; pack info about enemies / event here
                                 #:interrupting? #t)))
                  (define metadata 'interrupted)
-                 (define duration 1) ; half of traversal time - where to elapse the rest? after the event, likely
+                 (define duration (/ (action-duration action) 2))
                  (define tl (timeline metadata events duration))
 
                  (set! elapsed-time (timeline-duration tl))
@@ -84,8 +85,6 @@
                  (when (eq? (timeline-metadata tl) 'interrupted)
                    (return tl))))))
                           
-
-
       (set-route-traversed! (action-target action))
 
       (define next-location (if (memq 'a-to-b (action-details action))
@@ -93,19 +92,20 @@
                                 (route-a (action-target action))))
       (move-pc-to-location! next-location)
 
-
+      (set! elapsed-time (action-duration action))
+      (define new-elapsed-time (+ (world-elapsed-time (current-world))
+                                  elapsed-time))
+      (set-world-elapsed-time!
+       (current-world)
+       new-elapsed-time)
+      
       (describe-finish-traverse-action action)
                           
       (when (not (null? (location-items (action-target action))))
         (pick-up-items!))
 
       'ok
-
-
       ))
-
-  
-  
 
   result
   )
