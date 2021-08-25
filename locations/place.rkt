@@ -45,4 +45,9 @@
           actors
           items
           features
-          tags))
+          tags
+          routes
+          on-enter-symbol
+          visited?
+          actions-provided
+          shortname))

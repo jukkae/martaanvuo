@@ -4,6 +4,7 @@
 
 (require "io.rkt")
 (require "locations/location.rkt")
+(require "locations/locations.rkt")
 (require "pc.rkt")
 (require "quest.rkt")
 (require "quests.rkt")

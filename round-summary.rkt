@@ -4,6 +4,8 @@
 
 (require "api.rkt")
 
+(require "locations/locations.rkt")
+
 (define (round-summary mode)
   (define title
     (case mode
