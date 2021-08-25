@@ -22,8 +22,10 @@
                 times-cancel-traverse-narrated
                 times-cancel-traverse-narrated++
                 set-flag
-                next-chapter!
                 quest-exists?)])
+
+(lazy-require ["state/logging.rkt"
+               (next-chapter!)])
 
 
 (define (describe-begin-traverse-action action)

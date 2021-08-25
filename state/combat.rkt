@@ -24,6 +24,9 @@
                get-current-enemies
                pc)])
 
+(lazy-require ["logging.rkt"
+               (next-chapter!)])
+
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body
@@ -169,6 +172,8 @@
   (current-combat-timeline (append-element (current-combat-timeline) (make-combat-event text))))
 
 (define (begin-combat!)
+  (wait-for-confirm)
+  (next-chapter!)
   (current-in-combat? #t)
   (add-combat-event "combat started!"))
 
@@ -177,4 +182,6 @@
   (dev-note "timeline:")
   (displayln (current-combat-timeline))
   (current-in-combat? #f)
-  (current-combat-timeline '()))
+  (current-combat-timeline '())
+  (wait-for-confirm)
+  (next-chapter!))
