@@ -51,6 +51,11 @@
 
 (define (resolve-sleep-action! action)
   (p "Otava makes camp.")
+  (define new-elapsed-time (+ (world-elapsed-time (current-world))
+                              100)) ; actually should be "until next full 400"
+  (set-world-elapsed-time!
+   (current-world)
+   new-elapsed-time)
   'ok)
 
 ; just a skill check in a fancy coat

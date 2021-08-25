@@ -72,7 +72,7 @@
                                 '() ; pack info about enemies / event here
                                 #:interrupting? #t)))
                  (define metadata 'interrupted)
-                 (define duration (/ (action-duration action) 2))
+                 (define duration (exact-floor (/ (action-duration action) 3)))
                  (define tl (timeline metadata events duration))
 
                  (set! elapsed-time (timeline-duration tl))
@@ -98,6 +98,7 @@
                                 (route-a (action-target action))))
       (move-pc-to-location! next-location)
 
+      ; all of this should not happen on traverse-action, but on any pc-action!
       (set! elapsed-time (action-duration action))
       (define new-elapsed-time (+ (world-elapsed-time (current-world))
                                   elapsed-time))

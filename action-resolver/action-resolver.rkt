@@ -51,8 +51,6 @@
 
 ; what all should this return?
 (define (resolve-action! action)
-  (dev-note "elapsed-time is duplicated and broken, TODO has to be fixed")
-  (define elapsed-time 0)
   (when (actor-alive? (action-actor action))
     (define result
       (case (action-symbol action)
