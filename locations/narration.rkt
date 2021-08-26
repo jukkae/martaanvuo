@@ -4,6 +4,7 @@
 (provide describe-begin-traverse-action
          describe-finish-traverse-action
          describe-cancel-traverse-action
+         display-location-info-card
          get-traverse-text
          route-shortname)
 
@@ -393,7 +394,7 @@
   (info-card body title))
 
 (define (display-place-info-card location [title "Location"])
-  (define id (location location))
+  (define id (location-id location))
   (define body
     (prune (list
             (when (not (eq? (place-shortname location) ""))
