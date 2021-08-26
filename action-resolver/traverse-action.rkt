@@ -101,12 +101,18 @@
       (move-pc-to-location! next-location)
 
       ; all of this should not happen on traverse-action, but on any pc-action!
-      (set! elapsed-time (action-duration action))
-      (define new-elapsed-time (+ (world-elapsed-time (current-world))
+      #;(set! elapsed-time (action-duration action))
+      #;(define new-elapsed-time (+ (world-elapsed-time (current-world))
                                   elapsed-time))
-      (set-world-elapsed-time!
+      #;(set-world-elapsed-time!
        (current-world)
        new-elapsed-time)
+
+      (set! elapsed-time (action-duration action))
+
+      (define tl (advance-time-until-next-interesting-event! elapsed-time #f))
+      (narrate-timeline tl)
+      (dev-note "sanity check")
       
       (describe-finish-traverse-action action)
                           
@@ -130,7 +136,7 @@
       (begin
         ; begin advancing time
         (define timeline
-          (advance-time-until-next-interesting-event! (action-duration action)))
+          (advance-time-until-next-interesting-event! (action-duration action) #f)) ; no encounters
         (set! elapsed-time (timeline-duration timeline))
 
         #;(narrate-timeline timeline)

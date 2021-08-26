@@ -49,7 +49,6 @@
    )])
 
 
-; what all should this return?
 (define (resolve-action! action)
   (when (actor-alive? (action-actor action))
     (define result

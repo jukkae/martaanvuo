@@ -14,7 +14,7 @@
 
 ; increment world time
 ; return a list of events that occur at new timestamp
-(define (time++)
+(define (time++ [encounters? #f])
   (define events '())
   (define new-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
@@ -25,11 +25,12 @@
     (define suspend-action?
       (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
            'night))
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) suspend-action?))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? suspend-action?))
     (set! events (append-element events ev)))
 
 
-  (when (not (in-combat?))
+  (when (and (not (in-combat?))
+             encounters?)
     (cond
       ;; Currently, only spawn enemies at daytime
       ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
@@ -58,14 +59,14 @@
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,
 ; returns a timeline of events that occurred with metadata
-(define (advance-time-until-next-interesting-event! jiffies)
+(define (advance-time-until-next-interesting-event! jiffies [encounters? #f])
   (define metadata '())
   (define events '())
   (define counter 0)
   (let/ec break
     (for ([t jiffies])
       (set! counter (add1 counter))
-      (define possible-events-at-t (time++))
+      (define possible-events-at-t (time++ encounters?))
       (define events-at-t possible-events-at-t) ; they are real events
       (set! events (append events events-at-t))
         
