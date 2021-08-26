@@ -162,4 +162,4 @@
   (current-pc (state-pc s))
   (current-life (state-life s))
   (current-fragment-id (state-current-fragment-id s))
-  (current-combat-timeline (state-current-fragment-id s)))
+  (current-combat-timeline (state-combat-timeline s)))

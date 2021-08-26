@@ -78,12 +78,18 @@
         (display-non-pc-combatant-info actor))))
 
 (define (describe-combat-situation)
+  ; show cards
   (notice "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
-    (display-combatant-info enemy)
-    
-    )
+    (display-combatant-info enemy))
   (display-pc-combatant-info (pc))
+
+  ; narrate
+  (define enemy-names
+    (for/list ([enemy (get-current-enemies)])
+      (actor-name enemy)))
+  (p "The " (car enemy-names) " is at arm's length to Otava, looking for an opening. Otava is holding her revolver.")
+  
   )
 
 (define (get-combatant-name actor)

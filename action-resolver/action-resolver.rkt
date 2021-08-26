@@ -32,6 +32,10 @@
   "special-actions.rkt"
   "traverse-action.rkt")
 
+(require
+  "blindscraper-actions.rkt"
+  "grabberkin-actions.rkt")
+
 
 (lazy-require
  ["state/combat.rkt"
