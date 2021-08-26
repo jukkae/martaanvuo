@@ -383,3 +383,9 @@
      
      ]
     [else (p "todo: unknown condition")]))
+
+(define (get-firearm actor)
+  (define items (actor-inventory actor))
+  (findf (λ (item) (ranged-weapon? item))
+         items)
+  )

@@ -4,7 +4,8 @@
 
 (require racket/serialize)
 
-(require "io.rkt")
+(require "io.rkt"
+         "utils.rkt")
 
 
 (serializable-struct
@@ -80,7 +81,7 @@
                            ((eq? (item-id item) 'bolt-cutters)
                             (list
                              (string-append " " (item-name item) " ")
-                             (string-append " " "Cuts, breaks, cracks, and in a pinch, levers." " ")))
+                             (string-append " " "Cuts, breaks, crushes and cracks." " ")))
                            ((item? item)
                             (list
                              (string-append " " (item-name item) " ")
@@ -90,3 +91,19 @@
                              (string-append " " (symbol->string item) " ")
                              (string-append " " " " " "))))))
   (info-card body title))
+
+(define (weapon-info gun)
+  (define body
+    (append-element
+     (for/list ([item-detail (item-details gun)])
+       (list (string-append " "
+                            (car item-detail)
+                            " ")
+             (string-append " "
+                            (~s (cdr item-detail))
+                            " ")))
+     (list (string-append " Ammo left ")
+           (string-append " "
+                          (number->string (ranged-weapon-ammo-left gun))
+                          " "))))
+  (info-card body (item-name gun)))

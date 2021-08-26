@@ -122,28 +122,6 @@
   action-result
   )
 
-(define (weapon-info gun)
-  (define body
-    (append-element
-     (for/list ([item-detail (item-details gun)])
-       (list (string-append " "
-                            (car item-detail)
-                            " ")
-             (string-append " "
-                            (~s (cdr item-detail))
-                            " ")))
-     (list (string-append " Ammo left ")
-           (string-append " "
-                          (number->string (ranged-weapon-ammo-left gun))
-                          " "))))
-  (info-card body (item-name gun)))
-
-; helper that belongs to actor (or one layer above actor)
-(define (get-firearm actor)
-  (define items (actor-inventory actor))
-  (findf (λ (item) (ranged-weapon? item))
-         items)
-  )
 
 (define (resolve-successful-shoot-action! action)
   (define actor (action-actor action))
@@ -165,40 +143,33 @@
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
   
-  
-
   (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       (string-append " "
-                      damage-roll-formula
-                      " ")
-       (string-append " "
-                      (number->string damage-roll-result)
-                      " ")))
-     "HP damage roll"))
+    [notice (string-append "dmg: " damage-roll-formula " = " (number->string damage-roll-result))]
+    (p "The gun belts out a thunderous roar."))
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
     
-    ; TODO what's a smart place to store this? the actor?
     (case (actor-name (action-target action))
-      [("Blindscraper") (award-xp! 7)]))
+      [("Blindscraper") (award-xp! 3)]))
 
   (display-combatant-info target)
   (newline)
 
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
-    (if (not (pc-actor? (action-target action)))
-        #;(p "The " (actor-name (action-target action)) " is dead.")
-        '()
-        (begin
-          #;(p "Otava is dead.")
-          (set! action-result 'pc-dead))))
+    (cond ((not (pc-actor? (action-target action)))
+           (define text
+             (take-random
+              (list
+               (string-append "The " (actor-name (action-target action)) " collapses on the ground.")
+               (string-append "The " (actor-name (action-target action)) " crumbles in a heap and twitches a few times and then goes still."))))
+           (p text))
+          (else
+           (begin
+             #;(p "Otava is dead.")
+             (set! action-result 'pc-dead)))))
 
   action-result
   )
