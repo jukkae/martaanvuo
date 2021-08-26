@@ -22,11 +22,11 @@
          "../round-resolver/timeline.rkt")
 
 (lazy-require
- ["../locations/locations.rkt"
+ ["../locations/narration.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
-   location-on-enter!
+   display-location-info-card
    )])
 
 (define (resolve-cancel-traverse-action! action)

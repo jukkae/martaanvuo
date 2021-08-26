@@ -17,6 +17,7 @@
 (require "locations/place.rkt")
 (require "locations/route.rkt")
 (require "locations/routes.rkt")
+(require "locations/narration.rkt")
 
 (require "stance.rkt")
 (require "time.rkt")
@@ -309,7 +310,7 @@
                         "Shoot the lock."
                         (λ ()
                           (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
-                          (consume-ammo!)
+                          (consume-ammo! 1)
                           (remove-detail-from-location! route 'locked)
                           (make-empty-action))))
                      (when (and (pc-has-item? 'bolt-cutters))
