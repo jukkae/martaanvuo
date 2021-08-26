@@ -15,8 +15,8 @@
 
 
 #;(lazy-require
- ["state/state.rkt"
-  (get-pending-traverse-direction)])
+   ["state/state.rkt"
+    (get-pending-traverse-direction)])
 
 (require "../api.rkt"
          "../actor.rkt")
@@ -26,18 +26,18 @@
 
 
 #;(lazy-require ["../state/state.rkt"
-               (current-location
-                times-begin-traverse-narrated
-                times-begin-traverse-narrated++
-                times-finish-traverse-narrated
-                times-finish-traverse-narrated++
-                times-cancel-traverse-narrated
-                times-cancel-traverse-narrated++
-                set-flag
-                quest-exists?)])
+                 (current-location
+                  times-begin-traverse-narrated
+                  times-begin-traverse-narrated++
+                  times-finish-traverse-narrated
+                  times-finish-traverse-narrated++
+                  times-cancel-traverse-narrated
+                  times-cancel-traverse-narrated++
+                  set-flag
+                  quest-exists?)])
 
 #;(lazy-require ["../state/logging.rkt"
-               (next-chapter!)])
+                 (next-chapter!)])
 
 
 (define (location-on-enter! location)
@@ -125,16 +125,6 @@
   )
 
 
-(define (display-location-info-card location [title "Location"])
-  (cond ((place? location)
-         (display-place-info-card location))
-        ((route? location)
-         (display-route-info-card location))
-        (else
-         (displayln "location-info-card: unknown location:")
-         (displayln location))))
-
-
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
   #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
@@ -159,112 +149,6 @@
         ((place? location)
          (place-routes location))))
 
-
-(define (display-route-info-card route)
-  (define id (location-id route))
-  (define title "Location (en route)")
-
-  (define pending-action (current-pending-action))
-  (define details (action-details pending-action))
-         
-  (define traverse-direction
-    (if (memq 'a-to-b details)
-        'a-to-b
-        'b-to-a))
-
-  (define endpoint
-    (case traverse-direction
-      ['a-to-b (route-b route)]
-      ['b-to-a (route-a route)]))
-
-  (define startpoint
-    (case traverse-direction
-      ['a-to-b (route-a route)]
-      ['b-to-a (route-b route)]))
-
-  
-  (define body
-    (cond ((route-fully-known? route)
-           (prune
-            (list
-             (list
-              (string-append " "
-                             (place-shortname startpoint)
-                             " – "
-                             (place-shortname endpoint)
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
-             (when (not (null? (location-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (location-features route))
-                                    " "))))))
-          (else
-           (prune
-            (list
-             (list
-              (string-append " "
-                             (place-shortname startpoint)
-                             " – "
-                             "???"
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
-             (when (not (null? (location-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (location-features route))
-                                    " "))))))))
-  (info-card body title))
-
-(define (display-place-info-card location [title "Location"])
-  (define id (location location))
-  (define body
-    (prune (list
-            (when (not (eq? (place-shortname location) ""))
-              (list (string-append " "
-                                   (place-shortname location)
-                                   " ")
-                    "  "))
-            (when (not (null? (location-id location)))
-              (list (string-append " "
-                                   "id"
-                                   " ")
-                    (string-append " "
-                                   (cond ((number? id) (number->string id))
-                                         ((symbol? id) (symbol->string id)))
-                                   " ")))
-            (when (and (null? (location-id location))
-                       (not (null? (location-type location))))
-              (list (string-append " "
-                                   "type"
-                                   " ")
-                    (string-append " "
-                                   (symbol->string (location-type location))
-                                   " ")))
-            (when (not (null? (location-items location)))
-              (list (string-append " "
-                                   "items"
-                                   " ")
-                    (string-append " "
-                                   (~v (location-items location))
-                                   " ")))
-            (when (not (null? (location-features location)))
-              (list (string-append " "
-                                   "features"
-                                   " ")
-                    (string-append " "
-                                   (~v (location-features location))
-                                   " ")))
-            )))
-  (info-card body title))
 
 
 
