@@ -42,67 +42,146 @@
    )])
 
 
+(lazy-require
+ ["../locations/narration.rkt"
+  (describe-begin-traverse-action
+   describe-finish-traverse-action
+   describe-cancel-traverse-action
+   display-location-info-card
+   )])
+
+(lazy-require
+ ["../locations/locations.rkt"
+  (move-pc-to-location!
+   )])
+
+
 
 (lazy-require
  ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 
-
+; action-result is either a timeline or a symbol
 (define (resolve-action! action)
   (when (actor-alive? (action-actor action))
-    (define result
-      (case (action-symbol action)
-        ; "special" actions first
-        ['end-run (resolve-special-action! action)]
-        ['back-off (resolve-special-action! action)]
-        ['win-game (resolve-special-action! action)]
-        ['skip (resolve-special-action! action)]
-        
-        ['go-to-location (resolve-go-to-action! action)]
-        ['traverse (resolve-traverse-action! action)]
-        ['cancel-traverse (resolve-cancel-traverse-action! action)]
-      
-      
-        ; the rest
-        ['melee (resolve-melee-action! action)]
-        ['shoot (resolve-shoot-action! action)]
-        ['forage (resolve-forage-action! action)]
-        ['sleep (resolve-sleep-action! action)]
-      
-        ['flee (resolve-flee-action! action)]
-        ['break-free (resolve-break-free-action! action)]
-
-        ['anklebreaker (resolve-anklebreaker-action! action)]
-        ['pull-under (resolve-pull-under-action! action)]
-        ['release-grip 'grip-released]
-
-        ['go-to-engaged (resolve-go-to-engaged-action! action)]
-        ['go-to-close (resolve-go-to-close-action! action)]
-
-
-        ['inflict-status (resolve-inflict-status-action! action)]
-
-        ['modify-status (resolve-modify-status-action! action)]
-
-        ['inflict-condition (resolve-inflict-condition-action! action)]
-
-        [else
-         (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
-
+    
+    (define result 'not-resolved)
+    (when (pc-actor? (action-actor action))
+      (set! result (pc-action-on-before-resolve! action))
+      (dev-note "pc-action before:")
+      (displayln result))
 
     ; what a hack
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
-      (set-pending-action! action (timeline-duration result))
+      (set-pending-action! action (- (action-duration action)
+                                     (timeline-duration result)))
       (set! result 'interrupted))
+
+    (when (not (eq? result 'interrupted))
+      (set! result (dispatch-to-sub-resolver-and-resolve! action))
+      (define duration (action-duration action))
+      (define tl (advance-time-until-next-interesting-event! duration #f))
+      (narrate-timeline tl))
+    
+    (when (pc-actor? (action-actor action))
+      (pc-action-on-after-resolve! action))
 
     result
     ))
 
 
-(define (set-pending-action! action elapsed-time)
-  (define time-left (- (action-duration action) elapsed-time))
+
+
+(define (pc-action-on-before-resolve! action)
+  (let/ec return
+    (case (action-symbol action)
+      ['traverse
+       (cond ((not (pending? action))
+              (describe-begin-traverse-action action)))
+       (move-pc-to-location! (action-target action))
+       (define elapsed-time 0)
+       ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
+
+       (when (not (location-has-detail? (current-location) 'no-encounters))
+         (define encounter-roll (d 1 6))
+         (when (< encounter-roll 4)
+           (define events
+             (list
+              (make-event 'spawn-enemies
+                          '() ; pack info about enemies / event here
+                          #:interrupting? #t)))
+           (define metadata 'interrupted)
+           (define duration (exact-floor (/ (action-duration action) 3)))
+           (define tl (timeline metadata events duration))
+
+           (set! elapsed-time duration)
+
+           (define tl2 (advance-time-until-next-interesting-event! duration #f))
+           (narrate-timeline tl)
+           (return tl)))
+
+       'before-action-ok
+       ]
+      [else 'before-action-ok])
+    ))
+
+
+
+
+
+
+(define (pc-action-on-after-resolve! action)
+  (case (action-symbol action)
+    ['traverse
+     (describe-finish-traverse-action action)
+     (when (not (null? (location-items (action-target action))))
+       (pick-up-items!))]
+
+    ))
+
+(define (dispatch-to-sub-resolver-and-resolve! action)
+  (case (action-symbol action)
+    ; "special" actions first
+    ['end-run (resolve-special-action! action)]
+    ['back-off (resolve-special-action! action)]
+    ['win-game (resolve-special-action! action)]
+    ['skip (resolve-special-action! action)]
+        
+    ['go-to-location (resolve-go-to-action! action)]
+    ['traverse (resolve-traverse-action! action)]
+    ['cancel-traverse (resolve-cancel-traverse-action! action)]
+      
+      
+    ; the rest
+    ['melee (resolve-melee-action! action)]
+    ['shoot (resolve-shoot-action! action)]
+    ['forage (resolve-forage-action! action)]
+    ['sleep (resolve-sleep-action! action)]
+      
+    ['flee (resolve-flee-action! action)]
+    ['break-free (resolve-break-free-action! action)]
+
+    ['anklebreaker (resolve-anklebreaker-action! action)]
+    ['pull-under (resolve-pull-under-action! action)]
+    ['release-grip 'grip-released]
+
+    ['go-to-engaged (resolve-go-to-engaged-action! action)]
+    ['go-to-close (resolve-go-to-close-action! action)]
+
+
+    ['inflict-status (resolve-inflict-status-action! action)]
+
+    ['modify-status (resolve-modify-status-action! action)]
+
+    ['inflict-condition (resolve-inflict-condition-action! action)]
+
+    [else
+     (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
+
+
+(define (set-pending-action! action time-left)
   (define pending-action action)
   (set-action-duration! pending-action time-left)
   (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
