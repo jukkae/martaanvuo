@@ -20,7 +20,7 @@
                       tags
                       [details #:mutable])
                      #:constructor-name action*
-
+                     #:transparent
                      )
 
 (define (make-action

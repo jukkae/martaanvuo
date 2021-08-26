@@ -64,13 +64,13 @@
 
 ; action-result is either a timeline or a symbol
 (define (resolve-action! action)
+  
   (when (actor-alive? (action-actor action))
     
     (define result 'not-resolved)
-    (when (pc-actor? (action-actor action))
-      (set! result (pc-action-on-before-resolve! action))
-      (dev-note "pc-action before:")
-      (displayln result))
+    (when (and (pc-actor? (action-actor action))
+               (not (pending? action)))
+      (set! result (pc-action-on-before-resolve! action)))
 
     ; what a hack
     (when (timeline? result)
@@ -85,7 +85,8 @@
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (narrate-timeline tl))
     
-    (when (pc-actor? (action-actor action))
+    (when (and (pc-actor? (action-actor action))
+               (not (eq? result 'interrupted)))
       (pc-action-on-after-resolve! action))
 
     result
@@ -99,7 +100,9 @@
     (case (action-symbol action)
       ['traverse
        (cond ((not (pending? action))
-              (describe-begin-traverse-action action)))
+              (describe-begin-traverse-action action))
+             (else
+              (dev-note "resolving pending action")))
        (move-pc-to-location! (action-target action))
        (define elapsed-time 0)
        ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
@@ -185,6 +188,7 @@
   (define pending-action action)
   (set-action-duration! pending-action time-left)
   (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
+  
   (current-pending-action pending-action))
 
 
