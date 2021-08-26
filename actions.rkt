@@ -17,6 +17,7 @@
 (require "locations/place.rkt")
 (require "locations/route.rkt")
 (require "locations/routes.rkt")
+(require "locations/traversal-narration.rkt")
 
 (require "stance.rkt")
 (require "time.rkt")

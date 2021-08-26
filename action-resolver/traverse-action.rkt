@@ -22,7 +22,7 @@
          "../round-resolver/timeline.rkt")
 
 (lazy-require
- ["../locations/routes.rkt"
+ ["../locations/traversal-narration.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
