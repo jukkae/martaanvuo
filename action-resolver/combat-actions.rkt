@@ -145,7 +145,7 @@
   
   (when success?
     [notice (string-append "dmg: " damage-roll-formula " = " (number->string damage-roll-result))]
-    (p "The gun belts out a thunderous roar."))
+    (p "Otava pulls the trigger. The gun belts out a thunderous roar, and blood gushes out of the creature."))
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))

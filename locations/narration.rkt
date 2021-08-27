@@ -46,6 +46,15 @@
         (p
          "Otava climbs the natural stairs up to Magpie Hill.")])
      ]
+    ['(magpie-hill perimeter)
+     (case n
+       [(1)
+        (p
+         "The sharply-angled terraced rocks along the first, steepest part of the descent tear some new holes in Otava's pants.")]
+       [else
+        (p
+         "Otava prepares herself for the descent, careful this time.")])
+     ]
     ['(perimeter martaanvuo-swamp)
      (case n
        [(1)
@@ -118,6 +127,16 @@
        [else
         (p
          "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
+
+    ['(magpie-hill perimeter)
+     (case n
+       [(1)
+        (p
+         "Eventually, the boulders get smaller, and the path evens out.")]
+       [else
+        (p
+         "Otava gets to Perimeter.")])
+     ]
 
     ['(perimeter martaanvuo-swamp)
      (case n
