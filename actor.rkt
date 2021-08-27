@@ -60,7 +60,8 @@
   [max-lp #:mutable]
   [death-roll-dice #:mutable]
   [alive? #:mutable]
-  [xp #:mutable])
+  [xp #:mutable]
+  [hunger #:mutable])
  #:constructor-name pc-actor*)
 
 (define (make-actor
@@ -81,7 +82,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t 0))
+   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t 0 0))
 
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))

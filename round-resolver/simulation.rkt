@@ -15,11 +15,16 @@
 ; increment world time
 ; return a list of events that occur at new timestamp
 (define (time++ [encounters? #f])
-  (define events '())
   (define new-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
    (current-world)
    new-elapsed-time)
+
+  (get-events-for-time new-elapsed-time)
+  )
+
+(define (get-events-for-time time)
+  (define events '())
 
   (when (= (modulo (world-elapsed-time (current-world)) 100) 0)
     (define suspend-action?
@@ -27,34 +32,8 @@
            'night))
     (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? suspend-action?))
     (set! events (append-element events ev)))
-
-
-  (when (and (not (in-combat?))
-             encounters?)
-    (cond
-      ;; Currently, only spawn enemies at daytime
-      ((not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
-                 'night))
-       (define dice-sides 300) ; tweak on a per-location basis
-       (define roll (d 1 dice-sides))
-
-       (cond ((= roll 1)
-              (define title "Luck roll failure")
-              (info-card
-               (list (list
-                      (string-append " at world time " (number->string (world-elapsed-time (current-world))) " ")
-                      (string-append " 1d" (number->string dice-sides) " = 1 ")
-                      " failure: hostile encounter, spawning enemies "))
-               title)
-              (define ev
-                (make-event 'spawn-enemies
-                            '() ; pack info about enemies / event here
-                            #t))
-              (set! events (append-element events ev))
-              (wait-for-confirm)))
-       )))
-  events
-  )
+  
+  events)
 
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,
