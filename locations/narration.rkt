@@ -64,6 +64,16 @@
         (p
          "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
      ]
+    ['(martaanvuo-swamp perimeter)
+     (case n
+       [(1)
+        (p
+         "The path comes to a barely traversable marsh.")]
+       [else
+        (p
+         "The marsh smells like wild rosemary.")])
+     ]
+    
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
@@ -147,6 +157,15 @@
        [else
         (p
          "Otava comes to Martaanvuo Fork.")])]
+    ['(martaanvuo-swamp perimeter)
+     (case n
+       [(1)
+        (p
+         "The path begins to rise, and ground turns more solid. Otava gets to Perimeter.")
+        ]
+       [else
+        (p
+         "Otava comes to Perimeter.")])]
     
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
