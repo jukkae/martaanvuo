@@ -88,8 +88,16 @@
   (define enemy-names
     (for/list ([enemy (get-current-enemies)])
       (actor-name enemy)))
-  (p "The " (car enemy-names) " is at arm's length to Otava, looking for an opening. Otava is holding her revolver.")
-  
+
+  (when (= (length (get-current-enemies)) 1)
+    (define enemy (car (get-current-enemies)))
+    (case (stance-range (actor-stance enemy))
+      ['mid
+       (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
+      ['close
+       (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")]
+      )
+    )
   )
 
 (define (get-combatant-name actor)

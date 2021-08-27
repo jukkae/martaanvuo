@@ -31,11 +31,12 @@
   
   (enqueue-npc-actions)
   
+  (save) ; save before describing situation -> no double-logged paragraphs
+  
   (if (eq? mode 'continue)
       (redescribe-situation)
       (describe-situation))
   
-  (save)
   (let/ec end-round-early-with-round-status
     (define pc-action (get-next-pc-action))
     
