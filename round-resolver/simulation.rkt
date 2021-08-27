@@ -29,12 +29,16 @@
   (define day (add1 (quotient time 400)))
   (define time-today (remainder time 400))
   
-  (when (= (modulo (world-elapsed-time (current-world)) 100) 0)
+  (when (= (modulo time-today 100) 0)
     (dev-note (string-append "day " (number->string day) ", time " (number->string time-today)))
     (define suspend-action?
       (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
            'night))
     (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? suspend-action?))
+    (set! events (append-element events ev)))
+
+  (when (= time-today 300)
+    (define ev (make-event 'hunger-check '() #:interrupting? #f))
     (set! events (append-element events ev)))
   
   events)
@@ -49,13 +53,13 @@
   (let/ec break
     (for ([t jiffies])
       (set! counter (add1 counter))
-      (define possible-events-at-t (time++ encounters?))
-      (define events-at-t possible-events-at-t) ; they are real events
+      (define events-at-t (time++ encounters?))
+      
       (set! events (append events events-at-t))
-        
+
       ; If any of the events suspends action, then return early
       (define contains-action-suspending-event?
-        (memf (λ (event) (event-interrupting? event)) possible-events-at-t))
+        (memf (λ (event) (event-interrupting? event)) events-at-t))
 
       ; early-exit
       (when contains-action-suspending-event?
