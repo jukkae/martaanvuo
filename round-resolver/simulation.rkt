@@ -20,13 +20,17 @@
    (current-world)
    new-elapsed-time)
 
-  (get-events-for-time new-elapsed-time)
+  (get-daily-events-for-time new-elapsed-time)
   )
 
-(define (get-events-for-time time)
+(define (get-daily-events-for-time time)
   (define events '())
 
+  (define day (add1 (quotient time 400)))
+  (define time-today (remainder time 400))
+  
   (when (= (modulo (world-elapsed-time (current-world)) 100) 0)
+    (dev-note (string-append "day " (number->string day) ", time " (number->string time-today)))
     (define suspend-action?
       (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
            'night))
