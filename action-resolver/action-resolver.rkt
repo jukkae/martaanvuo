@@ -147,10 +147,6 @@
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
-      ['hunger-check
-       (define pc (current-pc))
-       (set-pc-actor-hunger! (+ (pc-actor-hunger pc) 100))
-       (dev-note "increasing hunger...")]
       [else
        (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))

@@ -3,6 +3,7 @@
 (provide advance-time-until-next-interesting-event!)
 
 (require "../io.rkt"
+         "../actor.rkt"
          "../time.rkt"
          "../utils.rkt"
          "../world.rkt"
@@ -20,8 +21,9 @@
    (current-world)
    new-elapsed-time)
 
-  (get-daily-events-for-time new-elapsed-time)
-  )
+  (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
+
+  (get-daily-events-for-time new-elapsed-time))
 
 (define (get-daily-events-for-time time)
   (define events '())
@@ -31,10 +33,6 @@
   
   (when (= (modulo time-today 100) 0)
     (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? #f))
-    (set! events (append-element events ev)))
-
-  (when (= time-today 300)
-    (define ev (make-event 'hunger-check '() #:interrupting? #f))
     (set! events (append-element events ev)))
   
   events)
