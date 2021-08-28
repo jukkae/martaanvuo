@@ -7,7 +7,8 @@
 (require "../action.rkt"
          "../locations/location.rkt"
          "../locations/place.rkt"
-         "../locations/route.rkt")
+         "../locations/route.rkt"
+         "../utils.rkt")
 
 (lazy-require
  ["state.rkt" (current-pending-action)])
@@ -18,6 +19,7 @@
 
 (define (get-pending-traverse-direction)
   (define pending-action (current-pending-action))
+  
   (cond 
         ((eq? (action-symbol pending-action) 'traverse)
          (define target (action-target pending-action))

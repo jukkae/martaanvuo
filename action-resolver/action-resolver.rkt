@@ -170,7 +170,8 @@
   'ok)
 
 (define (next-time-of-day! action)
-  (define time-until-next-time-of-day (remainder (world-elapsed-time (current-world)) 100))
+  (define time-until-next-time-of-day (- 100
+                                         (remainder (world-elapsed-time (current-world)) 100)))
   (set-action-duration! action time-until-next-time-of-day)
   'ok)
 

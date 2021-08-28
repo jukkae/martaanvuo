@@ -91,9 +91,9 @@
                                     100)))
      (make-choice
       'rest
-      (string-append "Rest [until "
+      (string-append "Rest. [until "
                      (symbol->string next-time-of-day)
-                     "].")
+                     "]")
       (λ () (make-action
              #:symbol 'rest
              #:actor (pc)
@@ -126,6 +126,8 @@
   (list
    (choice-factory 'tent)
    (choice-factory 'campfire)
+   (choice-factory 'eat)
+   (choice-factory 'rest)
    ))
 
 
@@ -240,7 +242,8 @@
                             #:details (list direction))))))
              )))
 
-       (when (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
+       (when (and (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
+                  (place? (current-location)))
          (list (choice-factory 'rest)))
 
        (when (and (>= (pc-actor-hunger (current-pc)) 100)
