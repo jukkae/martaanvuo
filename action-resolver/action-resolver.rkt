@@ -144,7 +144,11 @@
     ))
 
 
-
+(define (handle-timeline tl)
+  (for ([event (timeline-events tl)])
+    (dev-note "handle event")
+    (displayln event))
+  (narrate-timeline tl))
 
 
 

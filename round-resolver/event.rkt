@@ -5,6 +5,7 @@
 (require racket/serialize)
 
 (require "../io.rkt"
+         "../utils.rkt"
          "../world.rkt"
 
          "../state/state.rkt")
@@ -36,8 +37,9 @@
        ))
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
-    (else (displayln (string-append "narrate-event: unknown event type "
-                                    (symbol->string (event-type event)))))))
+    (else
+     (dev-note "narrate-event: unknown event type")
+     (displayln (symbol->string (event-type event))))))
 
 (define
   (format-event-for-display event)
