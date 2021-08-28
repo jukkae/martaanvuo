@@ -45,35 +45,55 @@
      *combat-flags*
      )])
 
-; implementation detail
+
+
+; poor name, and likely belongs elsewhere
+(define (choice-factory action-symbol)
+  (case action-symbol
+    ['sleep
+     (make-choice
+      'sleep
+      "Sleep." 
+      (λ () (make-action
+             #:symbol 'sleep
+             #:actor (pc)
+             #:duration 200)))]
+    ['tent
+     (make-choice
+      'camp
+      "Set up a tent."
+      (λ () (make-action
+             #:symbol 'camp
+             #:actor (pc)
+             #:duration 20)))]
+
+    ['campfire
+     (make-choice
+      'camp
+      "Build campfire."
+      (λ () (make-action
+             #:symbol 'camp
+             #:actor (pc)
+             #:duration 10)))]
+
+
+    ))
+
+
+
+
+
 (define (get-nighttime-choices world actor)
   (dev-note "get-night-time-choices: not implemented yet")
   (list
-   (make-choice
-    'sleep
-    "Sleep." 
-    (λ () (make-action
-           #:symbol 'sleep
-           #:actor (pc)
-           #:duration 200)))))
+   (choice-factory 'sleep)))
 
 (define (get-evening-choices world actor)
   (dev-note "get-evening-choices: not implemented yet")
   (list
-   (make-choice
-    'camp
-    "Set up tent."
-    (λ () (make-action
-           #:symbol 'camp
-           #:actor (pc)
-           #:duration 20)))
-   (make-choice
-    'camp
-    "Build campfire."
-    (λ () (make-action
-           #:symbol 'camp
-           #:actor (pc)
-           #:duration 20)))))
+   (choice-factory 'tent)
+   (choice-factory 'campfire)
+   ))
 
 ; this is called from outside
 (define (get-world-choices world actor)

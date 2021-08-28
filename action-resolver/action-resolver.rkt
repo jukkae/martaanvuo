@@ -185,6 +185,9 @@
     ['camp 'ok]
     #;['sleep (resolve-sleep-action! action)]
     ['sleep (next-day! action)]
+    ['eat
+     (set-pc-actor-hunger! (current-pc) (- (pc-actor-hunger (current-pc)) 500))
+     (p "The ration's dry and bland, but filling.")]
 
       
     ; the rest
@@ -211,7 +214,8 @@
     ['inflict-condition (resolve-inflict-condition-action! action)]
 
     [else
-     (error (string-append "resolve-action!: unknown action type " (symbol->string (action-symbol action))))]))
+     (dev-note "resolve-action!: unknown action type:")
+     (error (string-append (symbol->string (action-symbol action))))]))
 
 
 (define (set-pending-action! action time-left)
