@@ -72,8 +72,9 @@
                         " – "
                         (place-shortname endpoint)
                         " "))
-        (string-append "En route: "
-                       (place-shortname startpoint)
-                       " – "
-                       "???"
-                       " ")))
+        (else
+         (string-append "En route: "
+                        (place-shortname startpoint)
+                        " – "
+                        "???"
+                        " "))))

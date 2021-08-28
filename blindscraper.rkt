@@ -169,3 +169,6 @@
     (stance sign range description))
            
   (set-actor-stance! enemy enemy-stance))
+
+(define (get-blindscraper-reaction actor)
+  '())

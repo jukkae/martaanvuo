@@ -30,11 +30,7 @@
   (define time-today (remainder time day-length))
   
   (when (= (modulo time-today 100) 0)
-    (dev-note (string-append "day " (number->string day) ", time " (number->string time-today)))
-    (define suspend-action? #f
-      #;(eq? (time-of-day-from-jiffies (world-elapsed-time (current-world)))
-           'night))
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? suspend-action?))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? #f))
     (set! events (append-element events ev)))
 
   (when (= time-today 300)

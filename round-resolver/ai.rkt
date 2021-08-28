@@ -36,6 +36,8 @@
   (cond ((not (pc-actor? actor))
          (cond ((equal? (actor-name actor) "Grabberkin")
                 (get-grabberkin-reaction actor))
+               ((equal? (actor-name actor) "Blindscraper")
+                (get-blindscraper-reaction actor))
                (else
                 (displayln "unknown non-pc-actor type for reaction")
                 '())))

@@ -15,7 +15,7 @@
   (define time (world-elapsed-time (current-world)))
   (define time-today (remainder time day-length))
   (define day-number (add1 (quotient time day-length)))
-  
+
   (define body
     (prune
      (list
