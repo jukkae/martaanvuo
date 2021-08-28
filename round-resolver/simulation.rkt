@@ -26,8 +26,8 @@
 (define (get-daily-events-for-time time)
   (define events '())
 
-  (define day (add1 (quotient time 400)))
-  (define time-today (remainder time 400))
+  (define day (add1 (quotient time day-length)))
+  (define time-today (remainder time day-length))
   
   (when (= (modulo time-today 100) 0)
     (dev-note (string-append "day " (number->string day) ", time " (number->string time-today)))
