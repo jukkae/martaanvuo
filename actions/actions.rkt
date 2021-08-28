@@ -4,20 +4,20 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
+(require "combat-choices.rkt")
 
-(require "../action.rkt")
-(require "../actor.rkt")
-(require "../choice.rkt")
-(require "../io.rkt")
-(require "../item.rkt")
-(require "../pc.rkt")
-(require "../locations/location.rkt")
-(require "../locations/locations.rkt")
-(require "../locations/place.rkt")
-(require "../locations/route.rkt")
-(require "../locations/routes.rkt")
-(require "../locations/narration.rkt")
+(require "../action.rkt"
+         "../actor.rkt"
+         "../choice.rkt"
+         "../io.rkt"
+         "../item.rkt"
+         "../pc.rkt"
+         "../locations/location.rkt"
+         "../locations/locations.rkt"
+         "../locations/place.rkt"
+         "../locations/route.rkt"
+         "../locations/routes.rkt"
+         "../locations/narration.rkt")
 
 (require "../stance.rkt")
 (require "../time.rkt")
@@ -104,168 +104,6 @@
         ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
-
-; implementation detail
-(define (get-melee-choices)
-  (define targets (get-current-enemies))
-  (define combat-choices '())
-  (for ([i (in-range 0 (length targets))])
-    (define target (list-ref targets i))
-    (define stance (actor-stance target))
-    (cond ((or (eq? (stance-range stance) 'close)
-               (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 2)))
-           (define details
-             (list
-              (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "1d2")
-              (cons 'damage-type 'bludgeoning)
-              ))
-           (define choice
-             (make-choice
-              'attack
-              (string-append
-               "Hit "
-               (get-combatant-name target)
-               " [with bolt cutters].")
-              (λ ()
-                (make-action
-                 #:symbol 'melee
-                 #:actor (pc)
-                 #:duration 1
-                 #:target target
-                 #:tags '(initiative-based-resolution)
-                 #:details details))))
-           (set! combat-choices (append-element combat-choices choice)))
-          ))
-  combat-choices)
-
-; implementation detail
-(define (get-ranged-choices)
-  (define targets (get-current-enemies))
-  
-  (define all-choices
-    (for/list ([i (in-range 0 (length targets))])
-      (define target (list-ref targets i))
-      (define stance (actor-stance target))
-
-      (list
-       (when (and (not (flag-set? 'aware-of-being-out-of-ammo))
-                  (or (eq? (stance-range stance) 'far) ; always require roll
-                      (eq? (stance-range stance) 'mid) ; require roll if no proficiency
-                      (eq? (stance-range stance) 'close) ; never require roll
-                      (eq? (stance-range stance) 'engaged)))
-         (define damage-roll (λ () (d 2 2)))
-         (define details
-           (list
-            (cons 'damage-roll damage-roll)
-            (cons 'damage-roll-formula "2d2")
-            (cons 'damage-type 'gunshot) ; we're assuming firearms here
-            ))
-           
-         (make-choice
-          'attack
-          (string-append
-           "Shoot "
-           (get-combatant-name target)
-           " [with revolver].")
-          (λ ()
-            (make-action
-             #:symbol 'shoot
-             #:actor (pc)
-             #:duration 1
-             #:target target
-             #:tags '(initiative-based-resolution)
-             #:details details))))
-       
-       (when (or (eq? (stance-range stance) 'close)
-                 (eq? (stance-range stance) 'engaged))
-         
-         (define damage-roll (λ () 1))
-         (define details
-           (list
-            (cons 'damage-roll damage-roll)
-            (cons 'damage-roll-formula "1")
-            (cons 'damage-type 'bludgeoning)
-            ))
-         (make-choice
-          'attack
-          (string-append
-           "Pistol whip the "
-           (get-combatant-name target)
-           " [with revolver].")
-          (λ ()
-            (make-action
-             #:symbol 'melee
-             #:actor (pc)
-             #:duration 1
-             #:target target
-             #:tags '(initiative-based-resolution)
-             #:details details))))
-       )))
-  
-  
-  (condense all-choices))
-
-
-(define (get-combat-choices)
-  (define targets (get-current-enemies))
-
-  (define combat-choices '())
-
-  (when (actor-has-item? (pc) 'bolt-cutters)
-    (set! combat-choices
-          (append combat-choices (get-melee-choices))))
-
-  (when (actor-has-item? (pc) 'revolver)
-    (set! combat-choices
-          (append combat-choices (get-ranged-choices))))
-
-  (cond ((not (engaged?))
-         (define run-choice
-           (make-choice
-            'flee
-            (string-append
-             "Run.")
-            (λ ()
-              (make-action
-               #:symbol 'flee
-               #:actor (pc)
-               #:duration 1
-               #:tags '(initiative-based-resolution fast)))))
-         (set! combat-choices (append-element combat-choices run-choice))))
-
-  (define engaged-enemies (get-enemies-at-range 'engaged))
-  (define engaged-grabberkin
-    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'engaged))
-                               "Grabberkin"))
-            engaged-enemies))
-
-  (cond ((not (null? engaged-grabberkin))
-
-         (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
-         
-         (define details
-           (association-list 'str-mod strength-mod))
-         
-         (define break-free-choice
-           (make-choice
-            'pull-free
-            (string-append
-             "Try to pull the leg free.")
-            (λ ()
-              (make-action
-               #:symbol 'break-free
-               #:actor (pc)
-               #:duration 1
-               #:target (take-random engaged-grabberkin)
-               #:tags '(initiative-based-resolution fast)
-               #:details details))))
-         (set! combat-choices (append-element combat-choices break-free-choice))))
- 
-
-  combat-choices
-  )
 
 
 (define (get-downtime-choices world actor)
