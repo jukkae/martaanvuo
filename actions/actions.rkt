@@ -227,7 +227,8 @@
                             #:details (list direction))))))
              )))
 
-       (when (>= (pc-actor-hunger (current-pc)) 100)
+       (when (and (>= (pc-actor-hunger (current-pc)) 100)
+                  (pc-has-item? 'ration))
          (list
           (choice-factory 'eat)))
 

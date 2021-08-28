@@ -136,6 +136,9 @@
          (positive? ammo-left))
         (else #f)))
 
+(define (pc-hungry?)
+  (> (pc-actor-hunger (pc)) 500))
+
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)

@@ -40,6 +40,12 @@
                  (get-location-short-description (current-location))
                  "N/A")
              " ")
-            ))))
+            )
+      (when (pc-hungry?) (list (string-append
+             " "
+             "[hungry]"
+             " ")
+            ))
+      )))
   (info-card body title))
 
