@@ -159,6 +159,9 @@
     ['go-to-location (resolve-go-to-action! action)]
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
+
+    ; placeholder
+    ['camp 'ok]
       
       
     ; the rest

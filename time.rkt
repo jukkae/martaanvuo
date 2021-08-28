@@ -6,10 +6,11 @@
   (define jiffies-of-current-day (remainder jiffies day-length))
   (define time-of-day
     (cond ((< jiffies-of-current-day 100) 'morning)
-          ((< jiffies-of-current-day 200) 'afternoon)
-          ((< jiffies-of-current-day 300) 'evening)
-          ((< jiffies-of-current-day 400) 'night)))
+          ((< jiffies-of-current-day 200) 'midday)
+          ((< jiffies-of-current-day 300) 'afternoon)
+          ((< jiffies-of-current-day 400) 'evening)
+          ((< jiffies-of-current-day 500) 'night)))
   time-of-day
   )
 
-(define day-length 400)
+(define day-length 500)

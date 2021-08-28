@@ -57,10 +57,30 @@
            #:actor (pc)
            #:duration 100)))))
 
+(define (get-evening-choices world actor)
+  (dev-note "get-evening-choices: not implemented yet")
+  (list
+   (make-choice
+    'camp
+    "Set up tent."
+    (λ () (make-action
+           #:symbol 'camp
+           #:actor (pc)
+           #:duration 20)))
+   (make-choice
+    'camp
+    "Build campfire."
+    (λ () (make-action
+           #:symbol 'camp
+           #:actor (pc)
+           #:duration 20)))))
+
 ; this is called from outside
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'evening)
+         (get-evening-choices world actor))
         ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
