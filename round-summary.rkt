@@ -4,6 +4,8 @@
 
 (require "api.rkt")
 
+
+(require "actor.rkt")
 (require "locations/locations.rkt")
 
 (define (round-summary mode)
@@ -44,17 +46,17 @@
       (when (pc-hungry?)
         (define hunger-text
           (case (pc-hunger-level)
-            ['hungry "hungry"]
-            ['very-hungry "very hungry"]
-            ['starving "starving"]
-            ))
+             ['hungry "hungry"]
+             ['very-hungry "very hungry"]
+             ['starving "starving"]
+             ))
         (list (string-append
-             " "
-             "["
-             hunger-text
-             "]"
-             " ")
-            ))
+               " "
+               "["
+               hunger-text
+               "]"
+               " ")
+              ))
       )))
   (info-card body title))
 
