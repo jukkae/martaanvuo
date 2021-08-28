@@ -193,7 +193,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "N" (cons "[N]: Notes." notes))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
-  (when (not (null? (actor-inventory (pc))))
+  #;(when (not (null? (actor-inventory (pc))))
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))

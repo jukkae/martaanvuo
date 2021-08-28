@@ -122,6 +122,8 @@
    sheet
    "Character sheet"
    )
+
+  (print-inventory)
   #t
   )
 
