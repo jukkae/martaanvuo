@@ -59,6 +59,12 @@
       #:id id
       #:details 2)]
 
+    ['ration
+     (new-item
+      "Food rations"
+      #:id id
+      #:details amount)]
+
     ['gold
      (new-item
       "Gold" ; gold-198, to be more precise
@@ -82,6 +88,10 @@
                             (list
                              (string-append " " (item-name item) " ")
                              (string-append " " "Cuts, breaks, crushes and cracks." " ")))
+                           ((eq? (item-id item) 'ration)
+                            (list
+                             (string-append " " (item-name item) " ")
+                             (string-append " " (~v (item-details item)) " ")))
                            ((item? item)
                             (list
                              (string-append " " (item-name item) " ")

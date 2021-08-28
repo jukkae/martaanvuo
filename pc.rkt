@@ -43,6 +43,7 @@
      (set-trait! (pc) "wrestle-attack-skill" 1)
      (set-trait! (pc) "defense" 1)
      (add-item! 'revolver #:silent? #t)
+     (add-item! 'ration #:amount 1 #:silent? #t)
      ]
     
     ['survivor
@@ -60,6 +61,7 @@
      (set-trait! (pc) "wrestle-attack-skill" -1)
      (set-trait! (pc) "defense" 1)
      (add-item! 'bolt-cutters #:silent? #t)
+     (add-item! 'ration #:amount 3 #:silent? #t)
      ]
 
     [else (error (string-append "set-build!: unknown build type " (symbol->string build)))])
@@ -67,7 +69,6 @@
   
   (set-trait! (pc) "exploration-skill" 1)
   (character-sheet)
-  (print-inventory)
   )
 
 ; TODO dispatching based on type should be done elsewhere,
