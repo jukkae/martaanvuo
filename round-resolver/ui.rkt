@@ -2,8 +2,9 @@
 
 (provide (all-defined-out))
 
-(require "../pc.rkt"
+(require "../character-sheet.rkt"
          "../io.rkt"
+         "../pc.rkt"
          "../quest.rkt"
          "../utils.rkt"
 

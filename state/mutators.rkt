@@ -5,7 +5,8 @@
 
 (require racket/lazy-require)
 
-(require "../actor.rkt")
+(require "../actor.rkt"
+         "../character-sheet.rkt")
 (require "../io.rkt")
 (require "../locations/location.rkt")
 (require "../pc.rkt")

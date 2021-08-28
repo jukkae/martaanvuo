@@ -5,17 +5,16 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "actor.rkt")
-(require "io.rkt")
-(require "utils.rkt")
+(require "actor.rkt"
+         "io.rkt"
+         "item.rkt"
+         "utils.rkt")
 
 (lazy-require
  ["state/state.rkt"
   (pc
    )])
 
-
-; -> PC, or even just character-sheet.rkt
 (define (character-sheet)
   (define actor (pc))
 
@@ -117,3 +116,41 @@
    )
   #t
   )
+
+(define (print-inventory)
+  (define actor (pc))
+  
+  (define header
+    (list
+     (list " Item " " Notes ")))
+
+  (define items (actor-inventory actor))
+  (define items-list
+    (for/list ([item items])
+      (cond ((ranged-weapon? item)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
+            ((eq? (item-id item) 'bolt-cutters)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " "Cuts, breaks, cracks, and in a pinch, levers." " ")))
+            ((item? item)
+             (list
+              (string-append " " (item-name item) " ")
+              (string-append " " (~v (item-details item)) " ")))
+            (else
+             (list
+              (string-append " " (symbol->string item) " ")
+              (string-append " " " " " "))))
+      ))
+  
+  (define sheet
+    (append
+     header
+     items-list))
+  
+  (info-card
+   sheet
+   "Inventory"
+   ))
