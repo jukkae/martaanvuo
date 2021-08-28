@@ -41,9 +41,18 @@
                  "N/A")
              " ")
             )
-      (when (pc-hungry?) (list (string-append
+      (when (pc-hungry?)
+        (define hunger-text
+          (case (pc-hunger-level)
+            ['hungry "hungry"]
+            ['very-hungry "very hungry"]
+            ['starving "starving"]
+            ))
+        (list (string-append
              " "
-             "[hungry]"
+             "["
+             hunger-text
+             "]"
              " ")
             ))
       )))

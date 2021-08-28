@@ -139,6 +139,20 @@
 (define (pc-hungry?)
   (> (pc-actor-hunger (pc)) 500))
 
+(define (pc-hunger-level)
+  (cond
+    ((<= (pc-actor-hunger (pc)) 0)
+     'satiated)
+    ((<= (pc-actor-hunger (pc)) 500)
+     'not-hungry)
+    ((<= (pc-actor-hunger (pc)) 1300)
+     'hungry)
+    ((<= (pc-actor-hunger (pc)) 2100)
+     'very-hungry)
+    (else
+     'starving)
+    ))
+
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)
