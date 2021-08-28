@@ -1,6 +1,6 @@
 #lang racket
 
-(provide (all-defined-out))
+
 
 (require racket/lazy-require)
 
@@ -45,9 +45,18 @@
      *combat-flags*
      )])
 
+(provide get-world-choices)
+(define (get-world-choices world actor)
+  (cond ((in-combat?)
+         (get-combat-choices))
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'evening)
+         (get-evening-choices world actor))
+        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
+         (get-nighttime-choices world actor))
+        (else (get-downtime-choices world actor))))
 
 
-; poor name, and likely belongs elsewhere
+
 (define (choice-factory action-symbol)
   (case action-symbol
     ['sleep
@@ -94,16 +103,6 @@
    (choice-factory 'tent)
    (choice-factory 'campfire)
    ))
-
-; this is called from outside
-(define (get-world-choices world actor)
-  (cond ((in-combat?)
-         (get-combat-choices))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'evening)
-         (get-evening-choices world actor))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
-         (get-nighttime-choices world actor))
-        (else (get-downtime-choices world actor))))
 
 
 (define (get-downtime-choices world actor)
@@ -322,6 +321,7 @@
 ; where does this belong? some module auxilliary to round-resolver?
 ; store in the action, handle calling from here
 ; -> code to action handler?
+(provide describe-pc-intention)
 (define (describe-pc-intention pc-action)
   (when (not (null? pc-action)) ; should be checked at call site but eh
     (case (action-symbol pc-action)
