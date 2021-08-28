@@ -88,7 +88,7 @@
       (set! result (dispatch-to-sub-resolver-and-resolve! action))
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
-      (narrate-timeline tl))
+      (process-timeline! tl))
     
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
@@ -135,7 +135,7 @@
            
            (define tl (timeline all-metadata all-events duration))
            
-           (narrate-timeline tl)
+           (process-timeline! tl)
            (return tl)))
 
        'before-action-ok
@@ -143,11 +143,14 @@
       [else 'before-action-ok])
     ))
 
-
-(define (handle-timeline tl)
+; note: this has overlap with handle-interrupting-event
+(define (process-timeline! tl)
   (for ([event (timeline-events tl)])
-    (dev-note "handle event")
-    (displayln event))
+    (case (event-type event)
+      ['hunger-check
+       (dev-note "increasing hunger...")]
+      [else
+       (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))
 
 
