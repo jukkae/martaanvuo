@@ -360,6 +360,17 @@
                             #:details (list direction))))))
              )))
 
+       (when (>= (pc-actor-hunger (current-pc)) 100)
+         (list
+          (make-choice
+           'eat
+           (string-append "Eat.")
+           (λ () (make-action
+                  #:symbol 'eat
+                  #:actor (pc)
+                  #:duration 15
+                  #:tags '(downtime))))))
+
        (when (eq? (location-type (current-location)) 'swamp)
          (list
           (make-choice
