@@ -85,6 +85,20 @@
              #:actor (pc)
              #:duration 10)))]
 
+    ['rest
+     (define next-time-of-day
+       (time-of-day-from-jiffies (+ (world-elapsed-time (current-world))
+                                    100)))
+     (make-choice
+      'rest
+      (string-append "Rest [until "
+                     (symbol->string next-time-of-day)
+                     "].")
+      (λ () (make-action
+             #:symbol 'rest
+             #:actor (pc)
+             #:duration 100)))]
+
     ['eat
      (make-choice
       'eat
@@ -171,8 +185,7 @@
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-         (cond ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
-                '()))
+         
       
          (when (place? (current-location))
            (for/list ([route (place-routes (current-location))])
@@ -226,6 +239,9 @@
                             #:tags '(downtime)
                             #:details (list direction))))))
              )))
+
+       (when (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
+         (list (choice-factory 'rest)))
 
        (when (and (>= (pc-actor-hunger (current-pc)) 100)
                   (pc-has-item? 'ration))
