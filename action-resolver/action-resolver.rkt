@@ -122,13 +122,15 @@
                           #:interrupting? #t)))
            (define metadata 'interrupted)
            (define duration (exact-floor (/ (action-duration action) 3)))
-           (define tl (timeline metadata events duration))
+           (define timeline (timeline metadata events duration))
 
            (set! elapsed-time duration)
 
-           (define tl2 (advance-time-until-next-interesting-event! duration #f))
-           (narrate-timeline tl)
-           (return tl)))
+           (define world-events (advance-time-until-next-interesting-event! duration #f))
+           (set! timeline (append timeline world-events))
+           
+           (narrate-timeline timeline)
+           (return timeline)))
 
        'before-action-ok
        ]
