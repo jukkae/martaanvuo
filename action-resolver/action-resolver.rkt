@@ -187,7 +187,8 @@
     ['sleep (next-day! action)]
     ['eat
      (set-pc-actor-hunger! (current-pc) (- (pc-actor-hunger (current-pc)) 500))
-     (p "The ration's dry and bland, but filling.")]
+     (p "The ration's dry and bland, but filling.")
+     (remove-item! 'ration)]
 
       
     ; the rest

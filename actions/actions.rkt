@@ -85,6 +85,16 @@
              #:actor (pc)
              #:duration 10)))]
 
+    ['eat
+     (make-choice
+      'eat
+      (string-append "Eat.")
+      (λ () (make-action
+             #:symbol 'eat
+             #:actor (pc)
+             #:duration 15
+             #:tags '(downtime))))]
+
 
     ))
 
@@ -219,14 +229,7 @@
 
        (when (>= (pc-actor-hunger (current-pc)) 100)
          (list
-          (make-choice
-           'eat
-           (string-append "Eat.")
-           (λ () (make-action
-                  #:symbol 'eat
-                  #:actor (pc)
-                  #:duration 15
-                  #:tags '(downtime))))))
+          (choice-factory 'eat)))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list

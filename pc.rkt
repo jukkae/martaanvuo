@@ -99,7 +99,7 @@
                         (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
                                 (actor-inventory (pc))
                                 ))
-  (displayln "removing item"))
+  (dev-note "item removed, show info about removed/remaining items"))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
