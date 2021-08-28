@@ -109,7 +109,15 @@
   (when (not (null? traits-list))
     (set! traits-list (cons (list "" "") traits-list)))
 
-  (set! sheet (append sheet attributes-list traits-list))
+  (define hunger-list
+    (list
+     (list "" "")
+     (list " hunger "
+           (string-append " "
+                          (number->string (pc-actor-hunger actor))
+                          " "))))
+
+  (set! sheet (append sheet attributes-list traits-list hunger-list))
   (info-card
    sheet
    "Character sheet"
