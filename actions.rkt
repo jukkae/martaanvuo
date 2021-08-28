@@ -55,7 +55,7 @@
     (λ () (make-action
            #:symbol 'sleep
            #:actor (pc)
-           #:duration 100)))))
+           #:duration 200)))))
 
 (define (get-evening-choices world actor)
   (dev-note "get-evening-choices: not implemented yet")

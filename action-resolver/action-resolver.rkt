@@ -19,6 +19,7 @@
 (require "../state/logging.rkt")
 (require "../stance.rkt")
 (require "../status.rkt")
+(require "../time.rkt")
 (require "../utils.rkt")
 (require "../world.rkt")
 
@@ -148,6 +149,13 @@
 
     ))
 
+(define (next-day! action)
+  (define time (world-elapsed-time (current-world)))
+  (define time-today (remainder time day-length))
+  (define time-until-next-morning (- 600 time-today))
+  (set-action-duration! action time-until-next-morning)
+  'ok)
+
 (define (dispatch-to-sub-resolver-and-resolve! action)
   (case (action-symbol action)
     ; "special" actions first
@@ -160,15 +168,17 @@
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
 
-    ; placeholder
+    ; placeholder / WIP
     ['camp 'ok]
-      
+    #;['sleep (resolve-sleep-action! action)]
+    ['sleep (next-day! action)]
+
       
     ; the rest
     ['melee (resolve-melee-action! action)]
     ['shoot (resolve-shoot-action! action)]
     ['forage (resolve-forage-action! action)]
-    ['sleep (resolve-sleep-action! action)]
+    
       
     ['flee (resolve-flee-action! action)]
     ['break-free (resolve-break-free-action! action)]
