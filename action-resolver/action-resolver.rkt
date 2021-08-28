@@ -115,22 +115,28 @@
        (when (not (location-has-detail? (current-location) 'no-encounters))
          (define encounter-roll (d 1 6))
          (when (< encounter-roll 4)
-           (define events
+
+           (define resolve-events
              (list
               (make-event 'spawn-enemies
                           '() ; pack info about enemies / event here
                           #:interrupting? #t)))
-           (define metadata 'interrupted)
+           (define metadata '(interrupted))
            (define duration (exact-floor (/ (action-duration action) 3)))
-           (define timeline (timeline metadata events duration))
+           
 
            (set! elapsed-time duration)
 
-           (define world-events (advance-time-until-next-interesting-event! duration #f))
-           (set! timeline (append timeline world-events))
+           (define world-tl (advance-time-until-next-interesting-event! duration #f))
+           (define world-events (timeline-events world-tl))
+
+           (define all-events (append world-events resolve-events))
+           (define all-metadata (append (timeline-metadata world-tl) metadata))
            
-           (narrate-timeline timeline)
-           (return timeline)))
+           (define tl (timeline all-metadata all-events duration))
+           
+           (narrate-timeline tl)
+           (return tl)))
 
        'before-action-ok
        ]
