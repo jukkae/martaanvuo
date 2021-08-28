@@ -147,6 +147,8 @@
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
+      ['new-time-of-day ; proc dailies here
+       '()]
       [else
        (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))

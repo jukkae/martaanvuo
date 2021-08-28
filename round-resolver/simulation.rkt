@@ -2,6 +2,8 @@
 
 (provide advance-time-until-next-interesting-event!)
 
+(require racket/lazy-require)
+
 (require "../io.rkt"
          "../actor.rkt"
          "../time.rkt"
@@ -13,17 +15,45 @@
 (require "event.rkt"
          "timeline.rkt")
 
+(lazy-require
+ ["../pc.rkt"
+  (pc-hunger-level)])
+
+; this should also likely have a mutator counterpart, to handle becoming less hungry
+(define (hunger++)
+  (define events '())
+  
+  (define old-pc-hunger-level (pc-hunger-level))
+  (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
+  (define new-pc-hunger-level (pc-hunger-level))
+
+  (if (not (eq? old-pc-hunger-level new-pc-hunger-level))
+    (make-event
+     new-pc-hunger-level
+     (time-of-day-from-jiffies (world-elapsed-time (current-world)))
+     #:interrupting? #f)
+    
+    '()))
+
 ; increment world time
 ; return a list of events that occur at new timestamp
 (define (time++ [encounters? #f])
+  (define events '())
+
+  
   (define new-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
    (current-world)
    new-elapsed-time)
 
-  (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
+  (define new-hunger-level? (hunger++))
+  (when (not (null? new-hunger-level?))
+    (set! events (append-element events new-hunger-level?)))
+  
 
-  (get-daily-events-for-time new-elapsed-time))
+  (set! events (append events (get-daily-events-for-time new-elapsed-time)))
+  events
+  )
 
 (define (get-daily-events-for-time time)
   (define events '())
