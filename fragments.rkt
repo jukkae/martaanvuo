@@ -24,15 +24,17 @@
  'begin-life
  (proc
   (p
-   "Still, she has reason for confidence."
-   ))
+   (string-append
+    "She goes over her checklist again: Plan? Part of a plan, yes. Map? Not applicable. Knife? Yes. Food? Uh... not much. Bolt cutters? Yes. Bonding tape, firestarter, bivouac. Something else?")
+   )
+  )
  #:decisions
  (list
   (make-decision
-   #:title "She has a gun."
-   #:description "Her Aegis Metalworks revolver will get her out of a pinch. One of the last ones they ever made before the Rains. Hundreds of years old, and more reliable than anything that's made since."
+   #:title "Rope."
+   #:description "Rope, about 20 meters, mostly not too badly frayed."
    #:on-resolve! (proc
-                  (set-build! 'gun)
+                  (set-build! 'survivor)
                   (wait-for-confirm)
                   (p "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
                   (p "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
@@ -41,8 +43,8 @@
    )
 
   (make-decision
-   #:title "She's a survivor."
-   #:description "She is a survivor. That's what's kept her alive all these years. That, and her modified bolt cutters."
+   #:title "A flashlight."
+   #:description "A flashlight."
    #:on-resolve! (proc
                   (set-build! 'survivor)
                   (wait-for-confirm)
