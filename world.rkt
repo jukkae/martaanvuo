@@ -36,7 +36,7 @@
 
    (make-place
     #:id 'magpie-hill
-    #:features '(magpie-effigy)
+    #:features '(magpie-effigy precipice)
     #:type 'mountains
     #:shortname "Magpie hill")
 

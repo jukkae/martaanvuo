@@ -99,7 +99,7 @@
                         (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
                                 (actor-inventory (pc))
                                 ))
-  (displayln "removing item"))
+  (dev-note "item removed, show info about removed/remaining items"))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
@@ -135,6 +135,23 @@
          (define ammo-left (ranged-weapon-ammo-left revolver))
          (positive? ammo-left))
         (else #f)))
+
+(define (pc-hungry?)
+  (> (pc-actor-hunger (pc)) 500))
+
+(define (pc-hunger-level)
+  (cond
+    ((<= (pc-actor-hunger (pc)) 0)
+     'satiated)
+    ((<= (pc-actor-hunger (pc)) 500)
+     'not-hungry)
+    ((<= (pc-actor-hunger (pc)) 1300)
+     'hungry)
+    ((<= (pc-actor-hunger (pc)) 2100)
+     'very-hungry)
+    (else
+     'starving)
+    ))
 
 (provide award-xp!)
 (define (award-xp! amount . reason)

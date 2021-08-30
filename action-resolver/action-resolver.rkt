@@ -147,6 +147,8 @@
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
+      ['new-time-of-day ; proc dailies here
+       '()]
       [else
        (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))
@@ -169,6 +171,12 @@
   (set-action-duration! action time-until-next-morning)
   'ok)
 
+(define (next-time-of-day! action)
+  (define time-until-next-time-of-day (- 100
+                                         (remainder (world-elapsed-time (current-world)) 100)))
+  (set-action-duration! action time-until-next-time-of-day)
+  'ok)
+
 (define (dispatch-to-sub-resolver-and-resolve! action)
   (case (action-symbol action)
     ; "special" actions first
@@ -185,9 +193,11 @@
     ['camp 'ok]
     #;['sleep (resolve-sleep-action! action)]
     ['sleep (next-day! action)]
+    ['rest (next-time-of-day! action)]
     ['eat
      (set-pc-actor-hunger! (current-pc) (- (pc-actor-hunger (current-pc)) 500))
-     (p "The ration's dry and bland, but filling.")]
+     (p "The ration's dry and bland, but filling.")
+     (remove-item! 'ration)]
 
       
     ; the rest
