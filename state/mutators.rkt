@@ -178,7 +178,7 @@
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))
-  (print-inventory))
+  (inventory))
 
 (define (add-quest! quest)
   (current-quests

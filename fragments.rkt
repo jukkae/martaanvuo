@@ -25,7 +25,7 @@
  (proc
   (p
    (string-append
-    "She goes over her checklist again: Plan? Part of a plan, yes. Map? Not applicable. Knife? Yes. Food? Uh... not much. Bolt cutters? Yes. Bonding tape, firestarter, bivouac. Something else?")
+    "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Food? Some still left, yes. Bolt cutters? Yes. Something else?")
    )
   )
  #:decisions
@@ -34,7 +34,7 @@
    #:title "Rope."
    #:description "Rope, about 20 meters, mostly not too badly frayed."
    #:on-resolve! (proc
-                  (set-build! 'survivor)
+                  (set-build! 'rope)
                   (wait-for-confirm)
                   (p "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
                   (p "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
@@ -46,7 +46,7 @@
    #:title "A flashlight."
    #:description "A flashlight."
    #:on-resolve! (proc
-                  (set-build! 'survivor)
+                  (set-build! 'flashlight)
                   (wait-for-confirm)
                   (p "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
                   (p "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")

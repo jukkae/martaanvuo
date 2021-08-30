@@ -25,50 +25,41 @@
    4
    ))
 
-(define (set-build! build)
-  (case build
-    
-    ['gun
-     (set-actor-strength! (pc) 7)
-     (set-actor-dexterity! (pc) 10)
-     (set-actor-constitution! (pc) 7)
-     (set-actor-intelligence! (pc) 7)
-     (set-actor-charisma! (pc) 10)
+(define (set-base-build!)
+  (set-actor-strength! (pc) 7)
+  (set-actor-dexterity! (pc) 10)
+  (set-actor-constitution! (pc) 10)
+  (set-actor-intelligence! (pc) 7)
+  (set-actor-charisma! (pc) 7)
      
-     (set-pc-actor-max-lp! (pc) 0)
-     (set-pc-actor-lp! (pc) 0)
+  (set-pc-actor-max-lp! (pc) 1)
+  (set-pc-actor-lp! (pc) 1)
 
-     (set-trait! (pc) "athletics-skill" 0)
-     (set-trait! (pc) "melee-attack-skill" 0)
-     (set-trait! (pc) "wrestle-attack-skill" 1)
-     (set-trait! (pc) "defense" 1)
-     (add-item! 'revolver #:silent? #t)
-     (add-item! 'ration #:amount 1 #:silent? #t)
+  (set-trait! (pc) "athletics-skill" 1)
+  (set-trait! (pc) "melee-attack-skill" 3)
+  (set-trait! (pc) "wrestle-attack-skill" -1)
+  (set-trait! (pc) "defense" 1)
+  (set-trait! (pc) "exploration-skill" 1)
+  
+  (add-item! 'knife #:amount 2 #:silent? #t)
+  (add-item! 'ration #:amount 2 #:silent? #t)
+  (add-item! 'bolt-cutters #:silent? #t)
+  )
+
+(define (set-build! build)
+  (set-base-build!)
+  (case build
+    ['rope
+     (add-item! 'rope #:silent? #t)
      ]
     
-    ['survivor
-     (set-actor-strength! (pc) 7)
-     (set-actor-dexterity! (pc) 10)
-     (set-actor-constitution! (pc) 10)
-     (set-actor-intelligence! (pc) 7)
-     (set-actor-charisma! (pc) 7)
-     
-     (set-pc-actor-max-lp! (pc) 1)
-     (set-pc-actor-lp! (pc) 1)
-
-     (set-trait! (pc) "athletics-skill" 1)
-     (set-trait! (pc) "melee-attack-skill" 3)
-     (set-trait! (pc) "wrestle-attack-skill" -1)
-     (set-trait! (pc) "defense" 1)
-     (add-item! 'bolt-cutters #:silent? #t)
-     (add-item! 'ration #:amount 3 #:silent? #t)
+    ['flashlight
+     (add-item! 'flashlight #:amount 1 #:silent? #t)
      ]
 
     [else (error (string-append "set-build!: unknown build type " (symbol->string build)))])
-
-  
-  (set-trait! (pc) "exploration-skill" 1)
-  (character-sheet)
+  #;(inventory)
+  #;(character-sheet)
   )
 
 ; TODO dispatching based on type should be done elsewhere,

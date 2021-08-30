@@ -123,11 +123,11 @@
    "Character sheet"
    )
 
-  (print-inventory)
+  (inventory)
   #t
   )
 
-(define (print-inventory)
+(define (inventory)
   (define actor (pc))
   
   (define header
@@ -144,7 +144,7 @@
             ((eq? (item-id item) 'bolt-cutters)
              (list
               (string-append " " (item-name item) " ")
-              (string-append " " "Cuts, breaks, cracks, and in a pinch, levers." " ")))
+              (string-append "")))
             ((item? item)
              (list
               (string-append " " (item-name item) " ")
