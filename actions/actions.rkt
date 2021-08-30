@@ -303,6 +303,17 @@
 
              ]
 
+            ['precipice
+             (make-choice
+              'fall-down
+              "Fall down the precipice."
+              (λ ()
+                #;(p "Despite the worsening rain, Otava goes into the monochrome bush.")
+                (go-to-story-fragment 'fall-down)
+                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+
+             ]
+
             ['anthill
              (make-choice
               'anthill

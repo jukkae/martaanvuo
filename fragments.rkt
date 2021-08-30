@@ -92,3 +92,15 @@
    #:next-fragment 'recurse
    )))
 
+(fragment
+ 'fall-down
+ (proc
+  (dev-note "oof")
+  (p "Otava's grasp slips. She tries to find a footing."))
+ #:decisions
+ (list (make-decision
+        #:title "ok"
+        #:description "ok"
+        #:next-fragment 'exit
+        )))
+
