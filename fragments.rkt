@@ -21,7 +21,7 @@
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
 (fragment
- 'select-build
+ 'begin-life
  (proc
   (p
    "Still, she has reason for confidence."

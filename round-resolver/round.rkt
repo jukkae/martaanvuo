@@ -34,13 +34,13 @@
   (case mode
     ['begin
      (current-round (add1 (current-round)))
-     (round-summary mode)
+     (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)
      (when (not (null? (current-fragment-id)))
        (current-fragment-on-begin-round!))]
     
     ['continue
-     (round-summary mode)
+     (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)]))
 
 (define (on-end-round)
