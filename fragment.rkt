@@ -33,5 +33,8 @@
      ))
   (hash-set! *story-fragments* id frag))
 
+; this can currently error with
+; hash-ref: no value found for key
+; - if this happens during file load, then the cause is often a stale save file!
 (define (get-fragment id)
-  (hash-ref *story-fragments* id))
+  (hash-ref *story-fragments* id #;(λ () '())))

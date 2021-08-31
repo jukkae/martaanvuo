@@ -47,7 +47,7 @@
 
 
 (define (inventory)
-  (print-inventory)
+  (inventory)
   #t
   )
 

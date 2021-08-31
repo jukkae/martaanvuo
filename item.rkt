@@ -65,13 +65,23 @@
       #:id id
       #:details amount)]
 
+    ['knife
+     (new-item
+      "Knife"
+      #:id id)]
+
+    ['rope
+     (new-item
+      "Rope"
+      #:id id)]
+
     ['gold
      (new-item
       "Gold" ; gold-198, to be more precise
       #:id id
       #:details amount)] ; amount in grams, for now
     
-    [else (displayln "make-item: unknown id:") (displayln "id") '()]))
+    [else (dev-note "make-item: unknown id:") (prln id)]))
 
 (define (increase-ammo! gun)
   (set-ranged-weapon-ammo-left! gun (add1 (ranged-weapon-ammo-left gun))))

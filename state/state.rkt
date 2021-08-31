@@ -51,6 +51,8 @@
 
 (define current-combat-timeline (make-parameter '()))
 
+(define current-show-round-summary? (make-parameter #f))
+
 
 (define (reset-situation!)
   (current-world (world 0 0))
@@ -74,7 +76,8 @@
   (current-pc (make-new-pc))
   (current-life 0)
   (current-fragment-id '())
-  (current-combat-timeline '()))
+  (current-combat-timeline '())
+  (current-show-round-summary? #f))
 
 ; s11n logistics are simpler when there is only one S-expression to serialize -> "wrapper" struct for global state
 (serializable-struct
@@ -101,6 +104,7 @@
   [life #:mutable]
   [current-fragment-id #:mutable]
   [combat-timeline #:mutable]
+  [show-round-summary? #:mutable]
   ))
 
 (define (save)
@@ -129,7 +133,8 @@
      (current-pc)
      (current-life)
      (current-fragment-id)
-     (current-combat-timeline)))
+     (current-combat-timeline)
+     (current-show-round-summary?)))
   
   (define serialized-state (serialize st))
   (write serialized-state output-file)
@@ -162,4 +167,5 @@
   (current-pc (state-pc s))
   (current-life (state-life s))
   (current-fragment-id (state-current-fragment-id s))
-  (current-combat-timeline (state-combat-timeline s)))
+  (current-combat-timeline (state-combat-timeline s))
+  (current-show-round-summary? (state-show-round-summary? s)))

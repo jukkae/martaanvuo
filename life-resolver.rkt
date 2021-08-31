@@ -29,7 +29,7 @@
 (define (on-begin-life)
   (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
-  (go-to-story-fragment 'select-build)
+  (go-to-story-fragment 'begin-life)
   (when (not (= 1 (current-life)))
     (player-info)))
 

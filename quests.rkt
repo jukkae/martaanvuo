@@ -38,7 +38,8 @@
     (add-quest! q)
     (case quest-symbol
       ['pay-off-debt
-       (p "She's getting closer to the Martaanvuo Anomaly, too close to be comfortable. But the Debt is still there, so she doesn't have much choice.")])
+       (p "She's getting closer to Martaanvuo anomaly. Nobody's gone there for hundreds of years, but she found a couple of sources, did some digging of her own, connected the dots. This ought to be good, this ought to be worth it.")
+       (p "This should be enough to cover the rest of her debt to Collector.")])
   
 
     (define body
