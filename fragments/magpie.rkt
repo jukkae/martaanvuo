@@ -8,76 +8,37 @@
  'magpie
  (proc
   (p
-   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Hello, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. Who are you and what is your business?\"")
+   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. Are you looking for work?\"")
   )
  
  #:decisions
  (list
   (make-decision
-   #:title "Otava, seeking gold."
-   #:description "\"I am Otava, and I am seeking gold.\""
-   #:next-fragment 'magpie-help
+   #:title "Yes."
+   #:description "\"Good day, Magpie, King of Magpies. I am Otava, and I am seeking gold. Tell me more.\""
+   #:next-fragment 'magpie-cache
    )))
 
 (fragment
- 'magpie-help
+ 'magpie-cache
  (proc
   (p
-   "\"Chk-chk! Gold! I happen to know quite a bit about gold! In fact, I will tell you about a vault somewhere in the ruins nearby, if we agree on a deal, chk-chk-chk!\"")
+   "Magpie ruffles its feathers, as it asks you to come closer and leans in. In low voice that is all but lost under the falling rain, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 gold coins. What do you say?\"")
   (p
-   "\"What's the catch?\", Otava asks.")
+   "\"It's, uh... 23 is an interesting number. Considering the requirements and the expertise required, I was thinking more along the lines of –\", only briefly pausing while she does the math, \"– 37.\"")
   (p
-   "\"No catch, some hundreds of grams at least, we split 30-70, I just need hands to break in\", Magpie explains.")
+   "\"31 and perks\", Magpie replies, \"I'll explain the whole package in detail later, but it includes things like tailored excellent employee recognition messages, free armory credits, and fitness and wellness perks.\"")
   (p
-   "\"And the risks?\", Otava asks.")
-  (p
-   "\"As long as you don't go into the tunnels or do anything stupid, the worst might be some local wildlife, chk!\", Magpie says. \"So, what do you say?\"")
+   "Otava agrees, and Magpie goes over the details. The cache is in the nearby power plant on the plateau. It should be possible to get enough power to open the doors, and if not, well, they're sure to come up with something.")
   )
  
  #:decisions
  (list
   (make-decision
-   #:title "Agree."
-   #:description "\"Sounds good, tell me more.\""
-   #:next-fragment 'magpie-agree
+   #:title "Prepare."
+   #:description "Magpie explains the benefits package and armory credit system in detail, but it is all terribly confusing. In the end, Otava nevertheless gets a revolver."
+   #:on-resolve! (proc
+                  (wait-for-confirm))
+   #:next-fragment 'exit
    )
   ))
-
-(fragment
- 'magpie-agree
- (proc
-  (p "\"So, in the power plant a bit ahead on this plateau, there's one of the storage closet's been turned into a vault. Looks like been people camping there, possibly raiders, possibly looters – when it happened, some saw, uh, opportunity.\", Magpie explains."
-   )
-  (p "\"When what happened?\", Otava asks."
-   )
-  )
- 
- #:decisions
- (list
-  (make-decision
-   #:title "Agree."
-   #:description "\"Sounds good, tell me more.\""
-   #:next-fragment 'exit ; actually, why not just treat '() as exit...
-   )
-  ))
-
-(fragment
- 'magpie-donate-a-lot
- (proc
-  (p
-   "Otava offers her revolver. \"Thank you\", Magpie says, \"with this I can shoot my enemies. But how will you shoot yours? I hereby name you Otava the Friend.\""
-   )))
-
-(fragment
- 'magpie-donate-a-bit
- (proc
-  (p
-   "Otava offers two of her bullets. \"Thank you\", Magpie says, \"with these I can shoot my enemies.\""
-   )))
-
-(fragment
- 'magpie-do-not-donate
- (proc
-  (p
-   "\"I hope future brings you good fortune\", Magpie says."
-   )))
