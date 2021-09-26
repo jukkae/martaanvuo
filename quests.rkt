@@ -27,6 +27,12 @@
               "???"
               "a book? who/WHAT is Stiltman?? fee for what?"
               '())]
+      ['loot-the-cache
+       (quest 'loot-the-cache
+              "Loot the Cache"
+              "in progress"
+              "power plant (?) on the hill"
+              '())]
       ['grabberkin-finger
        (quest 'grabberkin-finger
               "Grabberkin finger"
