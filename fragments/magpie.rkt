@@ -15,7 +15,7 @@
  (list
   (make-decision
    #:title "Yes."
-   #:description "\"Good day, Magpie, King of Magpies. I am Otava, and I am seeking gold. Tell me more.\""
+   #:description "\"Good day, Magpie, King of Magpies. I am Otava, and I seek gold. Tell me more.\""
    #:next-fragment 'magpie-cache
    )))
 

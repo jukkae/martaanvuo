@@ -299,6 +299,7 @@
               (λ ()
                 (p "Despite the worsening rain, Otava goes into the monochrome bush.")
                 (go-to-story-fragment 'magpie)
+                (remove-feature-from-location! (current-location) 'magpie-effigy)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
