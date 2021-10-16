@@ -32,7 +32,7 @@
          (cond ((eq? (location-id (current-location)) 'perimeter)
                 (set-prompt! "Either a climb up the rocky slope to the magpie, or follow the ants to the swamp."))
                ((eq? (location-id (current-location)) 'magpie-hill)
-                (p "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. There's also a small trail that seems to lead down, towards Martaanvuo swamp.")))
+                (p "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. A small trail leads along the edge of the plateau.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p "\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau."))))))
 
@@ -55,5 +55,5 @@
 (define (redescribe-situation)
   (cond
     ((current-in-combat?) (describe-combat-situation))
-    (else '()#;(repeat-last-paragraph)))
+    (else (repeat-last-paragraph)))
   )

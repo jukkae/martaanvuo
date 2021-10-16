@@ -307,9 +307,9 @@
             ['precipice
              (make-choice
               'fall-down
-              "Fall down the precipice."
+              "Check out the mesmerising overhang."
               (λ ()
-                #;(p "Despite the worsening rain, Otava goes into the monochrome bush.")
+                (p "The glowing fog is starting to coalesce around her, as a rock gets loose under her foot. Otava slips.")
                 (go-to-story-fragment 'fall-down)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 

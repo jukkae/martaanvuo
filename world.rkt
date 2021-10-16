@@ -36,9 +36,15 @@
 
    (make-place
     #:id 'magpie-hill
-    #:features '(magpie-effigy precipice)
+    #:features '(magpie-effigy)
     #:type 'mountains
     #:shortname "Magpie hill")
+
+   (make-place
+    #:id 'bright-precipice
+    #:features '(precipice)
+    #:type 'mountains
+    #:shortname "Precipice")
 
    (make-place
     #:id 'crematory
@@ -139,8 +145,9 @@
   (make-path-between 'martaanvuo-swamp 'crematory)
   (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
   (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-  (make-path-between 'martaanvuo-swamp 'magpie-hill)
+  (make-path-between 'martaanvuo-swamp 'bright-precipice)
   (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+  (make-path-between 'magpie-hill 'bright-precipice #:no-encounters? #t)
   (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
   (make-path-between 'power-plant-ruins 'sewers-1)
   (make-path-between 'sewers-1 'sewers-2)

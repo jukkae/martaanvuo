@@ -35,7 +35,7 @@
   
   (when (current-show-round-summary?)
     (if (eq? mode 'continue)
-      (redescribe-situation)
+      '()#;(redescribe-situation)
       (describe-situation)))
   
   (let/ec end-round-early-with-round-status
