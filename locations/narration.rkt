@@ -301,7 +301,7 @@
           (if (route-fully-known? route)
               "The power plant ruins."
               "The decrepit building.")]
-         ['precipice
+         ['bright-precipice
           (if (route-fully-known? route)
               "Bright Precipice."
               "The trail along the edge of the plateau.")]
