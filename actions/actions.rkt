@@ -311,6 +311,7 @@
               (λ ()
                 (p "The glowing fog is starting to coalesce around her, as a rock gets loose under her foot. Otava slips.")
                 (go-to-story-fragment 'fall-down)
+                (wait-for-confirm)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]

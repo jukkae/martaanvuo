@@ -98,12 +98,19 @@
 (fragment
  'fall-down
  (proc
-  (dev-note "oof")
-  (p "Otava's grasp slips. She tries to find a footing."))
+  (p "Otava tumbles down along the near-vertical wall, tries to get a grip and slams headfirst against a rock. A dizzying vertigo and a crunch."))
  #:decisions
  (list (make-decision
-        #:title "ok"
-        #:description "ok"
-        #:next-fragment 'exit
+        #:title "..."
+        #:next-fragment 'fall-down-2
         )))
 
+(fragment
+ 'fall-down-2
+ (proc
+  (p "..."))
+ #:decisions
+ (list (make-decision
+        #:title "..."
+        #:next-fragment 'exit
+        )))
