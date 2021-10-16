@@ -55,5 +55,5 @@
 (define (redescribe-situation)
   (cond
     ((current-in-combat?) (describe-combat-situation))
-    (else (repeat-last-paragraph)))
+    (else '()#;(repeat-last-paragraph)))
   )
