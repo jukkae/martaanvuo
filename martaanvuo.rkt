@@ -9,7 +9,8 @@
 (require "utils.rkt")
 (require "world.rkt")
 
-
+; requires the following packages:
+; text-table, lens, rebellion
 
 ; game-specific, not engine!
 (define (title)
