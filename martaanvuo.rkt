@@ -6,7 +6,6 @@
 (require "life-resolver.rkt")
 (require "round-resolver/round-resolver.rkt")
 (require "state/state.rkt")
-(require "utils.rkt")
 (require "world.rkt")
 
 ; requires the following packages:
