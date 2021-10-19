@@ -1,6 +1,5 @@
 #lang racket
 
-(require "fragment.rkt")
 (require "fragments.rkt") ; has to be required somewhere!
 (require "io.rkt")
 (require "life-resolver.rkt")

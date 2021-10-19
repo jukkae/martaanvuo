@@ -2,7 +2,6 @@
 
 (provide (all-defined-out))
 
-(require "io.rkt")
 (require "pc.rkt")
 (require "round-resolver/round-resolver.rkt")
 (require "run-resolver.rkt")

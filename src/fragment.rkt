@@ -4,8 +4,6 @@
 
 (require racket/serialize)
 
-(require "utils.rkt")
-
 
 (serializable-struct
  story-fragment

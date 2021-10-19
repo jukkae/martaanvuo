@@ -2,8 +2,6 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-(require racket/serialize)
 
 (require "api.rkt")
 
@@ -11,12 +9,9 @@
          "fragments/magpie.rkt"
          "fragments/stiltman.rkt")
 
-(require "action.rkt")
-(require "checks.rkt")
 (require "decision.rkt")
 (require "fragment.rkt")
 (require "state/state.rkt")
-(require "world.rkt")
 
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout
