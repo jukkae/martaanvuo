@@ -6,8 +6,8 @@
 
 (require "../action.rkt"
          "../actor.rkt"
-         "../blindscraper.rkt"
-         "../grabberkin.rkt"
+         "../enemies/blindscraper.rkt"
+         "../enemies/grabberkin.rkt"
 
          "../state/state.rkt")
 

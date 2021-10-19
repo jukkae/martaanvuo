@@ -4,16 +4,16 @@
 
 (require racket/serialize)
 
-(require "state/combat.rkt"
-         "state/state.rkt")
+(require "../state/combat.rkt"
+         "../state/state.rkt")
 
-(require "action.rkt")
-(require "actor.rkt")
-(require "io.rkt")
-(require "state/state.rkt")
-(require "stance.rkt")
-(require "utils.rkt")
-(require "world.rkt")
+(require "../action.rkt"
+         "../actor.rkt" 
+         "../io.rkt"
+         "../state/state.rkt"
+         "../stance.rkt"
+         "../utils.rkt"
+         "../world.rkt")
 
 (define (make-blindscraper-action actor action-flag)
   (case action-flag

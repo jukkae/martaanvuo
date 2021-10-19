@@ -21,8 +21,8 @@
 (require "../api.rkt"
          "../actor.rkt")
 
-(require "../blindscraper.rkt"
-         "../grabberkin.rkt")
+(require "../enemies/blindscraper.rkt"
+         "../enemies/grabberkin.rkt")
 
 
 #;(lazy-require ["../state/state.rkt"

@@ -5,16 +5,16 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "state/combat.rkt"
-         "state/state.rkt")
+(require "../state/combat.rkt"
+         "../state/state.rkt")
 
-(require "action.rkt")
-(require "actor.rkt")
-(require "io.rkt")
-(require "stance.rkt")
-(require "status.rkt")
-(require "utils.rkt")
-(require "world.rkt")
+(require "../action.rkt"
+         "../actor.rkt"
+         "../io.rkt"
+         "../stance.rkt"
+         "../status.rkt"
+         "../utils.rkt"
+         "../world.rkt")
 
 
 ;;; THE BIG THINGS:
