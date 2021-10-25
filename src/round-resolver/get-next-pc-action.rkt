@@ -19,6 +19,7 @@
          "../choice.rkt"
          "../decision.rkt"
          "../io.rkt"
+         "../utils.rkt"
          "../locations/locations.rkt"
          "../state/state.rkt")
 
@@ -104,6 +105,9 @@
                (define result 'end-round-early)
                (when (eq? fragment-decision-result 'recurse)
                  (set! result 'recurse))
+               (when (eq? fragment-decision-result 'pc-dead)
+                 (dev-note "fragment-decision-result: PC DEAD")
+                 (set! result 'pc-dead))
                produce-action result))
             ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
             (else (what-do-you-do 'abbreviated))))))

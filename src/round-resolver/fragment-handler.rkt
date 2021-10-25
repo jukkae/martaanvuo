@@ -46,6 +46,10 @@
            ((eq? 'recurse next-fragment)
             (unset-current-fragment-id!)
             'recurse) ; !! important
+
+           ((eq? 'pc-dead next-fragment)
+            (unset-current-fragment-id!)
+            'pc-dead)
            
            ; ... or it can be just a label
            (else (go-to-story-fragment next-fragment))

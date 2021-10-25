@@ -108,7 +108,7 @@
   (info-card
    (list
     (list " 1d4: " (string-append " " (number->string r) " ")))
-   "Death save")
+   "Death save")1
   (wait-for-confirm)
   (case r
     [(1)
@@ -130,7 +130,7 @@
         )
         (make-decision
         #:title "DEAD"
-        #:next-fragment 'fall-down-2
+        #:next-fragment 'pc-dead
         #:requirement (λ () (not (pc-is-alive?)))
         )))
 
