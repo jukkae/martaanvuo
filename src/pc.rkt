@@ -152,9 +152,9 @@
     (actor-alive? (pc)) 
     ]))
 
-(define (set-pc-alive?! new-alive?)
-  (set-pc-actor-alive?! (pc) new-alive?))
-  
+(define (kill-pc! cause-of-death)
+  (kill (pc) cause-of-death))
+
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)

@@ -113,7 +113,7 @@
   (case r
     [(1)
      (p "Otava is dead.")
-     (set-pc-alive?! 'dead)]
+     (kill-pc! 'fell-to-death)]
     [(2 3 4)
      (next-chapter!)
      (p "Otava comes to.")

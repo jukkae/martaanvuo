@@ -309,11 +309,19 @@
                       " is dead.")
        (string-append (actor-name actor)
                       " is dead. Cause of death: "
-                      #;(symbol->string cause-of-death)
-                      cause-of-death)))
+                      (cond ((symbol? cause-of-death)
+                             (symbol->string cause-of-death))
+                            ((string? cause-of-death)
+                             cause-of-death)
+                            ((symbol? (car cause-of-death))
+                             (symbol->string (car cause-of-death)))
+                            ((string? (car cause-of-death))
+                             (car cause-of-death))
+                            (else "NA"))
+                      )))
   
   (cond ((pc-actor? actor)
-         (set-pc-actor-alive?! actor #f))
+         (set-pc-actor-alive?! actor 'dead))
         (else
          (remove-actor-from-its-current-location! actor)
          (define corpse (cons 'corpse "Corpse (TODO)"))
