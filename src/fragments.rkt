@@ -37,7 +37,7 @@
    )
 
   (make-decision
-   #:title "A flashlight."
+   #:title "Flashlight."
    #:description "A flashlight, with almost half of a full charge."
    #:on-resolve! (proc
                   (set-build! 'flashlight)
@@ -97,11 +97,41 @@
 (fragment
  'fall-down
  (proc
-  (p "Otava tumbles down along the near-vertical wall, tries to get a grip and slams headfirst against a rock. A dizzying vertigo and a crunch."))
+  (p "Otava tumbles down along the near-vertical wall, tries to get a grip and slams headfirst against a rock. A dizzying vertigo and a crunch.")
+  (wait-for-confirm)
+  (p "Warm red black darkness and warm taste of iron.")
+  (wait-for-confirm)
+  (p "Darkness.")
+  (wait-for-confirm)
+  #;(define r (d 1 4))
+  (define r 1)
+  (info-card
+   (list
+    (list " 1d4: " (string-append " " (number->string r) " ")))
+   "Death save")
+  (wait-for-confirm)
+  (case r
+    [(1)
+     (p "Otava is dead.")
+     (set-pc-alive?! 'dead)]
+    [(2 3 4)
+     (next-chapter!)
+     (p "Otava comes to.")
+     (wait-for-confirm)
+     (p "Then, the pain.")])
+
+  (wait-for-confirm)
+ )
  #:decisions
  (list (make-decision
         #:title "..."
         #:next-fragment 'fall-down-2
+        #:requirement (λ () (pc-is-alive?))
+        )
+        (make-decision
+        #:title "DEAD"
+        #:next-fragment 'fall-down-2
+        #:requirement (λ () (not (pc-is-alive?)))
         )))
 
 (fragment

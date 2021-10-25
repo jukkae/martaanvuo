@@ -144,6 +144,17 @@
      'starving)
     ))
 
+(define (pc-is-alive?)
+  ; TODO this is dirty hack, think about "aliveness" vs hp etc
+  (case (pc-actor-alive? (pc))
+   ['dead #f]
+   [else
+    (actor-alive? (pc)) 
+    ]))
+
+(define (set-pc-alive?! new-alive?)
+  (set-pc-actor-alive?! (pc) new-alive?))
+  
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)
