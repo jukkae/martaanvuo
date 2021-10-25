@@ -33,7 +33,7 @@
   
   (case (current-run)
     [(1)
-     (p "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. The Broker's instructions have been correct thus far.")
+     (p "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. Broker's directions have been correct thus far.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]
     #;[(2)

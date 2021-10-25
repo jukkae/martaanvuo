@@ -19,8 +19,8 @@
        (quest 'pay-off-debt
               "Debt to Collector"
               "in progress"
-              "unsettled: 10,111 g of Martaanvuo gold"
-              10111)] ; gold-198 has a short halflife, around 2.7 days, -> temporal anomaly
+              "unsettled: 10,111 g of gold"
+              10111)]
       ['anthead-monograph
        (quest 'anthead-monograph
               "Anthead Monograph"
@@ -44,8 +44,7 @@
     (add-quest! q)
     (case quest-symbol
       ['pay-off-debt
-       (p "She's getting closer to Martaanvuo anomaly. Nobody's gone there for hundreds of years, but she found a couple of sources, did some digging of her own, connected the dots. This ought to be good, this ought to be worth it.")
-       (p "This should be enough to cover the rest of her debt to Collector.")])
+       (p "She's getting closer to Martaanvuo anomaly. If what she's pieced together is correct, she'll be able to pay off the rest of her debt to Collector, and still have some left over.")])
   
 
     (define body
