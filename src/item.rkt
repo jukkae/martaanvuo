@@ -75,6 +75,12 @@
       "Rope"
       #:id id)]
 
+    ['flashlight
+     (new-item
+      "Flashlight"
+      #:id id
+      #:details 34)] ; charge percentage
+
     ['gold
      (new-item
       "Gold" ; gold-198, to be more precise

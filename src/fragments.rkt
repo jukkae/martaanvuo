@@ -38,7 +38,7 @@
 
   (make-decision
    #:title "A flashlight."
-   #:description "A flashlight."
+   #:description "A flashlight, with almost half of a full charge."
    #:on-resolve! (proc
                   (set-build! 'flashlight)
                   (wait-for-confirm)
