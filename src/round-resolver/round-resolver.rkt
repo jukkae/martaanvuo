@@ -15,7 +15,9 @@
          "../action-resolver/action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
-         "../locations/location.rkt")
+         "../locations/location.rkt"
+         "../pc.rkt"
+         "../utils.rkt")
 
 (require "action-queue.rkt"
          "ai.rkt"
@@ -29,6 +31,7 @@
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))
   
+  
   (enqueue-npc-actions)
 
   (case round-begin-status
@@ -41,10 +44,14 @@
       '()#;(redescribe-situation)
       (describe-situation)))
 
+  ; this fixes save files after death
+  (when (not (pc-is-alive?))
+    (set! round-begin-status 'pc-dead))
+
   (case round-begin-status
     ['pc-dead
       'pc-dead]
-    
+
     [else
       ; chonky boi, extract function
       (let/ec end-round-early-with-round-status
