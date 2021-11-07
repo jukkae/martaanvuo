@@ -36,8 +36,14 @@
      (current-round (add1 (current-round)))
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)
-     (when (not (null? (current-fragment-id)))
-       (current-fragment-on-begin-round!))]
+     
+     (define round-begin-status
+      (cond ((not (null? (current-fragment-id)))
+       (current-fragment-on-begin-round!))))
+     (case round-begin-status
+       ['ok '()]
+       ['pc-dead (dev-note "ON-BEGIN-ROUND: PC DEAD")])
+     ]
     
     ['continue
      (when (current-show-round-summary?) (round-summary mode))

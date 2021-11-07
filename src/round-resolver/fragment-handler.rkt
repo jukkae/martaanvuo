@@ -48,6 +48,7 @@
             'recurse) ; !! important
 
            ((eq? 'pc-dead next-fragment)
+            (dev-note "PC DEAD NEXT FRAG")
             (unset-current-fragment-id!)
             'pc-dead)
            
