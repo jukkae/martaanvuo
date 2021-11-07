@@ -15,6 +15,7 @@
          "../action-resolver/action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
+         "../io.rkt"
          "../locations/location.rkt"
          "../pc.rkt"
          "../utils.rkt")
@@ -46,7 +47,22 @@
 
   ; this fixes save files after death
   (when (not (pc-is-alive?))
-    (set! round-begin-status 'pc-dead))
+    (set! round-begin-status 'pc-dead)
+
+    ; This "reprints" the "Otava is dead" notice
+    (define cause-of-death (pc-actor-cause-of-death (pc)))
+    (notice (string-append "Otava is dead. Cause of death: "
+                           (cond ((symbol? cause-of-death)
+                             (describe-cause-of-death cause-of-death))
+                            ((string? cause-of-death)
+                             cause-of-death)
+                            ((symbol? (car cause-of-death))
+                             (describe-cause-of-death (car cause-of-death)))
+                            ((string? (car cause-of-death))
+                             (car cause-of-death))
+                            (else "NA"))
+                           ))
+    )
 
   (case round-begin-status
     ['pc-dead

@@ -60,6 +60,7 @@
   [max-lp #:mutable]
   [death-roll-dice #:mutable]
   [alive? #:mutable]
+  [cause-of-death #:mutable]
   [xp #:mutable]
   [hunger #:mutable])
  #:constructor-name pc-actor*)
@@ -82,7 +83,7 @@
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t 0 0))
+   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0 0))
 
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))
@@ -326,7 +327,9 @@
                       )))
   
   (cond ((pc-actor? actor)
-         (set-pc-actor-alive?! actor 'dead))
+         (set-pc-actor-alive?! actor 'dead)
+         (set-pc-actor-cause-of-death! actor cause-of-death)
+         )
         (else
          (remove-actor-from-its-current-location! actor)
          (define corpse (cons 'corpse "Corpse (TODO)"))

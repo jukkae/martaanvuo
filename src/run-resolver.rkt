@@ -123,6 +123,7 @@
      (p title-string)]
     ['restart
      (narrate-restart)]
+    ['pc-dead '()]
     [else
      (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
   (wait-for-confirm))
