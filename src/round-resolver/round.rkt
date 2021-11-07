@@ -37,12 +37,13 @@
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)
      
+     ; does this also need to happen when 'continue?
      (define round-begin-status
       (cond ((not (null? (current-fragment-id)))
        (current-fragment-on-begin-round!))))
      (case round-begin-status
-       ['ok '()]
-       ['pc-dead (dev-note "ON-BEGIN-ROUND: PC DEAD")])
+       ['ok 'ok]
+       ['pc-dead 'pc-dead])
      ]
     
     ['continue
