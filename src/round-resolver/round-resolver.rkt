@@ -30,6 +30,9 @@
   (define round-begin-status (on-begin-round mode))
   
   (enqueue-npc-actions)
+
+  (case round-begin-status
+    ['pc-dead (unset-current-fragment-id!)])
   
   (save) ; save before describing situation -> no double-logged paragraphs
   
@@ -39,7 +42,8 @@
       (describe-situation)))
 
   (case round-begin-status
-    ['pc-dead 'pc-dead]
+    ['pc-dead
+      'pc-dead]
     
     [else
       ; chonky boi, extract function
@@ -79,9 +83,7 @@
               (on-end-round)
               (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
               round-exit-status
-              )))
-      ])     
-    )
+              )))]))
 
 (define (enqueue-npc-actions)
   (define actors (location-actors (current-location)))

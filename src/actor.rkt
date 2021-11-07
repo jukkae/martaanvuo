@@ -301,6 +301,11 @@
       (pc-take-damage! actor damage damage-type)
       (non-pc-take-damage! actor damage damage-type)))
 
+(define (describe-cause-of-death cause-of-death)
+  (case cause-of-death
+    ['fell-to-death "Concussion and internal bleeding."]
+    [else (symbol->string cause-of-death)]))
+
 (define (kill actor . cause-of-death)
   (set-actor-hp! actor 0)
   (notice
@@ -310,11 +315,11 @@
        (string-append (actor-name actor)
                       " is dead. Cause of death: "
                       (cond ((symbol? cause-of-death)
-                             (symbol->string cause-of-death))
+                             (describe-cause-of-death cause-of-death))
                             ((string? cause-of-death)
                              cause-of-death)
                             ((symbol? (car cause-of-death))
-                             (symbol->string (car cause-of-death)))
+                             (describe-cause-of-death (car cause-of-death)))
                             ((string? (car cause-of-death))
                              (car cause-of-death))
                             (else "NA"))

@@ -153,7 +153,14 @@
     ]))
 
 (define (kill-pc! cause-of-death)
+  (narrate-pc-death cause-of-death)
   (kill (pc) cause-of-death))
+
+(define (narrate-pc-death cause-of-death)
+  (case cause-of-death
+    ['fell-to-death
+     (p "Otava's mangled body hangs limply on the rock wall, a feast for carrion-eaters")])
+  )
 
 (provide award-xp!)
 (define (award-xp! amount . reason)

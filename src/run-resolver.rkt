@@ -105,11 +105,10 @@
 
         
           (else
-           (displayln "FAILED RUN")
-           (info-card
-            (list
-             (list " run " (string-append " " (number->string (current-run)) " ")))
-            (string-append "End run number " (number->string (current-run)))))))
+           (notice (string-append
+                      "End run number "
+                      (number->string (current-run))
+                      " [failed]")))))
 
   
   
