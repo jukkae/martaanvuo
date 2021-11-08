@@ -32,7 +32,7 @@
         (end-life 'pc-dead))
       (when (eq? run-exit-status 'win-game) (end-life 'win-game))
       (when (eq? run-exit-status 'end-run) (loop 'begin #f)) ; not first run
-      (when (eq? run-exit-status 'recurse) (loop 'recurse))
+      (when (eq? run-exit-status 'recurse) (loop 'recurse #f)) ; not first run
       (when (eq? run-exit-status 'restart) (end-life 'restart))
       )
     ))

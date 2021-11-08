@@ -69,10 +69,11 @@
                                      (current-fragment-get-decisions)))
 
       (when (null? fragment-decisions)
+        (unset-current-fragment-id!)
         (wait-for-confirm)) ; what a place for this
 
       ; launch a fragment directly -> no action resolution -> not a choice
-      (define location-decisions (if (null? (current-fragment-id))
+      (define location-decisions (if (null? fragment-decisions)
                                      (get-location-decisions (current-location))
                                      '()))
       

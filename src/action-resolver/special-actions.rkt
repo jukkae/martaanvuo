@@ -29,7 +29,7 @@
             (set-flag 'tried-to-go-back)
             (p "The unexpected fork is worrisome. Otava must have taken the wrong turn somewhere. She decides to turn back, make sure she hasn't missed anything.")
             (wait-for-confirm)
-            (next-chapter!) ; end chapter
+            (next-chapter!) ; end chapter, but not run!
             (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the trail of the Broker? Yes, yes she did. What was she doing here?")
             (wait-for-confirm)
             (p "The Facility. She is looking for the Facility at Martaanvuo, to pay back her debt to the Collector. Broker's trail comes to a fork.")
