@@ -19,7 +19,8 @@
 
 
 (define (quit)
-  (displayln "Really quit Martaanvuo? [Q] to quit, anything else to continue.")
+  (displayln "Your attention is the thin barrier between everything and the void. Really quit?")
+  (displayln "[Q] to quit, anything else to continue.")
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
@@ -32,9 +33,8 @@
          #t))) ; mark input as handled
 
 (define (restart)
-  (displayln
-   (string-append
-    "Really restart? [R] to restart, anything else to continue."))
+  (displayln "We have to live with the choices we make. Really restart?")
+  (displayln "[R] to restart, anything else to continue.")
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "R")

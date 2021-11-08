@@ -125,8 +125,6 @@
   (case end-game-status
     ['win-game (end-game)]
     ['restart
-     ; Your attention is the thin barrier between everything and the void.
-     (prln "We live with the choices we make.")
      (delete-save-file)
      (reset-situation!)
      
