@@ -138,7 +138,9 @@
   (case mode
     ['continue (on-continue-run)]
     ['begin (on-begin-run)]
-    ['recurse (on-begin-recurse-run)])
+    ['restart (on-begin-run)]
+    ['recurse (on-begin-recurse-run)]
+    [else (dev-note "Unknown resolve-run-mode!") (error "fix this")])
   
   (define run-exit-status
     (let/ec end-run

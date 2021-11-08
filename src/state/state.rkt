@@ -77,7 +77,8 @@
   (current-life 0)
   (current-fragment-id '())
   (current-combat-timeline '())
-  (current-show-round-summary? #f))
+  (current-show-round-summary? #f)
+  )
 
 ; s11n logistics are simpler when there is only one S-expression to serialize -> "wrapper" struct for global state
 (serializable-struct

@@ -18,7 +18,8 @@
  world
  (places
   day
-  [elapsed-time #:mutable]))
+  [elapsed-time #:mutable])
+ #:transparent)
 
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
