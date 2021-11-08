@@ -26,7 +26,7 @@
   (cond ((equal? input "Q")
          (define session-score (d 1 4))
          (p (string-append "Your session score was " (number->string session-score) "."))
-         (p "Martaanvuo expects your return.")
+         (p "Martaanvuo is always there for you.")
          (exit))
         (else
          (newline)
