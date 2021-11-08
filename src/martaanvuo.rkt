@@ -84,7 +84,7 @@
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 
-  (define life-resolver-mode
+  #;(define life-resolver-mode
     (case mode
       ['begin 'begin]
       ['restart 'begin]
@@ -92,7 +92,7 @@
 
   (define end-game-status
     (let/ec end-game
-      (let begin-new-life ()
+      (let begin-new-life ([life-resolver-mode mode])
         (define pc-life-end-status (resolve-life life-resolver-mode))
         (when (eq? pc-life-end-status 'pc-dead)
 
@@ -106,7 +106,7 @@
 
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-            (hash-set! meta-commands "P" (cons "[P]: Proceed." begin-new-life))
+            (hash-set! meta-commands "P" (cons "[P]: Proceed." (begin-new-life 'begin)))
 
             (p "Proceed?")
             (print-meta-commands-with-keys meta-commands)

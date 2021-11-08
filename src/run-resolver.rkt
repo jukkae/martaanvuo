@@ -126,7 +126,11 @@
     ['pc-dead '()]
     [else
      (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
-  (wait-for-confirm))
+
+  (when (not (eq? exit-status 'pc-dead))
+    (wait-for-confirm)
+    )
+  )
 
 ; engine / run-resolver
 (define (resolve-run mode)
@@ -134,7 +138,6 @@
   (case mode
     ['continue (on-continue-run)]
     ['begin (on-begin-run)]
-    
     ['recurse (on-begin-recurse-run)])
   
   (define run-exit-status

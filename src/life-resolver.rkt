@@ -8,9 +8,13 @@
 (require "run-resolver.rkt")
 (require "state/state.rkt")
 (require "utils.rkt")
+(require "world.rkt")
 
 
 (define (resolve-life mode)
+  (dev-note "RESOLVE LIFE ENTERED")
+  (println mode)
+  (println (find-place-by-id 'perimeter))
   (when (eq? mode 'begin)
     (on-begin-life))
   
@@ -38,5 +42,6 @@
 (define (on-end-life)
   (let ([body (list (list " a " " b "))]
         [title "Life summary"])
-    (info-card body title)))
+    (info-card body title))
+  (wait-for-confirm))
  
