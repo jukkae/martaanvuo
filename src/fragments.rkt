@@ -102,7 +102,7 @@
   (p "Warm red black darkness tastes like iron.")
   (wait-for-confirm)
   ;; Here: Possible flashback aka new life
-  (p "Consciousness fading into the void.")
+  (p "Consciousness fades into the void.")
   (wait-for-confirm)
   #;(define r (d 1 4))
   (define r 1)

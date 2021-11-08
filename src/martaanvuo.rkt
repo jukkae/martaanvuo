@@ -21,7 +21,6 @@
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
   (reset-situation!)
-  (setup-world)
   )
 
 

@@ -51,7 +51,7 @@
   (current-run (add1 (current-run)))
   (current-round 0)
   (remove-flag 'ending-run-allowed)
-  (move-pc-to-location! (find-place-by-id 'perimeter))
+  (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
   (narrate-begin-run)
   )
 
@@ -59,8 +59,8 @@
   (current-run (add1 (current-run)))
   #;(current-round 0)
   (remove-flag 'ending-run-allowed)
-  (add-feature-to-location! (find-place-by-id 'martaanvuo-docks) 'stiltman)
-  (move-pc-to-location! (find-place-by-id 'perimeter))
+  (add-feature-to-location! (find-place-by-id (world-places (current-world)) 'martaanvuo-docks) 'stiltman)
+  (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
   (narrate-begin-recurse-run)
   )
 

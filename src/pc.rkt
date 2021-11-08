@@ -159,7 +159,7 @@
 (define (narrate-pc-death cause-of-death)
   (case cause-of-death
     ['fell-to-death
-     (p "Otava's mangled body hangs limply on the rock wall, a feast for carrion-eaters")])
+     (p "Otava's mangled body hangs limp against the rock wall, a feast for carrioneaters, torn apart, sustenance for new generations, possessions strewn in the underbrush.")])
   )
 
 (provide award-xp!)

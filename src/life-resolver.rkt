@@ -14,7 +14,9 @@
 (define (resolve-life mode)
   (dev-note "RESOLVE LIFE ENTERED")
   (println mode)
-  (println (find-place-by-id 'perimeter))
+  (println (find-place-by-id (world-places (current-world)) 'perimeter))
+
+
   (when (eq? mode 'begin)
     (on-begin-life))
   

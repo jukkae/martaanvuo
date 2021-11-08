@@ -55,7 +55,7 @@
 
 
 (define (reset-situation!)
-  (current-world (world 0 0))
+  (current-world (make-new-world))
   (current-log '())
   (current-last-paragraph "")
   (current-part 0)
