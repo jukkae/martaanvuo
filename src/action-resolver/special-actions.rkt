@@ -9,13 +9,13 @@
          "../utils.rkt")
 
 (lazy-require
- ["state/mutators.rkt"
+ ["../state/mutators.rkt"
   (flag-set?
    set-flag
    )])
 
 (lazy-require
- ["state/logging.rkt"
+ ["../state/logging.rkt"
   (next-chapter!
    )])
 

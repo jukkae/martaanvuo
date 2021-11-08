@@ -20,8 +20,8 @@
 ; content is game-specific, not engine stuff
 ; but figure out where this should be called from
 ; engine / run-resolver
-(define (narrate-begin-run)
-  (next-chapter!)
+(define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
+  (when (not suppress-new-chapter?) (next-chapter!))
   
   ; Don't show this until the second run!
   (when (not (= 1 (current-run)))
@@ -47,12 +47,12 @@
 
 
 ; engine / run-resolver
-(define (on-begin-run)
+(define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
   (current-round 0)
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
-  (narrate-begin-run)
+  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
   )
 
 (define (on-begin-recurse-run)
@@ -133,12 +133,13 @@
   )
 
 ; engine / run-resolver
-(define (resolve-run mode)
+(define (resolve-run mode 
+                     #:suppress-new-chapter? [suppress-new-chapter? #f])
 
   (case mode
     ['continue (on-continue-run)]
-    ['begin (on-begin-run)]
-    ['restart (on-begin-run)]
+    ['begin (on-begin-run #:suppress-new-chapter? suppress-new-chapter?)]
+    ['restart (on-begin-run #:suppress-new-chapter? suppress-new-chapter?)]
     ['recurse (on-begin-recurse-run)]
     [else (dev-note "Unknown resolve-run-mode!") (error "fix this")])
   
