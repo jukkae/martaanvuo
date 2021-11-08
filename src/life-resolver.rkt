@@ -12,8 +12,9 @@
 
 
 (define (resolve-life mode)
-  (when (eq? mode 'begin)
-    (on-begin-life))
+  (case mode
+    ['begin (on-begin-life)]
+    ['restart (on-begin-life)])
   
   (let/ec end-life
     (let loop ([m mode])

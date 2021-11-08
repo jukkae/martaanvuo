@@ -84,7 +84,7 @@
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 
-  #;(define life-resolver-mode
+  (define life-resolver-mode
     (case mode
       ['begin 'begin]
       ['restart 'begin]
