@@ -26,8 +26,6 @@
          ['begin #t]
          ['restart #t]
          ['else #f]))
-      (dev-note "FIRST RUN:")
-      (displayln first-run?)
       
       (define run-exit-status
         (resolve-run m #:suppress-new-chapter? (not first-run?)))
