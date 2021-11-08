@@ -5,7 +5,8 @@
 (require "life-resolver.rkt")
 (require "round-resolver/round-resolver.rkt")
 (require "state/state.rkt")
-(require "world.rkt")
+(require "utils.rkt"
+         "world.rkt")
 
 ; game-specific, not engine!
 (define (title)
@@ -93,8 +94,8 @@
     (let/ec end-game
       (let begin-new-life ([life-resolver-mode mode])
         (define pc-life-end-status (resolve-life life-resolver-mode))
+        
         (when (eq? pc-life-end-status 'pc-dead)
-
           (let end-of-life-menu ([verbosity 'verbose])
             (define (handle-meta-command meta-commands-with-keys input)
               (set! input (string-upcase input))
@@ -105,9 +106,11 @@
 
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
-            (hash-set! meta-commands "P" (cons "[P]: Proceed." (begin-new-life 'begin)))
+            (hash-set! meta-commands "P" (cons "[P]: Proceed."
+                                               (proc (begin-new-life 'begin))
+                                               ))
 
-            (p "Proceed?")
+            (p "Otava is dead. Proceed?")
             (print-meta-commands-with-keys meta-commands)
             (define input (wait-for-input))
             
@@ -115,12 +118,15 @@
 
             (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
                   (else (end-of-life-menu 'abbreviated)))))
+
         (when (eq? pc-life-end-status 'win-game) (end-game 'win-game))
         (when (eq? pc-life-end-status 'restart) (end-game 'restart)))))
   
   (case end-game-status
     ['win-game (end-game)]
     ['restart
+     ; Your attention is the thin barrier between everything and the void.
+     (prln "We live with the choices we make.")
      (delete-save-file)
      (reset-situation!)
      
