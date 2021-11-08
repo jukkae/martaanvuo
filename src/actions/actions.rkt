@@ -346,7 +346,14 @@
           #:text "Turn back."
           #:duration 0
           #:tags '(downtime)))
-
+        
+       (when (and (eq? (location-type (current-location)) 'perimeter)
+                  (flag-set? 'ending-run-allowed))
+          (make-pc-choice
+          #:id 'end-run
+          #:text "Go back to the Shack and the Collector."
+          #:duration 0
+          #:tags '(downtime)))
        ))))
   
   (define condensed (condense all-actions))

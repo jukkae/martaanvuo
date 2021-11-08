@@ -18,9 +18,14 @@
     ['restart (on-begin-life)])
 
   (let/ec end-life
-    (let loop ([m mode]
-               [first-run? #t])
+    (let loop ([m mode])
 
+      ; first run of the life
+      (define first-run?
+        (case m
+         ['begin #t]
+         ['restart #t]
+         ['else #f]))
       (dev-note "FIRST RUN:")
       (displayln first-run?)
       
@@ -31,8 +36,8 @@
         (on-end-life)
         (end-life 'pc-dead))
       (when (eq? run-exit-status 'win-game) (end-life 'win-game))
-      (when (eq? run-exit-status 'end-run) (loop 'begin #f)) ; not first run
-      (when (eq? run-exit-status 'recurse) (loop 'recurse #f)) ; not first run
+      (when (eq? run-exit-status 'end-run) (loop 'begin))
+      (when (eq? run-exit-status 'recurse) (loop 'recurse))
       (when (eq? run-exit-status 'restart) (end-life 'restart))
       )
     ))
