@@ -7,6 +7,7 @@
 (require "pc.rkt")
 (require "round-resolver/round-resolver.rkt")
 (require "run-resolver.rkt")
+(require "session.rkt")
 (require "state/state.rkt")
 (require "utils.rkt")
 (require "world.rkt")
@@ -46,6 +47,7 @@
 
 
 (define (on-begin-life)
+  (current-session-score-dice++) ; could do this only once
   (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
   (go-to-story-fragment 'begin-life)

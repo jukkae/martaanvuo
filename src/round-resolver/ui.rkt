@@ -6,6 +6,7 @@
          "../io.rkt"
          "../pc.rkt"
          "../quest.rkt"
+         "../session.rkt"
          "../utils.rkt"
 
          "../state/state.rkt")
@@ -25,8 +26,8 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (define session-score (d 1 4))
-         (p (string-append "Your session score was " (number->string session-score) "."))
+         (define session-score (d (current-session-score-dice) 4))
+         (p (format "Session score: ~a" session-score))
          (p "Martaanvuo is always there for you.")
          (exit))
         (else
