@@ -30,13 +30,17 @@
       (define run-exit-status
         (resolve-run m #:suppress-new-chapter? (not first-run?)))
       
-      (when (eq? run-exit-status 'pc-dead)
-        (on-end-life)
-        (end-life 'pc-dead))
-      (when (eq? run-exit-status 'win-game) (end-life 'win-game))
-      (when (eq? run-exit-status 'end-run) (loop 'begin))
-      (when (eq? run-exit-status 'recurse) (loop 'recurse))
-      (when (eq? run-exit-status 'restart) (end-life 'restart))
+      (case run-exit-status
+        ['pc-dead (on-end-life)
+                  (end-life 'pc-dead)]
+        ['win-game (end-life 'win-game)]
+        ['end-run (loop 'begin)]
+        ['recurse (loop 'recurse)]
+        ['restart (end-life 'restart)]
+        [else
+          (dev-note "Unknown run exit status:")
+          (displayln run-exit-status)
+          (error "FIXME")])
       )
     ))
 
