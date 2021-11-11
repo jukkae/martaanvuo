@@ -7,7 +7,7 @@
 (fragment
  'anthill-1
  
- (proc
+ (thunk
   (p
    "The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.")
   (p
@@ -44,7 +44,7 @@
 
 (fragment
  'anthill-quest
- (proc
+ (thunk
   (p
    "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
   (create-quest 'grabberkin-finger)
@@ -68,7 +68,7 @@
 
 (fragment
  'anthill-help
- (proc
+ (thunk
   (p
    "anthill-help frag tbd.")
   )
@@ -78,7 +78,7 @@
 
 (fragment
  'anthill-passage
- (proc
+ (thunk
   (p
    "anthill-passage frag tbd.")
   )
@@ -88,7 +88,7 @@
 
 (fragment
  'anthill-monograph
- (proc
+ (thunk
   (p
    "anthill-monograph frag tbd.")
   )

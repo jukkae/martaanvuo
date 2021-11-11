@@ -107,7 +107,7 @@
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed."
-                                               (proc (begin-new-life 'begin))
+                                               (thunk (begin-new-life 'begin))
                                                ))
 
             (p "Otava is dead. Proceed?")

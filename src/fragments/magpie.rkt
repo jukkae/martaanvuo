@@ -6,7 +6,7 @@
 
 (fragment
  'magpie
- (proc
+ (thunk
   (p
    "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. Are you looking for work?\"")
   )
@@ -21,7 +21,7 @@
 
 (fragment
  'magpie-cache
- (proc
+ (thunk
   (p
    "Magpie ruffles its feathers, as it asks you to come closer and leans in. In low voice that is all but lost under the falling rain, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 gold coins. What do you say?\"")
   (p
@@ -38,7 +38,7 @@
   (make-decision
    #:title "Ask about the benefits package."
    #:description "Magpie explains the benefits package and armory credit system in detail, but it is all terribly confusing. In the end, Otava nevertheless gets a revolver."
-   #:on-resolve! (proc
+   #:on-resolve! (thunk
                   (add-item! 'revolver)
                   (wait-for-confirm))
    #:next-fragment 'exit

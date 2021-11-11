@@ -17,7 +17,7 @@
 ; and with runs, you select the loadout
 (fragment
  'begin-life
- (proc
+ (thunk
   (p
    (string-append
     "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Food? Some still left, yes. Bolt cutters? Yes. What else...")
@@ -28,7 +28,7 @@
   (make-decision
    #:title "Rope."
    #:description "Rope, about 20 meters, mostly not too badly frayed."
-   #:on-resolve! (proc
+   #:on-resolve! (thunk
                   (set-build! 'rope)
                   (wait-for-confirm)
                   
@@ -39,7 +39,7 @@
   (make-decision
    #:title "Flashlight."
    #:description "A flashlight, with almost half of a full charge."
-   #:on-resolve! (proc
+   #:on-resolve! (thunk
                   (set-build! 'flashlight)
                   (wait-for-confirm)
                   
@@ -50,7 +50,7 @@
 
 (fragment
 'begin-life-exit
-(proc
+(thunk
   (p "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
   (p "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
   (p "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")))
@@ -60,7 +60,7 @@
 
 (fragment
  100
- (proc
+ (thunk
   (p
    "[post-combat steps]"
    ))
@@ -77,7 +77,7 @@
 
 (fragment
  'turn-on-martaanvuo-terminal
- (proc
+ (thunk
   (p
    "The password is written down on a piece of paper. The terminal has access to heating and ventilation systems, including service access to reactor. There is also a lone executable with the name 'Martaanvuo'."))
  #:decisions
@@ -96,7 +96,7 @@
 
 (fragment
  'fall-down
- (proc
+ (thunk
   (p "Otava tumbles down along the near-vertical wall, tries to get a grip and slams headfirst against a granite fist. She feels weightless as the world spins around her. A rock pillar extends towards her and there's a crunch as her hand gets caught in a crack and her body wraps around the pillar.")
   (wait-for-confirm)
   (p "Warm red black darkness tastes like iron.")
@@ -147,7 +147,7 @@
 
 (fragment
  'fall-down-2
- (proc
+ (thunk
   (p "..."))
  #:decisions
  (list (make-decision

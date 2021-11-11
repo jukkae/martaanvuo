@@ -6,7 +6,7 @@
 
 (fragment
  'begin-stiltman-dialogue
- (proc
+ (thunk
   (next-chapter!)
   (p "\"– ah, I knew you would ask that – no, I insist – you can call me Stiltman – I am unstably present –\", the man exclaims, stumbling and wobbling above the reeds, when he notices Otava approaching. Stiltman is wearing the overalls of a lab technician, and is strapped from his waist to the pipes and rods of his three-legged contraption. The logo on the overalls says Murkwater–Aegis, and there's a name tag on the overalls saying STILTMAN.")
   (remove-feature-from-location! (current-location) 'stiltman)
@@ -27,7 +27,7 @@
   (make-decision
    #:title "Ask what he means, 'unstably present'."
    #:on-resolve!
-   (proc
+   (thunk
     (p "\"What do you mean, 'unstably present'?\", Otava asks.")
     (p "\"– I was fishing, thank the heavens you noticed me – \", Stiltman goes, \"– they were manufacturing a special kind of radioactive gold, for medicine and things – I'm just a technician, see, I was doing the night shift when it –\"")
     (p "\"– It is a completely different basis for mathematics, see, so then new foundations lead to new mechanisms which then led them to a new kind of physics – no, I don't know what the biologists were doing! –\"")
@@ -51,7 +51,7 @@
   (make-decision
    #:title "Ask about the Monograph."
    #:on-resolve!
-   (proc
+   (thunk
     (p "\"The Monograph?\", Otava asks.")
     (p "\"– we all got stuck, see – for all I know they are the ones to blame, and Principal foremost – sorry, that'd be Mx Principal Scientist, affectionately known to her closest ones as... Mx Principal Scientist – the Murkwater-Aegis facility upriver – the Monograph contains the solution – \", Stiltman goes, \"– in the storage closet of the workshop – it is locked – no, not the closet, the book – it was an accident – nobody asked where did it come from –\"")
     (p "Suddenly, Stiltman snaps back into the middle of the cove, and then further out near the cliffs, before disappearing. \"– I need the book! – gold at the facility – \" is the last Otava hears of Stiltman.")
@@ -75,7 +75,7 @@
   (make-decision
    #:title "Ask about what the fee is for."
    #:on-resolve!
-   (proc
+   (thunk
     (p "\"The fee, what is it for?\", Otava asks.")
     (p "\"– who would have thought – the Murkwater-Aegis facility upriver – the book must be destroyed, the area sealed, the public will have to be informed – \", Stiltman goes, \"– I hid the Monograph in the storage closet of the workshop – front payment, kilos more –\" It looks like Stiltman is pulled back by invisible ropes. \"– they went insane from reading it, rambling about the Anthead  – do not read it! –\", he shouts, disappearing in the mist")
 

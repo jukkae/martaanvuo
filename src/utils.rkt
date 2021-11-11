@@ -51,11 +51,9 @@
 
 ; DSL macros
 (define-syntax-rule
-  (proc body ...)
-  (λ () body ...))
-(define-syntax-rule
   (nop)
   (λ () '()))
+
 
 ; __FILE__ and __LINE__ all in one
 (define-syntax (here stx)
