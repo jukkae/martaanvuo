@@ -19,7 +19,8 @@
 
 
 (define (quit)
-  (displayln "Your attention is the thin barrier between everything and the void. Really quit?")
+  (displayln "Your attention is the thin barrier between the world and the void. Really quit?")
+  (newline)
   (displayln "[Q] to quit, anything else to continue.")
   (define input (wait-for-input))
   (set! input (string-upcase input))
@@ -33,7 +34,8 @@
          #t))) ; mark input as handled
 
 (define (restart)
-  (displayln "We have to live with the choices we make. Really restart?")
+  (displayln "We live with the choices we make. Really restart?")
+  (newline)
   (displayln "[R] to restart, anything else to continue.")
   (define input (wait-for-input))
   (set! input (string-upcase input))

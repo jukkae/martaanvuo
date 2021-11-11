@@ -41,9 +41,10 @@
 
 (define (narrate-begin-recurse-run)
   (next-chapter!)
-  
 
-  (p "Otava is again following the Broker's trail through the foggy woods. This time, she's better prepared, she knows what lies ahead. She gets to the fork."))
+  (p "Otava is again following the Broker's trail through the foggy woods. Better prepared, she knows what's ahead. She gets to Fork and Anthill."))
+  ; Otava is on Brokerstrail and comes to Fork-and-Anthill BUT THIS TIME KNOWY OF HARTMAN-DEVICE
+  ; sort of like "worlds" 1-2-3
 
 
 ; engine / run-resolver
@@ -70,12 +71,19 @@
 
 (define (narrate-restart)
   (p
-   (take-random
+   (take-random ; TODO: probabilitify these kinds of take-random calls
     (list
-     "Otava wanders Martaanvuo the rest of her life without finding what she's looking for."
-     "Death comes quickly to Otava."
-     "A strange sense of detachment overcomes Otava, and she finds the Cache she was looking for, and in it, enough gold-198 to pay off her debt. Unbeknownst to her, she would soon experience it all over again."
-     "Otava finds passage through the swamps and disappears to the other side of the unnamed mountain range, to begin a new life herding the reindeer."
+     "In the depths of THE MAW the Heart of the World stops. Then, it's all black."
+     "In the depths of Murkwater-Aegis Workshop, Hartmann Device is turned on. False vacuum begins its collapse and space and time unfold until there is nothing."
+     (string-append "The end."
+                    "\n\n"
+                    "M A R T A A N V U O"
+                    "\n"
+                    "==================="
+                    "\n\n"
+                    "Jukka Eerikäinen (2021)"
+                    "\n\n")
+     "[details omitted – 3 days later] Having passed throught Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."
      ))))
 
 
