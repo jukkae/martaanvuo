@@ -13,12 +13,25 @@
 
 (require "get-next-pc-action.rkt")
 
+
 ; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.
 ; This is because at the time of writing this, cleaning up round-resolver.rkt is priority.
+
+(define (get-quit-text)
+  (define r (d 1 100))
+  (cond
+    ((= r 1)
+     "Martaanvuo will always be there for you, as it always has.")
+    ((< r 5)
+     "")
+    ((< r 20)
+     "Martaanvuo is always there for you.")
+    (else
+     "Martaanvuo awaits your return.")
+    ))
+
 ; TODO: clean up!
 ; Return value is tied to round resolution.
-
-
 (define (quit)
   (displayln "Your attention is the thin barrier between the world and the void. Really quit?")
   (newline)
@@ -27,8 +40,15 @@
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
          (define session-score (d (current-session-score-dice) 4))
-         (p (format "Session score: ~a" session-score))
-         (p "Martaanvuo is always there for you.")
+         (prln (format "Session score: ~a" session-score))
+         (newline)
+
+         (define quit-message (get-quit-text))
+         (when (not (equal? quit-message ""))
+          (prln quit-message)
+          (newline)
+         )
+
          (exit))
         (else
          (newline)
