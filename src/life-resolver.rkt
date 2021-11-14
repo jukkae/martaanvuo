@@ -45,9 +45,13 @@
       )
     ))
 
-
 (define (on-begin-life)
-  (current-session-score-dice++) ; could do this only once
+  (when (not (session-flag-set? 'began-life))
+    (set-session-flag 'began-life)
+    (current-session-score-dice++)
+    (notice "Attainment: Origin")
+    )
+
   (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
   (go-to-story-fragment 'begin-life)

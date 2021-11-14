@@ -54,6 +54,17 @@
   (nop)
   (λ () '()))
 
+#;(define (once fn)
+  (let ((called? #f))
+    (λ ()
+      (if (not called?)
+        (fn)
+        (prln "this has been called already")
+        )
+      (set! called? #t)
+    )
+  ))
+
 
 ; __FILE__ and __LINE__ all in one
 (define-syntax (here stx)
