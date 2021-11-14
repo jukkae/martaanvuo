@@ -24,3 +24,7 @@
 (define (print-session-flags)
   (dev-note "print-session-flags:")
   (displayln (session-flags)))
+
+(define current-session-times-in-combat (make-parameter 0))
+(define (current-session-times-in-combat++)
+  (current-session-times-in-combat (add1 (current-session-times-in-combat))))

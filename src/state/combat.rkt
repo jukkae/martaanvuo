@@ -10,6 +10,7 @@
          "../io.rkt"
          "../locations/location.rkt"
          "../pc.rkt"
+         "../session.rkt"
          "../stance.rkt"
          "../status.rkt"
          "../utils.rkt"
@@ -189,6 +190,22 @@
   (wait-for-confirm)
   (next-chapter!)
   (current-in-combat? #t)
+
+  (current-session-times-in-combat++)
+  (when (= (current-session-times-in-combat) 2)
+    (notice "Attainment: Way of Blood"))
+  (when (= (current-session-times-in-combat) 7)
+    (notice "Attainment: Way of Carnage"))
+  (when (= (current-session-times-in-combat) 16)
+    (notice "Attainment: Way of Bloodshed"))
+  (when (= (current-session-times-in-combat) 31)
+    (notice "Attainment: Way of Death"))
+  (when (= (current-session-times-in-combat) 100)
+    (notice "Attainment: Hecatomb")) ; award this for 100 *kills*
+  ; (when (not (session-flag-set? 'got-in-combat))
+  ;   (set-session-flag 'got-in-combat)
+      (current-session-score-dice++)
+  ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started!"))
 
 (define (end-combat!)
