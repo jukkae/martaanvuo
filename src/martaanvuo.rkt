@@ -59,11 +59,11 @@
      (prln "Progress is saved automatically.")]
 
     ['restart '()] ; If the player restarts, they should know that progress is saved automatically.
-    
+
     ['continue
      (define input-file (open-input-file "save.txt"))
      (define serialized-state (read input-file))
-     
+
      (with-handlers ([exn:fail:contract:arity?
                       (λ (exn)
                         (handle-broken-save)
@@ -78,7 +78,7 @@
   (case mode
     ['begin (on-begin-playthrough)]
     ['restart (on-begin-playthrough)]
-    
+
     ['continue
      (for ([entry (current-log)])
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
@@ -94,7 +94,7 @@
     (let/ec end-game
       (let begin-new-life ([life-resolver-mode mode])
         (define pc-life-end-status (resolve-life life-resolver-mode))
-        
+
         (when (eq? pc-life-end-status 'pc-dead)
           (let end-of-life-menu ([verbosity 'verbose])
             (define (handle-meta-command meta-commands-with-keys input)
@@ -113,7 +113,7 @@
             (p "Otava is dead. Proceed?")
             (print-meta-commands-with-keys meta-commands)
             (define input (wait-for-input))
-            
+
             (newline)
 
             (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
@@ -121,13 +121,13 @@
 
         (when (eq? pc-life-end-status 'win-game) (end-game 'win-game))
         (when (eq? pc-life-end-status 'restart) (end-game 'restart)))))
-  
+
   (case end-game-status
     ['win-game (end-game)]
     ['restart
      (delete-save-file)
      (reset-situation!)
-     
+
      (prln "Progress deleted. Starting from the beginning. Progress is saved automatically.")
      (resolve-game 'restart)]))
 
