@@ -94,6 +94,8 @@
                (not (eq? result 'interrupted)))
       (pc-action-on-after-resolve! action))
 
+    (wait-for-confirm)
+
     result
     ))
 
