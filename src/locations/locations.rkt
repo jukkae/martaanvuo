@@ -115,8 +115,8 @@
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin
-  (p "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
   (begin-combat!)
+  (p "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
 
   (define hp 11)
 

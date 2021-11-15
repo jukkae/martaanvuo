@@ -114,6 +114,9 @@
 
        (when (not (location-has-detail? (current-location) 'no-encounters))
          (define encounter-roll (d 1 6))
+         (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a" encounter-roll (if (< encounter-roll 4)
+                                                                              "fail"
+                                                                              "success")))
          (when (< encounter-roll 4)
 
            (define resolve-events
@@ -150,7 +153,8 @@
       ['new-time-of-day ; proc dailies here
        '()]
       [else
-       (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
+       '()
+       #;(dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))
 
 

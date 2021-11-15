@@ -367,7 +367,7 @@
 (define (inflict-status! target status)
   (match status
     ['blind
-     (displayln "todo: blind should be a condition, not a status")
+     (dev-note "todo: blind should be a condition, not a status")
      (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
      (define roll (d 1 2))
      (wait-for-confirm)
@@ -381,7 +381,7 @@
     ['bound
      (actor-set-status! target (status-type status) (status-lifetime status))
      ]
-    [else (p "todo: unknown status")]))
+    [else (notice (format "Status inflicted on ~a: ~a" (actor-name target) status))]))
 
 (define (inflict-condition! target cond)
   (match (condition-type cond)

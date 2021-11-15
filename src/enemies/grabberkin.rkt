@@ -17,6 +17,8 @@
          "../world.rkt")
 
 
+; Grabberkin are greedy -> they have jewelry -> they drop loot
+
 ;;; THE BIG THINGS:
 ;;; What is Grabberkin's purpose, gameplay-wise? What is its niche?
 ;;; What is its vulnerability?
@@ -25,7 +27,7 @@
 ;;; -> act as a soft gate
 ;;; -> somewhat miniboss-like *at first*
 ; They are greedy. They are clingy. (What do they most wish?)
-; Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
+; Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe? (steal gold, not items)
 ; Idea: Vulnerabilities:
 ; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
 ; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
