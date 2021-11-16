@@ -10,7 +10,7 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (spawn-enemies (current-location))
+         (spawn-enemies)
          )
         (else
          (dev-note (string-append "handle-interrupting-event!: unknown event type: " (symbol->string (event-type event))))))

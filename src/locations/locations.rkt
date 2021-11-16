@@ -85,35 +85,19 @@
 
 
 
-(define (spawn-enemies location)
-  ;(define encounter-types '(blindscraper grabberkin))
-  (define encounter-types '(grabberkin-and-blindscraper two-blindscrapers)) ; "level 2"
+(define (spawn-enemies)
+  ;(define encounter-types (list spawn-blindscraper-encounter! spawn-grabberkin-encounter!))
+  (define encounter-types (list spawn-grabberkin-and-blindscraper-encounter! spawn-two-blindscrapers-encounter!)) ; "level 2"
 
-  (define
-    encounter-type
-    (cond ((place? location)
-           (cond ((eq? (location-type location) 'ridges)
-                  'blindscraper)
-                 ((eq? (location-type location) 'valleys)
-                  'grabberkin)
-                 (else (take-random encounter-types))))
-          ((route? location)
-           (take-random encounter-types))))
-
-  (case encounter-type
-    ['grabberkin
-     (spawn-grabberkin-encounter!)
-     ]
-    ['blindscraper
-     (spawn-blindscraper-encounter!)
-     ]
-    ['two-blindscrapers
-     (spawn-two-blindscrapers-encounter!)
-     ]
-    ['grabberkin-and-blindscraper
-     (spawn-grabberkin-and-blindscraper-encounter!)
-     ]
-    ))
+  (cond ((place? (current-location))
+          (cond ((eq? (location-type (current-location)) 'ridges)
+                 (spawn-blindscraper-encounter!))
+                ((eq? (location-type (current-location)) 'valleys)
+                 (spawn-grabberkin-encounter!))
+                (else ((take-random encounter-types)))))
+        ((route? (current-location))
+          ((take-random encounter-types))))
+  )
 
 ; internal
 (define (get-location-short-description location)
@@ -160,7 +144,3 @@
           (route-b location)))
         ((place? location)
          (place-routes location))))
-
-
-
-
