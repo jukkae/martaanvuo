@@ -160,7 +160,8 @@
            (else
             (make-grabberkin-action actor 'release-grip))))
         (else
-         (begin (displayln "Grabberkin AI, not in combat")))))
+         '() ; not in combat, do nothing
+         )))
 
 ; implicitly, this is the pre-own-action reaction
 (define (get-grabberkin-reaction actor)
@@ -168,35 +169,3 @@
          (make-grabberkin-action actor 'release-grip))
         (else
          '())))
-
-(define (spawn-grabberkin-encounter!)
-  
-  (p "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
-  (begin-combat!)
-
-  (define hp 11)
-  (define i 0)
-  (define enemy (make-actor "Grabberkin" hp))
-  (set-actor-dexterity! enemy 4)
-  (set-actor-strength! enemy 11)
-  (set-trait! enemy "defense" -1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "hp-hidden" #f)
-  (move-actor-to-location! enemy (current-location))
-
-  (inflict-status! (pc) (status 'bound 10))
-
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  (define range 'engaged)
-  (define description "grabbing Otava's ankle")
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance)
-  )
