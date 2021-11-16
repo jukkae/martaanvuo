@@ -22,6 +22,14 @@
     [(2) "A Grabberkin grips Otava by the shin and tries to bring her to the ground, jealous of what it can't have."]
     [else "A Grabberkin seizes Otava by the foot."]))
 
+(define (blindscraper-spawn-text)
+  (define times-encountered (hash-ref (current-times-species-encountered) 'blindscraper 0))
+
+  (case times-encountered
+    [(0) "A many-jointed fingerlike appendage, long as a forearm, extends and folds through the shadows. At the tip of the slender limb is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body."]
+    [(1) "A gleam of light from the shadows catches Otava's eye. It's another Blindscraper."]
+    [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
+
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll
 
@@ -123,7 +131,7 @@
 
 
 (define (spawn-blindscraper-encounter!)
-  (p "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
+  (p (blindscraper-spawn-text))
 
   (begin-combat!)
 
@@ -155,7 +163,14 @@
   (define enemy-stance
     (stance sign range description))
            
-  (set-actor-stance! enemy enemy-stance))
+  (set-actor-stance! enemy enemy-stance)
+  
+  (hash-set! (current-times-species-encountered)
+             'blindscraper
+             (add1 (hash-ref (current-times-species-encountered)
+                              'blindscraper
+                              0)))
+  )
 
 (define (spawn-two-blindscrapers-encounter!)
   (p "Two blindscrapers appear.")

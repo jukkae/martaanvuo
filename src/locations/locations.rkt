@@ -86,7 +86,8 @@
 
 
 (define (spawn-enemies location)
-  (define encounter-types '(blindscraper grabberkin))
+  ;(define encounter-types '(blindscraper grabberkin))
+  (define encounter-types '(grabberkin-and-blindscraper two-blindscrapers)) ; "level 2"
 
   (define
     encounter-type
@@ -97,7 +98,7 @@
                   'grabberkin)
                  (else (take-random encounter-types))))
           ((route? location)
-           'grabberkin-and-blindscraper)))
+           (take-random encounter-types))))
 
   (case encounter-type
     ['grabberkin
