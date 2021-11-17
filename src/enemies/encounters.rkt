@@ -30,38 +30,46 @@
     [(1) "A gleam of light from the shadows catches Otava's eye. It's another Blindscraper."]
     [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
 
+(define (spawn-enemies type number)
+  (case type
+    ['grabberkin
+      (define hp 11)
+      (define enemy (make-actor "Grabberkin" hp))
+      (define i 0)
+      (define sign
+        (case i
+          [(0) "α"]
+          [(1) "β"]
+          [(2) "γ"]
+          [(3) "δ"]
+          [else ""]))
+      (define range 'engaged)
+      (define description "grabbing Otava's ankle")
+      (define enemy-stance
+        (stance sign range description))
+              
+      (set-actor-dexterity! enemy 4)
+      (set-actor-strength! enemy 11)
+      (set-trait! enemy "defense" -1)
+      (set-trait! enemy "melee-attack-skill" 1)
+      (set-trait! enemy "hp-hidden" #f)
+      (set-actor-stance! enemy enemy-stance)
+      (move-actor-to-location! enemy (current-location))]
+
+    ['blindscraper '()]
+    [else (dev-note (format "Unknown enemy type: ~a" type))])
+  '())
+
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll
 
   (p (grabberkin-spawn-text))
 
   (begin-combat!)
-
-  (define hp 11)
-  (define i 0)
-  (define enemy (make-actor "Grabberkin" hp))
-  (set-actor-dexterity! enemy 4)
-  (set-actor-strength! enemy 11)
-  (set-trait! enemy "defense" -1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "hp-hidden" #f)
-  (move-actor-to-location! enemy (current-location))
+  (spawn-enemies 'grabberkin 1)
 
   (inflict-status! (pc) (status 'bound 10))
 
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  (define range 'engaged)
-  (define description "grabbing Otava's ankle")
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance)
 
   (hash-set! (current-times-species-encountered)
              'grabberkin
