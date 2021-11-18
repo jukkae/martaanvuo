@@ -2,5 +2,6 @@
 
 ## Requirements
 
-- Racket and the following packages: `text-table`, `lens`, and `rebellion`.
+- Racket
+- Following Racket packages: `text-table`, `lens`, and `rebellion`.
 - DrRacket or VS Code.
