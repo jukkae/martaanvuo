@@ -56,7 +56,38 @@
       (set-actor-stance! enemy enemy-stance)
       (move-actor-to-location! enemy (current-location))]
 
-    ['blindscraper '()]
+    ['blindscraper
+        (define i 1)
+        (define enemy (make-actor "Blindscraper" 3))
+        (set-actor-dexterity! enemy 13)
+        (set-trait! enemy "defense" 1)
+        (set-trait! enemy "melee-attack-skill" 1)
+        (set-trait! enemy "size" "small")
+        (move-actor-to-location! enemy (current-location))
+
+        (define sign
+          (case i
+            [(0) "α"]
+            [(1) "β"]
+            [(2) "γ"]
+            [(3) "δ"]
+            [else ""]))
+        
+        (define range
+          (if (= i 0)
+              'close
+              'mid))
+        (define description
+          (case i
+            [(0) "right"]
+            [(1) "left"]
+            [else "right"]))
+        (define enemy-stance
+          (stance sign range description))
+                
+        (set-actor-stance! enemy enemy-stance)
+          
+          ]
     [else (dev-note (format "Unknown enemy type: ~a" type))])
   '())
 
@@ -71,6 +102,52 @@
   (inflict-status! (pc) (status 'bound 10))
 
   (current-times-species-encountered++ 'grabberkin))
+
+(define (spawn-blindscraper-encounter!)
+  (p (blindscraper-spawn-text))
+
+  (begin-combat!)
+
+  (spawn-enemies 'blindscraper 1)
+  (current-times-species-encountered++ 'blindscraper)
+  )
+
+(define (spawn-two-blindscrapers-encounter!)
+  (p "Two blindscrapers appear.")
+
+  (begin-combat!)
+
+  (for ([i 2])
+    (define enemy (make-actor "Blindscraper" 3))
+    (set-actor-dexterity! enemy 13)
+    (set-trait! enemy "defense" 1)
+    (set-trait! enemy "melee-attack-skill" 1)
+    (set-trait! enemy "size" "small")
+    (move-actor-to-location! enemy (current-location))
+
+    (define sign
+      (case i
+        [(0) "α"]
+        [(1) "β"]
+        [(2) "γ"]
+        [(3) "δ"]
+        [else ""]))
+    
+    (define range
+      (if (= i 0)
+          'close
+          'mid))
+    (define description
+      (case i
+        [(0) "right"]
+        [(1) "left"]
+        [else "right"]))
+    (define enemy-stance
+      (stance sign range description))
+            
+    (set-actor-stance! enemy enemy-stance)
+    )
+)
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin
@@ -130,83 +207,3 @@
                               'grabberkin
                               0)))
   )
-
-
-(define (spawn-blindscraper-encounter!)
-  (p (blindscraper-spawn-text))
-
-  (begin-combat!)
-
-  (define i 1)
-  (define enemy (make-actor "Blindscraper" 3))
-  (set-actor-dexterity! enemy 13)
-  (set-trait! enemy "defense" 1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "size" "small")
-  (move-actor-to-location! enemy (current-location))
-
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  
-  (define range
-    (if (= i 0)
-        'close
-        'mid))
-  (define description
-    (case i
-      [(0) "right"]
-      [(1) "left"]
-      [else "right"]))
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance)
-  
-  (hash-set! (current-times-species-encountered)
-             'blindscraper
-             (add1 (hash-ref (current-times-species-encountered)
-                              'blindscraper
-                              0)))
-  )
-
-(define (spawn-two-blindscrapers-encounter!)
-  (p "Two blindscrapers appear.")
-
-  (begin-combat!)
-
-  (for ([i 2])
-    (define enemy (make-actor "Blindscraper" 3))
-    (set-actor-dexterity! enemy 13)
-    (set-trait! enemy "defense" 1)
-    (set-trait! enemy "melee-attack-skill" 1)
-    (set-trait! enemy "size" "small")
-    (move-actor-to-location! enemy (current-location))
-
-    (define sign
-      (case i
-        [(0) "α"]
-        [(1) "β"]
-        [(2) "γ"]
-        [(3) "δ"]
-        [else ""]))
-    
-    (define range
-      (if (= i 0)
-          'close
-          'mid))
-    (define description
-      (case i
-        [(0) "right"]
-        [(1) "left"]
-        [else "right"]))
-    (define enemy-stance
-      (stance sign range description))
-            
-    (set-actor-stance! enemy enemy-stance)
-    )
-)
