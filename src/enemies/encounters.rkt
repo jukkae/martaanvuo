@@ -30,6 +30,32 @@
     [(1) "A gleam of light from the shadows catches Otava's eye. It's another Blindscraper."]
     [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
 
+; this returns an enemy entity, "character sheet", data but not situation
+(define (make-enemy type)
+  (case type
+    ['grabberkin
+      (define hp 11)
+      (define enemy (make-actor "Grabberkin" hp))
+              
+      (set-actor-dexterity! enemy 4)
+      (set-actor-strength! enemy 11)
+      (set-trait! enemy "defense" -1)
+      (set-trait! enemy "melee-attack-skill" 1)
+      (set-trait! enemy "hp-hidden" #f)
+      enemy
+      ]
+
+    ['blindscraper
+      (define enemy (make-actor "Blindscraper" 3))
+      (set-actor-dexterity! enemy 13)
+      (set-trait! enemy "defense" 1)
+      (set-trait! enemy "melee-attack-skill" 1)
+      (set-trait! enemy "size" "small")
+      enemy
+      ]
+
+    [else (dev-note (format "Unknown enemy type: ~a" type))]))
+
 (define (spawn-enemies type number)
   (for ([i (in-range 0 number)])
     (define sign
@@ -41,49 +67,38 @@
             [(2) "γ"]
             [(3) "δ"]
             [(4) "ε"]
-            [else ""])))
+            [else (number->string (add1 i))])))
+
+    (define enemy (make-enemy type))
 
     (case type
+      ['blindscraper
+        (define range
+          (if (= i 0)
+              'close
+              'mid))
+        (define description
+          (case i
+            [(0) "right"]
+            [(1) "left"]
+            [else "right"]))
+        (define enemy-stance
+          (stance sign range description))
+        (set-actor-stance! enemy enemy-stance)
+       '()]
+
       ['grabberkin
-        (define hp 11)
-        (define enemy (make-actor "Grabberkin" hp))
-        
         (define range 'engaged)
         (define description "grabbing Otava's ankle")
         (define enemy-stance
           (stance sign range description))
-                
-        (set-actor-dexterity! enemy 4)
-        (set-actor-strength! enemy 11)
-        (set-trait! enemy "defense" -1)
-        (set-trait! enemy "melee-attack-skill" 1)
-        (set-trait! enemy "hp-hidden" #f)
         (set-actor-stance! enemy enemy-stance)
-        (move-actor-to-location! enemy (current-location))]
+       '()]
 
-      ['blindscraper
-          (define enemy (make-actor "Blindscraper" 3))
-          (set-actor-dexterity! enemy 13)
-          (set-trait! enemy "defense" 1)
-          (set-trait! enemy "melee-attack-skill" 1)
-          (set-trait! enemy "size" "small")
-          (move-actor-to-location! enemy (current-location))
+      [else (dev-note (format "unknown enemy type: ~a" type))])
 
-          (define range
-            (if (= i 0)
-                'close
-                'mid))
-          (define description
-            (case i
-              [(0) "right"]
-              [(1) "left"]
-              [else "right"]))
-          (define enemy-stance
-            (stance sign range description))
-          (set-actor-stance! enemy enemy-stance)
-            
-            ]
-      [else (dev-note (format "Unknown enemy type: ~a" type))])
+    (move-actor-to-location! enemy (current-location))
+
 
     (current-times-species-encountered++ type)
   )
