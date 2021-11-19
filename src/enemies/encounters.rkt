@@ -84,6 +84,8 @@
             
             ]
       [else (dev-note (format "Unknown enemy type: ~a" type))])
+
+    (current-times-species-encountered++ type)
   )
   '())
 
@@ -95,27 +97,21 @@
   (begin-combat!)
   (spawn-enemies 'grabberkin 1)
 
-  (inflict-status! (pc) (status 'bound 10))
-
-  (current-times-species-encountered++ 'grabberkin))
+  (inflict-status! (pc) (status 'bound 10)))
 
 (define (spawn-blindscraper-encounter!)
   (p (blindscraper-spawn-text))
 
   (begin-combat!)
 
-  (spawn-enemies 'blindscraper 1)
-  (current-times-species-encountered++ 'blindscraper)
-  )
+  (spawn-enemies 'blindscraper 1))
 
 (define (spawn-two-blindscrapers-encounter!)
   (p "Two blindscrapers appear.")
 
   (begin-combat!)
 
-  (spawn-enemies 'blindscraper 2)
-  (current-times-species-encountered++ 'blindscraper)
-)
+  (spawn-enemies 'blindscraper 2))
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin
@@ -124,54 +120,8 @@
   (p (grabberkin-spawn-text))
   (p "Otava briefly looks at her restrainted lower appendage, then notices movement in the corner of her eye. Long, fingerlike limbs of a Blindscraper approach silently, folding and bending through the shadows, then its pus-filled drooping sac comes to view.")
 
-  (define hp 11)
-
-  (define e1 (make-actor "Grabberkin" hp))
-  (set-actor-dexterity! e1 4)
-  (set-actor-strength! e1 11)
-  (set-trait! e1 "defense" -1)
-  (set-trait! e1 "melee-attack-skill" 1)
-  (set-trait! e1 "hp-hidden" #f)
-  (move-actor-to-location! e1 (current-location))
-
+  (spawn-enemies 'grabberkin 1)
   (inflict-status! (pc) (status 'bound 10))
-         
-  (set-actor-stance! e1 (stance "α" 'engaged "grabbing Otava's ankle"))
-  
 
-  (define i 1)
-  (define enemy (make-actor "Blindscraper" 3))
-  (set-actor-dexterity! enemy 13)
-  (set-trait! enemy "defense" 1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "size" "small")
-  (move-actor-to-location! enemy (current-location))
-
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  
-  (define range
-    (if (= i 0)
-        'close
-        'mid))
-  (define description
-    (case i
-      [(0) "right"]
-      [(1) "left"]
-      [else "right"]))
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance)
-  
-  (hash-set! (current-times-species-encountered)
-             'grabberkin
-             (add1 (hash-ref (current-times-species-encountered)
-                              'grabberkin
-                              0)))
+  (spawn-enemies 'blindscraper 1)
   )

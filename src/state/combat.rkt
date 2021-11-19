@@ -114,7 +114,9 @@
                   (if stance
                       (stance-sign stance)
                       ""))
-                (append-string name " " sign))))))
+                (cond ((eq? "" sign)
+                       name)
+                      (else (append-string name " " sign))))))))
 
 
 (define (display-non-pc-combatant-info actor)
