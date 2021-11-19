@@ -95,7 +95,7 @@
     (case (stance-range (actor-stance enemy))
       ['mid
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
-      ['close
+      #;['close ; this is specific to enemy type etc
        (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")]
       )
     )

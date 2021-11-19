@@ -71,7 +71,7 @@
        '()]
 
       ['grabberkin
-        (define range 'engaged)
+        (define range 'close) ; can't be grappled with, can be shot with long-barreled guns
         (define description "grabbing Otava's ankle")
         (define enemy-stance
           (stance sign range description))
@@ -95,7 +95,7 @@
   (begin-combat!)
   (spawn-enemies 'grabberkin 1)
 
-  (inflict-status! (pc) (status 'bound 10)))
+  (inflict-status! (pc) 'bound (d 2 3)))
 
 (define (spawn-blindscraper-encounter!)
   (p (blindscraper-spawn-text))
@@ -119,7 +119,7 @@
   (p "Otava briefly looks at her restrainted lower appendage, then notices movement in the corner of her eye. Long, fingerlike limbs of a Blindscraper approach silently, folding and bending through the shadows, then its pus-filled drooping sac comes to view.")
 
   (spawn-enemies 'grabberkin 1)
-  (inflict-status! (pc) (status 'bound 10))
+  (inflict-status! (pc) 'bound (d 2 3))
 
   (spawn-enemies 'blindscraper 1)
   )

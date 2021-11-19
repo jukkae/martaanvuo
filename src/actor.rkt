@@ -110,6 +110,7 @@
   (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
 (define (actor-has-status-of-type? actor type)
+  (dev-note (format "actor: ~a type: ~a statuses: ~a" actor type (actor-statuses actor)))
   (if (memf (λ (status)
               (eq? (status-type status) type))
             (actor-statuses actor))
@@ -165,7 +166,7 @@
 ; it's a good idea
 (define (actor-set-status! actor type value)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Setting status [" (symbol->string type) "] strength to (" (number->string value) " turns)]")))
+    (notice (string-append (actor-name actor) ": [" (symbol->string type) "]:" (number->string value))))
 
   (if (actor-has-status-of-type? actor type)
       (for ([status (actor-statuses actor)])
@@ -364,8 +365,8 @@
       " ")))
    title))
 
-(define (inflict-status! target status)
-  (match status
+(define (inflict-status! target status-type status-strength)
+  (match status-type
     ['blind
      (dev-note "todo: blind should be a condition, not a status")
      (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
@@ -379,9 +380,8 @@
         (p "A searing pain cuts through her eyes as her vision turns to black.")])
      ]
     ['bound
-     (actor-set-status! target (status-type status) (status-lifetime status))
-     ]
-    [else (notice (format "Status inflicted on ~a: ~a" (actor-name target) status))]))
+     (actor-set-status! target status-type status-strength)]
+    [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
 
 (define (inflict-condition! target cond)
   (match (condition-type cond)

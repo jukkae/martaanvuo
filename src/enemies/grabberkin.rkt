@@ -43,7 +43,7 @@
 
 
 (define (make-grabberkin)
-  (define hp 11)
+  (define hp 9)
   (define enemy (make-actor "Grabberkin" hp))
 
   (set-actor-dexterity! enemy 4)
@@ -83,7 +83,7 @@
       #:details '(slow silent))]
 
     ['grab
-     (define strength (+ (d 1 4) 1))
+     (define strength (+ (d 1 4) 0))
      (make-action
       #:symbol 'modify-status
       #:actor actor
@@ -115,10 +115,9 @@
 
 (define (get-grabberkin-action-phase-1 actor)
   (cond
-    ((and (actor-in-range? actor 'engaged)
-          (actor-has-status-of-type? (pc) 'bound)
+    ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             4))
+             2))
      (define options
        '(anklebreaker anklebreaker grab skip skip skip))
                
@@ -132,12 +131,11 @@
 
 (define (get-grabberkin-action-phase-2 actor)
   (cond
-    ((and (actor-in-range? actor 'engaged)
-          (actor-has-status-of-type? (pc) 'bound)
+    ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             4))
+             2))
      (define options
-       '(pull-under pull-under grab grab skip skip))
+       '(pull-under pull-under pull-under pull-under skip skip))
                
      (define roll (d 1 6))
      (define index (- roll 1))
@@ -161,7 +159,8 @@
 )
 
 (define (get-grabberkin-action actor)
-  (cond ((in-combat?)
+  (cond ((and (in-combat?)
+              (actor-in-range? actor 'close))
          (cond
            ((grabberkin-hp-above-threshold? actor)
             (case (current-phase)
