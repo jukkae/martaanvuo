@@ -31,64 +31,60 @@
     [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
 
 (define (spawn-enemies type number)
-  (case type
-    ['grabberkin
-      (define hp 11)
-      (define enemy (make-actor "Grabberkin" hp))
-      (define i 0)
-      (define sign
-        (case i
-          [(0) "α"]
-          [(1) "β"]
-          [(2) "γ"]
-          [(3) "δ"]
-          [else ""]))
-      (define range 'engaged)
-      (define description "grabbing Otava's ankle")
-      (define enemy-stance
-        (stance sign range description))
-              
-      (set-actor-dexterity! enemy 4)
-      (set-actor-strength! enemy 11)
-      (set-trait! enemy "defense" -1)
-      (set-trait! enemy "melee-attack-skill" 1)
-      (set-trait! enemy "hp-hidden" #f)
-      (set-actor-stance! enemy enemy-stance)
-      (move-actor-to-location! enemy (current-location))]
-
-    ['blindscraper
-        (define i 1)
-        (define enemy (make-actor "Blindscraper" 3))
-        (set-actor-dexterity! enemy 13)
-        (set-trait! enemy "defense" 1)
-        (set-trait! enemy "melee-attack-skill" 1)
-        (set-trait! enemy "size" "small")
-        (move-actor-to-location! enemy (current-location))
-
-        (define sign
+  (for ([i (in-range 0 number)])
+    (define sign
+      (if (= number 1)
+          ""
           (case i
             [(0) "α"]
             [(1) "β"]
             [(2) "γ"]
             [(3) "δ"]
-            [else ""]))
+            [(4) "ε"]
+            [else ""])))
+
+    (case type
+      ['grabberkin
+        (define hp 11)
+        (define enemy (make-actor "Grabberkin" hp))
         
-        (define range
-          (if (= i 0)
-              'close
-              'mid))
-        (define description
-          (case i
-            [(0) "right"]
-            [(1) "left"]
-            [else "right"]))
+        (define range 'engaged)
+        (define description "grabbing Otava's ankle")
         (define enemy-stance
           (stance sign range description))
                 
+        (set-actor-dexterity! enemy 4)
+        (set-actor-strength! enemy 11)
+        (set-trait! enemy "defense" -1)
+        (set-trait! enemy "melee-attack-skill" 1)
+        (set-trait! enemy "hp-hidden" #f)
         (set-actor-stance! enemy enemy-stance)
-          
-          ]
-    [else (dev-note (format "Unknown enemy type: ~a" type))])
+        (move-actor-to-location! enemy (current-location))]
+
+      ['blindscraper
+          (define enemy (make-actor "Blindscraper" 3))
+          (set-actor-dexterity! enemy 13)
+          (set-trait! enemy "defense" 1)
+          (set-trait! enemy "melee-attack-skill" 1)
+          (set-trait! enemy "size" "small")
+          (move-actor-to-location! enemy (current-location))
+
+          (define range
+            (if (= i 0)
+                'close
+                'mid))
+          (define description
+            (case i
+              [(0) "right"]
+              [(1) "left"]
+              [else "right"]))
+          (define enemy-stance
+            (stance sign range description))
+          (set-actor-stance! enemy enemy-stance)
+            
+            ]
+      [else (dev-note (format "Unknown enemy type: ~a" type))])
+  )
   '())
 
 (define (spawn-grabberkin-encounter!)
@@ -117,36 +113,8 @@
 
   (begin-combat!)
 
-  (for ([i 2])
-    (define enemy (make-actor "Blindscraper" 3))
-    (set-actor-dexterity! enemy 13)
-    (set-trait! enemy "defense" 1)
-    (set-trait! enemy "melee-attack-skill" 1)
-    (set-trait! enemy "size" "small")
-    (move-actor-to-location! enemy (current-location))
-
-    (define sign
-      (case i
-        [(0) "α"]
-        [(1) "β"]
-        [(2) "γ"]
-        [(3) "δ"]
-        [else ""]))
-    
-    (define range
-      (if (= i 0)
-          'close
-          'mid))
-    (define description
-      (case i
-        [(0) "right"]
-        [(1) "left"]
-        [else "right"]))
-    (define enemy-stance
-      (stance sign range description))
-            
-    (set-actor-stance! enemy enemy-stance)
-    )
+  (spawn-enemies 'blindscraper 2)
+  (current-times-species-encountered++ 'blindscraper)
 )
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
