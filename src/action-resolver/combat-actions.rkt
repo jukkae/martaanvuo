@@ -192,7 +192,6 @@
 (define (resolve-break-free-action! action)
   (define actor (action-actor action))
   (define details (action-details action))
-
   (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
 
   (define target (action-target action))

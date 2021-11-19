@@ -54,7 +54,7 @@
   (cond ((not (null? close-grabberkin))
 
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
-         
+
          (define details
            (association-list 'str-mod strength-mod))
          
