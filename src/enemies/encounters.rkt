@@ -70,13 +70,7 @@
 
   (inflict-status! (pc) (status 'bound 10))
 
-
-  (hash-set! (current-times-species-encountered)
-             'grabberkin
-             (add1 (hash-ref (current-times-species-encountered)
-                              'grabberkin
-                              0)))
-  )
+  (current-times-species-encountered++ 'grabberkin))
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin

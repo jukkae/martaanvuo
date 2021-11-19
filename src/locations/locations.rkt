@@ -86,8 +86,13 @@
 
 
 (define (spawn-enemies)
-  ;(define encounter-types (list spawn-blindscraper-encounter! spawn-grabberkin-encounter!))
-  (define encounter-types (list spawn-grabberkin-and-blindscraper-encounter! spawn-two-blindscrapers-encounter!)) ; "level 2"
+  (define encounter-types
+    (list
+     ; spawn-blindscraper-encounter!
+     spawn-grabberkin-encounter!
+     ; spawn-grabberkin-and-blindscraper-encounter!
+     ; spawn-two-blindscrapers-encounter!
+    ))
 
   (cond ((place? (current-location))
           (cond ((eq? (location-type (current-location)) 'ridges)
