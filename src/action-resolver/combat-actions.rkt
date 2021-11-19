@@ -205,7 +205,7 @@
 
   (define target-number (status-lifetime actor-bound-status))
 
-  (define dice-sides 10)
+  (define dice-sides 4)
   (define bonus str-mod)
   (define roll (d 1 dice-sides))
   (define result (+ roll bonus))

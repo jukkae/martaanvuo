@@ -110,7 +110,6 @@
   (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
 (define (actor-has-status-of-type? actor type)
-  (dev-note (format "actor: ~a type: ~a statuses: ~a" actor type (actor-statuses actor)))
   (if (memf (λ (status)
               (eq? (status-type status) type))
             (actor-statuses actor))
