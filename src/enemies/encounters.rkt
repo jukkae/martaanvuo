@@ -2,6 +2,9 @@
 
 (provide (all-defined-out))
 
+(require "blindscraper.rkt"
+         "grabberkin.rkt")
+
 (require "../state/combat.rkt"
          "../state/state.rkt")
 
@@ -30,30 +33,10 @@
     [(1) "A gleam of light from the shadows catches Otava's eye. It's another Blindscraper."]
     [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
 
-; this returns an enemy entity, "character sheet", data but not situation
 (define (make-enemy type)
   (case type
-    ['grabberkin
-      (define hp 11)
-      (define enemy (make-actor "Grabberkin" hp))
-              
-      (set-actor-dexterity! enemy 4)
-      (set-actor-strength! enemy 11)
-      (set-trait! enemy "defense" -1)
-      (set-trait! enemy "melee-attack-skill" 1)
-      (set-trait! enemy "hp-hidden" #f)
-      enemy
-      ]
-
-    ['blindscraper
-      (define enemy (make-actor "Blindscraper" 3))
-      (set-actor-dexterity! enemy 13)
-      (set-trait! enemy "defense" 1)
-      (set-trait! enemy "melee-attack-skill" 1)
-      (set-trait! enemy "size" "small")
-      enemy
-      ]
-
+    ['grabberkin (make-grabberkin)]
+    ['blindscraper (make-blindscraper)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))
 
 (define (spawn-enemies type number)

@@ -15,6 +15,14 @@
          "../utils.rkt"
          "../world.rkt")
 
+(define (make-blindscraper)
+  (define enemy (make-actor "Blindscraper" 3))
+  (set-actor-dexterity! enemy 13)
+  (set-trait! enemy "defense" 1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "size" "small")
+  enemy)
+
 (define (make-blindscraper-action actor action-flag)
   (case action-flag
 

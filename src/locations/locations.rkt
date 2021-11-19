@@ -89,9 +89,9 @@
   (define encounter-types
     (list
      ; spawn-blindscraper-encounter!
-     ; spawn-grabberkin-encounter!
+     spawn-grabberkin-encounter!
      ; spawn-grabberkin-and-blindscraper-encounter!
-     spawn-two-blindscrapers-encounter!
+     ; spawn-two-blindscrapers-encounter!
     ))
 
   (cond ((place? (current-location))
