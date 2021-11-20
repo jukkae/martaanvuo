@@ -2,6 +2,7 @@
 
 (require "action.rkt")
 (require "choice.rkt")
+(require "pc.rkt")
 
 (define (choice-from-symbol world pc symbol)
   (case symbol
@@ -61,7 +62,7 @@
     ((not (get-field in-combat world))
      (set! choices (cons (choice-from-symbol world pc 'forage) choices)) ; eurgh
      (set! choices (cons (choice-from-symbol world pc 'search) choices))
-     (cond ((and (memq 'hungry (get-field conditions pc))
+     (cond ((and (pc-hungry?)
                  (memq 'food (get-field inventory pc)))
             (set! choices (cons (choice-from-symbol world pc 'eat) choices))))
      (cond ((not (eq? (get-field time-of-day world) 'night))

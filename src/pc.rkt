@@ -131,7 +131,9 @@
         (else #f)))
 
 (define (pc-hungry?)
-  (> (pc-actor-hunger (pc)) 500))
+  (or (eq? (pc-hunger-level) 'hungry)
+      (eq? (pc-hunger-level) 'very-hungry)
+      (eq? (pc-hunger-level) 'starving)))
 
 ; a day is 600 ticks -> if you eat always when you get hungry, once a day is not enough
 (define (decrease-pc-hunger-level levels)
