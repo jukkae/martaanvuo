@@ -100,6 +100,14 @@
              #:duration 100)))]
 
     ['eat
+     (define title
+       (case (pc-hunger-level)
+        ['satiated "Eat? Disgusting idea."]
+        ['not-hungry "Not really hungry but she could eat."]
+        ['hungry "Eat."]
+        ['very-hungry "Eat, she's very hungry."]
+        ['starving "She's starving, eat. Eat now."]
+       ))
      (make-choice
       'eat
       (string-append "Eat.")

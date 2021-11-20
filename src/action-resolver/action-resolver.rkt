@@ -201,7 +201,7 @@
     ['sleep (next-day! action)]
     ['rest (next-time-of-day! action)]
     ['eat
-     (set-pc-actor-hunger! (current-pc) (- (pc-actor-hunger (current-pc)) 500))
+     (decrease-pc-hunger-level 2)
      (p "The ration's dry and bland, but filling.")
      (remove-item! 'ration)]
 

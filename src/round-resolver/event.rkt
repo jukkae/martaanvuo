@@ -37,9 +37,9 @@
        ))
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
+    ('not-hungry '()) ; this is usually not relevant
     (else
-     (dev-note "narrate-event: unknown event type")
-     (displayln (symbol->string (event-type event))))))
+     (dev-note (format "narrate-event: unknown event type ~a" (event-type event))))))
 
 (define
   (format-event-for-display event)
@@ -51,5 +51,4 @@
                   (if (event-interrupting? event)
                       "yes"
                       "no")
-                  " ")
-   ))
+                  " ")))
