@@ -133,8 +133,7 @@
 (define (pc-hungry?)
   (> (pc-actor-hunger (pc)) 500))
 
-; add param: 0/1/2 levels - if hungry, 0 resets to 1300, 1 to 500, 2 to 0
-; defaults to 1
+; a day is 600 ticks -> if you eat always when you get hungry, once a day is not enough
 (define (decrease-pc-hunger-level levels)
   (let ([current-hunger (pc-hunger-level)])
     (case current-hunger
@@ -147,13 +146,13 @@
        [(2) (set-pc-actor-hunger! (pc) 0)])]
      ['very-hungry
       (case levels
-       [(0) (set-pc-actor-hunger! (pc) 1300)]
+       [(0) (set-pc-actor-hunger! (pc) 1100)]
        [(1) (set-pc-actor-hunger! (pc) 500)]
        [(2) (set-pc-actor-hunger! (pc) 0)])]
      ['starving
       (case levels
        [(0) (set-pc-actor-hunger! (pc) 2100)]
-       [(1) (set-pc-actor-hunger! (pc) 1300)]
+       [(1) (set-pc-actor-hunger! (pc) 1100)]
        [(2) (set-pc-actor-hunger! (pc) 500)])])
    
    (when (and (or (eq? current-hunger 'hungry)
@@ -183,7 +182,7 @@
      'satiated)
     ((<= (pc-actor-hunger (pc)) 500)
      'not-hungry)
-    ((<= (pc-actor-hunger (pc)) 1300)
+    ((<= (pc-actor-hunger (pc)) 1100)
      'hungry)
     ((<= (pc-actor-hunger (pc)) 2100)
      'very-hungry)
