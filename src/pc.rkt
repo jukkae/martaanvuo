@@ -142,24 +142,35 @@
      ['not-hungry (set-pc-actor-hunger! (pc) 0)]
      ['hungry
       (case levels
+       [(0) (set-pc-actor-hunger! (pc) 500)]
+       [(1) (set-pc-actor-hunger! (pc) 000)]
+       [(2) (set-pc-actor-hunger! (pc) 0)])]
+     ['very-hungry
+      (case levels
        [(0) (set-pc-actor-hunger! (pc) 1300)]
        [(1) (set-pc-actor-hunger! (pc) 500)]
        [(2) (set-pc-actor-hunger! (pc) 0)])]
-     ['very-hungry (set-pc-actor-hunger! (pc) 1300)]
-     ['starving (set-pc-actor-hunger! (pc) 2100)])
+     ['starving
+      (case levels
+       [(0) (set-pc-actor-hunger! (pc) 2100)]
+       [(1) (set-pc-actor-hunger! (pc) 1300)]
+       [(2) (set-pc-actor-hunger! (pc) 500)])])
    
-    (define hunger-string
-      (if (and (eq? current-hunger 'hungry)
-               (= levels 2))
-          (begin
+   (when (and (or (eq? current-hunger 'hungry)
+                  (eq? current-hunger 'very-hungry)
+                  (eq? current-hunger 'starving))
+              (= levels 2))
+           (p "Damn that tastes good.")
            (award-xp! 50)
-           "now perfectly and blissfully satiated")
-          (case (pc-hunger-level)
-            ['satiated "now satiated"] ; allow going from hungry to -> satiated; this feels blissful and gives XP
-            ['not-hungry "not hungry anymore"]
-            ['hungry "less hungry"]
-            ['very-hungry "still very hungry"]
-            ['starving "still starving"]))
+           )
+
+    (define hunger-string
+      (case (pc-hunger-level)
+        ['satiated "now satiated"] ; allow going from hungry to -> satiated; this feels blissful and gives XP
+        ['not-hungry "not hungry anymore"]
+        ['hungry "less hungry"]
+        ['very-hungry "still very hungry"]
+        ['starving "still starving"])
       )
     (notice (format "Otava is ~a." hunger-string))
      
