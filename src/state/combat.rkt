@@ -194,7 +194,7 @@
   (current-in-combat? #t)
 
   (current-session-times-in-combat++)
-  (when (= (current-session-times-in-combat) 2)
+  (when (= (current-session-times-in-combat) 3)
     (notice "Attainment: Way of Blood"))
   (when (= (current-session-times-in-combat) 7)
     (notice "Attainment: Way of Carnage"))
