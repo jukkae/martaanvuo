@@ -15,6 +15,14 @@
          "../utils.rkt"
          "../world.rkt")
 
+(define (make-blindscraper)
+  (define enemy (make-actor "Blindscraper" 3))
+  (set-actor-dexterity! enemy 13)
+  (set-trait! enemy "defense" 1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "size" "small")
+  enemy)
+
 (define (make-blindscraper-action actor action-flag)
   (case action-flag
 
@@ -133,42 +141,6 @@
              #:details '()))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
-
-
-(define (spawn-blindscraper-encounter!)
-  (p "A many-jointed fingerlike appendage, long as a forearm, extends from behind a tree trunk. At the tip of the thin finger is a curving shiny black claw. The first finger is followed by several more, then a sac-like, limply hanging body.")
-
-  (begin-combat!)
-
-  (define i 1)
-  (define enemy (make-actor "Blindscraper" 3))
-  (set-actor-dexterity! enemy 13)
-  (set-trait! enemy "defense" 1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "size" "small")
-  (move-actor-to-location! enemy (current-location))
-
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  
-  (define range
-    (if (= i 0)
-        'close
-        'mid))
-  (define description
-    (case i
-      [(0) "right"]
-      [(1) "left"]
-      [else "right"]))
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance))
 
 (define (get-blindscraper-reaction actor)
   '())

@@ -165,7 +165,7 @@
 ; it's a good idea
 (define (actor-set-status! actor type value)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Setting status [" (symbol->string type) "] strength to (" (number->string value) " turns)]")))
+    (notice (string-append (actor-name actor) ": [" (symbol->string type) "]:" (number->string value))))
 
   (if (actor-has-status-of-type? actor type)
       (for ([status (actor-statuses actor)])
@@ -364,10 +364,10 @@
       " ")))
    title))
 
-(define (inflict-status! target status)
-  (match status
+(define (inflict-status! target status-type status-strength)
+  (match status-type
     ['blind
-     (displayln "todo: blind should be a condition, not a status")
+     (dev-note "todo: blind should be a condition, not a status")
      (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
      (define roll (d 1 2))
      (wait-for-confirm)
@@ -379,9 +379,8 @@
         (p "A searing pain cuts through her eyes as her vision turns to black.")])
      ]
     ['bound
-     (actor-set-status! target (status-type status) (status-lifetime status))
-     ]
-    [else (p "todo: unknown status")]))
+     (actor-set-status! target status-type status-strength)]
+    [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
 
 (define (inflict-condition! target cond)
   (match (condition-type cond)

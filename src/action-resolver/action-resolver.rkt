@@ -94,6 +94,8 @@
                (not (eq? result 'interrupted)))
       (pc-action-on-after-resolve! action))
 
+    (wait-for-confirm)
+
     result
     ))
 
@@ -114,6 +116,9 @@
 
        (when (not (location-has-detail? (current-location) 'no-encounters))
          (define encounter-roll (d 1 6))
+         (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a" encounter-roll (if (< encounter-roll 4)
+                                                                              "fail"
+                                                                              "success")))
          (when (< encounter-roll 4)
 
            (define resolve-events
@@ -150,7 +155,8 @@
       ['new-time-of-day ; proc dailies here
        '()]
       [else
-       (dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
+       '()
+       #;(dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
   (narrate-timeline tl))
 
 
@@ -195,7 +201,7 @@
     ['sleep (next-day! action)]
     ['rest (next-time-of-day! action)]
     ['eat
-     (set-pc-actor-hunger! (current-pc) (- (pc-actor-hunger (current-pc)) 500))
+     (decrease-pc-hunger-level 2)
      (p "The ration's dry and bland, but filling.")
      (remove-item! 'ration)]
 

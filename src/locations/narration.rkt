@@ -59,7 +59,7 @@
      (case n
        [(1)
         (p
-         "Otava follows the ants and takes the right-hand path. The trail descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns soggy, and the smell of wild rosemary fills the air as the forested swamp turns into an open marsh.")]
+         "Otava follows the ants and takes the right-hand path. The trail descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns soggy, and the smell of suopursu fills the air as the forested swamp turns into an open marsh.")]
        [else
         (p
          "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
@@ -71,7 +71,7 @@
          "The path comes to a barely traversable marsh.")]
        [else
         (p
-         "The marsh smells like wild rosemary.")])
+         "The marsh smells like suopursu.")])
      ]
     
     ['(martaanvuo-swamp martaanvuo-docks)

@@ -17,6 +17,8 @@
          "../world.rkt")
 
 
+; Grabberkin are greedy -> they have jewelry -> they drop loot
+
 ;;; THE BIG THINGS:
 ;;; What is Grabberkin's purpose, gameplay-wise? What is its niche?
 ;;; What is its vulnerability?
@@ -25,7 +27,7 @@
 ;;; -> act as a soft gate
 ;;; -> somewhat miniboss-like *at first*
 ; They are greedy. They are clingy. (What do they most wish?)
-; Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe?
+; Add 'steal' action, but make it pretty rare / once-per-encounter type thing maybe? (steal gold, not items)
 ; Idea: Vulnerabilities:
 ; - Firearms: Simply too much firepower. (Approach weaknesses: Makes noise, bullets are hard to come by, fuck up and blow your own leg up -> skill check if not proficient / consume LP)
 ; - Chainsaw: Too awesome. Weaknesses: Got to get up-and-close, makes noise, needs gas
@@ -39,6 +41,17 @@
 ; This doesn't belong here really but what the hell:
 ; - After combat, patching up is possible, but it is risk-free only if you know medicine, which requires finding literature (= doing a Cache-run, in practice) and then leveling up
 
+
+(define (make-grabberkin)
+  (define hp 9)
+  (define enemy (make-actor "Grabberkin" hp))
+
+  (set-actor-dexterity! enemy 4)
+  (set-actor-strength! enemy 11)
+  (set-trait! enemy "defense" -1)
+  (set-trait! enemy "melee-attack-skill" 1)
+  (set-trait! enemy "hp-hidden" #f)
+  enemy)
 
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
@@ -70,7 +83,7 @@
       #:details '(slow silent))]
 
     ['grab
-     (define strength (+ (d 1 4) 1))
+     (define strength (+ (d 1 4) 0))
      (make-action
       #:symbol 'modify-status
       #:actor actor
@@ -102,12 +115,11 @@
 
 (define (get-grabberkin-action-phase-1 actor)
   (cond
-    ((and (actor-in-range? actor 'engaged)
-          (actor-has-status-of-type? (pc) 'bound)
+    ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             4))
+             3))
      (define options
-       '(anklebreaker anklebreaker grab skip skip skip))
+       '(anklebreaker anklebreaker grab grab skip skip))
                
      (define roll (d 1 6))
      (define index (- roll 1))
@@ -119,12 +131,11 @@
 
 (define (get-grabberkin-action-phase-2 actor)
   (cond
-    ((and (actor-in-range? actor 'engaged)
-          (actor-has-status-of-type? (pc) 'bound)
+    ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             4))
+             3))
      (define options
-       '(pull-under pull-under grab grab skip skip))
+       '(pull-under pull-under pull-under grab skip skip))
                
      (define roll (d 1 6))
      (define index (- roll 1))
@@ -134,31 +145,33 @@
     (else
      (make-grabberkin-action actor 'grab))))
 
+(define (current-phase)
+  (cond
+    ((and (not (actor-has-condition-of-type? (pc) 'ankle-broken))
+          (not (actor-has-condition-of-type? (pc) 'both-ankles-broken)))
+      1)
+    ((and (actor-has-condition-of-type? (pc) 'ankle-broken)
+          (not (actor-has-condition-of-type? (pc) 'both-ankles-broken)))
+      1)
+    ((and (not (actor-has-condition-of-type? (pc) 'ankle-broken))
+          (actor-has-condition-of-type? (pc) 'both-ankles-broken))
+      2))
+)
+
 (define (get-grabberkin-action actor)
-  (cond ((in-combat?)
+  (cond ((and (in-combat?)
+              (actor-in-range? actor 'close))
          (cond
            ((grabberkin-hp-above-threshold? actor)
-            (define target (pc))
-            (define phase
-              (cond
-                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
-                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
-                 1)
-                ((and (actor-has-condition-of-type? target 'ankle-broken)
-                      (not (actor-has-condition-of-type? target 'both-ankles-broken)))
-                 1)
-                ((and (not (actor-has-condition-of-type? target 'ankle-broken))
-                      (actor-has-condition-of-type? target 'both-ankles-broken))
-                 2)))
-            
-            (case phase
+            (case (current-phase)
               [(1) (get-grabberkin-action-phase-1 actor)]
               [(2) (get-grabberkin-action-phase-2 actor)]))
-           
+
            (else
             (make-grabberkin-action actor 'release-grip))))
         (else
-         (begin (displayln "Grabberkin AI, not in combat")))))
+         '() ; not in combat, do nothing
+         )))
 
 ; implicitly, this is the pre-own-action reaction
 (define (get-grabberkin-reaction actor)
@@ -166,35 +179,3 @@
          (make-grabberkin-action actor 'release-grip))
         (else
          '())))
-
-(define (spawn-grabberkin-encounter!)
-  
-  (p "Something grabs Otava by the ankle and pulls. She staggers, barely manages to stay upright, and immediately goes for her bolt cutters.") ; could cause fall-down on failed roll
-  (begin-combat!)
-
-  (define hp 11)
-  (define i 0)
-  (define enemy (make-actor "Grabberkin" hp))
-  (set-actor-dexterity! enemy 4)
-  (set-actor-strength! enemy 11)
-  (set-trait! enemy "defense" -1)
-  (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "hp-hidden" #f)
-  (move-actor-to-location! enemy (current-location))
-
-  (inflict-status! (pc) (status 'bound 10))
-
-  (define sign
-    (case i
-      [(0) "α"]
-      [(1) "β"]
-      [(2) "γ"]
-      [(3) "δ"]
-      [else ""]))
-  (define range 'engaged)
-  (define description "grabbing Otava's ankle")
-  (define enemy-stance
-    (stance sign range description))
-           
-  (set-actor-stance! enemy enemy-stance)
-  )

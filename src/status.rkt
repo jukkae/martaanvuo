@@ -7,4 +7,5 @@
 (serializable-struct
  status
  (type
-  (lifetime #:mutable)))
+  (lifetime #:mutable))
+ #:transparent)

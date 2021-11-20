@@ -33,6 +33,13 @@
 (define current-times-cancel-traverse-narrated (make-parameter (make-hash)))
 (define current-times-species-encountered (make-parameter (make-hash)))
 
+(define (current-times-species-encountered++ species)
+  (hash-set! (current-times-species-encountered)
+             species
+             (add1 (hash-ref (current-times-species-encountered)
+                              species
+                              0))))
+
 (define current-flags (make-parameter '()))
 
 (define current-round (make-parameter 0))

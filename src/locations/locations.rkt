@@ -18,12 +18,19 @@
    ["state/state.rkt"
     (get-pending-traverse-direction)])
 
+(lazy-require
+ ["../state/combat.rkt"
+  (begin-combat!)])
+
 (require "../api.rkt"
          "../actor.rkt")
 
 (require "../enemies/blindscraper.rkt"
+         "../enemies/encounters.rkt"
          "../enemies/grabberkin.rkt")
 
+(require "../stance.rkt"
+         "../status.rkt")
 
 #;(lazy-require ["../state/state.rkt"
                  (current-location
@@ -78,30 +85,24 @@
 
 
 
-(define (spawn-enemies location)
-  (define encounter-types '(blindscraper grabberkin))
-
-  (define
-    encounter-type
-    (cond ((place? location)
-           (cond ((eq? (location-type location) 'ridges)
-                  'blindscraper)
-                 ((eq? (location-type location) 'valleys)
-                  'grabberkin)
-                 (else (take-random encounter-types))))
-          ((route? location)
-           'blindscraper)))
-
-  (case encounter-type
-    ['grabberkin
-     (spawn-grabberkin-encounter!)
-     ]
-    ['blindscraper
-     (spawn-blindscraper-encounter!)
-     ]
+(define (spawn-enemies)
+  (define encounter-types
+    (list
+     ; spawn-blindscraper-encounter!
+     spawn-grabberkin-encounter!
+     ; spawn-grabberkin-and-blindscraper-encounter!
+     ; spawn-two-blindscrapers-encounter!
     ))
 
-
+  (cond ((place? (current-location))
+          (cond ((eq? (location-type (current-location)) 'ridges)
+                 (spawn-blindscraper-encounter!))
+                ((eq? (location-type (current-location)) 'valleys)
+                 (spawn-grabberkin-encounter!))
+                (else ((take-random encounter-types)))))
+        ((route? (current-location))
+          ((take-random encounter-types))))
+  )
 
 ; internal
 (define (get-location-short-description location)
@@ -148,7 +149,3 @@
           (route-b location)))
         ((place? location)
          (place-routes location))))
-
-
-
-

@@ -95,7 +95,7 @@
     (case (stance-range (actor-stance enemy))
       ['mid
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
-      ['close
+      #;['close ; this is specific to enemy type etc
        (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")]
       )
     )
@@ -114,7 +114,9 @@
                   (if stance
                       (stance-sign stance)
                       ""))
-                (append-string name " " sign))))))
+                (cond ((eq? "" sign)
+                       name)
+                      (else (append-string name " " sign))))))))
 
 
 (define (display-non-pc-combatant-info actor)
@@ -192,7 +194,7 @@
   (current-in-combat? #t)
 
   (current-session-times-in-combat++)
-  (when (= (current-session-times-in-combat) 2)
+  (when (= (current-session-times-in-combat) 3)
     (notice "Attainment: Way of Blood"))
   (when (= (current-session-times-in-combat) 7)
     (notice "Attainment: Way of Carnage"))

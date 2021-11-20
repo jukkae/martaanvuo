@@ -30,7 +30,8 @@
     (set! combat-choices
           (append combat-choices (get-ranged-choices))))
 
-  (cond ((not (engaged?))
+  (cond ((and (not (engaged?))
+              (not (actor-has-status-of-type? (pc) 'bound)))
          (define run-choice
            (make-choice
             'flee
@@ -44,16 +45,16 @@
                #:tags '(initiative-based-resolution fast)))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
-  (define engaged-enemies (get-enemies-at-range 'engaged))
-  (define engaged-grabberkin
-    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'engaged))
+  (define close-enemies (get-enemies-at-range 'close))
+  (define close-grabberkin
+    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'close))
                                "Grabberkin"))
-            engaged-enemies))
+            close-enemies))
 
-  (cond ((not (null? engaged-grabberkin))
+  (cond ((not (null? close-grabberkin))
 
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
-         
+
          (define details
            (association-list 'str-mod strength-mod))
          
@@ -67,7 +68,7 @@
                #:symbol 'break-free
                #:actor (pc)
                #:duration 1
-               #:target (take-random engaged-grabberkin)
+               #:target (take-random close-grabberkin)
                #:tags '(initiative-based-resolution fast)
                #:details details))))
          (set! combat-choices (append-element combat-choices break-free-choice))))

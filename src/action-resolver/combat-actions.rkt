@@ -59,25 +59,25 @@
 
   (define skill (get-trait actor "melee-attack-skill"))
 
-  (define bonus 0)
+  ; (define bonus 0)
   
-  (cond ((member 'fallen (actor-statuses target))
-         (displayln "[Target fallen, TN -2]")
-         (set! bonus 2)
-         ))
-  (cond ((engaged?)
-         (displayln "[Engaged, TN +1]")
-         (set! bonus -1)
-         ))
+  ; (cond ((member 'fallen (actor-statuses target))
+  ;        (displayln "[Target fallen, TN -2]")
+  ;        (set! bonus 2)
+  ;        ))
+  ; (cond ((engaged?)
+  ;        (displayln "[Engaged, TN +1]")
+  ;        (set! bonus -1)
+  ;        ))
   
-  (define action-target-number (- 7 bonus))
+  ; (define action-target-number (- 7 bonus))
 
   (define title
-    (string-append "Melee, "
+    (string-append "Melee attack, "
                    (get-combatant-name actor)
                    " vs "
                    (get-combatant-name target)))
-  #;(define success? (skill-check title skill action-target-number))
+  ; #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
 
   (define details (action-details action))
@@ -87,18 +87,11 @@
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
 
-  (when success?
-    (info-card
-     (list
-      (list " damage roll formula " " result ")
-      (list
-       (string-append " "
-                      damage-roll-formula
-                      " ")
-       (string-append " "
-                      (number->string damage-roll-result)
-                      " ")))
-     "HP damage roll"))
+  (define body
+    (list
+      (list " damage "
+            (format " ~a: [~a] " damage-roll-formula damage-roll-result))))
+  (info-card body title)
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
@@ -199,7 +192,6 @@
 (define (resolve-break-free-action! action)
   (define actor (action-actor action))
   (define details (action-details action))
-
   (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
 
   (define target (action-target action))
@@ -213,7 +205,7 @@
 
   (define target-number (status-lifetime actor-bound-status))
 
-  (define dice-sides 10)
+  (define dice-sides 4)
   (define bonus str-mod)
   (define roll (d 1 dice-sides))
   (define result (+ roll bonus))
