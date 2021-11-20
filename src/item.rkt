@@ -13,6 +13,7 @@
  (id
   [name #:mutable]
   [details #:mutable])
+ #:transparent
  #:constructor-name item*)
 
 ; not part of API
@@ -62,6 +63,18 @@
     ['ration
      (new-item
       "Food rations"
+      #:id id
+      #:details amount)]
+    
+    ['fresh-berries
+     (new-item
+      "Berries, fresh"
+      #:id id
+      #:details amount)]
+
+    ['vatruska
+     (new-item
+      "Vatruska"
       #:id id
       #:details amount)]
 

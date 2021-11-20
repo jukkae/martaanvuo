@@ -99,6 +99,7 @@
              #:actor (pc)
              #:duration 100)))]
 
+    ; This opens a submenu
     ['eat
      (define title
        (case (pc-hunger-level)
@@ -111,17 +112,49 @@
      (make-choice
       'eat
       (string-append "Eat.")
-      (λ () (make-action
-             #:symbol 'eat
-             #:actor (pc)
-             #:duration 15
-             #:tags '(downtime))))]
+      (λ ()
+       (define food (select-food-to-eat))
+       (make-action
+        #:symbol 'eat
+        #:actor (pc)
+        #:duration 15
+        #:target food
+        #:tags '(downtime))))
+      
+      
+    ]
 
 
     ))
 
 
+(define (select-food-to-eat)
+  (define items (actor-inventory (pc)))
+  (define comestibles
+    (filter (λ (item) ; likely this should be stored as data on the item itself
+              (case (item-id item)
+               ['fresh-berries #t]
+               ['ration #t]
+               ['vatruska #t]
+               [else #f]))
+            items))
 
+  (prln (format "Eat what? [1-~a], anything else to cancel." (length comestibles)))
+  (br)
+  
+  (for ([food comestibles]
+        [i (in-naturals 1)])
+    (prln (format "[~a] ~a (~a)" i (item-name food) (item-details food))))
+  (br)
+  (define input (string->number (wait-for-input)))
+  (cond ((and (number? input)
+              (> input 0)
+              (<= input (length comestibles)))
+         (define index (- input 1))
+         (list-ref comestibles index)
+         )
+        (else (prln "Nevermind.")))
+)
 
 
 (define (get-nighttime-choices world actor)
