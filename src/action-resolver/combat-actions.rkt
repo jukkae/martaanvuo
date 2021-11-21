@@ -183,12 +183,6 @@
   
   )
 
-
-
-
-
-
-
 (define (resolve-break-free-action! action)
   (define actor (action-actor action))
   (define details (action-details action))
@@ -203,49 +197,56 @@
     (findf (λ (status) (eq? (status-type status) 'bound))
            statuses))
 
-  (define target-number (status-lifetime actor-bound-status))
+  (cond (actor-bound-status
+    (define target-number (status-lifetime actor-bound-status))
 
-  (define dice-sides 4)
-  (define bonus str-mod)
-  (define roll (d 1 dice-sides))
-  (define result (+ roll bonus))
+    (define dice-sides 4)
+    (define bonus str-mod)
+    (define roll (d 1 dice-sides))
+    (define result (+ roll bonus))
 
-  (define success?
-    (cond ((= roll 1) #f)
-          ((= roll dice-sides) #t)
-          (else (> result target-number))))
+    (define success?
+      (cond ((= roll 1) #f)
+            ((= roll dice-sides) #t)
+            (else (> result target-number))))
 
-  (define success-string
-    (if success?
-        "success"
-        "failure"))
+    (define success-string
+      (if success?
+          "success"
+          "failure"))
 
-  (displayln
-   (string-append "["
-                  "Resolution: "
-                  "1d10 + bonus > TN: "
-                  (number->string roll)
-                  " + "
-                  (number->string bonus)
-                  " = "
-                  (number->string result)
-                  " > "
-                  (number->string target-number)
-                  " - "
-                  success-string
-                  "]"))
-  ; crit = nat MAX = always succeed,
-  ; crit fail = nat 1 = always fail, avoid hard failures?
-  (wait-for-confirm)
-  (if success?
-      (begin
-        (displayln "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
-        (award-xp! 4)
-        'end-combat)
-      (begin
-        (displayln "The grip is still too strong for Otava to break it.")
-        (award-xp! 1)
-        'failed)))
+    (notice
+     (string-append "Resolution: "
+                    "1d10 + bonus > TN: "
+                    (number->string roll)
+                    " + "
+                    (number->string bonus)
+                    " = "
+                    (number->string result)
+                    " > "
+                    (number->string target-number)
+                    " - "
+                    success-string))
+    ; crit = nat MAX = always succeed,
+    ; crit fail = nat 1 = always fail, avoid hard failures?
+    (wait-for-confirm)
+    (cond (success?
+           (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
+           (award-xp! 4)
+           (dev-note "Fix me: shouldn't end combat")
+           'end-combat) ; shouldn't be end-combat!
+          (else
+           (p "The grip is still too strong for Otava to break it.")
+           (award-xp! 1)
+           'failed))
+  )
+  (else ; pc not bound
+    (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
+    (award-xp! 3)
+    (dev-note "Fix me: shouldn't end combat")
+    'end-combat
+    ))
+  )
 
 
 ; skinnable, but in a sense generic action

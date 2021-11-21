@@ -44,7 +44,7 @@
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   (add-item! 'ration #:amount 2 #:silent? #t)
   (add-item! 'fresh-berries #:amount 1 #:silent? #t)
-  (add-item! 'feast #:amount 1 #:silent? #t)
+  (add-item! 'vatruska #:amount 1 #:silent? #t)
   (add-item! 'bolt-cutters #:silent? #t)
   (add-item! 'revolver #:silent? #t)
   )
@@ -131,10 +131,15 @@
         (else #f)))
 
 (define (pc-hungry?)
-  (> (pc-actor-hunger (pc)) 500))
+  (or (eq? (pc-hunger-level) 'hungry)
+      (eq? (pc-hunger-level) 'very-hungry)
+      (eq? (pc-hunger-level) 'starving)))
 
-; add param: 0/1/2 levels - if hungry, 0 resets to 1300, 1 to 500, 2 to 0
-; defaults to 1
+(define hunger-level-hungry 400)
+(define hunger-level-very-hungry 800)
+(define hunger-level-starving 1600)
+
+; a day is 600 ticks -> if you eat always when you get hungry, once a day is not enough
 (define (decrease-pc-hunger-level levels)
   (let ([current-hunger (pc-hunger-level)])
     (case current-hunger
@@ -142,24 +147,35 @@
      ['not-hungry (set-pc-actor-hunger! (pc) 0)]
      ['hungry
       (case levels
-       [(0) (set-pc-actor-hunger! (pc) 1300)]
-       [(1) (set-pc-actor-hunger! (pc) 500)]
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
+       [(1) (set-pc-actor-hunger! (pc) 0)]
        [(2) (set-pc-actor-hunger! (pc) 0)])]
-     ['very-hungry (set-pc-actor-hunger! (pc) 1300)]
-     ['starving (set-pc-actor-hunger! (pc) 2100)])
+     ['very-hungry
+      (case levels
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+       [(1) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
+       [(2) (set-pc-actor-hunger! (pc) 0)])]
+     ['starving
+      (case levels
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-starving)]
+       [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+       [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
    
-    (define hunger-string
-      (if (and (eq? current-hunger 'hungry)
-               (= levels 2))
-          (begin
+   (when (and (or (eq? current-hunger 'hungry)
+                  (eq? current-hunger 'very-hungry)
+                  (eq? current-hunger 'starving))
+              (= levels 2))
+           (p "Damn that tastes good.")
            (award-xp! 50)
-           "now perfectly and blissfully satiated")
-          (case (pc-hunger-level)
-            ['satiated "now satiated"] ; allow going from hungry to -> satiated; this feels blissful and gives XP
-            ['not-hungry "not hungry anymore"]
-            ['hungry "less hungry"]
-            ['very-hungry "still very hungry"]
-            ['starving "still starving"]))
+           )
+
+    (define hunger-string
+      (case (pc-hunger-level)
+        ['satiated "now satiated"]
+        ['not-hungry "not hungry anymore"]
+        ['hungry "less hungry"]
+        ['very-hungry "still very hungry"]
+        ['starving "still starving"])
       )
     (notice (format "Otava is ~a." hunger-string))
      
@@ -168,13 +184,13 @@
 
 (define (pc-hunger-level)
   (cond
-    ((<= (pc-actor-hunger (pc)) 0)
+    ((<= (pc-actor-hunger (pc)) 50)
      'satiated)
-    ((<= (pc-actor-hunger (pc)) 500)
+    ((< (pc-actor-hunger (pc)) hunger-level-hungry)
      'not-hungry)
-    ((<= (pc-actor-hunger (pc)) 1300)
+    ((< (pc-actor-hunger (pc)) hunger-level-very-hungry)
      'hungry)
-    ((<= (pc-actor-hunger (pc)) 2100)
+    ((< (pc-actor-hunger (pc)) hunger-level-starving)
      'very-hungry)
     (else
      'starving)

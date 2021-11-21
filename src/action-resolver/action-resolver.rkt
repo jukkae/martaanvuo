@@ -201,9 +201,23 @@
     ['sleep (next-day! action)]
     ['rest (next-time-of-day! action)]
     ['eat
-     (decrease-pc-hunger-level 2)
-     (p "The ration's dry and bland, but filling.")
-     (remove-item! 'ration)]
+     (define food-item (action-target action))
+     (displayln (format "TARGET: ~a" food-item))
+     (define food-tier
+       (case (item-id food-item)
+        ['fresh-berries 0]
+        ['food-ration 1]
+        ['vatruska 2]
+        [else (dev-note (format "Unknown comestible ~a" (item-id food-item)))
+              1])
+      )
+     (decrease-pc-hunger-level food-tier)
+
+     (case (item-id food-item)
+      ['fresh-berries (p "The berries are invigoratingly sweet.")]
+      ['food-ration (p "The ration's dry and bland, but filling.")]
+      ['vatruska (p "The vatruska tastes heavenly.")])
+     (remove-item! (item-id food-item))]
 
       
     ; the rest
