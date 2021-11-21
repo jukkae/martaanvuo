@@ -153,13 +153,12 @@
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))
         (set! new-statuses (append-element new-statuses status))
-        (displayln
+        (notice
          (string-append
-          "["
           (actor-name actor)
           ": Status ["
           (symbol->string (status-type status))
-          "] removed]"))))
+          "] removed"))))
   (set-actor-statuses! actor new-statuses))
 
 ; yeah the way statuses currently work are a piece of shit
