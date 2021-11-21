@@ -12,6 +12,7 @@
          "../io.rkt"
          "../item.rkt"
          "../pc.rkt"
+         "../pc-actor.rkt"
          "../locations/location.rkt"
          "../locations/locations.rkt"
          "../locations/place.rkt"

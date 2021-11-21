@@ -10,6 +10,7 @@
          "../io.rkt"
          "../locations/location.rkt"
          "../pc.rkt"
+         "../pc-actor.rkt"
          "../session.rkt"
          "../stance.rkt"
          "../status.rkt"

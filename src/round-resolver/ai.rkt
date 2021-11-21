@@ -6,6 +6,7 @@
 
 (require "../action.rkt"
          "../actor.rkt"
+         "../pc-actor.rkt"
          "../enemies/blindscraper.rkt"
          "../enemies/grabberkin.rkt"
 

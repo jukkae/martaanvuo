@@ -6,6 +6,7 @@
 
 (require "../io.rkt"
          "../actor.rkt"
+         "../pc-actor.rkt"
          "../time.rkt"
          "../utils.rkt"
          "../world.rkt"

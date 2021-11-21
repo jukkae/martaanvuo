@@ -8,6 +8,7 @@
 (require "actor.rkt"
          "io.rkt"
          "item.rkt"
+         "pc-actor.rkt"
          "utils.rkt")
 
 (lazy-require

@@ -15,6 +15,7 @@
          "../action-resolver/action-resolver.rkt"
          "../actions.rkt"
          "../actor.rkt"
+         "../pc-actor.rkt"
          "../io.rkt"
          "../locations/location.rkt"
          "../pc.rkt"
