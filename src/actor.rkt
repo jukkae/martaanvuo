@@ -8,7 +8,7 @@
   (pc
    current-location
    )]
- ["pc.rkt"
+ ["pc-actor.rkt"
   (pc-actor?
    pc-take-damage!
    set-pc-actor-alive?!
