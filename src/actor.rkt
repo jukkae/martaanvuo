@@ -295,8 +295,6 @@
     (notice (format "[Bound] strength Δ [~a], new strength [~a]"
                     mod-amount
                     (actor-lifetime-of-status-of-type? (pc) 'bound))))
-    
-  
   result)
 
 (define (take-damage actor damage damage-type)
