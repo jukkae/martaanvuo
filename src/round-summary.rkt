@@ -43,20 +43,19 @@
                  "N/A")
              " ")
             )
-      (when (pc-hungry?)
-        (define hunger-text
-          (case (pc-hunger-level)
-             ['hungry "hungry"]
-             ['very-hungry "very hungry"]
-             ['starving "starving"]
-             ))
-        (list (string-append
-               " "
-               "["
-               hunger-text
-               "]"
-               " ")
-              ))
+      (list " ")
+      (list (string-append
+             " "
+             "hunger: "
+             (case (pc-hunger-level)
+              ['satiated "satiated"]
+              ['not-hungry "not hungry"]
+              ['hungry "hungry"]
+              ['very-hungry "very hungry"]
+              ['starving "starving"]
+             )
+             " ")
+            )
       )))
   (info-card body title))
 

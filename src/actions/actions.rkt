@@ -114,6 +114,8 @@
       (string-append "Eat.")
       (λ ()
        (define food (select-food-to-eat))
+       (when (void? food)
+         (dev-note "fixme: Do not return action if food is void"))
        (make-action
         #:symbol 'eat
         #:actor (pc)

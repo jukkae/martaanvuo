@@ -135,6 +135,10 @@
       (eq? (pc-hunger-level) 'very-hungry)
       (eq? (pc-hunger-level) 'starving)))
 
+(define hunger-level-hungry 400)
+(define hunger-level-very-hungry 800)
+(define hunger-level-starving 1600)
+
 ; a day is 600 ticks -> if you eat always when you get hungry, once a day is not enough
 (define (decrease-pc-hunger-level levels)
   (let ([current-hunger (pc-hunger-level)])
@@ -143,19 +147,19 @@
      ['not-hungry (set-pc-actor-hunger! (pc) 0)]
      ['hungry
       (case levels
-       [(0) (set-pc-actor-hunger! (pc) 500)]
-       [(1) (set-pc-actor-hunger! (pc) 000)]
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
+       [(1) (set-pc-actor-hunger! (pc) 0)]
        [(2) (set-pc-actor-hunger! (pc) 0)])]
      ['very-hungry
       (case levels
-       [(0) (set-pc-actor-hunger! (pc) 1100)]
-       [(1) (set-pc-actor-hunger! (pc) 500)]
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+       [(1) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
        [(2) (set-pc-actor-hunger! (pc) 0)])]
      ['starving
       (case levels
-       [(0) (set-pc-actor-hunger! (pc) 2100)]
-       [(1) (set-pc-actor-hunger! (pc) 1100)]
-       [(2) (set-pc-actor-hunger! (pc) 500)])])
+       [(0) (set-pc-actor-hunger! (pc) hunger-level-starving)]
+       [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+       [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
    
    (when (and (or (eq? current-hunger 'hungry)
                   (eq? current-hunger 'very-hungry)
@@ -167,7 +171,7 @@
 
     (define hunger-string
       (case (pc-hunger-level)
-        ['satiated "now satiated"] ; allow going from hungry to -> satiated; this feels blissful and gives XP
+        ['satiated "now satiated"]
         ['not-hungry "not hungry anymore"]
         ['hungry "less hungry"]
         ['very-hungry "still very hungry"]
@@ -180,13 +184,13 @@
 
 (define (pc-hunger-level)
   (cond
-    ((<= (pc-actor-hunger (pc)) 0)
+    ((<= (pc-actor-hunger (pc)) 50)
      'satiated)
-    ((<= (pc-actor-hunger (pc)) 500)
+    ((< (pc-actor-hunger (pc)) hunger-level-hungry)
      'not-hungry)
-    ((<= (pc-actor-hunger (pc)) 1100)
+    ((< (pc-actor-hunger (pc)) hunger-level-very-hungry)
      'hungry)
-    ((<= (pc-actor-hunger (pc)) 2100)
+    ((< (pc-actor-hunger (pc)) hunger-level-starving)
      'very-hungry)
     (else
      'starving)
