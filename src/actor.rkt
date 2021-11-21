@@ -292,7 +292,9 @@
                 "Grabberkin")
     (define mod-amount (exact-floor (* -0.5 damage)))
     (modify-actor-status-lifetime (pc) 'bound mod-amount)
-    (notice (format "[Bound] strength ~a" mod-amount)))
+    (notice (format "[Bound] strength Δ [~a], new strength [~a]"
+                    mod-amount
+                    (actor-lifetime-of-status-of-type? (pc) 'bound))))
     
   
   result)

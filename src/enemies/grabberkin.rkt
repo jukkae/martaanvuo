@@ -117,7 +117,7 @@
   (cond
     ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             3))
+             2))
      (define options
        '(anklebreaker anklebreaker grab grab skip skip))
                
@@ -133,10 +133,10 @@
   (cond
     ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             3))
+             2))
      (define options
        '(pull-under pull-under pull-under grab skip skip))
-               
+
      (define roll (d 1 6))
      (define index (- roll 1))
      (define action (list-ref options index))
