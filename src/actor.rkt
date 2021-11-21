@@ -108,7 +108,7 @@
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] (" (number->string (status-lifetime status)) " turns) added]")))
+    (notice (string-append (actor-name actor) ": Status [" (symbol->string (status-type status)) "] (" (number->string (status-lifetime status)) " turns) added")))
   (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
 (define (actor-has-status-of-type? actor type)
@@ -131,13 +131,12 @@
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))
         (set! new-statuses (append-element new-statuses status))
-        (displayln
+        (notice
          (string-append
-          "["
           (actor-name actor)
           ": Status ["
           (symbol->string (status-type status))
-          "] removed]"))))
+          "] removed"))))
   (set-actor-statuses! actor new-statuses))
 
 ; think:
@@ -146,7 +145,7 @@
 (define (modify-actor-status-lifetime actor type modify-amount)
   (for ([status (actor-statuses actor)])
     (when (eq? (status-type status) type)
-      (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] modified." "]"))
+      (notice (string-append (actor-name actor) ": Status [" (symbol->string (status-type status)) "] modified."))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
   
   (define new-statuses '())
@@ -291,9 +290,9 @@
   ; -> subtype grabberkin-actor from actor?
   (when (equal? (actor-name actor)
                 "Grabberkin")
-    (modify-actor-status-lifetime (pc) 'bound (* -1 damage))
-    (displayln (string-append "decrease bound status strength by "
-                              (number->string (* -1 damage)))))
+    (define mod-amount (exact-floor (* -0.5 damage)))
+    (modify-actor-status-lifetime (pc) 'bound mod-amount)
+    (notice (format "[Bound] strength ~a" mod-amount)))
     
   
   result)
@@ -369,7 +368,7 @@
   (match status-type
     ['blind
      (dev-note "todo: blind should be a condition, not a status")
-     (p "The Blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
      (define roll (d 1 2))
      (wait-for-confirm)
      (case roll
@@ -377,29 +376,29 @@
         ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
         (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
        [(2)
-        (p "A searing pain cuts through her eyes as her vision turns to black.")])
+        (p "A searing pain cuts through her eyes as her vision goes black.")])
      ]
     ['bound
      (actor-set-status! target status-type status-strength)]
     [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
 
-(define (inflict-condition! target cond)
-  (match (condition-type cond)
+(define (inflict-condition! target condition)
+  (match (condition-type condition)
     ['ankle-broken
      (if (actor-has-condition-of-type? target 'ankle-broken)
          (begin
            (actor-remove-condition-of-type! target 'ankle-broken)
            (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
            )
-         (actor-add-condition! target cond))
+         (actor-add-condition! target condition))
      ]
     ['bleeding
      (if (not (actor-has-condition-of-type? target 'bleeding))
-         (actor-add-condition! target cond)
-         (displayln "Already bleeding."))
+         (actor-add-condition! target condition)
+         (notice "Already bleeding."))
      
      ]
-    [else (p "todo: unknown condition")]))
+    [else (dev-note (format "todo: unknown condition ~a" condition))]))
 
 (define (get-firearm actor)
   (define items (actor-inventory actor))
