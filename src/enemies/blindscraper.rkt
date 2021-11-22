@@ -65,9 +65,7 @@
       #:details '(blind))]
 
     [else
-     (error (string-append
-             "make-blindscraper-action: unknown action: "
-             (symbol->string action-flag)))]))
+     (error (format "make-blindscraper-action: unknown action: ~a" action-flag))]))
 
 (define (get-blindscraper-action actor)
   (cond ((in-combat?)

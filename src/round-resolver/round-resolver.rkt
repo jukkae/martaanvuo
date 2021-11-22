@@ -61,17 +61,17 @@
     ; This "reprints" the "Otava is dead" notice
     (when (eq? mode 'continue)
       (define cause-of-death (pc-actor-cause-of-death (pc)))
-      (notice (string-append "Otava is dead. Cause of death: "
-                            (cond ((symbol? cause-of-death)
-                              (describe-cause-of-death cause-of-death))
-                              ((string? cause-of-death)
-                              cause-of-death)
-                              ((symbol? (car cause-of-death))
-                              (describe-cause-of-death (car cause-of-death)))
-                              ((string? (car cause-of-death))
-                              (car cause-of-death))
-                              (else "NA"))
-                            ))
+      (notice (format "Otava is dead. Cause of death: ~a"
+                      (cond ((symbol? cause-of-death)
+                        (describe-cause-of-death cause-of-death))
+                        ((string? cause-of-death)
+                        cause-of-death)
+                        ((symbol? (car cause-of-death))
+                        (describe-cause-of-death (car cause-of-death)))
+                        ((string? (car cause-of-death))
+                        (car cause-of-death))
+                        (else "NA"))
+                      ))
       )
     )
 

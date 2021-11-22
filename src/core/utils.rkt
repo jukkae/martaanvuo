@@ -19,8 +19,6 @@
 (define (take-random l)
   (list-ref l (random (length l))))
 
-(define append-string string-append)
-
 (define (append-element lst elem)
   (append lst (list elem)))
 

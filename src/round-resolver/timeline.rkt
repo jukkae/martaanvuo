@@ -21,6 +21,6 @@
      (append
       (list (list " at " " type " " details " " interrupts action? "))
       displayable-events)
-     (string-append "Timeline, duration " (number->string (timeline-duration timeline))))
+     (format "Timeline, duration ~a" (timeline-duration timeline)))
   (for ([event (timeline-events timeline)])
     (narrate-event event)))

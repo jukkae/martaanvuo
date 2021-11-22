@@ -93,14 +93,12 @@
             (else ; no features
              ""))
     "")
-  (string-append name
-                 features-str)
+  (format "~a~a" name features-str)
   )
 
 
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
-  #;(displayln (string-append "-- move-pc-to-location!: moving to " (~v location)))
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location! (pc) location)
   (add-actor-to-location! location (pc))
