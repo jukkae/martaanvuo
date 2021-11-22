@@ -44,7 +44,7 @@
     (set! attributes-list
           (append-element attributes-list
                           (list "" ""))))
-  
+
   (when (not (null? (actor-strength actor)))
     (set! attributes-list (append-element attributes-list
                                           (list

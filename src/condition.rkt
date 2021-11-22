@@ -36,5 +36,5 @@
                                       (number->string bleed-damage-roll)
                                       "]]"))))]
     ['ankle-broken '()]
-    [else (displayln "process-condition-on-end-turn: unknown condition")])
+    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" condition))])
   )
