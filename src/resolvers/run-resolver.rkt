@@ -2,18 +2,18 @@
 
 (provide (all-defined-out))
 
-(require "io.rkt")
-(require "locations/location.rkt")
-(require "locations/locations.rkt")
-(require "pc.rkt")
-(require "quest.rkt")
-(require "quests.rkt")
-(require "round-resolver/round-resolver.rkt")
-(require "state/state.rkt")
-(require "utils.rkt")
-(require "world.rkt")
-
-(require "state/logging.rkt")
+(require
+  "../core/io.rkt"
+  "../core/utils.rkt"
+  "../locations/location.rkt"
+  "../locations/locations.rkt"
+  "../pc/pc.rkt"
+  "../quests/quest.rkt"
+  "../quests/quests.rkt"
+  "../round-resolver/round-resolver.rkt"
+  "../state/state.rkt"
+  "../state/logging.rkt"
+  "../world/world.rkt")
 
 
 ; content should be provided "somewhere"

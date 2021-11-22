@@ -4,9 +4,9 @@
 
 (require racket/serialize)
 
-(require "../io.rkt"
-         "../utils.rkt"
-         "../world.rkt"
+(require "../core/io.rkt"
+         "../core/utils.rkt"
+         "../world/world.rkt"
 
          "../state/state.rkt")
 

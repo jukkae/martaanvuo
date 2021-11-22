@@ -3,15 +3,16 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
-(require "actor.rkt"
-         "io.rkt"
-         "item.rkt"
-         "utils.rkt")
+(require
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  "../items/item.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt")
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (pc
    )])
 
@@ -43,7 +44,7 @@
     (set! attributes-list
           (append-element attributes-list
                           (list "" ""))))
-  
+
   (when (not (null? (actor-strength actor)))
     (set! attributes-list (append-element attributes-list
                                           (list

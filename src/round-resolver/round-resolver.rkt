@@ -6,27 +6,36 @@
 (provide print-meta-commands-with-keys
          meta-command-valid?)
 
-(require racket/serialize)
+(require
+  ; these are needed for providing
+  "fragment-handler.rkt"
+  "ui.rkt"
 
-(require "../state/logging.rkt"
-         "../state/state.rkt")
+  "action-queue.rkt"
+  "ai.rkt"
+  "get-next-pc-action.rkt"
+  "initiative-based-round-resolver.rkt"
+  "round.rkt"
 
-(require "../action.rkt"
-         "../action-resolver/action-resolver.rkt"
-         "../actions.rkt"
-         "../actor.rkt"
-         "../io.rkt"
-         "../locations/location.rkt"
-         "../pc.rkt"
-         "../utils.rkt")
+  "../action-resolver/action-resolver.rkt"
 
-(require "action-queue.rkt"
-         "ai.rkt"
-         "fragment-handler.rkt"
-         "get-next-pc-action.rkt"
-         "initiative-based-round-resolver.rkt"
-         "round.rkt"
-         "ui.rkt")
+  "../actions/action.rkt"
+  "../actions/actions.rkt"
+  
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  
+  "../core/io.rkt"
+  "../core/utils.rkt"
+  
+  "../locations/location.rkt"
+  
+  "../pc/pc.rkt"
+
+  "../state/logging.rkt"
+  "../state/state.rkt"
+  )
+
 
 
 (define (resolve-round mode)
@@ -75,7 +84,8 @@
       (let/ec end-round-early-with-round-status
         (define pc-action (get-next-pc-action))
         
-        (cond ((eq? pc-action 'end-round-early)
+        (cond
+              ((eq? pc-action 'end-round-early)
               (on-end-round)
               (end-round-early-with-round-status 'ok))
               ((eq? pc-action 'pc-dead)

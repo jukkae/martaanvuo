@@ -4,26 +4,33 @@
 
 (require racket/lazy-require)
 (lazy-require
- ["state/state.rkt"
+ ["pc-actor.rkt"
+  (pc-actor?
+   pc-take-damage!
+   set-pc-actor-alive?!
+   set-pc-actor-cause-of-death!
+   )]
+ ["../state/state.rkt"
   (pc
    current-location
    )]
- ["world.rkt"
+ ["../world/world.rkt"
   (remove-actor-from-its-current-location!
    )]
- ["locations/location.rkt"
+ ["../locations/location.rkt"
   (add-feature-to-location!
    )])
 
 
 (require racket/serialize)
 
-(require "condition.rkt")
-(require "io.rkt")
-(require "item.rkt")
-(require "stance.rkt")
-(require "status.rkt")
-(require "utils.rkt")
+(require "condition.rkt"
+         "status.rkt"
+
+         "../items/item.rkt"
+
+         "../core/io.rkt"
+         "../core/utils.rkt")
 
 
 (serializable-struct
@@ -53,17 +60,7 @@
   [stance #:mutable]) ; only NPCs
  #:constructor-name actor*)
 
-(serializable-struct
- pc-actor
- actor
- ([lp #:mutable]
-  [max-lp #:mutable]
-  [death-roll-dice #:mutable]
-  [alive? #:mutable]
-  [cause-of-death #:mutable]
-  [xp #:mutable]
-  [hunger #:mutable])
- #:constructor-name pc-actor*)
+
 
 (define (make-actor
          name
@@ -74,18 +71,6 @@
           ; traits etc
           (make-hash) '() '() '() '() '()))
 
-(define (make-pc-actor
-         name
-         max-hp
-         max-lp)
-  (pc-actor*
-   name max-hp max-hp
-   ; attributes
-   '() '() '() '() '()
-   ; traits etc
-   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0
-   ; hunger
-   200))
 
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))
@@ -122,7 +107,9 @@
   (define s (findf (λ (status)
                      (eq? (status-type status) type))
                    (actor-statuses actor)))
-  (status-lifetime s))
+  (if s 
+    (status-lifetime s)
+    #f))
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
@@ -223,54 +210,6 @@
   (cond ((negative? modifier) (number->string modifier))
         ((= 0 modifier) (number->string modifier))
         ((positive? modifier) (string-append "+" (number->string modifier)))))
-
-
-(define (pc-take-damage! actor damage damage-type)
-  (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
-  
-  (cond ((not (positive? (actor-hp actor)))
-
-         
-         (define new-hp (- (actor-hp actor) damage))
-         (set-actor-hp! actor new-hp)
-         (displayln (string-append "[Taking damage, new HP : "
-                                   (number->string new-hp)
-                                   "]"))
-                  
-         (define death-roll-dice (pc-actor-death-roll-dice actor))
-         (define death-roll (d 1 death-roll-dice))
-         (define result (+ death-roll
-                           (actor-hp actor)))
-         (displayln (string-append
-                     "[Death roll: 1d"
-                     (number->string death-roll-dice)
-                     " + HP"
-                     " = "
-                     (number->string death-roll)
-                     " - "
-                     (number->string (abs (actor-hp actor))) ; slightly dirty: actor-hp *should* be non-positive
-                     " = "
-                     (number->string result)
-                     "]"))
-
-         (define cause-of-death damage-type)
-
-         (cond ((<= result 1)
-                (begin
-                  (kill actor cause-of-death)
-                  'dead))
-               (else
-                'hit)
-               ))
-        
-        (else
-         (define new-hp (- (actor-hp actor) damage))
-         (when (not (positive? new-hp))
-           (displayln "[Otava is dying.]")
-           (wait-for-confirm))
-              
-         (set-actor-hp! actor new-hp)
-         'hit)))
 
 
 (define (non-pc-take-damage! actor damage damage-type)

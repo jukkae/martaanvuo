@@ -4,7 +4,7 @@
 (require racket/lazy-require)
 (require "action.rkt")
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (pc
    )])
 

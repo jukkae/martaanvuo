@@ -1,38 +1,31 @@
 #lang racket
 
-(provide build-keys-to-choices-map
-         choice-valid?
-         fragment-decision-valid?
-         get-meta-commands-with-keys
-         get-next-pc-action
-         meta-command-valid?
-         print-choices-and-meta-commands-with-keys
-         print-meta-commands-with-keys
-         resolve-choice-and-produce-action!)
+(provide
+  get-next-pc-action
+  meta-command-valid?
+  print-meta-commands-with-keys
+  )
 
 (require racket/lazy-require)
 
-(require "../action.rkt"
-         "../actions.rkt"
-         "../actor.rkt"
-         "../character-sheet.rkt"
-         "../choice.rkt"
-         "../decision.rkt"
-         "../io.rkt"
-         "../utils.rkt"
-         "../locations/locations.rkt"
-         "../state/state.rkt")
+(require
+  "fragment-handler.rkt"
 
-(require "fragment-handler.rkt")
+  "../actions/action.rkt"
+  "../actions/actions.rkt"
+  "../actions/choice.rkt"
 
-#;(lazy-require
- ["../state/state.rkt"
-  (current-prompt
-   player-info
-   redescribe-situation
-   pc
-   current-fragment-id
-   )])
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../fragments/decision.rkt"
+
+  "../locations/locations.rkt"
+
+  "../pc/character-sheet.rkt"
+
+  "../state/state.rkt"
+  )
 
 (lazy-require
  ["ui.rkt"
@@ -48,14 +41,14 @@
 ; this pokes a hole through abstraction layers (as it should)
 ; (sort of like IO monad)
 (define (get-next-pc-action)
-  (let/ec produce-action
+  (let/ec return
     (let what-do-you-do ([verbosity 'verbose])
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
         (define meta-command (cdr meta-command-with-key))
         (define meta-command-result (meta-command))
-        (when (eq? meta-command-result 'restart) (produce-action 'restart))
+        (when (eq? meta-command-result 'restart) (return 'restart))
         
         
         (redescribe-situation)
@@ -98,7 +91,9 @@
 
       (newline)
 
-      (cond ((meta-command-valid? meta-commands-with-keys input) (handle-meta-command meta-commands-with-keys input))
+      (cond ((meta-command-valid? meta-commands-with-keys input)
+             (handle-meta-command meta-commands-with-keys input))
+
             ((fragment-decision-valid? decisions-with-keys input)
              (begin
                (define fragment-decision-result (handle-fragment-decision decisions-with-keys input))
@@ -109,8 +104,13 @@
                (when (eq? fragment-decision-result 'pc-dead)
                  (dev-note "fragment-decision-result: PC DEAD")
                  (set! result 'pc-dead))
-               produce-action result))
-            ((choice-valid? choices-with-keys input) (produce-action (resolve-choice-and-produce-action! choices-with-keys input)))
+               return result))
+
+            ((choice-valid? choices-with-keys input)
+             (define action (resolve-choice-and-produce-action! choices-with-keys input))
+             (cond ((eq? 'cancel action) (what-do-you-do 'verbose))
+                   (else (return action))))
+
             (else (what-do-you-do 'abbreviated))))))
 
 

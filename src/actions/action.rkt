@@ -4,11 +4,10 @@
 
 (require racket/lazy-require)
 (require racket/serialize)
-(require lens)
 
-(require "utils.rkt")
+(require "../core/utils.rkt")
 
-(lazy-require ["state/state.rkt"
+(lazy-require ["../state/state.rkt"
                (pc)])
 
 (serializable-struct action

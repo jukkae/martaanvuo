@@ -2,31 +2,19 @@
 
 (provide (all-defined-out))
 
-
-
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
+(require
+  "../actions/action.rkt"
 
-(require "../action.rkt")
-(require "../actor.rkt")
-(require "../checks.rkt")
-(require "../condition.rkt")
-(require "../io.rkt")
-(require "../item.rkt")
-(require "../locations/location.rkt")
-(require "../pc.rkt")
-(require "../locations/route.rkt")
-(require "../state/state.rkt")
-(require "../state/logging.rkt")
-(require "../stance.rkt")
-(require "../status.rkt")
-(require "../utils.rkt")
-(require "../world.rkt")
+  "../actors/actor.rkt"
+  "../actors/condition.rkt"
 
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../state/state.rkt"
+  )
 
 
 (lazy-require

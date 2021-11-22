@@ -2,11 +2,7 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-(require racket/struct)
 (require racket/serialize)
-
-
 
 (serializable-struct
  location

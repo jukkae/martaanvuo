@@ -4,7 +4,6 @@
 
 (require racket/serialize)
 
-
 (serializable-struct
  story-fragment
  (id

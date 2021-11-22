@@ -7,12 +7,11 @@
                        "pending-action.rkt"
                        "resolve-counts.rkt"))
 
-(require racket/lazy-require)
 (require racket/serialize)
 
-(require "../pc.rkt")
-(require "../utils.rkt")
-(require "../world.rkt")
+(require
+  "../pc/pc.rkt"
+  "../world/world.rkt")
 
 (require "describe-situation.rkt"
          "mutators.rkt"

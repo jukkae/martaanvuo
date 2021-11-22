@@ -6,22 +6,30 @@
 
 (require rebellion/collection/association-list)
 
-(require "../action.rkt")
-(require "../actor.rkt")
-(require "../checks.rkt")
-(require "../condition.rkt")
-(require "../io.rkt")
-(require "../item.rkt")
-(require "../locations/location.rkt")
-(require "../pc.rkt")
-(require "../locations/route.rkt")
-(require "../state/state.rkt")
-(require "../state/logging.rkt")
-(require "../stance.rkt")
-(require "../status.rkt")
-(require "../time.rkt")
-(require "../utils.rkt")
-(require "../world.rkt")
+(require "../actions/action.rkt"
+
+         "../actors/actor.rkt"
+         "../actors/condition.rkt"
+         "../actors/pc-actor.rkt"
+         "../actors/stance.rkt"
+         "../actors/status.rkt"
+
+         "../core/checks.rkt"
+         "../core/io.rkt"
+         "../core/utils.rkt"
+
+         "../items/item.rkt"
+
+         "../locations/location.rkt"
+         "../locations/route.rkt"
+
+         "../pc/pc.rkt"
+
+         "../state/state.rkt"
+         "../state/logging.rkt"
+
+         "../world/time.rkt"
+         "../world/world.rkt")
 
 (require "../round-resolver/event.rkt"
          "../round-resolver/simulation.rkt"
@@ -39,7 +47,7 @@
 
 
 (lazy-require
- ["state/combat.rkt"
+ ["../state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info

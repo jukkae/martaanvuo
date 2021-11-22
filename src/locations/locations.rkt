@@ -4,48 +4,20 @@
 
 (require racket/lazy-require)
 
-(require "location.rkt"
-         "place.rkt"
-         "route.rkt"
+
+(lazy-require
+  ["../actions/action.rkt"
+    (action-details)]
+  ["../state/combat.rkt"
+    (begin-combat!)])
+
+(require 
+  "../actors/actor.rkt"
+  "../core/api.rkt"
+  "../enemies/encounters.rkt")
+
+(require "place.rkt"
          "routes.rkt")
-
-(lazy-require
- ["../action.rkt"
-  (action-details)])
-
-
-#;(lazy-require
-   ["state/state.rkt"
-    (get-pending-traverse-direction)])
-
-(lazy-require
- ["../state/combat.rkt"
-  (begin-combat!)])
-
-(require "../api.rkt"
-         "../actor.rkt")
-
-(require "../enemies/blindscraper.rkt"
-         "../enemies/encounters.rkt"
-         "../enemies/grabberkin.rkt")
-
-(require "../stance.rkt"
-         "../status.rkt")
-
-#;(lazy-require ["../state/state.rkt"
-                 (current-location
-                  times-begin-traverse-narrated
-                  times-begin-traverse-narrated++
-                  times-finish-traverse-narrated
-                  times-finish-traverse-narrated++
-                  times-cancel-traverse-narrated
-                  times-cancel-traverse-narrated++
-                  set-flag
-                  quest-exists?)])
-
-#;(lazy-require ["../state/logging.rkt"
-                 (next-chapter!)])
-
 
 (define (location-on-enter! location)
   (dev-note "location-on-enter! tbd for location")

@@ -4,11 +4,11 @@
 
 (require racket/lazy-require)
 
-(require "io.rkt")
-(require "quest.rkt")
+(require "quest.rkt"
+         "../core/io.rkt")
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (add-quest!
    quest-exists?)])
 

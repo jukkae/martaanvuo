@@ -5,31 +5,16 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
-
-(require "../action.rkt")
-(require "../actor.rkt")
-(require "../checks.rkt")
-(require "../condition.rkt")
-(require "../io.rkt")
-(require "../item.rkt")
-(require "../locations/location.rkt")
-(require "../pc.rkt")
-(require "../locations/route.rkt")
-(require "../state/state.rkt")
-(require "../state/logging.rkt")
-(require "../stance.rkt")
-(require "../status.rkt")
-(require "../utils.rkt")
-(require "../world.rkt")
-
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
+(require
+  "../actors/actor.rkt"
+  "../core/checks.rkt"
+  "../core/io.rkt"
+  "../state/state.rkt"
+  "../core/utils.rkt")
 
 
 (lazy-require
- ["state/combat.rkt"
+ ["../state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
@@ -45,7 +30,7 @@
    )])
 
 (lazy-require
- ["round-resolver/event-handler.rkt"
+ ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 

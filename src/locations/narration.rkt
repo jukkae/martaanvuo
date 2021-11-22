@@ -9,10 +9,9 @@
          route-shortname)
 
 (require "place.rkt"
-         "route.rkt"
-         "routes.rkt")
-(require "../api.rkt")
-(require "../action.rkt")
+         "routes.rkt"
+         "../core/api.rkt"
+         "../actions/action.rkt")
 
 (define (describe-begin-traverse-action action)
   (define from

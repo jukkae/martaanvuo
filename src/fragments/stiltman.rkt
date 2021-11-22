@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../api.rkt")
+(require "../core/api.rkt")
 
 (fragment
  'begin-stiltman-dialogue

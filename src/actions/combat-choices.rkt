@@ -2,17 +2,18 @@
 
 (require rebellion/collection/association-list)
 
-; 'core'
-(require "../actor.rkt"
-         "../utils.rkt")
 
-; others
-(require "../action.rkt"
-         "../choice.rkt"
-         "../stance.rkt")
+(require
+  "../actions/action.rkt"
+  "../actions/choice.rkt"
 
-(require "../state/combat.rkt")
-(require "../state/state.rkt")
+  "../actors/actor.rkt"
+  "../actors/stance.rkt"
+
+  "../core/utils.rkt"
+
+  "../state/combat.rkt"
+  "../state/state.rkt")
 
 
 

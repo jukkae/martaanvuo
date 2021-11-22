@@ -5,14 +5,14 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "utils.rkt")
+(require "../core/utils.rkt")
 
 (lazy-require
  ["actor.rkt"
   (take-damage)])
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (display-combatant-info)])
 
 (serializable-struct
@@ -36,5 +36,5 @@
                                       (number->string bleed-damage-roll)
                                       "]]"))))]
     ['ankle-broken '()]
-    [else (displayln "process-condition-on-end-turn: unknown condition")])
+    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" condition))])
   )

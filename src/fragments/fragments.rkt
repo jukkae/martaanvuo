@@ -3,15 +3,16 @@
 (provide (all-defined-out))
 
 
-(require "api.rkt")
+(require "../core/api.rkt")
 
-(require "fragments/anthill.rkt"
-         "fragments/magpie.rkt"
-         "fragments/stiltman.rkt")
+(require
+  "anthill.rkt"
+  "decision.rkt"
+  "fragment.rkt"
+  "magpie.rkt"
+  "stiltman.rkt")
 
-(require "decision.rkt")
-(require "fragment.rkt")
-(require "state/state.rkt")
+(require "../state/state.rkt")
 
 ; This should happen on the beginning of a life
 ; and with runs, you select the loadout

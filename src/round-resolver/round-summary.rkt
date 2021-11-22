@@ -2,11 +2,9 @@
 
 (provide (all-defined-out))
 
-(require "api.rkt")
-
-
-(require "actor.rkt")
-(require "locations/locations.rkt")
+(require
+  "../core/api.rkt"
+  "../locations/locations.rkt")
 
 (define (round-summary mode)
   (define title

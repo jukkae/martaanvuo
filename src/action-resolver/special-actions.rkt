@@ -4,9 +4,9 @@
 
 (require racket/lazy-require)
 
-(require "../action.rkt"
-         "../io.rkt"
-         "../utils.rkt")
+(require "../actions/action.rkt"
+         "../core/io.rkt"
+         "../core/utils.rkt")
 
 (lazy-require
  ["../state/mutators.rkt"

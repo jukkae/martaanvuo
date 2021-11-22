@@ -5,16 +5,20 @@
 
 (require racket/lazy-require)
 
-(require "../actor.rkt"
-         "../condition.rkt"
-         "../fragment.rkt"
-         "../round-summary.rkt"
-         "../utils.rkt"
+(require
+  "round-summary.rkt"
+  "action-queue.rkt"
+  "fragment-handler.rkt"
 
-         "../state/state.rkt")
+  "../actors/actor.rkt"
+  "../actors/condition.rkt"
 
-(require "action-queue.rkt"
-         "fragment-handler.rkt")
+  "../core/utils.rkt"
+
+  "../fragments/fragment.rkt"
+
+
+  "../state/state.rkt")
 
 
 (lazy-require
