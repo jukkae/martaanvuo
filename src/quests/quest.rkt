@@ -14,12 +14,6 @@
  #:transparent)
 
 (define (format-quest-for-card q)
-  (list (string-append " "
-                         (quest-title q)
-                         " ")
-          (string-append " "
-                         (quest-status q)
-                         " ")
-          (string-append " "
-                         (quest-notes q)
-                         " ")))
+  (list (format " ~a " (quest-title q))
+        (format " ~a " (quest-status q))
+        (format " ~a " (quest-notes q))))

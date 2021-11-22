@@ -63,15 +63,11 @@
 
 (define (on-end-life)
   (let ([body 
-         (list 
-          (list " Round "
-                (string-append " " 
-                               (number->string (current-round))
-                               " "))
-          (list " XP "
-                (string-append " " 
-                               (number->string (pc-actor-xp (pc)))
-                               " ")))]
+         (tbody
+          (tr " Round "
+              (format " ~a " current-round))
+          (tr " XP "
+              (format " ~a " (pc-actor-xp (pc)))))]
         [title "Life summary"])
     (info-card body title))
   (wait-for-confirm))

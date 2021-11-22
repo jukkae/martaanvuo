@@ -20,8 +20,7 @@
  'begin-life
  (thunk
   (p
-   (string-append
-    "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Food? Some still left, yes. Bolt cutters? Yes. What else...")
+   "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Food? Some still left, yes. Bolt cutters? Yes. What else..."
    )
   )
  #:decisions
@@ -112,15 +111,9 @@
         "failure"
         "success"))
   (info-card
-   (list
-    (list " 1d4: "
-          (string-append " "
-                         (number->string r)
-                         " "
-                         "["
-                         success-text
-                         "]"
-                         " ")))
+   (tbody
+    (tr " 1d4: "
+        (format " ~a [~a] " r success-text)))
    "Death save")
   (wait-for-confirm)
   (case r
