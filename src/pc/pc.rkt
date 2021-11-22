@@ -88,13 +88,22 @@
 
 (define (remove-item! id)
   (define items (actor-inventory (pc)))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
-         items)
-  (set-actor-inventory! (pc)
-                        (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
-                                (actor-inventory (pc))
-                                ))
-  (dev-note "item removed, show info about removed/remaining items"))
+  (define it
+    (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+           items))
+  (cond (it
+          ; TODO: Add quantity to item
+         (define d (item-details it))
+         (cond ((and (number? d)
+                     (> d 1))
+                (set-item-details! it (- d 1)))
+               (else
+                (set-actor-inventory! (pc)
+                                      (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                              (actor-inventory (pc))
+                                              ))))
+         (dev-note "item removed, show info about removed/remaining items"))
+         ))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
