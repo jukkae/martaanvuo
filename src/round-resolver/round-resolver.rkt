@@ -26,6 +26,7 @@
   "../actors/pc-actor.rkt"
   
   "../core/io.rkt"
+  "../core/utils.rkt"
   
   "../locations/location.rkt"
   
@@ -83,7 +84,8 @@
       (let/ec end-round-early-with-round-status
         (define pc-action (get-next-pc-action))
         
-        (cond ((eq? pc-action 'end-round-early)
+        (cond
+              ((eq? pc-action 'end-round-early)
               (on-end-round)
               (end-round-early-with-round-status 'ok))
               ((eq? pc-action 'pc-dead)

@@ -1,7 +1,5 @@
 #lang racket
 
-
-
 (require racket/lazy-require)
 
 (require
@@ -33,13 +31,6 @@
   (go-to-story-fragment
    )])
 
-#;(lazy-require
-   ["state/combat.rkt"
-    (get-combatant-name
-     display-combatant-info
-     *combat-flags*
-     )])
-
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (cond ((in-combat?)
@@ -49,7 +40,6 @@
         ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
-
 
 
 (define (choice-factory action-symbol)
@@ -109,14 +99,16 @@
       (string-append "Eat.")
       (λ ()
        (define food (select-food-to-eat))
-       (when (void? food)
-         (dev-note "fixme: Do not return action if food is void"))
-       (make-action
-        #:symbol 'eat
-        #:actor (pc)
-        #:duration 15
-        #:target food
-        #:tags '(downtime))))
+       (if (void? food)
+           'cancel
+           (make-action
+            #:symbol 'eat
+            #:actor (pc)
+            #:duration 15
+            #:target food
+            #:tags '(downtime)))
+
+        ))
       
       
     ]
@@ -150,7 +142,7 @@
          (define index (- input 1))
          (list-ref comestibles index)
          )
-        (else (prln "Nevermind.")))
+        (else (p "Nevermind.")))
 )
 
 
