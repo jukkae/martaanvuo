@@ -66,10 +66,9 @@
   ; (define action-target-number (- 7 bonus))
 
   (define title
-    (string-append "Melee attack, "
-                   (get-combatant-name actor)
-                   " vs "
-                   (get-combatant-name target)))
+    (format "Melee attack, ~a vs ~a"
+            (get-combatant-name actor)
+            (get-combatant-name target)))
   ; #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
 
@@ -81,9 +80,9 @@
   (define damage-roll-result ((cdr damage-roll)))
 
   (define body
-    (list
-      (list " damage "
-            (format " ~a: [~a] " damage-roll-formula damage-roll-result))))
+    (tbody
+      (tr " damage "
+          (format " ~a: [~a] " damage-roll-formula damage-roll-result))))
   (info-card body title)
 
   (define action-result 'ok)
@@ -113,10 +112,9 @@
   (define actor (action-actor action))
   (define target (action-target action))
   (define title
-    (string-append "Ranged [firearms], "
-                   (get-combatant-name actor)
-                   " vs "
-                   (get-combatant-name target)))
+    (format "Ranged [firearms], ~a vs ~a"
+            (get-combatant-name actor)
+            (get-combatant-name target)))
 
   ; TODO add sophistication regarding ranges etc
   (define success? #t)
@@ -130,7 +128,7 @@
   (define damage-roll-result ((cdr damage-roll)))
   
   (when success?
-    [notice (string-append "dmg: " damage-roll-formula " = " (number->string damage-roll-result))]
+    [notice (format "dmg: [~a] = [~a]" damage-roll-formula damage-roll-result)]
     (p "Otava pulls the trigger. The gun belts out a thunderous roar, and blood gushes out of the creature."))
 
   (define action-result 'ok)
@@ -149,8 +147,8 @@
            (define text
              (take-random
               (list
-               (string-append "The " (actor-name (action-target action)) " collapses on the ground.")
-               (string-append "The " (actor-name (action-target action)) " crumbles in a heap and twitches a few times and then goes still."))))
+               (format "The ~a collapses on the ground." (actor-name (action-target action)))
+               (format "The ~a crumbles in a heap and twitches a few times, then goes still." (actor-name (action-target action))))))
            (p text))
           (else
            (begin
@@ -209,17 +207,12 @@
           "failure"))
 
     (notice
-     (string-append "Resolution: "
-                    "1d10 + bonus > TN: "
-                    (number->string roll)
-                    " + "
-                    (number->string bonus)
-                    " = "
-                    (number->string result)
-                    " > "
-                    (number->string target-number)
-                    " - "
-                    success-string))
+     (format "Resolution: 1d10 + bonus > TN: ~a + ~a = ~a > ~a - ~a"
+             (number->string roll)
+             (number->string bonus)
+             (number->string result)
+             (number->string target-number)
+             success-string))
     ; crit = nat MAX = always succeed,
     ; crit fail = nat 1 = always fail, avoid hard failures?
     (wait-for-confirm)
@@ -280,9 +273,7 @@
 
         (else ; not a pc actor
          (p
-          (string-append
-           (get-combatant-name (action-actor action))
-           " tries to run."))
+          (format "~a tries to run." (get-combatant-name (action-actor action))))
          (define skill 1)
          (define stance (actor-stance (action-actor action)))
          (define value (get-stance-range-numeric-value (stance-range stance)))

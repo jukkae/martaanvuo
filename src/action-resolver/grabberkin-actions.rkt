@@ -60,9 +60,7 @@
   (define crit-string (if critical?
                           ", crit"
                           ""))
-  (displayln (string-append "[crit roll: 1d"
-                            (number->string sides)
-                            " = " (number->string crit-roll) crit-string "]")))
+  (notice (format "crit roll: 1d~a = ~a~a" sides crit-roll crit-string)))
 
 ; ability-like attack
 (define (resolve-anklebreaker-action! action)
@@ -91,7 +89,7 @@
            ('dead
             (display-combatant-info target)
             'pc-dead)
-           (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result)))))
+           (else (error (format "unhandled action-result ~a" action-result))))
          )
 
         ; second ankle
@@ -120,18 +118,16 @@
                           #;(λ ()
                               (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
                               (cond ((= 1 bleed-damage-roll)
-                                     (displayln "[Bleed check: 1d6 = 1: [1] => 1 dmg]")
+                                     (notice "Bleed check: 1d6 = 1: [1] => 1 dmg")
                                      (take-damage target 1 'bleed)
                                      (display-combatant-info target)
                                      )
                                     (else
-                                     (displayln (string-append "[Bleed check: 1d6 = 1: ["
-                                                               (number->string bleed-damage-roll)
-                                                               "]]")))))
+                                     (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll)))))
 
 
                           )))
             'ok)
            ('dead
             'pc-dead)
-           (else (error (string-append "resolve-anklebreaker-action!: unhandled action-result " (symbol->string action-result))))))))
+           (else (error (format "resolve-anklebreaker-action!: unhandled action-result ~a" action-result)))))))

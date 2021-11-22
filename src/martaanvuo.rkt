@@ -7,17 +7,6 @@
          "round-resolver/round-resolver.rkt"
          "state/state.rkt")
 
-; game-specific, not engine!
-(define (title)
-  (define width 92) ; 80?
-  
-  (br)
-  (prln (string-append* "" (make-list width "-")))
-  (br)
-
-  (display-title))
-
-
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
   (reset-situation!)

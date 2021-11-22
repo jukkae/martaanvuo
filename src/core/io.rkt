@@ -23,10 +23,13 @@
 (define br newline)
 
 (define (info-card content title)
-  (when (not (null? title)) (displayln (string-append "[" title "]")))
+  (when (not (null? title)) (prln (format "[~a]" title)))
   (when (not (null? (prune content)))
     (print-table content #:row-sep? #f)
     (newline)))
+
+(define tbody list)
+(define tr list)
 
 (define (write-paragraph-to-log paragraph)
   (append-to-log paragraph))
@@ -39,29 +42,36 @@
   (define s (format-for-printing title-string #:width 84 #:indent 4))
   (print-paragraph s))
 
+(define (title)
+  (define width 92) ; 80?
+  
+  (br)
+  (prln (string-append* "" (make-list width "-")))
+  (br)
+
+  (display-title))
+
 (define (display-log)
   (hr)
-  (displayln "[BEGIN LOG]")
+  (prln "[BEGIN LOG]")
   (newline)
   (display-title)
-  #;(displayln (current-log))
+  #;(prln (current-log))
   (for ([entry (current-log)])
     (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
-  (displayln "[END LOG]")
+  (prln "[END LOG]")
   (newline)
   (wait-for-confirm))
 
 (define (display-prompt)
   (newline)
-  (displayln (current-prompt)))
+  (prln (current-prompt)))
 
 (define (print-heading)
   (define heading
-    (string-append "\n"
-                   "PART "
-                   (number->string (current-part))
-                   ", CHAPTER "
-                   (number->string (current-chapter))))
+    (format "\nPART ~a, CHAPTER ~a"
+            (number->string (current-part))
+            (number->string (current-chapter))))
   (p heading))
 
 ; implementation detail
@@ -74,8 +84,8 @@
   (print-paragraph (format-for-printing (current-last-paragraph) #:width 84 #:indent 4)))
 
 (define (hr)
-  ; (displayln "---")
-  (displayln "--------------------------------------------------------------------------------------------")
+  ; (prln "---")
+  (prln "--------------------------------------------------------------------------------------------")
   (newline))
 
 (define (paragraph . args)
@@ -96,7 +106,7 @@
   (print-paragraph s))
 
 (define (wait-for-confirm)
-  (displayln "[Enter]")
+  (prln "[Enter]")
   (newline)
   (define input (read-line))
   input)
