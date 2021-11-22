@@ -5,7 +5,6 @@
          set-route-endpoint-visited!)
 
 (require "place.rkt"
-         "route.rkt"
          "../core/api.rkt")
 
 

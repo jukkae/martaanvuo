@@ -2,7 +2,6 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
 (require racket/serialize)
 
 (require "location.rkt")

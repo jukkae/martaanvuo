@@ -8,7 +8,7 @@
          "../core/io.rkt")
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (add-quest!
    quest-exists?)])
 

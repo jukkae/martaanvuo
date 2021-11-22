@@ -1,8 +1,9 @@
 #lang racket
 
-(require "action.rkt")
-(require "choice.rkt")
-(require "pc.rkt")
+(require
+  "../actions/action.rkt"
+  "../actions/choice.rkt"
+  "../pc/pc.rkt")
 
 (define (choice-from-symbol world pc symbol)
   (case symbol

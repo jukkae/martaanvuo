@@ -6,11 +6,8 @@
   "blindscraper.rkt"
   "grabberkin.rkt"
   
-  "../actions/action.rkt"
-
   "../actors/actor.rkt" 
   "../actors/stance.rkt"
-  "../actors/status.rkt"
 
   "../core/io.rkt"
   "../core/utils.rkt"

@@ -4,11 +4,14 @@
 
 (require racket/lazy-require)
 
-(require "../core/io.rkt"
-         "../locations/location.rkt"
-         "../pc/pc.rkt")
+(require 
+  "logging.rkt"
 
-(require "logging.rkt")
+  "../core/io.rkt"
+
+  "../locations/location.rkt"
+
+  "../pc/pc.rkt")
 
 (lazy-require
  ["state.rkt" (current-flags

@@ -19,8 +19,6 @@
   "../actions/actions.rkt"
   "../actions/choice.rkt"
 
-  "../actors/actor.rkt"
-
   "../core/io.rkt"
   "../core/utils.rkt"
 
@@ -33,17 +31,8 @@
   "../state/state.rkt"
   )
 
-#;(lazy-require
- ["../state/state.rkt"
-  (current-prompt
-   player-info
-   redescribe-situation
-   pc
-   current-fragment-id
-   )])
-
 (lazy-require
- ["core/ui.rkt"
+ ["ui.rkt"
   (display-quests
    inventory
    notes

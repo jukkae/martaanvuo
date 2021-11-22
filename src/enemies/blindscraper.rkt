@@ -2,23 +2,14 @@
 
 (provide (all-defined-out))
 
-(require racket/serialize)
-
-(require "../state/combat.rkt"
-         "../state/state.rkt")
-
 (require
   "../actions/action.rkt"
 
   "../actors/actor.rkt" 
-  "../actors/stance.rkt"
-
-  "../core/io.rkt"
+  
   "../core/utils.rkt"
 
-  "../state/state.rkt"
-
-  "../world/world.rkt")
+  "../state/state.rkt")
 
 (define (make-blindscraper)
   (define enemy (make-actor "Blindscraper" 3))

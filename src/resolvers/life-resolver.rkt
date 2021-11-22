@@ -5,7 +5,6 @@
 (require 
   "run-resolver.rkt"
 
-  "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
 
   "../core/io.rkt"
@@ -14,8 +13,7 @@
 
   "../pc/pc.rkt"
   "../round-resolver/round-resolver.rkt"
-  "../state/state.rkt"
-  "../world/world.rkt")
+  "../state/state.rkt")
 
 
 (define (resolve-life mode)

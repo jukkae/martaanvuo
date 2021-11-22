@@ -5,11 +5,12 @@
 
 (require "../core/api.rkt")
 
-(require "anthill.rkt"
-         "decision.rkt"
-         "fragment.rkt"
-         "magpie.rkt"
-         "stiltman.rkt")
+(require
+  "anthill.rkt"
+  "decision.rkt"
+  "fragment.rkt"
+  "magpie.rkt"
+  "stiltman.rkt")
 
 (require "../state/state.rkt")
 

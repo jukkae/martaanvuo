@@ -14,16 +14,12 @@
   "../pc/pc.rkt"
   "../actors/pc-actor.rkt"
   "../locations/location.rkt"
-  "../locations/locations.rkt"
   "../locations/place.rkt"
   "../locations/route.rkt"
-  "../locations/routes.rkt"
   "../locations/narration.rkt"
-  "../actors/stance.rkt"
   "../world/time.rkt"
   "../core/utils.rkt"
   "../world/world.rkt"
-  "../state/combat.rkt"
   "../state/state.rkt")
 
 (lazy-require

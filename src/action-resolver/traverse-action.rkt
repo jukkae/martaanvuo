@@ -10,21 +10,14 @@
 (require
   "../actions/action.rkt"
 
-  "../core/io.rkt"
-  "../core/utils.rkt"
-
   "../locations/location.rkt"
   "../locations/locations.rkt"
   "../locations/route.rkt"
-  "../locations/routes.rkt"
 
-  "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
   "../state/state.rkt"
-
-  "../world/world.rkt"
   )
 
 (lazy-require

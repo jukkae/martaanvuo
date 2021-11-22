@@ -5,8 +5,6 @@
 (require racket/lazy-require)
 
 (require 
-  "character-sheet.rkt"
-
   "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
   "../items/item.rkt"
@@ -14,7 +12,7 @@
   "../core/utils.rkt")
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (pc
    )])
 

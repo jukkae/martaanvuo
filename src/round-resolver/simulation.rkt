@@ -5,22 +5,21 @@
 (require racket/lazy-require)
 
 (require
-  "../actors/actor.rkt"
+  "event.rkt"
+  "timeline.rkt"
+
   "../actors/pc-actor.rkt"
 
-  "../core/io.rkt"
   "../core/utils.rkt"
 
+  "../state/state.rkt"
+  
   "../world/time.rkt"
   "../world/world.rkt"
-
-  "../state/state.rkt")
-
-(require "event.rkt"
-         "timeline.rkt")
+  )
 
 (lazy-require
- ["../pc.rkt"
+ ["../pc/pc.rkt"
   (pc-hunger-level)])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry

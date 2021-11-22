@@ -14,7 +14,7 @@
 
 
 (lazy-require
- ["state/combat.rkt"
+ ["../state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
@@ -30,7 +30,7 @@
    )])
 
 (lazy-require
- ["round-resolver/event-handler.rkt"
+ ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 

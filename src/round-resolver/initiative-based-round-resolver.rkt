@@ -9,8 +9,6 @@
 
   "../action-resolver/action-resolver.rkt"
 
-  "../actors/actor.rkt"
-
   "../core/io.rkt"
 
   "../pc/pc.rkt"

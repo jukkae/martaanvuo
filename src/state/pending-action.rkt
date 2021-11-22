@@ -6,10 +6,8 @@
 
 (require
   "../actions/action.rkt"
-  "../locations/location.rkt"
   "../locations/place.rkt"
-  "../locations/route.rkt"
-  "../core/utils.rkt")
+  "../locations/route.rkt")
 
 (lazy-require
  ["state.rkt" (current-pending-action)])

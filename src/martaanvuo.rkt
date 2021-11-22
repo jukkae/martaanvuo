@@ -3,11 +3,9 @@
 (require "fragments/fragments.rkt") ; fragments have to be required somewhere!
 
 (require "core/io.rkt"
-         "core/utils.rkt"
          "resolvers/life-resolver.rkt"
          "round-resolver/round-resolver.rkt"
-         "state/state.rkt"
-         "world/world.rkt")
+         "state/state.rkt")
 
 ; game-specific, not engine!
 (define (title)

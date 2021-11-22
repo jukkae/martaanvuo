@@ -2,7 +2,6 @@
 
 (provide (all-defined-out))
 
-(require racket/struct)
 (require racket/serialize)
 
 (require "location.rkt")

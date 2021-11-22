@@ -3,7 +3,6 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require
   "../actors/actor.rkt"
@@ -13,7 +12,7 @@
   "../core/utils.rkt")
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (pc
    )])
 

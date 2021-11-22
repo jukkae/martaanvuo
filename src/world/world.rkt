@@ -12,7 +12,7 @@
          "../locations/route.rkt"
          "../core/utils.rkt")
 
-(lazy-require ["state/state.rkt" (current-world)])
+(lazy-require ["../state/state.rkt" (current-world)])
 
 (serializable-struct
  world

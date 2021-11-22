@@ -4,20 +4,20 @@
 
 (require racket/lazy-require)
 (lazy-require
- ["state/state.rkt"
-  (pc
-   current-location
-   )]
  ["pc-actor.rkt"
   (pc-actor?
    pc-take-damage!
    set-pc-actor-alive?!
    set-pc-actor-cause-of-death!
    )]
- ["world.rkt"
+ ["../state/state.rkt"
+  (pc
+   current-location
+   )]
+ ["../world/world.rkt"
   (remove-actor-from-its-current-location!
    )]
- ["locations/location.rkt"
+ ["../locations/location.rkt"
   (add-feature-to-location!
    )])
 
@@ -25,7 +25,6 @@
 (require racket/serialize)
 
 (require "condition.rkt"
-         "stance.rkt"
          "status.rkt"
 
          "../items/item.rkt"

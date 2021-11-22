@@ -13,10 +13,8 @@
   "../core/utils.rkt"
 
   "../locations/location.rkt"
-  "../locations/place.rkt"
   
   "../pc/character-sheet.rkt"
-  "../pc/pc.rkt"
   
   "../quests/quest.rkt"
   "../actors/stance.rkt"

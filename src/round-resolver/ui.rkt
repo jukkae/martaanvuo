@@ -3,14 +3,9 @@
 (provide (all-defined-out))
 
 (require
-  "get-next-pc-action.rkt"
-
   "../core/io.rkt"
   "../core/session.rkt"
   "../core/utils.rkt"
-
-  "../pc/character-sheet.rkt"
-  "../pc/pc.rkt"
 
   "../quests/quest.rkt"
 

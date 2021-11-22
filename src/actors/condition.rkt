@@ -12,7 +12,7 @@
   (take-damage)])
 
 (lazy-require
- ["state/state.rkt"
+ ["../state/state.rkt"
   (display-combatant-info)])
 
 (serializable-struct

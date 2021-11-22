@@ -3,7 +3,6 @@
 (provide (all-defined-out))
 
 (require
-  "../actors/actor.rkt"
   "../core/api.rkt"
   "../locations/locations.rkt")
 

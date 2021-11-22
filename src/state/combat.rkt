@@ -16,10 +16,6 @@
   "../core/io.rkt"
   "../core/utils.rkt"
 
-  "../locations/location.rkt"
-
-  "../pc/pc.rkt"
-
   "../world/world.rkt")
 
 (lazy-require
