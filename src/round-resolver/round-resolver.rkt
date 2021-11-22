@@ -8,26 +8,34 @@
 
 (require racket/serialize)
 
-(require "../state/logging.rkt"
-         "../state/state.rkt")
+(require
+  "action-queue.rkt"
+  "ai.rkt"
+  "fragment-handler.rkt"
+  "get-next-pc-action.rkt"
+  "initiative-based-round-resolver.rkt"
+  "round.rkt"
 
-(require "../action.rkt"
-         "../action-resolver/action-resolver.rkt"
-         "../actions.rkt"
-         "../actor.rkt"
-         "../pc-actor.rkt"
-         "../io.rkt"
-         "../locations/location.rkt"
-         "../pc.rkt"
-         "../utils.rkt")
+  "ui.rkt"
 
-(require "action-queue.rkt"
-         "ai.rkt"
-         "fragment-handler.rkt"
-         "get-next-pc-action.rkt"
-         "initiative-based-round-resolver.rkt"
-         "round.rkt"
-         "ui.rkt")
+  "../action-resolver/action-resolver.rkt"
+
+  "../actions/action.rkt"
+  "../actions/actions.rkt"
+  
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  
+  "../core/io.rkt"
+  "../core/utils.rkt"
+  
+  "../locations/location.rkt"
+  
+  "../pc/pc.rkt"
+
+  "../state/logging.rkt"
+  "../state/state.rkt"
+  )
 
 
 

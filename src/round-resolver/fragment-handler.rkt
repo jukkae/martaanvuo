@@ -2,11 +2,14 @@
 
 (provide (all-defined-out))
 
-(require "../decision.rkt"
-         "../fragment.rkt"
-         "../io.rkt"
-         "../state/state.rkt"
-         "../utils.rkt")
+(require
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../fragments/decision.rkt"
+  "../fragments/fragment.rkt"
+
+  "../state/state.rkt")
 
 
 (define (current-fragment-on-begin-round!)

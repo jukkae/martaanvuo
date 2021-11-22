@@ -2,16 +2,20 @@
 
 (provide (all-defined-out))
 
-(require "../character-sheet.rkt"
-         "../io.rkt"
-         "../pc.rkt"
-         "../quest.rkt"
-         "../session.rkt"
-         "../utils.rkt"
+(require
+  "get-next-pc-action.rkt"
 
-         "../state/state.rkt")
+  "../core/io.rkt"
+  "../core/session.rkt"
+  "../core/utils.rkt"
 
-(require "get-next-pc-action.rkt")
+  "../pc/character-sheet.rkt"
+  "../pc/pc.rkt"
+
+  "../quests/quest.rkt"
+
+  "../state/state.rkt"
+)
 
 
 ; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.

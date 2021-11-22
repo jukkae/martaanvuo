@@ -2,10 +2,11 @@
 
 (provide (all-defined-out))
 
-(require "../actor.rkt"
-         "../action.rkt"
-         "../io.rkt"
-         "../utils.rkt")
+(require
+  "../actors/actor.rkt"
+  "../actions/action.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt")
 
 ; This is not serialized!
 (define action-queue '())

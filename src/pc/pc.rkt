@@ -4,12 +4,14 @@
 
 (require racket/lazy-require)
 
-(require "actor.rkt"
-         "character-sheet.rkt"
-         "io.rkt"
-         "item.rkt"
-         "pc-actor.rkt"
-         "utils.rkt")
+(require 
+  "character-sheet.rkt"
+
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  "../items/item.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt")
 
 (lazy-require
  ["state/state.rkt"

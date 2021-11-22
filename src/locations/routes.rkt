@@ -5,9 +5,8 @@
          set-route-endpoint-visited!)
 
 (require "place.rkt"
-         "route.rkt")
-(require "../api.rkt")
-(require "../action.rkt")
+         "route.rkt"
+         "../core/api.rkt")
 
 
 (define (route-other-end-from route start-location)

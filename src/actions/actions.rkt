@@ -4,29 +4,27 @@
 
 (require racket/lazy-require)
 
-(require "combat-choices.rkt")
-
-(require "../action.rkt"
-         "../actor.rkt"
-         "../choice.rkt"
-         "../io.rkt"
-         "../item.rkt"
-         "../pc.rkt"
-         "../pc-actor.rkt"
-         "../locations/location.rkt"
-         "../locations/locations.rkt"
-         "../locations/place.rkt"
-         "../locations/route.rkt"
-         "../locations/routes.rkt"
-         "../locations/narration.rkt")
-
-(require "../stance.rkt")
-(require "../world/time.rkt")
-(require "../utils.rkt")
-(require "../world/world.rkt")
-
-(require "../state/combat.rkt")
-(require "../state/state.rkt")
+(require
+  "combat-choices.rkt"
+  "action.rkt"
+  "choice.rkt"
+  "../actors/actor.rkt"
+  "../core/io.rkt"
+  "../items/item.rkt"
+  "../pc/pc.rkt"
+  "../actors/pc-actor.rkt"
+  "../locations/location.rkt"
+  "../locations/locations.rkt"
+  "../locations/place.rkt"
+  "../locations/route.rkt"
+  "../locations/routes.rkt"
+  "../locations/narration.rkt"
+  "../actors/stance.rkt"
+  "../world/time.rkt"
+  "../core/utils.rkt"
+  "../world/world.rkt"
+  "../state/combat.rkt"
+  "../state/state.rkt")
 
 (lazy-require
  ["../martaanvuo.rkt"

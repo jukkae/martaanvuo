@@ -5,16 +5,20 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "../state/combat.rkt"
-         "../state/state.rkt")
+(require
+  "../actions/action.rkt"
 
-(require "../action.rkt"
-         "../actor.rkt"
-         "../io.rkt"
-         "../stance.rkt"
-         "../status.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+  "../actors/actor.rkt"
+  "../actors/stance.rkt"
+  "../actors/status.rkt"
+
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../state/combat.rkt"
+  "../state/state.rkt"
+
+  "../world/world.rkt")
 
 
 ; Grabberkin are greedy -> they have jewelry -> they drop loot

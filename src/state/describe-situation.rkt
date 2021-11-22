@@ -4,14 +4,9 @@
 
 (require racket/lazy-require)
 
-(require "../actor.rkt")
-(require "../io.rkt")
-(require "../locations/location.rkt")
-(require "../pc.rkt")
-(require "../locations/place.rkt")
-(require "../quest.rkt")
-(require "../stance.rkt")
-(require "../utils.rkt")
+(require "../core/io.rkt"
+         "../locations/location.rkt"
+         "../pc/pc.rkt")
 
 (require "logging.rkt")
 

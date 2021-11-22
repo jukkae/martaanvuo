@@ -3,8 +3,8 @@
 (provide (all-defined-out))
 
 (require "actor.rkt"
-         "io.rkt"
-         "utils.rkt")
+         "../core/io.rkt"
+         "../core/utils.rkt")
 
 (require racket/serialize)
 

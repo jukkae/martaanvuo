@@ -1,11 +1,12 @@
 #lang racket
 
-(require "fragments.rkt") ; has to be required somewhere!
-(require "io.rkt")
-(require "life-resolver.rkt")
-(require "round-resolver/round-resolver.rkt")
-(require "state/state.rkt")
-(require "utils.rkt"
+(require "fragments/fragments.rkt") ; fragments have to be required somewhere!
+
+(require "core/io.rkt"
+         "core/utils.rkt"
+         "resolvers/life-resolver.rkt"
+         "round-resolver/round-resolver.rkt"
+         "state/state.rkt"
          "world/world.rkt")
 
 ; game-specific, not engine!

@@ -12,18 +12,26 @@
 
 (require racket/lazy-require)
 
-(require "../action.rkt"
-         "../actions.rkt"
-         "../actor.rkt"
-         "../character-sheet.rkt"
-         "../choice.rkt"
-         "../decision.rkt"
-         "../io.rkt"
-         "../utils.rkt"
-         "../locations/locations.rkt"
-         "../state/state.rkt")
+(require
+  "fragment-handler.rkt"
 
-(require "fragment-handler.rkt")
+  "../actions/action.rkt"
+  "../actions/actions.rkt"
+  "../actions/choice.rkt"
+
+  "../actors/actor.rkt"
+
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../fragments/decision.rkt"
+
+  "../locations/locations.rkt"
+
+  "../pc/character-sheet.rkt"
+
+  "../state/state.rkt"
+  )
 
 #;(lazy-require
  ["../state/state.rkt"
@@ -35,7 +43,7 @@
    )])
 
 (lazy-require
- ["ui.rkt"
+ ["core/ui.rkt"
   (display-quests
    inventory
    notes

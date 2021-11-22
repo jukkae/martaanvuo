@@ -7,13 +7,18 @@
 (require "../state/combat.rkt"
          "../state/state.rkt")
 
-(require "../action.rkt"
-         "../actor.rkt" 
-         "../io.rkt"
-         "../state/state.rkt"
-         "../stance.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+(require
+  "../actions/action.rkt"
+
+  "../actors/actor.rkt" 
+  "../actors/stance.rkt"
+
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../state/state.rkt"
+
+  "../world/world.rkt")
 
 (define (make-blindscraper)
   (define enemy (make-actor "Blindscraper" 3))

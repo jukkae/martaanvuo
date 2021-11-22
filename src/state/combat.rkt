@@ -5,17 +5,22 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "../actor.rkt"
-         "../condition.rkt"
-         "../io.rkt"
-         "../locations/location.rkt"
-         "../pc.rkt"
-         "../pc-actor.rkt"
-         "../session.rkt"
-         "../stance.rkt"
-         "../status.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+(require
+  "../actors/actor.rkt"
+  "../actors/condition.rkt"
+  "../actors/pc-actor.rkt"
+  "../actors/stance.rkt"
+  "../actors/status.rkt"
+
+  "../core/session.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../locations/location.rkt"
+
+  "../pc/pc.rkt"
+
+  "../world/world.rkt")
 
 (lazy-require
  ["state.rkt" (current-in-combat?

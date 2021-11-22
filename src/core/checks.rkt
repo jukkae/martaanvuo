@@ -4,12 +4,13 @@
 
 (require racket/lazy-require)
 
-(require "actor.rkt")
-(require "io.rkt")
-(require "utils.rkt")
+(require
+  "../actors/actor.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt")
 
 (lazy-require
- ["martaanvuo.rkt"
+ ["../martaanvuo.rkt"
   (
    pc
    )])

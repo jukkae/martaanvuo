@@ -4,8 +4,8 @@
 
 (require racket/lazy-require)
 
-(require "../io.rkt")
-(require "../utils.rkt")
+(require "../core/io.rkt"
+         "../core/utils.rkt")
 
 (lazy-require
  ["state.rkt" (current-log

@@ -2,19 +2,23 @@
 
 (provide (all-defined-out))
 
-(require "blindscraper.rkt"
-         "grabberkin.rkt")
+(require
+  "blindscraper.rkt"
+  "grabberkin.rkt"
+  
+  "../actions/action.rkt"
 
-(require "../state/combat.rkt"
-         "../state/state.rkt")
+  "../actors/actor.rkt" 
+  "../actors/stance.rkt"
+  "../actors/status.rkt"
 
-(require "../action.rkt"
-         "../actor.rkt" 
-         "../io.rkt"
-         "../stance.rkt"
-         "../status.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../state/combat.rkt"
+  "../state/state.rkt"
+
+  "../world/world.rkt")
 
 (define (grabberkin-spawn-text)
   (define times-encountered (hash-ref (current-times-species-encountered) 'grabberkin 0))

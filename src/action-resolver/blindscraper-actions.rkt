@@ -5,28 +5,18 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
+(require
+  "../actions/action.rkt"
 
-(require "../action.rkt"
-         "../actor.rkt"
-         "../checks.rkt"
-         "../condition.rkt"
-         "../io.rkt"
-         "../item.rkt"
-         "../locations/location.rkt"
-         "../pc.rkt"
-         "../pc-actor.rkt"
-         "../locations/route.rkt"
-         "../state/state.rkt"
-         "../state/logging.rkt"
-         "../stance.rkt"
-         "../status.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  "../actors/stance.rkt"
 
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
+  "../core/checks.rkt"
+  "../core/io.rkt"
+
+  "../state/state.rkt"
+  )
 
 
 (lazy-require

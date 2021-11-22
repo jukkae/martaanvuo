@@ -22,15 +22,14 @@
  ["../state/combat.rkt"
   (begin-combat!)])
 
-(require "../api.rkt"
-         "../actor.rkt")
-
-(require "../enemies/blindscraper.rkt"
-         "../enemies/encounters.rkt"
-         "../enemies/grabberkin.rkt")
-
-(require "../stance.rkt"
-         "../status.rkt")
+(require 
+  "../actors/actor.rkt"
+  "../actors/stance.rkt"
+  "../actors/status.rkt"
+  "../core/api.rkt"
+  "../enemies/blindscraper.rkt"
+  "../enemies/encounters.rkt"
+  "../enemies/grabberkin.rkt")
 
 #;(lazy-require ["../state/state.rkt"
                  (current-location

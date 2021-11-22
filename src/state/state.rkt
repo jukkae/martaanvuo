@@ -10,8 +10,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "../pc.rkt")
-(require "../utils.rkt")
+(require "../pc/pc.rkt")
+(require "../core/utils.rkt")
 (require "../world/world.rkt")
 
 (require "describe-situation.rkt"

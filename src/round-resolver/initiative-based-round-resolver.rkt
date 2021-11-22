@@ -1,16 +1,22 @@
 #lang racket
 
 
-(require "../action.rkt"
-         "../action-resolver/action-resolver.rkt"
-         "../actor.rkt"
-         "../io.rkt"
-         "../pc.rkt"
-         
-         "../state/state.rkt")
+(require
+  "ai.rkt"
+  "action-queue.rkt"
 
-(require "ai.rkt"
-         "action-queue.rkt")
+  "../actions/action.rkt"
+
+  "../action-resolver/action-resolver.rkt"
+
+  "../actors/actor.rkt"
+
+  "../core/io.rkt"
+
+  "../pc/pc.rkt"
+
+  "../state/state.rkt"
+  )
 
 
 (provide resolve-turns!)

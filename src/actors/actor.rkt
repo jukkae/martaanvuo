@@ -24,12 +24,14 @@
 
 (require racket/serialize)
 
-(require "condition.rkt")
-(require "io.rkt")
-(require "item.rkt")
-(require "stance.rkt")
-(require "status.rkt")
-(require "utils.rkt")
+(require "condition.rkt"
+         "stance.rkt"
+         "status.rkt"
+
+         "../items/item.rkt"
+
+         "../core/io.rkt"
+         "../core/utils.rkt")
 
 
 (serializable-struct

@@ -2,15 +2,15 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-(require racket/serialize)
+(require racket/lazy-require
+         racket/serialize)
 
-(require "../actor.rkt")
-(require "../item.rkt")
-(require "../locations/location.rkt")
-(require "../locations/place.rkt")
-(require "../locations/route.rkt")
-(require "../utils.rkt")
+(require "../actors/actor.rkt"
+         "../items/item.rkt"
+         "../locations/location.rkt"
+         "../locations/place.rkt"
+         "../locations/route.rkt"
+         "../core/utils.rkt")
 
 (lazy-require ["state/state.rkt" (current-world)])
 

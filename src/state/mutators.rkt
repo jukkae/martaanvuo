@@ -5,16 +5,22 @@
 
 (require racket/lazy-require)
 
-(require "../actor.rkt"
-         "../character-sheet.rkt"
-         "../io.rkt"
-         "../locations/location.rkt"
-         "../pc.rkt"
-         "../pc-actor.rkt"
-         "../locations/place.rkt"
-         "../quest.rkt"
-         "../stance.rkt"
-         "../utils.rkt")
+(require 
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+  
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../locations/location.rkt"
+  "../locations/place.rkt"
+  
+  "../pc/character-sheet.rkt"
+  "../pc/pc.rkt"
+  
+  "../quests/quest.rkt"
+  "../actors/stance.rkt"
+  )
 
 (lazy-require
  ["state.rkt" (current-flags

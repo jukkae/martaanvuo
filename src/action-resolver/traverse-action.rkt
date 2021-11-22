@@ -7,19 +7,25 @@
 
 (require racket/lazy-require)
 
-(require "../action.rkt"
-         "../io.rkt"
-         "../locations/location.rkt"
-         "../locations/locations.rkt"
-         "../locations/route.rkt"
-         "../locations/routes.rkt"
-         "../state/state.rkt"
-         "../utils.rkt"
-         "../world/world.rkt")
+(require
+  "../actions/action.rkt"
 
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../locations/location.rkt"
+  "../locations/locations.rkt"
+  "../locations/route.rkt"
+  "../locations/routes.rkt"
+
+  "../round-resolver/event.rkt"
+  "../round-resolver/simulation.rkt"
+  "../round-resolver/timeline.rkt"
+
+  "../state/state.rkt"
+
+  "../world/world.rkt"
+  )
 
 (lazy-require
  ["../locations/narration.rkt"

@@ -6,22 +6,29 @@
 
 (require rebellion/collection/association-list)
 
-(require "../action.rkt"
-         "../actor.rkt"
-         "../checks.rkt"
-         "../condition.rkt"
-         "../io.rkt"
-         "../item.rkt"
+(require "../actions/action.rkt"
+
+         "../actors/actor.rkt"
+         "../actors/condition.rkt"
+         "../actors/pc-actor.rkt"
+         "../actors/stance.rkt"
+         "../actors/status.rkt"
+
+         "../core/checks.rkt"
+         "../core/io.rkt"
+         "../core/utils.rkt"
+
+         "../items/item.rkt"
+
          "../locations/location.rkt"
-         "../pc.rkt"
-         "../pc-actor.rkt"
          "../locations/route.rkt"
+
+         "../pc/pc.rkt"
+
          "../state/state.rkt"
          "../state/logging.rkt"
-         "../stance.rkt"
-         "../status.rkt"
+
          "../world/time.rkt"
-         "../utils.rkt"
          "../world/world.rkt")
 
 (require "../round-resolver/event.rkt"
@@ -40,7 +47,7 @@
 
 
 (lazy-require
- ["state/combat.rkt"
+ ["../state/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info

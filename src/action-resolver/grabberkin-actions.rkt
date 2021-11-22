@@ -8,25 +8,34 @@
 
 (require rebellion/collection/association-list)
 
-(require "../action.rkt")
-(require "../actor.rkt")
-(require "../checks.rkt")
-(require "../condition.rkt")
-(require "../io.rkt")
-(require "../item.rkt")
-(require "../locations/location.rkt")
-(require "../pc.rkt")
-(require "../locations/route.rkt")
-(require "../state/state.rkt")
-(require "../state/logging.rkt")
-(require "../stance.rkt")
-(require "../status.rkt")
-(require "../utils.rkt")
-(require "../world/world.rkt")
+(require
+  "../actions/action.rkt"
 
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
+  "../actors/actor.rkt"
+  "../actors/condition.rkt"
+  "../actors/stance.rkt"
+  "../actors/status.rkt"
+
+  "../core/checks.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../items/item.rkt"
+
+  "../locations/location.rkt"
+  "../locations/route.rkt"
+
+  "../pc/pc.rkt"
+
+  "../round-resolver/event.rkt"
+  "../round-resolver/simulation.rkt"
+  "../round-resolver/timeline.rkt"
+
+  "../state/state.rkt"
+  "../state/logging.rkt"
+
+  "../world/world.rkt"
+  )
 
 
 (lazy-require

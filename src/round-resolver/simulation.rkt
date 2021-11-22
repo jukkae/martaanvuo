@@ -4,14 +4,17 @@
 
 (require racket/lazy-require)
 
-(require "../io.rkt"
-         "../actor.rkt"
-         "../pc-actor.rkt"
-         "../world/time.rkt"
-         "../utils.rkt"
-         "../world/world.rkt"
-         
-         "../state/state.rkt")
+(require
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../world/time.rkt"
+  "../world/world.rkt"
+
+  "../state/state.rkt")
 
 (require "event.rkt"
          "timeline.rkt")

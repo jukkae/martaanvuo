@@ -6,7 +6,7 @@
 (require racket/serialize)
 (require lens)
 
-(require "utils.rkt")
+(require "../core/utils.rkt")
 
 (lazy-require ["state/state.rkt"
                (pc)])

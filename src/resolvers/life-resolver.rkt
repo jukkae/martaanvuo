@@ -2,16 +2,20 @@
 
 (provide (all-defined-out))
 
-(require "actor.rkt"
-         "io.rkt"
-         "pc.rkt"
-         "pc-actor.rkt"
-         "round-resolver/round-resolver.rkt"
-         "run-resolver.rkt"
-         "session.rkt"
-         "state/state.rkt"
-         "utils.rkt"
-         "world/world.rkt")
+(require 
+  "run-resolver.rkt"
+
+  "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+
+  "../core/io.rkt"
+  "../core/session.rkt"
+  "../core/utils.rkt"
+
+  "../pc/pc.rkt"
+  "../round-resolver/round-resolver.rkt"
+  "../state/state.rkt"
+  "../world/world.rkt")
 
 
 (define (resolve-life mode)

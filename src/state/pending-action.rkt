@@ -4,11 +4,12 @@
 
 (require racket/lazy-require)
 
-(require "../action.rkt"
-         "../locations/location.rkt"
-         "../locations/place.rkt"
-         "../locations/route.rkt"
-         "../utils.rkt")
+(require
+  "../actions/action.rkt"
+  "../locations/location.rkt"
+  "../locations/place.rkt"
+  "../locations/route.rkt"
+  "../core/utils.rkt")
 
 (lazy-require
  ["state.rkt" (current-pending-action)])
