@@ -22,7 +22,7 @@
          "../stance.rkt"
          "../status.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 (require "../round-resolver/event.rkt"
          "../round-resolver/simulation.rkt"

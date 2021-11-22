@@ -15,7 +15,7 @@
          "../stance.rkt"
          "../status.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 (lazy-require
  ["state.rkt" (current-in-combat?

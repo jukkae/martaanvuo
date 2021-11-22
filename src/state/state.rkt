@@ -12,7 +12,7 @@
 
 (require "../pc.rkt")
 (require "../utils.rkt")
-(require "../world.rkt")
+(require "../world/world.rkt")
 
 (require "describe-situation.rkt"
          "mutators.rkt"

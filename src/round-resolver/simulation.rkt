@@ -7,9 +7,9 @@
 (require "../io.rkt"
          "../actor.rkt"
          "../pc-actor.rkt"
-         "../time.rkt"
+         "../world/time.rkt"
          "../utils.rkt"
-         "../world.rkt"
+         "../world/world.rkt"
          
          "../state/state.rkt")
 

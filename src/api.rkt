@@ -9,12 +9,13 @@
                        "quest.rkt"
                        "quests.rkt"
                        "locations/route.rkt"
-                       "time.rkt"
                        "utils.rkt"
-                       "world.rkt"
 
                        "state/logging.rkt"
-                       "state/state.rkt"))
+                       "state/state.rkt"
+                       
+                       "world/world.rkt"
+                       "world/time.rkt"))
 
 
 (require "decision.rkt"
@@ -26,9 +27,10 @@
          "quest.rkt"
          "quests.rkt"
          "locations/route.rkt"
-         "time.rkt"
-         "utils.rkt"
-         "world.rkt")
+         "utils.rkt")
+
+(require "world/world.rkt"
+         "world/time.rkt")
 
 (require "state/logging.rkt"
          "state/state.rkt")

@@ -14,7 +14,7 @@
          "../stance.rkt"
          "../status.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 
 ; Grabberkin are greedy -> they have jewelry -> they drop loot

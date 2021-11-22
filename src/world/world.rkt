@@ -5,12 +5,12 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "actor.rkt")
-(require "item.rkt")
-(require "locations/location.rkt")
-(require "locations/place.rkt")
-(require "locations/route.rkt")
-(require "utils.rkt")
+(require "../actor.rkt")
+(require "../item.rkt")
+(require "../locations/location.rkt")
+(require "../locations/place.rkt")
+(require "../locations/route.rkt")
+(require "../utils.rkt")
 
 (lazy-require ["state/state.rkt" (current-world)])
 

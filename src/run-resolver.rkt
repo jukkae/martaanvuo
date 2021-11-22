@@ -11,7 +11,7 @@
 (require "round-resolver/round-resolver.rkt")
 (require "state/state.rkt")
 (require "utils.rkt")
-(require "world.rkt")
+(require "world/world.rkt")
 
 (require "state/logging.rkt")
 

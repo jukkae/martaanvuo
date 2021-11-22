@@ -11,7 +11,7 @@
          "session.rkt"
          "state/state.rkt"
          "utils.rkt"
-         "world.rkt")
+         "world/world.rkt")
 
 
 (define (resolve-life mode)

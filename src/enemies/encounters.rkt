@@ -14,7 +14,7 @@
          "../stance.rkt"
          "../status.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 (define (grabberkin-spawn-text)
   (define times-encountered (hash-ref (current-times-species-encountered) 'grabberkin 0))

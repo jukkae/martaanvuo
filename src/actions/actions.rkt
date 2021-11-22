@@ -21,9 +21,9 @@
          "../locations/narration.rkt")
 
 (require "../stance.rkt")
-(require "../time.rkt")
+(require "../world/time.rkt")
 (require "../utils.rkt")
-(require "../world.rkt")
+(require "../world/world.rkt")
 
 (require "../state/combat.rkt")
 (require "../state/state.rkt")

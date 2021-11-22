@@ -6,7 +6,7 @@
 
 (require "../io.rkt"
          "../utils.rkt"
-         "../world.rkt"
+         "../world/world.rkt"
 
          "../state/state.rkt")
 

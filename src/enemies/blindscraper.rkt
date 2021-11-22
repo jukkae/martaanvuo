@@ -13,7 +13,7 @@
          "../state/state.rkt"
          "../stance.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 (define (make-blindscraper)
   (define enemy (make-actor "Blindscraper" 3))

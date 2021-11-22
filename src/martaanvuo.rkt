@@ -6,7 +6,7 @@
 (require "round-resolver/round-resolver.rkt")
 (require "state/state.rkt")
 (require "utils.rkt"
-         "world.rkt")
+         "world/world.rkt")
 
 ; game-specific, not engine!
 (define (title)

@@ -20,9 +20,9 @@
          "../state/logging.rkt"
          "../stance.rkt"
          "../status.rkt"
-         "../time.rkt"
+         "../world/time.rkt"
          "../utils.rkt"
-         "../world.rkt")
+         "../world/world.rkt")
 
 (require "../round-resolver/event.rkt"
          "../round-resolver/simulation.rkt"
