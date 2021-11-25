@@ -19,8 +19,6 @@
 (define (take-random l)
   (list-ref l (random (length l))))
 
-(define append-string string-append)
-
 (define (append-element lst elem)
   (append lst (list elem)))
 
@@ -83,13 +81,10 @@
       [(dev-note message)
        #'(begin
            (displayln
-            (string-append "<"
-                           (path->string (find-relative-path (current-directory) file))
-                           ":"
-                           (number->string line)
-                           "> "
-                           message)))])))
-
+            (format "<~a:~a> ~a"
+                    (path->string (find-relative-path (current-directory) file))
+                    (number->string line)
+                    message)))])))
 
 ; various container stuff
 (define (collect-similar lst)

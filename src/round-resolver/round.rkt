@@ -13,6 +13,7 @@
   "../actors/actor.rkt"
   "../actors/condition.rkt"
 
+  "../core/io.rkt"
   "../core/utils.rkt"
 
   "../fragments/fragment.rkt"
@@ -71,7 +72,7 @@
   (for ([enemy (get-current-enemies)])
     (define name (get-combatant-name enemy))
     (when (not (null? (actor-statuses enemy)))
-      (displayln (string-append "[" name ": removed statuses:]"))
+      (notice (format "~a: removed statuses:" name ))
       (for ([status (actor-statuses enemy)])
         (displayln status))
       (decrement-actor-status-lifetimes! enemy)))

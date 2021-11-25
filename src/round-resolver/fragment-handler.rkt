@@ -63,7 +63,9 @@
          (unset-current-fragment-id!)
          )
         
-        (else (error (string-append "(current-fragment-handle-decision!): unexpected next-fragment type.")))))
+        (else (error
+          (format "(current-fragment-handle-decision!): unexpected next-fragment type: ~a"
+                  next-fragment)))))
 
 (define (current-fragment-on-end-round!)
   '()

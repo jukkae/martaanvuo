@@ -163,8 +163,8 @@
       ['new-time-of-day ; proc dailies here
        '()]
       [else
-       '()
-       #;(dev-note (string-append "process-timeline!: unknown event type: " (symbol->string (event-type event))))]))
+       (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
+       '()]))
   (narrate-timeline tl))
 
 
@@ -252,8 +252,8 @@
     ['inflict-condition (resolve-inflict-condition-action! action)]
 
     [else
-     (dev-note "resolve-action!: unknown action type:")
-     (error (string-append (symbol->string (action-symbol action))))]))
+     (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
+     ]))
 
 
 (define (set-pending-action! action time-left)

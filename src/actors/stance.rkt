@@ -15,5 +15,4 @@
     ['engaged 0]
     ['close 1]
     ['mid 2]
-    [else (error (string-append "get-stance-range-numeric-value: unknown range: "
-                                (symbol->string range)))]))
+    [else (error (format "get-stance-range-numeric-value: unknown range: ~a" range))]))

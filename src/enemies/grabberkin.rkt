@@ -98,9 +98,7 @@
       #:details '(fast))]
 
     [else
-     (error (string-append
-             "make-grabberkin-action: unknown action: "
-             (symbol->string action-flag)))]))
+     (error (format "make-grabberkin-action: unknown action ~a" action-flag))]))
 
 (define (grabberkin-hp-above-threshold? actor)
   (define hp (actor-hp actor))

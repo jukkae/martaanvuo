@@ -61,18 +61,10 @@
     (case direction
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
-
-  
   
   (cond ((route-fully-known? route)
-         (string-append "En route: "
-                        (place-shortname startpoint)
-                        " – "
-                        (place-shortname endpoint)
-                        " "))
+         (format "En route: ~a – ~a"
+                 (place-shortname startpoint)
+                 (place-shortname endpoint)))
         (else
-         (string-append "En route: "
-                        (place-shortname startpoint)
-                        " – "
-                        "???"
-                        " "))))
+         (format "En route: ~a – ???" (place-shortname startpoint)))))

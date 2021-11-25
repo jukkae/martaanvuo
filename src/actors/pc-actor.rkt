@@ -41,25 +41,17 @@
          
          (define new-hp (- (actor-hp actor) damage))
          (set-actor-hp! actor new-hp)
-         (displayln (string-append "[Taking damage, new HP : "
-                                   (number->string new-hp)
-                                   "]"))
+         (notice (format "Taking damage, new HP : ~a]" new-hp))
                   
          (define death-roll-dice (pc-actor-death-roll-dice actor))
          (define death-roll (d 1 death-roll-dice))
          (define result (+ death-roll
                            (actor-hp actor)))
-         (displayln (string-append
-                     "[Death roll: 1d"
-                     (number->string death-roll-dice)
-                     " + HP"
-                     " = "
-                     (number->string death-roll)
-                     " - "
-                     (number->string (abs (actor-hp actor))) ; slightly dirty: actor-hp *should* be non-positive
-                     " = "
-                     (number->string result)
-                     "]"))
+         (notice (format "Death roll: 1d~a + HP = ~a – ~a = ~a"
+                         death-roll-dice
+                         death-roll
+                         (abs (actor-hp actor)) ; slightly dirty: actor-hp *should* be non-positive
+                         result))
 
          (define cause-of-death damage-type)
 

@@ -109,7 +109,7 @@
         (else
          (define stance (actor-stance actor))
          (cond ((= (length (get-current-enemies)) 1)
-                (append-string (actor-name actor)))
+                (string-append (actor-name actor)))
                (else
                 (define name (actor-name actor))
                 (define sign
@@ -118,7 +118,7 @@
                       ""))
                 (cond ((eq? "" sign)
                        name)
-                      (else (append-string name " " sign))))))))
+                      (else (string-append name " " sign))))))))
 
 
 (define (display-non-pc-combatant-info actor)

@@ -52,15 +52,15 @@
            (define amount (d 1 4)) ; portions = days of survival
            (define amount-string
              (if (= amount 1)
-                 (string-append (number->string amount) " meal")
-                 (string-append (number->string amount) " meals")))
+                 (format "~a meal" amount)
+                 (format "~a meals" amount)))
 
            (info-card
-            (list
-             (list
+            (tbody
+             (tr
               " 1d4 "
               " = "
-              (string-append " " amount-string " "))
+              (format " ~a " amount-string))
              )
             "Forage results roll")
            (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
@@ -72,11 +72,11 @@
              (p "Despite spending a while, Otava can't find anything to eat.")
              (define luck-roll (d 1 20))
              (info-card
-              (list
-               (list
+              (tbody
+               (tr
                 " 1d20 "
                 " = "
-                (string-append " " (number->string luck-roll) " " )))
+                (format " ~a " luck-roll)))
               "Luck roll")
              )))
     (if successful?

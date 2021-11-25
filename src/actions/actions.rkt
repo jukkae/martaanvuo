@@ -76,9 +76,7 @@
                                     100)))
      (make-choice
       'rest
-      (string-append "Rest. [until "
-                     (symbol->string next-time-of-day)
-                     "]")
+      (format "Rest. [until ~a]" next-time-of-day)
       (λ () (make-action
              #:symbol 'rest
              #:actor (pc)
@@ -96,7 +94,7 @@
        ))
      (make-choice
       'eat
-      (string-append "Eat.")
+      "Eat."
       (λ ()
        (define food (select-food-to-eat))
        (if (void? food)
@@ -285,7 +283,7 @@
          (list
           (make-choice
            'forage
-           (string-append "Forage.")
+           "Forage."
            (λ () (make-action
                   #:symbol 'forage
                   #:actor (pc)
@@ -304,7 +302,7 @@
                       #:actor (pc)
                       #:duration 100
                       #:tags '(downtime))))]
-             [else (error (string-append "get-downtime-choices: unknown action " (symbol->string action)))])))
+             [else (error (format "get-downtime-choices: unknown action ~a" action))])))
        
 
        (filter
@@ -356,7 +354,7 @@
 
              ]
            
-            [else '()#;(error (string-append "get-downtime-choices: unknown feature " (symbol->string feature)))])))
+            [else (dev-note (format "unknown feature ~a" feature))])))
 
        (when (eq? (location-type (current-location)) 'spring)
          (make-choice

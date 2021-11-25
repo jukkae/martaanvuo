@@ -36,8 +36,7 @@
          (define run-choice
            (make-choice
             'flee
-            (string-append
-             "Run.")
+            "Run"
             (λ ()
               (make-action
                #:symbol 'flee
@@ -62,8 +61,7 @@
          (define break-free-choice
            (make-choice
             'pull-free
-            (string-append
-             "Try to pull the leg free.")
+            "Pull the leg free."
             (λ ()
               (make-action
                #:symbol 'break-free
@@ -96,10 +94,7 @@
            (define choice
              (make-choice
               'attack
-              (string-append
-               "Hit "
-               (get-combatant-name target)
-               " [with bolt cutters].")
+              (format "Hit ~a [with bolt cutters]." (get-combatant-name target))
               (λ ()
                 (make-action
                  #:symbol 'melee
@@ -137,10 +132,7 @@
            
          (make-choice
           'attack
-          (string-append
-           "Shoot "
-           (get-combatant-name target)
-           " [with revolver].")
+          (format "Shoot ~a [with revolver]." (get-combatant-name target))
           (λ ()
             (make-action
              #:symbol 'shoot
@@ -162,10 +154,7 @@
             ))
          (make-choice
           'attack
-          (string-append
-           "Pistol whip the "
-           (get-combatant-name target)
-           " [with revolver].")
+          (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
           (λ ()
             (make-action
              #:symbol 'melee
