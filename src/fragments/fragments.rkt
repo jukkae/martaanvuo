@@ -20,14 +20,14 @@
  'begin-life
  (thunk
   (p
-   "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Food? Some still left, yes. Bolt cutters? Yes. What else..."
+   "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Provisions? For a couple of days, yes. Bolt cutters? Yes."
    )
   )
  #:decisions
  (list
   (make-decision
    #:title "Rope."
-   #:description "Rope, about 20 meters, mostly not too badly frayed."
+   #:description "Rope, about 40 meters, mostly not too badly frayed."
    #:on-resolve! (thunk
                   (set-build! 'rope)
                   (wait-for-confirm)

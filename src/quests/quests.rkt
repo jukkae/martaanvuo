@@ -44,7 +44,7 @@
     (add-quest! q)
     (case quest-symbol
       ['pay-off-debt
-       (p "She's getting closer to Martaanvuo anomaly. If what she's pieced together is correct, she'll be able to pay off the rest of her debt to Collector, and still have some left over.")])
+       (p "She's getting closer to Martaanvuo anomaly. If what she's pieced together is correct, she's finally going to pay off her debt to the Collector.")])
   
 
     (define body

@@ -33,16 +33,15 @@
   
   (case (current-run)
     [(1)
-     (p "Otava is following an old, overgrown trail through foggy woods. The air is thick with a damp, musty smell. Broker's directions have been correct thus far.")
+     (p "Otava is following an old, overgrown trail through foggy woods. It is gloomy, despite being morning, always is, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.")
+     (p "The Broker's directions have been correct thus far.")
      (when (not (quest-exists? 'pay-off-debt))
-       (create-quest 'pay-off-debt))]
-    #;[(2)
-       (p "\"How many more,\" she thinks as she goes down the path toward Perimeter, \"can I do?\"")]))
+       (create-quest 'pay-off-debt))]))
 
 (define (narrate-begin-recurse-run)
   (next-chapter!)
 
-  (p "Otava is again following the Broker's trail through the foggy woods. Better prepared, she knows what's ahead. She gets to Fork and Anthill."))
+  (p "Otava is on Broker's trail in the foggy cardboard cutout woods. She gets to Fork and Anthill."))
   ; Otava is on Brokerstrail and comes to Fork-and-Anthill BUT THIS TIME KNOWY OF HARTMAN-DEVICE
   ; sort of like "worlds" 1-2-3
 
@@ -73,7 +72,7 @@
   (p
    (take-random ; TODO: probabilitify these kinds of take-random calls
     (list
-     "In the depths of THE MAW the Heart of the World stops. Then, it's all black."
+     "In the depths of THE MAW, the Heart of the World stops. Then, it's all black."
      "In the depths of Murkwater-Aegis Workshop, Hartmann Device is turned on. False vacuum begins its collapse and space and time unfold until there is nothing."
      (string-append "The end."
                     "\n\n\n"
