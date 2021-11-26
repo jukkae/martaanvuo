@@ -19,8 +19,8 @@
 
 (lazy-require
  ["round-resolver.rkt"
-  (get-next-pc-action
-   )])
+  (get-next-pc-action)])
+
 
 (define (get-next-npc-action actor)
   (case (actor-name actor)
@@ -31,9 +31,7 @@
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))
         (else
-         (get-next-pc-action)
-         ))
-  )
+         (get-next-pc-action))))
 
 (define (get-pre-action-reaction action)
   (define actor (action-actor action))
@@ -46,7 +44,7 @@
                 (displayln "unknown non-pc-actor type for reaction")
                 '())))
         (else
-         ; (displayln "PC REACTION")    
+         ; (displayln "PC REACTION")
          '())))
 
 (define (get-post-action-reaction action result)
@@ -67,6 +65,4 @@
       ; blam blam
       #;(define action (make-shoot-action actor))
       (define action '())
-      (add-to-action-queue action))
-    )
-  )
+      (add-to-action-queue action))))

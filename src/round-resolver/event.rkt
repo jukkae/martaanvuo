@@ -33,8 +33,8 @@
        ('afternoon (notice "It is now afternoon."))
        ('evening (notice "It is now evening."))
        ('night (notice "It is now night."))
-       ('morning (notice "It is now morning."))
-       ))
+       ('morning (notice "It is now morning."))))
+
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
     ('not-hungry '()) ; this is usually not relevant

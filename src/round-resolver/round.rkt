@@ -27,13 +27,11 @@
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
-   end-combat!
-   )])
+   end-combat!)])
 
 (lazy-require
  ["../state/logging.rkt"
-  (set-prompt!
-   )])
+  (set-prompt!)])
 
 (define (on-begin-round mode)
   (case mode
@@ -41,16 +39,15 @@
      (current-round (add1 (current-round)))
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)
-     
+
      ; does this also need to happen when 'continue?
      (define round-begin-status
       (cond ((not (null? (current-fragment-id)))
-       (current-fragment-on-begin-round!))))
+             (current-fragment-on-begin-round!))))
      (case round-begin-status
        ['ok 'ok]
-       ['pc-dead 'pc-dead])
-     ]
-    
+       ['pc-dead 'pc-dead])]
+
     ['continue
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)]))
@@ -64,7 +61,7 @@
              (= (length current-enemies) 0))
     (end-combat!))
   #;(wait-for-confirm)
-  
+
   (when (not (null? (current-fragment-id)))
     (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
 
@@ -72,7 +69,7 @@
   (for ([enemy (get-current-enemies)])
     (define name (get-combatant-name enemy))
     (when (not (null? (actor-statuses enemy)))
-      (notice (format "~a: removed statuses:" name ))
+      (notice (format "~a: removed statuses:" name))
       (for ([status (actor-statuses enemy)])
         (displayln status))
       (decrement-actor-status-lifetimes! enemy)))
@@ -82,7 +79,7 @@
     (when (not (null? (actor-statuses enemy)))
       (define name (get-combatant-name enemy))
       (define description (~s (actor-statuses enemy)))
-    
+
       (define description-prefix
         (string-append "[" name ": removed statuses: "))
       (define description-suffix "]")
@@ -92,22 +89,23 @@
   (when (not (null? (actor-statuses (pc))))
     (define name (get-combatant-name (pc)))
     (define description (~s (actor-statuses (pc))))
-    
+
     (define description-prefix
       (string-append "[" name ": removed statuses: "))
     (define description-suffix "]")
     (decrement-actor-status-lifetimes! (pc)))
 
-  
   ; proc conditions - TODO this is currently only for PC, fix if needed!
   (define pc-conditions (actor-conditions (pc)))
   (for ([condition pc-conditions])
     (process-condition-on-end-turn (pc) condition)
     #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
-    '()
-    )
-  
-  
-  #;(newline) ; This is the "extra" newline that separates rounds
-  #;(wait-for-confirm)
-  )
+    '())
+
+  (if (#f)
+    (newline) ; This is the "extra" newline that separates rounds
+    ('()))
+
+  (if (#f)
+    (wait-for-confirm)
+    '()))

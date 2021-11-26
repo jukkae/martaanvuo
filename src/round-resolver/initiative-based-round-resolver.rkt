@@ -13,8 +13,8 @@
 
   "../pc/pc.rkt"
 
-  "../state/state.rkt"
-  )
+  "../state/state.rkt")
+
 
 
 (provide resolve-turns!)
@@ -28,11 +28,11 @@
     (for ([action action-queue])
 
       (define actor (action-actor action))
-      
+
       (define pre-action-reaction? (get-pre-action-reaction action))
       (when (not (null? pre-action-reaction?))
         (set! action pre-action-reaction?))
-      
+
       (define turn-result (resolve-turn! action))
 
       ; todo
@@ -40,26 +40,21 @@
       (when (not (null? post-action-reaction-from-target?))
         ;(define action post-action-reaction-from-target?)
         (displayln "-- post-action-reaction-from-target?: handle!"))
-      
+
       (case turn-result
-        
+
         ['pc-dead
          (end-round-early)]
-        
+
         ['end-combat
          (end-combat)
-         (end-round-early)
-         ]
+         (end-round-early)]
 
         ; TODO: As always, description belongs in the action
         ['grip-released
          (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
          (award-xp! 3 "for surviving an encounter with a Grabberkin")
-         (remove-enemy actor)
-         ]
-        )
-      )
-    ))
+         (remove-enemy actor)]))))
 
 (define (resolve-turn! action)
   (resolve-action! action))

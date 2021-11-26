@@ -22,26 +22,23 @@
 
 
 (define (sort-action-queue)
-  
+
   (define actions-by-initiatives '())
   (for ([action action-queue])
     (define actor (action-actor action))
     (define dexterity-mod (get-attribute-modifier-for (actor-dexterity actor)))
-    
+
     (define action-mod 0)
-    
+
     (cond ((has-tag? action 'fast)
            (set! action-mod 2))
           ((has-tag? action 'slow)
            (set! action-mod -4)))
 
-
-
     (define dice-1 (d 1 6))
     (define dice-2 (d 1 6))
 
     (define total (+ dice-1 dice-2 action-mod dexterity-mod))
-
 
     (set! actions-by-initiatives (append-element actions-by-initiatives (cons total action))))
 
@@ -63,5 +60,5 @@
   (set! action-queue '())
   (for ([action-with-initiative sorted])
     (set! action-queue (append-element action-queue (cdr action-with-initiative))))
-  
+
   action-queue)

@@ -39,8 +39,8 @@
                       (not (void? (current-location))))
                  (get-location-short-description (current-location))
                  "N/A")
-             " ")
-            )
+             " "))
+
       (list " ")
       (list (string-append
              " "
@@ -50,10 +50,9 @@
               ['not-hungry "not hungry"]
               ['hungry "hungry"]
               ['very-hungry "very hungry"]
-              ['starving "starving"]
-             )
-             " ")
-            )
-      )))
+              ['starving "starving"])
+
+             " ")))))
+
   (info-card body title))
 

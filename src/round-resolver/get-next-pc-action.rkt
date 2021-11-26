@@ -49,13 +49,11 @@
         (define meta-command (cdr meta-command-with-key))
         (define meta-command-result (meta-command))
         (when (eq? meta-command-result 'restart) (return 'restart))
-        
-        
+
         (redescribe-situation)
         (what-do-you-do 'verbose))
-      
-      (define actor (pc))
 
+      (define actor (pc))
 
       (define fragment-decisions (if (null? (current-fragment-id))
                                      '()
@@ -69,9 +67,9 @@
       (define location-decisions (if (null? fragment-decisions)
                                      (get-location-decisions (current-location))
                                      '()))
-      
+
       (define world-choices (get-world-choices (current-world) actor))
-      
+
       (define choices (if (null? fragment-decisions)
                           world-choices
                           '()))
@@ -81,7 +79,7 @@
       (define first-free-index (add1 (length all-decisions)))
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
-      
+
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
 
@@ -97,7 +95,7 @@
             ((fragment-decision-valid? decisions-with-keys input)
              (begin
                (define fragment-decision-result (handle-fragment-decision decisions-with-keys input))
-               
+
                (define result 'end-round-early)
                (when (eq? fragment-decision-result 'recurse)
                  (set! result 'recurse))
@@ -141,10 +139,10 @@
             (begin
               (when (string-prefix? (choice-name v) "[continue]")
                 (set! pending-choice-available? #t)))))
-  
+
   ; choice either is pending (= resolve it) or is not, in which case discard pending action
   (when pending-choice-available? (reset-pending-action!))
-  
+
   action)
 
 (define (choice-as-resolution-effect choices-with-keys input)
@@ -170,7 +168,7 @@
     (define meta-command (cdr meta-command-with-key))
     (meta-command))
   (define (close-menu) #t) ; hacky but eh
-  
+
   (displayln "[Menu]")
   (define meta-commands (make-hash))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
@@ -178,7 +176,6 @@
   (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
   (hash-set! meta-commands "R" (cons "[R]: Restart." restart))
-  
 
   (for ([(k v) (in-hash meta-commands)])
     (display (car v))
@@ -213,11 +210,11 @@
   (define choices
     (for/list ([(k v) (in-hash choices-with-keys)])
       (cons k v)))
-  
+
   (set! choices
         (sort choices
               (λ (c1 c2) (< (car c1) (car c2)))))
-  
+
   (for ([choice choices])
     (displayln (string-append "[" (number->string (car choice)) "]: " (choice-name (cdr choice)))))
   (newline))

@@ -10,8 +10,8 @@
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)
-         (spawn-enemies)
-         )
+         (spawn-enemies))
+
         (else
          (dev-note (format "unknown event type ~a" (event-type event)))))
   '())

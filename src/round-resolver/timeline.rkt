@@ -22,5 +22,5 @@
       (list (list " at " " type " " details " " interrupts action? "))
       displayable-events)
      (format "Timeline, duration ~a" (timeline-duration timeline)))
-  (for ([event (timeline-events timeline)])
-    (narrate-event event)))
+(for ([event (timeline-events timeline)])
+  (narrate-event event)))

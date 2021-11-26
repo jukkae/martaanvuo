@@ -9,9 +9,7 @@
 
   "../quests/quest.rkt"
 
-  "../state/state.rkt"
-)
-
+  "../state/state.rkt")
 
 ; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.
 ; This is because at the time of writing this, cleaning up round-resolver.rkt is priority.
@@ -26,8 +24,8 @@
     ((< r 20)
      "Martaanvuo is always there for you.")
     (else
-     "Martaanvuo awaits your return.")
-    ))
+     "Martaanvuo awaits your return.")))
+
 
 ; TODO: clean up!
 ; Return value is tied to round resolution.
@@ -45,8 +43,7 @@
          (define quit-message (get-quit-text))
          (when (not (equal? quit-message ""))
           (prln quit-message)
-          (newline)
-         )
+          (newline))
 
          (exit))
         (else
@@ -66,28 +63,23 @@
          #t))) ; mark input as handled
 
 
-
-
 (define (inventory)
   (inventory)
-  #t
-  )
-
+  #t)
 
 (define (notes)
   (define actor (pc))
-  
+
   (define list-items
     (list
      (list " Martaanvuo " " The anomaly is very strong here. ")))
 
-  
   (info-card
    list-items
-   "Notes"
-   )
-  #t
-  )
+   "Notes")
+
+  #t)
+
 
 (define (display-quests)
   (define body
@@ -96,11 +88,10 @@
   (define sheet
     (append
      (list
-      (list " quest " " status " " notes ")
-      )
-     body
-     ))
+      (list " quest " " status " " notes "))
+
+     body))
+
   (info-card
    sheet
-   "Quests")
-  )
+   "Quests"))
