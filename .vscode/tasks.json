@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "racket martaanvuo.rkt",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}/src",
+            },
+            "presentation": {
+                "reveal" : "always",
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm save.txt",
+            "group": "build",
+            "presentation": {
+                "reveal" : "always",
+            }
+        },
+    ]
+}
