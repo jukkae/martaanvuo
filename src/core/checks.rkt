@@ -12,8 +12,7 @@
 (lazy-require
  ["../martaanvuo.rkt"
   (
-   pc
-   )])
+   pc)])
 
 (define (luck-check)
   (define wangernumbs
@@ -60,9 +59,8 @@
 
   ; dirty but eh: for failures, flip successful here
   (case type
-    ['fail-charisma-mod (set! successful? (not successful?))]
-    )
-  
+    ['fail-charisma-mod (set! successful? (not successful?))])
+
   (define result (if successful?
                      "check passed"
                      "check failed"))
@@ -70,14 +68,13 @@
     (list
      (list (string-append " " text " ")
            (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
-           (string-append " " result " "))
-     
-     ))
+           (string-append " " result " "))))
+
   (when (null? silent)
     (info-card
      sheet
-     "Passive check"
-     ))
+     "Passive check"))
+
   (wait-for-confirm)
   successful?)
 
@@ -99,7 +96,7 @@
        (number->string roll))
       " < "
       (string-append " " (number->string attribute) success-string " "))))
-               
+
   (info-card
    results
    (string-append "Attribute check: " title))
@@ -133,7 +130,7 @@
        (number->string roll-total))
       " >= "
       (string-append " " (number->string target-number) success-string " "))))
-               
+
   (info-card
    results
    (string-append "Skill check: " title))

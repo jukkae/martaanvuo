@@ -26,7 +26,7 @@
   (when (null? lst) (error "reduce: lst cannot be '()"))
   (if (null? (cdr lst))
       (car lst)
-      (func (car lst) (reduce (cdr lst) func ))))
+      (func (car lst) (reduce (cdr lst) func))))
 
 (define (all-fulfill-predicate? lst predicate)
   (define result #t)
@@ -57,12 +57,8 @@
     (λ ()
       (if (not called?)
         (fn)
-        (prln "this has been called already")
-        )
-      (set! called? #t)
-    )
-  ))
-
+        (prln "this has been called already"))
+      (set! called? #t))))
 
 ; __FILE__ and __LINE__ all in one
 (define-syntax (here stx)

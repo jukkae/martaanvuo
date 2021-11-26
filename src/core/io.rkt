@@ -44,7 +44,7 @@
 
 (define (title)
   (define width 92) ; 80?
-  
+
   (br)
   (prln (string-append* "" (make-list width "-")))
   (br)
@@ -76,8 +76,7 @@
 
 ; implementation detail
 (define (print-paragraph formatted-text)
-  (displayln formatted-text)
-  )
+  (displayln formatted-text))
 
 (define (repeat-last-paragraph)
   (hr)
@@ -129,14 +128,14 @@
   (define first-char (string-ref input-string 0))
   (when (= 10 (char->integer first-char))
     (set! final-output "\n"))
-  
+
   (define pre-broken-lines (string-split input-string "\n"))
-  
+
   (for ([line pre-broken-lines])
     (define output "")
     (define words (string-split line))
     (define space-left line-width)
-  
+
     (for ([word words])
       (cond ((> (+ (string-length word) space-width) space-left)
              (set! output (string-append output "\n")) ; append newline
@@ -151,8 +150,8 @@
     (when (not (equal? "" output)) (set! output (substring output 1))) ; remove the extra space
     (set! output (string-append indent-string output)) ; fix indenting
     (set! final-output (string-append final-output output))
-    (set! final-output (string-append final-output "\n")) ; add newline to correspond to the possible manually broken newline, or for paragraph end
-    )
+    (set! final-output (string-append final-output "\n"))) ; add newline to correspond to the possible manually broken newline, or for paragraph end
+
   final-output)
 
 (define (write-save-file serialized-state)
