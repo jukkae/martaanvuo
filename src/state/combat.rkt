@@ -40,8 +40,7 @@
                      (number->string (actor-hp actor))
                      "/"
                      (number->string (actor-max-hp actor))
-                     " "
-                     ))))
+                     " "))))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -52,7 +51,7 @@
                        " ("
                        (number->string (status-lifetime status))
                        ")]")))
-    
+
     (define statuses-list
       (list " statuses "
             (string-append " " (string-join statuses-strings) " ")))
@@ -65,7 +64,7 @@
         (string-append "["
                        (symbol->string (condition-type condition))
                        "]")))
-    
+
     (define conditions-list
       (list " conditions "
             (string-append " " (string-join conditions-strings) " ")))
@@ -98,10 +97,7 @@
       ['mid
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
       #;['close ; this is specific to enemy type etc
-       (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")]
-      )
-    )
-  )
+       (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")])))
 
 (define (get-combatant-name actor)
   (cond ((pc-actor? actor)
@@ -141,29 +137,22 @@
                             (number->string (actor-hp actor))
                             "/"
                             (number->string (actor-max-hp actor))
-                            " "
-                            ))))]
+                            " "))))]
+
       [("Blindscraper")
        (list
         (list
          " size "
          (string-append " "
                         (get-trait actor "size")
-                        " "
-                        ))
-        #;(list
-           " location "
-           (string-append " " (stance-location stance) " "))
+                        " "))
         (if (not (null? stance))
-            (list
-             " range "
-             (string-append " " (symbol->string (stance-range stance)) " "))
-            (list
-             " range "
-             (string-append " " "N/A" " ")))
-        
-
-        )]))
+         (list
+          " range "
+          (string-append " " (symbol->string (stance-range stance)) " "))
+         (list
+          " range "
+          (string-append " " "N/A" " "))))]))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -208,7 +197,7 @@
     (notice "Attainment: Hecatomb")) ; award this for 100 *kills*
   ; (when (not (session-flag-set? 'got-in-combat))
   ;   (set-session-flag 'got-in-combat)
-      (current-session-score-dice++)
+  (current-session-score-dice++)
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started!"))
 
