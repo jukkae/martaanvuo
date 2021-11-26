@@ -22,7 +22,7 @@
 ; engine / run-resolver
 (define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (when (not suppress-new-chapter?) (next-chapter!))
-  
+
   ; Don't show this until the second run!
   (when (not (= 1 (current-run)))
     (info-card
@@ -30,7 +30,7 @@
       (list " run " (string-append " " (number->string (current-run)) " ")))
      (string-append "Begin run number " (number->string (current-run)))))
 
-  
+
   (case (current-run)
     [(1)
      (p "Otava is following an old, overgrown trail through foggy woods. It is gloomy, despite being morning, always is, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.")
@@ -52,8 +52,7 @@
   (current-round 0)
   (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
-  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
-  )
+  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?))
 
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
@@ -61,12 +60,10 @@
   (remove-flag 'ending-run-allowed)
   (add-feature-to-location! (find-place-by-id (world-places (current-world)) 'martaanvuo-docks) 'stiltman)
   (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
-  (narrate-begin-recurse-run)
-  )
+  (narrate-begin-recurse-run))
 
 (define (on-continue-run)
-  '()
-  )
+  '())
 
 (define (narrate-restart)
   (p
@@ -82,8 +79,7 @@
                     "\n\n"
                     "Jukka Eerikäinen (2021)"
                     "\n\n")
-     "[details omitted – 3 days later] Having passed  Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."
-     ))))
+     "[details omitted – 3 days later] Having passed  Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
 
 
 (define (on-end-run exit-status)
@@ -135,9 +131,9 @@
      (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
 
   (when (not (eq? exit-status 'pc-dead))
-    (wait-for-confirm)
-    )
-  )
+    (wait-for-confirm)))
+    
+  
 
 ; engine / run-resolver
 (define (resolve-run mode 

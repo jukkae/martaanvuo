@@ -36,7 +36,7 @@
   (hash-set! (current-times-species-encountered)
              species
              (add1 (hash-ref (current-times-species-encountered)
-                              species
+                             species
                               0))))
 
 (define current-flags (make-parameter '()))
@@ -58,7 +58,6 @@
 (define current-combat-timeline (make-parameter '()))
 
 (define current-show-round-summary? (make-parameter #f))
-
 
 (define (reset-situation!)
   (current-world (make-new-world))
@@ -83,8 +82,8 @@
   (current-life 0)
   (current-fragment-id '())
   (current-combat-timeline '())
-  (current-show-round-summary? #f)
-  )
+  (current-show-round-summary? #f))
+
 
 ; s11n logistics are simpler when there is only one S-expression to serialize -> "wrapper" struct for global state
 (serializable-struct
@@ -111,8 +110,8 @@
   [life #:mutable]
   [current-fragment-id #:mutable]
   [combat-timeline #:mutable]
-  [show-round-summary? #:mutable]
-  ))
+  [show-round-summary? #:mutable]))
+
 
 (define (save)
   (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
@@ -142,7 +141,7 @@
      (current-fragment-id)
      (current-combat-timeline)
      (current-show-round-summary?)))
-  
+
   (define serialized-state (serialize st))
   (write serialized-state output-file)
   (close-output-port output-file))
@@ -152,7 +151,7 @@
 ; - https://docs.racket-lang.org/reference/serialization.html
 (define (load-situation-from-state serialized-state)
   (define s (deserialize serialized-state))
-  
+
   (current-world (state-world s))
   (current-log (state-log s))
   (current-last-paragraph (state-last-paragraph s))

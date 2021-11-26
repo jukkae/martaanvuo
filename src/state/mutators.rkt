@@ -5,20 +5,19 @@
 
 (require racket/lazy-require)
 
-(require 
+(require
   "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
-  
+
   "../core/io.rkt"
   "../core/utils.rkt"
 
   "../locations/location.rkt"
-  
+
   "../pc/character-sheet.rkt"
-  
+
   "../quests/quest.rkt"
-  "../actors/stance.rkt"
-  )
+  "../actors/stance.rkt")
 
 (lazy-require
  ["state.rkt" (current-flags
@@ -54,12 +53,12 @@
 ; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
-  
+
   (for ([enemy (get-current-enemies)])
     (let ([stance (actor-stance enemy)])
       (when (eq? (stance-range stance) 'engaged)
-        (set! any-enemy-engaged? #t)))
-    )
+        (set! any-enemy-engaged? #t))))
+
   any-enemy-engaged?)
 
 ; API
@@ -117,7 +116,7 @@
 
 (define (reduce-debt-by! amount)
   (define debt-quest (find-quest 'pay-off-debt))
-  
+
   (define old-debt-amount (quest-details debt-quest))
   (define new-debt-amount (- old-debt-amount amount))
   (set-quest-details! debt-quest new-debt-amount)
@@ -129,7 +128,7 @@
   (displayln "new-debt-amount:")
   #;(displayln (~r new-debt-amount)) ; formatting todo
   (displayln new-debt-amount)
-  
+
   '())
 
 
@@ -143,8 +142,8 @@
   (for ([enemy (get-current-enemies)])
     (remove-actor-from-location! (actor-location enemy) enemy))
   (end-combat!)
-  (displayln "post-combat steps") ; for instance, wound care (fast vs good), xp, summary etc
-  )
+  (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
+
 
 ; scripting API
 (define (remove-enemy enemy)
@@ -161,17 +160,24 @@
 (define (player-info)
   (define player-status
     (list
-     (list " life " (string-append " " (number->string (current-life)) " "))
-     ))
-     
-  (info-card player-status (string-append "Player status"))
-  )
+     (list " life " (string-append " " (number->string (current-life)) " "))))
+
+  (info-card player-status (string-append "Player status")))
+
 
 
 ; scripting API
 (define (end-game)
   (wait-for-confirm)
-  (p "[The end.]")
+  (p
+   (string-append "The end."
+                  "\n\n\n"
+                  "M A R T A A N V U O"
+                  "\n"
+                  "==================="
+                  "\n\n"
+                  "Jukka Eerikäinen (2021)"
+                  "\n\n"))
   (player-info)
   (wait-for-confirm)
   (exit))
@@ -200,26 +206,20 @@
   (define quests (current-quests))
   (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
   (when quest
-    (set-quest-status! quest status)
-    )
-  )
+    (set-quest-status! quest status)))
 
 ; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
 (define (update-quest-notes! id notes)
   (define quests (current-quests))
   (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
   (when quest
-    (set-quest-notes! quest notes)
-    )
-  )
+    (set-quest-notes! quest notes)))
 
 (define (update-quest-details! id details)
   (define quests (current-quests))
   (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
   (when quest
-    (set-quest-details! quest details)
-    )
-  )
+    (set-quest-details! quest details)))
 
 (define (increment-achievement! achievement)
   (case achievement

@@ -4,7 +4,7 @@
 
 (require racket/lazy-require)
 
-(require 
+(require
   "logging.rkt"
 
   "../core/io.rkt"
@@ -47,11 +47,9 @@
            (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
   (cond
     ((current-in-combat?) (describe-combat-situation))
-    (else (describe-non-combat-situation)))
-  )
+    (else (describe-non-combat-situation))))
 
 (define (redescribe-situation)
   (cond
     ((current-in-combat?) (describe-combat-situation))
-    (else (repeat-last-paragraph)))
-  )
+    (else (repeat-last-paragraph))))
