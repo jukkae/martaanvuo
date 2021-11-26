@@ -9,17 +9,17 @@
 
 ; engine / game-resolver? meta player.rkt?
 (define (on-begin-playthrough)
-  (reset-situation!)
-  )
+  (reset-situation!))
+
 
 
 (define (handle-broken-save)
   (br)
   (prln "Save file is corrupt or incompatible with this revision of Martaanvuo. Delete saved progress? [D] to delete, [Q] to quit without deleting.")
-  
+
   (define input (wait-for-input))
   (set! input (string-upcase input))
-  
+
   (cond ((equal? input "D")
          (delete-save-file)
          (br)
@@ -31,7 +31,7 @@
          (br)
          (prln "Come back soon. Martaanvuo is eager for your return.")
          (exit))
-          
+
         (else
          (br)
          (prln "It was [D] or [Q], but nevermind. Your saved progress was not deleted, but it is still corrupt or incompatible.")
@@ -60,7 +60,7 @@
 
        (br)
        (prln "Progress loaded."))])
-  
+
   (title)
 
   (case mode
@@ -95,8 +95,7 @@
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed."
-                                               (thunk (begin-new-life 'begin))
-                                               ))
+                                               (thunk (begin-new-life 'begin))))
 
             (p "Otava is dead. Proceed?")
             (print-meta-commands-with-keys meta-commands)
@@ -116,7 +115,7 @@
      (delete-save-file)
      (reset-situation!)
 
-     (prln "Progress deleted. Starting from the beginning. Progress is saved automatically.")
+     (prln "Progress deleted. Starting from the beginning.")
      (resolve-game 'restart)]))
 
 ; engine / game-resolver?
