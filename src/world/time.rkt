@@ -10,7 +10,6 @@
           ((< jiffies-of-current-day 300) 'afternoon)
           ((< jiffies-of-current-day 400) 'evening)
           ((< jiffies-of-current-day 600) 'night)))
-  time-of-day
-  )
+  time-of-day)
 
 (define day-length 600)

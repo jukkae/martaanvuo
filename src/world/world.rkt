@@ -27,7 +27,7 @@
 
 (define (make-places)
   (list
-   
+
    (make-place
     #:id 'perimeter
     #:type 'perimeter
@@ -106,8 +106,8 @@
     #:id 'reactor-room)
 
    (make-place
-    #:id 'martaanvuo-source)
-   ))
+    #:id 'martaanvuo-source)))
+
 
 (define (find-place-by-id places id)
   (findf (λ (place) (location-is? id place))
@@ -122,13 +122,13 @@
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f]
          #:details [details '()])
-  
+
   (define place-a (find-place-by-id places id-a))
   (define place-b (find-place-by-id places id-b))
   (set! *number-of-routes* (add1 *number-of-routes*))
 
   (when no-encounters? (set! details (append-element details 'no-encounters)))
-  
+
   (define actors '())
   (define r (make-route
              *number-of-routes*
@@ -143,7 +143,7 @@
 (define (make-new-world)
 
   (define places (make-places))
-  
+
   #;(make-path-between perimeter martaanvuo-swamp 'hidden)
   (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
   (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
@@ -167,9 +167,7 @@
   (make-path-between places 'workshop 'martaanvuo-source)
   (make-path-between places 'control-room 'reactor-room)
 
-  (world places 0 0)
-  )
-
+  (world places 0 0))
 
 ; world-as-simulation / scripting API
 (define (remove-actor-from-its-current-location! actor)
