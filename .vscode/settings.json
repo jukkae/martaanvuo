@@ -2,7 +2,9 @@
   "files.exclude": {
     "**/*.rkt~": true,
     "**/compiled/": true
-  }
+  },
+  "editor.tabSize": 2,
+  "parinfer.defaultMode": "paren-mode"
   // "actionButtons": {
   //   "defaultColor": "#ff0034", // Can also use string color names.
   //   "loadNpmCommands":false, // Disables automatic generation of actions for npm commands.

@@ -54,12 +54,12 @@
 
      (with-handlers ([exn:fail:contract:arity?
                       (λ (exn)
-                        (handle-broken-save)
-                        (set! mode 'begin))])
-       (load-situation-from-state serialized-state)
+                       (handle-broken-save)
+                       (set! mode 'begin))])
+      (load-situation-from-state serialized-state)
 
-       (br)
-       (prln "Progress loaded."))])
+      (br)
+      (prln "Progress loaded."))])
 
   (title)
 
