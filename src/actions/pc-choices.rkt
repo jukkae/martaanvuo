@@ -1,12 +1,14 @@
 #lang racket
 
+;; where does this file belong?
+
 (require racket/lazy-require)
 
 (require
   "action.rkt"
   "choice.rkt"
   "../actors/actor.rkt"
-  "../combat/combat-choices.rkt"
+  "../combat/combat-pc-choices.rkt"
   "../core/io.rkt"
   "../items/item.rkt"
   "../pc/pc.rkt"

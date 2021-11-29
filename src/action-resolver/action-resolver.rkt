@@ -14,6 +14,7 @@
   "../actors/pc-actor.rkt"
   "../actors/status.rkt"
 
+  "../combat/combat-action-resolver.rkt"
   "../combat/stance.rkt"
 
   "../core/checks.rkt"
@@ -35,7 +36,6 @@
   "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
-  "../combat/combat-actions.rkt"
 
   "downtime-actions.rkt"
   "special-actions.rkt"

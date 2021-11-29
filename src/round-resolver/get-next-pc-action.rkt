@@ -12,7 +12,7 @@
   "fragment-handler.rkt"
 
   "../actions/action.rkt"
-  "../actions/actions.rkt"
+  "../actions/pc-choices.rkt"
   "../actions/choice.rkt"
 
   "../core/io.rkt"
