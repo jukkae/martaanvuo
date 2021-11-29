@@ -6,37 +6,37 @@
 
 (require rebellion/collection/association-list)
 
-(require "../actions/action.rkt"
-
-         "../actors/actor.rkt"
-         "../actors/condition.rkt"
-         "../actors/pc-actor.rkt"
-         "../actors/stance.rkt"
-         "../actors/status.rkt"
-
-         "../core/checks.rkt"
-         "../core/io.rkt"
-         "../core/utils.rkt"
-
-         "../items/item.rkt"
-
-         "../locations/location.rkt"
-         "../locations/route.rkt"
-
-         "../pc/pc.rkt"
-
-         "../state/state.rkt"
-         "../state/logging.rkt"
-
-         "../world/time.rkt"
-         "../world/world.rkt")
-
-(require "../round-resolver/event.rkt"
-         "../round-resolver/simulation.rkt"
-         "../round-resolver/timeline.rkt")
-
 (require
-  "combat-actions.rkt"
+  "../actions/action.rkt"
+
+  "../actors/actor.rkt"
+  "../actors/condition.rkt"
+  "../actors/pc-actor.rkt"
+  "../actors/status.rkt"
+
+  "../combat/stance.rkt"
+
+  "../core/checks.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../items/item.rkt"
+
+  "../locations/location.rkt"
+  "../locations/route.rkt"
+
+  "../pc/pc.rkt"
+
+  "../state/state.rkt"
+  "../state/logging.rkt"
+
+  "../world/time.rkt"
+  "../world/world.rkt"
+  "../round-resolver/event.rkt"
+  "../round-resolver/simulation.rkt"
+  "../round-resolver/timeline.rkt"
+  "../combat/combat-actions.rkt"
+
   "downtime-actions.rkt"
   "special-actions.rkt"
   "traverse-action.rkt")

@@ -17,7 +17,8 @@
   "../pc/character-sheet.rkt"
 
   "../quests/quest.rkt"
-  "../actors/stance.rkt")
+
+  "../combat/stance.rkt")
 
 (lazy-require
  ["state.rkt" (current-flags

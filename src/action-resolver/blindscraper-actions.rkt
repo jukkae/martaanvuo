@@ -9,7 +9,8 @@
 
   "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
-  "../actors/stance.rkt"
+
+  "../combat/stance.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"

@@ -7,12 +7,13 @@
   "grabberkin.rkt"
 
   "../actors/actor.rkt"
-  "../actors/stance.rkt"
+
+  "../combat/combat.rkt"
+  "../combat/stance.rkt"
 
   "../core/io.rkt"
   "../core/utils.rkt"
 
-  "../state/combat.rkt"
   "../state/state.rkt"
 
   "../world/world.rkt")

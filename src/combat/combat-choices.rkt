@@ -3,15 +3,17 @@
 (require rebellion/collection/association-list)
 
 (require
+  "combat.rkt"
+
   "../actions/action.rkt"
   "../actions/choice.rkt"
 
   "../actors/actor.rkt"
-  "../actors/stance.rkt"
+
+  "../combat/stance.rkt"
 
   "../core/utils.rkt"
 
-  "../state/combat.rkt"
   "../state/state.rkt")
 
 (provide get-combat-choices)

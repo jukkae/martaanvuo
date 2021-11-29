@@ -7,10 +7,20 @@
 
 (require rebellion/collection/association-list)
 
+; TODO THINK ABOUT WHAT NEEDS TO BE LAZY
+(lazy-require
+ ["combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   display-pc-combatant-info
+   add-combat-flag
+   )])
+
 (require
+  "stance.rkt"
+
   "../actions/action.rkt"
   "../actors/actor.rkt"
-  "../actors/stance.rkt"
   "../actors/status.rkt"
   "../core/checks.rkt"
   "../core/io.rkt"
@@ -20,13 +30,6 @@
   "../state/state.rkt"
   "../core/utils.rkt")
 
-(lazy-require
- ["../state/combat.rkt"
-  (get-combatant-name
-   display-combatant-info
-   display-pc-combatant-info
-   add-combat-flag
-   )])
 
 (lazy-require
  ["../locations/locations.rkt"

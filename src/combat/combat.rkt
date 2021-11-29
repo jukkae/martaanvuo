@@ -6,10 +6,11 @@
 (require racket/serialize)
 
 (require
+  "stance.rkt"
+
   "../actors/actor.rkt"
   "../actors/condition.rkt"
   "../actors/pc-actor.rkt"
-  "../actors/stance.rkt"
   "../actors/status.rkt"
 
   "../core/session.rkt"

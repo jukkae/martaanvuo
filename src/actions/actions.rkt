@@ -3,10 +3,10 @@
 (require racket/lazy-require)
 
 (require
-  "combat-choices.rkt"
   "action.rkt"
   "choice.rkt"
   "../actors/actor.rkt"
+  "../combat/combat-choices.rkt"
   "../core/io.rkt"
   "../items/item.rkt"
   "../pc/pc.rkt"
