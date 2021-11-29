@@ -4,56 +4,40 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
-
 (require
+  "downtime-actions.rkt"
+  "special-actions.rkt"
+  "traverse-action.rkt"
+
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/condition.rkt"
   "../actors/pc-actor.rkt"
-  "../actors/status.rkt"
 
   "../combat/combat-action-resolver.rkt"
-  "../combat/stance.rkt"
 
-  "../core/checks.rkt"
   "../core/io.rkt"
   "../core/utils.rkt"
+
+  "../enemies/blindscraper-actions.rkt"
+  "../enemies/grabberkin-actions.rkt"
 
   "../items/item.rkt"
 
   "../locations/location.rkt"
-  "../locations/route.rkt"
 
   "../pc/pc.rkt"
 
-  "../state/state.rkt"
-  "../state/logging.rkt"
-
-  "../world/time.rkt"
-  "../world/world.rkt"
   "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
-  "downtime-actions.rkt"
-  "special-actions.rkt"
-  "traverse-action.rkt")
+  "../state/state.rkt"
 
-(require
-  "blindscraper-actions.rkt"
-  "grabberkin-actions.rkt")
+  "../world/time.rkt"
+  "../world/world.rkt"
 
-
-(lazy-require
- ["../state/combat.rkt"
-  (get-combatant-name
-   display-combatant-info
-   display-pc-combatant-info
-   add-combat-flag
-   )])
-
+  )
 
 (lazy-require
  ["../locations/narration.rkt"
@@ -67,7 +51,6 @@
  ["../locations/locations.rkt"
   (move-pc-to-location!
    )])
-
 
 
 (lazy-require

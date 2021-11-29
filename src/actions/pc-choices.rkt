@@ -23,12 +23,6 @@
   "../state/state.rkt")
 
 (lazy-require
- ["../martaanvuo.rkt"
-  (actor-in-range?
-   move-actor-to-location!
-   )])
-
-(lazy-require
  ["../round-resolver/round-resolver.rkt"
   (go-to-story-fragment
    )])
