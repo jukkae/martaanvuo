@@ -19,7 +19,6 @@
    "Stiltman abruptly goes silent."
    ))
 
- 
  #:decisions
  (list
 
@@ -68,7 +67,7 @@
 
     (wait-for-confirm)
     )
-   
+
    #:next-fragment 'exit
    )
   ; -> the mission is to destroy the monograph

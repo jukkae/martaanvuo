@@ -15,7 +15,6 @@
   "../state/logging.rkt"
   "../world/world.rkt")
 
-
 ; content should be provided "somewhere"
 ; content is game-specific, not engine stuff
 ; but figure out where this should be called from
@@ -44,7 +43,6 @@
   (p "Otava is on Broker's trail in the foggy cardboard cutout woods. She gets to Fork and Anthill."))
   ; Otava is on Brokerstrail and comes to Fork-and-Anthill BUT THIS TIME KNOWY OF HARTMAN-DEVICE
   ; sort of like "worlds" 1-2-3
-
 
 ; engine / run-resolver
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
@@ -81,7 +79,6 @@
                     "\n\n")
      "[details omitted – 3 days later] Having passed  Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
 
-
 (define (on-end-run exit-status)
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
@@ -90,12 +87,10 @@
            (define gold-collected (pc-gold-amount))
            (reduce-debt-by! gold-collected)
            (remove-item! 'gold)
-         
-         
 
            (displayln "Quest:")
            (displayln debt-quest)
-         
+
            (info-card
             (list
              (list " run "
@@ -106,15 +101,12 @@
                    (string-append " " (number->string (quest-details debt-quest)) " grams ")))
             (string-append "Run number " (number->string (current-run)) " ended")))
 
-        
           (else
            (notice (string-append
                       "End run number "
                       (number->string (current-run))
                       " [failed]")))))
 
-  
-  
   (case exit-status
     ['end-run
      (p "She's still alive.")]
@@ -132,8 +124,6 @@
 
   (when (not (eq? exit-status 'pc-dead))
     (wait-for-confirm)))
-    
-  
 
 ; engine / run-resolver
 (define (resolve-run mode 
@@ -145,11 +135,10 @@
     ['restart (on-begin-run #:suppress-new-chapter? suppress-new-chapter?)]
     ['recurse (on-begin-recurse-run)]
     [else (dev-note "Unknown resolve-run-mode!") (error "fix this")])
-  
+
   (define run-exit-status
     (let/ec end-run
 
-      
       (when (eq? mode 'continue)
         (define first-round-exit-status (resolve-round 'continue))
         ; end run?
@@ -162,7 +151,6 @@
         ; continue
         (when (eq? first-round-exit-status 'next-chapter) (next-chapter!)))
 
-      
       (let loop ()
         (define round-exit-status (resolve-round 'begin))
         ; end run?
@@ -174,7 +162,7 @@
 
         ; continue
         (when (eq? round-exit-status 'next-chapter) (next-chapter!))
-        
+
         (loop))))
   (on-end-run run-exit-status)
   run-exit-status)

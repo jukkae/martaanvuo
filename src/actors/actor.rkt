@@ -21,7 +21,6 @@
   (add-feature-to-location!
    )])
 
-
 (require racket/serialize)
 
 (require "condition.rkt"
@@ -32,11 +31,10 @@
          "../core/io.rkt"
          "../core/utils.rkt")
 
-
 (serializable-struct
  actor
  (name
-  
+
   ; always numbers
   [hp #:mutable]
   [max-hp #:mutable]
@@ -54,13 +52,11 @@
   ; lists of symbols
   [statuses #:mutable]   ; (semi)temporary
   [conditions #:mutable] ; (semi)permanent
-  
+
   [inventory #:mutable]
   [location #:mutable]
   [stance #:mutable]) ; only NPCs
  #:constructor-name actor*)
-
-
 
 (define (make-actor
          name
@@ -71,10 +67,8 @@
           ; traits etc
           (make-hash) '() '() '() '() '()))
 
-
 (define (actor-alive? actor)
   (> (actor-hp actor) 0))
-
 
 (define (set-trait! actor trait-name trait-value)
   (hash-set! (actor-traits actor) trait-name trait-value))
@@ -134,7 +128,7 @@
     (when (eq? (status-type status) type)
       (notice (string-append (actor-name actor) ": Status [" (symbol->string (status-type status)) "] modified."))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
-  
+
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))
@@ -159,11 +153,6 @@
         (when (eq? (status-type status) type)
           (set-status-lifetime! status value)))
       (actor-add-status! actor (status type value))))
-
-
-
-
-
 
 ;;; CONDITIONS
 (define (actor-add-condition! actor condition)
@@ -264,7 +253,7 @@
                              (car cause-of-death))
                             (else "NA"))
                       )))
-  
+
   (cond ((pc-actor? actor)
          (set-pc-actor-alive?! actor 'dead)
          (set-pc-actor-cause-of-death! actor cause-of-death)
@@ -276,7 +265,7 @@
 
 
 (define (add-item-to-inventory! actor item)
-  
+
   (set-actor-inventory! actor
                         (append (actor-inventory actor)
                                 (list item))))
@@ -335,7 +324,7 @@
      (if (not (actor-has-condition-of-type? target 'bleeding))
          (actor-add-condition! target condition)
          (notice "Already bleeding."))
-     
+
      ]
     [else (dev-note (format "todo: unknown condition ~a" condition))]))
 

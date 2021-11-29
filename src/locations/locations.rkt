@@ -4,14 +4,13 @@
 
 (require racket/lazy-require)
 
-
 (lazy-require
   ["../actions/action.rkt"
     (action-details)]
   ["../state/combat.rkt"
     (begin-combat!)])
 
-(require 
+(require
   "../actors/actor.rkt"
   "../core/api.rkt"
   "../enemies/encounters.rkt")
@@ -52,10 +51,7 @@
                                (p "Otava turns on the terminal. It clicks and whirrs, then the display comes to life."))
                 #:next-fragment 'turn-on-martaanvuo-terminal
                 ))
-
              )))
-
-
 
 (define (spawn-enemies)
   (define encounter-types
@@ -108,7 +104,6 @@
       (when #t ; if not hidden
         (set-route-endpoint-visited! route location)
         ))
-      
     ))
 
 

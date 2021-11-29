@@ -47,7 +47,7 @@
      (new-item
       "Bolt cutters"
       #:id id)]
-    
+
     ['revolver
      (new-ranged-weapon
       "Revolver"
@@ -65,7 +65,7 @@
       "Food rations"
       #:id id
       #:details amount)]
-    
+
     ['fresh-berries
      (new-item
       "Berries, fresh"
@@ -99,7 +99,7 @@
       "Gold" ; gold-198, to be more precise
       #:id id
       #:details amount)] ; amount in grams, for now
-    
+
     [else (dev-note "make-item: unknown id:") (prln id)]))
 
 (define (increase-ammo! gun)

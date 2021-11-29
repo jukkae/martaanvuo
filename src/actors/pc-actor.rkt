@@ -35,14 +35,13 @@
 
 (define (pc-take-damage! actor damage damage-type)
   (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
-  
+
   (cond ((not (positive? (actor-hp actor)))
 
-         
          (define new-hp (- (actor-hp actor) damage))
          (set-actor-hp! actor new-hp)
          (notice (format "Taking damage, new HP : ~a]" new-hp))
-                  
+
          (define death-roll-dice (pc-actor-death-roll-dice actor))
          (define death-roll (d 1 death-roll-dice))
          (define result (+ death-roll
@@ -62,12 +61,12 @@
                (else
                 'hit)
                ))
-        
+
         (else
          (define new-hp (- (actor-hp actor) damage))
          (when (not (positive? new-hp))
            (displayln "[Otava is dying.]")
            (wait-for-confirm))
-              
+
          (set-actor-hp! actor new-hp)
          'hit)))

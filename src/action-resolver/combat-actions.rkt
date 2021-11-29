@@ -20,7 +20,6 @@
   "../state/state.rkt"
   "../core/utils.rkt")
 
-
 (lazy-require
  ["../state/combat.rkt"
   (get-combatant-name
@@ -47,13 +46,10 @@
 (define (resolve-melee-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
-  
   (define target-defense (get-trait target "defense"))
-
   (define skill (get-trait actor "melee-attack-skill"))
 
   ; (define bonus 0)
-  
   ; (cond ((member 'fallen (actor-statuses target))
   ;        (displayln "[Target fallen, TN -2]")
   ;        (set! bonus 2)
@@ -62,7 +58,6 @@
   ;        (displayln "[Engaged, TN +1]")
   ;        (set! bonus -1)
   ;        ))
-  
   ; (define action-target-number (- 7 bonus))
 
   (define title
@@ -73,7 +68,6 @@
   (define success? #t)
 
   (define details (action-details action))
-  
 
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
@@ -88,7 +82,6 @@
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
-    
     ; TODO what's a smart place to store this? the actor?
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 7)]))
@@ -107,7 +100,6 @@
   action-result
   )
 
-
 (define (resolve-successful-shoot-action! action)
   (define actor (action-actor action))
   (define target (action-target action))
@@ -121,12 +113,11 @@
   (consume-ammo! 1)
 
   (define details (action-details action))
-  
 
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
-  
+
   (when success?
     [notice (format "dmg: [~a] = [~a]" damage-roll-formula damage-roll-result)]
     (p "Otava pulls the trigger. The gun belts out a thunderous roar, and blood gushes out of the creature."))
@@ -134,7 +125,7 @@
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
-    
+
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 3)]))
 
@@ -170,8 +161,6 @@
          'failure]
     [else (resolve-successful-shoot-action! action)]
     )
-  
-  
   )
 
 (define (resolve-break-free-action! action)
@@ -182,7 +171,6 @@
   (define target (action-target action))
   (define target-stance (actor-stance target))
 
-  
   (define statuses (actor-statuses actor))
   (define actor-bound-status
     (findf (λ (status) (eq? (status-type status) 'bound))
@@ -251,7 +239,7 @@
            (if (member 0 stance-range-values)
                10
                8))
-           
+
          (define success? (skill-check "Athletics" skill target-number))
          (if success?
              (begin ; TODO wouldn't it be cool if only failure was explicitly noted :D
@@ -303,7 +291,7 @@
   (when (status? status)
     (when (eq? (status-type status) 'bound)
       (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
-           
+
   (inflict-status! target status)
   'ok)
 
@@ -325,4 +313,3 @@
       (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
   #;(inflict-status! target status)
   'ok)
-

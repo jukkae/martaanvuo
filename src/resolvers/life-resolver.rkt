@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require 
+(require
   "run-resolver.rkt"
 
   "../actors/pc-actor.rkt"
@@ -30,10 +30,10 @@
          ['begin #t]
          ['restart #t]
          ['else #f]))
-      
+
       (define run-exit-status
         (resolve-run m #:suppress-new-chapter? (not first-run?)))
-      
+
       (case run-exit-status
         ['pc-dead (on-end-life)
                   (end-life 'pc-dead)]
@@ -71,4 +71,3 @@
         [title "Life summary"])
     (info-card body title))
   (wait-for-confirm))
- 

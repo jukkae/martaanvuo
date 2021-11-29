@@ -7,7 +7,6 @@
 (require "place.rkt"
          "../core/api.rkt")
 
-
 (define (route-other-end-from route start-location)
   (define start
     (cond ((eq? (location-id start-location)
@@ -21,8 +20,6 @@
       ['a (route-b route)]
       ['b (route-a route)]))
   endpoint)
-
-
 
 (define (set-route-endpoint-visited! route location)
   (define endpoint
@@ -61,7 +58,7 @@
     (case direction
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
-  
+
   (cond ((route-fully-known? route)
          (format "En route: ~a – ~a"
                  (place-shortname startpoint)

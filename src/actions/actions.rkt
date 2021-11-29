@@ -41,7 +41,6 @@
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
-
 (define (choice-factory action-symbol)
   (case action-symbol
     ['sleep
@@ -107,13 +106,8 @@
             #:tags '(downtime)))
 
         ))
-      
-      
     ]
-
-
     ))
-
 
 (define (select-food-to-eat)
   (define items (actor-inventory (pc)))
@@ -128,7 +122,7 @@
 
   (prln (format "Eat what? [1-~a], anything else to cancel." (length comestibles)))
   (br)
-  
+
   (for ([food comestibles]
         [i (in-naturals 1)])
     (prln (format "[~a] ~a (~a)" i (item-name food) (item-details food))))
@@ -168,13 +162,13 @@
             ; show pending action
             ((string-prefix? (choice-name choice) "[continue]")
              #t)
-            
+
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
             ; plot twist: it is shit and has to be fixed
             ((eq? (choice-symbol choice) (action-symbol (current-pending-action)))
              #f)
-            
+
             ; show anything else
             (else
              #t)))))
@@ -185,12 +179,12 @@
      (λ (x) (show-based-on-pending-choice? x))
      (condense
       (list
-    
+
        (when (not (null? (current-pending-action)))
          (choice
           (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
-     
+
           (λ ()
             (begin0
               (current-pending-action)
@@ -205,7 +199,7 @@
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
-          (get-cancel-pending-action-and-go-back-name (current-location) (current-pending-action)) 
+          (get-cancel-pending-action-and-go-back-name (current-location) (current-pending-action))
           (λ () (make-action
                  #:symbol 'cancel-traverse
                  #:actor (pc)
@@ -215,8 +209,7 @@
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
-         
-      
+
          (when (place? (current-location))
            (for/list ([route (place-routes (current-location))])
 
@@ -250,7 +243,7 @@
                         (λ ()
                           (p "The crude lock yields to Otava's bolt cutters easily.")
                           (remove-detail-from-location! route 'locked)
-                        
+
                           (make-action
                            #:symbol 'skip
                            #:actor (pc)
@@ -303,7 +296,6 @@
                       #:duration 100
                       #:tags '(downtime))))]
              [else (error (format "get-downtime-choices: unknown action ~a" action))])))
-       
 
        (filter
         (λ (x) (and (not (null? x))
@@ -317,8 +309,6 @@
               (λ ()
                 (p "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
                 (end-game)))]
-
-            
 
             ['magpie-effigy
              (make-choice
@@ -353,7 +343,7 @@
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
-           
+
             [else (dev-note (format "unknown feature ~a" feature))])))
 
        (when (eq? (location-type (current-location)) 'spring)
@@ -365,7 +355,7 @@
                  #:actor (pc)
                  #:duration 0
                  #:tags '(downtime)))))
-       
+
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (not (flag-set? 'tried-to-go-back))
                   (= (current-run) 1))
@@ -374,7 +364,7 @@
           #:text "Turn back."
           #:duration 0
           #:tags '(downtime)))
-        
+
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (flag-set? 'ending-run-allowed))
           (make-pc-choice
@@ -383,10 +373,9 @@
           #:duration 0
           #:tags '(downtime)))
        ))))
-  
+
   (define condensed (condense all-actions))
   condensed)
-    
 
 
 ; where does this belong? some module auxilliary to round-resolver?

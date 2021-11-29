@@ -44,10 +44,8 @@
   (begin
     (define skill 0)
     (define target 8)
-             
+
     (define successful? (skill-check "Forage" skill target))
-             
-             
     (cond (successful?
            (define amount (d 1 4)) ; portions = days of survival
            (define amount-string

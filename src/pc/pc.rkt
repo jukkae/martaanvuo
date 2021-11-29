@@ -4,7 +4,7 @@
 
 (require racket/lazy-require)
 
-(require 
+(require
   "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
   "../items/item.rkt"
@@ -32,7 +32,7 @@
   (set-actor-constitution! (pc) 10)
   (set-actor-intelligence! (pc) 7)
   (set-actor-charisma! (pc) 7)
-     
+
   (set-pc-actor-max-lp! (pc) 1)
   (set-pc-actor-lp! (pc) 1)
 
@@ -41,7 +41,7 @@
   (set-trait! (pc) "wrestle-attack-skill" -1)
   (set-trait! (pc) "defense" 1)
   (set-trait! (pc) "exploration-skill" 1)
-  
+
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   (add-item! 'ration #:amount 2 #:silent? #t)
   (add-item! 'bolt-cutters #:silent? #t)
@@ -53,7 +53,7 @@
     ['rope
      (add-item! 'rope #:silent? #t)
      ]
-    
+
     ['flashlight
      (add-item! 'flashlight #:amount 1 #:silent? #t)
      ]
@@ -167,7 +167,7 @@
        [(0) (set-pc-actor-hunger! (pc) hunger-level-starving)]
        [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
        [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
-   
+
    (when (and (or (eq? current-hunger 'hungry)
                   (eq? current-hunger 'very-hungry)
                   (eq? current-hunger 'starving))
@@ -185,7 +185,6 @@
         ['starving "still starving"])
       )
     (notice (format "Otava is ~a." hunger-string))
-     
   )
 )
 

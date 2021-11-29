@@ -11,7 +11,6 @@
                (pc)])
 
 (serializable-struct action
- 
                      (symbol
                       actor
                       [duration #:mutable]

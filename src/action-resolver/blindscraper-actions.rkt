@@ -2,7 +2,6 @@
 
 (provide (all-defined-out))
 
-
 (require racket/lazy-require)
 
 (require
@@ -17,7 +16,6 @@
 
   "../state/state.rkt"
   )
-
 
 (lazy-require
  ["../state/combat.rkt"
@@ -50,14 +48,14 @@
            (displayln "[LP positive]")
            (attribute-check "Dexterity" dex))
           (else #t)))
-           
+
   (if success?
       (begin
         (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
-                 
+
         (let ([enemy-stance (stance "α" 'engaged "right")])
           (set-actor-stance! (action-actor action) enemy-stance)))
-        
+
       (begin
         (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
         (displayln "[-1 LP]")
@@ -75,9 +73,9 @@
 (define (resolve-go-to-close-action! action)
   (define lp (pc-actor-lp (pc)))
   (define dex (actor-dexterity (action-actor action)))
-           
+
   (p "The Blindscraper skitters towards Otava.")
-  
+
   (let ([enemy-stance (stance "α" 'close "right")])
     (set-actor-stance! (action-actor action) enemy-stance))
   'ok

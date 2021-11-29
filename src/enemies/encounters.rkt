@@ -5,8 +5,8 @@
 (require
   "blindscraper.rkt"
   "grabberkin.rkt"
-  
-  "../actors/actor.rkt" 
+
+  "../actors/actor.rkt"
   "../actors/stance.rkt"
 
   "../core/io.rkt"

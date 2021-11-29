@@ -16,7 +16,6 @@
   "../state/state.rkt"
   )
 
-
 (lazy-require
  ["../state/combat.rkt"
   (get-combatant-name

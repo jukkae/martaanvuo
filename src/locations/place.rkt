@@ -6,7 +6,6 @@
 
 (require "location.rkt")
 
-
 (serializable-struct
  place
  location
@@ -35,9 +34,9 @@
          #:visited? [visited? #f]
          #:actions-provided [actions-provided '()]
          #:shortname [shortname ""])
-  
+
   (set! *number-of-places* (add1 *number-of-places*))
-  
+
   (place* id
           type
           details

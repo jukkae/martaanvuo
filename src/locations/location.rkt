@@ -16,8 +16,6 @@
  #:transparent
  #:constructor-name location*)
 
-
-
 (define (add-actor-to-location! location actor)
   (set-location-actors! location (cons actor (location-actors location))))
 

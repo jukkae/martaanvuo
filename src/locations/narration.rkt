@@ -72,7 +72,7 @@
         (p
          "The marsh smells like suopursu.")])
      ]
-    
+
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
@@ -99,7 +99,7 @@
     ['(crematory martaanvuo-swamp)
      (p "Otava goes from the dreary lime courtyard of the crematory to the small path.")
      ]
-    
+
     [else
      (dev-note "describe-begin-traverse-action: unknown key:")
      (displayln key)])
@@ -185,7 +185,7 @@
        [else
         (p
          "Otava comes to Perimeter.")])]
-    
+
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
@@ -215,12 +215,7 @@
     [else
      (dev-note "describe-finish-traverse-action: unknown key:")
      (displayln key)]
-
-    
-
     ))
-  
-
 
 (define (describe-cancel-traverse-action action)
   (define from
@@ -251,8 +246,6 @@
         (p "Otava comes back to the fork in the path somewhere in Perimeter.")]
        [else
         (p "Otava comes back to the fork in Perimeter.")])
-
-     
      ])
   )
 
@@ -276,7 +269,7 @@
           (if (route-fully-known? route)
               "Rocky stairs up Magpie Hill."
               "Magpie and the rocky slope.")]
-         
+
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Martaanvuo Swamp."
@@ -285,7 +278,7 @@
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
-      
+
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
          ['perimeter
@@ -308,7 +301,7 @@
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
-      
+
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
          ['magpie-hill
@@ -353,7 +346,7 @@
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
                               "]")])]
-      
+
       ['power-plant-ruins
        (case (location-id (route-other-end-from route start-location))
          ['cache
@@ -371,9 +364,7 @@
                            "go to: "
                            (symbol->string (location-id (route-other-end-from route start-location)))
                            "]")]))
-  
 
-  
   #;(cond ((route-fully-known? route)
            ; Currently, "fully known" implies having been at the other end, fix as needed
            (case direction
@@ -396,7 +387,7 @@
 
   (define pending-action (current-pending-action))
   (define details (action-details pending-action))
-         
+
   (define traverse-direction
     (if (memq 'a-to-b details)
         'a-to-b
@@ -412,7 +403,6 @@
       ['a-to-b (route-a route)]
       ['b-to-a (route-b route)]))
 
-  
   (define body
     (cond ((route-fully-known? route)
            (prune
@@ -495,7 +485,6 @@
                                    " ")))
             )))
   (info-card body title))
-
 
 (define (display-location-info-card location [title "Location"])
   (cond ((place? location)

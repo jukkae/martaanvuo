@@ -77,9 +77,9 @@
 
 ; action-result is either a timeline or a symbol
 (define (resolve-action! action)
-  
+
   (when (actor-alive? (action-actor action))
-    
+
     (define result 'not-resolved)
     (when (and (pc-actor? (action-actor action))
                (not (pending? action)))
@@ -97,7 +97,7 @@
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
-    
+
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
       (pc-action-on-after-resolve! action))
@@ -106,9 +106,6 @@
 
     result
     ))
-
-
-
 
 (define (pc-action-on-before-resolve! action)
   (let/ec return
@@ -136,7 +133,6 @@
                           #:interrupting? #t)))
            (define metadata '(interrupted))
            (define duration (exact-floor (/ (action-duration action) 3)))
-           
 
            (set! elapsed-time duration)
 
@@ -145,9 +141,9 @@
 
            (define all-events (append world-events resolve-events))
            (define all-metadata (append (timeline-metadata world-tl) metadata))
-           
+
            (define tl (timeline all-metadata all-events duration))
-           
+
            (process-timeline! tl)
            (return tl)))
 
@@ -166,8 +162,6 @@
        (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
        '()]))
   (narrate-timeline tl))
-
-
 
 (define (pc-action-on-after-resolve! action)
   (case (action-symbol action)
@@ -198,7 +192,6 @@
     ['back-off (resolve-special-action! action)]
     ['win-game (resolve-special-action! action)]
     ['skip (resolve-special-action! action)]
-        
     ['go-to-location (resolve-go-to-action! action)]
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
@@ -227,13 +220,10 @@
       ['vatruska (p "The vatruska tastes heavenly.")])
      (remove-item! (item-id food-item))]
 
-      
     ; the rest
     ['melee (resolve-melee-action! action)]
     ['shoot (resolve-shoot-action! action)]
     ['forage (resolve-forage-action! action)]
-    
-      
     ['flee (resolve-flee-action! action)]
     ['break-free (resolve-break-free-action! action)]
 
@@ -260,12 +250,7 @@
   (define pending-action action)
   (set-action-duration! pending-action time-left)
   (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
-  
   (current-pending-action pending-action))
-
-
-
-
 
 
 (define (handle-pc-action-interrupted! timeline)
@@ -273,7 +258,6 @@
     (filter
      (λ (event) (event-interrupting? event))
      (timeline-events timeline)))
-  
   (cond ((eq? (length interrupting-events) 1)
          (define event (car interrupting-events))
          (handle-interrupting-event! event)
@@ -281,6 +265,3 @@
         (else
          (dev-note "handle-pc-action-interrupted!: unexpected amount of interrupting events.")))
   )
-
-
-

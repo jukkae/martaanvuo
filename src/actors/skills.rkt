@@ -7,7 +7,7 @@
 
 (define (choice-from-symbol world pc symbol)
   (case symbol
-    ['sleep 
+    ['sleep
      (make-choice 'sleep
                   "Sleep."
                   (λ () (make-action #:symbol 'sleep

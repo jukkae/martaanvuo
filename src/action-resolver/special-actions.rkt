@@ -36,7 +36,7 @@
             (p "To the left, the trail turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
             'failure
             ))]
-    
+
     ['back-off 'ok]
     ['win-game 'win-game]
     ['skip(cond ((member 'silent (action-details action))
@@ -45,5 +45,5 @@
               'ok))]
     [else (dev-note "unknown special action:")
           (displayln action)])
-  
+
   )

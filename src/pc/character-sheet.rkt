@@ -100,7 +100,7 @@
                                                            (get-attribute-modifier-for
                                                             (actor-charisma actor)))
                                                           "] ")))))
-  
+
   (define traits (actor-traits actor))
   (define traits-list
     (for/list ([(k v) (in-hash traits)])
@@ -130,7 +130,7 @@
 
 (define (inventory)
   (define actor (pc))
-  
+
   (define header
     (list
      (list " Item " " Notes ")))
@@ -155,12 +155,12 @@
               (string-append " " (symbol->string item) " ")
               (string-append " " " " " "))))
       ))
-  
+
   (define sheet
     (append
      header
      items-list))
-  
+
   (info-card
    sheet
    "Inventory"

@@ -68,7 +68,7 @@
       #:target (pc)
       #:tags '(initiative-based-resolution)
       #:details '())]
-    
+
     ['skip
      (make-action
       #:symbol 'skip
@@ -104,7 +104,7 @@
   (define hp (actor-hp actor))
   (define max-hp (actor-max-hp actor))
   (define threshold (quotient max-hp 2))
-  
+
   (> hp threshold))
 
 (define (get-grabberkin-action-phase-1 actor)
@@ -114,7 +114,7 @@
              2))
      (define options
        '(anklebreaker anklebreaker grab grab skip skip))
-               
+
      (define roll (d 1 6))
      (define index (- roll 1))
      (define action (list-ref options index))

@@ -46,7 +46,7 @@
                             (route-b (action-target action))
                             (route-a (action-target action))))
   (move-pc-to-location! next-location)
-  
+
   'ok)
 
 
@@ -74,7 +74,7 @@
         (location-on-enter! (current-location))
 
         (describe-finish-traverse-action action)
-                          
+
         (when (not (null? (location-items (action-target action))))
           (pick-up-items!))
 

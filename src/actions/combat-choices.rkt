@@ -2,7 +2,6 @@
 
 (require rebellion/collection/association-list)
 
-
 (require
   "../actions/action.rkt"
   "../actions/choice.rkt"
@@ -14,8 +13,6 @@
 
   "../state/combat.rkt"
   "../state/state.rkt")
-
-
 
 (provide get-combat-choices)
 (define (get-combat-choices)
@@ -57,7 +54,7 @@
 
          (define details
            (association-list 'str-mod strength-mod))
-         
+
          (define break-free-choice
            (make-choice
             'pull-free
@@ -71,7 +68,6 @@
                #:tags '(initiative-based-resolution fast)
                #:details details))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
- 
 
   combat-choices
   )
@@ -110,7 +106,7 @@
 ; implementation detail
 (define (get-ranged-choices)
   (define targets (get-current-enemies))
-  
+
   (define all-choices
     (for/list ([i (in-range 0 (length targets))])
       (define target (list-ref targets i))
@@ -129,7 +125,7 @@
             (cons 'damage-roll-formula "2d2")
             (cons 'damage-type 'gunshot) ; we're assuming firearms here
             ))
-           
+
          (make-choice
           'attack
           (format "Shoot ~a [with revolver]." (get-combatant-name target))
@@ -141,10 +137,10 @@
              #:target target
              #:tags '(initiative-based-resolution)
              #:details details))))
-       
+
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
-         
+
          (define damage-roll (λ () 1))
          (define details
            (list
@@ -164,6 +160,5 @@
              #:tags '(initiative-based-resolution)
              #:details details))))
        )))
-  
-  
+
   (condense all-choices))

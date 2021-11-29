@@ -5,8 +5,8 @@
 (require
   "../actions/action.rkt"
 
-  "../actors/actor.rkt" 
-  
+  "../actors/actor.rkt"
+
   "../core/utils.rkt"
 
   "../state/state.rkt")
@@ -90,7 +90,7 @@
                #;(displayln action-flag-with-index)
                (define action-flag (cdr action-flag-with-index))
                (make-blindscraper-action actor action-flag))
-                      
+
               ((actor-in-range? actor 'close)
                (define options
                  (list
@@ -124,7 +124,7 @@
                #;(displayln action-flag-with-index)
                (define action-flag 'go-to-close)
                (make-blindscraper-action actor action-flag))))
-           
+
            ((= (actor-hp actor) 1)
             (make-action
              #:symbol 'flee
