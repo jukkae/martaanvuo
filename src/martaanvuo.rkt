@@ -8,7 +8,7 @@
          "state/state.rkt")
 
 ; engine / game-resolver? meta player.rkt?
-(define (on-begin-playthrough)
+(define (on-begin-playthrough!)
   (reset-situation!))
 
 
@@ -40,13 +40,14 @@
          (exit))))
 
 
-(define (resolve-game mode)
-  (case mode
+(define (resolve-game game-mode)
+  (case game-mode
     ['begin
      (br)
      (prln "Progress is saved automatically.")]
 
-    ['restart '()] ; If the player restarts, they should know that progress is saved automatically.
+    ['restart
+     '()]
 
     ['continue
      (define input-file (open-input-file "save.txt"))
@@ -55,42 +56,32 @@
      (with-handlers ([exn:fail:contract:arity?
                       (λ (exn)
                        (handle-broken-save)
-                       (set! mode 'begin))])
+                       (set! game-mode 'begin))])
       (load-situation-from-state serialized-state)
-
       (br)
       (prln "Progress loaded."))])
 
   (title)
 
-  (case mode
-    ['begin (on-begin-playthrough)]
-    ['restart (on-begin-playthrough)]
-
+  (case game-mode
+    ['begin   (on-begin-playthrough!)]
+    ['restart (on-begin-playthrough!)]
     ['continue
      (for ([entry (current-log)])
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
      (hr)])
 
-  (define life-resolver-mode
-    (case mode
-      ['begin 'begin]
-      ['restart 'begin]
-      ['continue 'continue]))
-
   (define end-game-status
     (let/ec end-game
-      (let begin-new-life ([life-resolver-mode mode])
-        (define pc-life-end-status (resolve-life life-resolver-mode))
+      (let begin-new-life ([mode (case game-mode
+                                  ['begin 'begin]
+                                  ['restart 'begin]
+                                  ['continue 'continue])])
+
+        (define pc-life-end-status (resolve-life mode))
 
         (when (eq? pc-life-end-status 'pc-dead)
           (let end-of-life-menu ([verbosity 'verbose])
-            (define (handle-meta-command meta-commands-with-keys input)
-              (set! input (string-upcase input))
-              (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-              (define meta-command (cdr meta-command-with-key))
-              (meta-command)
-              (end-of-life-menu 'verbose))
 
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
@@ -103,7 +94,9 @@
 
             (newline)
 
-            (cond ((meta-command-valid? meta-commands input) (handle-meta-command meta-commands input))
+            (cond ((meta-command-valid? meta-commands input)
+                   (handle-meta-command meta-commands input)
+                   (end-of-life-menu 'verbose))
                   (else (end-of-life-menu 'abbreviated)))))
 
         (when (eq? pc-life-end-status 'win-game) (end-game 'win-game))
@@ -118,13 +111,18 @@
      (prln "Progress deleted. Starting from the beginning.")
      (resolve-game 'restart)]))
 
-; engine / game-resolver?
+(define (handle-meta-command meta-commands-with-keys input)
+              (set! input (string-upcase input))
+              (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+              (define meta-command (cdr meta-command-with-key))
+              (meta-command))
+
+
 (define (begin-session)
-  #; (random-seed 13)
+  ; (random-seed 13)
 
   (if (file-exists? "save.txt")
       (resolve-game 'continue)
       (resolve-game 'begin)))
 
-; main entrypoint
 (begin-session)

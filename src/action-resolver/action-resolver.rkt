@@ -58,17 +58,15 @@
   (handle-interrupting-event!
    )])
 
-; action-result is either a timeline or a symbol
+; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)
-
   (when (actor-alive? (action-actor action))
-
     (define result 'not-resolved)
+
     (when (and (pc-actor? (action-actor action))
                (not (pending? action)))
       (set! result (pc-action-on-before-resolve! action)))
 
-    ; what a hack
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
       (set-pending-action! action (- (action-duration action)
@@ -76,7 +74,7 @@
       (set! result 'interrupted))
 
     (when (not (eq? result 'interrupted))
-      (set! result (dispatch-to-sub-resolver-and-resolve! action))
+      (set! result (dispatch-to-sub-resolver! action))
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
@@ -87,8 +85,7 @@
 
     (wait-for-confirm)
 
-    result
-    ))
+    result))
 
 (define (pc-action-on-before-resolve! action)
   (let/ec return
@@ -158,7 +155,7 @@
 (define (next-day! action)
   (define time (world-elapsed-time (current-world)))
   (define time-today (remainder time day-length))
-  (define time-until-next-morning (- 600 time-today))
+  (define time-until-next-morning (- day-length time-today))
   (set-action-duration! action time-until-next-morning)
   'ok)
 
@@ -168,7 +165,7 @@
   (set-action-duration! action time-until-next-time-of-day)
   'ok)
 
-(define (dispatch-to-sub-resolver-and-resolve! action)
+(define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
     ; "special" actions first
     ['end-run (resolve-special-action! action)]
