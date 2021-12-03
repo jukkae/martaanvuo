@@ -6,9 +6,10 @@
 (require "../core/api.rkt")
 
 (require
+  "fragment.rkt"
+
   "anthill.rkt"
   "decision.rkt"
-  "fragment.rkt"
   "magpie.rkt"
   "stiltman.rkt")
 
@@ -31,7 +32,7 @@
    #:on-resolve! (thunk
                   (set-build! 'rope)
                   (wait-for-confirm)
-                  
+
                   (current-show-round-summary? #t))
    #:next-fragment 'begin-life-exit
    )

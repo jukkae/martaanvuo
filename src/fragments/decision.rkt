@@ -4,8 +4,6 @@
 
 (require racket/serialize)
 
-(require "../core/utils.rkt")
-
 ; requirement is a lambda that's run on fragment's on-enter!
 ; on-resolve! is a lambda that's run when the decision is resolved
 (serializable-struct
