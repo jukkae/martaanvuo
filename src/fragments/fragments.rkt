@@ -49,12 +49,20 @@
   )
  )
 
+(define (opts a b)
+  (dev-note "TODO: implement opts")
+  '())
+
 (fragment
 'begin-life-exit
 (thunk
-  (p "The trail goes past some jagged pieces of metal that stand up from the ground. This is anomaly perimeter, then – she's getting close.")
-  (p "The trail turns behind a boulder and comes to a fork. A fork? Broker had said nothing about a fork.")
-  (p "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")))
+  (p "The trail goes past some jagged pieces of metal that stand up from the ground. A half-buried sensor array, long out of commission. This is anomaly perimeter, then – she's getting close. No rust after decades, damn good metal. Maybe when she's coming back try to cut some, take it with her. Could be useful maybe.")
+  (p "Otava comes to a fork.")
+  (opts
+    ("The Broker..." "The Broker had said nothing about a fucking fork. Sounds like a fucking refund.")
+    ("The fork..." "The fork is an unwelcome surprise, the damp air a chilly suffocation against her skin."))
+  (p "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
+  ))
 
 (fragment
  100
