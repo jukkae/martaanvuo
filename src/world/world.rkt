@@ -106,7 +106,10 @@
     #:id 'reactor-room)
 
    (make-place
-    #:id 'martaanvuo-source)))
+    #:id 'martaanvuo-source)
+
+   (make-place
+    #:id 'palsat)))
 
 
 (define (find-place-by-id places id)
@@ -150,6 +153,7 @@
   (make-path-between places 'martaanvuo-swamp 'crematory)
   (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
   (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
+  (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
   (make-path-between places 'martaanvuo-swamp 'bright-precipice)
   (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
   (make-path-between places 'magpie-hill 'bright-precipice #:no-encounters? #t)
@@ -161,6 +165,7 @@
   (make-path-between places 'compound-entrance 'murkwater-docks)
   (make-path-between places 'compound-entrance 'workshop)
   (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
+  (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
   (make-path-between places 'sewers-2 'storage-closet)
   (make-path-between places 'storage-closet 'workshop)
   (make-path-between places 'workshop 'control-room #:no-encounters? #t)

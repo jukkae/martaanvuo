@@ -267,13 +267,13 @@
 
          ['magpie-hill
           (if (route-fully-known? route)
-              "Rocky stairs up Magpie Hill."
-              "Magpie and the rocky slope.")]
+              "Magpie Hill."
+              "Rocky slope.")]
 
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Martaanvuo Swamp."
-              "Ants and the swamp.")]
+              "The swamp.")]
          [else (string-append "["
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))

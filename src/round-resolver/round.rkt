@@ -102,10 +102,10 @@
     #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
     '())
 
-  (if (#f)
+  (if #f
     (newline) ; This is the "extra" newline that separates rounds
-    ('()))
+    '())
 
-  (if (#f)
+  (if #f
     (wait-for-confirm)
     '()))

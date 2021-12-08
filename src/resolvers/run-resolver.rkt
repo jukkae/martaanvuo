@@ -32,8 +32,8 @@
 
   (case (current-run)
     [(1)
-     (p "Otava is following an old, overgrown trail through foggy woods. It is gloomy, despite being morning, always is, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.")
-     (p "The Broker's directions have been correct thus far.")
+     (p "Otava is following an old, overgrown trail through foggy woods. It is gloomy, despite being morning, like it always is, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.")
+     (p "The Broker's directions have been correct thus far. She's getting closer to Martaanvuo anomaly. If what she's pieced together is correct, she's finally going to pay off her debt to the Collector.")
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]))
 
