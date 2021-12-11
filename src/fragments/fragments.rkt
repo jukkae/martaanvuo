@@ -49,18 +49,37 @@
   )
  )
 
-(define (opts a b)
-  (dev-note "TODO: implement opts")
-  '())
+(define (opts . params)
+  (define ks '())
+  (define vs '())
+  (for ([i (length params)])
+    (if (even? i)
+      (set! ks (append-element ks (list-ref params i)))
+      (set! vs (append-element vs (list-ref params i)))
+      ))
+
+  ; see also get-next-pc-action and build-keys-to-choices-map
+  (define opts-with-keys (make-hash))
+  (for ([i (in-range (length ks))])
+    (hash-set! opts-with-keys (add1 i) (list-ref ks i))
+    )
+
+  (for ([(k v) (in-hash opts-with-keys)])
+    (displayln (format "[~a]: ~a" k v)))
+
+  (define input (wait-for-input))
+  (define index (- (string->number input) 1))
+  (p (list-ref vs index))
+  )
 
 (fragment
 'begin-life-exit
 (thunk
-  (p "The trail goes past some jagged pieces of metal that stand up from the ground. A half-buried sensor array, long out of commission. This is anomaly perimeter, then – she's getting close. No rust after decades, damn good metal. Maybe when she's coming back try to cut some, take it with her. Could be useful maybe.")
+  (p "The trail goes past some jagged pieces of metal that stand up from the ground. A half-buried sensor array, long out of commission. This is anomaly perimeter, then - she's getting close. No rust after decades, damn good metal. Maybe when she's coming back try to cut some, take it with her. Could be useful maybe.")
   (p "Otava comes to a fork.")
   (opts
-    ("The Broker..." "The Broker had said nothing about a fucking fork. Sounds like a fucking refund.")
-    ("The fork..." "The fork is an unwelcome surprise, the damp air a chilly suffocation against her skin."))
+    "The Broker..." "The Broker had said nothing about a fucking fork. Sounds like a fucking refund."
+    "The fork..." "The fork is an unwelcome surprise, the damp air a chilly suffocation against her skin.")
   (p "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
   ))
 
