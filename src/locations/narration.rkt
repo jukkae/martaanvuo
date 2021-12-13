@@ -147,24 +147,24 @@
          "Otava gets to Perimeter.")])
      ]
 
-    ['(magpie-hill bright-precipice)
+    ['(magpie-hill luminous-precipice)
      (case n
        [(1)
         (p
          "A narrow, long overhang leads into the mist that has acquired a soft milky glow.")]
        [else
         (p
-         "Otava arrives at Bright Precipice.")])
+         "Otava arrives at Luminous Precipice.")])
      ]
 
-    ['(bright-precipice magpie-hill)
+    ['(luminous-precipice magpie-hill)
      (case n
        [(1)
         (p
          "A trail leads along the edge of the plateau into deepening fog.")]
        [else
         (p
-         "Otava arrives at Bright Precipice.")])
+         "Otava arrives at Luminous Precipice.")])
      ]
 
     ['(perimeter martaanvuo-swamp)
@@ -293,9 +293,9 @@
           (if (route-fully-known? route)
               "The power plant ruins."
               "The decrepit building.")]
-         ['bright-precipice
+         ['luminous-precipice
           (if (route-fully-known? route)
-              "Bright Precipice."
+              "Luminous Precipice."
               "The trail along the edge of the plateau.")]
          [else (string-append "["
                               "go to: "
