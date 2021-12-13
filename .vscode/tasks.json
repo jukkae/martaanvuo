@@ -11,6 +11,7 @@
             },
             "presentation": {
                 "reveal" : "always",
+                "focus" : true,
             }
         },
         {
