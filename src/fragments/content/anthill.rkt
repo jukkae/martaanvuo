@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../core/api.rkt")
+(require "../../core/api.rkt")
 
 (fragment
  'anthill-1
