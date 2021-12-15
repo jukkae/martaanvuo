@@ -15,7 +15,7 @@
   "../core/api.rkt"
   "../enemies/encounters.rkt")
 
-(require "place.rkt"
+(require "0-types/place.rkt"
          "routes.rkt")
 
 (define (location-on-enter! location)

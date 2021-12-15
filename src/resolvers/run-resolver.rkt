@@ -5,7 +5,7 @@
 (require
   "../core/io.rkt"
   "../core/utils.rkt"
-  "../locations/location.rkt"
+  "../locations/0-types/location.rkt"
   "../locations/locations.rkt"
   "../pc/pc.rkt"
   "../quests/quest.rkt"

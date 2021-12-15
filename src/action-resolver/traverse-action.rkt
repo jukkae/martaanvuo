@@ -10,9 +10,9 @@
 (require
   "../actions/action.rkt"
 
-  "../locations/location.rkt"
+  "../locations/0-types/location.rkt"
+  "../locations/0-types/route.rkt"
   "../locations/locations.rkt"
-  "../locations/route.rkt"
 
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"

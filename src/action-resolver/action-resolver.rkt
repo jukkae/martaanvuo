@@ -24,7 +24,7 @@
 
   "../items/item.rkt"
 
-  "../locations/location.rkt"
+  "../locations/0-types/location.rkt"
 
   "../pc/pc.rkt"
 

@@ -9,9 +9,9 @@
 
 (require "../actors/actor.rkt"
          "../items/item.rkt"
-         "../locations/location.rkt"
-         "../locations/place.rkt"
-         "../locations/route.rkt"
+         "../locations/0-types/location.rkt"
+         "../locations/0-types/place.rkt"
+         "../locations/0-types/route.rkt"
          "../core/utils.rkt")
 
 (lazy-require ["../state/state.rkt" (current-world)])

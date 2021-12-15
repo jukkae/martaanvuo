@@ -4,7 +4,7 @@
          route-shortname
          set-route-endpoint-visited!)
 
-(require "place.rkt"
+(require "0-types/place.rkt"
          "../core/api.rkt")
 
 (define (route-other-end-from route start-location)
