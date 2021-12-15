@@ -152,17 +152,20 @@
 
     ))
 
-(define (next-day! action)
-  (define time (world-elapsed-time (current-world)))
-  (define time-today (remainder time day-length))
-  (define time-until-next-morning (- day-length time-today))
-  (set-action-duration! action time-until-next-morning)
+(define (time-until-next-morning)
+  (let* ([time (world-elapsed-time (current-world))]
+         [time-today (remainder time day-length)])
+    (- day-length time-today)))
+
+(define (time-until-next-time-of-day)
+  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
+
+(define (progress-until-next-day! action)
+  (set-action-duration! action (time-until-next-morning))
   'ok)
 
-(define (next-time-of-day! action)
-  (define time-until-next-time-of-day (- 100
-                                         (remainder (world-elapsed-time (current-world)) 100)))
-  (set-action-duration! action time-until-next-time-of-day)
+(define (progress-until-next-time-of-day! action)
+  (set-action-duration! action (time-until-next-time-of-day))
   'ok)
 
 (define (dispatch-to-sub-resolver! action)
@@ -179,8 +182,8 @@
     ; placeholder / WIP
     ['camp 'ok]
     #;['sleep (resolve-sleep-action! action)]
-    ['sleep (next-day! action)]
-    ['rest (next-time-of-day! action)]
+    ['sleep (progress-until-next-day! action)]
+    ['rest (progress-until-next-time-of-day! action)]
     ['eat
      (define food-item (action-target action))
      (displayln (format "TARGET: ~a" food-item))
