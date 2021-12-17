@@ -7,7 +7,7 @@
 (lazy-require
   ["../actions/action.rkt"
     (action-details)]
-  ["../state/combat.rkt"
+  ["../combat/combat.rkt"
     (begin-combat!)])
 
 (require

@@ -17,7 +17,7 @@
   )
 
 (lazy-require
- ["../state/combat.rkt"
+ ["../combat/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info

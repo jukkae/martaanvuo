@@ -1,8 +1,20 @@
 #lang racket
 
 (provide (all-defined-out))
+(provide (all-from-out "0-types/actor.rkt"))
+
+(require "0-types/actor.rkt")
 
 (require racket/lazy-require)
+
+(require "condition.rkt"
+         "status.rkt"
+
+         "../items/item.rkt"
+
+         "../core/io.rkt"
+         "../core/utils.rkt")
+
 (lazy-require
  ["pc-actor.rkt"
   (pc-actor?
@@ -20,43 +32,6 @@
  ["../locations/location.rkt"
   (add-feature-to-location!
    )])
-
-(require racket/serialize)
-
-(require "condition.rkt"
-         "status.rkt"
-
-         "../items/item.rkt"
-
-         "../core/io.rkt"
-         "../core/utils.rkt")
-
-(serializable-struct
- actor
- (name
-
-  ; always numbers
-  [hp #:mutable]
-  [max-hp #:mutable]
-
-  ; number or '()
-  [strength #:mutable]
-  [dexterity #:mutable]
-  [constitution #:mutable]
-  [intelligence #:mutable]
-  [charisma #:mutable]
-
-  ; hash of string-to-whatever-makes-sense
-  [traits #:mutable]
-
-  ; lists of symbols
-  [statuses #:mutable]   ; (semi)temporary
-  [conditions #:mutable] ; (semi)permanent
-
-  [inventory #:mutable]
-  [location #:mutable]
-  [stance #:mutable]) ; only NPCs
- #:constructor-name actor*)
 
 (define (make-actor
          name
