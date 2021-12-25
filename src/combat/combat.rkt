@@ -20,15 +20,15 @@
   "../world/world.rkt")
 
 (lazy-require
- ["state.rkt" (current-in-combat?
-               current-log
-               current-location
-               current-combat-timeline
-               current-world
-               get-current-enemies
-               pc)])
+ ["../state/state.rkt"  (current-in-combat?
+                         current-log
+                         current-location
+                         current-combat-timeline
+                         current-world
+                         get-current-enemies
+                         pc)])
 
-(lazy-require ["logging.rkt"
+(lazy-require ["../state/logging.rkt"
                (next-chapter!)])
 
 (define (display-pc-combatant-info actor)
