@@ -33,9 +33,9 @@
   (case (current-run)
     [(1)
      (p @~a{
-       Otava is following an old, overgrown trail through foggy woods. It is gloomy, despite being morning, like it always is these days, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.
+       Otava is following an old, overgrown path through foggy woods. It is gloomy, despite being morning, like it always is these days, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.
 
-       The Broker's instructions have been correct thus far. She's getting closer to Martaanvuo anomaly. If what she's pieced together is correct, she's finally going to pay off her debt to the Collector.
+       Mediator's instructions have been correct so far. No reason to start distrusting Mediator now. She'll just follow the instructions, she'll be fine, she'll pay her debt and go on with her life.
       })
      (when (not (quest-exists? 'pay-off-debt))
        (create-quest 'pay-off-debt))]))
@@ -44,7 +44,7 @@
   (next-chapter!)
 
   (p @~a{
-    Otava is on Broker's trail in the foggy cardboard cutout woods. She gets to Fork and Anthill.
+    Otava is on Mediator's path in the foggy cardboard cutout woods. She gets to Fork and Anthill.
   }))
   ; Otava is on Brokerstrail and comes to Fork-and-Anthill BUT THIS TIME KNOWY OF HARTMAN-DEVICE
   ; sort of like "worlds" 1-2-3
