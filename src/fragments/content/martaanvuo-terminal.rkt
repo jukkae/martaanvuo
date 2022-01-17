@@ -23,3 +23,23 @@
    #:description "The terminal greets her:"
    #:next-fragment 'recurse
    )))
+
+
+(fragment
+ 'read-the-book
+ (thunk
+  (p
+   ""))
+ #:decisions
+ (list
+  (make-decision
+   #:title "Put the book down."
+   #:description "Fuck it. She puts the book down."
+   #:next-fragment 'exit
+   )
+
+  (make-decision
+   #:title "Open the book."
+   #:description "She flips open the cover."
+   #:next-fragment 'recurse
+   )))

@@ -33,12 +33,21 @@
   (case (current-run)
     [(1)
      (p @~a{
-       Otava is following an old, overgrown path through foggy woods. It is gloomy, despite being morning, like it always is these days, and the fog makes everything worse, like monochrome cardboard. The immobile air is thick with the damp smell of an old, decaying forest.
+      Otava is following an old, overgrown path through the foggy woods. Late-morning gloom, forest like monochrome cardboard. Air thick with the damp smell of old, decaying forest.
 
-       Mediator's instructions have been correct so far. No reason to start distrusting Mediator now. She'll just follow the instructions, she'll be fine, she'll pay her debt and go on with her life.
+      This should be worth it: There's a *cache* of valuables deep in the forest, but somewhere near it there's this basement lab too, a fucking abandoned junkie cellar kitchen called *the Maw*, and if what she knows and what she's figured out is correct, she'll find *Anthead Monograph* there.
+
+      The first should net enough gold for Otava to pay back Mediator her debt anyway. That alone would be good enough a reason.
+
+      The second one, though, Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation, and then none of this will matter anyway. The last step is to find the book that will fill in the blanks and make it all make sense. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
+
+      Otava the Seeker, become Otava the Deathless!
       })
-     (when (not (quest-exists? 'pay-off-debt))
-       (create-quest 'pay-off-debt))]))
+     ;(dev-note "Fixme: Quests")
+     (wait-for-confirm)
+     ;(create-quest 'pay-off-debt)
+     ;(create-quest 'anthead-monograph)
+     ]))
 
 (define (narrate-begin-recurse-run)
   (next-chapter!)
@@ -61,7 +70,7 @@
   (current-run (add1 (current-run)))
   #;(current-round 0)
   (remove-flag 'ending-run-allowed)
-  (add-feature-to-location! (find-place-by-id (world-places (current-world)) 'martaanvuo-docks) 'stiltman)
+  (add-feature-to-location! (find-place-by-id (world-places (current-world)) 'martaanvuo-docks) 'mieli)
   (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
   (narrate-begin-recurse-run))
 

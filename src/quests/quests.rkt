@@ -17,9 +17,9 @@
     (case quest-symbol
       ['pay-off-debt
        (quest 'pay-off-debt
-              "Debt to Collector"
+              "Debt to Mediator"
               "in progress"
-              "unsettled: 10,111 g of gold"
+              "unsettled: 10.111 grams of gold" ; MAKE A FUCKING PLOT POINT OF THIS
               10111)]
       ['anthead-monograph
        (quest 'anthead-monograph

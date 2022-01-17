@@ -27,23 +27,13 @@
   (condense (list
 
              ; definition / content goes to -> features, or world, or something
-             (when (location-has-feature? location 'stiltman)
-               (define manuscript-quest (quest-exists? 'anthead-monograph))
-               (cond ((not manuscript-quest)
-                      (make-decision
-                       #:title "Talk to the stilted figure."
-                       #:on-resolve! (thunk
-                                      (p "Otava goes closer to the figure flailing peculiarly above water. It turns out to be a man, balancing precariously on an insectlike, three-legged contraption of rods and springs and wire."))
-                       #:next-fragment 'begin-stiltman-dialogue
-                       ))
-                     (else
-                      (make-decision
-                       #:title "Talk to Stiltman."
-                       #:on-resolve! (thunk
-                                      (p "Stiltman flickers and flails above water, and Otava shouts out to him."))
-                       #:next-fragment 'stiltman-continue-dialogue
-                       ))))
-
+             (when (location-has-feature? location 'martaanvuo-book)
+               (make-decision
+                #:title "Pick up the book."
+                #:on-resolve! (thunk
+                               (p "Otava takes the book in her hands. Bound in supple leather, heavier than you'd expect. The book fills her with apprehension and dread."))
+                #:next-fragment 'read-the-book
+                ))
              (when (location-has-feature? location 'martaanvuo-console)
                (make-decision
                 #:title "Turn on the terminal."

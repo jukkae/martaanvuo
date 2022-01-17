@@ -5,7 +5,7 @@
 (require "../../core/api.rkt")
 
 
-(fragment
+#;(fragment
  'begin-life
  (thunk
   (p @~a{
@@ -37,17 +37,21 @@
  )
 
 (fragment
-'begin-life-exit
+'begin-life
 (thunk
   (p @~a{
-    The forest she's walking through has a jagged metal shard underbrush. Some of it makes sense: A malevolent shiny black watcher-eye thing, a slither-snaking soul-sucking what's-the-fancy-word a cable and a movement in the corner of her eye catches her eye in the corner of her eye.
+    The forest she's walking through has a jagged metal shard underbrush. Some of it makes sense: A malevolent shiny black watcher-eye thing, a slither-snaking soul-sucking what's-the-fancy-word a cable and a movement in the corner of her eye catches her attention.
 
-    The flickering static of a screen, all jumbled and incoherent, and then something changes and there's order where there previously was only chaos. Atoms form from the proverbial soup, and then there are forms and forces and structures, and then there's the woods and the silhouette trees, and there's a sign and the sign says ANOMALY PERIMETER.
+    Oh it's just the flickering static of a screen, jumbled and incoherent chaos, and then there's just black. Then, atoms emerge, and then there are forms and forces and structures, and then there's the forest and the ants and the silhouette trees, and Otava is walking through a forest.
 
     She is on a path, and the path splits.
   })
   (wait-for-confirm)
   (p @~a{
-    A magpie calls from high up the rocky hill on the left. An army of ants is marching down, towards Martaanvuo swamp.
+    A magpie calls from high up the rocky hill on the left. There's a natural staircase leading up.
+
+    A small squad of ants is marching down the narrow, barely noticeable right-hand trail that's sloping down towards Martaanvuo swamp.
+
+    The air is not right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.
   })
   ))

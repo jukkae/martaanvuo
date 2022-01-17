@@ -48,7 +48,7 @@
 
    (make-place
     #:id 'martaanvuo-docks
-    #:features '(stiltman)
+    #:features '(mieli)
     #:type 'docks
     #:shortname "Martaanvuo docks")
 
