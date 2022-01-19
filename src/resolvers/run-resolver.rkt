@@ -72,8 +72,7 @@
   (p
    (take-random ; TODO: probabilitify these kinds of take-random calls
     (list
-     "In the depths of THE MAW, the Heart of the World stops. Then, it's all black."
-     "In the depths of Murkwater-Aegis Workshop, Hartmann Device is turned on. False vacuum begins its collapse and space and time unfold until there is nothing."
+     "In the depths of the Maw, the Heart of the World stops. Then, it's all black."
      (string-append "The end."
                     "\n\n\n"
                     "M A R T A A N V U O"
@@ -82,7 +81,7 @@
                     "\n\n"
                     "Jukka Eerikäinen (2021)"
                     "\n\n")
-     "[details omitted – 3 days later] Having passed  Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
+     "[details omitted – 3 days later] Having passed Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
 
 (define (on-end-run exit-status)
   (when (and (not (eq? exit-status 'restart))

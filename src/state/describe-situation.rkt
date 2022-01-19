@@ -7,6 +7,8 @@
 (require
   "logging.rkt"
 
+  "../blurbs/blurbs.rkt"
+
   "../core/io.rkt"
   "../core/utils.rkt"
 
@@ -35,13 +37,9 @@
 
   (case (location-id (current-location))
     ['perimeter
-     (p @~a{
-        A magpie calls from high up the rocky hill on the left. A natural staircase leads up.
-
-        A small squad of ants is marching down the narrow, barely noticeable right-hand trail that's sloping down towards Martaanvuo swamp.
-
-        The air is not right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.
-      })]))
+     (p "A magpie calls from high up the rocky hill on the left. A natural staircase leads up.")
+     (next-blurb 'ants)
+     (p "The air is not right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")]))
 
 
 
@@ -53,7 +51,7 @@
           ((and (pc-has-item? 'bolt-cutters))
            (p "There's a door that's locked with a heavy padlock."))
           (else
-           (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters, or something."))))
+           (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters..."))))
   (cond
     ((current-in-combat?) (describe-combat-situation))
     (else (describe-non-combat-situation))))
