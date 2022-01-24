@@ -44,6 +44,7 @@
    (make-place
     #:id 'crematory
     #:type 'crematory
+    #:features '(waiting-room-begin)
     #:shortname "Crematory")
 
    (make-place

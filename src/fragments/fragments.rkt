@@ -10,4 +10,5 @@
   "content/luminous-precipice.rkt"
   "content/magpie.rkt"
   "content/martaanvuo-terminal.rkt"
-  "content/mieli.rkt")
+  "content/mieli.rkt"
+  "content/waiting-room.rkt")
