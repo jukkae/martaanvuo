@@ -15,8 +15,6 @@
 (define (blurb name)
   (case name
     ['begin-first-run
- (dev-note "TODO: Add options") ; ruminate on X / dialogue options (menu with 1-2) - choose 1 - then (menu with 2)") (or only have time to think about one topic per each transition!)
- ; or then, just use fragments despite they consuming turns?
 
  (p @~a{
   Otava is following an old, overgrown path through the foggy woods. Late-morning gloom, forest like monochrome cardboard. Air thick with the damp smell of old, decaying forest.

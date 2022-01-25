@@ -340,6 +340,17 @@
 
              ]
 
+            ['waiting-room-begin
+             (make-choice
+              'waiting-room
+              "Enter the waiting room."
+              (λ ()
+                (p "The penultimate step towards Ascending to a Higher Plane of Existence: To enter the waiting room!")
+                (go-to-story-fragment 'waiting-room-1)
+                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+
+             ]
+
             [else (dev-note (format "unknown feature ~a" feature))])))
 
        (when (eq? (location-type (current-location)) 'spring)
