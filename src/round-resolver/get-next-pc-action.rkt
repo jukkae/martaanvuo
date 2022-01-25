@@ -80,6 +80,8 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
+      (describe-situation)
+
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
 

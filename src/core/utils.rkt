@@ -61,12 +61,12 @@
   (λ () '()))
 
 #;(define (once fn)
-  (let ((called? #f))
-    (λ ()
-      (if (not called?)
-        (fn)
-        (prln "this has been called already"))
-      (set! called? #t))))
+    (let ((called? #f))
+      (λ ()
+        (if (not called?)
+            (fn)
+            (prln "this has been called already"))
+        (set! called? #t))))
 
 ; __FILE__ and __LINE__ all in one
 (define-syntax (here stx)
@@ -97,9 +97,9 @@
   (define vs '())
   (for ([i (length params)])
     (if (even? i)
-      (set! ks (append-element ks (list-ref params i)))
-      (set! vs (append-element vs (list-ref params i)))
-      ))
+        (set! ks (append-element ks (list-ref params i)))
+        (set! vs (append-element vs (list-ref params i)))
+        ))
 
   ; see also get-next-pc-action and build-keys-to-choices-map
   (define opts-with-keys (make-hash))
@@ -122,3 +122,11 @@
             (hash-update ht key add1 0))
           '#hash()
           lst)))
+
+
+; menus - rename this!
+(define (handle-meta-command meta-commands-with-keys input)
+  (set! input (string-upcase input))
+  (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
+  (define meta-command (cdr meta-command-with-key))
+  (meta-command))

@@ -44,11 +44,12 @@
    (make-place
     #:id 'crematory
     #:type 'crematory
+    #:features '(waiting-room-begin)
     #:shortname "Crematory")
 
    (make-place
     #:id 'martaanvuo-docks
-    #:features '(stiltman)
+    #:features '(mieli)
     #:type 'docks
     #:shortname "Martaanvuo docks")
 

@@ -37,7 +37,7 @@
              species
              (add1 (hash-ref (current-times-species-encountered)
                              species
-                              0))))
+                             0))))
 
 (define current-flags (make-parameter '()))
 
@@ -82,7 +82,8 @@
   (current-life 0)
   (current-fragment-id '())
   (current-combat-timeline '())
-  (current-show-round-summary? #f))
+  (current-show-round-summary? #f)
+  )
 
 
 ; s11n logistics are simpler when there is only one S-expression to serialize -> "wrapper" struct for global state

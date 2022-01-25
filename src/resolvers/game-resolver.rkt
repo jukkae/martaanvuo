@@ -1,6 +1,7 @@
 #lang racket
 
 (require "../core/io.rkt"
+         "../core/utils.rkt"
          "../resolvers/life-resolver.rkt"
          "../round-resolver/round-resolver.rkt"
          "../state/state.rkt")
@@ -106,11 +107,3 @@
 
 (define (on-begin-playthrough!)
   (reset-situation!))
-
-
-; generic menu util
-(define (handle-meta-command meta-commands-with-keys input)
-              (set! input (string-upcase input))
-              (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
-              (define meta-command (cdr meta-command-with-key))
-              (meta-command))

@@ -1,4 +1,4 @@
-#lang racket
+#lang at-exp racket
 
 (provide (all-defined-out))
 
@@ -6,44 +6,13 @@
 
 
 (fragment
- 'begin-life
- (thunk
-  (p
-   "She goes over her checklist again: Plan? Part of a plan, yes. Knife? Yes. Provisions? For a couple of days, yes. Bolt cutters? Yes."
-   )
-  )
- #:decisions
- (list
-  (make-decision
-   #:title "Rope."
-   #:description "Rope, about 40 meters, mostly not too badly frayed."
-   #:on-resolve! (thunk
-                  (set-build! 'rope)
-                  (wait-for-confirm)
-
-                  (current-show-round-summary? #t))
-   #:next-fragment 'begin-life-exit
-   )
-
-  (make-decision
-   #:title "Flashlight."
-   #:description "A flashlight, with almost half of a full charge."
-   #:on-resolve! (thunk
-                  (set-build! 'flashlight)
-                  (wait-for-confirm)
-
-                  (current-show-round-summary? #t))
-   #:next-fragment 'begin-life-exit)
-  )
- )
-
-(fragment
-'begin-life-exit
+'begin-life
 (thunk
-  (p "The trail goes past some jagged pieces of metal that stand up from the ground. A half-buried sensor array, long out of commission. This is anomaly perimeter, then - she's getting close. No rust after decades, damn good metal. Maybe when she's coming back try to cut some, take it with her. Could be useful maybe.")
-  (p "Otava comes to a fork.")
-  (opts
-    "The Broker..." "The Broker had said nothing about a fucking fork. Sounds like a fucking refund."
-    "The fork..." "The fork is an unwelcome surprise, the damp air a chilly suffocation against her skin.")
-  (p "The left branch turns into a climb up a rocky hill. A magpie's call echoes from somewhere up the hill. An army of ants is marching down the other branch, toward what must be Martaanvuo swamp.")
+  (p @~a{
+    The forest she's walking through has a jagged metal shard underbrush. Some of it makes sense: A malevolent shiny black watcher-eye thing, a slither-snaking soul-sucking what's-the-fancy-word a cable and a movement in the corner of her eye catches her attention.
+
+    Oh it's just the flickering static of a screen, jumbled and incoherent chaos, and then there's just black. Then, atoms emerge, and then there are forms and forces and structures, and then there's the forest and the ants and the silhouette trees, and Otava is walking through a forest.
+
+    She is on a path, and the path splits.
+  })
   ))
