@@ -138,6 +138,10 @@
     (case (event-type event)
       ['new-time-of-day ; proc dailies here
        '()]
+      ['not-hungry '()]
+      ['hungry '()]
+      ['very-hungry '()]
+      ['starving '()]
       [else
        (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
        '()]))

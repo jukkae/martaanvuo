@@ -38,6 +38,9 @@
     ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
     ('spawn-enemies '())
     ('not-hungry '()) ; this is usually not relevant
+    ('hungry (notice "Otava is now hungry."))
+    ('very-hungry (notice "Otava is now very hungry."))
+    ('starving (notice "Otava is now starving."))
     (else
      (dev-note (format "narrate-event: unknown event type ~a" (event-type event))))))
 
