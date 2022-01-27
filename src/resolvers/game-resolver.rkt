@@ -22,11 +22,11 @@
 
      (with-handlers ([exn:fail:contract:arity?
                       (λ (exn)
-                       (handle-broken-save)
-                       (set! game-mode 'begin))])
-      (load-situation-from-state serialized-state)
-      (br)
-      (prln "Progress loaded."))])
+                        (handle-broken-save)
+                        (set! game-mode 'begin))])
+       (load-situation-from-state serialized-state)
+       (br)
+       (prln "Progress loaded."))])
 
   (title)
 
@@ -41,9 +41,9 @@
   (define end-game-status
     (let/ec end-game
       (let begin-new-life ([mode (case game-mode
-                                  ['begin 'begin]
-                                  ['restart 'begin]
-                                  ['continue 'continue])])
+                                   ['begin 'begin]
+                                   ['restart 'begin]
+                                   ['continue 'continue])])
 
         (define pc-life-end-status (resolve-life mode))
 
@@ -72,12 +72,29 @@
   (case end-game-status
     ['win-game (end-game)]
     ['restart
+
+     (narrate-restart)
+
      (delete-save-file)
      (reset-situation!)
 
      (prln "Progress deleted. Starting from the beginning.")
      (resolve-game 'restart)]))
 
+(define (narrate-restart)
+  (p
+   (take-random ; TODO: probabilitify these kinds of take-random calls
+    (list
+     "In the depths of the Maw, the Heart of the World stops. Then, it's all black."
+     (string-append "The end."
+                    "\n\n\n"
+                    "M A R T A A N V U O"
+                    "\n"
+                    "==================="
+                    "\n\n"
+                    "Jukka Eerikäinen (2021)"
+                    "\n\n")
+     "[details omitted – 3 days later] Having passed Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
 
 (define (handle-broken-save)
   (br)

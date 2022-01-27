@@ -68,21 +68,6 @@
 (define (on-continue-run)
   '())
 
-(define (narrate-restart)
-  (p
-   (take-random ; TODO: probabilitify these kinds of take-random calls
-    (list
-     "In the depths of the Maw, the Heart of the World stops. Then, it's all black."
-     (string-append "The end."
-                    "\n\n\n"
-                    "M A R T A A N V U O"
-                    "\n"
-                    "==================="
-                    "\n\n"
-                    "Jukka Eerikäinen (2021)"
-                    "\n\n")
-     "[details omitted – 3 days later] Having passed Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
-
 (define (on-end-run exit-status)
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
@@ -121,7 +106,7 @@
                       "==================="))
      (p title-string)]
     ['restart
-     (narrate-restart)]
+     '()]
     ['pc-dead '()]
     [else
      (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])

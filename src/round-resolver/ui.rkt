@@ -51,7 +51,7 @@
          #t))) ; mark input as handled
 
 (define (restart)
-  (displayln "We live with the choices we make. Really restart?")
+  (displayln "Really restart?")
   (newline)
   (displayln "[R] to restart, anything else to continue.")
   (define input (wait-for-input))
