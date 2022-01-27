@@ -70,7 +70,23 @@
         (when (eq? pc-life-end-status 'restart) (end-game 'restart)))))
 
   (case end-game-status
-    ['win-game (end-game)]
+
+    ['win-game
+     
+     (wait-for-confirm)
+     (p
+      (string-append "The end."
+                     "\n\n\n"
+                     "M A R T A A N V U O"
+                     "\n"
+                     "==================="
+                     "\n\n"
+                     "Jukka Eerikäinen (2021)"
+                     "\n\n"))
+     (player-info)
+     (wait-for-confirm)
+     (exit)]
+    
     ['restart
 
      (narrate-restart)

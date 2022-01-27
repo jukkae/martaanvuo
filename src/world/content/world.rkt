@@ -100,6 +100,15 @@
     #:id 'martaanvuo-source)
 
    (make-place
+    #:id 'the-maw)
+
+   (make-place
+    #:id 'slaughterhouse)
+
+   (make-place
+    #:id 'the-waiting-room)
+
+   (make-place
     #:id 'palsat)))
 
 

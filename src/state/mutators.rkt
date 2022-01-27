@@ -165,24 +165,6 @@
 
   (info-card player-status (string-append "Player status")))
 
-
-
-; scripting API
-(define (end-game)
-  (wait-for-confirm)
-  (p
-   (string-append "The end."
-                  "\n\n\n"
-                  "M A R T A A N V U O"
-                  "\n"
-                  "==================="
-                  "\n\n"
-                  "Jukka Eerikäinen (2021)"
-                  "\n\n"))
-  (player-info)
-  (wait-for-confirm)
-  (exit))
-
 ; api?
 (define (pick-up-items!)
   (p "Otava picks up everything there is to pick up.")
