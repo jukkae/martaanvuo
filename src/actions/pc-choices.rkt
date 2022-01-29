@@ -298,14 +298,6 @@
                     (not (void? x))))
         (for/list ([feature (location-features (current-location))])
           (case feature
-            ['hartmann-device
-             (make-choice
-              'turn-on-device
-              "Turn on Hartmann Device."
-              (λ ()
-                (p "The fabric of reality begins unfolding itself. The reaction bubbles outwards faster than lightspeed, obliterating all traces of Otava within a nanosecond, and proceeding to blink the entire Universe out of existence.")
-                (end-game)))]
-
             ['magpie-effigy
              (make-choice
               'follow-the-magpie
@@ -353,22 +345,13 @@
 
             [else (dev-note (format "unknown feature ~a" feature))])))
 
-       (when (eq? (location-type (current-location)) 'spring)
-         (make-choice
-          'dive-in-spring
-          "Dive in the spring."
-          (λ () (make-action
-                 #:symbol 'win-game
-                 #:actor (pc)
-                 #:duration 0
-                 #:tags '(downtime)))))
 
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (not (flag-set? 'tried-to-go-back))
                   (= (current-run) 1))
          (make-pc-choice
           #:id 'end-run
-          #:text "Turn back."
+          #:text "Go back home."
           #:duration 0
           #:tags '(downtime)))
 
@@ -376,7 +359,7 @@
                   (flag-set? 'ending-run-allowed))
           (make-pc-choice
           #:id 'end-run
-          #:text "Go back to the Shack and the Collector."
+          #:text "Go back home."
           #:duration 0
           #:tags '(downtime)))
        ))))

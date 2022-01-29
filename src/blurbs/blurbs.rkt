@@ -14,6 +14,17 @@
 
 (define (blurb name)
   (case name
+    ['the-end
+     (p @~a{
+The end.
+
+
+
+M A R T A A N V U O
+===================
+
+Jukka Eerikäinen
+      })]
     ['begin-first-run
 
  (p @~a{

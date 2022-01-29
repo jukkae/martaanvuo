@@ -6,6 +6,7 @@
 
 (require
   "logging.rkt"
+  "mutators.rkt"
 
   "../blurbs/blurbs.rkt"
 
@@ -39,7 +40,10 @@
     ['perimeter
      (p "A magpie calls from high up the rocky hill on the left. A natural staircase leads up.")
      (next-blurb 'ants)
-     (p "The air is not right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")]))
+     (p "The air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")
+     (when (not (flag-set? 'tried-to-go-back))
+       '())
+     ]))
 
 
 

@@ -1,10 +1,12 @@
 #lang racket
 
-(require "../core/io.rkt"
-         "../core/utils.rkt"
-         "../resolvers/life-resolver.rkt"
-         "../round-resolver/round-resolver.rkt"
-         "../state/state.rkt")
+(require
+  "../blurbs/blurbs.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
+  "../resolvers/life-resolver.rkt"
+  "../round-resolver/round-resolver.rkt"
+  "../state/state.rkt")
 
 (provide resolve-game)
 (define (resolve-game game-mode)
@@ -74,15 +76,7 @@
     ['win-game
      
      (wait-for-confirm)
-     (p
-      (string-append "The end."
-                     "\n\n\n"
-                     "M A R T A A N V U O"
-                     "\n"
-                     "==================="
-                     "\n\n"
-                     "Jukka Eerikäinen (2021)"
-                     "\n\n"))
+     (blurb 'the-end)
      (player-info)
      (wait-for-confirm)
      (exit)]
