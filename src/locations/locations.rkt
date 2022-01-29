@@ -92,14 +92,7 @@
   ; TODO: location on-exit / on-enter triggers here
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location! (pc) location)
-  (add-actor-to-location! location (pc))
-  (when (place? location)
-    (set-place-visited?! location #t)
-    (for ([route (place-routes location)])
-      (when #t ; if not hidden
-        (set-route-endpoint-visited! route location)
-        ))
-    ))
+  (add-actor-to-location! location (pc)))
 
 
 (define (location-neighbors location)

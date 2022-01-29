@@ -125,7 +125,7 @@
                     (string-append
                      "unsettled: "
                      (number->string new-debt-amount)
-                     " g of Martaanvuo gold"))
+                     " g gold"))
   (displayln "new-debt-amount:")
   #;(displayln (~r new-debt-amount)) ; formatting todo
   (displayln new-debt-amount)

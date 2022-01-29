@@ -18,6 +18,10 @@
 
   "../fragments/fragment.rkt"
 
+  "../locations/0-types/location.rkt"
+  "../locations/0-types/place.rkt"
+  "../locations/0-types/route.rkt"
+  "../locations/routes.rkt"
 
   "../state/state.rkt")
 
@@ -42,8 +46,8 @@
 
      ; does this also need to happen when 'continue?
      (define round-begin-status
-      (cond ((not (null? (current-fragment-id)))
-             (current-fragment-on-begin-round!))))
+       (cond ((not (null? (current-fragment-id)))
+              (current-fragment-on-begin-round!))))
      (case round-begin-status
        ['ok 'ok]
        ['pc-dead 'pc-dead])]
@@ -102,10 +106,21 @@
     #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
     '())
 
-  (if #f
-    (newline) ; This is the "extra" newline that separates rounds
-    '())
+  ; mark location as visited
+  (let ([location (current-location)])
+    (when (place? location)
+      (set-place-visited?! location #t)
+      (for ([route (place-routes location)])
+        (when #t ; if not hidden
+          (set-route-endpoint-visited! route location)
+          ))
+      ))
+  
 
   (if #f
-    (wait-for-confirm)
-    '()))
+      (newline) ; This is the "extra" newline that separates rounds
+      '())
+
+  (if #f
+      (wait-for-confirm)
+      '()))

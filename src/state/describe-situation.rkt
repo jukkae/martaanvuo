@@ -14,6 +14,7 @@
   "../core/utils.rkt"
 
   "../locations/0-types/location.rkt"
+  "../locations/0-types/place.rkt"
 
   "../pc/pc.rkt")
 
@@ -39,8 +40,16 @@
   (case (location-id (current-location))
     ['perimeter
      (p "A magpie calls from high up the rocky hill on the left. A natural staircase leads up.")
-     (next-blurb 'ants)
-     (p "The air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")
+     ;(next-blurb 'ants)
+     (if (not (place-visited? (current-location)))
+      (p "It takes a while for Otava to notice the other fork. A crew of ants is carrying chopped-up leaves down a soggy downhill path to the right that's barely there, behind a rock.")
+      (p "There's a soggy downhill path to the right.")
+       )
+
+    (if (not (place-visited? (current-location)))
+      (p "The air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")
+      (p "The air is filthy and wrong and rotten and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
+    )
      (when (not (flag-set? 'tried-to-go-back))
        '())
      ]))

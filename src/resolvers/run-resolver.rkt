@@ -36,8 +36,8 @@
      (blurb 'begin-first-run)
      ;(dev-note "Fixme: Quests")
      (wait-for-confirm)
-     ;(create-quest 'pay-off-debt)
-     ;(create-quest 'anthead-monograph)
+     (create-quest 'pay-off-debt)
+     (create-quest 'anthead-monograph)
      ]))
 
 (define (narrate-begin-recurse-run)
