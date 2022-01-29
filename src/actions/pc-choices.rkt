@@ -351,8 +351,8 @@
                   (= (current-run) 1))
          (make-pc-choice
           #:id 'end-run
-          #:text "Go back home."
-          #:duration 0
+          #:text "Go back."
+          #:duration 100
           #:tags '(downtime)))
 
        (when (and (eq? (location-type (current-location)) 'perimeter)

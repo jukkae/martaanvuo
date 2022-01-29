@@ -31,6 +31,7 @@
     ('new-time-of-day
      (case (event-details event)
        ('afternoon (notice "It is now afternoon."))
+       ('midday (notice "It is now midday."))
        ('evening (notice "It is now evening."))
        ('night (notice "It is now night."))
        ('morning (notice "It is now morning."))))
