@@ -273,7 +273,7 @@
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Martaanvuo Swamp."
-              "The swamp.")]
+              "Soggy downhill path.")]
          [else (string-append "["
                               "go to: "
                               (symbol->string (location-id (route-other-end-from route start-location)))
