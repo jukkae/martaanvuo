@@ -5,15 +5,15 @@
   "ai.rkt"
   "action-queue.rkt"
 
-  "../actions/action.rkt"
+  "../../actions/action.rkt"
 
   "../action-resolver/action-resolver.rkt"
 
-  "../core/io.rkt"
+  "../../core/io.rkt"
 
-  "../pc/pc.rkt"
+  "../../pc/pc.rkt"
 
-  "../state/state.rkt")
+  "../../state/state.rkt")
 
 
 

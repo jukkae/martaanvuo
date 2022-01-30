@@ -4,20 +4,20 @@
 
 (require racket/lazy-require)
 
-(require "../actions/action.rkt"
-         "../core/io.rkt"
-         "../core/utils.rkt"
+(require "../../actions/action.rkt"
+         "../../core/io.rkt"
+         "../../core/utils.rkt"
 
-         "../pc/pc.rkt")
+         "../../pc/pc.rkt")
 
 (lazy-require
- ["../state/mutators.rkt"
+ ["../../state/mutators.rkt"
   (flag-set?
    set-flag
    )])
 
 (lazy-require
- ["../state/logging.rkt"
+ ["../../state/logging.rkt"
   (next-chapter!
    )])
 

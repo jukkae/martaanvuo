@@ -3,13 +3,13 @@
 (provide (all-defined-out))
 
 (require
-  "../core/io.rkt"
-  "../core/utils.rkt"
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
 
-  "../fragments/decision.rkt"
-  "../fragments/fragment.rkt"
+  "../../fragments/decision.rkt"
+  "../../fragments/fragment.rkt"
 
-  "../state/state.rkt")
+  "../../state/state.rkt")
 
 
 (define (current-fragment-on-begin-round!)

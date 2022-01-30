@@ -10,31 +10,31 @@
   "action-queue.rkt"
   "fragment-handler.rkt"
 
-  "../actors/actor.rkt"
-  "../actors/condition.rkt"
+  "../../actors/actor.rkt"
+  "../../actors/condition.rkt"
 
-  "../core/io.rkt"
-  "../core/utils.rkt"
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
 
-  "../fragments/fragment.rkt"
+  "../../fragments/fragment.rkt"
 
-  "../locations/0-types/location.rkt"
-  "../locations/0-types/place.rkt"
-  "../locations/0-types/route.rkt"
-  "../locations/routes.rkt"
+  "../../locations/0-types/location.rkt"
+  "../../locations/0-types/place.rkt"
+  "../../locations/0-types/route.rkt"
+  "../../locations/routes.rkt"
 
-  "../state/state.rkt")
+  "../../state/state.rkt")
 
 
 (lazy-require
- ["../combat/combat.rkt"
+ ["../../combat/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
    end-combat!)])
 
 (lazy-require
- ["../state/logging.rkt"
+ ["../../state/logging.rkt"
   (set-prompt!)])
 
 (define (on-begin-round mode)

@@ -5,15 +5,15 @@
 (require racket/lazy-require)
 
 (require
-  "../actions/action.rkt"
+  "../../actions/action.rkt"
 
-  "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
+  "../../actors/actor.rkt"
+  "../../actors/pc-actor.rkt"
 
-  "../enemies/blindscraper.rkt"
-  "../enemies/grabberkin.rkt"
+  "../../enemies/blindscraper.rkt"
+  "../../enemies/grabberkin.rkt"
 
-  "../state/state.rkt")
+  "../../state/state.rkt")
 
 (require "action-queue.rkt")
 

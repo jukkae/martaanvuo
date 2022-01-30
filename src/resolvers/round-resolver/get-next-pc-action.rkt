@@ -11,20 +11,20 @@
 (require
   "fragment-handler.rkt"
 
-  "../actions/action.rkt"
-  "../actions/pc-choices.rkt"
-  "../actions/choice.rkt"
+  "../../actions/action.rkt"
+  "../../actions/pc-choices.rkt"
+  "../../actions/choice.rkt"
 
-  "../core/io.rkt"
-  "../core/utils.rkt"
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
 
-  "../fragments/decision.rkt"
+  "../../fragments/decision.rkt"
 
-  "../locations/locations.rkt"
+  "../../locations/locations.rkt"
 
-  "../pc/character-sheet.rkt"
+  "../../pc/character-sheet.rkt"
 
-  "../state/state.rkt"
+  "../../state/state.rkt"
   )
 
 (lazy-require

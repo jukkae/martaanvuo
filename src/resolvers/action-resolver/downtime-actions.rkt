@@ -6,15 +6,21 @@
 (require racket/lazy-require)
 
 (require
-  "../actors/actor.rkt"
-  "../core/checks.rkt"
-  "../core/io.rkt"
-  "../state/state.rkt"
-  "../core/utils.rkt")
+  "../../actors/actor.rkt"
+  "../../core/checks.rkt"
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
+  "../../state/state.rkt"
+  )
 
 
 (lazy-require
- ["../combat/combat.rkt"
+ ["../round-resolver/event-handler.rkt"
+  (handle-interrupting-event!
+   )])
+
+(lazy-require
+ ["../../combat/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
@@ -22,16 +28,11 @@
    )])
 
 (lazy-require
- ["../locations/locations.rkt"
+ ["../../locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
    location-on-enter!
-   )])
-
-(lazy-require
- ["../round-resolver/event-handler.rkt"
-  (handle-interrupting-event!
    )])
 
 (define (resolve-sleep-action! action)

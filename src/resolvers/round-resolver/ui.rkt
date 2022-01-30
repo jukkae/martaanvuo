@@ -3,13 +3,13 @@
 (provide (all-defined-out))
 
 (require
-  "../core/io.rkt"
-  "../core/session.rkt"
-  "../core/utils.rkt"
+  "../../core/io.rkt"
+  "../../core/session.rkt"
+  "../../core/utils.rkt"
 
-  "../quests/quest.rkt"
+  "../../quests/quest.rkt"
 
-  "../state/state.rkt")
+  "../../state/state.rkt")
 
 ; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.
 ; This is because at the time of writing this, cleaning up round-resolver.rkt is priority.

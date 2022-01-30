@@ -1,11 +1,12 @@
 #lang racket
 
 (require
+  "life-resolver.rkt"
+  "round-resolver/round-resolver.rkt"
+
   "../blurbs/blurbs.rkt"
   "../core/io.rkt"
   "../core/utils.rkt"
-  "../resolvers/life-resolver.rkt"
-  "../round-resolver/round-resolver.rkt"
   "../state/state.rkt")
 
 (provide resolve-game)
@@ -74,18 +75,21 @@
   (case end-game-status
 
     ['win-game
-     
+
      (wait-for-confirm)
      (blurb 'the-end)
      (player-info)
      (wait-for-confirm)
      (exit)]
-    
+
     ['restart
 
      (narrate-restart)
 
      (delete-save-file)
+
+     (player-info)
+     (wait-for-confirm)
      (reset-situation!)
 
      (prln "Progress deleted. Starting from the beginning.")

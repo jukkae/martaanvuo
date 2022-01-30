@@ -9,38 +9,43 @@
   "special-actions.rkt"
   "traverse-action.rkt"
 
-  "../actions/action.rkt"
-
-  "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
-
-  "../combat/combat-action-resolver.rkt"
-
-  "../core/io.rkt"
-  "../core/utils.rkt"
-
-  "../enemies/blindscraper-actions.rkt"
-  "../enemies/grabberkin-actions.rkt"
-
-  "../items/item.rkt"
-
-  "../locations/0-types/location.rkt"
-
-  "../pc/pc.rkt"
-
   "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
-  "../state/state.rkt"
+  "../../actions/action.rkt"
 
-  "../world/time.rkt"
-  "../world/world.rkt"
+  "../../actors/actor.rkt"
+  "../../actors/pc-actor.rkt"
+
+  "../../combat/combat-action-resolver.rkt"
+
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
+
+  "../../enemies/blindscraper-actions.rkt"
+  "../../enemies/grabberkin-actions.rkt"
+
+  "../../items/item.rkt"
+
+  "../../locations/0-types/location.rkt"
+
+  "../../pc/pc.rkt"
+
+  "../../state/state.rkt"
+
+  "../../world/time.rkt"
+  "../../world/world.rkt"
 
   )
 
 (lazy-require
- ["../locations/narration.rkt"
+ ["../round-resolver/event-handler.rkt"
+  (handle-interrupting-event!
+   )])
+
+(lazy-require
+ ["../../locations/narration.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
@@ -48,15 +53,10 @@
    )])
 
 (lazy-require
- ["../locations/locations.rkt"
+ ["../../locations/locations.rkt"
   (move-pc-to-location!
    )])
 
-
-(lazy-require
- ["../round-resolver/event-handler.rkt"
-  (handle-interrupting-event!
-   )])
 
 ; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)

@@ -5,8 +5,8 @@
 (require 
   "event.rkt"
 
-  "../core/utils.rkt"
-  "../locations/locations.rkt")
+  "../../core/utils.rkt"
+  "../../locations/locations.rkt")
 
 (define (handle-interrupting-event! event)
   (cond ((eq? (event-type event) 'spawn-enemies)

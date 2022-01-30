@@ -19,21 +19,21 @@
 
   "../action-resolver/action-resolver.rkt"
 
-  "../actions/action.rkt"
-  "../actions/pc-choices.rkt"
+  "../../actions/action.rkt"
+  "../../actions/pc-choices.rkt"
 
-  "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
+  "../../actors/actor.rkt"
+  "../../actors/pc-actor.rkt"
 
-  "../core/io.rkt"
-  "../core/utils.rkt"
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
 
-  "../locations/0-types/location.rkt"
+  "../../locations/0-types/location.rkt"
 
-  "../pc/pc.rkt"
+  "../../pc/pc.rkt"
 
-  "../state/logging.rkt"
-  "../state/state.rkt")
+  "../../state/logging.rkt"
+  "../../state/state.rkt")
 
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))

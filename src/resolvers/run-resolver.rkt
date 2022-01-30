@@ -3,6 +3,7 @@
 (provide (all-defined-out))
 
 (require
+  "round-resolver/round-resolver.rkt"
   "../blurbs/blurbs.rkt"
   "../core/io.rkt"
   "../core/utils.rkt"
@@ -11,7 +12,6 @@
   "../pc/pc.rkt"
   "../quests/quest.rkt"
   "../quests/quests.rkt"
-  "../round-resolver/round-resolver.rkt"
   "../state/state.rkt"
   "../state/logging.rkt"
   "../world/world.rkt")

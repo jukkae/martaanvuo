@@ -8,20 +8,20 @@
 (require racket/lazy-require)
 
 (require
-  "../actions/action.rkt"
-
-  "../locations/0-types/location.rkt"
-  "../locations/0-types/route.rkt"
-  "../locations/locations.rkt"
-
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
-  "../state/state.rkt"
+  "../../actions/action.rkt"
+
+  "../../locations/0-types/location.rkt"
+  "../../locations/0-types/route.rkt"
+  "../../locations/locations.rkt"
+
+  "../../state/state.rkt"
   )
 
 (lazy-require
- ["../locations/narration.rkt"
+ ["../../locations/narration.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action

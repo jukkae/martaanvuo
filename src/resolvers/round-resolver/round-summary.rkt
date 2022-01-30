@@ -3,8 +3,8 @@
 (provide (all-defined-out))
 
 (require
-  "../core/api.rkt"
-  "../locations/locations.rkt")
+  "../../core/api.rkt"
+  "../../locations/locations.rkt")
 
 (define (round-summary mode)
   (define title

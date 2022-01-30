@@ -5,6 +5,8 @@
 (require
   "run-resolver.rkt"
 
+  "round-resolver/round-resolver.rkt"
+
   "../actors/pc-actor.rkt"
 
   "../core/io.rkt"
@@ -12,7 +14,6 @@
   "../core/utils.rkt"
 
   "../pc/pc.rkt"
-  "../round-resolver/round-resolver.rkt"
   "../state/state.rkt")
 
 

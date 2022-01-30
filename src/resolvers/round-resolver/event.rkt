@@ -4,11 +4,11 @@
 
 (require racket/serialize)
 
-(require "../core/io.rkt"
-         "../core/utils.rkt"
-         "../world/world.rkt"
+(require "../../core/io.rkt"
+         "../../core/utils.rkt"
+         "../../world/world.rkt"
 
-         "../state/state.rkt")
+         "../../state/state.rkt")
 
 (serializable-struct
  event

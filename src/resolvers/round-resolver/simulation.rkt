@@ -8,18 +8,18 @@
   "event.rkt"
   "timeline.rkt"
 
-  "../actors/pc-actor.rkt"
+  "../../actors/pc-actor.rkt"
 
-  "../core/utils.rkt"
+  "../../core/utils.rkt"
 
-  "../state/state.rkt"
+  "../../state/state.rkt"
 
-  "../world/time.rkt"
-  "../world/world.rkt")
+  "../../world/time.rkt"
+  "../../world/world.rkt")
 
 
 (lazy-require
- ["../pc/pc.rkt"
+ ["../../pc/pc.rkt"
   (pc-hunger-level)])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry
