@@ -99,16 +99,23 @@
   (p
    (take-random ; TODO: probabilitify these kinds of take-random calls
     (list
-     "In the depths of the Maw, the Heart of the World stops. Then, it's all black."
+     "An unfinished timeline continues its chaotic growth, an eldritch tentacle tying itself in a thousand knots through dimensions of time and space."
+     "Unpruned, abandoned, the story ends here."
+     "Unpruned, abandoned, the story of Otava ends here."
+     "Unpruned, abandoned, the story of this Otava ends here."
+     "Unpruned, abandoned, this story of this Otava ends here."
+     "In the depths of the Maw, the Heart of the World stops."
      (string-append "The end."
                     "\n\n\n"
                     "M A R T A A N V U O"
                     "\n"
                     "==================="
                     "\n\n"
-                    "Jukka Eerikäinen (2021)"
+                    "Jukka Eerikäinen (2022)"
                     "\n\n")
-     "[details omitted – 3 days later] Having passed Martaanvuo, Otava comes upon an unnamed mountain range. She crosses over and begins a new life herding reindeer. She lives the rest of her days free from suffering and dies of natural causes at an elderly age."))))
+     (string-append "[data corrupt]\n"
+                    "[7 days later]\n"
+                    "Otava comes upon a mountain range. She finds a way over, and begins a new life on the other side, deep within the vast unnamed forests.")))))
 
 (define (handle-broken-save)
   (br)

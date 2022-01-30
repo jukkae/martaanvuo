@@ -100,16 +100,12 @@
     ['end-run
      (p "She's still alive.")]
     ['recurse
-     (define title-string
-       (string-append "M A R T A A N V U O"
-                      "\n"
-                      "==================="))
-     (p title-string)]
+      (blurb 'martaanvuo-title)]
     ['restart
      '()]
     ['pc-dead '()]
     [else
-     (p "narrate-end-run: unhandled exit status: " (symbol->string exit-status))])
+     (dev-note (string-append "narrate-end-run: unhandled exit status: " (symbol->string exit-status)))])
 
   (when (not (eq? exit-status 'pc-dead))
     (wait-for-confirm)))
