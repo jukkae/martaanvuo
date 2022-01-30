@@ -115,7 +115,7 @@
     (wait-for-confirm)))
 
 ; engine / run-resolver
-(define (resolve-run mode 
+(define (resolve-run mode
                      #:suppress-new-chapter? [suppress-new-chapter? #f])
 
   (case mode
@@ -130,27 +130,27 @@
 
       (when (eq? mode 'continue)
         (define first-round-exit-status (resolve-round 'continue))
-        ; end run?
-        (when (eq? first-round-exit-status 'pc-dead) (end-run 'pc-dead))
-        (when (eq? first-round-exit-status 'win-game) (end-run 'win-game))
-        (when (eq? first-round-exit-status 'end-run) (end-run 'end-run))
-        (when (eq? first-round-exit-status 'recurse) (end-run 'recurse))
-        (when (eq? first-round-exit-status 'restart) (end-run 'restart))
-
-        ; continue
-        (when (eq? first-round-exit-status 'next-chapter) (next-chapter!)))
+        (case first-round-exit-status
+          ; end run
+          ['pc-dead (end-run 'pc-dead)]
+          ['win-game (end-run 'win-game)]
+          ['end-run (end-run 'end-run)]
+          ['recurse (end-run 'recurse)]
+          ['restart (end-run 'restart)]
+          ; continue
+          ['next-chapter (end-run 'next-chapter!)]))
 
       (let loop ()
         (define round-exit-status (resolve-round 'begin))
-        ; end run?
-        (when (eq? round-exit-status 'pc-dead) (end-run 'pc-dead))
-        (when (eq? round-exit-status 'win-game) (end-run 'win-game))
-        (when (eq? round-exit-status 'end-run) (end-run 'end-run))
-        (when (eq? round-exit-status 'recurse) (end-run 'recurse))
-        (when (eq? round-exit-status 'restart) (end-run 'restart))
-
-        ; continue
-        (when (eq? round-exit-status 'next-chapter) (next-chapter!))
+        (case round-exit-status
+          ; end run
+          ['pc-dead (end-run 'pc-dead)]
+          ['win-game (end-run 'win-game)]
+          ['end-run (end-run 'end-run)]
+          ['recurse (end-run 'recurse)]
+          ['restart (end-run 'restart)]
+          ; continue
+          ['next-chapter (end-run 'next-chapter!)])
 
         (loop))))
   (on-end-run run-exit-status)
