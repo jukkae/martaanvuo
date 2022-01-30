@@ -19,6 +19,8 @@
  ["../state/logging.rkt"
   (append-to-log)])
 
+(define *output-state* 'clean) ; not serialized, local
+
 (define prln displayln)
 (define br newline)
 
@@ -76,6 +78,7 @@
 
 ; implementation detail
 (define (print-paragraph formatted-text)
+  (set! *output-state* 'dirty)
   (displayln formatted-text))
 
 (define (repeat-last-paragraph)
@@ -104,11 +107,17 @@
   (define s (format-for-printing str #:width 92 #:indent 0))
   (print-paragraph s))
 
+; only confirm if there's been something new – no redundant confirmations
 (define (wait-for-confirm)
-  (prln "[Enter]")
-  (newline)
-  (define input (read-line))
-  input)
+  (case *output-state*
+   ['dirty
+    (prln "[Enter]")
+    (newline)
+    (define input (read-line))
+    (set! *output-state* 'clean)
+    input
+   ]
+   [else '()]))
 
 (define (wait-for-input)
   (newline)
