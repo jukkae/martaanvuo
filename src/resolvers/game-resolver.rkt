@@ -107,9 +107,7 @@
      "Unpruned, abandoned, this story of this Otava ends here."
      "In the depths of the Maw, the Heart of the World stops."
      (get-blurb 'the-end)
-     (string-append "[data corrupt]\n"
-                    "[7 days later]\n"
-                    "Otava comes upon a mountain range. She finds a way over, and begins a new life on the other side, deep within the vast unnamed forests.")))))
+     "[data missing - 13 days later] Otava comes upon a mountain range. She finds a way over, and begins a new life on the other side, deep within the vast unnamed forests."))))
 
 (define (handle-broken-save)
   (br)

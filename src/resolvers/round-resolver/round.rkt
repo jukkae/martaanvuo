@@ -48,6 +48,16 @@
      (define round-begin-status
        (cond ((not (null? (current-fragment-id)))
               (current-fragment-on-begin-round!))))
+
+     ; mark location as visited w.r.t routes
+     ; todo logic is shit here (should maybe happen in traversal action resolution)
+     (let ([location (current-location)])
+      (when (place? location)
+        (for ([route (place-routes location)])
+          (when #t ; if not hidden
+            (set-route-endpoint-visited! route location)
+            ))
+        ))
      (case round-begin-status
        ['ok 'ok]
        ['pc-dead 'pc-dead])]
@@ -106,16 +116,11 @@
     #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
     '())
 
-  ; mark location as visited
-  (let ([location (current-location)])
-    (when (place? location)
-      (set-place-visited?! location #t)
-      (for ([route (place-routes location)])
-        (when #t ; if not hidden
-          (set-route-endpoint-visited! route location)
-          ))
-      ))
-  
+; mark location itself as visited, as opposed to its routes
+     (let ([location (current-location)])
+      (when (place? location)
+        (set-place-visited?! location #t)
+        ))
 
   (if #f
       (newline) ; This is the "extra" newline that separates rounds

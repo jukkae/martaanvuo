@@ -54,7 +54,7 @@
 ; (sort of like IO monad)
 (define (get-next-pc-action)
   (let/ec return
-    (let what-do-you-do ()
+    (let what-do-you-do ([question-repeated? #f])
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
@@ -63,7 +63,7 @@
         (when (eq? meta-command-result 'restart) (return 'restart))
 
         (redescribe-situation)
-        (what-do-you-do))
+        (what-do-you-do #f))
 
       (define actor (pc))
 
@@ -92,7 +92,11 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
-      (describe-situation)
+      (dev-note "Find me and fix me: redescribe-situation doesn't work here as intended")
+      (if question-repeated?
+        (redescribe-situation)
+        (describe-situation)
+        )
 
       (newline)
       (display-statusline)
@@ -123,18 +127,18 @@
 
             ((choice-valid? choices-with-keys input)
              (define action (resolve-choice-and-produce-action! choices-with-keys input))
-             (cond ((eq? 'cancel action) (what-do-you-do))
+             (cond ((eq? 'cancel action) (what-do-you-do #f))
                    (else (return action))))
 
             (else
-            (notice
+             (notice
               ; if whitespace only
               (if (regexp-match-exact? #px"\\s*" input)
                   "Empty command"
                   (format "Unknown command: [~a]" input)
                   )
                                 )
-            (what-do-you-do))))))
+             (what-do-you-do #t))))))
 
 
 (define (choice-valid? choices-with-keys input)
