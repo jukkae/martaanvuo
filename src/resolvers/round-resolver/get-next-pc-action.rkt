@@ -25,6 +25,7 @@
   "../../pc/character-sheet.rkt"
 
   "../../state/state.rkt"
+  "../../world/time.rkt"
   )
 
 (lazy-require
@@ -35,6 +36,16 @@
    quit
    restart
    )])
+
+(define (display-statusline)
+  (define current-day (add1 (/ (current-elapsed-time) day-length)))
+  (notice (format
+          "~a, day ~a, ~a"
+          (get-location-short-description (current-location))
+          current-day
+          (symbol->string (time-of-day-from-jiffies (current-elapsed-time)))
+          ))
+)
 
 
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
@@ -82,6 +93,9 @@
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
       (describe-situation)
+
+      (newline)
+      (display-statusline)
 
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
@@ -241,8 +255,6 @@
          (newline)
          )
         (else
-         (newline) ; This is the extra space, should pass a param to print call perhaps instead?
-         #;(p "What do you do?")
          (print-decisions-with-keys fragment-decisions-with-keys)
          (print-choices-with-keys choices-with-keys)
          (print-meta-commands-with-keys meta-commands-with-keys))))
