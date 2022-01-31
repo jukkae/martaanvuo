@@ -33,11 +33,15 @@
 
   (case (current-run)
     [(1)
-     (blurb 'begin-first-run)
+     (blurb 'begin-first-run-pt-1)
      ;(dev-note "Fixme: Quests")
      (wait-for-confirm)
      (create-quest 'pay-off-debt)
+     (wait-for-confirm)
+     (blurb 'begin-first-run-pt-2)
+     (wait-for-confirm)
      (create-quest 'anthead-monograph)
+     (wait-for-confirm)
      ]))
 
 (define (narrate-begin-recurse-run)

@@ -25,6 +25,7 @@
 (define br newline)
 
 (define (info-card content title)
+  (set! *output-state* 'dirty)
   (when (not (null? title)) (prln (format "[~a]" title)))
   (when (not (null? (prune content)))
     (print-table content #:row-sep? #f)
