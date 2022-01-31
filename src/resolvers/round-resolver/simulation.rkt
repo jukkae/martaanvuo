@@ -44,17 +44,19 @@
   (define events '())
 
 
-  (define new-elapsed-time (add1 (world-elapsed-time (current-world))))
+  (define new-world-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
    (current-world)
-   new-elapsed-time)
+   new-world-elapsed-time)
+
+   (current-elapsed-time (add1 (current-elapsed-time)))
 
   (define new-hunger-level? (hunger++))
   (when (not (null? new-hunger-level?))
     (set! events (append-element events new-hunger-level?)))
 
 
-  (set! events (append events (get-daily-events-for-time new-elapsed-time)))
+  (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
 
 

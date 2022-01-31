@@ -30,7 +30,7 @@
            (else
             (set-flag 'tried-to-go-back)
             (p @~a{
-              Choking to death doesn't sound like a good time to Otava. Fuck it. She'll go find a gas mask.
+              Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
             })
             (wait-for-confirm)
             (next-chapter!) ; end chapter, but not run!

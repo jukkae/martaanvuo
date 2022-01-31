@@ -26,6 +26,7 @@
 
   "../../state/state.rkt"
   "../../world/time.rkt"
+  "../../world/world.rkt"
   )
 
 (lazy-require
@@ -38,12 +39,12 @@
    )])
 
 (define (display-statusline)
-  (define current-day (add1 (/ (current-elapsed-time) day-length)))
+  (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
           "~a, day ~a, ~a"
           (get-location-short-description (current-location))
           current-day
-          (symbol->string (time-of-day-from-jiffies (current-elapsed-time)))
+          (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
           ))
 )
 
@@ -53,7 +54,7 @@
 ; (sort of like IO monad)
 (define (get-next-pc-action)
   (let/ec return
-    (let what-do-you-do ([verbosity 'verbose])
+    (let what-do-you-do ()
       (define (handle-meta-command meta-commands-with-keys input)
         (set! input (string-upcase input))
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
@@ -62,7 +63,7 @@
         (when (eq? meta-command-result 'restart) (return 'restart))
 
         (redescribe-situation)
-        (what-do-you-do 'verbose))
+        (what-do-you-do))
 
       (define actor (pc))
 
@@ -72,7 +73,6 @@
 
       (when (null? fragment-decisions)
         (unset-current-fragment-id!)
-        ;(wait-for-confirm) ; what a place for this
         )
 
       ; launch a fragment directly -> no action resolution -> not a choice
@@ -100,7 +100,7 @@
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
 
-      (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys verbosity)
+      (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys)
 
       (define input (wait-for-input))
 
@@ -123,10 +123,18 @@
 
             ((choice-valid? choices-with-keys input)
              (define action (resolve-choice-and-produce-action! choices-with-keys input))
-             (cond ((eq? 'cancel action) (what-do-you-do 'verbose))
+             (cond ((eq? 'cancel action) (what-do-you-do))
                    (else (return action))))
 
-            (else (what-do-you-do 'abbreviated))))))
+            (else
+            (notice
+              ; if whitespace only
+              (if (regexp-match-exact? #px"\\s*" input)
+                  "Empty command"
+                  (format "Unknown command: [~a]" input)
+                  )
+                                )
+            (what-do-you-do))))))
 
 
 (define (choice-valid? choices-with-keys input)
@@ -246,18 +254,10 @@
 (define (print-choices-and-meta-commands-with-keys
          choices-with-keys
          fragment-decisions-with-keys
-         meta-commands-with-keys verbosity)
-  (cond ((eq? verbosity 'abbreviated)
-         (display "Unknown command. Known commands: ")
-         (for ([(k v) (in-hash fragment-decisions-with-keys)]) (display k))
-         (for ([(k v) (in-hash choices-with-keys)]) (display k))
-         (for ([(k v) (in-hash meta-commands-with-keys)]) (display k))
-         (newline)
-         )
-        (else
-         (print-decisions-with-keys fragment-decisions-with-keys)
-         (print-choices-with-keys choices-with-keys)
-         (print-meta-commands-with-keys meta-commands-with-keys))))
+         meta-commands-with-keys)
+  (print-decisions-with-keys fragment-decisions-with-keys)
+  (print-choices-with-keys choices-with-keys)
+  (print-meta-commands-with-keys meta-commands-with-keys))
 
 (define (meta-command-valid? meta-commands-with-keys input)
   (set! input (string-upcase input))
