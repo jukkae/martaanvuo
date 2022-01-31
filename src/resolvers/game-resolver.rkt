@@ -83,16 +83,17 @@
      (exit)]
 
     ['restart
-
      (narrate-restart)
-
-     (delete-save-file)
 
      (player-info)
      (wait-for-confirm)
-     (reset-situation!)
 
+     (reset-situation!)
+     (delete-save-file)
      (prln "Progress deleted. Starting from the beginning.")
+     (newline)
+     (wait-for-confirm)
+
      (resolve-game 'restart)]))
 
 (define (narrate-restart)

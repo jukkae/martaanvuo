@@ -21,7 +21,10 @@
 
 (define *output-state* 'clean) ; not serialized, local
 
-(define prln displayln)
+(define (prln args)
+  (set! *output-state* 'dirty)
+  (displayln args))
+
 (define br newline)
 
 (define (info-card content title)
