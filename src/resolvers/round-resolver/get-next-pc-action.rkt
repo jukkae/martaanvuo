@@ -32,6 +32,7 @@
 (lazy-require
  ["ui.rkt"
   (display-quests
+   display-log
    inventory
    notes
    quit

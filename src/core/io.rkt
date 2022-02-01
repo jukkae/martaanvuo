@@ -57,18 +57,6 @@
 
   (display-title))
 
-(define (display-log)
-  (hr)
-  (prln "[BEGIN LOG]")
-  (newline)
-  (display-title)
-  #;(prln (current-log))
-  (for ([entry (current-log)])
-    (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
-  (prln "[END LOG]")
-  (newline)
-  (wait-for-confirm))
-
 (define (display-prompt)
   (newline)
   (prln (current-prompt)))
