@@ -78,6 +78,7 @@
    list-items
    "Notes")
 
+  (wait-for-confirm)
   #t)
 
 
@@ -94,4 +95,6 @@
 
   (info-card
    sheet
-   "Quests"))
+   "Quests")
+  (wait-for-confirm)
+  )

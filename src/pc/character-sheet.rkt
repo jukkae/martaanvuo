@@ -125,6 +125,7 @@
    )
 
   (inventory)
+  (wait-for-confirm)
   #t
   )
 
