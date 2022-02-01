@@ -50,6 +50,15 @@ Jukka Eerikäinen (2022)
     ===================
   }]
 
+  ; idea: this (and other similar semi-random content stuff) could also either use p or notice, depending on situation
+  ['rest-action
+  @~a{
+    Time passes.
+  }]
+
+ [else (dev-note (format "Unknown blurb: ~a" name))
+       '()]
+
   ))
 
 (define (blurb name)

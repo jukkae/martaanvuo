@@ -18,6 +18,8 @@
   "../../actors/actor.rkt"
   "../../actors/pc-actor.rkt"
 
+  "../../blurbs/blurbs.rkt"
+
   "../../combat/combat-action-resolver.rkt"
 
   "../../core/io.rkt"
@@ -172,6 +174,9 @@
   (set-action-duration! action (time-until-next-time-of-day))
   'ok)
 
+(define (narrate-rest-action)
+  (blurb 'rest-action))
+
 (define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
     ; "special" actions first
@@ -187,7 +192,8 @@
     ['camp 'ok]
     #;['sleep (resolve-sleep-action! action)]
     ['sleep (progress-until-next-day! action)]
-    ['rest (progress-until-next-time-of-day! action)]
+    ['rest (progress-until-next-time-of-day! action)
+           (narrate-rest-action)]
     ['eat
      (define food-item (action-target action))
      (displayln (format "TARGET: ~a" food-item))
