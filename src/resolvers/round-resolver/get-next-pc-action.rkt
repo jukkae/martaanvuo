@@ -62,8 +62,8 @@
         (define meta-command-result (meta-command))
         (when (eq? meta-command-result 'restart) (return 'restart))
 
-        (redescribe-situation)
-        (what-do-you-do #f))
+        ; TODO: Assumes that this is a re-description
+        (what-do-you-do #t))
 
       (define actor (pc))
 
@@ -92,10 +92,9 @@
       (define choices-with-keys (build-keys-to-choices-map choices first-free-index)) ; should check for pending actions and name choices accordingly
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
-      (dev-note "Find me and fix me: redescribe-situation doesn't work here as intended")
       (if question-repeated?
-        (redescribe-situation)
-        (describe-situation)
+        (describe-situation #t)
+        (describe-situation #f)
         )
 
       (newline)

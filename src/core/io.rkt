@@ -94,12 +94,14 @@
   (prln "--------------------------------------------------------------------------------------------")
   (newline))
 
-(define (paragraph . args)
+(define (paragraph #:suppress-logging? [suppress-logging? #f] . args)
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))
          (define s (format-for-printing str #:width 84 #:indent 4))
-         (current-last-paragraph str)
-         (write-paragraph-to-log str)
+         (when (not suppress-logging?)
+          (current-last-paragraph str)
+          (write-paragraph-to-log str)
+         )
          (print-paragraph s))
         (else ; don't do anything with empty input
          '())))

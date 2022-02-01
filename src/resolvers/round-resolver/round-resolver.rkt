@@ -47,8 +47,8 @@
 
   (when (current-show-round-summary?)
     (if (eq? mode 'continue)
-      '()#;(redescribe-situation)
-      (describe-situation)))
+      '()#;(describe-situation #t)
+      '()#;(describe-situation #f)))
 
   ; this fixes save files after death
   (when (not (pc-is-alive?))
