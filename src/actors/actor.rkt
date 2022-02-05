@@ -285,19 +285,19 @@
      (actor-set-status! target status-type status-strength)]
     [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
 
-(define (inflict-condition! target condition)
-  (match (condition-type condition)
+(define (inflict-condition! target a-condition)
+  (match (condition-type a-condition)
     ['ankle-broken
      (if (actor-has-condition-of-type? target 'ankle-broken)
          (begin
            (actor-remove-condition-of-type! target 'ankle-broken)
            (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
            )
-         (actor-add-condition! target condition))
+         (actor-add-condition! target a-condition))
      ]
     ['bleeding
      (if (not (actor-has-condition-of-type? target 'bleeding))
-         (actor-add-condition! target condition)
+         (actor-add-condition! target a-condition)
          (notice "Already bleeding."))
 
      ]

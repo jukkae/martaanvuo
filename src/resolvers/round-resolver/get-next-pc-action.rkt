@@ -42,7 +42,10 @@
 (define (display-statusline)
   (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
-          "~a, day ~a, ~a"
+          "~a~a, day ~a, ~a"
+          (if (current-in-combat?)
+            "[In combat] "
+            "")
           (get-location-short-description (current-location))
           current-day
           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
