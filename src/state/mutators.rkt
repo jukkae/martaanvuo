@@ -29,7 +29,7 @@
                current-quests)])
 
 (lazy-require
- ["combat.rkt" (end-combat!)])
+ ["../combat/combat.rkt" (end-combat!)])
 
 ;; bad name for this file, this is sort of "misc"
 

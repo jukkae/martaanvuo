@@ -13,6 +13,7 @@
   "../core/session.rkt"
   "../core/utils.rkt"
 
+
   "../pc/pc.rkt"
   "../state/state.rkt")
 
@@ -58,12 +59,13 @@
 
   (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
+  (set-base-build!)
   (go-to-story-fragment 'begin-life)
   (when (not (= 1 (current-life)))
     (player-info)))
 
 (define (on-end-life)
-  (let ([body 
+  (let ([body
          (tbody
           (tr " Round "
               (format " ~a " current-round))

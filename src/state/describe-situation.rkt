@@ -28,7 +28,7 @@
                current-quests)])
 
 (lazy-require
- ["combat.rkt" (describe-combat-situation)])
+ ["../combat/combat.rkt" (describe-combat-situation)])
 
 (define (describe-non-combat-situation repeated?)
   (cond ((null? (current-fragment-id))
