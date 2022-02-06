@@ -51,8 +51,8 @@
 (define (spawn-enemies)
   (define encounter-types
     (list
-     ; spawn-blindscraper-encounter!
-     spawn-grabberkin-encounter!
+     spawn-blindscraper-encounter!
+     ; spawn-grabberkin-encounter!
      ; spawn-grabberkin-and-blindscraper-encounter!
      ; spawn-two-blindscrapers-encounter!
     ))

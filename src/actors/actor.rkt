@@ -29,7 +29,7 @@
  ["../world/world.rkt"
   (remove-actor-from-its-current-location!
    )]
- ["../locations/location.rkt"
+ ["../locations/0-types/location.rkt"
   (add-feature-to-location!
    )])
 
@@ -267,7 +267,7 @@
       " ")))
    title))
 
-(define (inflict-status! target status-type status-strength)
+(define (inflict-status! target status-type . status-strength)
   (match status-type
     ['blind
      (dev-note "todo: blind should be a condition, not a status")

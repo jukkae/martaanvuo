@@ -10,6 +10,7 @@
   "../action-resolver/action-resolver.rkt"
 
   "../../core/io.rkt"
+  "../../core/utils.rkt"
 
   "../../pc/pc.rkt"
 
@@ -41,6 +42,7 @@
         ;(define action post-action-reaction-from-target?)
         (displayln "-- post-action-reaction-from-target?: handle!"))
 
+      (dev-note (format "Turn result: ~a" turn-result))
       (case turn-result
 
         ['pc-dead

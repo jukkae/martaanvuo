@@ -77,9 +77,6 @@
                (define options
                  (list
                   (cons 1 'blindscrape)
-                  (cons 1 'blindscrape)
-                  (cons 1 'blindscrape)
-                  (cons 1 'blindscrape)
                   #;(cons 2 'attack)
                   #;(cons 3 'attack)
                   #;(cons 4 'attack)))

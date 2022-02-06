@@ -85,7 +85,7 @@
       [(dev-note message)
        #'(begin
            (displayln
-            (format "<~a:~a> ~a"
+            (format "< ~a:~a > ~a"
                     (path->string (find-relative-path (current-directory) file))
                     (number->string line)
                     message)))])))
