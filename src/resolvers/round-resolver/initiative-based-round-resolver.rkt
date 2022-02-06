@@ -5,9 +5,11 @@
   "ai.rkt"
   "action-queue.rkt"
 
+  "../action-resolver/action-resolver.rkt"
+
   "../../actions/action.rkt"
 
-  "../action-resolver/action-resolver.rkt"
+  "../../world/world.rkt"
 
   "../../core/io.rkt"
   "../../core/utils.rkt"
@@ -40,9 +42,19 @@
       (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
       (when (not (null? post-action-reaction-from-target?))
         ;(define action post-action-reaction-from-target?)
-        (displayln "-- post-action-reaction-from-target?: handle!"))
+        (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
       (dev-note (format "Turn result: ~a" turn-result))
+
+      (when (eq? turn-result 'escape-from-combat)
+        (remove-actor-from-its-current-location! actor)
+        (dev-note (format "~a" (get-current-enemies)))
+        (when (empty? (get-current-enemies))
+          (dev-note (format "-- No more enemies"))
+          (set! turn-result 'end-combat)
+          )
+        )
+
       (case turn-result
 
         ['pc-dead
