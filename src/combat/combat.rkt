@@ -202,10 +202,17 @@
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started!"))
 
+(define (display-combat-timeline)
+  (define body
+    (for/list ([event (current-combat-timeline)])
+      (tr (number->string (combat-event-at event)) (combat-event-details event))
+    ))
+  (info-card body "Combat timeline")
+  )
+
 (define (end-combat!)
   (notice "Combat finished.")
-  (dev-note "timeline:")
-  (displayln (current-combat-timeline))
+  (display-combat-timeline)
   (current-in-combat? #f)
   (current-combat-timeline '())
   (wait-for-confirm)

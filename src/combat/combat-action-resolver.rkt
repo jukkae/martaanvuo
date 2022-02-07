@@ -7,13 +7,13 @@
 
 (require rebellion/collection/association-list)
 
-; TODO THINK ABOUT WHAT NEEDS TO BE LAZY
 (lazy-require
  ["combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
    add-combat-flag
+   add-combat-event
    )])
 
 (require
@@ -99,6 +99,8 @@
         (begin
           (p "Otava is dead.")
           (set! action-result 'pc-dead))))
+
+  (add-combat-event "melee hit!")
 
   action-result
   )
