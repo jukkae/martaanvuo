@@ -27,11 +27,24 @@
 
 (define br newline)
 
-(define (info-card content title)
+(define (info-card content title [padding? #t])
   (set! *output-state* 'dirty)
   (when (not (null? title)) (prln (format "[~a]" title)))
   (when (not (null? (prune content)))
-    (print-table content #:row-sep? #f)
+    (if padding?
+      (print-table
+        content
+        #:row-sep? #f
+
+        #:border-style
+        '(("┌─" "─" "─┬─" "─┐")
+          ("│ " " " " │ " " │")
+          ("├─" "─" "─┼─" "─┤")
+          ("└─" "─" "─┴─" "─┘")))
+      (print-table
+        content
+        #:row-sep? #f)
+    )
     (newline)))
 
 (define tbody list)

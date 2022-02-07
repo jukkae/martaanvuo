@@ -81,7 +81,6 @@
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
 
-    (dev-note "when to do this?")
     (when (not (empty? (action-resolution-effect action)))
       ((action-resolution-effect action)))
 

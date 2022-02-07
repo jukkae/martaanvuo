@@ -9,6 +9,7 @@
 
   "../../actions/action.rkt"
 
+
   "../../world/world.rkt"
 
   "../../core/io.rkt"
@@ -38,7 +39,6 @@
 
       (define turn-result (resolve-turn! action))
 
-      ; todo
       (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
       (when (not (null? post-action-reaction-from-target?))
         ;(define action post-action-reaction-from-target?)
