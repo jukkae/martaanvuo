@@ -3,23 +3,22 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require "../core/utils.rkt")
 
 (lazy-require ["../state/state.rkt"
                (pc)])
 
-(serializable-struct action
-                     (symbol
-                      actor
-                      [duration #:mutable]
-                      target
-                      tags
-                      [details #:mutable])
-                     #:constructor-name action*
-                     #:transparent
-                     )
+(struct action
+  (symbol
+  actor
+  [duration #:mutable]
+  target
+  tags
+  [details #:mutable])
+  #:constructor-name action*
+  #:prefab
+  )
 
 (define (make-action
          #:symbol symbol

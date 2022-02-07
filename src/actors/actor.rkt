@@ -282,7 +282,7 @@
         (p "A searing pain cuts through her eyes as her vision goes black.")])
      ]
     ['bound
-     (actor-set-status! target status-type status-strength)]
+     (actor-set-status! target status-type (car status-strength))]
     [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
 
 (define (inflict-condition! target a-condition)
