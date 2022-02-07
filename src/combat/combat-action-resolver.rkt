@@ -298,7 +298,7 @@
                (p "The blindscraper skitters away and disappears in the foliage.")
                (award-xp! 1)
                (remove-actor-from-its-current-location! (action-actor action))
-               'escape-from-combat)
+               'ok)
              (begin
                (p "The blindscraper tries to run away, its legs twitching, but it is not fast enough.")
                (actor-add-status! (action-actor action) (status 'fallen 1))

@@ -9,6 +9,7 @@
 
   "../../actions/action.rkt"
 
+  "../../combat/combat.rkt"
 
   "../../world/world.rkt"
 
@@ -44,13 +45,10 @@
         ;(define action post-action-reaction-from-target?)
         (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
-      (dev-note (format "Turn result: ~a" turn-result))
-
-      (when (eq? turn-result 'escape-from-combat)
-        (when (empty? (get-current-enemies))
-          (dev-note (format "-- No more enemies"))
-          (set! turn-result 'end-combat)
-          )
+      (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (action-actor action))turn-result))
+      (when (empty? (get-current-enemies))
+        (dev-note (format "-- No more enemies"))
+        (set! turn-result 'end-combat)
         )
 
       (case turn-result
