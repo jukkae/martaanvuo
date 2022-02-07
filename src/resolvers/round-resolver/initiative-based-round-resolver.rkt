@@ -63,12 +63,7 @@
         ['end-combat
          (end-combat)
          (end-round-early)]
-
-        ; TODO: As always, description belongs in the action
-        ['grip-released
-         (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
-         (award-xp! 3 "for surviving an encounter with a Grabberkin")
-         (remove-enemy actor)]))))
+        ))))
 
 (define (resolve-turn! action)
   (resolve-action! action))

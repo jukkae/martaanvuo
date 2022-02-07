@@ -15,7 +15,8 @@
   [duration #:mutable]
   target
   tags
-  [details #:mutable])
+  [details #:mutable]
+  resolution-effect)
   #:constructor-name action*
   #:prefab
   )
@@ -26,8 +27,9 @@
          #:duration duration
          #:target [target '()]
          #:tags [tags '()]
-         #:details [details '()])
-  (action* symbol actor duration target tags details))
+         #:details [details '()]
+         #:resolution-effect [resolution-effect '()])
+  (action* symbol actor duration target tags details resolution-effect))
 
 (define (make-empty-action)
   (make-action

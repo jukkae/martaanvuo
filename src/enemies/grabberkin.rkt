@@ -8,7 +8,10 @@
   "../actors/actor.rkt"
   "../actors/status.rkt"
 
+  "../core/io.rkt"
   "../core/utils.rkt"
+
+  "../pc/pc.rkt"
 
   "../state/state.rkt")
 
@@ -95,7 +98,13 @@
       #:duration 0
       #:target '()
       #:tags '(initiative-based-resolution)
-      #:details '(fast))]
+      #:details '(fast)
+      #:resolution-effect
+      (λ ()
+        (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
+        (award-xp! 3 "for surviving an encounter with a Grabberkin")
+        (remove-enemy actor)
+        ))]
 
     [else
      (error (format "make-grabberkin-action: unknown action ~a" action-flag))]))

@@ -81,6 +81,10 @@
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
 
+    (dev-note "when to do this?")
+    (when (not (empty? (action-resolution-effect action)))
+      ((action-resolution-effect action)))
+
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
       (pc-action-on-after-resolve! action))
