@@ -20,15 +20,23 @@
   "stance.rkt"
 
   "../actions/action.rkt"
+
   "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
   "../actors/status.rkt"
+
   "../core/checks.rkt"
   "../core/io.rkt"
+  "../core/utils.rkt"
+
   "../items/item.rkt"
+
   "../pc/pc.rkt"
-  "../actors/pc-actor.rkt"
+
   "../state/state.rkt"
-  "../core/utils.rkt")
+
+  "../world/world.rkt"
+  )
 
 
 (lazy-require
@@ -286,13 +294,13 @@
 
          (define success? (skill-check "Athletics" skill target-number))
          (if success?
-             ; TODO this fails if there are multiple enemies!
              (begin
-               (p "The Blindscraper skitters away and disappears in the foliage.")
+               (p "The blindscraper skitters away and disappears in the foliage.")
                (award-xp! 1)
+               (remove-actor-from-its-current-location! (action-actor action))
                'escape-from-combat)
              (begin
-               (p "It is fast, but not fast enough.")
+               (p "The blindscraper tries to run away, its legs twitching, but it is not fast enough.")
                (actor-add-status! (action-actor action) (status 'fallen 1))
                (display-combatant-info (action-actor action))
                'failure))

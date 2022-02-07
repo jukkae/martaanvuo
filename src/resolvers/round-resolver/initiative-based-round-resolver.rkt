@@ -47,8 +47,6 @@
       (dev-note (format "Turn result: ~a" turn-result))
 
       (when (eq? turn-result 'escape-from-combat)
-        (remove-actor-from-its-current-location! actor)
-        (dev-note (format "~a" (get-current-enemies)))
         (when (empty? (get-current-enemies))
           (dev-note (format "-- No more enemies"))
           (set! turn-result 'end-combat)
