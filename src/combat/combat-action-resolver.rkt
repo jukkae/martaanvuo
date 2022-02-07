@@ -229,8 +229,10 @@
     (cond (success?
            (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
            (award-xp! 4)
-           (dev-note "Fix me: shouldn't end combat")
-           'end-combat) ; shouldn't be end-combat!
+           (define enemies (get-current-enemies))
+           (define grabberkin (findf (eq? actor-name "Grabberkin") enemies)) ; TODO SHIT CODE, actors should know their type
+           (remove-actor-from-its-current-location! grabberkin)
+           'ok)
           (else
            (p "The grip is still too strong for Otava to break it.")
            (award-xp! 1)
@@ -305,17 +307,6 @@
                (display-combatant-info (action-actor action))
                'failure))
          )))
-
-
-(define (resolve-inflict-status-action! action)
-  (define target (action-target action))
-  (define status (car (action-details action)))
-  (when (status? status)
-    (when (eq? (status-type status) 'bound)
-      (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")))
-
-  (inflict-status! target status)
-  'ok)
 
 (define (resolve-modify-status-action! action)
   (define target (action-target action))

@@ -21,12 +21,11 @@
   "../../state/state.rkt")
 
 
-
 (provide resolve-turns!)
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'flee)
-      (p "Otava turns her back to flee and crawls under a bush to hide. She waits a while. Nothing seems to be following her.")
+      (p "Otava turns and ducks in the shadows. She waits a while.")
       (award-xp! 1)
       (end-combat)
       (end-round-early))

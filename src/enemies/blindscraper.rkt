@@ -62,7 +62,12 @@
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details '(blind))]
+      #:details '(blind)
+      #:resolution-effect
+      (λ ()
+        (define target (pc))
+        (inflict-status! (pc) 'blind))
+      )]
 
     [else
      (error (format "make-blindscraper-action: unknown action: ~a" action-flag))]))
@@ -77,9 +82,9 @@
                (define options
                  (list
                   (cons 1 'blindscrape)
-                  #;(cons 2 'attack)
-                  #;(cons 3 'attack)
-                  #;(cons 4 'attack)))
+                  (cons 2 'attack)
+                  (cons 3 'attack)
+                  (cons 4 'attack)))
                (define roll (d 1 4))
                (define index (- roll 1))
                #;(displayln "Action")

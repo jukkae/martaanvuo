@@ -230,15 +230,13 @@
     ['go-to-engaged (resolve-go-to-engaged-action! action)]
     ['go-to-close (resolve-go-to-close-action! action)]
 
-
-    ['inflict-status (resolve-inflict-status-action! action)]
-
     ['modify-status (resolve-modify-status-action! action)]
 
     ['inflict-condition (resolve-inflict-condition-action! action)]
 
     [else
      (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
+     'ok
      ]))
 
 
