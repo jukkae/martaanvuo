@@ -100,7 +100,16 @@
           (p "Otava is dead.")
           (set! action-result 'pc-dead))))
 
-  (add-combat-event "melee hit!")
+
+  (define descr
+    (format "melee attack, ~a vs ~a (~a)"
+    (get-combatant-name actor)
+    (get-combatant-name target)
+    (case action-result
+     ['ok "hit"]
+     ['dead "hit and kill"]
+     [else action-result])))
+  (add-combat-event descr)
 
   action-result
   )

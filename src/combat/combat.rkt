@@ -200,7 +200,7 @@
   ;   (set-session-flag 'got-in-combat)
   (current-session-score-dice++)
   ;   (notice "Attainment: Fighter"))
-  (add-combat-event "combat started!"))
+  (add-combat-event "combat started"))
 
 (define (display-combat-timeline)
   (define body
@@ -212,6 +212,7 @@
 
 (define (end-combat!)
   (notice "Combat finished.")
+  (add-combat-event "combat finished")
   (display-combat-timeline)
   (current-in-combat? #f)
   (current-combat-timeline '())
