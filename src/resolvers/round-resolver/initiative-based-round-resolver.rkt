@@ -55,6 +55,9 @@
                 (set! turn-result 'end-combat)
                 )
 
+              (when (not (pc-is-alive?))
+                (set! turn-result 'pc-dead))
+
               (case turn-result
 
                 ['pc-dead
