@@ -42,7 +42,6 @@
 
   (case round-begin-status
     ['pc-dead (unset-current-fragment-id!)])
-
   (save) ; save before describing situation -> no double-logged paragraphs
 
   (when (current-show-round-summary?)
@@ -58,8 +57,11 @@
     (when (eq? mode 'continue)
       (define cause-of-death (pc-actor-cause-of-death (pc)))
       (notice (format "Otava is dead. Cause of death: ~a"
-                      (cond ((symbol? cause-of-death)
-                             (describe-cause-of-death cause-of-death))
+                      (cond
+                        ((empty? cause-of-death)
+                         "NA")
+                        ((symbol? cause-of-death)
+                         (describe-cause-of-death cause-of-death))
                         ((string? cause-of-death)
                          cause-of-death)
                         ((symbol? (car cause-of-death))

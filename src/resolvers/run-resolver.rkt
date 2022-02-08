@@ -127,7 +127,6 @@
 
   (define run-exit-status
     (let/ec end-run
-
       (when (eq? mode 'continue)
         (define first-round-exit-status (resolve-round 'continue))
         (case first-round-exit-status
