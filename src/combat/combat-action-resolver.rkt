@@ -194,6 +194,9 @@
   (define target-stance (actor-stance target))
 
   (define statuses (actor-statuses actor))
+
+  (when (not statuses)
+    (set! statuses '()))
   (define actor-bound-status
     (findf (λ (status) (eq? (status-type status) 'bound))
            statuses))
