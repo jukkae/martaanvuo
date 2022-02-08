@@ -130,6 +130,11 @@
           (set-status-lifetime! status value)))
       (actor-add-status! actor (status type value))))
 
+(define (actor-remove-status! actor status)
+  (when (not (null? actor))
+    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] removed]")))
+  (set-actor-statuses! actor (remove status (actor-statuses actor))))
+
 ;;; CONDITIONS
 (define (actor-add-condition! actor condition)
   (when (not (null? actor))

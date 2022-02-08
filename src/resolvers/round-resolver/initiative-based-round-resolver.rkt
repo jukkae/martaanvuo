@@ -7,6 +7,8 @@
 
   "../action-resolver/action-resolver.rkt"
 
+  "../../actors/0-types/actor.rkt"
+
   "../../actions/action.rkt"
 
   "../../combat/combat.rkt"
@@ -32,34 +34,42 @@
     (for ([action action-queue])
 
       (define actor (action-actor action))
+      ; a bit hacky check to see if this actor has been removed already
+      (define actor-removed? (empty? (actor-location actor)))
 
-      (define pre-action-reaction? (get-pre-action-reaction action))
-      (when (not (null? pre-action-reaction?))
-        (set! action pre-action-reaction?))
+      (cond ((not actor-removed?)
+              (define pre-action-reaction? (get-pre-action-reaction action))
+              (when (not (null? pre-action-reaction?))
+                (set! action pre-action-reaction?))
 
-      (define turn-result (resolve-turn! action))
+              (define turn-result (resolve-turn! action))
 
-      (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
-      (when (not (null? post-action-reaction-from-target?))
-        ;(define action post-action-reaction-from-target?)
-        (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
+              (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
+              (when (not (null? post-action-reaction-from-target?))
+                ;(define action post-action-reaction-from-target?)
+                (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
-      (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (action-actor action))turn-result))
-      (when (empty? (get-current-enemies))
-        (dev-note (format "-- No more enemies"))
-        (set! turn-result 'end-combat)
-        )
+              (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (action-actor action))turn-result))
+              (when (empty? (get-current-enemies))
+                (dev-note (format "-- No more enemies"))
+                (set! turn-result 'end-combat)
+                )
 
-      (case turn-result
+              (case turn-result
 
-        ['pc-dead
-         (end-combat)
-         (end-round-early)]
+                ['pc-dead
+                (end-combat)
+                (end-round-early)]
 
-        ['end-combat
-         (end-combat)
-         (end-round-early)]
-        ))))
+                ['end-combat
+                (end-combat)
+                (end-round-early)]
+                ))
+
+            (else
+             'skipped))
+
+      )))
 
 (define (resolve-turn! action)
   (resolve-action! action))

@@ -22,7 +22,8 @@
 (define (remove-actor-from-its-current-location! actor)
   (define current-location (actor-location actor))
   (when (not (eq? '() current-location))
-    (remove-actor-from-location! current-location actor)))
+    (remove-actor-from-location! current-location actor))
+  (set-actor-location! actor '()))
 
 ; world-as-simulation / scripting API
 (provide move-actor-to-location!)

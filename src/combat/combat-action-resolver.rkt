@@ -235,6 +235,7 @@
            (define enemies (get-current-enemies))
            (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
            (remove-actor-from-its-current-location! grabberkin)
+           (actor-remove-status! actor actor-bound-status)
            'ok)
           (else
            (p "The grip is still too strong for Otava to break it.")
