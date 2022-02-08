@@ -12,7 +12,7 @@
   "../state/state.rkt")
 
 (define (make-blindscraper)
-  (define enemy (make-actor "Blindscraper" 3))
+  (define enemy (make-actor "Blindscraper" 'blindscraper 3))
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)
   (set-trait! enemy "melee-attack-skill" 1)

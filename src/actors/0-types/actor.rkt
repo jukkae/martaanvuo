@@ -8,6 +8,9 @@
  actor
  (name
 
+  ; symbol
+  [type #:mutable]
+
   ; always numbers
   [hp #:mutable]
   [max-hp #:mutable]

@@ -233,7 +233,7 @@
            (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
            (award-xp! 4)
            (define enemies (get-current-enemies))
-           (define grabberkin (findf (eq? actor-name "Grabberkin") enemies)) ; TODO SHIT CODE, actors should know their type
+           (define grabberkin (findf (eq? actor-type 'grabberkin) enemies))
            (remove-actor-from-its-current-location! grabberkin)
            'ok)
           (else

@@ -35,8 +35,9 @@
 
 (define (make-actor
          name
+         type
          max-hp)
-  (actor* name max-hp max-hp
+  (actor* name type max-hp max-hp
           ; attributes
           '() '() '() '() '()
           ; traits etc
