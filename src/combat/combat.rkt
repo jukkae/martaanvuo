@@ -17,6 +17,8 @@
   "../core/io.rkt"
   "../core/utils.rkt"
 
+  "../pc/pc.rkt"
+
   "../world/world.rkt")
 
 (lazy-require
@@ -218,10 +220,12 @@
   )
 
 (define (end-combat!)
-  (notice "Combat finished.")
+  (define success-text (if (pc-is-alive?) "Otava survived." "Otava died."))
+  (notice (format "Combat finished. [~a]" success-text))
   (add-combat-event "combat finished")
   (display-combat-timeline)
   (current-in-combat? #f)
   (current-combat-timeline '())
   (wait-for-confirm)
-  (next-chapter!))
+  (when (pc-is-alive?)
+    (next-chapter!)))
