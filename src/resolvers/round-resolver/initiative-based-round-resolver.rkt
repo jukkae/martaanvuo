@@ -53,6 +53,7 @@
       (case turn-result
 
         ['pc-dead
+         (end-combat)
          (end-round-early)]
 
         ['end-combat
