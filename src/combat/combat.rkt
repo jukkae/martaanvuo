@@ -138,7 +138,14 @@
                             (number->string (actor-hp actor))
                             "/"
                             (number->string (actor-max-hp actor))
-                            " "))))]
+                            " ")))
+        (if (not (null? stance))
+         (list
+          " range "
+          (string-append " " (symbol->string (stance-range stance)) " "))
+         (list
+          " range "
+          (string-append " " "N/A" " "))))]
 
       [("Blindscraper")
        (list

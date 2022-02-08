@@ -46,8 +46,8 @@
 
   (define close-enemies (get-enemies-at-range 'close))
   (define close-grabberkin
-    (filter (λ (enemy) (equal? (actor-name (get-an-enemy-at-range 'close))
-                               "Grabberkin"))
+    (filter (λ (enemy) (equal? (actor-type enemy)
+                               'grabberkin))
             close-enemies))
 
   (cond ((not (null? close-grabberkin))
