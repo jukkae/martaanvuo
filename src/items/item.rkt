@@ -109,40 +109,34 @@
          item
          #:title [title "Item"])
 
-  (define body (list (cond ((ranged-weapon? item)
-                            (list
-                             (string-append " " (item-name item) " ")
-                             (string-append " " "ammo left: " (number->string (ranged-weapon-ammo-left item)) " ")))
-                           ((eq? (item-id item) 'bolt-cutters)
-                            (list
-                             (string-append " " (item-name item) " ")
-                             (string-append " " "Cuts, breaks, crushes and cracks." " ")))
-                           ((eq? (item-id item) 'ration)
-                            (list
-                             (string-append " " (item-name item) " ")
-                             (string-append " " (~v (item-details item)) " ")))
-                           ((item? item)
-                            (list
-                             (string-append " " (item-name item) " ")
-                             (string-append " " (~v (item-details item)) " ")))
-                           (else
-                            (list
-                             (string-append " " (symbol->string item) " ")
-                             (string-append " " " " " "))))))
+  (define body (tbody (cond ((ranged-weapon? item)
+                             (tr
+                              (item-name item)
+                              (string-append "ammo left: " (number->string (ranged-weapon-ammo-left item)))))
+                            ((eq? (item-id item) 'bolt-cutters)
+                             (tr
+                              (item-name item)
+                              (string-append "Cuts, breaks, crushes and cracks.")))
+                            ((eq? (item-id item) 'ration)
+                             (tr
+                              (item-name item)
+                              (~v (item-details item))))
+                            ((item? item)
+                             (tr
+                              (item-name item)
+                              (~v (item-details item))))
+                            (else
+                             (tr
+                              (symbol->string item)
+                              "NA")))))
   (info-card body title))
 
 (define (weapon-info gun)
   (define body
     (append-element
      (for/list ([item-detail (item-details gun)])
-       (list (string-append " "
-                            (car item-detail)
-                            " ")
-             (string-append " "
-                            (~s (cdr item-detail))
-                            " ")))
-     (list (string-append " Ammo left ")
-           (string-append " "
-                          (number->string (ranged-weapon-ammo-left gun))
-                          " "))))
+       (tr (car item-detail)
+           (~s (cdr item-detail))))
+     (tr "Ammo left"
+         (number->string (ranged-weapon-ammo-left gun)))))
   (info-card body (item-name gun)))

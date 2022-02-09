@@ -86,8 +86,8 @@
 
   (define body
     (tbody
-      (tr " damage "
-          (format " ~a: [~a] " damage-roll-formula damage-roll-result))))
+      (tr "damage"
+          (format "~a: [~a]" damage-roll-formula damage-roll-result))))
   (info-card body title)
 
   (define action-result 'ok)

@@ -19,7 +19,7 @@
      (timeline-events timeline)))
   #;(info-card
      (append
-      (list (list " at " " type " " details " " interrupts action? "))
+      (tbody (tr "at" "type" "details" "interrupts action?"))
       displayable-events)
      (format "Timeline, duration ~a" (timeline-duration timeline)))
 (for ([event (timeline-events timeline)])

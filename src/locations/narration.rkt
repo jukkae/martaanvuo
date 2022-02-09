@@ -406,83 +406,49 @@
   (define body
     (cond ((route-fully-known? route)
            (prune
-            (list
-             (list
-              (string-append " "
-                             (place-shortname startpoint)
+            (tbody
+             (tr
+              (string-append (place-shortname startpoint)
                              " – "
-                             (place-shortname endpoint)
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
+                             (place-shortname endpoint))
+              "[route]")
              (when (not (null? (location-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (location-features route))
-                                    " "))))))
+               (tr "features"
+                   (~v (location-features route)))))))
           (else
            (prune
-            (list
-             (list
-              (string-append " "
-                             (place-shortname startpoint)
+            (tbody
+             (tr
+              (string-append (place-shortname startpoint)
                              " – "
-                             "???"
-                             " ")
-              (string-append " "
-                             "[route]"
-                             " "))
+                             "???")
+              "[route]")
              (when (not (null? (location-features route)))
-               (list (string-append " "
-                                    "features"
-                                    " ")
-                     (string-append " "
-                                    (~v (location-features route))
-                                    " "))))))))
+               (tr "features"
+                   (~v (location-features route)))))))))
   (info-card body title))
 
 (define (display-place-info-card location [title "Location"])
   (define id (location-id location))
   (define body
-    (prune (list
+    (prune (tbody
             (when (not (eq? (place-shortname location) ""))
-              (list (string-append " "
-                                   (place-shortname location)
-                                   " ")
-                    "  "))
+              (tr (place-shortname location)
+                  " "))
             (when (not (null? (location-id location)))
-              (list (string-append " "
-                                   "id"
-                                   " ")
-                    (string-append " "
-                                   (cond ((number? id) (number->string id))
-                                         ((symbol? id) (symbol->string id)))
-                                   " ")))
+              (tr "id"
+                  (cond ((number? id) (number->string id))
+                        ((symbol? id) (symbol->string id)))))
             (when (and (null? (location-id location))
                        (not (null? (location-type location))))
-              (list (string-append " "
-                                   "type"
-                                   " ")
-                    (string-append " "
-                                   (symbol->string (location-type location))
-                                   " ")))
+              (tr "type"
+                  (symbol->string (location-type location))))
             (when (not (null? (location-items location)))
-              (list (string-append " "
-                                   "items"
-                                   " ")
-                    (string-append " "
-                                   (~v (location-items location))
-                                   " ")))
+              (tr "items"
+                  (~v (location-items location))))
             (when (not (null? (location-features location)))
-              (list (string-append " "
-                                   "features"
-                                   " ")
-                    (string-append " "
-                                   (~v (location-features location))
-                                   " ")))
+              (tr "features"
+                  (~v (location-features location))))
             )))
   (info-card body title))
 

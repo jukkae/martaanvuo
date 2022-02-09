@@ -57,9 +57,9 @@
            (info-card
             (tbody
              (tr
-              " 1d4 "
-              " = "
-              (format " ~a " amount-string))
+              "1d4"
+              "="
+              (format "~a" amount-string))
              )
             "Forage results roll")
            (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
@@ -73,9 +73,9 @@
              (info-card
               (tbody
                (tr
-                " 1d20 "
-                " = "
-                (format " ~a " luck-roll)))
+                "1d20"
+                "="
+                (format "~a" luck-roll)))
               "Luck roll")
              )))
     (if successful?

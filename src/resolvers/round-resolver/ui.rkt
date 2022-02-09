@@ -71,8 +71,8 @@
   (define actor (pc))
 
   (define list-items
-    (list
-     (list " Martaanvuo " " The anomaly is very strong here. ")))
+    (tbody
+     (tr "Martaanvuo" "The anomaly is very strong here.")))
 
   (info-card
    list-items
@@ -88,8 +88,8 @@
       (format-quest-for-card q)))
   (define sheet
     (append
-     (list
-      (list " quest " " status " " notes "))
+     (tbody
+      (tr "quest" "status" "notes"))
 
      body))
 

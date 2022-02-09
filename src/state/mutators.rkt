@@ -26,7 +26,8 @@
                current-in-combat?
                current-life
                current-pc
-               current-quests)])
+               current-quests
+               current-run)])
 
 (lazy-require
  ["../combat/combat.rkt" (end-combat!)])
@@ -160,8 +161,9 @@
 ; scripting API?
 (define (player-info)
   (define player-status
-    (list
-     (list " life " (string-append " " (number->string (current-life)) " "))))
+    (tbody
+     (tr "run" (number->string (current-run)))
+     (tr "life" (number->string (current-life)))))
 
   (info-card player-status (string-append "Player status")))
 

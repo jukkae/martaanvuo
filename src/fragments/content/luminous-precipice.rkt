@@ -23,8 +23,8 @@
         "success"))
   (info-card
    (tbody
-    (tr " 1d4: "
-        (format " ~a [~a] " r success-text)))
+    (tr "1d4:"
+        (format "~a [~a]" r success-text)))
    "Death save")
   (wait-for-confirm)
   (case r

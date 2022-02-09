@@ -48,11 +48,9 @@
 (define
   (format-event-for-display event)
   (list
-   (string-append " " (number->string (event-at event)) " ")
-   (string-append " " (symbol->string (event-type event)) " ")
-   (string-append " " (~s (event-details event)) " ")
-   (string-append " "
-                  (if (event-interrupting? event)
-                      "yes"
-                      "no")
-                  " ")))
+   (number->string (event-at event))
+   (symbol->string (event-type event))
+   (~s (event-details event))
+   (if (event-interrupting? event)
+       "yes"
+       "no")))

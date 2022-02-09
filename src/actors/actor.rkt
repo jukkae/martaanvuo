@@ -259,18 +259,17 @@
 
 (define (actor-status-card actor title)
   (info-card
-   (list
-    (list
-     (string-append " " (actor-name actor) " ")
+   (tbody
+    (tr
+     (actor-name actor)
      "")
-    (list
-     " hp: "
+    (tr
+     "hp:"
      (string-append
-      " "
       (number->string (actor-hp actor))
       "/"
       (number->string (actor-max-hp actor))
-      " ")))
+      )))
    title))
 
 (define (inflict-status! target status-type . status-strength)

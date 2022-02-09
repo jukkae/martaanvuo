@@ -34,13 +34,13 @@
                      #t
                      #f))
   (define result-text (if result
-                          " success "
-                          " failure "))
+                          "success"
+                          "failure"))
   (define wangernumb (list-ref wangernumbs wanger-index))
   (info-card
-   (list
-    (list " luck " (string-append " " wangernumb " "))
-    (list " " result-text))
+   (tbody
+    (tr "luck" (string-append wangernumb))
+    (tr "" result-text))
    "Luck check")
   (wait-for-confirm)
   result)
@@ -65,10 +65,13 @@
                      "check passed"
                      "check failed"))
   (define sheet
-    (list
-     (list (string-append " " text " ")
-           (string-append " " (number->string attribute-value) " (" (get-modifier-string modifier) ") ")
-           (string-append " " result " "))))
+    (tbody
+     (tr (string-append text)
+         (string-append (number->string attribute-value)
+                        " ("
+                        (get-modifier-string modifier)
+                        ")")
+         (string-append result))))
 
   (when (null? silent)
     (info-card
@@ -88,14 +91,12 @@
         ", success"
         ", failure"))
   (define results
-    (list
-     (list " 1d20 " " < " " attr ")
-     (list
-      (string-append
-       " "
-       (number->string roll))
-      " < "
-      (string-append " " (number->string attribute) success-string " "))))
+    (tbody
+     (tr "1d20" "<" "attr")
+     (tr
+      (number->string roll)
+      "<"
+      (string-append (number->string attribute) success-string))))
 
   (info-card
    results
@@ -116,11 +117,10 @@
         ", success"
         ", failure"))
   (define results
-    (list
-     (list " 2d6 + skill " " >= " " TN ")
-     (list
+    (tbody
+     (tr "2d6 + skill" ">=" "TN")
+     (tr
       (string-append
-       " "
        (number->string first-d)
        "+"
        (number->string second-d)
@@ -128,8 +128,8 @@
        (number->string bonus)
        " = "
        (number->string roll-total))
-      " >= "
-      (string-append " " (number->string target-number) success-string " "))))
+      ">="
+      (string-append (number->string target-number) success-string))))
 
   (info-card
    results

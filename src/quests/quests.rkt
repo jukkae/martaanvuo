@@ -43,11 +43,11 @@
   (when (not (quest-exists? quest-symbol))
     (add-quest! q)
 
-    (define body
-      (format-quest-for-card q))
-
     (info-card
-     (list body)
+     (tbody
+      (tr (format "~a" (quest-title q))
+          (format "~a" (quest-status q))
+          (format "~a" (quest-notes q))))
      "New quest")
 
     (wait-for-confirm)))

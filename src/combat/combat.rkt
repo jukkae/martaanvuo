@@ -36,14 +36,13 @@
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body
-    (list
-     (list
-      " HP "
-      (string-append " "
-                     (number->string (actor-hp actor))
+    (tbody
+     (tr
+      "HP"
+      (string-append (number->string (actor-hp actor))
                      "/"
                      (number->string (actor-max-hp actor))
-                     " "))))
+                     ))))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -56,8 +55,8 @@
                        ")]")))
 
     (define statuses-list
-      (list " statuses "
-            (string-append " " (string-join statuses-strings) " ")))
+      (tr "statuses"
+          (string-join statuses-strings)))
     (set! body (append-element body statuses-list)))
 
   (when (not (null? (actor-conditions actor)))
@@ -69,8 +68,8 @@
                        "]")))
 
     (define conditions-list
-      (list " conditions "
-            (string-append " " (string-join conditions-strings) " ")))
+      (tr "conditions"
+          (string-join conditions-strings)))
     (set! body (append-element body conditions-list)))
   (info-card
    body
@@ -131,43 +130,39 @@
   (define body
     (case (actor-name actor)
       [("Grabberkin")
-       (list
-        (list
-         " HP "
+       (tbody
+        (tr
+         "HP"
          (if hide-hp?
-             " ??? "
-             (string-append " "
-                            (number->string (actor-hp actor))
+             "???"
+             (string-append (number->string (actor-hp actor))
                             "/"
-                            (number->string (actor-max-hp actor))
-                            " ")))
+                            (number->string (actor-max-hp actor)))))
         (if (not (null? stance))
-         (list
-          " range "
-          (string-append " " (symbol->string (stance-range stance)) " "))
-         (list
-          " range "
-          (string-append " " "N/A" " "))))]
+         (tr
+          "range"
+          (string-append (symbol->string (stance-range stance))))
+         (tr
+          "range"
+          "N/A")))]
 
       [("Blindscraper")
-       (list
-        (list
-         " size "
-         (string-append " "
-                        (get-trait actor "size")
-                        " "))
+       (tbody
+        (tr
+         "size"
+         (get-trait actor "size"))
         (if (not (null? stance))
+         (tr
+          "range"
+          (symbol->string (stance-range stance)))
          (list
-          " range "
-          (string-append " " (symbol->string (stance-range stance)) " "))
-         (list
-          " range "
-          (string-append " " "N/A" " "))))]))
+          "range"
+          "N/A")))]))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
     (define statuses-list
-      (list " statuses " (~s statuses)))
+      (tr "statuses" (~s statuses)))
     (set! body (append-element body statuses-list)))
   (info-card
    body

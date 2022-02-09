@@ -25,10 +25,7 @@
 
   ; Don't show this until the second run!
   (when (not (= 1 (current-run)))
-    (info-card
-     (list
-      (list " run " (string-append " " (number->string (current-run)) " ")))
-     (string-append "Begin run number " (number->string (current-run)))))
+    (notice (format "Begin run number ~a" (current-run))))
 
 
   (case (current-run)
@@ -85,13 +82,13 @@
            (displayln debt-quest)
 
            (info-card
-            (list
-             (list " run "
-                   (string-append " " (number->string (current-run)) " "))
-             (list " gold collected "
-                   (string-append " " (number->string (pc-gold-amount)) " grams "))
-             (list " debt still owed "
-                   (string-append " " (number->string (quest-details debt-quest)) " grams ")))
+            (tbody
+             (tr "run"
+                 (number->string (current-run)))
+             (tr "gold collected"
+                 (number->string (pc-gold-amount)))
+             (tr "debt still owed"
+                 (number->string (quest-details debt-quest))))
             (string-append "Run number " (number->string (current-run)) " ended")))
 
           (else

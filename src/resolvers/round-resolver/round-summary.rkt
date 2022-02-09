@@ -18,41 +18,34 @@
 
   (define body
     (prune
-     (list
-      (list (string-append
-             " round "
-             (number->string (current-round))
-             " "))
-      (list (string-append
-             " day "
-             (number->string day-number)
-             ", "
-             (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
-             " "
-             "("
-             (number->string time-today)
-             ")"
-             " "))
-      (list (string-append
-             " "
-             (if (and (not (null? (current-location)))
-                      (not (void? (current-location))))
-                 (get-location-short-description (current-location))
-                 "N/A")
-             " "))
+     (tbody
+      (tr (string-append
+           "round "
+           (number->string (current-round))))
+      (tr (string-append
+           "day "
+           (number->string day-number)
+           ", "
+           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
+           " "
+           "("
+           (number->string time-today)
+           ")"))
+      (tr (string-append
+           (if (and (not (null? (current-location)))
+                    (not (void? (current-location))))
+               (get-location-short-description (current-location))
+               "N/A")))
 
-      (list " ")
-      (list (string-append
-             " "
+      (tr "")
+      (tr (string-append
              "hunger: "
              (case (pc-hunger-level)
               ['satiated "satiated"]
               ['not-hungry "not hungry"]
               ['hungry "hungry"]
               ['very-hungry "very hungry"]
-              ['starving "starving"])
-
-             " ")))))
+              ['starving "starving"]))))))
 
   (info-card body title))
 
