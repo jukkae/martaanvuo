@@ -34,10 +34,7 @@
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
-         (string-append
-          "[continue] Continue towards "
-          (place-shortname (action-target pending-action))
-          "."))
+         (format "[continue] Continue towards ~a." (place-shortname (action-target pending-action))))
         ((eq? (action-symbol pending-action) 'traverse)
          (define target (action-target pending-action))
 
@@ -53,14 +50,10 @@
              ['a-to-b (route-b target)]
              ['b-to-a (route-a target)]))
 
-         (string-append
-          "[continue] Continue towards "
-          (place-shortname endpoint)
-          "."))
+         (format "[continue] Continue towards ~a." (place-shortname endpoint)))
         ((eq? (action-symbol pending-action) 'search-for-paths)
-         (string-append
-          "[continue] Search for paths."))
-        (else (string-append "[continue] unknown action symbol: " (symbol->string (action-symbol pending-action))))))
+         "[continue] Search for paths.")
+        (else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action)))))
 
 (define (get-cancel-pending-action-and-go-back-name
          route
@@ -78,7 +71,7 @@
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
 
-  (string-append "Go back to " (place-shortname cancel-traverse-endpoint) "."))
+  (format "Go back to ~a." (place-shortname cancel-traverse-endpoint)))
 
 (define (get-cancel-and-go-back-destination
          route

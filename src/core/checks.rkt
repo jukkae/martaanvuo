@@ -49,9 +49,9 @@
 (define (passive-check type comparator target-number . silent)
   (define text "")
   (case type
-    ['charisma-mod (set! text (string-append "charisma mod > " (number->string target-number)))]
-    ['fail-charisma-mod (set! text (string-append "fail charisma mod > " (number->string target-number)))]
-    [else (error (string-append "passive check: unknown type: " (symbol->string type)))])
+    ['charisma-mod (set! text (format "charisma mod > ~a" target-number))]
+    ['fail-charisma-mod (set! text (format "fail charisma mod > ~a" target-number))]
+    [else (error (format "passive check: unknown type: ~a" type))])
 
   (define attribute-value (get-trait (pc) "charisma"))
   (define modifier (get-attribute-modifier-for attribute-value))
@@ -100,7 +100,7 @@
 
   (info-card
    results
-   (string-append "Attribute check: " title))
+   (format "Attribute check: ~a" title))
 
   (wait-for-confirm)
 
@@ -133,7 +133,7 @@
 
   (info-card
    results
-   (string-append "Skill check: " title))
+   (format "Skill check: ~a" title))
 
   (wait-for-confirm)
 

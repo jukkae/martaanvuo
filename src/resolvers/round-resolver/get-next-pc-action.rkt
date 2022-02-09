@@ -235,7 +235,7 @@
 
 (define (print-decisions-with-keys decisions-with-keys)
   (for ([(k v) (in-hash decisions-with-keys)])
-    (displayln (string-append "[" (number->string k) "]: " (decision-title v))))
+    (displayln (format "[~a]: ~a" k (decision-title v))))
   #;(newline))
 
 (define (print-choices-with-keys choices-with-keys)
@@ -248,7 +248,7 @@
               (λ (c1 c2) (< (car c1) (car c2)))))
 
   (for ([choice choices])
-    (displayln (string-append "[" (number->string (car choice)) "]: " (choice-name (cdr choice)))))
+    (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice)))))
   (newline))
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)

@@ -89,13 +89,10 @@
                  (number->string (pc-gold-amount)))
              (tr "debt still owed"
                  (number->string (quest-details debt-quest))))
-            (string-append "Run number " (number->string (current-run)) " ended")))
+            (format "Run number ~a ended" (current-run))))
 
           (else
-           (notice (string-append
-                      "End run number "
-                      (number->string (current-run))
-                      " [failed]")))))
+           (notice (format "End run number ~a [failed]" (number->string (current-run)))))))
 
   (case exit-status
     ['end-run
@@ -106,7 +103,7 @@
      '()]
     ['pc-dead '()]
     [else
-     (dev-note (string-append "narrate-end-run: unhandled exit status: " (symbol->string exit-status)))])
+     (dev-note (format "narrate-end-run: unhandled exit status: ~a" exit-status))])
 
   (when (not (eq? exit-status 'pc-dead))
     (wait-for-confirm)))

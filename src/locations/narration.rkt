@@ -274,10 +274,7 @@
           (if (route-fully-known? route)
               "Martaanvuo Swamp."
               "Soggy downhill path.")]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
 
       ['magpie-hill
        (case (location-id (route-other-end-from route start-location))
@@ -297,10 +294,7 @@
           (if (route-fully-known? route)
               "Luminous Precipice."
               "The trail along the edge of the plateau.")]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
 
       ['martaanvuo-swamp
        (case (location-id (route-other-end-from route start-location))
@@ -320,10 +314,7 @@
           (if (route-fully-known? route)
               "The Docks."
               "The broader path straight ahead.")]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
 
       ['crematory
        (case (location-id (route-other-end-from route start-location))
@@ -331,10 +322,7 @@
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The lone path.")]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a" (location-id (route-other-end-from route start-location)))])]
 
       ['martaanvuo-docks
        (case (location-id (route-other-end-from route start-location))
@@ -342,10 +330,7 @@
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The vehicle trail out.")]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
 
       ['power-plant-ruins
        (case (location-id (route-other-end-from route start-location))
@@ -355,26 +340,20 @@
               "The previously locked door.")]
          ['sewers-1 "The sewers."]
          ['magpie-hill "Go outside."]
-         [else (string-append "["
-                              "go to: "
-                              (symbol->string (location-id (route-other-end-from route start-location)))
-                              "]")])]
+         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
 
-      [else (string-append "["
-                           "go to: "
-                           (symbol->string (location-id (route-other-end-from route start-location)))
-                           "]")]))
+      [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))]))
 
   #;(cond ((route-fully-known? route)
            ; Currently, "fully known" implies having been at the other end, fix as needed
            (case direction
              ['a-to-b
               (define to-name (get-location-name-from-location (route-b route)))
-              (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+              (format "Go back to ~a." to-name) ; breaks eg. when recursing into a new run
               ]
              ['b-to-a
               (define to-name (get-location-name-from-location (route-a route)))
-              (string-append "Go back to " to-name ".") ; breaks eg. when recursing into a new run
+              (format "Go back to ~a." to-name) ; breaks eg. when recursing into a new run
               ]))
           (else
            (get-route-short-description)))
@@ -408,9 +387,7 @@
            (prune
             (tbody
              (tr
-              (string-append (place-shortname startpoint)
-                             " – "
-                             (place-shortname endpoint))
+              (format "~a – ~a" (place-shortname startpoint) (place-shortname endpoint))
               "[route]")
              (when (not (null? (location-features route)))
                (tr "features"
@@ -419,9 +396,7 @@
            (prune
             (tbody
              (tr
-              (string-append (place-shortname startpoint)
-                             " – "
-                             "???")
+              (format "~a – ???" (place-shortname startpoint))
               "[route]")
              (when (not (null? (location-features route)))
                (tr "features"

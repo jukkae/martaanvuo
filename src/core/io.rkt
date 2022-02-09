@@ -56,9 +56,10 @@
 
 (define (display-title)
   (define title-string
-    (string-append "M A R T A A N V U O"
-                   "\n"
-                   "==================="))
+    @~a{
+M A R T A A N V U O
+===================
+    })
   (define s (format-for-printing title-string #:width 84 #:indent 4))
   (print-paragraph s))
 
@@ -110,8 +111,7 @@
 (define p paragraph)
 
 (define (notice . args)
-  (define str (string-append* args))
-  (set! str (string-append "[" str "]"))
+  (define str (format "[~a]" (string-append* args)))
   (define s (format-for-printing str #:width 92 #:indent 0))
   (print-paragraph s))
 

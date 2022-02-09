@@ -9,8 +9,8 @@
 (define (round-summary mode)
   (define title
     (case mode
-      ['begin (string-append "Begin round " (number->string (current-round)))]
-      ['continue (string-append "Continue round " (number->string (current-round)))]))
+      ['begin (format "Begin round ~a" (current-round))]
+      ['continue (format "Continue round ~a" (current-round))]))
 
   (define time (world-elapsed-time (current-world)))
   (define time-today (remainder time day-length))
@@ -19,27 +19,19 @@
   (define body
     (prune
      (tbody
-      (tr (string-append
-           "round "
-           (number->string (current-round))))
-      (tr (string-append
-           "day "
-           (number->string day-number)
-           ", "
-           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
-           " "
-           "("
-           (number->string time-today)
-           ")"))
-      (tr (string-append
-           (if (and (not (null? (current-location)))
+      (tr (format "round ~a" (current-round)))
+      (tr (format "day ~a, ~a (~a)"
+           day-number
+           (time-of-day-from-jiffies (world-elapsed-time (current-world)))
+           time-today))
+      (tr (if (and (not (null? (current-location)))
                     (not (void? (current-location))))
-               (get-location-short-description (current-location))
-               "N/A")))
+              (get-location-short-description (current-location))
+              "N/A"))
 
       (tr "")
-      (tr (string-append
-             "hunger: "
+      (tr (format
+             "hunger: ~a"
              (case (pc-hunger-level)
               ['satiated "satiated"]
               ['not-hungry "not hungry"]

@@ -132,29 +132,23 @@
 
 (define (actor-remove-status! actor status)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Status [" (symbol->string (status-type status)) "] removed]")))
+    (notice (format "~a: Status [~a] removed" (actor-name actor) (status-type status))))
   (set-actor-statuses! actor (remove status (actor-statuses actor))))
 
 ;;; CONDITIONS
 (define (actor-add-condition! actor condition)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] added, details:]"))
-    (displayln (condition-details condition)))
+    (notice (format "~a: Condition [~a] added, details: [~a]" (actor-name actor) (condition-type condition) (condition-details condition))))
   (set-actor-conditions! actor (append-element (actor-conditions actor) condition)))
 
-; TODO: Broken!
 (define (actor-remove-condition! actor condition)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Condition [" (symbol->string (condition-type condition)) "] removed, details:]"))
-    (displayln (condition-details condition)))
-  (set-actor-conditions! actor (filter
-                                (λ (other) (not (eq? (condition-type condition)
-                                                     (condition-type other))))
-                                (actor-conditions actor))))
+    (notice (format "~a: Condition [~a] removed" (actor-name actor) (condition-type condition))))
+  (set-actor-conditions! actor (remove condition (actor-conditions actor))))
 
 (define (actor-remove-condition-of-type! actor type)
   (when (not (null? actor))
-    (displayln (string-append "[" (actor-name actor) ": Condition of type [" (symbol->string type) "] removed]")))
+    (notice (format "~a: Condition of type [~a] removed" (actor-name actor) type)))
   (set-actor-conditions! actor (filter
                                 (λ (other) (not (eq? type
                                                      (condition-type other))))
@@ -179,7 +173,7 @@
 (define (get-modifier-string modifier)
   (cond ((negative? modifier) (number->string modifier))
         ((= 0 modifier) (number->string modifier))
-        ((positive? modifier) (string-append "+" (number->string modifier)))))
+        ((positive? modifier) (format "+~a" modifier))))
 
 
 (define (non-pc-take-damage! actor damage damage-type)

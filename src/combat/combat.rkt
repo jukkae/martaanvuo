@@ -39,20 +39,17 @@
     (tbody
      (tr
       "HP"
-      (string-append (number->string (actor-hp actor))
-                     "/"
-                     (number->string (actor-max-hp actor))
-                     ))))
+      (format "~a/~a"
+              (actor-hp actor)
+              (actor-max-hp actor)))))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
     (define statuses-strings
       (for/list ([status statuses])
-        (string-append "["
-                       (symbol->string (status-type status))
-                       " ("
-                       (number->string (status-lifetime status))
-                       ")]")))
+        (format "[~a (~a)]"
+                (status-type status)
+                (status-lifetime status))))
 
     (define statuses-list
       (tr "statuses"
@@ -63,9 +60,7 @@
     (define conditions (actor-conditions actor))
     (define conditions-strings
       (for/list ([condition conditions])
-        (string-append "["
-                       (symbol->string (condition-type condition))
-                       "]")))
+        (format "[~a]" (condition-type condition))))
 
     (define conditions-list
       (tr "conditions"

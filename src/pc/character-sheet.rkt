@@ -132,7 +132,7 @@
       (cond ((ranged-weapon? item)
              (tr
               (item-name item)
-              (string-append "ammo left: " (number->string (ranged-weapon-ammo-left item)))))
+              (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
             ((eq? (item-id item) 'bolt-cutters)
              (tr
               (item-name item)

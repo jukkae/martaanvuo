@@ -35,5 +35,5 @@
            (else
             (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll))))]
     ['ankle-broken '()]
-    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" condition))])
+    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" (condition-type condition)))])
   )

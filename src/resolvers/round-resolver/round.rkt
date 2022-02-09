@@ -95,7 +95,7 @@
       (define description (~s (actor-statuses enemy)))
 
       (define description-prefix
-        (string-append "[" name ": removed statuses: "))
+        (format "[~a: removed statuses: " name))
       (define description-suffix "]")
       (decrement-actor-status-lifetimes! enemy)))
 
@@ -105,7 +105,7 @@
     (define description (~s (actor-statuses (pc))))
 
     (define description-prefix
-      (string-append "[" name ": removed statuses: "))
+      (format "[~a: removed statuses" name))
     (define description-suffix "]")
     (decrement-actor-status-lifetimes! (pc)))
 

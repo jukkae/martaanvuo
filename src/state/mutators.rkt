@@ -123,10 +123,7 @@
   (define new-debt-amount (- old-debt-amount amount))
   (set-quest-details! debt-quest new-debt-amount)
   (set-quest-notes! debt-quest
-                    (string-append
-                     "unsettled: "
-                     (number->string new-debt-amount)
-                     " g gold"))
+                    (format "unsettled: ~a g gold" new-debt-amount))
   (displayln "new-debt-amount:")
   #;(displayln (~r new-debt-amount)) ; formatting todo
   (displayln new-debt-amount)
@@ -165,7 +162,7 @@
      (tr "run" (number->string (current-run)))
      (tr "life" (number->string (current-life)))))
 
-  (info-card player-status (string-append "Player status")))
+  (info-card player-status "Player status"))
 
 ; api?
 (define (pick-up-items!)

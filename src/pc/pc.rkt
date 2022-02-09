@@ -58,7 +58,7 @@
      (add-item! 'flashlight #:amount 1 #:silent? #t)
      ]
 
-    [else (error (string-append "set-build!: unknown build type " (symbol->string build)))])
+    [else (error (format "set-build!: unknown build type ~a" build))])
   #;(inventory)
   #;(character-sheet)
   )
@@ -223,8 +223,8 @@
 (provide award-xp!)
 (define (award-xp! amount . reason)
   (if (null? reason)
-      (displayln (string-append "[+" (number->string amount) " xp]"))
-      (displayln (string-append "[+" (number->string amount) " xp " (car reason) "]")))
+      (notice (format "+~a xp" amount))
+      (notice (format "+~a xp (~a)" amount reason)))
   (set-pc-actor-xp! (pc)
                     (+ (pc-actor-xp (pc))
                        amount)))
