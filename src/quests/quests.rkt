@@ -48,6 +48,6 @@
 
     (info-card
      (list body)
-     "New quest")
+     "New quest" #f)
 
     (wait-for-confirm)))
