@@ -75,10 +75,10 @@
   (case end-game-status
 
     ['win-game
-
-     (wait-for-confirm)
      (blurb 'the-end)
      (player-info)
+     (wait-for-confirm)
+     (display-playthrough-stats)
      (wait-for-confirm)
      (exit)]
 
@@ -86,6 +86,8 @@
      (narrate-restart)
 
      (player-info)
+     (wait-for-confirm)
+     (display-playthrough-stats)
      (wait-for-confirm)
 
      (reset-situation!)
@@ -95,6 +97,15 @@
      (wait-for-confirm)
 
      (resolve-game 'restart)]))
+
+(define (display-playthrough-stats)
+  (define body
+    (tbody
+      (tr "Otava did not become deathless.")
+      (tr "Otava did not pay back her debt.")
+      (tr "Otava did not escape Martaanvuo.")
+      (tr "The world exists.")))
+  (info-card body "End game"))
 
 (define (narrate-restart)
   (p
