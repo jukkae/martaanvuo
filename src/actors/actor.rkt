@@ -52,18 +52,15 @@
 (define (get-trait actor trait-name)
   (define result (hash-ref (actor-traits actor) trait-name 'not-found))
   (when (eq? result 'not-found)
-    (displayln (string-append
-                "-- get-trait: trait "
-                "\""
+    (dev-note (format
+                "-- get-trait: trait [~a] not found on actor [~a]"
                 trait-name
-                "\""
-                " not found on actor "
                 (actor-name actor))))
   result)
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
-    (notice (string-append (actor-name actor) ": Status [" (symbol->string (status-type status)) "] (" (number->string (status-lifetime status)) " turns) added")))
+    (notice (format "~a: Status [~a] (~a turns) added" (actor-name actor) (status-type status) (status-lifetime status) " turns) added")))
   (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
 (define (actor-has-status-of-type? actor type)
@@ -89,11 +86,9 @@
     (if (positive? (status-lifetime status))
         (set! new-statuses (append-element new-statuses status))
         (notice
-         (string-append
+         (format "~a: Status [~a] removed"
           (actor-name actor)
-          ": Status ["
-          (symbol->string (status-type status))
-          "] removed"))))
+          (status-type status)))))
   (set-actor-statuses! actor new-statuses))
 
 ; think:
@@ -102,19 +97,14 @@
 (define (modify-actor-status-lifetime actor type modify-amount)
   (for ([status (actor-statuses actor)])
     (when (eq? (status-type status) type)
-      (notice (string-append (actor-name actor) ": Status [" (symbol->string (status-type status)) "] modified."))
+      (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
 
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))
         (set! new-statuses (append-element new-statuses status))
-        (notice
-         (string-append
-          (actor-name actor)
-          ": Status ["
-          (symbol->string (status-type status))
-          "] removed"))))
+        (notice (format "~a: Status [~a] removed" (actor-name actor) (status-type status)))))
   (set-actor-statuses! actor new-statuses))
 
 ; yeah the way statuses currently work are a piece of shit
@@ -122,7 +112,7 @@
 ; it's a good idea
 (define (actor-set-status! actor type value)
   (when (not (null? actor))
-    (notice (string-append (actor-name actor) ": [" (symbol->string type) "]:" (number->string value))))
+    (notice (format "~a: [~a]: ~a" (actor-name actor) type value)))
 
   (if (actor-has-status-of-type? actor type)
       (for ([status (actor-statuses actor)])
@@ -214,19 +204,18 @@
   (set-actor-hp! actor 0)
   (notice
    (if (null? cause-of-death)
-       (string-append (actor-name actor)
-                      " is dead.")
-       (string-append (actor-name actor)
-                      " is dead. Cause of death: "
-                      (cond ((symbol? cause-of-death)
-                             (describe-cause-of-death cause-of-death))
-                            ((string? cause-of-death)
-                             cause-of-death)
-                            ((symbol? (car cause-of-death))
-                             (describe-cause-of-death (car cause-of-death)))
-                            ((string? (car cause-of-death))
-                             (car cause-of-death))
-                            (else "NA"))
+       (format "~a is dead." (actor-name actor))
+       (format "~a is dead. Cause of death: ~a"
+               (actor-name actor)
+               (cond ((symbol? cause-of-death)
+                        (describe-cause-of-death cause-of-death))
+                      ((string? cause-of-death)
+                        cause-of-death)
+                      ((symbol? (car cause-of-death))
+                        (describe-cause-of-death (car cause-of-death)))
+                      ((string? (car cause-of-death))
+                        (car cause-of-death))
+                      (else "NA"))
                       )))
 
   (cond ((pc-actor? actor)
@@ -259,11 +248,8 @@
      "")
     (tr
      "hp:"
-     (string-append
-      (number->string (actor-hp actor))
-      "/"
-      (number->string (actor-max-hp actor))
-      )))
+     (format "~a/~a" (actor-hp actor) (actor-max-hp actor))
+     ))
    title))
 
 (define (inflict-status! target status-type . status-strength)

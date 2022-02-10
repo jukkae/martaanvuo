@@ -102,7 +102,7 @@
         (else
          (define stance (actor-stance actor))
          (cond ((= (length (get-current-enemies)) 1)
-                (string-append (actor-name actor)))
+                (actor-name actor))
                (else
                 (define name (actor-name actor))
                 (define sign
@@ -111,7 +111,7 @@
                       ""))
                 (cond ((eq? "" sign)
                        name)
-                      (else (string-append name " " sign))))))))
+                      (else (format "~a ~a" name sign))))))))
 
 
 (define (display-non-pc-combatant-info actor)
@@ -130,13 +130,11 @@
          "HP"
          (if hide-hp?
              "???"
-             (string-append (number->string (actor-hp actor))
-                            "/"
-                            (number->string (actor-max-hp actor)))))
+             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))
         (if (not (null? stance))
          (tr
           "range"
-          (string-append (symbol->string (stance-range stance))))
+          (format "~a" (stance-range stance)))
          (tr
           "range"
           "N/A")))]

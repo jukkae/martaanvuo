@@ -23,9 +23,7 @@
     (tbody
      (tr (actor-name actor) "" )
      (tr "" "")
-     (tr "HP" (string-append (number->string (actor-hp actor))
-                             "/"
-                             (number->string (actor-max-hp actor))))))
+     (tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
 
   (when (not (= 0 (pc-actor-xp actor)))
     (set! sheet (append-element sheet
@@ -46,52 +44,47 @@
     (set! attributes-list (append-element attributes-list
                                           (tr
                                            "strength"
-                                           (string-append (number->string (actor-strength actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-strength actor)))
-                                                          "]")))))
+                                           (format "~a [~a]"
+                                                   (actor-strength actor)
+                                                   (get-modifier-string
+                                                     (get-attribute-modifier-for
+                                                       (actor-strength actor))))))))
   (when (not (null? (actor-dexterity actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
                                            "dexterity"
-                                           (string-append (number->string (actor-dexterity actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-dexterity actor)))
-                                                          "]")))))
+                                           (format "~a [~a]"
+                                                   (actor-dexterity actor)
+                                                   (get-modifier-string
+                                                     (get-attribute-modifier-for
+                                                       (actor-dexterity actor))))))))
   (when (not (null? (actor-constitution actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
                                            "constitution"
-                                           (string-append (number->string (actor-constitution actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-constitution actor)))
-                                                          "]")))))
+                                           (format "~a [~a]"
+                                                   (actor-constitution actor)
+                                                   (get-modifier-string
+                                                     (get-attribute-modifier-for
+                                                       (actor-constitution actor))))))))
   (when (not (null? (actor-intelligence actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
                                            "intelligence"
-                                           (string-append (number->string (actor-intelligence actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-intelligence actor)))
-                                                          "]")))))
+                                           (format "~a [~a]"
+                                                   (actor-intelligence actor)
+                                                   (get-modifier-string
+                                                     (get-attribute-modifier-for
+                                                       (actor-intelligence actor))))))))
   (when (not (null? (actor-charisma actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
                                            "charisma"
-                                           (string-append (number->string (actor-charisma actor))
-                                                          " ["
-                                                          (get-modifier-string
-                                                           (get-attribute-modifier-for
-                                                            (actor-charisma actor)))
-                                                          "]")))))
+                                           (format "~a [~a]"
+                                                   (actor-charisma actor)
+                                                   (get-modifier-string
+                                                     (get-attribute-modifier-for
+                                                       (actor-charisma actor))))))))
 
   (define traits (actor-traits actor))
   (define traits-list

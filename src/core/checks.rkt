@@ -39,7 +39,7 @@
   (define wangernumb (list-ref wangernumbs wanger-index))
   (info-card
    (tbody
-    (tr "luck" (string-append wangernumb))
+    (tr "luck" wangernumb)
     (tr "" result-text))
    "Luck check")
   (wait-for-confirm)
@@ -66,12 +66,9 @@
                      "check failed"))
   (define sheet
     (tbody
-     (tr (string-append text)
-         (string-append (number->string attribute-value)
-                        " ("
-                        (get-modifier-string modifier)
-                        ")")
-         (string-append result))))
+     (tr text
+         (format "~a (~a)" attribute-value (get-modifier-string modifier))
+         result)))
 
   (when (null? silent)
     (info-card
@@ -94,9 +91,9 @@
     (tbody
      (tr "1d20" "<" "attr")
      (tr
-      (number->string roll)
+      (format "~a" roll)
       "<"
-      (string-append (number->string attribute) success-string))))
+      (format "~a~a" attribute success-string))))
 
   (info-card
    results
@@ -120,16 +117,9 @@
     (tbody
      (tr "2d6 + skill" ">=" "TN")
      (tr
-      (string-append
-       (number->string first-d)
-       "+"
-       (number->string second-d)
-       "+"
-       (number->string bonus)
-       " = "
-       (number->string roll-total))
+      (format "~a + ~a + ~a = ~a" first-d second-d bonus roll-total)
       ">="
-      (string-append (number->string target-number) success-string))))
+      (format "~a~a" target-number success-string))))
 
   (info-card
    results
