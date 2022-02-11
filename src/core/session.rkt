@@ -4,9 +4,13 @@
 
 (require "utils.rkt")
 
-(define current-session-score-dice (make-parameter 1))
-(define (current-session-score-dice++)
-  (current-session-score-dice (add1 (current-session-score-dice))))
+(define current-session-score-dice (make-parameter 0))
+(define (current-session-score-dice++ . reason)
+  (current-session-score-dice (add1 (current-session-score-dice)))
+  (when (not (null? reason))
+    (current-session-score-reasons (cons reason (current-session-score-reasons)))))
+
+(define current-session-score-reasons (make-parameter '()))
 
 (define session-flags (make-parameter '()))
 
