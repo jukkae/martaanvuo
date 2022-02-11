@@ -81,7 +81,9 @@
       (process-timeline! tl))
 
     (when (not (empty? (action-resolution-effect action)))
-      ((action-resolution-effect action)))
+      (define resolution-effect-result (action-resolution-effect action))
+      (when (not (or (void? resolution-effect-result) (empty? resolution-effect-result)))
+        (set! result resolution-effect-result)))
 
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
@@ -228,13 +230,10 @@
 
     ['anklebreaker (resolve-anklebreaker-action! action)]
     ['pull-under (resolve-pull-under-action! action)]
-    ['release-grip 'grip-released]
 
     ['go-to-engaged (resolve-go-to-engaged-action! action)]
     ['go-to-close (resolve-go-to-close-action! action)]
 
-
-    ['inflict-condition (resolve-inflict-condition-action! action)]
 
     [else
      (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
