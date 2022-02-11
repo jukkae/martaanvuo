@@ -7,22 +7,34 @@
 (require
   "action.rkt"
   "choice.rkt"
+
   "../actors/actor.rkt"
+  "../actors/pc-actor.rkt"
+
   "../blurbs/blurbs.rkt"
+
   "../combat/combat-pc-choices.rkt"
+
   "../core/checks.rkt"
   "../core/io.rkt"
+  "../core/utils.rkt"
+
   "../items/item.rkt"
-  "../pc/pc.rkt"
-  "../actors/pc-actor.rkt"
+
   "../locations/0-types/location.rkt"
   "../locations/0-types/place.rkt"
   "../locations/0-types/route.rkt"
   "../locations/narration.rkt"
+
+  "../pc/pc.rkt"
+
+  "../state/logging.rkt"
+  "../state/state.rkt"
+
   "../world/time.rkt"
-  "../core/utils.rkt"
   "../world/world.rkt"
-  "../state/state.rkt")
+  )
+
 
 (lazy-require
  ["../resolvers/round-resolver/round-resolver.rkt"
@@ -293,7 +305,8 @@
                            #:symbol 'skip
                            #:actor (pc)
                            #:duration 0
-                           #:tags '(downtime))))))
+                           #:tags '(downtime)
+                           )))))
                     )
                    (else ; route is traversable
                     (make-choice
@@ -444,7 +457,30 @@
           #:id 'end-run
           #:text "Go back."
           #:duration 100
-          #:tags '(downtime)))
+          #:tags '(downtime)
+          #:resolution-effect
+          (λ ()
+            (cond ((flag-set? 'ending-run-allowed)
+            (p "At least it's something.")
+            'end-run)
+           (else
+            (set-flag 'tried-to-go-back)
+            (p @~a{
+              Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+            })
+            (wait-for-confirm)
+            (next-chapter!) ; end chapter, but not run!
+            (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+            (wait-for-confirm)
+            (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+            (p "This should be simple, Otava thinks.")
+            (award-xp! 25 "for good thinking")
+            'failure
+            ))
+
+          )
+
+          ))
 
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (flag-set? 'ending-run-allowed))
@@ -452,7 +488,28 @@
           #:id 'end-run
           #:text "Go back home."
           #:duration 0
-          #:tags '(downtime)))
+          #:tags '(downtime)
+          #:resolution-effect
+          (λ ()
+            (cond ((flag-set? 'ending-run-allowed)
+            (p "At least it's something.")
+            'end-run)
+           (else
+            (set-flag 'tried-to-go-back)
+            (p @~a{
+              Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+            })
+            (wait-for-confirm)
+            (next-chapter!) ; end chapter, but not run!
+            (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+            (wait-for-confirm)
+            (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+            (p "This should be simple, Otava thinks.")
+            (award-xp! 25 "for good thinking")
+            'failure
+            ))
+
+          )))
        ))))
 
   (define condensed (condense all-actions))
