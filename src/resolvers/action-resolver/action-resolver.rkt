@@ -80,7 +80,7 @@
       (process-timeline! tl))
 
     (when (not (empty? (action-resolution-effect action)))
-      (define resolution-effect-result (action-resolution-effect action))
+      (define resolution-effect-result ((action-resolution-effect action)))
       (when (not (or (void? resolution-effect-result) (empty? resolution-effect-result)))
         (set! result resolution-effect-result)))
 
