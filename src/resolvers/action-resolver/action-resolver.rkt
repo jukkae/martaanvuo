@@ -21,7 +21,6 @@
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
-  "../../enemies/blindscraper-actions.rkt"
   "../../enemies/grabberkin-actions.rkt"
 
   "../../items/item.rkt"
@@ -164,9 +163,6 @@
 
 (define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
-    ; "special" actions first
-
-    ['go-to-location (resolve-go-to-action! action)]
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
 
@@ -178,10 +174,6 @@
 
     ['anklebreaker (resolve-anklebreaker-action! action)]
     ['pull-under (resolve-pull-under-action! action)]
-
-    ['go-to-engaged (resolve-go-to-engaged-action! action)]
-    ['go-to-close (resolve-go-to-close-action! action)]
-
 
     [else
      (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
