@@ -41,43 +41,4 @@
 
 ; just a skill check in a fancy coat
 (define (resolve-forage-action! action)
-
-  (begin
-    (define skill 0)
-    (define target 8)
-
-    (define successful? (skill-check "Forage" skill target))
-    (cond (successful?
-           (define amount (d 1 4)) ; portions = days of survival
-           (define amount-string
-             (if (= amount 1)
-                 (format "~a meal" amount)
-                 (format "~a meals" amount)))
-
-           (info-card
-            (tbody
-             (tr
-              "1d4"
-              "="
-              (format "~a" amount-string))
-             )
-            "Forage results roll")
-           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-           (define item (list 'food (list amount)))
-           (add-item-to-inventory! (pc) item)
-           )
-          (else
-           (begin
-             (p "Despite spending a while, Otava can't find anything to eat.")
-             (define luck-roll (d 1 20))
-             (info-card
-              (tbody
-               (tr
-                "1d20"
-                "="
-                (format "~a" luck-roll)))
-              "Luck roll")
-             )))
-    (if successful?
-        'successful
-        'failure)))
+  'ok)

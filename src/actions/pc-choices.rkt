@@ -9,6 +9,7 @@
   "choice.rkt"
   "../actors/actor.rkt"
   "../combat/combat-pc-choices.rkt"
+  "../core/checks.rkt"
   "../core/io.rkt"
   "../items/item.rkt"
   "../pc/pc.rkt"
@@ -277,7 +278,49 @@
                   #:symbol 'forage
                   #:actor (pc)
                   #:duration 100
-                  #:tags '(downtime))))))
+                  #:tags '(downtime)
+                  #:resolution-effect (λ ()
+
+    (begin
+    (define skill 0)
+    (define target 8)
+
+    (define successful? (skill-check "Forage" skill target))
+    (cond (successful?
+           (define amount (d 1 4)) ; portions = days of survival
+           (define amount-string
+             (if (= amount 1)
+                 (format "~a meal" amount)
+                 (format "~a meals" amount)))
+
+           (info-card
+            (tbody
+             (tr
+              "1d4"
+              "="
+              (format "~a" amount-string))
+             )
+            "Forage results roll")
+           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+           (define item (list 'food (list amount)))
+           (add-item-to-inventory! (pc) item)
+           )
+          (else
+           (begin
+             (p "Despite spending a while, Otava can't find anything to eat.")
+             (define luck-roll (d 1 20))
+             (info-card
+              (tbody
+               (tr
+                "1d20"
+                "="
+                (format "~a" luck-roll)))
+              "Luck roll")
+             )))
+    (if successful?
+        'successful
+        'failure))
+                                        ))))))
 
        (when (place? (current-location))
          (for/list ([action (place-actions-provided (current-location))])
