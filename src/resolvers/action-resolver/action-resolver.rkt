@@ -216,8 +216,6 @@
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
 
-    ; placeholder / WIP
-    ['camp 'ok]
     ['sleep (progress-until-next-day! action)]
     ['rest (progress-until-next-time-of-day! action)
            (narrate-rest-action)]

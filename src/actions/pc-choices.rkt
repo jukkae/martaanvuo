@@ -59,16 +59,24 @@
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
-             #:duration 20)))]
+             #:duration 20
+             #:resolution-effect
+             (λ ()
+              (dev-note "Camp action TODO")
+              'ok))))]
 
     ['campfire
      (make-choice
-      'camp
+      'campfire
       "Build campfire."
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
-             #:duration 10)))]
+             #:duration 10
+             #:resolution-effect
+             (λ ()
+              (dev-note "Campfire action TODO")
+              'ok))))]
 
     ['rest
      (define next-time-of-day
