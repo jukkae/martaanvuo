@@ -104,7 +104,27 @@
             #:actor (pc)
             #:duration 15
             #:target food
-            #:tags '(downtime)))
+            #:tags '(downtime)
+            #:resolution-effect
+            (λ ()
+     (displayln (format "TARGET: ~a" food))
+     (define food-tier
+       (case (item-id food)
+        ['fresh-berries 0]
+        ['food-ration 1]
+        ['vatruska 2]
+        [else (dev-note (format "Unknown comestible ~a" (item-id food)))
+              1])
+      )
+     (decrease-pc-hunger-level food-tier)
+
+     (case (item-id food)
+      ['fresh-berries (p "The berries are invigoratingly sweet.")]
+      ['food-ration (p "The ration's dry and bland, but filling.")]
+      ['vatruska (p "The vatruska tastes heavenly.")])
+     (remove-item! (item-id food))
+
+              '())))
 
         ))
     ]
