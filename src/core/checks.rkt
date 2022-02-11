@@ -128,3 +128,17 @@
   (wait-for-confirm)
 
   successful?)
+
+
+;;; CRIT ROLL IDEA:
+; Base chances are like 1/6 for "certain" attack failing, 1/6 for crit,
+; but PC's attribute/skill bonuses can shift that balance
+; - or would failures be based on saving throw? maybe.
+(define (roll-crit? sides)
+  (define crit-roll (d 1 sides))
+  (define critical? (= crit-roll 6))
+  (define crit-string (if critical?
+                          ", crit"
+                          ""))
+  (notice (format "crit roll: 1d~a = ~a~a" sides crit-roll crit-string)))
+

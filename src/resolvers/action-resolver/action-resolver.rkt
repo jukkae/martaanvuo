@@ -14,28 +14,16 @@
   "../../actors/actor.rkt"
   "../../actors/pc-actor.rkt"
 
-  "../../blurbs/blurbs.rkt"
-
   "../../combat/combat-action-resolver.rkt"
 
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
-  "../../enemies/grabberkin-actions.rkt"
-
-  "../../items/item.rkt"
-
   "../../locations/0-types/location.rkt"
   "../../locations/0-types/route.rkt"
   "../../locations/locations.rkt"
 
-  "../../pc/pc.rkt"
-
-  "../../state/logging.rkt"
   "../../state/state.rkt"
-
-  "../../world/time.rkt"
-  "../../world/world.rkt"
 
   )
 
@@ -171,9 +159,6 @@
     ['shoot (resolve-shoot-action! action)]
     ['flee (resolve-flee-action! action)]
     ['break-free (resolve-break-free-action! action)]
-
-    ['anklebreaker (resolve-anklebreaker-action! action)]
-    ['pull-under (resolve-pull-under-action! action)]
 
     [else
      (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
