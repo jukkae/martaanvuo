@@ -5,7 +5,6 @@
 (require racket/lazy-require)
 
 (require
-  "downtime-actions.rkt"
   "special-actions.rkt"
   "traverse-action.rkt"
 
@@ -193,7 +192,6 @@
 
     ; placeholder / WIP
     ['camp 'ok]
-    #;['sleep (resolve-sleep-action! action)]
     ['sleep (progress-until-next-day! action)]
     ['rest (progress-until-next-time-of-day! action)
            (narrate-rest-action)]
@@ -219,7 +217,6 @@
     ; the rest
     ['melee (resolve-melee-action! action)]
     ['shoot (resolve-shoot-action! action)]
-    ['forage (resolve-forage-action! action)]
     ['flee (resolve-flee-action! action)]
     ['break-free (resolve-break-free-action! action)]
 

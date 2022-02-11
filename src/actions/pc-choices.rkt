@@ -43,11 +43,15 @@
     ['sleep
      (make-choice
       'sleep
-      "Sleep." 
+      "Sleep."
       (λ () (make-action
              #:symbol 'sleep
              #:actor (pc)
-             #:duration 200)))]
+             #:duration 200
+             #:resolution-effect
+             (λ ()
+              (dev-note "Fix sleep action")
+              'successful))))]
     ['tent
      (make-choice
       'camp
