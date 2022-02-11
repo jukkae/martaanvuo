@@ -8,6 +8,7 @@
   "action.rkt"
   "choice.rkt"
   "../actors/actor.rkt"
+  "../blurbs/blurbs.rkt"
   "../combat/combat-pc-choices.rkt"
   "../core/checks.rkt"
   "../core/io.rkt"
@@ -28,6 +29,18 @@
   (go-to-story-fragment
    )])
 
+
+
+; TODO: action / time helpers, move these somewhere
+(define (time-until-next-morning)
+  (let* ([time (world-elapsed-time (current-world))]
+         [time-today (remainder time day-length)])
+    (- day-length time-today)))
+
+(define (time-until-next-time-of-day)
+  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
+
+
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (cond ((in-combat?)
@@ -47,11 +60,10 @@
       (λ () (make-action
              #:symbol 'sleep
              #:actor (pc)
-             #:duration 200
+             #:duration (time-until-next-morning)
              #:resolution-effect
              (λ ()
-              (dev-note "Fix sleep action")
-              'successful))))]
+              'ok))))]
     ['tent
      (make-choice
       'camp
@@ -88,7 +100,11 @@
       (λ () (make-action
              #:symbol 'rest
              #:actor (pc)
-             #:duration 100)))]
+             #:duration (time-until-next-time-of-day)
+             #:resolution-effect
+             (λ ()
+              (blurb 'rest-action))
+             )))]
 
     ; This opens a submenu
     ['eat

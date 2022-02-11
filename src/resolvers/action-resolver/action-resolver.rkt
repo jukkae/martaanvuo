@@ -162,25 +162,6 @@
 
     ))
 
-(define (time-until-next-morning)
-  (let* ([time (world-elapsed-time (current-world))]
-         [time-today (remainder time day-length)])
-    (- day-length time-today)))
-
-(define (time-until-next-time-of-day)
-  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
-
-(define (progress-until-next-day! action)
-  (set-action-duration! action (time-until-next-morning))
-  'ok)
-
-(define (progress-until-next-time-of-day! action)
-  (set-action-duration! action (time-until-next-time-of-day))
-  'ok)
-
-(define (narrate-rest-action)
-  (blurb 'rest-action))
-
 (define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
     ; "special" actions first
@@ -215,10 +196,6 @@
     ['go-to-location (resolve-go-to-action! action)]
     ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
-
-    ['sleep (progress-until-next-day! action)]
-    ['rest (progress-until-next-time-of-day! action)
-           (narrate-rest-action)]
 
     ; the rest
     ['melee (resolve-melee-action! action)]
