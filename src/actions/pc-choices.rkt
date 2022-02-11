@@ -23,7 +23,7 @@
   "../state/state.rkt")
 
 (lazy-require
- ["../round-resolver/round-resolver.rkt"
+ ["../resolvers/round-resolver/round-resolver.rkt"
   (go-to-story-fragment
    )])
 

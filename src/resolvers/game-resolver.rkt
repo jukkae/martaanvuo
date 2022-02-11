@@ -76,17 +76,16 @@
 
     ['win-game
      (blurb 'the-end)
-     (player-info)
      (wait-for-confirm)
+
      (display-playthrough-stats)
      (wait-for-confirm)
+
      (exit)]
 
     ['restart
      (narrate-restart)
 
-     (player-info)
-     (wait-for-confirm)
      (display-playthrough-stats)
      (wait-for-confirm)
 
@@ -98,14 +97,26 @@
 
      (resolve-game 'restart)]))
 
+
 (define (display-playthrough-stats)
   (define body
     (tbody
+      (tr "MARTAANVUO")
+      (tr "")
       (tr "Otava did not become deathless.")
       (tr "Otava did not pay back her debt.")
       (tr "Otava did not escape Martaanvuo.")
-      (tr "The world exists.")))
-  (info-card body "End game"))
+      (tr "The world continues to exist.")
+      (tr "")
+      (tr (format "Otava ran ~a ~a and lived ~a ~a."
+                  (current-run)
+                  (if (= (current-run) 1) "run" "runs")
+                  (current-life)
+                  (if (= (current-life) 1) "life" "lives")
+                  ))
+      ))
+  (newline)
+  (info-card body '()))
 
 (define (narrate-restart)
   (p

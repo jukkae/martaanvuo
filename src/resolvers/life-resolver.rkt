@@ -62,7 +62,7 @@
   (set-base-build!)
   (go-to-story-fragment 'begin-life)
   (when (not (= 1 (current-life)))
-    (player-info)))
+    (dev-note "Show life info")))
 
 (define (on-end-life)
   (let ([body
