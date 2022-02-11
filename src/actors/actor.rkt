@@ -99,7 +99,6 @@
     (when (eq? (status-type status) type)
       (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
-
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))

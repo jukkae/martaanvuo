@@ -312,15 +312,6 @@
                'failure))
          )))
 
-(define (resolve-modify-status-action! action)
-  (define target (action-target action))
-  (define status (car (action-details action)))
-  (when (eq? (status-type status) 'bound) ; this is shit, refactor
-    (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-    (define amount (status-lifetime status))
-    (modify-actor-status-lifetime target 'bound amount)
-    )
-  'ok)
 
 (define (resolve-inflict-condition-action! action)
   (define target (action-target action))

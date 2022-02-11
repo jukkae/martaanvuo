@@ -89,7 +89,15 @@
       #:duration 0
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
-      #:details (list (status 'bound strength)))] ; this is shit, refactor
+      #:details (list (status 'bound strength))
+      #:resolution-effect (λ ()
+
+        (define target (pc))
+        (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+        (modify-actor-status-lifetime target 'bound strength)
+      'ok
+      )
+      )] ; this is shit, refactor
 
     ['release-grip
      (make-action

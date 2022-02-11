@@ -233,7 +233,6 @@
     ['go-to-engaged (resolve-go-to-engaged-action! action)]
     ['go-to-close (resolve-go-to-close-action! action)]
 
-    ['modify-status (resolve-modify-status-action! action)]
 
     ['inflict-condition (resolve-inflict-condition-action! action)]
 
