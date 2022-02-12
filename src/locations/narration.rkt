@@ -13,25 +13,7 @@
          "../core/api.rkt"
          "../actions/action.rkt")
 
-(define (describe-begin-traverse-action action)
-  (define from
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-a (action-target action))
-               (route-b (action-target action))))
-          (else
-           (current-location))
-          ))
-
-  (define to
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-b (action-target action))
-               (route-a (action-target action))))
-          (else
-           (action-target action))
-          ))
-
+(define (describe-begin-traverse-action from to)
   (define key (list (location-id from) (location-id to)))
   (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-begin-traverse-narrated key))
@@ -105,24 +87,7 @@
      (displayln key)])
   )
 
-(define (describe-finish-traverse-action action)
-  (define from
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-a (action-target action))
-               (route-b (action-target action))))
-          (else
-           (current-location))
-          ))
-
-  (define to
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-b (action-target action))
-               (route-a (action-target action))))
-          (else
-           (action-target action))
-          ))
+(define (describe-finish-traverse-action from to)
 
   (define key (list (location-id from) (location-id to)))
   (times-finish-traverse-narrated++ key) ; dumbass order of initialization but who cares
@@ -217,24 +182,7 @@
      (displayln key)]
     ))
 
-(define (describe-cancel-traverse-action action)
-  (define from
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-a (action-target action))
-               (route-b (action-target action))))
-          (else
-           (current-location))
-          ))
-
-  (define to
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-b (action-target action))
-               (route-a (action-target action))))
-          (else
-           (action-target action))
-          ))
+(define (describe-cancel-traverse-action from to)
 
   (define key (list from to))
   (times-cancel-traverse-narrated++ key) ; dumbass order of initialization

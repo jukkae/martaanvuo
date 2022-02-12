@@ -84,8 +84,25 @@
   (let/ec return
     (case (action-symbol action)
       ['traverse
+        (define from
+          (cond ((route? (action-target action))
+                (if (memq 'a-to-b (action-details action))
+                    (route-a (action-target action))
+                    (route-b (action-target action))))
+                (else
+                (current-location))
+                ))
+
+        (define to
+          (cond ((route? (action-target action))
+                (if (memq 'a-to-b (action-details action))
+                    (route-b (action-target action))
+                    (route-a (action-target action))))
+                (else
+                (action-target action))
+                ))
        (cond ((not (pending? action))
-              (describe-begin-traverse-action action))
+              (describe-begin-traverse-action from to))
              (else
               (dev-note "resolving pending action")))
        (move-pc-to-location! (action-target action))
@@ -143,7 +160,24 @@
 (define (pc-action-on-after-resolve! action)
   (case (action-symbol action)
     ['traverse
-     (describe-finish-traverse-action action)
+     (define from
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-a (action-target action))
+               (route-b (action-target action))))
+          (else
+           (current-location))
+          ))
+
+  (define to
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-b (action-target action))
+               (route-a (action-target action))))
+          (else
+           (action-target action))
+          ))
+     (describe-finish-traverse-action from to)
      (when (not (null? (location-items (action-target action))))
        (pick-up-items!))]
 
@@ -168,10 +202,27 @@
 
 
 (define (resolve-cancel-traverse-action! action)
+  (define from
+      (cond ((route? (action-target action))
+            (if (memq 'a-to-b (action-details action))
+                (route-a (action-target action))
+                (route-b (action-target action))))
+            (else
+            (current-location))
+            ))
+
+    (define to
+      (cond ((route? (action-target action))
+            (if (memq 'a-to-b (action-details action))
+                (route-b (action-target action))
+                (route-a (action-target action))))
+            (else
+            (action-target action))
+            ))
   (reset-pending-action!)
   (move-pc-to-location! (action-target action))
 
-  (describe-cancel-traverse-action action)
+  (describe-cancel-traverse-action from to)
   (display-location-info-card (current-location))
   (when (not (null? (location-items (action-target action))))
     (pick-up-items!))
@@ -190,9 +241,26 @@
 
 
 (define (resolve-go-to-action! action)
+  (define from
+      (cond ((route? (action-target action))
+            (if (memq 'a-to-b (action-details action))
+                (route-a (action-target action))
+                (route-b (action-target action))))
+            (else
+            (current-location))
+            ))
+
+    (define to
+      (cond ((route? (action-target action))
+            (if (memq 'a-to-b (action-details action))
+                (route-b (action-target action))
+                (route-a (action-target action))))
+            (else
+            (action-target action))
+            ))
   (define elapsed-time 0)
   (cond ((not (pending? action))
-         (describe-begin-traverse-action action)))
+         (describe-begin-traverse-action from to)))
 
   (define result
     (let/ec return
@@ -212,7 +280,7 @@
         (move-pc-to-location! next-location)
         (location-on-enter! (current-location))
 
-        (describe-finish-traverse-action action)
+        (describe-finish-traverse-action from to)
 
         (when (not (null? (location-items (action-target action))))
           (pick-up-items!))
