@@ -21,6 +21,7 @@
 
   "../items/item.rkt"
 
+  "../locations/locations.rkt"
   "../locations/0-types/location.rkt"
   "../locations/0-types/place.rkt"
   "../locations/0-types/route.rkt"
@@ -75,7 +76,7 @@
              #:duration (time-until-next-morning)
              #:resolution-effect
              (λ ()
-              'ok))))]
+               'ok))))]
     ['tent
      (make-choice
       'camp
@@ -86,8 +87,8 @@
              #:duration 20
              #:resolution-effect
              (λ ()
-              (dev-note "Camp action TODO")
-              'ok))))]
+               (dev-note "Camp action TODO")
+               'ok))))]
 
     ['campfire
      (make-choice
@@ -99,8 +100,8 @@
              #:duration 10
              #:resolution-effect
              (λ ()
-              (dev-note "Campfire action TODO")
-              'ok))))]
+               (dev-note "Campfire action TODO")
+               'ok))))]
 
     ['rest
      (define next-time-of-day
@@ -115,55 +116,55 @@
              #:duration (time-until-next-time-of-day)
              #:resolution-effect
              (λ ()
-              (blurb 'rest-action))
+               (blurb 'rest-action))
              )))]
 
     ; This opens a submenu
     ['eat
      (define title
        (case (pc-hunger-level)
-        ['satiated "Eat? Disgusting idea."]
-        ['not-hungry "Not really hungry but she could eat."]
-        ['hungry "Eat."]
-        ['very-hungry "Eat, she's very hungry."]
-        ['starving "She's starving, eat. Eat now."]
-       ))
+         ['satiated "Eat? Disgusting idea."]
+         ['not-hungry "Not really hungry but she could eat."]
+         ['hungry "Eat."]
+         ['very-hungry "Eat, she's very hungry."]
+         ['starving "She's starving, eat. Eat now."]
+         ))
      (make-choice
       'eat
       "Eat."
       (λ ()
-       (define food (select-food-to-eat))
-       (if (void? food)
-           'cancel
-           (make-action
-            #:symbol 'eat
-            #:actor (pc)
-            #:duration 15
-            #:target food
-            #:tags '(downtime)
-            #:resolution-effect
-            (λ ()
-     (displayln (format "TARGET: ~a" food))
-     (define food-tier
-       (case (item-id food)
-        ['fresh-berries 0]
-        ['food-ration 1]
-        ['vatruska 2]
-        [else (dev-note (format "Unknown comestible ~a" (item-id food)))
-              1])
-      )
-     (decrease-pc-hunger-level food-tier)
+        (define food (select-food-to-eat))
+        (if (void? food)
+            'cancel
+            (make-action
+             #:symbol 'eat
+             #:actor (pc)
+             #:duration 15
+             #:target food
+             #:tags '(downtime)
+             #:resolution-effect
+             (λ ()
+               (displayln (format "TARGET: ~a" food))
+               (define food-tier
+                 (case (item-id food)
+                   ['fresh-berries 0]
+                   ['food-ration 1]
+                   ['vatruska 2]
+                   [else (dev-note (format "Unknown comestible ~a" (item-id food)))
+                    1])
+                 )
+               (decrease-pc-hunger-level food-tier)
 
-     (case (item-id food)
-      ['fresh-berries (p "The berries are invigoratingly sweet.")]
-      ['food-ration (p "The ration's dry and bland, but filling.")]
-      ['vatruska (p "The vatruska tastes heavenly.")])
-     (remove-item! (item-id food))
+               (case (item-id food)
+                 ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                 ['food-ration (p "The ration's dry and bland, but filling.")]
+                 ['vatruska (p "The vatruska tastes heavenly.")])
+               (remove-item! (item-id food))
 
-              '())))
+               '())))
 
         ))
-    ]
+     ]
     ))
 
 (define (select-food-to-eat)
@@ -171,10 +172,10 @@
   (define comestibles
     (filter (λ (item) ; likely this should be stored as data on the item itself
               (case (item-id item)
-               ['fresh-berries #t]
-               ['ration #t]
-               ['vatruska #t]
-               [else #f]))
+                ['fresh-berries #t]
+                ['ration #t]
+                ['vatruska #t]
+                [else #f]))
             items))
 
   (prln (format "Eat what? [1-~a], anything else to cancel." (length comestibles)))
@@ -192,7 +193,7 @@
          (list-ref comestibles index)
          )
         (else (p "Nevermind.")))
-)
+  )
 
 
 (define (get-nighttime-choices world actor)
@@ -311,14 +312,27 @@
                    (else ; route is traversable
                     (make-choice
                      'traverse
-                     (get-traverse-text route (current-location)) 
+                     (get-traverse-text route (current-location))
                      (λ () (make-action
                             #:symbol 'traverse
                             #:actor (pc)
                             #:duration 100
                             #:target route
                             #:tags '(downtime)
-                            #:details (list direction))))))
+                            #:details (list direction)
+                            #:resolution-effect
+                            (λ ()
+                              (set-route-traversed! route)
+
+                              (define next-location (if (eq? 'a-to-b direction)
+                                                        (route-b route)
+                                                        (route-a route)))
+                              (move-pc-to-location! next-location)
+
+                              'ok
+                              )
+
+                            )))))
              )))
 
        (when (and (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
@@ -342,45 +356,45 @@
                   #:tags '(downtime)
                   #:resolution-effect (λ ()
 
-    (begin
-    (define skill 0)
-    (define target 8)
+                                        (begin
+                                          (define skill 0)
+                                          (define target 8)
 
-    (define successful? (skill-check "Forage" skill target))
-    (cond (successful?
-           (define amount (d 1 4)) ; portions = days of survival
-           (define amount-string
-             (if (= amount 1)
-                 (format "~a meal" amount)
-                 (format "~a meals" amount)))
+                                          (define successful? (skill-check "Forage" skill target))
+                                          (cond (successful?
+                                                 (define amount (d 1 4)) ; portions = days of survival
+                                                 (define amount-string
+                                                   (if (= amount 1)
+                                                       (format "~a meal" amount)
+                                                       (format "~a meals" amount)))
 
-           (info-card
-            (tbody
-             (tr
-              "1d4"
-              "="
-              (format "~a" amount-string))
-             )
-            "Forage results roll")
-           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-           (define item (list 'food (list amount)))
-           (add-item-to-inventory! (pc) item)
-           )
-          (else
-           (begin
-             (p "Despite spending a while, Otava can't find anything to eat.")
-             (define luck-roll (d 1 20))
-             (info-card
-              (tbody
-               (tr
-                "1d20"
-                "="
-                (format "~a" luck-roll)))
-              "Luck roll")
-             )))
-    (if successful?
-        'successful
-        'failure))
+                                                 (info-card
+                                                  (tbody
+                                                   (tr
+                                                    "1d4"
+                                                    "="
+                                                    (format "~a" amount-string))
+                                                   )
+                                                  "Forage results roll")
+                                                 (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+                                                 (define item (list 'food (list amount)))
+                                                 (add-item-to-inventory! (pc) item)
+                                                 )
+                                                (else
+                                                 (begin
+                                                   (p "Despite spending a while, Otava can't find anything to eat.")
+                                                   (define luck-roll (d 1 20))
+                                                   (info-card
+                                                    (tbody
+                                                     (tr
+                                                      "1d20"
+                                                      "="
+                                                      (format "~a" luck-roll)))
+                                                    "Luck roll")
+                                                   )))
+                                          (if successful?
+                                              'successful
+                                              'failure))
                                         ))))))
 
        (when (place? (current-location))
@@ -457,61 +471,61 @@
           'end-run
           "Go back."
           (make-action
-            #:symbol 'end-run
-            #:actor actor
-            #:duration 100
-            #:tags '(downtime)
-            #:resolution-effect
-            (λ ()
-            (cond ((flag-set? 'ending-run-allowed)
-            (p "At least it's something.")
-            'end-run)
-            (else
-              (set-flag 'tried-to-go-back)
-              (p @~a{
-                Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
-              })
-              (wait-for-confirm)
-              (next-chapter!) ; end chapter, but not run!
-              (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
-              (wait-for-confirm)
-              (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
-              (p "This should be simple, Otava thinks.")
-              (award-xp! 25 "for good thinking")
-              'failure
-              ))))
+           #:symbol 'end-run
+           #:actor actor
+           #:duration 100
+           #:tags '(downtime)
+           #:resolution-effect
+           (λ ()
+             (cond ((flag-set? 'ending-run-allowed)
+                    (p "At least it's something.")
+                    'end-run)
+                   (else
+                    (set-flag 'tried-to-go-back)
+                    (p @~a{
+ Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+ })
+                    (wait-for-confirm)
+                    (next-chapter!) ; end chapter, but not run!
+                    (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+                    (wait-for-confirm)
+                    (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+                    (p "This should be simple, Otava thinks.")
+                    (award-xp! 25 "for good thinking")
+                    'failure
+                    ))))
 
           ))
 
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (flag-set? 'ending-run-allowed))
-          (choice
+         (choice
           'end-run
           "Go back home."
           (make-action
-            #:symbol 'end-run
-            #:actor actor
-            #:duration 100
-            #:tags '(downtime)
-            #:resolution-effect
-            (λ ()
-            (cond ((flag-set? 'ending-run-allowed)
-            (p "At least it's something.")
-            'end-run)
-            (else
-              (set-flag 'tried-to-go-back)
-              (p @~a{
-                Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
-              })
-              (wait-for-confirm)
-              (next-chapter!) ; end chapter, but not run!
-              (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
-              (wait-for-confirm)
-              (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
-              (p "This should be simple, Otava thinks.")
-              (award-xp! 25 "for good thinking")
-              'failure
-              ))))
+           #:symbol 'end-run
+           #:actor actor
+           #:duration 100
+           #:tags '(downtime)
+           #:resolution-effect
+           (λ ()
+             (cond ((flag-set? 'ending-run-allowed)
+                    (p "At least it's something.")
+                    'end-run)
+                   (else
+                    (set-flag 'tried-to-go-back)
+                    (p @~a{
+ Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+ })
+                    (wait-for-confirm)
+                    (next-chapter!) ; end chapter, but not run!
+                    (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+                    (wait-for-confirm)
+                    (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+                    (p "This should be simple, Otava thinks.")
+                    (award-xp! 25 "for good thinking")
+                    'failure
+                    ))))
 
           ))
        ))))

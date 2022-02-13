@@ -185,7 +185,6 @@
 
 (define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
-    ['traverse (resolve-traverse-action! action)]
     ['cancel-traverse (resolve-cancel-traverse-action! action)]
 
     ; the rest
@@ -229,15 +228,7 @@
   'ok)
 
 
-(define (resolve-traverse-action! action)
-  (set-route-traversed! (action-target action))
 
-  (define next-location (if (memq 'a-to-b (action-details action))
-                            (route-b (action-target action))
-                            (route-a (action-target action))))
-  (move-pc-to-location! next-location)
-
-  'ok)
 
 
 (define (resolve-go-to-action! action)
