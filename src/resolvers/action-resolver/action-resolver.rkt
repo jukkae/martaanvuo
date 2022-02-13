@@ -62,7 +62,6 @@
       (set! result 'interrupted))
 
     (when (not (eq? result 'interrupted))
-      (set! result (dispatch-to-sub-resolver! action))
       (when (not (empty? (action-resolution-effect action)))
         (define resolution-effect-result ((action-resolution-effect action)))
         (when (not (or (void? resolution-effect-result) (empty? resolution-effect-result)))
@@ -181,16 +180,6 @@
        (pick-up-items!))]
 
     ))
-
-(define (dispatch-to-sub-resolver! action)
-  (case (action-symbol action)
-
-    [else
-     (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
-     'ok
-     ]))
-
-
 
 
 (define (set-pending-action! action time-left)
