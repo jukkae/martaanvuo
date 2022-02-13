@@ -63,14 +63,13 @@
 
     (when (not (eq? result 'interrupted))
       (set! result (dispatch-to-sub-resolver! action))
+      (when (not (empty? (action-resolution-effect action)))
+        (define resolution-effect-result ((action-resolution-effect action)))
+        (when (not (or (void? resolution-effect-result) (empty? resolution-effect-result)))
+          (set! result resolution-effect-result)))
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
-
-    (when (not (empty? (action-resolution-effect action)))
-      (define resolution-effect-result ((action-resolution-effect action)))
-      (when (not (or (void? resolution-effect-result) (empty? resolution-effect-result)))
-        (set! result resolution-effect-result)))
 
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
@@ -84,23 +83,23 @@
   (let/ec return
     (case (action-symbol action)
       ['traverse
-        (define from
-          (cond ((route? (action-target action))
+       (define from
+         (cond ((route? (action-target action))
                 (if (memq 'a-to-b (action-details action))
                     (route-a (action-target action))
                     (route-b (action-target action))))
-                (else
+               (else
                 (current-location))
-                ))
+               ))
 
-        (define to
-          (cond ((route? (action-target action))
+       (define to
+         (cond ((route? (action-target action))
                 (if (memq 'a-to-b (action-details action))
                     (route-b (action-target action))
                     (route-a (action-target action))))
-                (else
+               (else
                 (action-target action))
-                ))
+               ))
        (cond ((not (pending? action))
               (describe-begin-traverse-action from to))
              (else
@@ -112,8 +111,8 @@
        (when (not (location-has-detail? (current-location) 'no-encounters))
          (define encounter-roll (d 1 6))
          (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a" encounter-roll (if (< encounter-roll 4)
-                                                                              "fail"
-                                                                              "success")))
+                                                                                 "fail"
+                                                                                 "success")))
          (when (< encounter-roll 4)
 
            (define resolve-events
@@ -161,22 +160,22 @@
   (case (action-symbol action)
     ['traverse
      (define from
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-a (action-target action))
-               (route-b (action-target action))))
-          (else
-           (current-location))
-          ))
+       (cond ((route? (action-target action))
+              (if (memq 'a-to-b (action-details action))
+                  (route-a (action-target action))
+                  (route-b (action-target action))))
+             (else
+              (current-location))
+             ))
 
-  (define to
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-b (action-target action))
-               (route-a (action-target action))))
-          (else
-           (action-target action))
-          ))
+     (define to
+       (cond ((route? (action-target action))
+              (if (memq 'a-to-b (action-details action))
+                  (route-b (action-target action))
+                  (route-a (action-target action))))
+             (else
+              (action-target action))
+             ))
      (describe-finish-traverse-action from to)
      (when (not (null? (location-items (action-target action))))
        (pick-up-items!))]
@@ -202,22 +201,22 @@
 
 (define (resolve-cancel-traverse-action! action)
   (define from
-      (cond ((route? (action-target action))
-            (if (memq 'a-to-b (action-details action))
-                (route-a (action-target action))
-                (route-b (action-target action))))
-            (else
-            (current-location))
-            ))
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-a (action-target action))
+               (route-b (action-target action))))
+          (else
+           (current-location))
+          ))
 
-    (define to
-      (cond ((route? (action-target action))
-            (if (memq 'a-to-b (action-details action))
-                (route-b (action-target action))
-                (route-a (action-target action))))
-            (else
-            (action-target action))
-            ))
+  (define to
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-b (action-target action))
+               (route-a (action-target action))))
+          (else
+           (action-target action))
+          ))
   (reset-pending-action!)
   (move-pc-to-location! (action-target action))
 
@@ -233,22 +232,22 @@
 
 (define (resolve-go-to-action! action)
   (define from
-      (cond ((route? (action-target action))
-            (if (memq 'a-to-b (action-details action))
-                (route-a (action-target action))
-                (route-b (action-target action))))
-            (else
-            (current-location))
-            ))
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-a (action-target action))
+               (route-b (action-target action))))
+          (else
+           (current-location))
+          ))
 
-    (define to
-      (cond ((route? (action-target action))
-            (if (memq 'a-to-b (action-details action))
-                (route-b (action-target action))
-                (route-a (action-target action))))
-            (else
-            (action-target action))
-            ))
+  (define to
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-b (action-target action))
+               (route-a (action-target action))))
+          (else
+           (action-target action))
+          ))
   (define elapsed-time 0)
   (cond ((not (pending? action))
          (describe-begin-traverse-action from to)))
