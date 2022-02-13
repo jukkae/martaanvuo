@@ -45,3 +45,53 @@
   (move-pc-to-location!
    )])
 
+
+
+(define (resolve-go-to-action! action)
+  (define from
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-a (action-target action))
+               (route-b (action-target action))))
+          (else
+           (current-location))
+          ))
+
+  (define to
+    (cond ((route? (action-target action))
+           (if (memq 'a-to-b (action-details action))
+               (route-b (action-target action))
+               (route-a (action-target action))))
+          (else
+           (action-target action))
+          ))
+  (define elapsed-time 0)
+  (cond ((not (pending? action))
+         (describe-begin-traverse-action from to)))
+
+  (define result
+    (let/ec return
+      (begin
+        ; begin advancing time
+        (define timeline
+          (advance-time-until-next-interesting-event! (action-duration action) #f)) ; no encounters
+        (set! elapsed-time (timeline-duration timeline))
+
+        #;(narrate-timeline timeline)
+
+        (when (eq? (timeline-metadata timeline) 'interrupted)
+          (return timeline))
+
+
+        (define next-location (action-target action))
+        (move-pc-to-location! next-location)
+        (location-on-enter! (current-location))
+
+        (describe-finish-traverse-action from to)
+
+        (when (not (null? (location-items (action-target action))))
+          (pick-up-items!))
+
+        'ok)
+      ))
+  result)

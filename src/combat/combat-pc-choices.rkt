@@ -41,7 +41,9 @@
                #:symbol 'flee
                #:actor (pc)
                #:duration 1
-               #:tags '(initiative-based-resolution fast)))))
+               #:tags '(initiative-based-resolution fast)
+               #:resolve-effect
+               '(resolve-as-flee-action)))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
@@ -68,7 +70,9 @@
                #:duration 1
                #:target (take-random close-grabberkin)
                #:tags '(initiative-based-resolution fast)
-               #:details details))))
+               #:details details
+               #:resolve-effect
+               '(resolve-as-break-free-action)))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
@@ -100,7 +104,9 @@
                  #:duration 1
                  #:target target
                  #:tags '(initiative-based-resolution)
-                 #:details details))))
+                 #:details details
+                 #:resolve-effect
+                 '(resolve-as-melee-action)))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
   combat-choices)
@@ -138,7 +144,9 @@
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
-             #:details details))))
+             #:details details
+             #:resolve-effect
+             '(resolve-as-shoot-action)))))
 
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
@@ -160,7 +168,9 @@
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
-             #:details details))))
+             #:details details
+             #:resolve-effect
+             '(resolve-as-melee-action)))))
        )))
 
   (condense all-choices))

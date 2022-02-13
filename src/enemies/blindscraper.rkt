@@ -40,7 +40,9 @@
       #:duration 1
       #:target (pc)
       #:tags '(initiative-based-resolution)
-      #:details details)]
+      #:details details
+      #:resolve-effect
+      '(resolve-as-melee-action))]
 
     ['go-to-engaged
      (make-action
@@ -181,7 +183,9 @@
              #:duration 1
              #:target '()
              #:tags '(initiative-based-resolution fast)
-             #:details '()))))
+             #:details '()
+             #:resolve-effect
+             '(resolve-as-flee-action)))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 
