@@ -355,7 +355,10 @@
                             #:tags '(downtime)
                             #:details (list direction)
                             #:resolution-rules
-                            (λ ()
+                            '(
+                              (displayln "TEST")
+                            )
+                            #;(λ ()
                               (set-route-traversed! route)
 
                               (define next-location (if (eq? 'a-to-b direction)

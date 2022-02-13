@@ -46,6 +46,12 @@
    )])
 
 
+(define-namespace-anchor anc)
+(define ns (namespace-anchor->namespace anc))
+
+(define (rules-to-lambda rules)
+  (list 'lambda '() rules))
+
 ; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)
   (when (actor-alive? (action-actor action))
@@ -62,8 +68,12 @@
       (set! result 'interrupted))
 
     (when (not (eq? result 'interrupted))
-      (when (not (empty? (action-resolution-rules action)))
-        (define resolution-result (eval (action-resolution-rules action)))
+      (define rules (action-resolution-rules action))
+      (when (not (empty? rules))
+        (when (not (procedure? rules))
+          (set! rules (rules-to-lambda rules)))
+        (dev-note (format "RULES: ~a" rules))
+        (define resolution-result (eval rules ns))
         (when (not (or (void? resolution-result) (empty? resolution-result)))
           (set! result resolution-result)))
       (define duration (action-duration action))
