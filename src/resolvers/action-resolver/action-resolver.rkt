@@ -184,8 +184,6 @@
 
 (define (dispatch-to-sub-resolver! action)
   (case (action-symbol action)
-    ['cancel-traverse (resolve-cancel-traverse-action! action)]
-
     ; the rest
     ['melee (resolve-melee-action! action)]
     ['shoot (resolve-shoot-action! action)]
@@ -196,36 +194,6 @@
      (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
      'ok
      ]))
-
-
-
-(define (resolve-cancel-traverse-action! action)
-  (define from
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-a (action-target action))
-               (route-b (action-target action))))
-          (else
-           (current-location))
-          ))
-
-  (define to
-    (cond ((route? (action-target action))
-           (if (memq 'a-to-b (action-details action))
-               (route-b (action-target action))
-               (route-a (action-target action))))
-          (else
-           (action-target action))
-          ))
-  (reset-pending-action!)
-  (move-pc-to-location! (action-target action))
-
-  (describe-cancel-traverse-action from to)
-  (display-location-info-card (current-location))
-  (when (not (null? (location-items (action-target action))))
-    (pick-up-items!))
-  'ok)
-
 
 
 

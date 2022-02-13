@@ -263,7 +263,41 @@
                  #:actor (pc)
                  #:duration 100
                  #:target destination
-                 #:tags '(downtime)))))
+                 #:tags '(downtime)
+                 #:resolution-effect
+                 (λ ()
+
+                   (define from
+                     (cond ((route? destination)
+                            (dev-note "TODO: fix cancel-traverse")
+                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                                (route-a destination)
+                                (route-b destination)))
+                           (else
+                            (current-location))
+                           ))
+
+                   (define to
+                     (cond ((route? destination)
+                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                                (route-b destination)
+                                (route-a destination)))
+                           (else
+                            destination)
+                           ))
+                   (reset-pending-action!)
+                   (move-pc-to-location! destination)
+
+                   (describe-cancel-traverse-action from to)
+                   (display-location-info-card (current-location))
+                   (when (not (null? (location-items destination)))
+                     (pick-up-items!))
+                   'ok
+
+                   )
+
+
+                 ))))
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
