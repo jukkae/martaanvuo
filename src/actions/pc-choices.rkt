@@ -74,7 +74,7 @@
              #:symbol 'sleep
              #:actor (pc)
              #:duration (time-until-next-morning)
-             #:resolution-effect
+             #:resolution-rules
              (λ ()
                'ok))))]
     ['tent
@@ -85,7 +85,7 @@
              #:symbol 'camp
              #:actor (pc)
              #:duration 20
-             #:resolution-effect
+             #:resolution-rules
              (λ ()
                (dev-note "Camp action TODO")
                'ok))))]
@@ -98,7 +98,7 @@
              #:symbol 'camp
              #:actor (pc)
              #:duration 10
-             #:resolution-effect
+             #:resolution-rules
              (λ ()
                (dev-note "Campfire action TODO")
                'ok))))]
@@ -114,7 +114,7 @@
              #:symbol 'rest
              #:actor (pc)
              #:duration (time-until-next-time-of-day)
-             #:resolution-effect
+             #:resolution-rules
              (λ ()
                (blurb 'rest-action))
              )))]
@@ -142,7 +142,7 @@
              #:duration 15
              #:target food
              #:tags '(downtime)
-             #:resolution-effect
+             #:resolution-rules
              (λ ()
                (displayln (format "TARGET: ~a" food))
                (define food-tier
@@ -264,7 +264,7 @@
                  #:duration 100
                  #:target destination
                  #:tags '(downtime)
-                 #:resolution-effect
+                 #:resolution-rules
                  (λ ()
 
                    (define from
@@ -354,7 +354,7 @@
                             #:target route
                             #:tags '(downtime)
                             #:details (list direction)
-                            #:resolution-effect
+                            #:resolution-rules
                             (λ ()
                               (set-route-traversed! route)
 
@@ -388,48 +388,48 @@
                   #:actor (pc)
                   #:duration 100
                   #:tags '(downtime)
-                  #:resolution-effect (λ ()
+                  #:resolution-rules (λ ()
 
-                                        (begin
-                                          (define skill 0)
-                                          (define target 8)
+                                       (begin
+                                         (define skill 0)
+                                         (define target 8)
 
-                                          (define successful? (skill-check "Forage" skill target))
-                                          (cond (successful?
-                                                 (define amount (d 1 4)) ; portions = days of survival
-                                                 (define amount-string
-                                                   (if (= amount 1)
-                                                       (format "~a meal" amount)
-                                                       (format "~a meals" amount)))
+                                         (define successful? (skill-check "Forage" skill target))
+                                         (cond (successful?
+                                                (define amount (d 1 4)) ; portions = days of survival
+                                                (define amount-string
+                                                  (if (= amount 1)
+                                                      (format "~a meal" amount)
+                                                      (format "~a meals" amount)))
 
-                                                 (info-card
-                                                  (tbody
-                                                   (tr
-                                                    "1d4"
-                                                    "="
-                                                    (format "~a" amount-string))
-                                                   )
-                                                  "Forage results roll")
-                                                 (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                                                 (define item (list 'food (list amount)))
-                                                 (add-item-to-inventory! (pc) item)
-                                                 )
-                                                (else
-                                                 (begin
-                                                   (p "Despite spending a while, Otava can't find anything to eat.")
-                                                   (define luck-roll (d 1 20))
-                                                   (info-card
-                                                    (tbody
-                                                     (tr
-                                                      "1d20"
-                                                      "="
-                                                      (format "~a" luck-roll)))
-                                                    "Luck roll")
-                                                   )))
-                                          (if successful?
-                                              'successful
-                                              'failure))
-                                        ))))))
+                                                (info-card
+                                                 (tbody
+                                                  (tr
+                                                   "1d4"
+                                                   "="
+                                                   (format "~a" amount-string))
+                                                  )
+                                                 "Forage results roll")
+                                                (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+                                                (define item (list 'food (list amount)))
+                                                (add-item-to-inventory! (pc) item)
+                                                )
+                                               (else
+                                                (begin
+                                                  (p "Despite spending a while, Otava can't find anything to eat.")
+                                                  (define luck-roll (d 1 20))
+                                                  (info-card
+                                                   (tbody
+                                                    (tr
+                                                     "1d20"
+                                                     "="
+                                                     (format "~a" luck-roll)))
+                                                   "Luck roll")
+                                                  )))
+                                         (if successful?
+                                             'successful
+                                             'failure))
+                                       ))))))
 
        (when (place? (current-location))
          (for/list ([action (place-actions-provided (current-location))])
@@ -509,7 +509,7 @@
            #:actor actor
            #:duration 100
            #:tags '(downtime)
-           #:resolution-effect
+           #:resolution-rules
            (λ ()
              (cond ((flag-set? 'ending-run-allowed)
                     (p "At least it's something.")
@@ -541,7 +541,7 @@
            #:actor actor
            #:duration 100
            #:tags '(downtime)
-           #:resolution-effect
+           #:resolution-rules
            (λ ()
              (cond ((flag-set? 'ending-run-allowed)
                     (p "At least it's something.")
