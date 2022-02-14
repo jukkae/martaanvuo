@@ -408,6 +408,12 @@
 
                                 'before-action-ok
                                 ))
+                            #:on-after-rules
+                            `(
+                              (describe-finish-traverse-action ,route ',direction)
+                              (when (not (null? (location-items (current-location))))
+                                (pick-up-items!))
+                              )
 
                             )))))
              )))

@@ -62,12 +62,12 @@
 
     (when (and (pc-actor? (action-actor action))
                (not (pending? action)))
+
       (define on-before-rules (action-on-before-rules action))
       (when (not (empty? on-before-rules))
         (when (not (procedure? on-before-rules))
           (set! on-before-rules (rules-to-lambda on-before-rules)))
         (define resolution-result ((eval on-before-rules ns)))
-
         (dev-note (format "PRE-RESULT: ~a" resolution-result))
         (set! result resolution-result)))
 
@@ -94,9 +94,21 @@
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
 
+
+
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
-      (pc-action-on-after-resolve! action))
+
+      (define on-after-rules (action-on-after-rules action))
+      (when (not (empty? on-after-rules))
+        (when (not (procedure? on-after-rules))
+          (set! on-after-rules (rules-to-lambda on-after-rules)))
+        (define resolution-result ((eval on-after-rules ns)))
+        (dev-note (format "POST-RESULT: ~a" resolution-result))
+        (when (not (void? resolution-result))
+          (set! result resolution-result)
+          )
+        ))
 
     (wait-for-confirm)
 
@@ -117,32 +129,6 @@
        (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
        '()]))
   (narrate-timeline tl))
-
-(define (pc-action-on-after-resolve! action)
-  (case (action-symbol action)
-    ['traverse
-     (define from
-       (cond ((route? (action-target action))
-              (if (memq 'a-to-b (action-details action))
-                  (route-a (action-target action))
-                  (route-b (action-target action))))
-             (else
-              (current-location))
-             ))
-
-     (define to
-       (cond ((route? (action-target action))
-              (if (memq 'a-to-b (action-details action))
-                  (route-b (action-target action))
-                  (route-a (action-target action))))
-             (else
-              (action-target action))
-             ))
-     (describe-finish-traverse-action from to)
-     (when (not (null? (location-items (action-target action))))
-       (pick-up-items!))]
-
-    ))
 
 
 (define (set-pending-action! action time-left)
