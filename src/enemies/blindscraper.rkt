@@ -42,7 +42,9 @@
       #:tags '(initiative-based-resolution)
       #:details details
       #:resolution-rules
-      '(resolve-as-melee-action))]
+      `(
+        (resolve-melee-action! ,actor pc ,details)
+        ))]
 
     ['go-to-engaged
      (make-action

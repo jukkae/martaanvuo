@@ -88,7 +88,7 @@
                (eq? (stance-range stance) 'engaged))
            (define damage-roll (λ () (d 1 2)))
            (define details
-             (list
+             ('
               (cons 'damage-roll damage-roll)
               (cons 'damage-roll-formula "1d2")
               (cons 'damage-type 'bludgeoning)
@@ -106,7 +106,9 @@
                  #:tags '(initiative-based-resolution)
                  #:details details
                  #:resolution-rules
-                 '(resolve-as-melee-action)))))
+                 `(
+                   (resolve-melee-action! pc ,target ,details)
+                   )))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
   combat-choices)
@@ -170,7 +172,9 @@
              #:tags '(initiative-based-resolution)
              #:details details
              #:resolution-rules
-             '(resolve-as-melee-action)))))
+             `(
+               (resolve-melee-action! pc ,target ,details)
+               )))))
        )))
 
   (condense all-choices))

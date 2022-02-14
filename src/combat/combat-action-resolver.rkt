@@ -54,9 +54,8 @@
 
 
 ; "generic" attack with type
-(define (resolve-melee-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+(define (resolve-melee-action! actor target details)
+  (dev-note "HELLO")
   (define target-defense (get-trait target "defense"))
   (define skill (get-trait actor "melee-attack-skill"))
 
@@ -78,7 +77,6 @@
   ; #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
 
-  (define details (action-details action))
 
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
@@ -94,7 +92,7 @@
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
     ; TODO what's a smart place to store this? the actor?
-    (case (actor-name (action-target action))
+    (case (actor-name target)
       [("Blindscraper") (award-xp! 7)]))
 
   (display-combatant-info target)
@@ -102,8 +100,8 @@
 
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
-    (if (not (pc-actor? (action-target action)))
-        (p "The " (actor-name (action-target action)) " is dead.")
+    (if (not (pc-actor? target))
+        (p "The " (actor-name target) " is dead.")
         (begin
           (p "Otava is dead.")
           (set! action-result 'pc-dead))))
