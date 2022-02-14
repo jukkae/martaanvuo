@@ -25,6 +25,8 @@
 
   "../../state/state.rkt"
 
+  "../../world/world.rkt"
+
   )
 
 (lazy-require
@@ -50,7 +52,7 @@
 (define ns (namespace-anchor->namespace anc))
 
 (define (rules-to-lambda rules)
-  (list 'lambda '() rules))
+  `(λ () ,@rules))
 
 ; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)
@@ -73,7 +75,14 @@
         (when (not (procedure? rules))
           (set! rules (rules-to-lambda rules)))
         (dev-note (format "RULES: ~a" rules))
-        (define resolution-result (eval rules ns))
+
+        ; (define expression `(λ () (list 3 5)))
+        ; (dev-note (format "EXPR: ~a" expression))
+
+        ; (define resolution-result (eval expression ns))
+        (define resolution-result ((eval rules ns)))
+        (dev-note (format "RESULT: ~a" resolution-result))
+
         (when (not (or (void? resolution-result) (empty? resolution-result)))
           (set! result resolution-result)))
       (define duration (action-duration action))

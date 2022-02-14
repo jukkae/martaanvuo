@@ -355,19 +355,19 @@
                             #:tags '(downtime)
                             #:details (list direction)
                             #:resolution-rules
-                            '(
-                              (displayln "TEST")
+                            `(
+                              (displayln "A")
+                              (define the-route (get-location-by-id ,(location-id route)))
+                              (dev-note (format "ROUTE: ~a" the-route))
+                              ;(set-route-traversed! ,route)
+
+                              ; (define next-location (if (eq? 'a-to-b direction)
+                              ;                           (route-b route)
+                              ;                           (route-a route)))
+                              ; (move-pc-to-location! next-location)
+
+                              ; 'ok
                             )
-                            #;(λ ()
-                              (set-route-traversed! route)
-
-                              (define next-location (if (eq? 'a-to-b direction)
-                                                        (route-b route)
-                                                        (route-a route)))
-                              (move-pc-to-location! next-location)
-
-                              'ok
-                              )
 
                             )))))
              )))

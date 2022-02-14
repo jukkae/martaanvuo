@@ -32,6 +32,10 @@
   (set-actor-location! actor location)
   (add-actor-to-location! location actor))
 
+(provide get-location-by-id)
+(define (get-location-by-id id)
+  (dev-note (format "GLBI: ~a" id)))
+
 (provide (all-from-out
           "0-types/world.rkt"
           "content/world.rkt"))
