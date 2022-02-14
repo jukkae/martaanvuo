@@ -357,8 +357,9 @@
                             #:resolution-rules
                             `(
                               (displayln "A")
-                              (define the-route (get-location-by-id ,(location-id route)))
-                              (dev-note (format "ROUTE: ~a" the-route))
+                              (define the-route (get-route-by-id ,(location-id route)))
+                              (displayln (format "ROUTE: ~a" the-route))
+
                               ;(set-route-traversed! ,route)
 
                               ; (define next-location (if (eq? 'a-to-b direction)

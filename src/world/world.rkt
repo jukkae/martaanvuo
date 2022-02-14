@@ -32,9 +32,14 @@
   (set-actor-location! actor location)
   (add-actor-to-location! location actor))
 
-(provide get-location-by-id)
-(define (get-location-by-id id)
-  (dev-note (format "GLBI: ~a" id)))
+(provide get-route-by-id)
+(define (get-route-by-id id)
+  (dev-note (format "GRBI: ~a" id))
+  (define w (current-world))
+  (define routes (world-routes w))
+  (define location (findf (λ (route) (eq? id (location-id route)))
+                          routes))
+  location)
 
 (provide (all-from-out
           "0-types/world.rkt"
