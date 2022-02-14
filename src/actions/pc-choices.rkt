@@ -367,43 +367,47 @@
                               )
                             #:on-before-rules
                             `(
-                              (describe-begin-traverse-action ,route ',direction)
-                              (move-pc-to-location! ,route)
-                              ;(dev-note "TODO: Handle pending actions")
-                              (define elapsed-time 0)
+                              (let/ec return
+                                (describe-begin-traverse-action ,route ',direction)
+                                (move-pc-to-location! ,route)
+                                ;(dev-note "TODO: Handle pending actions")
+                                (define elapsed-time 0)
 
-                              (when (not (location-has-detail? (current-location) 'no-encounters))
-                                (define encounter-roll (d 1 6))
-                                (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a"
-                                                encounter-roll
-                                                (if (< encounter-roll 4)
-                                                    "fail"
-                                                    "success")))
-                                (when (< encounter-roll 4)
+                                (when (not (location-has-detail? (current-location) 'no-encounters))
+                                  (define encounter-roll (d 1 6))
+                                  (notice (format "Encounter roll: 1d6 < 6: [~a] – ~a"
+                                                  encounter-roll
+                                                  (if (< encounter-roll 6)
+                                                      "fail"
+                                                      "success")))
+                                  (when (< encounter-roll 6)
 
-                                  (define resolve-events
-                                    (list
-                                     (make-event 'spawn-enemies
-                                                 '() ; pack info about enemies / event here
-                                                 #:interrupting? #t)))
-                                  (define metadata '(interrupted))
-                                  (define duration (exact-floor (/ ,traverse-duration 3)))
+                                    (define resolve-events
+                                      (list
+                                       (make-event ,''spawn-enemies
+                                                   '() ; pack info about enemies / event here
+                                                   #:interrupting? #t)))
+                                    (define metadata '(interrupted))
+                                    (define duration
+                                      (exact-floor (/
+                                                    ,traverse-duration
+                                                    3)))
 
-                                  (set! elapsed-time duration)
+                                    (set! elapsed-time duration)
 
-                                  (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                                  (define world-events (timeline-events world-tl))
+                                    (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                                    (define world-events (timeline-events world-tl))
 
-                                  (define all-events (append world-events resolve-events))
-                                  (define all-metadata (append (timeline-metadata world-tl) metadata))
+                                    (define all-events (append world-events resolve-events))
+                                    (define all-metadata (append (timeline-metadata world-tl) metadata))
 
-                                  (define tl (timeline all-metadata all-events duration))
+                                    (define tl (timeline all-metadata all-events duration))
 
-                                  (process-timeline! tl)
-                                  (return tl)))
+                                    (process-timeline! tl)
+                                    (return tl)))
 
-                              'before-action-ok
-                              )
+                                'before-action-ok
+                                ))
 
                             )))))
              )))
