@@ -43,7 +43,7 @@
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `(resolve-flee-action! (pc))))))
+               `((resolve-flee-action! (pc)))))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
@@ -59,6 +59,9 @@
          (define details
            (association-list 'str-mod strength-mod))
 
+         (define target
+          (take-random close-grabberkin))
+
          (define break-free-choice
            (make-choice
             'pull-free
@@ -68,11 +71,11 @@
                #:symbol 'break-free
                #:actor (pc)
                #:duration 1
-               #:target (take-random close-grabberkin)
+               #:target target
                #:tags '(initiative-based-resolution fast)
                #:details details
                #:resolution-rules
-               '(resolve-as-break-free-action)))))
+               `((resolve-break-free-action! (pc) ,target ,strength-mod))))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
