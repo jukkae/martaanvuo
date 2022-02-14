@@ -43,7 +43,7 @@
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               '(resolve-as-flee-action)))))
+               `(resolve-flee-action! (pc))))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))

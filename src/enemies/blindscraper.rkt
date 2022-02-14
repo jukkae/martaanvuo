@@ -188,7 +188,7 @@
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             '(resolve-as-flee-action)))))
+             `(resolve-flee-action! ,actor)))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 

@@ -55,7 +55,6 @@
 
 ; "generic" attack with type
 (define (resolve-melee-action! actor target details)
-  (dev-note "HELLO2")
   (define target-defense (get-trait target "defense"))
   (define skill (get-trait actor "melee-attack-skill"))
 
@@ -81,8 +80,6 @@
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
-
-  (dev-note "CCCCC")
 
   (define body
     (tbody
@@ -252,8 +249,8 @@
 
 
 ; skinnable, but in a sense generic action
-(define (resolve-flee-action! action)
-  (cond ((pc-actor? (action-actor action))
+(define (resolve-flee-action! actor)
+  (cond ((pc-actor? actor)
          (p "Otava turns her back to run.")
          (define skill (get-trait (pc) "athletics-skill"))
 
@@ -289,9 +286,9 @@
 
         (else ; not a pc actor
          (p
-          (format "~a tries to run." (get-combatant-name (action-actor action))))
+          (format "~a tries to run." (get-combatant-name actor)))
          (define skill 1)
-         (define stance (actor-stance (action-actor action)))
+         (define stance (actor-stance actor))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)
@@ -303,11 +300,11 @@
              (begin
                (p "The blindscraper skitters away and disappears in the foliage.")
                (award-xp! 1)
-               (remove-actor-from-its-current-location! (action-actor action))
+               (remove-actor-from-its-current-location! actor)
                'ok)
              (begin
                (p "The blindscraper tries to run away, its legs twitching, but it is not fast enough.")
-               (actor-add-status! (action-actor action) (status 'fallen 1))
-               (display-combatant-info (action-actor action))
+               (actor-add-status! actor (status 'fallen 1))
+               (display-combatant-info actor)
                'failure))
          )))
