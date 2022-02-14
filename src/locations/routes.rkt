@@ -15,6 +15,10 @@
           ((eq? (location-id start-location)
                 (location-id (route-b route)))
            'b)))
+  (dev-note (format "start-location-id: ~a" (location-id start-location)))
+  (dev-note (format "route-a-id: ~a" (location-id (route-a route))))
+  (dev-note (format "route-b-id: ~a" (location-id (route-b route))))
+  (dev-note (format "START: ~a" start))
   (define endpoint
     (case start
       ['a (route-b route)]

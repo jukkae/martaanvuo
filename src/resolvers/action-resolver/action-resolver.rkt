@@ -22,10 +22,11 @@
   "../../locations/0-types/location.rkt"
   "../../locations/0-types/route.rkt"
   "../../locations/locations.rkt"
+  "../../locations/routes.rkt" ; not unused
 
   "../../state/state.rkt"
 
-  "../../world/world.rkt" ; not actually unused
+  "../../world/world.rkt" ; not unused
 
   )
 
