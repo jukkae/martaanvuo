@@ -62,7 +62,15 @@
 
     (when (and (pc-actor? (action-actor action))
                (not (pending? action)))
-      (set! result (pc-action-on-before-resolve! action)))
+      (define on-before-rules (action-on-before-rules action))
+      (when (not (empty? on-before-rules))
+        (when (not (procedure? on-before-rules))
+          (set! on-before-rules (rules-to-lambda on-before-rules)))
+        (define resolution-result ((eval on-before-rules ns)))
+
+        (dev-note (format "PRE-RESULT: ~a" resolution-result))
+        (set! result resolution-result)))
+
 
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
@@ -77,6 +85,7 @@
         (when (not (procedure? rules))
           (set! rules (rules-to-lambda rules)))
         (define resolution-result ((eval rules ns)))
+
         (dev-note (format "RESULT: ~a" resolution-result))
 
         (when (not (or (void? resolution-result) (empty? resolution-result)))
@@ -93,67 +102,6 @@
 
     result))
 
-(define (pc-action-on-before-resolve! action)
-  (let/ec return
-    (case (action-symbol action)
-      ['traverse
-       (define from
-         (cond ((route? (action-target action))
-                (if (memq 'a-to-b (action-details action))
-                    (route-a (action-target action))
-                    (route-b (action-target action))))
-               (else
-                (current-location))
-               ))
-
-       (define to
-         (cond ((route? (action-target action))
-                (if (memq 'a-to-b (action-details action))
-                    (route-b (action-target action))
-                    (route-a (action-target action))))
-               (else
-                (action-target action))
-               ))
-       (cond ((not (pending? action))
-              (describe-begin-traverse-action from to))
-             (else
-              (dev-note "resolving pending action")))
-       (move-pc-to-location! (action-target action))
-       (define elapsed-time 0)
-       ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
-
-       (when (not (location-has-detail? (current-location) 'no-encounters))
-         (define encounter-roll (d 1 6))
-         (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a" encounter-roll (if (< encounter-roll 4)
-                                                                                 "fail"
-                                                                                 "success")))
-         (when (< encounter-roll 4)
-
-           (define resolve-events
-             (list
-              (make-event 'spawn-enemies
-                          '() ; pack info about enemies / event here
-                          #:interrupting? #t)))
-           (define metadata '(interrupted))
-           (define duration (exact-floor (/ (action-duration action) 3)))
-
-           (set! elapsed-time duration)
-
-           (define world-tl (advance-time-until-next-interesting-event! duration #f))
-           (define world-events (timeline-events world-tl))
-
-           (define all-events (append world-events resolve-events))
-           (define all-metadata (append (timeline-metadata world-tl) metadata))
-
-           (define tl (timeline all-metadata all-events duration))
-
-           (process-timeline! tl)
-           (return tl)))
-
-       'before-action-ok
-       ]
-      [else 'before-action-ok])
-    ))
 
 ; note: this has overlap with handle-interrupting-event
 (define (process-timeline! tl)

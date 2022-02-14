@@ -13,7 +13,13 @@
          "../core/api.rkt"
          "../actions/action.rkt")
 
-(define (describe-begin-traverse-action from to)
+(define (describe-begin-traverse-action route direction)
+  (define from (if (eq? direction 'a-to-b)
+                   (route-a route)
+                   (route-b route)))
+  (define to (if (eq? direction 'a-to-b)
+                 (route-b route)
+                 (route-a route)))
   (define key (list (location-id from) (location-id to)))
   (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-begin-traverse-narrated key))

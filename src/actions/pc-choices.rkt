@@ -344,13 +344,14 @@
                            )))))
                     )
                    (else ; route is traversable
+                    (define traverse-duration 100)
                     (make-choice
                      'traverse
                      (get-traverse-text route (current-location))
                      (λ () (make-action
                             #:symbol 'traverse
                             #:actor (pc)
-                            #:duration 100
+                            #:duration traverse-duration
                             #:target route
                             #:tags '(downtime)
                             #:details (list direction)
@@ -359,11 +360,50 @@
                               (set-route-traversed! (get-route-by-id ,(location-id route)))
                               (define next-location
                                 ,(if (eq? direction 'a-to-b)
-                                      (route-b route)
-                                      (route-a route)))
+                                     (route-b route)
+                                     (route-a route)))
                               (move-pc-to-location! next-location)
                               'ok
-                            )
+                              )
+                            #:on-before-rules
+                            `(
+                              (describe-begin-traverse-action ,route ',direction)
+                              (move-pc-to-location! ,route)
+                              ;(dev-note "TODO: Handle pending actions")
+                              (define elapsed-time 0)
+
+                              (when (not (location-has-detail? (current-location) 'no-encounters))
+                                (define encounter-roll (d 1 6))
+                                (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a"
+                                                encounter-roll
+                                                (if (< encounter-roll 4)
+                                                    "fail"
+                                                    "success")))
+                                (when (< encounter-roll 4)
+
+                                  (define resolve-events
+                                    (list
+                                     (make-event 'spawn-enemies
+                                                 '() ; pack info about enemies / event here
+                                                 #:interrupting? #t)))
+                                  (define metadata '(interrupted))
+                                  (define duration (exact-floor (/ ,traverse-duration 3)))
+
+                                  (set! elapsed-time duration)
+
+                                  (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                                  (define world-events (timeline-events world-tl))
+
+                                  (define all-events (append world-events resolve-events))
+                                  (define all-metadata (append (timeline-metadata world-tl) metadata))
+
+                                  (define tl (timeline all-metadata all-events duration))
+
+                                  (process-timeline! tl)
+                                  (return tl)))
+
+                              'before-action-ok
+                              )
 
                             )))))
              )))
@@ -387,48 +427,49 @@
                   #:actor (pc)
                   #:duration 100
                   #:tags '(downtime)
-                  #:resolution-rules (λ ()
+                  #:resolution-rules
+                  (λ ()
 
-                                       (begin
-                                         (define skill 0)
-                                         (define target 8)
+                    (begin
+                      (define skill 0)
+                      (define target 8)
 
-                                         (define successful? (skill-check "Forage" skill target))
-                                         (cond (successful?
-                                                (define amount (d 1 4)) ; portions = days of survival
-                                                (define amount-string
-                                                  (if (= amount 1)
-                                                      (format "~a meal" amount)
-                                                      (format "~a meals" amount)))
+                      (define successful? (skill-check "Forage" skill target))
+                      (cond (successful?
+                             (define amount (d 1 4)) ; portions = days of survival
+                             (define amount-string
+                               (if (= amount 1)
+                                   (format "~a meal" amount)
+                                   (format "~a meals" amount)))
 
-                                                (info-card
-                                                 (tbody
-                                                  (tr
-                                                   "1d4"
-                                                   "="
-                                                   (format "~a" amount-string))
-                                                  )
-                                                 "Forage results roll")
-                                                (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                                                (define item (list 'food (list amount)))
-                                                (add-item-to-inventory! (pc) item)
-                                                )
-                                               (else
-                                                (begin
-                                                  (p "Despite spending a while, Otava can't find anything to eat.")
-                                                  (define luck-roll (d 1 20))
-                                                  (info-card
-                                                   (tbody
-                                                    (tr
-                                                     "1d20"
-                                                     "="
-                                                     (format "~a" luck-roll)))
-                                                   "Luck roll")
-                                                  )))
-                                         (if successful?
-                                             'successful
-                                             'failure))
-                                       ))))))
+                             (info-card
+                              (tbody
+                               (tr
+                                "1d4"
+                                "="
+                                (format "~a" amount-string))
+                               )
+                              "Forage results roll")
+                             (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+                             (define item (list 'food (list amount)))
+                             (add-item-to-inventory! (pc) item)
+                             )
+                            (else
+                             (begin
+                               (p "Despite spending a while, Otava can't find anything to eat.")
+                               (define luck-roll (d 1 20))
+                               (info-card
+                                (tbody
+                                 (tr
+                                  "1d20"
+                                  "="
+                                  (format "~a" luck-roll)))
+                                "Luck roll")
+                               )))
+                      (if successful?
+                          'successful
+                          'failure))
+                    ))))))
 
        (when (place? (current-location))
          (for/list ([action (place-actions-provided (current-location))])
