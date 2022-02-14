@@ -356,25 +356,12 @@
                             #:details (list direction)
                             #:resolution-rules
                             `(
-                              (displayln "A")
-                              (define the-route (get-route-by-id ,(location-id route)))
-                              (displayln (format "ROUTE: ~a" the-route))
-                              (set-route-traversed! the-route)
-                              (displayln (format "ROUTE: ~a" the-route))
-
-                              (displayln "")
-                              (displayln (format "CURRENT LOC: ~a" (current-location)))
-                              (displayln (format "ROUTE: ~a" the-route))
-                              (displayln (format "DIRECTION: ~a" ',direction))
+                              (set-route-traversed! (get-route-by-id ,(location-id route)))
                               (define next-location
                                 ,(if (eq? direction 'a-to-b)
                                       (route-b route)
                                       (route-a route)))
-                              (displayln (format "NEXT LOC: ~a" next-location))
                               (move-pc-to-location! next-location)
-
-                              (displayln "B")
-
                               'ok
                             )
 

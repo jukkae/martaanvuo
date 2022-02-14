@@ -71,16 +71,11 @@
       (set! result 'interrupted))
 
     (when (not (eq? result 'interrupted))
+
       (define rules (action-resolution-rules action))
       (when (not (empty? rules))
         (when (not (procedure? rules))
           (set! rules (rules-to-lambda rules)))
-        (dev-note (format "RULES: ~a" rules))
-
-        ; (define expression `(λ () (list 3 5)))
-        ; (dev-note (format "EXPR: ~a" expression))
-
-        ; (define resolution-result (eval expression ns))
         (define resolution-result ((eval rules ns)))
         (dev-note (format "RESULT: ~a" resolution-result))
 
