@@ -41,7 +41,7 @@
       #:target (pc)
       #:tags '(initiative-based-resolution)
       #:details details
-      #:resolve-effect
+      #:resolution-rules
       '(resolve-as-melee-action))]
 
     ['go-to-engaged
@@ -80,8 +80,8 @@
                                   0))
               (displayln (pc-actor-lp (pc)))
               'failure))
+        'ok
         )
-      'ok
       )]
 
     ['go-to-close
@@ -184,7 +184,7 @@
              #:target '()
              #:tags '(initiative-based-resolution fast)
              #:details '()
-             #:resolve-effect
+             #:resolution-rules
              '(resolve-as-flee-action)))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))

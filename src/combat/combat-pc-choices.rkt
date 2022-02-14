@@ -42,7 +42,7 @@
                #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)
-               #:resolve-effect
+               #:resolution-rules
                '(resolve-as-flee-action)))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
@@ -71,7 +71,7 @@
                #:target (take-random close-grabberkin)
                #:tags '(initiative-based-resolution fast)
                #:details details
-               #:resolve-effect
+               #:resolution-rules
                '(resolve-as-break-free-action)))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
@@ -105,7 +105,7 @@
                  #:target target
                  #:tags '(initiative-based-resolution)
                  #:details details
-                 #:resolve-effect
+                 #:resolution-rules
                  '(resolve-as-melee-action)))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
@@ -145,7 +145,7 @@
              #:target target
              #:tags '(initiative-based-resolution)
              #:details details
-             #:resolve-effect
+             #:resolution-rules
              '(resolve-as-shoot-action)))))
 
        (when (or (eq? (stance-range stance) 'close)
@@ -169,7 +169,7 @@
              #:target target
              #:tags '(initiative-based-resolution)
              #:details details
-             #:resolve-effect
+             #:resolution-rules
              '(resolve-as-melee-action)))))
        )))
 
