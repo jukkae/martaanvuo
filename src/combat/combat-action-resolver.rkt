@@ -55,7 +55,7 @@
 
 ; "generic" attack with type
 (define (resolve-melee-action! actor target details)
-  (dev-note "HELLO")
+  (dev-note "HELLO2")
   (define target-defense (get-trait target "defense"))
   (define skill (get-trait actor "melee-attack-skill"))
 
@@ -81,6 +81,8 @@
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
   (define damage-roll-result ((cdr damage-roll)))
+
+  (dev-note "CCCCC")
 
   (define body
     (tbody

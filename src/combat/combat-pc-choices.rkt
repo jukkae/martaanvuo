@@ -78,6 +78,7 @@
   combat-choices
   )
 
+
 (define (get-melee-choices)
   (define targets (get-current-enemies))
   (define combat-choices '())
@@ -86,13 +87,13 @@
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 2)))
+           ;(define damage-roll '(λ () d 1 2))
            (define details
-             ('
-              (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "1d2")
-              (cons 'damage-type 'bludgeoning)
-              ))
+             `(list
+               (cons 'damage-roll ,'(λ () (d 1 2)))
+               (cons 'damage-roll-formula "1d2")
+               (cons 'damage-type 'bludgeoning)
+               ))
            (define choice
              (make-choice
               'attack
@@ -107,7 +108,8 @@
                  #:details details
                  #:resolution-rules
                  `(
-                   (resolve-melee-action! pc ,target ,details)
+                   (displayln (format "ACTOR: ~a" (actor-name (pc))))
+                   (resolve-melee-action! (pc) ,target ,details)
                    )))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
@@ -153,13 +155,12 @@
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
 
-         (define damage-roll (λ () 1))
          (define details
-           (list
-            (cons 'damage-roll damage-roll)
-            (cons 'damage-roll-formula "1")
-            (cons 'damage-type 'bludgeoning)
-            ))
+           `(list
+             (cons 'damage-roll '(λ () 1))
+             (cons 'damage-roll-formula "1")
+             (cons 'damage-type 'bludgeoning)
+             ))
          (make-choice
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))

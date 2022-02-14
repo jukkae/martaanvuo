@@ -28,12 +28,12 @@
   (case action-flag
 
     ['attack
-     (define damage-roll (λ () (d 1 2)))
+     (define damage-roll '(λ () (d 1 2)))
      (define details
-       (list
-        (cons 'damage-roll damage-roll)
-        (cons 'damage-roll-formula "1d2")
-        ))
+       `(list
+         (cons 'damage-roll ,damage-roll)
+         (cons 'damage-roll-formula "1d2")
+         ))
      (make-action
       #:symbol 'melee
       #:actor actor
@@ -43,7 +43,8 @@
       #:details details
       #:resolution-rules
       `(
-        (resolve-melee-action! ,actor pc ,details)
+        (displayln (format "ACTOR: ~a" (actor-name ,actor)))
+        (resolve-melee-action! ,actor (pc) ,details)
         ))]
 
     ['go-to-engaged
