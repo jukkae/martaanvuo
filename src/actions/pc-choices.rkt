@@ -74,9 +74,7 @@
              #:symbol 'sleep
              #:actor (pc)
              #:duration (time-until-next-morning)
-             #:resolution-rules
-             (λ ()
-               'ok))))]
+             )))]
     ['tent
      (make-choice
       'camp
@@ -86,8 +84,8 @@
              #:actor (pc)
              #:duration 20
              #:resolution-rules
-             (λ ()
-               (dev-note "Camp action TODO")
+             `(
+               (displayln "Camp action TODO")
                'ok))))]
 
     ['campfire
@@ -99,8 +97,8 @@
              #:actor (pc)
              #:duration 10
              #:resolution-rules
-             (λ ()
-               (dev-note "Campfire action TODO")
+             `(
+               (displayln "Campfire action TODO")
                'ok))))]
 
     ['rest
@@ -115,7 +113,7 @@
              #:actor (pc)
              #:duration (time-until-next-time-of-day)
              #:resolution-rules
-             (λ ()
+             `(
                (blurb 'rest-action))
              )))]
 
@@ -136,32 +134,38 @@
         (define food (select-food-to-eat))
         (if (void? food)
             'cancel
-            (make-action
-             #:symbol 'eat
-             #:actor (pc)
-             #:duration 15
-             #:target food
-             #:tags '(downtime)
-             #:resolution-rules
-             (λ ()
-               (displayln (format "TARGET: ~a" food))
-               (define food-tier
-                 (case (item-id food)
-                   ['fresh-berries 0]
-                   ['food-ration 1]
-                   ['vatruska 2]
-                   [else (dev-note (format "Unknown comestible ~a" (item-id food)))
-                    1])
-                 )
-               (decrease-pc-hunger-level food-tier)
+            (begin
+              (displayln (format "TARGET A: ~a" food))
+              (displayln (format "ID: ~a" (item-id food)))
+              (make-action
+               #:symbol 'eat
+               #:actor (pc)
+               #:duration 15
+               #:target food
+               #:tags '(downtime)
+               #:resolution-rules
+               `(
+                 (displayln (format "TARGET: ~a" ,food))
+                 (displayln (format "ID: ~a" (,item-id ,food)))
+                 (define food-tier
+                   (case (,item-id ,food)
+                     ['fresh-berries 0]
+                     ['ration 1]
+                     ['vatruska 2]
+                     [else
+                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
+                      1])
+                   )
+                 (displayln (format "TIER: ~a" food-tier))
+                 (decrease-pc-hunger-level food-tier)
 
-               (case (item-id food)
-                 ['fresh-berries (p "The berries are invigoratingly sweet.")]
-                 ['food-ration (p "The ration's dry and bland, but filling.")]
-                 ['vatruska (p "The vatruska tastes heavenly.")])
-               (remove-item! (item-id food))
+                 (case (,item-id ,food)
+                   ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                   ['ration (p "The ration's dry and bland, but filling.")]
+                   ['vatruska (p "The vatruska tastes heavenly.")])
+                 (remove-item! (,item-id ,food))
 
-               '())))
+                 ))))
 
         ))
      ]

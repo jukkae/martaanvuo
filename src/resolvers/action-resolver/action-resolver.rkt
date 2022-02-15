@@ -24,6 +24,8 @@
   "../../locations/locations.rkt"
   "../../locations/routes.rkt" ; not unused
 
+  "../../pc/pc.rkt"
+
   "../../state/state.rkt"
 
   "../../world/world.rkt" ; not unused
