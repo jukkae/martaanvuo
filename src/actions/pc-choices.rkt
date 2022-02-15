@@ -135,8 +135,6 @@
         (if (void? food)
             'cancel
             (begin
-              (displayln (format "TARGET A: ~a" food))
-              (displayln (format "ID: ~a" (item-id food)))
               (make-action
                #:symbol 'eat
                #:actor (pc)
@@ -145,8 +143,6 @@
                #:tags '(downtime)
                #:resolution-rules
                `(
-                 (displayln (format "TARGET: ~a" ,food))
-                 (displayln (format "ID: ~a" (,item-id ,food)))
                  (define food-tier
                    (case (,item-id ,food)
                      ['fresh-berries 0]
@@ -156,7 +152,6 @@
                       (displayln (format "Unknown comestible ~a" (,item-id ,food)))
                       1])
                    )
-                 (displayln (format "TIER: ~a" food-tier))
                  (decrease-pc-hunger-level food-tier)
 
                  (case (,item-id ,food)
@@ -488,16 +483,7 @@
        (when (place? (current-location))
          (for/list ([action (place-actions-provided (current-location))])
            (case action
-             ['search-for-paths
-              (make-choice
-               'search-for-paths
-               "Search for paths."
-               (λ () (make-action
-                      #:symbol 'search-for-paths
-                      #:actor (pc)
-                      #:duration 100
-                      #:tags '(downtime))))]
-             [else (error (format "get-downtime-choices: unknown action ~a" action))])))
+             [else (error (format "get-downtime-choices: unknown action provided ~a" action))])))
 
        (filter
         (λ (x) (and (not (null? x))
