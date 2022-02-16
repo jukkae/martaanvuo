@@ -9,9 +9,7 @@
   "stance.rkt"
 
   "../actors/actor.rkt"
-  "../actors/condition.rkt"
   "../actors/pc-actor.rkt"
-  "../actors/status.rkt"
 
   "../core/session.rkt"
   "../core/io.rkt"

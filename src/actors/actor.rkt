@@ -1,16 +1,17 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "0-types/actor.rkt"))
+(provide (all-from-out "0-types/actor.rkt"
+                       "0-types/condition.rkt"
+                       "0-types/status.rkt"))
 
-(require "0-types/actor.rkt")
+(require "0-types/actor.rkt"
+         "0-types/condition.rkt"
+         "0-types/status.rkt")
 
 (require racket/lazy-require)
 
-(require "condition.rkt"
-         "status.rkt"
-
-         "../items/item.rkt"
+(require "../items/item.rkt"
 
          "../core/io.rkt"
          "../core/utils.rkt")
@@ -53,9 +54,9 @@
   (define result (hash-ref (actor-traits actor) trait-name 'not-found))
   (when (eq? result 'not-found)
     (dev-note (format
-                "-- get-trait: trait [~a] not found on actor [~a]"
-                trait-name
-                (actor-name actor))))
+               "-- get-trait: trait [~a] not found on actor [~a]"
+               trait-name
+               (actor-name actor))))
   result)
 
 (define (actor-add-status! actor status)
@@ -74,9 +75,9 @@
   (define s (findf (λ (status)
                      (eq? (status-type status) type))
                    (actor-statuses actor)))
-  (if s 
-    (status-lifetime s)
-    #f))
+  (if s
+      (status-lifetime s)
+      #f))
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
@@ -87,8 +88,8 @@
         (set! new-statuses (append-element new-statuses status))
         (notice
          (format "~a: Status [~a] removed"
-          (actor-name actor)
-          (status-type status)))))
+                 (actor-name actor)
+                 (status-type status)))))
   (set-actor-statuses! actor new-statuses))
 
 ; think:
@@ -207,15 +208,15 @@
        (format "~a is dead. Cause of death: ~a"
                (actor-name actor)
                (cond ((symbol? cause-of-death)
-                        (describe-cause-of-death cause-of-death))
-                      ((string? cause-of-death)
-                        cause-of-death)
-                      ((symbol? (car cause-of-death))
-                        (describe-cause-of-death (car cause-of-death)))
-                      ((string? (car cause-of-death))
-                        (car cause-of-death))
-                      (else "NA"))
-                      )))
+                      (describe-cause-of-death cause-of-death))
+                     ((string? cause-of-death)
+                      cause-of-death)
+                     ((symbol? (car cause-of-death))
+                      (describe-cause-of-death (car cause-of-death)))
+                     ((string? (car cause-of-death))
+                      (car cause-of-death))
+                     (else "NA"))
+               )))
 
   (cond ((pc-actor? actor)
          (set-pc-actor-alive?! actor 'dead)

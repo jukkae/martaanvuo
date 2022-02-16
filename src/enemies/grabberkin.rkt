@@ -6,8 +6,6 @@
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/condition.rkt"
-  "../actors/status.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"

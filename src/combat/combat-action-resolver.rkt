@@ -23,7 +23,6 @@
 
   "../actors/actor.rkt"
   "../actors/pc-actor.rkt"
-  "../actors/status.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"

@@ -5,8 +5,8 @@
 (require racket/lazy-require)
 (require racket/serialize)
 
-(require "../core/io.rkt"
-         "../core/utils.rkt")
+(require "../../core/io.rkt"
+         "../../core/utils.rkt")
 
 (lazy-require
  ["actor.rkt"
