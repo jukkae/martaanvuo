@@ -1,11 +1,9 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
-(provide (all-defined-out))
+(provide (struct-out status))
 
-(require racket/serialize)
-
-(serializable-struct
- status
- (type
-  (lifetime #:mutable))
- #:transparent)
+(struct status
+  ([type : Symbol]
+   [lifetime : Natural])
+  #:prefab
+  #:mutable)
