@@ -155,15 +155,6 @@
   (eq? (stance-range stance) range))
 
 
-; scripting API?
-(define (player-info)
-  (define player-status
-    (tbody
-     (tr "run" (number->string (current-run)))
-     (tr "life" (number->string (current-life)))))
-
-  (info-card player-status "Player status"))
-
 ; api?
 (define (pick-up-items!)
   (p "Otava picks up everything there is to pick up.")

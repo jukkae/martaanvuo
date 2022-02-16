@@ -60,7 +60,7 @@
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
-    (notice (format "~a: Status [~a] (~a turns) added" (actor-name actor) (status-type status) (status-lifetime status) " turns) added")))
+    (notice (format "~a: Status [~a] (~a turns) added" (actor-name actor) (status-type status) (status-lifetime status))))
   (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
 
 (define (actor-has-status-of-type? actor type)
@@ -99,7 +99,6 @@
     (when (eq? (status-type status) type)
       (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
-
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
     (if (positive? (status-lifetime status))

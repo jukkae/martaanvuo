@@ -224,7 +224,7 @@
 (define (award-xp! amount . reason)
   (if (null? reason)
       (notice (format "+~a xp" amount))
-      (notice (format "+~a xp (~a)" amount reason)))
+      (notice (format "+~a xp ~a" amount reason)))
   (set-pc-actor-xp! (pc)
                     (+ (pc-actor-xp (pc))
                        amount)))

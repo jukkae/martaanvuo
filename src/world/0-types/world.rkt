@@ -7,6 +7,7 @@
 (serializable-struct
  world
  (places
+  [routes #:mutable]
   day
   [elapsed-time #:mutable])
  #:transparent)

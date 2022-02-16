@@ -51,8 +51,6 @@
              ['b-to-a (route-a target)]))
 
          (format "[continue] Continue towards ~a." (place-shortname endpoint)))
-        ((eq? (action-symbol pending-action) 'search-for-paths)
-         "[continue] Search for paths.")
         (else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action)))))
 
 (define (get-cancel-pending-action-and-go-back-name

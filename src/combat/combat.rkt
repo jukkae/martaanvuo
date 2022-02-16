@@ -195,7 +195,7 @@
     (notice "Attainment: Hecatomb")) ; award this for 100 *kills*
   ; (when (not (session-flag-set? 'got-in-combat))
   ;   (set-session-flag 'got-in-combat)
-  (current-session-score-dice++)
+  (current-session-score-dice++ (if (= (current-session-times-in-combat) 1) "Got in combat." '()))
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started"))
 

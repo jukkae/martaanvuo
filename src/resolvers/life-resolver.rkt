@@ -54,7 +54,6 @@
   (when (not (session-flag-set? 'began-life))
     (set-session-flag 'began-life)
     (current-session-score-dice++)
-    ;(notice "Attainment: Origin")
     )
 
   (current-life (add1 (current-life)))
@@ -62,7 +61,7 @@
   (set-base-build!)
   (go-to-story-fragment 'begin-life)
   (when (not (= 1 (current-life)))
-    (player-info)))
+    (dev-note "Show life info")))
 
 (define (on-end-life)
   (let ([body

@@ -7,25 +7,52 @@
 (require
   "action.rkt"
   "choice.rkt"
+
   "../actors/actor.rkt"
-  "../combat/combat-pc-choices.rkt"
-  "../core/io.rkt"
-  "../items/item.rkt"
-  "../pc/pc.rkt"
   "../actors/pc-actor.rkt"
+
+  "../blurbs/blurbs.rkt"
+
+  "../combat/combat-pc-choices.rkt"
+
+  "../core/checks.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
+
+  "../items/item.rkt"
+
+  "../locations/locations.rkt"
   "../locations/0-types/location.rkt"
   "../locations/0-types/place.rkt"
   "../locations/0-types/route.rkt"
   "../locations/narration.rkt"
+
+  "../pc/pc.rkt"
+
+  "../state/logging.rkt"
+  "../state/state.rkt"
+
   "../world/time.rkt"
-  "../core/utils.rkt"
   "../world/world.rkt"
-  "../state/state.rkt")
+  )
+
 
 (lazy-require
- ["../round-resolver/round-resolver.rkt"
+ ["../resolvers/round-resolver/round-resolver.rkt"
   (go-to-story-fragment
    )])
+
+
+
+; TODO: action / time helpers, move these somewhere
+(define (time-until-next-morning)
+  (let* ([time (world-elapsed-time (current-world))]
+         [time-today (remainder time day-length)])
+    (- day-length time-today)))
+
+(define (time-until-next-time-of-day)
+  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
+
 
 (provide get-world-choices)
 (define (get-world-choices world actor)
@@ -42,11 +69,12 @@
     ['sleep
      (make-choice
       'sleep
-      "Sleep." 
+      "Sleep."
       (λ () (make-action
              #:symbol 'sleep
              #:actor (pc)
-             #:duration 200)))]
+             #:duration (time-until-next-morning)
+             )))]
     ['tent
      (make-choice
       'camp
@@ -54,16 +82,24 @@
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
-             #:duration 20)))]
+             #:duration 20
+             #:resolution-rules
+             `(
+               (displayln "Camp action TODO")
+               'ok))))]
 
     ['campfire
      (make-choice
-      'camp
+      'campfire
       "Build campfire."
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
-             #:duration 10)))]
+             #:duration 10
+             #:resolution-rules
+             `(
+               (displayln "Campfire action TODO")
+               'ok))))]
 
     ['rest
      (define next-time-of-day
@@ -75,34 +111,59 @@
       (λ () (make-action
              #:symbol 'rest
              #:actor (pc)
-             #:duration 100)))]
+             #:duration (time-until-next-time-of-day)
+             #:resolution-rules
+             `(
+               (blurb 'rest-action))
+             )))]
 
     ; This opens a submenu
     ['eat
      (define title
        (case (pc-hunger-level)
-        ['satiated "Eat? Disgusting idea."]
-        ['not-hungry "Not really hungry but she could eat."]
-        ['hungry "Eat."]
-        ['very-hungry "Eat, she's very hungry."]
-        ['starving "She's starving, eat. Eat now."]
-       ))
+         ['satiated "Eat? Disgusting idea."]
+         ['not-hungry "Not really hungry but she could eat."]
+         ['hungry "Eat."]
+         ['very-hungry "Eat, she's very hungry."]
+         ['starving "She's starving, eat. Eat now."]
+         ))
      (make-choice
       'eat
       "Eat."
       (λ ()
-       (define food (select-food-to-eat))
-       (if (void? food)
-           'cancel
-           (make-action
-            #:symbol 'eat
-            #:actor (pc)
-            #:duration 15
-            #:target food
-            #:tags '(downtime)))
+        (define food (select-food-to-eat))
+        (if (void? food)
+            'cancel
+            (begin
+              (make-action
+               #:symbol 'eat
+               #:actor (pc)
+               #:duration 15
+               #:target food
+               #:tags '(downtime)
+               #:resolution-rules
+               `(
+                 (define food-tier
+                   (case (,item-id ,food)
+                     ['fresh-berries 0]
+                     ['ration 1]
+                     ['vatruska 2]
+                     [else
+                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
+                      1])
+                   )
+                 (decrease-pc-hunger-level food-tier)
+
+                 (case (,item-id ,food)
+                   ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                   ['ration (p "The ration's dry and bland, but filling.")]
+                   ['vatruska (p "The vatruska tastes heavenly.")])
+                 (remove-item! (,item-id ,food))
+
+                 ))))
 
         ))
-    ]
+     ]
     ))
 
 (define (select-food-to-eat)
@@ -110,10 +171,10 @@
   (define comestibles
     (filter (λ (item) ; likely this should be stored as data on the item itself
               (case (item-id item)
-               ['fresh-berries #t]
-               ['ration #t]
-               ['vatruska #t]
-               [else #f]))
+                ['fresh-berries #t]
+                ['ration #t]
+                ['vatruska #t]
+                [else #f]))
             items))
 
   (prln (format "Eat what? [1-~a], anything else to cancel." (length comestibles)))
@@ -131,7 +192,7 @@
          (list-ref comestibles index)
          )
         (else (p "Nevermind.")))
-)
+  )
 
 
 (define (get-nighttime-choices world actor)
@@ -201,7 +262,39 @@
                  #:actor (pc)
                  #:duration 100
                  #:target destination
-                 #:tags '(downtime)))))
+                 #:tags '(downtime)
+                 #:resolution-rules
+                 `(
+                   (define from
+                     (cond ((,route? ,destination)
+                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                                (route-a destination)
+                                (route-b destination)))
+                           (else
+                            (current-location))
+                           ))
+
+                   (define to
+                     (cond ((,route? ,destination)
+                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                                (route-b destination)
+                                (route-a destination)))
+                           (else
+                            ,destination)
+                           ))
+                   (reset-pending-action!)
+                   (move-pc-to-location! ,destination)
+
+                   (describe-cancel-traverse-action from to)
+                   (display-location-info-card (current-location))
+                   (when (not (null? (location-items ,destination)))
+                     (pick-up-items!))
+                   'ok
+
+                   )
+
+
+                 ))))
 
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
@@ -244,19 +337,82 @@
                            #:symbol 'skip
                            #:actor (pc)
                            #:duration 0
-                           #:tags '(downtime))))))
+                           #:tags '(downtime)
+                           )))))
                     )
                    (else ; route is traversable
+                    (define traverse-duration 100)
                     (make-choice
                      'traverse
-                     (get-traverse-text route (current-location)) 
+                     (get-traverse-text route (current-location))
                      (λ () (make-action
                             #:symbol 'traverse
                             #:actor (pc)
-                            #:duration 100
+                            #:duration traverse-duration
                             #:target route
                             #:tags '(downtime)
-                            #:details (list direction))))))
+                            #:details (list direction)
+                            #:resolution-rules
+                            `(
+                              (set-route-traversed! (get-route-by-id ,(location-id route)))
+                              (define next-location
+                                ,(if (eq? direction 'a-to-b)
+                                     (route-b route)
+                                     (route-a route)))
+                              (move-pc-to-location! next-location)
+                              'ok
+                              )
+                            #:on-before-rules
+                            `(
+                              (let/ec return
+                                (describe-begin-traverse-action ,route ',direction)
+                                (move-pc-to-location! ,route)
+                                ;(dev-note "TODO: Handle pending actions")
+                                (define elapsed-time 0)
+
+                                (when (not (location-has-detail? (current-location) 'no-encounters))
+                                  (define encounter-roll (d 1 6))
+                                  (notice (format "Encounter roll: 1d6 < 6: [~a] – ~a"
+                                                  encounter-roll
+                                                  (if (< encounter-roll 6)
+                                                      "fail"
+                                                      "success")))
+                                  (when (< encounter-roll 6)
+
+                                    (define resolve-events
+                                      (list
+                                       (make-event ,''spawn-enemies
+                                                   '() ; pack info about enemies / event here
+                                                   #:interrupting? #t)))
+                                    (define metadata '(interrupted))
+                                    (define duration
+                                      (exact-floor (/
+                                                    ,traverse-duration
+                                                    3)))
+
+                                    (set! elapsed-time duration)
+
+                                    (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                                    (define world-events (timeline-events world-tl))
+
+                                    (define all-events (append world-events resolve-events))
+                                    (define all-metadata (append (timeline-metadata world-tl) metadata))
+
+                                    (define tl (timeline all-metadata all-events duration))
+
+                                    (process-timeline! tl)
+                                    (return tl)))
+
+                                'before-action-ok
+                                ))
+                            #:on-after-rules
+                            `(
+                              (describe-finish-traverse-action ,route ',direction)
+                              (when (not (null? (location-items (current-location))))
+                                (pick-up-items!))
+                              )
+
+                            )))))
              )))
 
        (when (and (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
@@ -277,21 +433,55 @@
                   #:symbol 'forage
                   #:actor (pc)
                   #:duration 100
-                  #:tags '(downtime))))))
+                  #:tags '(downtime)
+                  #:resolution-rules
+                  `(
+                    (define skill 0)
+                    (define target 8)
+
+                    (define successful? (skill-check "Forage" skill target))
+                    (cond (successful?
+                           (define amount (d 1 4)) ; portions = days of survival
+                           (define amount-string
+                             (if (= amount 1)
+                                 (format "~a meal" amount)
+                                 (format "~a meals" amount)))
+
+                           (info-card
+                            (tbody
+                             (tr
+                              "1d4"
+                              "="
+                              (format "~a" amount-string))
+                             )
+                            "Forage results roll")
+                           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
+                           (define item (list 'food (list amount)))
+                           (add-item-to-inventory! (pc) item)
+                           )
+                          (else
+                           (begin
+                             (p "Despite spending a while, Otava can't find anything to eat.")
+                             (define luck-roll (d 1 20))
+                             (info-card
+                              (tbody
+                               (tr
+                                "1d20"
+                                "="
+                                (format "~a" luck-roll)))
+                              "Luck roll")
+                             )))
+                    (if successful?
+                        'successful
+                        'failure)
+                    )
+
+                  )))))
 
        (when (place? (current-location))
          (for/list ([action (place-actions-provided (current-location))])
            (case action
-             ['search-for-paths
-              (make-choice
-               'search-for-paths
-               "Search for paths."
-               (λ () (make-action
-                      #:symbol 'search-for-paths
-                      #:actor (pc)
-                      #:duration 100
-                      #:tags '(downtime))))]
-             [else (error (format "get-downtime-choices: unknown action ~a" action))])))
+             [else (error (format "get-downtime-choices: unknown action provided ~a" action))])))
 
        (filter
         (λ (x) (and (not (null? x))
@@ -349,19 +539,67 @@
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (not (flag-set? 'tried-to-go-back))
                   (= (current-run) 1))
-         (make-pc-choice
-          #:id 'end-run
-          #:text "Go back."
-          #:duration 100
-          #:tags '(downtime)))
+         (choice
+          'end-run
+          "Go back."
+          (make-action
+           #:symbol 'end-run
+           #:actor actor
+           #:duration 100
+           #:tags '(downtime)
+           #:resolution-rules
+           `(
+             (cond ((flag-set? 'ending-run-allowed)
+                    (p "At least it's something.")
+                    'end-run)
+                   (else
+                    (set-flag 'tried-to-go-back)
+                    (p @~a{
+ Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+ })
+                    (wait-for-confirm)
+                    (next-chapter!) ; end chapter, but not run!
+                    (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+                    (wait-for-confirm)
+                    (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+                    (p "This should be simple, Otava thinks.")
+                    (award-xp! 25 "for good thinking")
+                    'failure
+                    ))))
+
+          ))
 
        (when (and (eq? (location-type (current-location)) 'perimeter)
                   (flag-set? 'ending-run-allowed))
-          (make-pc-choice
-          #:id 'end-run
-          #:text "Go back home."
-          #:duration 0
-          #:tags '(downtime)))
+         (choice
+          'end-run
+          "Go back home."
+          (make-action
+           #:symbol 'end-run
+           #:actor actor
+           #:duration 100
+           #:tags '(downtime)
+           #:resolution-rules
+           `(
+             (cond ((flag-set? 'ending-run-allowed)
+                    (p "At least it's something.")
+                    'end-run)
+                   (else
+                    (set-flag 'tried-to-go-back)
+                    (p @~a{
+ Fuck it. Not worth it, she's not ready yet. Here's the, uh, it was a scouting trip to figure out the route. Which she did.
+ })
+                    (wait-for-confirm)
+                    (next-chapter!) ; end chapter, but not run!
+                    (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+                    (wait-for-confirm)
+                    (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+                    (p "This should be simple, Otava thinks.")
+                    (award-xp! 25 "for good thinking")
+                    'failure
+                    ))))
+
+          ))
        ))))
 
   (define condensed (condense all-actions))

@@ -5,10 +5,6 @@
 (require racket/lazy-require)
 
 (require
-  "downtime-actions.rkt"
-  "special-actions.rkt"
-  "traverse-action.rkt"
-
   "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
@@ -16,28 +12,30 @@
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
+  "../../actors/condition.rkt"
   "../../actors/pc-actor.rkt"
+  "../../actors/status.rkt"
 
   "../../blurbs/blurbs.rkt"
 
   "../../combat/combat-action-resolver.rkt"
+  "../../combat/stance.rkt"
 
+  "../../core/checks.rkt"
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
-  "../../enemies/blindscraper-actions.rkt"
-  "../../enemies/grabberkin-actions.rkt"
-
-  "../../items/item.rkt"
-
   "../../locations/0-types/location.rkt"
+  "../../locations/0-types/route.rkt"
+  "../../locations/locations.rkt"
+  "../../locations/routes.rkt" ; not unused
 
   "../../pc/pc.rkt"
 
+  "../../state/logging.rkt"
   "../../state/state.rkt"
 
-  "../../world/time.rkt"
-  "../../world/world.rkt"
+  "../../world/world.rkt" ; not unused
 
   )
 
@@ -60,6 +58,12 @@
    )])
 
 
+(define-namespace-anchor anc)
+(define ns (namespace-anchor->namespace anc))
+
+(define (rules-to-lambda rules)
+  `(λ () ,@rules))
+
 ; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)
   (when (actor-alive? (action-actor action))
@@ -67,7 +71,15 @@
 
     (when (and (pc-actor? (action-actor action))
                (not (pending? action)))
-      (set! result (pc-action-on-before-resolve! action)))
+
+      (define on-before-rules (action-on-before-rules action))
+      (when (not (empty? on-before-rules))
+        (when (not (procedure? on-before-rules))
+          (set! on-before-rules (rules-to-lambda on-before-rules)))
+        (define resolution-result ((eval on-before-rules ns)))
+        (dev-note (format "PRE-RESULT: ~a" resolution-result))
+        (set! result resolution-result)))
+
 
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
@@ -76,66 +88,41 @@
       (set! result 'interrupted))
 
     (when (not (eq? result 'interrupted))
-      (set! result (dispatch-to-sub-resolver! action))
+
+      (define rules (action-resolution-rules action))
+      (when (not (empty? rules))
+        (when (not (procedure? rules))
+          (set! rules (rules-to-lambda rules)))
+        (define resolution-result ((eval rules ns)))
+
+        (dev-note (format "RESULT: ~a" resolution-result))
+
+        (when (not (or (void? resolution-result) (empty? resolution-result)))
+          (set! result resolution-result)))
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))
 
-    (when (not (empty? (action-resolution-effect action)))
-      ((action-resolution-effect action)))
+
 
     (when (and (pc-actor? (action-actor action))
                (not (eq? result 'interrupted)))
-      (pc-action-on-after-resolve! action))
+
+      (define on-after-rules (action-on-after-rules action))
+      (when (not (empty? on-after-rules))
+        (when (not (procedure? on-after-rules))
+          (set! on-after-rules (rules-to-lambda on-after-rules)))
+        (define resolution-result ((eval on-after-rules ns)))
+        (dev-note (format "POST-RESULT: ~a" resolution-result))
+        (when (not (void? resolution-result))
+          (set! result resolution-result)
+          )
+        ))
 
     (wait-for-confirm)
 
     result))
 
-(define (pc-action-on-before-resolve! action)
-  (let/ec return
-    (case (action-symbol action)
-      ['traverse
-       (cond ((not (pending? action))
-              (describe-begin-traverse-action action))
-             (else
-              (dev-note "resolving pending action")))
-       (move-pc-to-location! (action-target action))
-       (define elapsed-time 0)
-       ; -> roll-for-encounter or something, more content than code -> belongs elsewhere
-
-       (when (not (location-has-detail? (current-location) 'no-encounters))
-         (define encounter-roll (d 1 6))
-         (notice (format "Encounter roll: 1d6 < 4: [~a] – ~a" encounter-roll (if (< encounter-roll 4)
-                                                                              "fail"
-                                                                              "success")))
-         (when (< encounter-roll 4)
-
-           (define resolve-events
-             (list
-              (make-event 'spawn-enemies
-                          '() ; pack info about enemies / event here
-                          #:interrupting? #t)))
-           (define metadata '(interrupted))
-           (define duration (exact-floor (/ (action-duration action) 3)))
-
-           (set! elapsed-time duration)
-
-           (define world-tl (advance-time-until-next-interesting-event! duration #f))
-           (define world-events (timeline-events world-tl))
-
-           (define all-events (append world-events resolve-events))
-           (define all-metadata (append (timeline-metadata world-tl) metadata))
-
-           (define tl (timeline all-metadata all-events duration))
-
-           (process-timeline! tl)
-           (return tl)))
-
-       'before-action-ok
-       ]
-      [else 'before-action-ok])
-    ))
 
 ; note: this has overlap with handle-interrupting-event
 (define (process-timeline! tl)
@@ -151,93 +138,6 @@
        (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
        '()]))
   (narrate-timeline tl))
-
-(define (pc-action-on-after-resolve! action)
-  (case (action-symbol action)
-    ['traverse
-     (describe-finish-traverse-action action)
-     (when (not (null? (location-items (action-target action))))
-       (pick-up-items!))]
-
-    ))
-
-(define (time-until-next-morning)
-  (let* ([time (world-elapsed-time (current-world))]
-         [time-today (remainder time day-length)])
-    (- day-length time-today)))
-
-(define (time-until-next-time-of-day)
-  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
-
-(define (progress-until-next-day! action)
-  (set-action-duration! action (time-until-next-morning))
-  'ok)
-
-(define (progress-until-next-time-of-day! action)
-  (set-action-duration! action (time-until-next-time-of-day))
-  'ok)
-
-(define (narrate-rest-action)
-  (blurb 'rest-action))
-
-(define (dispatch-to-sub-resolver! action)
-  (case (action-symbol action)
-    ; "special" actions first
-    ['end-run (resolve-special-action! action)]
-    ['back-off (resolve-special-action! action)]
-    ['win-game (resolve-special-action! action)]
-    ['skip (resolve-special-action! action)]
-    ['go-to-location (resolve-go-to-action! action)]
-    ['traverse (resolve-traverse-action! action)]
-    ['cancel-traverse (resolve-cancel-traverse-action! action)]
-
-    ; placeholder / WIP
-    ['camp 'ok]
-    #;['sleep (resolve-sleep-action! action)]
-    ['sleep (progress-until-next-day! action)]
-    ['rest (progress-until-next-time-of-day! action)
-           (narrate-rest-action)]
-    ['eat
-     (define food-item (action-target action))
-     (displayln (format "TARGET: ~a" food-item))
-     (define food-tier
-       (case (item-id food-item)
-        ['fresh-berries 0]
-        ['food-ration 1]
-        ['vatruska 2]
-        [else (dev-note (format "Unknown comestible ~a" (item-id food-item)))
-              1])
-      )
-     (decrease-pc-hunger-level food-tier)
-
-     (case (item-id food-item)
-      ['fresh-berries (p "The berries are invigoratingly sweet.")]
-      ['food-ration (p "The ration's dry and bland, but filling.")]
-      ['vatruska (p "The vatruska tastes heavenly.")])
-     (remove-item! (item-id food-item))]
-
-    ; the rest
-    ['melee (resolve-melee-action! action)]
-    ['shoot (resolve-shoot-action! action)]
-    ['forage (resolve-forage-action! action)]
-    ['flee (resolve-flee-action! action)]
-    ['break-free (resolve-break-free-action! action)]
-
-    ['anklebreaker (resolve-anklebreaker-action! action)]
-    ['pull-under (resolve-pull-under-action! action)]
-    ['release-grip 'grip-released]
-
-    ['go-to-engaged (resolve-go-to-engaged-action! action)]
-    ['go-to-close (resolve-go-to-close-action! action)]
-
-    ['modify-status (resolve-modify-status-action! action)]
-
-    ['inflict-condition (resolve-inflict-condition-action! action)]
-
-    [else
-     (dev-note (format "resolve-action!: unknown action type ~a" (action-symbol action)))
-     'ok
-     ]))
 
 
 (define (set-pending-action! action time-left)

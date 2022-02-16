@@ -41,7 +41,9 @@
                #:symbol 'flee
                #:actor (pc)
                #:duration 1
-               #:tags '(initiative-based-resolution fast)))))
+               #:tags '(initiative-based-resolution fast)
+               #:resolution-rules
+               `((resolve-flee-action! (pc)))))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
@@ -57,6 +59,9 @@
          (define details
            (association-list 'str-mod strength-mod))
 
+         (define target
+          (take-random close-grabberkin))
+
          (define break-free-choice
            (make-choice
             'pull-free
@@ -66,13 +71,16 @@
                #:symbol 'break-free
                #:actor (pc)
                #:duration 1
-               #:target (take-random close-grabberkin)
+               #:target target
                #:tags '(initiative-based-resolution fast)
-               #:details details))))
+               #:details details
+               #:resolution-rules
+               `((resolve-break-free-action! (pc) ,target ,strength-mod))))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
   )
+
 
 (define (get-melee-choices)
   (define targets (get-current-enemies))
@@ -82,13 +90,13 @@
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (define damage-roll (λ () (d 1 2)))
+           ;(define damage-roll '(λ () d 1 2))
            (define details
-             (list
-              (cons 'damage-roll damage-roll)
-              (cons 'damage-roll-formula "1d2")
-              (cons 'damage-type 'bludgeoning)
-              ))
+             `(list
+               (cons 'damage-roll ,'(λ () (d 1 2)))
+               (cons 'damage-roll-formula "1d2")
+               (cons 'damage-type 'bludgeoning)
+               ))
            (define choice
              (make-choice
               'attack
@@ -100,7 +108,12 @@
                  #:duration 1
                  #:target target
                  #:tags '(initiative-based-resolution)
-                 #:details details))))
+                 #:details details
+                 #:resolution-rules
+                 `(
+                   (displayln (format "ACTOR: ~a" (actor-name (pc))))
+                   (resolve-melee-action! (pc) ,target ,details)
+                   )))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
   combat-choices)
@@ -138,18 +151,19 @@
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
-             #:details details))))
+             #:details details
+             #:resolution-rules
+             '(resolve-as-shoot-action)))))
 
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
 
-         (define damage-roll (λ () 1))
          (define details
-           (list
-            (cons 'damage-roll damage-roll)
-            (cons 'damage-roll-formula "1")
-            (cons 'damage-type 'bludgeoning)
-            ))
+           `(list
+             (cons 'damage-roll '(λ () 1))
+             (cons 'damage-roll-formula "1")
+             (cons 'damage-type 'bludgeoning)
+             ))
          (make-choice
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
@@ -160,7 +174,11 @@
              #:duration 1
              #:target target
              #:tags '(initiative-based-resolution)
-             #:details details))))
+             #:details details
+             #:resolution-rules
+             `(
+               (resolve-melee-action! pc ,target ,details)
+               )))))
        )))
 
   (condense all-choices))

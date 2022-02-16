@@ -204,8 +204,6 @@
   (displayln "[Menu]")
   (define meta-commands (make-hash))
   (hash-set! meta-commands "C" (cons "[C]: Close menu." close-menu))
-  ;(hash-set! meta-commands "D" (cons "[D]: Delete progress." delete-progress))
-  (hash-set! meta-commands "P" (cons "[P]: Player status." player-info))
   (hash-set! meta-commands "Q" (cons "[Q]: Quit Martaanvuo." quit))
   (hash-set! meta-commands "R" (cons "[R]: Restart." restart))
 

@@ -32,6 +32,14 @@
   (set-actor-location! actor location)
   (add-actor-to-location! location actor))
 
+(provide get-route-by-id)
+(define (get-route-by-id id)
+  (define w (current-world))
+  (define routes (world-routes w))
+  (define location (findf (λ (route) (eq? id (location-id route)))
+                          routes))
+  location)
+
 (provide (all-from-out
           "0-types/world.rkt"
           "content/world.rkt"))

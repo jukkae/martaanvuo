@@ -6,24 +6,22 @@
 
 (require "location.rkt")
 
-(serializable-struct
- route
- location
- ([a #:mutable]
-  [b #:mutable])
- #:transparent
- #:constructor-name route*)
+(serializable-struct route
+                     location
+                     ([a #:mutable]
+                      [b #:mutable])
+                     #:transparent
+                     #:constructor-name route*)
 
-(define
-  (make-route id
-              a
-              b
-              #:type [type '()]
-              #:details [details '()]
-              #:actors [actors '()]
-              #:items [items '()]
-              #:features [features '()]
-              #:tags [tags '()])
+(define (make-route id
+                    a
+                    b
+                    #:type [type '()]
+                    #:details [details '()]
+                    #:actors [actors '()]
+                    #:items [items '()]
+                    #:features [features '()]
+                    #:tags [tags '()])
 
   (route* id
           type

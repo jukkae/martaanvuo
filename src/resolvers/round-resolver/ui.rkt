@@ -19,6 +19,8 @@
   (cond
     ((= r 1)
      "Martaanvuo will always be there for you, as it always has.")
+    ((= r 1)
+     "There has never been a time that Martaanvuo hasn't existed.")
     ((< r 5)
      "")
     ((< r 20)
@@ -26,6 +28,16 @@
     (else
      "Martaanvuo awaits your return.")))
 
+(define (display-session-stats)
+  (newline)
+  (define session-score (d (current-session-score-dice) 4))
+  (define body
+    (tbody
+      (tr (format "Total score: ~a" session-score))
+      (tr "")
+      (tr (format "~a" (current-session-score-reasons)))))
+  (info-card body "Session stats")
+  (newline))
 
 ; TODO: clean up!
 ; Return value is tied to round resolution.
@@ -36,9 +48,7 @@
   (define input (wait-for-input))
   (set! input (string-upcase input))
   (cond ((equal? input "Q")
-         (define session-score (d (current-session-score-dice) 4))
-         (prln (format "Session score: ~a" session-score))
-         (newline)
+         (display-session-stats)
 
          (define quit-message (get-quit-text))
          (when (not (equal? quit-message ""))

@@ -54,9 +54,7 @@
 
 
 ; "generic" attack with type
-(define (resolve-melee-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+(define (resolve-melee-action! actor target details)
   (define target-defense (get-trait target "defense"))
   (define skill (get-trait actor "melee-attack-skill"))
 
@@ -78,7 +76,6 @@
   ; #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
 
-  (define details (action-details action))
 
   (define damage-roll (assoc 'damage-roll details))
   (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
@@ -94,7 +91,7 @@
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
   (when (eq? action-result 'dead)
     ; TODO what's a smart place to store this? the actor?
-    (case (actor-name (action-target action))
+    (case (actor-name target)
       [("Blindscraper") (award-xp! 7)]))
 
   (display-combatant-info target)
@@ -102,8 +99,8 @@
 
   ; Urgh, refactor!
   (when (eq? action-result 'dead)
-    (if (not (pc-actor? (action-target action)))
-        (p "The " (actor-name (action-target action)) " is dead.")
+    (if (not (pc-actor? target))
+        (p "The " (actor-name target) " is dead.")
         (begin
           (p "Otava is dead.")
           (set! action-result 'pc-dead))))
@@ -185,12 +182,7 @@
     )
   )
 
-(define (resolve-break-free-action! action)
-  (define actor (action-actor action))
-  (define details (action-details action))
-  (define str-mod (vector-ref (association-list-ref details 'str-mod) 0))
-
-  (define target (action-target action))
+(define (resolve-break-free-action! actor target [str-mod 0])
   (define target-stance (actor-stance target))
 
   (define statuses (actor-statuses actor))
@@ -252,8 +244,8 @@
 
 
 ; skinnable, but in a sense generic action
-(define (resolve-flee-action! action)
-  (cond ((pc-actor? (action-actor action))
+(define (resolve-flee-action! actor)
+  (cond ((pc-actor? actor)
          (p "Otava turns her back to run.")
          (define skill (get-trait (pc) "athletics-skill"))
 
@@ -289,9 +281,9 @@
 
         (else ; not a pc actor
          (p
-          (format "~a tries to run." (get-combatant-name (action-actor action))))
+          (format "~a tries to run." (get-combatant-name actor)))
          (define skill 1)
-         (define stance (actor-stance (action-actor action)))
+         (define stance (actor-stance actor))
          (define value (get-stance-range-numeric-value (stance-range stance)))
          (define target-number
            (if (= value 0)
@@ -303,30 +295,11 @@
              (begin
                (p "The blindscraper skitters away and disappears in the foliage.")
                (award-xp! 1)
-               (remove-actor-from-its-current-location! (action-actor action))
+               (remove-actor-from-its-current-location! actor)
                'ok)
              (begin
                (p "The blindscraper tries to run away, its legs twitching, but it is not fast enough.")
-               (actor-add-status! (action-actor action) (status 'fallen 1))
-               (display-combatant-info (action-actor action))
+               (actor-add-status! actor (status 'fallen 1))
+               (display-combatant-info actor)
                'failure))
          )))
-
-(define (resolve-modify-status-action! action)
-  (define target (action-target action))
-  (define status (car (action-details action)))
-  (when (eq? (status-type status) 'bound) ; this is shit, refactor
-    (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-    (define amount (status-lifetime status))
-    (modify-actor-status-lifetime target 'bound amount)
-    )
-  'ok)
-
-(define (resolve-inflict-condition-action! action)
-  (define target (action-target action))
-  (define condition (car (action-details action)))
-  (displayln "action-resolver: resolve-action!: inflict-condition: TODO")
-  #;(when (eq? (status-type status) 'bound)
-      (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might."))
-  #;(inflict-status! target status)
-  'ok)

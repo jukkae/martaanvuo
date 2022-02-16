@@ -11,6 +11,9 @@
          "../../locations/0-types/route.rkt"
          "../../core/utils.rkt")
 
+(require racket/lazy-require)
+(lazy-require ["../../state/state.rkt" (current-world)])
+
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
 ;  - a sort of an event horizon!
@@ -116,38 +119,42 @@
 
   (define places (make-places))
 
-  #;(make-path-between perimeter martaanvuo-swamp 'hidden)
-  (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
-  (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
-  (make-path-between places 'martaanvuo-swamp 'crematory)
-  (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-  (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-  (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
-  (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
-  (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-  (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
-  (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
-  (make-path-between places 'power-plant-ruins 'sewers-1)
-  (make-path-between places 'sewers-1 'sewers-2)
-  (make-path-between places 'sewers-1 'workshop)
-  (make-path-between places 'sewers-1 'compound-entrance)
-  (make-path-between places 'compound-entrance 'murkwater-docks)
-  (make-path-between places 'compound-entrance 'workshop)
-  (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
-  (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
-  (make-path-between places 'sewers-2 'storage-closet)
-  (make-path-between places 'storage-closet 'workshop)
-  (make-path-between places 'workshop 'control-room #:no-encounters? #t)
-  (make-path-between places 'workshop 'martaanvuo-source)
-  (make-path-between places 'control-room 'reactor-room)
+  (define routes
+    (list
+    #; (make-path-between perimeter martaanvuo-swamp 'hidden)
+    (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
+    (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-swamp 'crematory)
+    (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
+    (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
+    (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+    (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
+    (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
+    (make-path-between places 'power-plant-ruins 'sewers-1)
+    (make-path-between places 'sewers-1 'sewers-2)
+    (make-path-between places 'sewers-1 'workshop)
+    (make-path-between places 'sewers-1 'compound-entrance)
+    (make-path-between places 'compound-entrance 'murkwater-docks)
+    (make-path-between places 'compound-entrance 'workshop)
+    (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
+    (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
+    (make-path-between places 'sewers-2 'storage-closet)
+    (make-path-between places 'storage-closet 'workshop)
+    (make-path-between places 'workshop 'control-room #:no-encounters? #t)
+    (make-path-between places 'workshop 'martaanvuo-source)
+    (make-path-between places 'control-room 'reactor-room)
+  ))
 
-  (world places 0 0))
+  (world places routes 0 0))
 
 
 ; not content
 
 (define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
+; NB: Modifies a and b, and returns route r between the two
 (define (make-path-between
          places
          id-a
@@ -171,7 +178,8 @@
              #:actors actors))
   (set-place-routes! place-a (append-element (place-routes place-a) r))
   (set-place-routes! place-b (append-element (place-routes place-b) r))
-  (when hidden? (error "Implement hidden paths")))
+  (when hidden? (error "Implement hidden paths"))
+  r)
 
 (define (find-place-by-id places id)
   (findf (λ (place) (location-is? id place))
