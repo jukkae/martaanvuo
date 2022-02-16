@@ -96,14 +96,14 @@
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
-      (λ ()
+      `(
         (define lp (pc-actor-lp (pc)))
-        (define dex (actor-dexterity actor))
+        (define dex (,actor-dexterity ,actor))
 
         (p "The Blindscraper skitters towards Otava.")
 
         (let ([enemy-stance (stance "α" 'close "right")])
-          (set-actor-stance! actor enemy-stance))
+          (set-actor-stance! ,actor enemy-stance))
         'ok
         ))]
 
@@ -116,7 +116,7 @@
       #:tags '(initiative-based-resolution)
       #:details '(blind)
       #:resolution-rules
-      (λ ()
+      `(
         (define target (pc))
         (inflict-status! (pc) 'blind))
       )]

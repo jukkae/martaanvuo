@@ -12,9 +12,14 @@
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
+  "../../actors/condition.rkt"
   "../../actors/pc-actor.rkt"
+  "../../actors/status.rkt"
+
+  "../../blurbs/blurbs.rkt"
 
   "../../combat/combat-action-resolver.rkt"
+  "../../combat/stance.rkt"
 
   "../../core/checks.rkt"
   "../../core/io.rkt"

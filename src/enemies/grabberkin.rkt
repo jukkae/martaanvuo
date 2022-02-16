@@ -75,7 +75,7 @@
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
-      (λ ()
+      `(
 
         (p "The hands grasping her ankle – the thing with the hands – shift in the waters under the floating raft of moss. The thing pulls Otava through the moss, through a thick layer of algae, into the cloudy waters. The heavy, dark water closes in around her.")
         (p "The thing pulls her deeper. She fights back, but her arms get caught in the massive algae congesting the grimy waters. She cannot hold her breath much longer.") ; -> fragments -> saving throw, not direct death
@@ -98,7 +98,7 @@
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
-      (λ ()
+      `(
 
         (define target (pc))
         (cond ((not (actor-has-condition-of-type? target 'ankle-broken)) ; first
@@ -187,14 +187,15 @@
       #:target (pc)
       #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound strength))
-      #:resolution-rules (λ ()
+      #:resolution-rules
+      `(
 
-                           (define target (pc))
-                           (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
-                           (modify-actor-status-lifetime target 'bound strength)
-                           'ok
-                           )
-      )] ; this is shit, refactor
+        (define target (pc))
+        (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
+        (modify-actor-status-lifetime target 'bound ,strength)
+        'ok
+        )
+      )]
 
     ['release-grip
      (make-action
@@ -205,10 +206,10 @@
       #:tags '(initiative-based-resolution)
       #:details '(fast)
       #:resolution-rules
-      (λ ()
+      `(
         (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
         (award-xp! 3 "for surviving an encounter with a Grabberkin")
-        (remove-enemy actor)
+        (remove-enemy ,actor)
         ))]
 
     [else
