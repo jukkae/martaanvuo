@@ -264,11 +264,9 @@
                  #:target destination
                  #:tags '(downtime)
                  #:resolution-rules
-                 (λ ()
-
+                 `(
                    (define from
-                     (cond ((route? destination)
-                            (dev-note "TODO: fix cancel-traverse")
+                     (cond ((,route? ,destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-a destination)
                                 (route-b destination)))
@@ -277,19 +275,19 @@
                            ))
 
                    (define to
-                     (cond ((route? destination)
+                     (cond ((,route? ,destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-b destination)
                                 (route-a destination)))
                            (else
-                            destination)
+                            ,destination)
                            ))
                    (reset-pending-action!)
-                   (move-pc-to-location! destination)
+                   (move-pc-to-location! ,destination)
 
                    (describe-cancel-traverse-action from to)
                    (display-location-info-card (current-location))
-                   (when (not (null? (location-items destination)))
+                   (when (not (null? (location-items ,destination)))
                      (pick-up-items!))
                    'ok
 
