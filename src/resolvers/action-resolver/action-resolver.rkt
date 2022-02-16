@@ -16,6 +16,7 @@
 
   "../../combat/combat-action-resolver.rkt"
 
+  "../../core/checks.rkt"
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
