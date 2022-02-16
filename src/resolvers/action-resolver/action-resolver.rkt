@@ -27,6 +27,7 @@
 
   "../../pc/pc.rkt"
 
+  "../../state/logging.rkt"
   "../../state/state.rkt"
 
   "../../world/world.rkt" ; not unused

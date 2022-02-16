@@ -548,7 +548,7 @@
            #:duration 100
            #:tags '(downtime)
            #:resolution-rules
-           (λ ()
+           `(
              (cond ((flag-set? 'ending-run-allowed)
                     (p "At least it's something.")
                     'end-run)
@@ -580,7 +580,7 @@
            #:duration 100
            #:tags '(downtime)
            #:resolution-rules
-           (λ ()
+           `(
              (cond ((flag-set? 'ending-run-allowed)
                     (p "At least it's something.")
                     'end-run)
