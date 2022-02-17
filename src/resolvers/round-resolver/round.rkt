@@ -18,8 +18,6 @@
   "../../fragments/fragment.rkt"
 
   "../../locations/0-types/location.rkt"
-  "../../locations/0-types/place.rkt"
-  "../../locations/0-types/route.rkt"
   "../../locations/routes.rkt"
 
   "../../state/state.rkt")

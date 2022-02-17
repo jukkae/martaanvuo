@@ -8,7 +8,6 @@
           "../fragments/fragment.rkt"
           "../items/item.rkt"
           "../locations/0-types/location.rkt"
-          "../locations/0-types/route.rkt"
           "../pc/pc.rkt"
           "../quests/quest.rkt"
           "../quests/quests.rkt"
@@ -28,7 +27,7 @@
   "../fragments/fragment.rkt"
   "../items/item.rkt"
   "../locations/0-types/location.rkt"
-  "../locations/0-types/route.rkt"
+
   "../pc/pc.rkt"
   "../quests/quest.rkt"
   "../quests/quests.rkt"

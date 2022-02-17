@@ -8,7 +8,7 @@
          get-traverse-text
          route-shortname)
 
-(require "0-types/place.rkt"
+(require "0-types/location.rkt"
          "routes.rkt"
          "../core/api.rkt"
          "../actions/action.rkt")

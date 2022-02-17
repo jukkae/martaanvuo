@@ -14,7 +14,6 @@
   "../core/utils.rkt"
 
   "../locations/0-types/location.rkt"
-  "../locations/0-types/place.rkt"
 
   "../pc/pc.rkt")
 

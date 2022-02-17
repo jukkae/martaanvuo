@@ -5,10 +5,16 @@
 (require "../../actors/actor.rkt"
          "../../items/item.rkt")
 
+(require "../../core/maybe.rkt")
+
+(define-type PlaceId (U Symbol Natural))
+(define-type RouteId (U Symbol Natural))
+(define-type LocationId (U PlaceId RouteId))
+
 (struct
   location
-  ([id : Symbol]
-   [type : Symbol]
+  ([id : LocationId]
+   [type : (Maybe Symbol)]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
    [items : (Listof item)]
@@ -59,13 +65,10 @@
 
 
 
-
-
-; (define-type PlaceId Symbol) TODO: do this for all IDs
 (struct place
   location
-  ([routes : (Listof route)]
-   [on-enter-symbol : Symbol] ; symbol, because lambdas cannot be easily serialized -> fix!
+  ([routes : (Listof RouteId)]
+   [on-enter-symbol : (Maybe Symbol)] ; symbol, because lambdas cannot be easily serialized -> fix!
    [visited? : Boolean]
    [actions-provided : (Listof Symbol)]
    [shortname : String])
@@ -74,10 +77,23 @@
   #:mutable
   #:prefab)
 
-(define *number-of-places* 0)
+(define *number-of-places* : Natural 0)
 
 (define (get-numeric-id) *number-of-places*)
 
+(: make-place (->* ()
+                   (#:id (U Symbol Natural)
+                    #:type Symbol
+                    #:details (Listof Symbol)
+                    #:actors (Listof actor)
+                    #:items (Listof item)
+                    #:features (Listof Symbol)
+                    #:tags (Listof Symbol)
+                    #:on-enter-symbol (Maybe Symbol) ; TODO: s-exp
+                    #:visited? Boolean
+                    #:actions-provided (Listof Symbol)
+                    #:shortname String)
+                   place))
 (define (make-place
          #:id [id (get-numeric-id)]
          #:type [type '()]
@@ -115,12 +131,20 @@
 
 (struct route
   location
-  ([a : Symbol]  ; TODO: should be place-id
-   [b : Symbol])
+  ([a : PlaceId]
+   [b : PlaceId])
   #:mutable
   #:prefab
   #:constructor-name route*)
 
+(: make-route (->* (RouteId PlaceId PlaceId)
+                   (#:type (Maybe Symbol)
+                    #:details (Listof Symbol)
+                    #:actors (Listof actor)
+                    #:items (Listof item)
+                    #:features (Listof Symbol)
+                    #:tags (Listof Symbol))
+                   route))
 (define (make-route id
                     a
                     b
@@ -141,18 +165,23 @@
           a
           b))
 
+(: route-traversed? (->* (route) () Boolean))
 (define (route-traversed? route)
   (location-has-detail? route 'traversed))
 
+(: route-a-visited? (->* (route) () Boolean))
 (define (route-a-visited? route)
   (location-has-detail? route 'a-visited))
 
+(: route-b-visited? (->* (route) () Boolean))
 (define (route-b-visited? route)
   (location-has-detail? route 'b-visited))
 
+(: set-route-traversed! (->* (route) () Void))
 (define (set-route-traversed! route)
   (add-detail-to-location! route 'traversed))
 
+(: route-fully-known? (->* (route) () Boolean))
 (define (route-fully-known? route)
   (and (route-a-visited? route)
        (route-b-visited? route)
