@@ -117,32 +117,34 @@
 
   (define places (make-places))
 
+  (dev-note (format "Places: ~a" places))
+
   (define routes
     (list
     #; (make-path-between perimeter martaanvuo-swamp 'hidden)
-    (make-path-between 'perimeter 'magpie-hill #:no-encounters? #t)
-    (make-path-between 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
-    (make-path-between 'martaanvuo-swamp 'crematory)
-    (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-    (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-    (make-path-between 'martaanvuo-docks 'palsat #:no-encounters? #t)
-    (make-path-between 'martaanvuo-swamp 'luminous-precipice)
-    (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-    (make-path-between 'magpie-hill 'luminous-precipice #:no-encounters? #t)
-    (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
-    (make-path-between 'power-plant-ruins 'sewers-1)
-    (make-path-between 'sewers-1 'sewers-2)
-    (make-path-between 'sewers-1 'workshop)
-    (make-path-between 'sewers-1 'compound-entrance)
-    (make-path-between 'compound-entrance 'murkwater-docks)
-    (make-path-between 'compound-entrance 'workshop)
-    (make-path-between 'murkwater-docks 'workshop #:no-encounters? #t)
-    (make-path-between 'murkwater-docks 'palsat #:no-encounters? #t)
-    (make-path-between 'sewers-2 'storage-closet)
-    (make-path-between 'storage-closet 'workshop)
-    (make-path-between 'workshop 'control-room #:no-encounters? #t)
-    (make-path-between 'workshop 'martaanvuo-source)
-    (make-path-between 'control-room 'reactor-room)
+    (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
+    (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-swamp 'crematory)
+    (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
+    (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
+    (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
+    (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+    (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
+    (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
+    (make-path-between places 'power-plant-ruins 'sewers-1)
+    (make-path-between places 'sewers-1 'sewers-2)
+    (make-path-between places 'sewers-1 'workshop)
+    (make-path-between places 'sewers-1 'compound-entrance)
+    (make-path-between places 'compound-entrance 'murkwater-docks)
+    (make-path-between places 'compound-entrance 'workshop)
+    (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
+    (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
+    (make-path-between places 'sewers-2 'storage-closet)
+    (make-path-between places 'storage-closet 'workshop)
+    (make-path-between places 'workshop 'control-room #:no-encounters? #t)
+    (make-path-between places 'workshop 'martaanvuo-source)
+    (make-path-between places 'control-room 'reactor-room)
   ))
 
   (world places routes 0 0))
@@ -153,14 +155,19 @@
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 ; NB: Modifies a and b, and returns route r between the two
 (define (make-path-between
+         places
          id-a
          id-b
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f]
          #:details [details '()])
 
-  (define place-a (get-place-by-id id-a))
-  (define place-b (get-place-by-id id-b))
+  (define (find-place place-id)
+    (findf (λ (place) (eq? (location-id place) place-id))
+         places))
+
+  (define place-a (find-place id-a))
+  (define place-b (find-place id-b))
 
   (when no-encounters? (set! details (append-element details 'no-encounters)))
 

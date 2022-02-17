@@ -110,8 +110,9 @@
   (: id-symbol Symbol)
   (define id-symbol
     (match id
+     [(? symbol? id) id]
      [Natural (string->symbol (format "place-~a" id))]
-     [Symbol id]))
+     ))
 
   (place* id-symbol
           type
