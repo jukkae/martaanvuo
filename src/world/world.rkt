@@ -19,6 +19,7 @@
 (provide remove-actor-from-its-current-location!)
 (define (remove-actor-from-its-current-location! actor)
   (define current-loc (get-location-by-id (actor-location-id actor)))
+
   (when (not (null? current-loc))
     (remove-actor-from-location! current-loc actor))
   (set-actor-location-id! actor '()))
