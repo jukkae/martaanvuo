@@ -11,7 +11,7 @@
 
 (provide resolve-game)
 (define (resolve-game game-mode)
-  (dev-note "TODO: Handle empty save!")
+
   (case game-mode
     ['begin
      (br)
@@ -25,6 +25,10 @@
      (define serialized-state (read input-file))
 
      (with-handlers ([exn:fail:contract:arity?
+                      (λ (exn)
+                        (handle-broken-save)
+                        (set! game-mode 'begin))]
+                     [exn:fail:contract?
                       (λ (exn)
                         (handle-broken-save)
                         (set! game-mode 'begin))])

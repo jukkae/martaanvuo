@@ -182,5 +182,5 @@
   r)
 
 (define (find-place-by-id places id)
-  (findf (λ (place) (location-is? id place))
+  (findf (λ (place) (eq? (location-id place) id))
          places))

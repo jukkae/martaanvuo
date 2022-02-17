@@ -21,8 +21,7 @@
    [intelligence : (Maybe Natural)]
    [charisma : (Maybe Natural)]
 
-    ; TODO: (Trait (U Symbol Number Boolean)) or something
-   [traits : (HashTable String Any)]
+   [traits : (HashTable String (U Symbol Number Boolean String '()))]
 
    [statuses : (Listof status)]   ; (semi)temporary
    [conditions : (Listof condition)] ; (semi)permanent
