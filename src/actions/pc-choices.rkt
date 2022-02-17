@@ -351,6 +351,7 @@
                             #:details (list direction)
                             #:resolution-rules
                             `(
+                              (displayln "AAAAAA TODO: continue debugging from here")
                               (set-route-traversed! (get-route-by-id ,(location-id route)))
                               (define next-location
                                 ,(if (eq? direction 'a-to-b)

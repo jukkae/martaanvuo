@@ -20,7 +20,7 @@
   (define to (if (eq? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
-  (define key (list (location-id from) (location-id to)))
+  (define key (list from to))
   (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-begin-traverse-narrated key))
   (case key
@@ -100,7 +100,7 @@
   (define to (if (eq? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
-  (define key (list (location-id from) (location-id to)))
+  (define key (list from to))
   (times-finish-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-finish-traverse-narrated key))
   (case key
