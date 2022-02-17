@@ -17,6 +17,8 @@
 
   "../quests/quest.rkt"
 
+  "../world/world.rkt"
+
   "../combat/stance.rkt")
 
 (lazy-require
@@ -95,7 +97,7 @@
 
 ; api
 (define (current-location)
-  (actor-location (pc)))
+  (get-location-by-id (actor-location-id (pc))))
 
 
 ; api
@@ -138,14 +140,14 @@
 ; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
-    (remove-actor-from-location! (actor-location enemy) enemy))
+    (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
   (end-combat!)
   (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
 
 
 ; scripting API
 (define (remove-enemy enemy)
-  (remove-actor-from-location! (actor-location enemy) enemy))
+  (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
 ; scripting API
 (provide actor-in-range?)

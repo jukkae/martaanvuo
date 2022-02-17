@@ -21,13 +21,13 @@
       ['b (route-a route)]))
   endpoint)
 
-(define (set-route-endpoint-visited! route location)
+(define (set-route-endpoint-visited! route endpoint-id)
   (define endpoint
-    (cond ((eq? (location-id location)
-                (location-id (route-a route)))
+    (cond ((eq? endpoint-id
+                (route-a route))
            'a)
-          ((eq? (location-id location)
-                (location-id (route-b route)))
+          ((eq? endpoint-id
+                (route-b route))
            'b)))
   (case endpoint
     ['a (add-detail-to-location! route 'a-visited)]

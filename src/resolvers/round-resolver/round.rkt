@@ -20,7 +20,11 @@
   "../../locations/0-types/location.rkt"
   "../../locations/routes.rkt"
 
-  "../../state/state.rkt")
+  "../../state/state.rkt"
+
+  "../../world/world.rkt"
+
+  )
 
 
 (lazy-require
@@ -50,9 +54,9 @@
      ; todo logic is shit here (should maybe happen in traversal action resolution)
      (let ([location (current-location)])
       (when (place? location)
-        (for ([route (place-routes location)])
+        (for ([route-id (place-routes location)])
           (when #t ; if not hidden
-            (set-route-endpoint-visited! route location)
+            (set-route-endpoint-visited! (get-route-by-id route-id) location)
             ))
         ))
      (case round-begin-status

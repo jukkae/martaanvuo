@@ -35,7 +35,7 @@
 
       (define actor (action-actor action))
       ; a bit hacky check to see if this actor has been removed already
-      (define actor-removed? (empty? (actor-location actor)))
+      (define actor-removed? (empty? (actor-location-id actor)))
 
       (cond ((not actor-removed?)
               (define pre-action-reaction? (get-pre-action-reaction action))

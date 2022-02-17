@@ -1,14 +1,13 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
 (provide (all-defined-out))
 
-(require racket/serialize)
-
-(serializable-struct
- stance
- (sign
-  range
-  description))
+(struct stance
+  ([sign : String]
+   [range : Symbol]
+   [description : Symbol])
+  #:prefab
+  #:mutable)
 
 (define (get-stance-range-numeric-value range)
   (case range

@@ -18,25 +18,17 @@
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
 (define (remove-actor-from-its-current-location! actor)
-  (define current-location (actor-location actor))
+  (define current-location (get-location-by-id (actor-location-id actor)))
   (when (not (eq? '() current-location))
     (remove-actor-from-location! current-location actor))
-  (set-actor-location! actor '()))
+  (set-actor-location-id! actor '()))
 
 ; world-as-simulation / scripting API
 (provide move-actor-to-location!)
 (define (move-actor-to-location! actor location)
   (remove-actor-from-its-current-location! actor)
-  (set-actor-location! actor location)
+  (set-actor-location-id! actor (location-id location))
   (add-actor-to-location! location actor))
-
-(provide get-route-by-id)
-(define (get-route-by-id id)
-  (define w (current-world))
-  (define routes (world-routes w))
-  (define location (findf (λ (route) (eq? id (location-id route)))
-                          routes))
-  location)
 
 (provide (all-from-out
           "0-types/world.rkt"

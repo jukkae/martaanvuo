@@ -120,29 +120,29 @@
   (define routes
     (list
     #; (make-path-between perimeter martaanvuo-swamp 'hidden)
-    (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
-    (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-swamp 'crematory)
-    (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-    (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
-    (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-    (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
-    (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
-    (make-path-between places 'power-plant-ruins 'sewers-1)
-    (make-path-between places 'sewers-1 'sewers-2)
-    (make-path-between places 'sewers-1 'workshop)
-    (make-path-between places 'sewers-1 'compound-entrance)
-    (make-path-between places 'compound-entrance 'murkwater-docks)
-    (make-path-between places 'compound-entrance 'workshop)
-    (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
-    (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
-    (make-path-between places 'sewers-2 'storage-closet)
-    (make-path-between places 'storage-closet 'workshop)
-    (make-path-between places 'workshop 'control-room #:no-encounters? #t)
-    (make-path-between places 'workshop 'martaanvuo-source)
-    (make-path-between places 'control-room 'reactor-room)
+    (make-path-between 'perimeter 'magpie-hill #:no-encounters? #t)
+    (make-path-between 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
+    (make-path-between 'martaanvuo-swamp 'crematory)
+    (make-path-between 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
+    (make-path-between 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
+    (make-path-between 'martaanvuo-docks 'palsat #:no-encounters? #t)
+    (make-path-between 'martaanvuo-swamp 'luminous-precipice)
+    (make-path-between 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+    (make-path-between 'magpie-hill 'luminous-precipice #:no-encounters? #t)
+    (make-path-between 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
+    (make-path-between 'power-plant-ruins 'sewers-1)
+    (make-path-between 'sewers-1 'sewers-2)
+    (make-path-between 'sewers-1 'workshop)
+    (make-path-between 'sewers-1 'compound-entrance)
+    (make-path-between 'compound-entrance 'murkwater-docks)
+    (make-path-between 'compound-entrance 'workshop)
+    (make-path-between 'murkwater-docks 'workshop #:no-encounters? #t)
+    (make-path-between 'murkwater-docks 'palsat #:no-encounters? #t)
+    (make-path-between 'sewers-2 'storage-closet)
+    (make-path-between 'storage-closet 'workshop)
+    (make-path-between 'workshop 'control-room #:no-encounters? #t)
+    (make-path-between 'workshop 'martaanvuo-source)
+    (make-path-between 'control-room 'reactor-room)
   ))
 
   (world places routes 0 0))
@@ -150,36 +150,46 @@
 
 ; not content
 
-(define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 ; NB: Modifies a and b, and returns route r between the two
 (define (make-path-between
-         places
          id-a
          id-b
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f]
          #:details [details '()])
 
-  (define place-a (find-place-by-id places id-a))
-  (define place-b (find-place-by-id places id-b))
-  (set! *number-of-routes* (add1 *number-of-routes*))
+  (define place-a (get-place-by-id id-a))
+  (define place-b (get-place-by-id id-b))
 
   (when no-encounters? (set! details (append-element details 'no-encounters)))
 
   (define actors '())
-  (define route-id *number-of-routes*)
   (define r (make-route
-             route-id
              id-a
              id-b
              #:details details
              #:actors actors))
+  (define route-id (location-id r))
   (set-place-routes! place-a (append-element (place-routes place-a) route-id))
   (set-place-routes! place-b (append-element (place-routes place-b) route-id))
   (when hidden? (error "Implement hidden paths"))
   r)
 
-(define (find-place-by-id places id)
+(provide get-route-by-id)
+(define (get-route-by-id id)
+  (define w (current-world))
+  (define routes (world-routes w))
+  (findf (λ (route) (eq? id (location-id route)))
+         routes))
+
+(provide get-place-by-id)
+(define (get-place-by-id id)
+  (define w (current-world))
+  (define places (world-places w))
   (findf (λ (place) (eq? (location-id place) id))
          places))
+
+(provide get-location-by-id)
+(define (get-location-by-id id)
+  (dev-note "TODO: Fix"))

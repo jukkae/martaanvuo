@@ -2,14 +2,12 @@
 
 (provide (all-defined-out))
 
+(require "location-ids.rkt")
+
 (require "../../actors/actor.rkt"
          "../../items/item.rkt")
 
 (require "../../core/maybe.rkt")
-
-(define-type PlaceId (U Symbol Natural))
-(define-type RouteId (U Symbol Natural))
-(define-type LocationId (U PlaceId RouteId))
 
 (struct
   location
@@ -79,8 +77,6 @@
 
 (define *number-of-places* : Natural 0)
 
-(define (get-numeric-id) *number-of-places*)
-
 (: make-place (->* ()
                    (#:id (U Symbol Natural)
                     #:type Symbol
@@ -95,7 +91,7 @@
                     #:shortname String)
                    place))
 (define (make-place
-         #:id [id (get-numeric-id)]
+         #:id [id *number-of-places*]
          #:type [type '()]
          #:details [details '()]
          #:actors [actors '()]
@@ -110,7 +106,14 @@
 
   (set! *number-of-places* (add1 *number-of-places*))
 
-  (place* id
+
+  (: id-symbol Symbol)
+  (define id-symbol
+    (match id
+     [Natural (string->symbol (format "place-~a" id))]
+     [Symbol id]))
+
+  (place* id-symbol
           type
           details
           actors
@@ -137,17 +140,20 @@
   #:prefab
   #:constructor-name route*)
 
-(: make-route (->* (RouteId PlaceId PlaceId)
-                   (#:type (Maybe Symbol)
+(define *number-of-routes* 0)
+
+(: make-route (->* (PlaceId PlaceId)
+                   (#:id RouteId
+                    #:type (Maybe Symbol)
                     #:details (Listof Symbol)
                     #:actors (Listof actor)
                     #:items (Listof item)
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol))
                    route))
-(define (make-route id
-                    a
+(define (make-route a
                     b
+                    #:id [id *number-of-routes*]
                     #:type [type '()]
                     #:details [details '()]
                     #:actors [actors '()]
@@ -155,7 +161,15 @@
                     #:features [features '()]
                     #:tags [tags '()])
 
-  (route* id
+  (set! *number-of-routes* (add1 *number-of-routes*))
+
+  (: id-symbol Symbol)
+  (define id-symbol
+    (match id
+     [Natural (string->symbol (format "route-~a" id))]
+     [Symbol id]))
+
+  (route* id-symbol
           type
           details
           actors

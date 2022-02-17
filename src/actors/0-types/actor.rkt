@@ -7,7 +7,9 @@
 (require "status.rkt"
          "condition.rkt")
 
-(require "../../items/0-types/item.rkt")
+(require "../../items/0-types/item.rkt"
+         "../../combat/stance.rkt"
+         "../../locations/0-types/location-ids.rkt")
 
 (struct actor
   ([name : String]
@@ -27,8 +29,8 @@
    [conditions : (Listof condition)] ; (semi)permanent
 
    [inventory : (Listof item)]
-   [location : (Maybe Any)] ; TODO: (Maybe location) -> requires typing locations
-   [stance : (Maybe Any)]) ; only NPCs ; TODO: (Maybe stance) -> requires typing stances
+   [location-id : (Maybe LocationId)]
+   [stance : (Maybe stance)]) ; only NPCs
   #:constructor-name actor*
   #:mutable
   #:prefab)
