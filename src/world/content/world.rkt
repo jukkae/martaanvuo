@@ -117,8 +117,6 @@
 
   (define places (make-places))
 
-  (dev-note (format "Places: ~a" places))
-
   (define routes
     (list
     #; (make-path-between perimeter martaanvuo-swamp 'hidden)
@@ -153,7 +151,7 @@
 ; not content
 
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-; NB: Modifies a and b, and returns route r between the two
+; NB: Modifies a and b in places, and returns route r between the two
 (define (make-path-between
          places
          id-a
@@ -199,4 +197,8 @@
 
 (provide get-location-by-id)
 (define (get-location-by-id id)
-  (dev-note "TODO: Fix"))
+  (cond ((not (null? (get-place-by-id id)))
+         (get-place-by-id id))
+        ((not (null? (get-route-by-id id))
+         (get-route-by-id id)))
+        (else '())))

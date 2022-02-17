@@ -18,9 +18,9 @@
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
 (define (remove-actor-from-its-current-location! actor)
-  (define current-location (get-location-by-id (actor-location-id actor)))
-  (when (not (eq? '() current-location))
-    (remove-actor-from-location! current-location actor))
+  (define current-loc (get-location-by-id (actor-location-id actor)))
+  (when (not (null? current-loc))
+    (remove-actor-from-location! current-loc actor))
   (set-actor-location-id! actor '()))
 
 ; world-as-simulation / scripting API
