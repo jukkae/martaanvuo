@@ -297,14 +297,14 @@
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
 
          (when (place? (current-location))
-           (for/list ([route (place-routes (current-location))])
-
+           (for/list ([route-id (place-routes (current-location))])
+             (define route (get-route-by-id route-id))
              (define direction
                (cond ((eq? (location-id (current-location))
-                           (location-id (route-a route)))
+                           (route-a route))
                       'a-to-b)
                      ((eq? (location-id (current-location))
-                           (location-id (route-b route)))
+                           (route-b route))
                       'b-to-a)))
 
              (cond ((memq 'locked (location-details route))

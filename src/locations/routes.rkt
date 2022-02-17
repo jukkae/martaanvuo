@@ -10,10 +10,10 @@
 (define (route-other-end-from route start-location)
   (define start
     (cond ((eq? (location-id start-location)
-                (location-id (route-a route)))
+                (route-a route))
            'a)
           ((eq? (location-id start-location)
-                (location-id (route-b route)))
+                (route-b route))
            'b)))
   (define endpoint
     (case start
@@ -37,10 +37,10 @@
 (define (route-place-known? route place)
   (define endpoint
     (cond ((eq? (location-id place)
-                (location-id (route-a route)))
+                (route-a route))
            'a)
           ((eq? (location-id place)
-                (location-id (route-b route)))
+                (route-b route))
            'b)))
   (case endpoint
     ['a (place-visited? (route-a route))]
