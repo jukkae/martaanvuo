@@ -1,39 +1,14 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
-(provide (all-defined-out))
+(provide (struct-out condition))
 
-(require racket/lazy-require)
-(require racket/serialize)
+(require "../../core/maybe.rkt")
 
-(require "../../core/io.rkt"
-         "../../core/utils.rkt")
+(struct condition
+ ([type : Symbol]
+  [details : (Listof Symbol)]
+  [on-end-round-rules : (Maybe Sexp)])
+  #:prefab
+  #:mutable)
 
-(lazy-require
- ["actor.rkt"
-  (take-damage)])
 
-(lazy-require
- ["../state/state.rkt"
-  (display-combatant-info)])
-
-(serializable-struct
- condition
- (type
-  (details #:mutable)
-  ; on-end-round! ; lambda ; doesn't serialize
-  ))
-
-(define (process-condition-on-end-turn owner condition)
-  (case condition
-    ['bleed
-     (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-     (cond ((= 1 bleed-damage-roll)
-            (notice "Bleed check: 1d6 = 1: [1] => 1 dmg")
-            (take-damage owner 1 'bleed)
-            (display-combatant-info owner)
-            )
-           (else
-            (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll))))]
-    ['ankle-broken '()]
-    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" (condition-type condition)))])
-  )

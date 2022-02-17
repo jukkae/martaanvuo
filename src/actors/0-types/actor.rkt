@@ -1,35 +1,35 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
-(provide (all-defined-out))
+(provide (struct-out actor))
 
-(require racket/serialize)
+(require "../../core/maybe.rkt")
 
-(serializable-struct
- actor
- (name
+(require "status.rkt"
+         "condition.rkt")
 
-  ; symbol
-  [type #:mutable]
+(require "../../items/0-types/item.rkt")
 
-  ; always numbers
-  [hp #:mutable]
-  [max-hp #:mutable]
+(struct actor
+  ([name : String]
+   [type : Symbol]
+   [hp : Integer]
+   [max-hp : Natural]
 
-  ; number or '()
-  [strength #:mutable]
-  [dexterity #:mutable]
-  [constitution #:mutable]
-  [intelligence #:mutable]
-  [charisma #:mutable]
+   [strength : (Maybe Natural)]
+   [dexterity : (Maybe Natural)]
+   [constitution : (Maybe Natural)]
+   [intelligence : (Maybe Natural)]
+   [charisma : (Maybe Natural)]
 
-  ; hash of string-to-whatever-makes-sense
-  [traits #:mutable]
+    ; TODO: (Trait (U Symbol Number Boolean)) or something
+   [traits : (HashTable String Any)]
 
-  ; lists of symbols
-  [statuses #:mutable]   ; (semi)temporary
-  [conditions #:mutable] ; (semi)permanent
+   [statuses : (Listof status)]   ; (semi)temporary
+   [conditions : (Listof condition)] ; (semi)permanent
 
-  [inventory #:mutable]
-  [location #:mutable]
-  [stance #:mutable]) ; only NPCs
- #:constructor-name actor*)
+   [inventory : (Listof item)]
+   [location : (Maybe Any)] ; TODO: (Maybe location) -> requires typing locations
+   [stance : (Maybe Any)]) ; only NPCs ; TODO: (Maybe stance) -> requires typing stances
+  #:constructor-name actor*
+  #:mutable
+  #:prefab)

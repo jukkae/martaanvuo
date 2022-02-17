@@ -7,7 +7,7 @@
 
   "round-resolver/round-resolver.rkt"
 
-  "../actors/pc-actor.rkt"
+  "../actors/actor.rkt"
 
   "../core/io.rkt"
   "../core/session.rkt"
@@ -29,24 +29,24 @@
       ; first run of the life
       (define first-run?
         (case m
-         ['begin #t]
-         ['restart #t]
-         ['else #f]))
+          ['begin #t]
+          ['restart #t]
+          ['else #f]))
 
       (define run-exit-status
         (resolve-run m #:suppress-new-chapter? (not first-run?)))
 
       (case run-exit-status
         ['pc-dead (on-end-life)
-                  (end-life 'pc-dead)]
+         (end-life 'pc-dead)]
         ['win-game (end-life 'win-game)]
         ['end-run (loop 'begin)]
         ['recurse (loop 'recurse)]
         ['restart (end-life 'restart)]
         [else
-          (dev-note "Unknown run exit status:")
-          (displayln run-exit-status)
-          (error "FIXME")])
+         (dev-note "Unknown run exit status:")
+         (displayln run-exit-status)
+         (error "FIXME")])
       )
     ))
 

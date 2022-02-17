@@ -13,8 +13,6 @@
 
   "../../actors/actor.rkt"
 
-  "../../actors/pc-actor.rkt"
-
   "../../blurbs/blurbs.rkt"
 
   "../../combat/combat-action-resolver.rkt"

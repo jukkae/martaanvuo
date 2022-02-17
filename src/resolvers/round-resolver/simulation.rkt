@@ -8,7 +8,7 @@
   "event.rkt"
   "timeline.rkt"
 
-  "../../actors/pc-actor.rkt"
+  "../../actors/actor.rkt"
 
   "../../core/utils.rkt"
 
@@ -31,12 +31,12 @@
   (define new-pc-hunger-level (pc-hunger-level))
 
   (if (not (eq? old-pc-hunger-level new-pc-hunger-level))
-    (make-event
-     new-pc-hunger-level
-     (time-of-day-from-jiffies (world-elapsed-time (current-world)))
-     #:interrupting? #f)
+      (make-event
+       new-pc-hunger-level
+       (time-of-day-from-jiffies (world-elapsed-time (current-world)))
+       #:interrupting? #f)
 
-    '()))
+      '()))
 
 ; increment world time
 ; return a list of events that occur at new timestamp
@@ -49,7 +49,7 @@
    (current-world)
    new-world-elapsed-time)
 
-   (current-elapsed-time (add1 (current-elapsed-time)))
+  (current-elapsed-time (add1 (current-elapsed-time)))
 
   (define new-hunger-level? (hunger++))
   (when (not (null? new-hunger-level?))

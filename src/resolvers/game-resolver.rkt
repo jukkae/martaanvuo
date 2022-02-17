@@ -11,6 +11,7 @@
 
 (provide resolve-game)
 (define (resolve-game game-mode)
+  (dev-note "TODO: Handle empty save!")
   (case game-mode
     ['begin
      (br)

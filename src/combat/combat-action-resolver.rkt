@@ -22,7 +22,6 @@
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"
@@ -82,8 +81,8 @@
 
   (define body
     (tbody
-      (tr "damage"
-          (format "~a: [~a]" damage-roll-formula damage-roll-result))))
+     (tr "damage"
+         (format "~a: [~a]" damage-roll-formula damage-roll-result))))
   (info-card body title)
 
   (define action-result 'ok)
@@ -107,12 +106,12 @@
 
   (define descr
     (format "melee attack, ~a vs ~a (~a)"
-    (get-combatant-name actor)
-    (get-combatant-name target)
-    (case action-result
-     ['ok "hit"]
-     ['dead "hit and kill"]
-     [else action-result])))
+            (get-combatant-name actor)
+            (get-combatant-name target)
+            (case action-result
+              ['ok "hit"]
+              ['dead "hit and kill"]
+              [else action-result])))
   (add-combat-event descr)
 
   action-result
@@ -173,10 +172,10 @@
   (define gun (get-firearm actor))
   (case (ranged-weapon-ammo-left gun)
     [(0) (p "Click. Out of ammo.")
-         (award-xp! 1 "Whoops.")
-         (set-flag 'aware-of-being-out-of-ammo)
-         (increment-achievement! 'forgetful)
-         'failure]
+     (award-xp! 1 "Whoops.")
+     (set-flag 'aware-of-being-out-of-ammo)
+     (increment-achievement! 'forgetful)
+     'failure]
     [else (resolve-successful-shoot-action! action)]
     )
   )
@@ -193,52 +192,52 @@
            statuses))
 
   (cond (actor-bound-status
-    (define target-number (status-lifetime actor-bound-status))
+         (define target-number (status-lifetime actor-bound-status))
 
-    (define dice-sides 4)
-    (define bonus str-mod)
-    (define roll (d 1 dice-sides))
-    (define result (+ roll bonus))
+         (define dice-sides 4)
+         (define bonus str-mod)
+         (define roll (d 1 dice-sides))
+         (define result (+ roll bonus))
 
-    (define success?
-      (cond ((= roll 1) #f)
-            ((= roll dice-sides) #t)
-            (else (> result target-number))))
+         (define success?
+           (cond ((= roll 1) #f)
+                 ((= roll dice-sides) #t)
+                 (else (> result target-number))))
 
-    (define success-string
-      (if success?
-          "success"
-          "failure"))
+         (define success-string
+           (if success?
+               "success"
+               "failure"))
 
-    (notice
-     (format "Resolution: 1d10 + bonus > TN: ~a + ~a = ~a > ~a - ~a"
-             (number->string roll)
-             (number->string bonus)
-             (number->string result)
-             (number->string target-number)
-             success-string))
-    ; crit = nat MAX = always succeed,
-    ; crit fail = nat 1 = always fail, avoid hard failures?
-    (wait-for-confirm)
-    (cond (success?
-           (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
-           (award-xp! 4)
-           (define enemies (get-current-enemies))
-           (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
-           (remove-actor-from-its-current-location! grabberkin)
-           (actor-remove-status! actor actor-bound-status)
-           'ok)
-          (else
-           (p "The grip is still too strong for Otava to break it.")
-           (award-xp! 1)
-           'failed))
-  )
-  (else ; pc not bound
-    (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
-    (award-xp! 3)
-    (dev-note "Fix me: shouldn't end combat")
-    'end-combat
-    ))
+         (notice
+          (format "Resolution: 1d10 + bonus > TN: ~a + ~a = ~a > ~a - ~a"
+                  (number->string roll)
+                  (number->string bonus)
+                  (number->string result)
+                  (number->string target-number)
+                  success-string))
+         ; crit = nat MAX = always succeed,
+         ; crit fail = nat 1 = always fail, avoid hard failures?
+         (wait-for-confirm)
+         (cond (success?
+                (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
+                (award-xp! 4)
+                (define enemies (get-current-enemies))
+                (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
+                (remove-actor-from-its-current-location! grabberkin)
+                (actor-remove-status! actor actor-bound-status)
+                'ok)
+               (else
+                (p "The grip is still too strong for Otava to break it.")
+                (award-xp! 1)
+                'failed))
+         )
+        (else ; pc not bound
+         (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
+         (award-xp! 3)
+         (dev-note "Fix me: shouldn't end combat")
+         'end-combat
+         ))
   )
 
 

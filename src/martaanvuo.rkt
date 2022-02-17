@@ -4,7 +4,6 @@
 
 (require "resolvers/game-resolver.rkt")
 
-
 (define (begin-session)
   ; (random-seed 13)
 

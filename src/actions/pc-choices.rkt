@@ -9,7 +9,6 @@
   "choice.rkt"
 
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
 
   "../blurbs/blurbs.rkt"
 

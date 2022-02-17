@@ -6,7 +6,6 @@
 
 (require
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
   "../items/item.rkt"
   "../core/io.rkt"
   "../core/utils.rkt")
@@ -47,8 +46,8 @@
                                            (format "~a [~a]"
                                                    (actor-strength actor)
                                                    (get-modifier-string
-                                                     (get-attribute-modifier-for
-                                                       (actor-strength actor))))))))
+                                                    (get-attribute-modifier-for
+                                                     (actor-strength actor))))))))
   (when (not (null? (actor-dexterity actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
@@ -56,8 +55,8 @@
                                            (format "~a [~a]"
                                                    (actor-dexterity actor)
                                                    (get-modifier-string
-                                                     (get-attribute-modifier-for
-                                                       (actor-dexterity actor))))))))
+                                                    (get-attribute-modifier-for
+                                                     (actor-dexterity actor))))))))
   (when (not (null? (actor-constitution actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
@@ -65,8 +64,8 @@
                                            (format "~a [~a]"
                                                    (actor-constitution actor)
                                                    (get-modifier-string
-                                                     (get-attribute-modifier-for
-                                                       (actor-constitution actor))))))))
+                                                    (get-attribute-modifier-for
+                                                     (actor-constitution actor))))))))
   (when (not (null? (actor-intelligence actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
@@ -74,8 +73,8 @@
                                            (format "~a [~a]"
                                                    (actor-intelligence actor)
                                                    (get-modifier-string
-                                                     (get-attribute-modifier-for
-                                                       (actor-intelligence actor))))))))
+                                                    (get-attribute-modifier-for
+                                                     (actor-intelligence actor))))))))
   (when (not (null? (actor-charisma actor)))
     (set! attributes-list (append-element attributes-list
                                           (tr
@@ -83,8 +82,8 @@
                                            (format "~a [~a]"
                                                    (actor-charisma actor)
                                                    (get-modifier-string
-                                                     (get-attribute-modifier-for
-                                                       (actor-charisma actor))))))))
+                                                    (get-attribute-modifier-for
+                                                     (actor-charisma actor))))))))
 
   (define traits (actor-traits actor))
   (define traits-list

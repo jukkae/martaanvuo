@@ -8,7 +8,6 @@
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
-  "../../actors/pc-actor.rkt"
 
   "../../enemies/blindscraper.rkt"
   "../../enemies/grabberkin.rkt"
