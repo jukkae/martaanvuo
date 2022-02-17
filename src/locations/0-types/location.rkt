@@ -17,7 +17,7 @@
    [type : (Maybe Symbol)]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
-   [items : (Listof item)]
+   [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
    [tags : (Listof Symbol)])
   #:prefab
@@ -86,7 +86,7 @@
                     #:type Symbol
                     #:details (Listof Symbol)
                     #:actors (Listof actor)
-                    #:items (Listof item)
+                    #:items (Listof (U item Symbol))
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol)
                     #:on-enter-symbol (Maybe Symbol) ; TODO: s-exp

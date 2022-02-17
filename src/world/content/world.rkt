@@ -168,14 +168,15 @@
   (when no-encounters? (set! details (append-element details 'no-encounters)))
 
   (define actors '())
+  (define route-id *number-of-routes*)
   (define r (make-route
-             *number-of-routes*
-             place-a
-             place-b
+             route-id
+             id-a
+             id-b
              #:details details
              #:actors actors))
-  (set-place-routes! place-a (append-element (place-routes place-a) r))
-  (set-place-routes! place-b (append-element (place-routes place-b) r))
+  (set-place-routes! place-a (append-element (place-routes place-a) route-id))
+  (set-place-routes! place-b (append-element (place-routes place-b) route-id))
   (when hidden? (error "Implement hidden paths"))
   r)
 
