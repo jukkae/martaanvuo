@@ -56,7 +56,7 @@
       (when (place? location)
         (for ([route-id (place-routes location)])
           (when #t ; if not hidden
-            (set-route-endpoint-visited! (get-route-by-id route-id) location)
+            (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
             ))
         ))
      (case round-begin-status

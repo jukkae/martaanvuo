@@ -352,6 +352,7 @@
                             #:resolution-rules
                             `(
                               (set-route-traversed! (get-route-by-id (,location-id ,route)))
+
                               (define next-location-id
                                 (if (eq? ',direction ,''a-to-b)
                                      (,route-b ,route)
