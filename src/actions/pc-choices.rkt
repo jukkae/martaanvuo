@@ -351,12 +351,12 @@
                             #:details (list direction)
                             #:resolution-rules
                             `(
-                              (displayln "AAAAAA TODO: continue debugging from here")
-                              (set-route-traversed! (get-route-by-id ,(location-id route)))
-                              (define next-location
-                                ,(if (eq? direction 'a-to-b)
-                                     (route-b route)
-                                     (route-a route)))
+                              (set-route-traversed! (get-route-by-id (,location-id ,route)))
+                              (define next-location-id
+                                (if (eq? ',direction ,''a-to-b)
+                                     (,route-b ,route)
+                                     (,route-a ,route)))
+                              (define next-location (get-location-by-id next-location-id))
                               (move-pc-to-location! next-location)
                               'ok
                               )
