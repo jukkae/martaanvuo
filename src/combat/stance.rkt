@@ -5,7 +5,7 @@
 (struct stance
   ([sign : String]
    [range : Symbol]
-   [description : Symbol])
+   [description : String])
   #:prefab
   #:mutable)
 

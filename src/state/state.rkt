@@ -111,7 +111,8 @@
   [life #:mutable]
   [current-fragment-id #:mutable]
   [combat-timeline #:mutable]
-  [show-round-summary? #:mutable]))
+  [show-round-summary? #:mutable])
+ #:transparent)
 
 
 (define (save)
@@ -142,6 +143,15 @@
      (current-fragment-id)
      (current-combat-timeline)
      (current-show-round-summary?)))
+
+  (displayln "")
+  (displayln (format "~a" st))
+  (displayln "")
+
+  (displayln "CPA:")
+  (displayln (format "~a" (current-pending-action)))
+  (define failing-s (serialize (current-pending-action)))
+  (displayln "OK")
 
   (define serialized-state (serialize st))
   (write serialized-state output-file)
