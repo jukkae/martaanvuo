@@ -321,7 +321,11 @@
                           (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
                           (consume-ammo! 1)
                           (remove-detail-from-location! route 'locked)
-                          (make-empty-action))))
+                          (make-action
+                           #:symbol 'skip
+                           #:actor (pc)
+                           #:duration 0
+                           #:tags '(downtime)))))
                      (when (and (pc-has-item? 'bolt-cutters))
                        (make-choice
                         'cut-the-lock
@@ -355,8 +359,8 @@
 
                               (define next-location-id
                                 (if (eq? ',direction ,''a-to-b)
-                                     (,route-b ,route)
-                                     (,route-a ,route)))
+                                    (,route-b ,route)
+                                    (,route-a ,route)))
                               (define next-location (get-location-by-id next-location-id))
                               (move-pc-to-location! next-location)
                               'ok

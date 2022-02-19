@@ -1,6 +1,7 @@
 #lang at-exp typed/racket
 
-(provide (struct-out actor))
+(provide (struct-out actor)
+         ActorId)
 
 (require "../../core/maybe.rkt")
 
@@ -11,8 +12,11 @@
          "../../combat/stance.rkt"
          "../../locations/0-types/location-ids.rkt")
 
+(define-type ActorId (U Symbol Natural))
+
 (struct actor
-  ([name : String]
+  ([id : ActorId]
+   [name : String]
    [type : Symbol]
    [hp : Integer]
    [max-hp : Natural]
