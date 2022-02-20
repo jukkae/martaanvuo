@@ -1,8 +1,7 @@
 #lang at-exp racket
 
 
-(require racket/lazy-require
-         racket/serialize)
+(require racket/lazy-require)
 
 (require "0-types/world.rkt"
          "content/world.rkt")
@@ -12,8 +11,20 @@
          "../locations/0-types/location.rkt"
          "../core/utils.rkt")
 
-(lazy-require ["../state/state.rkt" (current-world)])
+(lazy-require ["../state/state.rkt"
+               (current-world
+                current-location)])
 
+; API
+(define (get-current-actors)
+  (define actors (location-actors (current-location)))
+  actors)
+
+(define (get-actor id)
+  (define actors (get-current-actors))
+  (findf (λ (a) (eq? (actor-id a) id)
+           actors))
+  )
 
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
