@@ -313,7 +313,7 @@
          max-hp
          max-lp)
   (pc-actor*
-   name 'pc max-hp max-hp
+   'pc name 'pc max-hp max-hp
    ; attributes
    '() '() '() '() '()
    ; traits etc
