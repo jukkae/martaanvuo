@@ -23,8 +23,8 @@
 (provide get-actor)
 (define (get-actor id)
   (define actors (get-current-actors))
-  (findf (λ (a) (eq? (actor-id a) id)
-           actors))
+  (findf (λ (a) (eq? (actor-id a) id))
+         actors)
   )
 
 ; world-as-simulation / scripting API

@@ -26,7 +26,7 @@
   )
 
 (: make-action (->* (#:symbol Symbol
-                     #:actor-id ActorId
+                     #:actor actor
                      #:duration Natural)
                     (#:target (Maybe (U item ActorId LocationId))
                      #:tags (Listof Symbol)
@@ -37,7 +37,7 @@
                     action))
 (define (make-action
          #:symbol symbol
-         #:actor-id actor-id
+         #:actor actor
          #:duration duration
          #:target [target '()]
          #:tags [tags '()]
@@ -45,7 +45,7 @@
          #:resolution-rules [resolution-rules '()]
          #:on-before-rules [on-before-rules '()]
          #:on-after-rules [on-after-rules '()])
-  (action* symbol actor-id duration target tags details resolution-rules on-before-rules on-after-rules))
+  (action* symbol (actor-id actor) duration target tags details resolution-rules on-before-rules on-after-rules))
 
 
 (define (visible-in-combat? [action : action])

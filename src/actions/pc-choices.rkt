@@ -258,7 +258,7 @@
                  #:symbol 'cancel-traverse
                  #:actor (pc)
                  #:duration 100
-                 #:target destination
+                 #:target (location-id destination)
                  #:tags '(downtime)
                  #:resolution-rules
                  `(
@@ -341,6 +341,10 @@
                            #:tags '(downtime)
                            )))))
                     )
+
+
+
+
                    (else ; route is traversable
                     (define traverse-duration 100)
                     (make-choice
@@ -350,70 +354,70 @@
                             #:symbol 'traverse
                             #:actor (pc)
                             #:duration traverse-duration
-                            #:target route
+                            #:target (location-id route)
                             #:tags '(downtime)
                             #:details (list direction)
                             #:resolution-rules
                             `(
-                              (set-route-traversed! (get-route-by-id (,location-id ,route)))
+                              (set-route-traversed! (get-route-by-id ',(location-id route)))
 
                               (define next-location-id
-                                (if (eq? ',direction ,''a-to-b)
-                                    (,route-b ,route)
-                                    (,route-a ,route)))
+                                ',(if (eq? direction 'a-to-b)
+                                      (route-b route)
+                                      (route-a route)))
                               (define next-location (get-location-by-id next-location-id))
                               (move-pc-to-location! next-location)
                               'ok
                               )
-                            #:on-before-rules
-                            `(
-                              (let/ec return
-                                (describe-begin-traverse-action ,route ',direction)
-                                (move-pc-to-location! ,route)
-                                ;(dev-note "TODO: Handle pending actions")
-                                (define elapsed-time 0)
+                            ; #:on-before-rules
+                            ; `(
+                            ;   (let/ec return
+                            ;     (describe-begin-traverse-action ,route ',direction)
+                            ;     (move-pc-to-location! ,route)
+                            ;     ;(dev-note "TODO: Handle pending actions")
+                            ;     (define elapsed-time 0)
 
-                                (when (not (location-has-detail? (current-location) 'no-encounters))
-                                  (define encounter-roll (d 1 6))
-                                  (notice (format "Encounter roll: 1d6 < 6: [~a] – ~a"
-                                                  encounter-roll
-                                                  (if (< encounter-roll 6)
-                                                      "fail"
-                                                      "success")))
-                                  (when (< encounter-roll 6)
+                            ;     (when (not (location-has-detail? (current-location) 'no-encounters))
+                            ;       (define encounter-roll (d 1 6))
+                            ;       (notice (format "Encounter roll: 1d6 < 6: [~a] – ~a"
+                            ;                       encounter-roll
+                            ;                       (if (< encounter-roll 6)
+                            ;                           "fail"
+                            ;                           "success")))
+                            ;       (when (< encounter-roll 6)
 
-                                    (define resolve-events
-                                      (list
-                                       (make-event ,''spawn-enemies
-                                                   '() ; pack info about enemies / event here
-                                                   #:interrupting? #t)))
-                                    (define metadata '(interrupted))
-                                    (define duration
-                                      (exact-floor (/
-                                                    ,traverse-duration
-                                                    3)))
+                            ;         (define resolve-events
+                            ;           (list
+                            ;            (make-event ,''spawn-enemies
+                            ;                        '() ; pack info about enemies / event here
+                            ;                        #:interrupting? #t)))
+                            ;         (define metadata '(interrupted))
+                            ;         (define duration
+                            ;           (exact-floor (/
+                            ;                         ,traverse-duration
+                            ;                         3)))
 
-                                    (set! elapsed-time duration)
+                            ;         (set! elapsed-time duration)
 
-                                    (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                                    (define world-events (timeline-events world-tl))
+                            ;         (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                            ;         (define world-events (timeline-events world-tl))
 
-                                    (define all-events (append world-events resolve-events))
-                                    (define all-metadata (append (timeline-metadata world-tl) metadata))
+                            ;         (define all-events (append world-events resolve-events))
+                            ;         (define all-metadata (append (timeline-metadata world-tl) metadata))
 
-                                    (define tl (timeline all-metadata all-events duration))
+                            ;         (define tl (timeline all-metadata all-events duration))
 
-                                    (process-timeline! tl)
-                                    (return tl)))
+                            ;         (process-timeline! tl)
+                            ;         (return tl)))
 
-                                'before-action-ok
-                                ))
-                            #:on-after-rules
-                            `(
-                              (describe-finish-traverse-action ,route ',direction)
-                              (when (not (null? (location-items (current-location))))
-                                (pick-up-items!))
-                              )
+                            ;     'before-action-ok
+                            ;     ))
+                            ; #:on-after-rules
+                            ; `(
+                            ;   (describe-finish-traverse-action ,route ',direction)
+                            ;   (when (not (null? (location-items (current-location))))
+                            ;     (pick-up-items!))
+                            ;   )
 
                             )))))
              )))
@@ -440,9 +444,9 @@
                   #:resolution-rules
                   `(
                     (define skill 0)
-                    (define target 8)
+                    (define target-number 8)
 
-                    (define successful? (skill-check "Forage" skill target))
+                    (define successful? (skill-check "Forage" skill target-number))
                     (cond (successful?
                            (define amount (d 1 4)) ; portions = days of survival
                            (define amount-string
