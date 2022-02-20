@@ -9,6 +9,8 @@
 
   "../../actors/actor.rkt"
 
+  "../../core/utils.rkt"
+
   "../../enemies/blindscraper.rkt"
   "../../enemies/grabberkin.rkt"
 
@@ -17,8 +19,8 @@
 (require "action-queue.rkt")
 
 (lazy-require
- ["round-resolver.rkt"
-  (get-next-pc-action)])
+ ["round-resolver.rkt" (get-next-pc-action)]
+ ["../../world/world.rkt" (get-actor)])
 
 
 (define (get-next-npc-action actor)
@@ -33,7 +35,7 @@
          (get-next-pc-action))))
 
 (define (get-pre-action-reaction action)
-  (define actor (action-actor action))
+  (define actor (get-actor (action-actor-id action)))
   (cond ((not (pc-actor? actor))
          (cond ((equal? (actor-name actor) "Grabberkin")
                 (get-grabberkin-reaction actor))
@@ -58,7 +60,7 @@
     ; remove own actions from queue
     (for ([actor npcs])
       (define actions (filter
-                       (λ (action) (eq? actor (action-actor action)))
+                       (λ (action) (eq? (actor-id actor) (action-actor-id action)))
                        action-queue))
       (remove-from-action-queue actions)
       ; blam blam
@@ -74,9 +76,9 @@
   (define action-mod 0)
 
   (cond ((has-tag? action 'fast)
-          (set! action-mod 2))
+         (set! action-mod 2))
         ((has-tag? action 'slow)
-          (set! action-mod -4)))
+         (set! action-mod -4)))
 
   (define dice-1 (d 1 6))
   (define dice-2 (d 1 6))

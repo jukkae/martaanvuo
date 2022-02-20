@@ -20,6 +20,7 @@
   (define actors (location-actors (current-location)))
   actors)
 
+(provide get-actor)
 (define (get-actor id)
   (define actors (get-current-actors))
   (findf (λ (a) (eq? (actor-id a) id)

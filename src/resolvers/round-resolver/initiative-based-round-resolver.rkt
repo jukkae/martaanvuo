@@ -1,5 +1,6 @@
 #lang at-exp racket
 
+(require racket/lazy-require)
 
 (require
   "ai.rkt"
@@ -22,6 +23,8 @@
 
   "../../state/state.rkt")
 
+(lazy-require ["../../world.world.rkt" (get-actor)])
+
 
 (provide resolve-turns!)
 (define (resolve-turns!)
@@ -33,7 +36,7 @@
       (end-round-early))
     (for ([action action-queue])
 
-      (define actor (action-actor action))
+      (define actor (get-actor (action-actor-id action)))
       ; a bit hacky check to see if this actor has been removed already
       (define actor-removed? (empty? (actor-location-id actor)))
 
@@ -49,7 +52,7 @@
                 ;(define action post-action-reaction-from-target?)
                 (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
-              (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (action-actor action))turn-result))
+              (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (get-actor (action-actor-id action))) turn-result))
               (when (empty? (get-current-enemies))
                 (dev-note (format "-- No more enemies"))
                 (set! turn-result 'end-combat)

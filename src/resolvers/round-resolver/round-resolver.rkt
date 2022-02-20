@@ -118,4 +118,4 @@
   (for ([actor actors])
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
-      (add-to-action-queue next-action (get-action-initiative action actor)))))
+      (add-to-action-queue next-action (get-action-initiative next-action actor)))))

@@ -37,7 +37,7 @@
       (define initiative (car action-with-initiative))
       (define action-description
 
-        (format "~a" (actor-name (get-actor (action-actor-id action))))) ; action is hidden information
+        (format "~a" (actor-name (get-actor (action-actor-id action)))))
       (tr action-description (format "~a" initiative))))
   ; TODO: Only show initiatives when more than one combatant do something, and exclude the ones that only "skip"
   (info-card actions "Action initiatives")

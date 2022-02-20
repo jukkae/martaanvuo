@@ -43,12 +43,12 @@
    describe-finish-traverse-action
    describe-cancel-traverse-action
    location-on-enter!
-   )])
-
-(lazy-require
+   )]
  ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
-   )])
+   )]
+ ["../world/world.rkt"
+  (get-actor)])
 
 
 ; "generic" attack with type
@@ -118,8 +118,8 @@
   )
 
 (define (resolve-successful-shoot-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+  (define actor (get-actor (action-actor-id action)))
+  (define target (get-actor (action-target action)))
   (define title
     (format "Ranged [firearms], ~a vs ~a"
             (get-combatant-name actor)
@@ -167,8 +167,8 @@
   )
 
 (define (resolve-shoot-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+  (define actor (get-actor (action-actor-id action)))
+  (define target (get-actor (action-target action)))
   (define gun (get-firearm actor))
   (case (ranged-weapon-ammo-left gun)
     [(0) (p "Click. Out of ammo.")

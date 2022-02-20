@@ -31,7 +31,7 @@
   "../../state/logging.rkt"
   "../../state/state.rkt"
 
-  "../../world/world.rkt" ; not unused
+  "../../world/world.rkt"
 
   )
 
@@ -62,10 +62,10 @@
 
 ; action-result is either a timeline, a symbol, or void
 (define (resolve-action! action)
-  (when (actor-alive? (action-actor action))
+  (when (actor-alive? (get-actor (action-actor-id action)))
     (define result 'not-resolved)
 
-    (when (and (pc-actor? (action-actor action))
+    (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (pending? action)))
 
       (define on-before-rules (action-on-before-rules action))
@@ -101,7 +101,7 @@
 
 
 
-    (when (and (pc-actor? (action-actor action))
+    (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (eq? result 'interrupted)))
 
       (define on-after-rules (action-on-after-rules action))
