@@ -36,13 +36,6 @@
       (car lst)
       (func (car lst) (reduce (cdr lst) func))))
 
-(define (all-fulfill-predicate? lst predicate)
-  (define result #t)
-  (for ([element lst])
-    (when (not (predicate element))
-      (set! result #f)))
-  result)
-
 (define (prune lst)
   (filter
    (λ (x) (and (not (null? x))

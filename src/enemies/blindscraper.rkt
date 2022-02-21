@@ -27,24 +27,15 @@
   (case action-flag
 
     ['attack
-     (define damage-roll '(λ () (d 1 2)))
-     (define details
-       `(list
-         (cons 'damage-roll ,damage-roll)
-         (cons 'damage-roll-formula "1d2")
-         ))
      (define target-id (actor-id (pc)))
-     (make-action
-      #:symbol 'melee
+     (make-melee-attack-action
       #:actor actor
       #:duration 1
       #:target target-id
-      #:tags '(initiative-based-resolution)
-      #:details details
-      #:resolution-rules
-      `(
-        (resolve-melee-action! ,(actor-id actor) ,target-id ,details)
-        ))]
+      #:n 1
+      #:x 2
+      #:bonus 0
+      )]
 
     ['go-to-engaged
      (define target-id (actor-id (pc)))
@@ -59,30 +50,31 @@
       `(
         (define lp (pc-actor-lp (pc)))
         (define dex ,(actor-dexterity actor))
+        (displayln "GO TO ENGAGED: TODO: fix")
         (define success?
           (cond ((positive? lp)
                  (displayln "[LP positive]")
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
-        (if success?
-            (begin
-              (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        ; (if success?
+        ;     (begin
+        ;       (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-              (let ([enemy-stance (stance "α" 'engaged "right")])
-                (set-actor-stance! ,actor enemy-stance)))
+        ;       (let ([enemy-stance (stance "α" 'engaged "right")])
+        ;         (set-actor-stance! ,actor enemy-stance)))
 
-            (begin
-              (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-              (displayln "[-1 LP]")
-              (set-pc-actor-lp! (pc)
-                                (- (pc-actor-lp (pc))
-                                   1))
-              (when (< (pc-actor-lp (pc)) 0)
-                (set-pc-actor-lp! (pc)
-                                  0))
-              (displayln (pc-actor-lp (pc)))
-              'failure))
+        ;     (begin
+        ;       (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+        ;       (displayln "[-1 LP]")
+        ;       (set-pc-actor-lp! (pc)
+        ;                         (- (pc-actor-lp (pc))
+        ;                            1))
+        ;       (when (< (pc-actor-lp (pc)) 0)
+        ;         (set-pc-actor-lp! (pc)
+        ;                           0))
+        ;       (displayln (pc-actor-lp (pc)))
+        ;       'failure))
         'ok
         )
       )]

@@ -15,7 +15,8 @@
   "../core/api.rkt"
   "../enemies/encounters.rkt")
 
-(require "0-types/location.rkt"
+(require "0-types/location-ids.rkt"
+         "0-types/location.rkt"
          "routes.rkt")
 
 (define (location-on-enter! location)
@@ -73,7 +74,7 @@
     (cond ((place? location)
            (place-shortname location))
           ((route? location)
-           (route-shortname location))
+           (route-shortname (location-id location)))
           ))
   (define features-str
     ; Disabled for now, just do empty string

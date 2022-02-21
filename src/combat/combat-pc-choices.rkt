@@ -60,7 +60,7 @@
            (association-list 'str-mod strength-mod))
 
          (define target-id
-          (actor-id (take-random close-grabberkin)))
+           (actor-id (take-random close-grabberkin)))
 
          (define break-free-choice
            (make-choice
@@ -102,18 +102,15 @@
               'attack
               (format "Hit ~a [with bolt cutters]." (get-combatant-name target))
               (λ ()
-                (make-action
-                 #:symbol 'melee
+                (define target-id (actor-id target))
+                (make-melee-attack-action
                  #:actor (pc)
                  #:duration 1
-                 #:target target
-                 #:tags '(initiative-based-resolution)
-                 #:details details
-                 #:resolution-rules
-                 `(
-                   (displayln (format "ACTOR: ~a" (actor-name (pc))))
-                   (resolve-melee-action! (pc) ,target ,details)
-                   )))))
+                 #:target target-id
+                 #:n 1
+                 #:x 2
+                 #:bonus 0
+                 ))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
   combat-choices)
@@ -169,17 +166,15 @@
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
           (λ ()
-            (make-action
-             #:symbol 'melee
+            (define target-id (actor-id target))
+            (make-melee-attack-action
              #:actor (pc)
              #:duration 1
              #:target target-id
-             #:tags '(initiative-based-resolution)
-             #:details details
-             #:resolution-rules
-             `(
-               (resolve-melee-action! (pc) ,target-id ,details)
-               )))))
+             #:n 1
+             #:x 2
+             #:bonus 0
+             ))))
        )))
 
   (condense all-choices))

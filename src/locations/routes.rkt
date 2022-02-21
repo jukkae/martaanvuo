@@ -7,12 +7,16 @@
 (require "0-types/location.rkt"
          "../core/api.rkt")
 
-(define (route-other-end-from route start-location)
+(define (route-other-end-from route-or-id startpoint-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define start
-    (cond ((eq? (location-id start-location)
+    (cond ((eq? startpoint-id
                 (route-a route))
            'a)
-          ((eq? (location-id start-location)
+          ((eq? startpoint-id
                 (route-b route))
            'b)))
   (define endpoint
@@ -21,7 +25,11 @@
       ['b (route-a route)]))
   endpoint)
 
-(define (set-route-endpoint-visited! route endpoint-id)
+(define (set-route-endpoint-visited! route-or-id endpoint-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define endpoint
     (cond ((eq? endpoint-id
                 (route-a route))
@@ -34,7 +42,11 @@
     ['b (add-detail-to-location! route 'b-visited)]))
 
 
-(define (route-place-known? route place)
+(define (route-place-known? route-or-id place)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define endpoint
     (cond ((eq? (location-id place)
                 (route-a route))
@@ -47,8 +59,11 @@
     ['b (place-visited? (route-b route))])
   )
 
-(define (route-shortname route-id)
-  (define route (get-location-by-id route-id))
+(define (route-shortname route-or-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define direction (get-pending-traverse-direction))
 
   (define startpoint
@@ -59,6 +74,11 @@
     (case direction
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
+
+  (when (symbol? startpoint)
+    (set! startpoint (get-location-by-id startpoint)))
+  (when (symbol? endpoint)
+    (set! endpoint (get-location-by-id endpoint)))
 
   (cond ((route-fully-known? route)
          (format "En route: ~a – ~a"

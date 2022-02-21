@@ -1,7 +1,5 @@
 #lang at-exp racket
 
-(require racket/lazy-require)
-
 (require
   "ai.rkt"
   "action-queue.rkt"
@@ -22,8 +20,6 @@
   "../../pc/pc.rkt"
 
   "../../state/state.rkt")
-
-(lazy-require ["../../world.world.rkt" (get-actor)])
 
 
 (provide resolve-turns!)

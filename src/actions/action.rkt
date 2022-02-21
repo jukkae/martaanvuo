@@ -4,11 +4,9 @@
 
 (require "../core/maybe.rkt")
 (require "../actors/0-types/actor.rkt")
+(require "../actors/0-types/status.rkt")
 (require "../items/0-types/item.rkt")
 (require "../locations/0-types/location-ids.rkt")
-
-(require/typed "../core/utils.rkt"
-               [all-fulfill-predicate? (-> (Listof Any) Procedure Boolean)])
 
 (struct action
   ([symbol : Symbol]
@@ -16,7 +14,7 @@
    [duration : Natural]
    [target : (Maybe (U item ActorId LocationId))]
    [tags : (Listof Symbol)]
-   [details : (Listof Symbol)]
+   [details : (Listof (U Symbol status))]
    [resolution-rules : (Maybe Sexp)]
    [on-before-rules : (Maybe Sexp)]
    [on-after-rules : (Maybe Sexp)])
@@ -46,6 +44,77 @@
          #:on-before-rules [on-before-rules '()]
          #:on-after-rules [on-after-rules '()])
   (action* symbol (actor-id actor) duration target tags details resolution-rules on-before-rules on-after-rules))
+
+; Roll X N-sided dice, add bonus
+(struct standard-damage-roll
+  ([n : Integer]
+   [x : Integer]
+   [bonus : Integer])
+  #:prefab
+  #:mutable
+  )
+
+(: damage-roll-formula (-> standard-damage-roll String))
+(define (damage-roll-formula roll)
+  (define b (standard-damage-roll-bonus roll))
+  (format "~ad~a~a"
+          (standard-damage-roll-n roll)
+          (standard-damage-roll-x roll)
+          (cond [(= 0 b)
+                 ""]
+                [(negative? b)
+                 (format "~a" b)]
+                [else
+                 (format "+~a" b)])))
+
+(struct melee-attack-action
+  action
+  ([damage-roll : standard-damage-roll])
+  #:prefab
+  #:mutable
+  #:constructor-name melee-attack-action*
+  )
+
+(: make-melee-attack-action (->* (#:actor actor
+                                  #:duration Natural
+                                  #:target ActorId
+                                  #:n Natural
+                                  #:x Natural
+                                  #:bonus Integer
+                                  )
+                                 (
+                                  #:resolution-rules (Maybe Sexp)
+                                  #:on-before-rules (Maybe Sexp)
+                                  #:on-after-rules (Maybe Sexp)
+                                  )
+                                 action
+                                 ))
+(define (make-melee-attack-action
+         #:actor actor
+         #:duration duration
+         #:target target
+         #:resolution-rules
+         [resolution-rules
+          `(
+            (resolve-melee-action! ,(actor-id actor) ,target)
+            )]
+         #:on-before-rules [on-before-rules '()]
+         #:on-after-rules [on-after-rules '()]
+         #:n n
+         #:x x
+         #:bonus bonus
+         )
+  (define symbol 'melee)
+  (define tags '(initiative-based-resolution))
+  (define details '())
+  (define attack-roll (standard-damage-roll
+                       n
+                       x
+                       bonus))
+  (melee-attack-action* symbol (actor-id actor) duration target tags details resolution-rules on-before-rules on-after-rules attack-roll))
+
+
+
 
 
 (define (visible-in-combat? [action : action])
@@ -99,6 +168,15 @@
         ((has-tag? action2 'fast) #f)
         ((eq? (action-actor-id action1) 'pc) #t)
         ((eq? (action-actor-id action2) 'pc) #f)))
+
+
+(: all-fulfill-predicate? (All (A) (-> (Listof A) (-> A Boolean) Boolean)))
+(define (all-fulfill-predicate? lst predicate)
+  (define result #t)
+  (for ([element lst])
+    (when (not (predicate element))
+      (set! result #f)))
+  result)
 
 (define (all-actions-of-type? [actions : (Listof action)] [type : Symbol])
   (define predicate
