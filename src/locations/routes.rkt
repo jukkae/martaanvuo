@@ -47,7 +47,8 @@
     ['b (place-visited? (route-b route))])
   )
 
-(define (route-shortname route)
+(define (route-shortname route-id)
+  (define route (get-location-by-id route-id))
   (define direction (get-pending-traverse-direction))
 
   (define startpoint
