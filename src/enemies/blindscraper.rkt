@@ -33,31 +33,32 @@
          (cons 'damage-roll ,damage-roll)
          (cons 'damage-roll-formula "1d2")
          ))
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'melee
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details details
       #:resolution-rules
       `(
-        (displayln (format "ACTOR: ~a" (actor-name ,actor)))
-        (resolve-melee-action! ,actor (pc) ,details)
+        (resolve-melee-action! ,(actor-id actor) ,target-id ,details)
         ))]
 
     ['go-to-engaged
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'go-to-engaged
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
       `(
         (define lp (pc-actor-lp (pc)))
-        (define dex (,actor-dexterity ,actor))
+        (define dex ,(actor-dexterity actor))
         (define success?
           (cond ((positive? lp)
                  (displayln "[LP positive]")
@@ -87,11 +88,12 @@
       )]
 
     ['go-to-close
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'go-to-close
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -107,11 +109,12 @@
         ))]
 
     ['blindscrape
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'inflict-status
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '(blind)
       #:resolution-rules

@@ -59,8 +59,8 @@
          (define details
            (association-list 'str-mod strength-mod))
 
-         (define target
-          (take-random close-grabberkin))
+         (define target-id
+          (actor-id (take-random close-grabberkin)))
 
          (define break-free-choice
            (make-choice
@@ -71,11 +71,11 @@
                #:symbol 'break-free
                #:actor (pc)
                #:duration 1
-               #:target target
+               #:target target-id
                #:tags '(initiative-based-resolution fast)
                #:details details
                #:resolution-rules
-               `((resolve-break-free-action! (pc) ,target ,strength-mod))))))
+               `((resolve-break-free-action! (pc) ,target-id ,strength-mod))))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
@@ -125,6 +125,7 @@
   (define all-choices
     (for/list ([i (in-range 0 (length targets))])
       (define target (list-ref targets i))
+      (define target-id (actor-id target))
       (define stance (actor-stance target))
 
       (list
@@ -149,7 +150,7 @@
              #:symbol 'shoot
              #:actor (pc)
              #:duration 1
-             #:target target
+             #:target target-id
              #:tags '(initiative-based-resolution)
              #:details details
              #:resolution-rules
@@ -172,12 +173,12 @@
              #:symbol 'melee
              #:actor (pc)
              #:duration 1
-             #:target target
+             #:target target-id
              #:tags '(initiative-based-resolution)
              #:details details
              #:resolution-rules
              `(
-               (resolve-melee-action! pc ,target ,details)
+               (resolve-melee-action! (pc) ,target-id ,details)
                )))))
        )))
 

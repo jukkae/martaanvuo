@@ -65,11 +65,12 @@
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
     ['pull-under
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'pull-under
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -88,11 +89,12 @@
       )]
 
     ['anklebreaker
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'anklebreaker
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -178,11 +180,12 @@
 
     ['grab
      (define strength (+ (d 1 4) 0))
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'modify-status
       #:actor actor
       #:duration 0
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound strength))
       #:resolution-rules
