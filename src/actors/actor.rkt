@@ -23,7 +23,10 @@
  ["../state/state.rkt"
   (pc
    current-location
-    display-combatant-info
+   current-last-numeric-actor-id
+   current-last-numeric-actor-id++
+   get-next-numeric-actor-id
+   display-combatant-info
    )]
  ["../world/world.rkt"
   (remove-actor-from-its-current-location!
@@ -36,7 +39,8 @@
          name
          type
          max-hp)
-  (actor* name type max-hp max-hp
+  (define id (get-next-numeric-actor-id))
+  (actor* id name type max-hp max-hp
           ; attributes
           '() '() '() '() '()
           ; traits etc
@@ -308,10 +312,11 @@
   )
 
 
- (define (make-pc-actor
+(define (make-pc-actor
          name
          max-hp
          max-lp)
+  (current-last-numeric-actor-id++) ; TODO: Dirty: symbol vs integer?
   (pc-actor*
    'pc name 'pc max-hp max-hp
    ; attributes

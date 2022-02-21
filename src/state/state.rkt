@@ -19,6 +19,15 @@
          "resolve-counts.rkt")
 
 (define current-world (make-parameter '()))
+
+; Where does this belong?
+(define current-last-numeric-actor-id (make-parameter 0))
+(define (current-last-numeric-actor-id++)
+  (current-last-numeric-actor-id (add1 (current-last-numeric-actor-id))))
+(define (get-next-numeric-actor-id)
+  (current-last-numeric-actor-id++)
+  (current-last-numeric-actor-id))
+
 (define current-log (make-parameter '()))
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
@@ -61,6 +70,7 @@
 
 (define (reset-situation!)
   (current-world (make-new-world))
+  (current-last-numeric-actor-id 0)
   (current-log '())
   (current-last-paragraph "")
   (current-part 0)
@@ -90,6 +100,7 @@
 (serializable-struct
  state
  ([world #:mutable]
+  [last-numeric-actor-id #:mutable]
   [log #:mutable]
   [last-paragraph #:mutable]
   [part #:mutable]
@@ -121,6 +132,7 @@
   (define st
     (state
      (current-world)
+     (current-last-numeric-actor-id)
      (current-log)
      (current-last-paragraph)
      (current-part)
@@ -144,15 +156,6 @@
      (current-combat-timeline)
      (current-show-round-summary?)))
 
-  (displayln "")
-  (displayln (format "~a" st))
-  (displayln "")
-
-  (displayln "CPA:")
-  (displayln (format "~a" (current-pending-action)))
-  (define failing-s (serialize (current-pending-action)))
-  (displayln "OK")
-
   (define serialized-state (serialize st))
   (write serialized-state output-file)
   (close-output-port output-file))
@@ -164,6 +167,7 @@
   (define s (deserialize serialized-state))
 
   (current-world (state-world s))
+  (current-last-numeric-actor-id (state-last-numeric-actor-id s))
   (current-log (state-log s))
   (current-last-paragraph (state-last-paragraph s))
   (current-part (state-part s))
