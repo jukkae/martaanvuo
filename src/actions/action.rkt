@@ -28,7 +28,7 @@
                      #:duration Natural)
                     (#:target (Maybe (U item ActorId LocationId))
                      #:tags (Listof Symbol)
-                     #:details (Listof Symbol)
+                     #:details (Listof (U Symbol status))
                      #:resolution-rules (Maybe Sexp)
                      #:on-before-rules (Maybe Sexp)
                      #:on-after-rules (Maybe Sexp))
@@ -93,11 +93,7 @@
          #:actor actor
          #:duration duration
          #:target target
-         #:resolution-rules
-         [resolution-rules
-          `(
-            (resolve-melee-action! ,(actor-id actor) ,target)
-            )]
+         #:resolution-rules [resolution-rules '()]
          #:on-before-rules [on-before-rules '()]
          #:on-after-rules [on-after-rules '()]
          #:n n

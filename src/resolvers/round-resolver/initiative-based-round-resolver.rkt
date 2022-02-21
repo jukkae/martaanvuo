@@ -11,6 +11,7 @@
   "../../actions/action.rkt"
 
   "../../combat/combat.rkt"
+  "../../combat/combat-action-resolver.rkt"
 
   "../../world/world.rkt"
 
@@ -74,7 +75,10 @@
       )))
 
 (define (resolve-turn! action)
-  (resolve-action! action))
+  (cond ((melee-attack-action? action)
+         (displayln "TODO: Fix melee / combat action resolution!")
+         (resolve-melee-action! action))
+        (else (resolve-action! action))))
 
 (define (end-combat)
   (remove-all-enemies-and-end-combat!)

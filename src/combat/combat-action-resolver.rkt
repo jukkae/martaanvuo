@@ -52,7 +52,9 @@
 
 
 ; "generic" attack with type
-(define (resolve-melee-action! actor target details)
+(define (resolve-melee-action! action)
+  (define actor (get-actor (action-actor-id action)))
+  (define target (get-actor (action-target action)))
   (define target-defense (get-trait target "defense"))
   (define skill (get-trait actor "melee-attack-skill"))
 
@@ -74,15 +76,18 @@
   ; #;(define success? (skill-check title skill action-target-number))
   (define success? #t)
 
-
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
-
+  (define damage-roll (melee-attack-action-damage-roll action))
+  (define damage-roll-result (d
+                              (standard-damage-roll-n damage-roll)
+                              (standard-damage-roll-x damage-roll)
+                              ; (standard-damage-roll-bonus damage-roll)
+                              ))
   (define body
     (tbody
      (tr "damage"
-         (format "~a: [~a]" damage-roll-formula damage-roll-result))))
+         (format "~a: [~a]"
+                 (damage-roll-formula damage-roll)
+                 damage-roll-result))))
   (info-card body title)
 
   (define action-result 'ok)
