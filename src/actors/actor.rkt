@@ -53,13 +53,16 @@
   (hash-set! (actor-traits actor) trait-name trait-value))
 
 (define (get-trait actor trait-name)
-  (define result (hash-ref (actor-traits actor) trait-name 'not-found))
-  (when (eq? result 'not-found)
-    (dev-note (format
-               "-- get-trait: trait [~a] not found on actor [~a]"
-               trait-name
-               (actor-name actor))))
-  result)
+  (cond (actor
+    (define result (hash-ref (actor-traits actor) trait-name 'not-found))
+    (when (eq? result 'not-found)
+      (dev-note (format
+                "-- get-trait: trait [~a] not found on actor [~a]"
+                trait-name
+                (actor-name actor))))
+    result)
+    (else 'not-found)
+  ))
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
@@ -226,8 +229,8 @@
          )
         (else
          (remove-actor-from-its-current-location! actor)
-         (define corpse (cons 'corpse "Corpse (TODO)"))
-         (add-feature-to-location! (current-location) corpse))))
+         (dev-note "TODO: corpse")
+         (add-feature-to-location! (current-location) 'corpse))))
 
 
 (define (add-item-to-inventory! actor item)

@@ -97,6 +97,7 @@
   (cond ((pc-actor? actor)
          "Otava")
         (else
+         (when actor
          (define stance (actor-stance actor))
          (cond ((= (length (get-current-enemies)) 1)
                 (actor-name actor))
@@ -108,7 +109,7 @@
                       ""))
                 (cond ((eq? "" sign)
                        name)
-                      (else (format "~a ~a" name sign))))))))
+                      (else (format "~a ~a" name sign)))))))))
 
 
 (define (display-non-pc-combatant-info actor)

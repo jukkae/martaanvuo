@@ -174,6 +174,7 @@
                (make-blindscraper-action actor action-flag))))
 
            ((= (actor-hp actor) 1)
+            (define id (actor-id actor))
             (make-action
              #:symbol 'flee
              #:actor actor
@@ -182,7 +183,7 @@
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             `((resolve-flee-action! ,actor))))))
+             `((resolve-flee-action! ',id))))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 

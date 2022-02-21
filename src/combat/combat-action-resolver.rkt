@@ -247,7 +247,8 @@
 
 
 ; skinnable, but in a sense generic action
-(define (resolve-flee-action! actor)
+(define (resolve-flee-action! actor-id)
+  (define actor (get-actor actor-id))
   (cond ((pc-actor? actor)
          (p "Otava turns her back to run.")
          (define skill (get-trait (pc) "athletics-skill"))

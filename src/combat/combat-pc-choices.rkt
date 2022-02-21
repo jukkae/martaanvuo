@@ -39,11 +39,11 @@
             (λ ()
               (make-action
                #:symbol 'flee
-               #:actor (pc)
+               #:actor 'pc
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `((resolve-flee-action! (pc)))))))
+               `((resolve-flee-action! 'pc))))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
