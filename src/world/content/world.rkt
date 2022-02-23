@@ -107,7 +107,7 @@
     #:id 'slaughterhouse)
 
    (make-place
-    #:id 'the-waiting-room)
+    #:id 'waiting-room)
 
    (make-place
     #:id 'palsat)))
@@ -127,6 +127,8 @@
      (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
      (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
      (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
+     (make-path-between places 'crematory 'the-maw)
+     (make-path-between places 'the-maw 'waiting-room)
      (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
      (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
      (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))

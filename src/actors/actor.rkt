@@ -244,8 +244,10 @@
                    (else (item-id item))))
   (define inventory (actor-inventory actor))
   (findf (λ (inventory-item)
-           (cond ((symbol? item) (eq? id inventory-item))
-                 (else (eq? (item-id inventory-item) id))))
+           (cond ((symbol? inventory-item)
+                  (eq? id inventory-item))
+                 (else
+                  (eq? (item-id inventory-item) id))))
          inventory))
 
 
