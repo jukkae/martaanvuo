@@ -2,19 +2,13 @@
 
 (provide (all-defined-out))
 
-(require racket/serialize)
+(provide (all-from-out "0-types/item.rkt"))
+
+(require "0-types/item.rkt")
 
 (require "../core/io.rkt"
          "../core/utils.rkt")
 
-
-(serializable-struct
- item
- (id
-  [name #:mutable]
-  [details #:mutable])
- #:transparent
- #:constructor-name item*)
 
 ; not part of API
 (define (new-item
@@ -22,12 +16,6 @@
          #:id id
          #:details (details '()))
   (item* id name details))
-
-(serializable-struct
- ranged-weapon
- item
- ([ammo-left #:mutable])
- #:constructor-name ranged-weapon*)
 
 ; not part of API
 (define (new-ranged-weapon

@@ -7,8 +7,6 @@
 (require "../../actors/actor.rkt"
          "../../items/item.rkt"
          "../../locations/0-types/location.rkt"
-         "../../locations/0-types/place.rkt"
-         "../../locations/0-types/route.rkt"
          "../../core/utils.rkt")
 
 (require racket/lazy-require)
@@ -121,40 +119,39 @@
 
   (define routes
     (list
-    #; (make-path-between perimeter martaanvuo-swamp 'hidden)
-    (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
-    (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-swamp 'crematory)
-    (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-    (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
-    (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
-    (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-    (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
-    (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
-    (make-path-between places 'power-plant-ruins 'sewers-1)
-    (make-path-between places 'sewers-1 'sewers-2)
-    (make-path-between places 'sewers-1 'workshop)
-    (make-path-between places 'sewers-1 'compound-entrance)
-    (make-path-between places 'compound-entrance 'murkwater-docks)
-    (make-path-between places 'compound-entrance 'workshop)
-    (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
-    (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
-    (make-path-between places 'sewers-2 'storage-closet)
-    (make-path-between places 'storage-closet 'workshop)
-    (make-path-between places 'workshop 'control-room #:no-encounters? #t)
-    (make-path-between places 'workshop 'martaanvuo-source)
-    (make-path-between places 'control-room 'reactor-room)
-  ))
+     #; (make-path-between perimeter martaanvuo-swamp 'hidden)
+     (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
+     (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-swamp 'crematory)
+     (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
+     (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
+     (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
+     (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
+     (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
+     (make-path-between places 'power-plant-ruins 'sewers-1)
+     (make-path-between places 'sewers-1 'sewers-2)
+     (make-path-between places 'sewers-1 'workshop)
+     (make-path-between places 'sewers-1 'compound-entrance)
+     (make-path-between places 'compound-entrance 'murkwater-docks)
+     (make-path-between places 'compound-entrance 'workshop)
+     (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
+     (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
+     (make-path-between places 'sewers-2 'storage-closet)
+     (make-path-between places 'storage-closet 'workshop)
+     (make-path-between places 'workshop 'control-room #:no-encounters? #t)
+     (make-path-between places 'workshop 'martaanvuo-source)
+     (make-path-between places 'control-room 'reactor-room)
+     ))
 
   (world places routes 0 0))
 
 
 ; not content
 
-(define *number-of-routes* 0)
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-; NB: Modifies a and b, and returns route r between the two
+; NB: Modifies a and b in places, and returns route r between the two
 (define (make-path-between
          places
          id-a
@@ -163,24 +160,47 @@
          #:no-encounters? [no-encounters? #f]
          #:details [details '()])
 
-  (define place-a (find-place-by-id places id-a))
-  (define place-b (find-place-by-id places id-b))
-  (set! *number-of-routes* (add1 *number-of-routes*))
+  (define (find-place place-id)
+    (findf (λ (place) (eq? (location-id place) place-id))
+           places))
+
+  (define place-a (find-place id-a))
+  (define place-b (find-place id-b))
 
   (when no-encounters? (set! details (append-element details 'no-encounters)))
 
   (define actors '())
   (define r (make-route
-             *number-of-routes*
-             place-a
-             place-b
+             id-a
+             id-b
              #:details details
              #:actors actors))
-  (set-place-routes! place-a (append-element (place-routes place-a) r))
-  (set-place-routes! place-b (append-element (place-routes place-b) r))
+  (define route-id (location-id r))
+  (set-place-routes! place-a (append-element (place-routes place-a) route-id))
+  (set-place-routes! place-b (append-element (place-routes place-b) route-id))
   (when hidden? (error "Implement hidden paths"))
   r)
 
-(define (find-place-by-id places id)
-  (findf (λ (place) (location-is? id place))
-         places))
+(provide get-route-by-id)
+(define (get-route-by-id id)
+  (define w (current-world))
+  (define routes (world-routes w))
+  (define r (findf (λ (route) (eq? id (location-id route)))
+                   routes))
+  (if r r '()))
+
+(provide get-place-by-id)
+(define (get-place-by-id id)
+  (define w (current-world))
+  (define places (world-places w))
+  (define r (findf (λ (place) (eq? (location-id place) id))
+                   places))
+  (if r r '()))
+
+(provide get-location-by-id)
+(define (get-location-by-id id)
+  (cond ((not (null? (get-place-by-id id)))
+         (get-place-by-id id))
+        ((not (null? (get-route-by-id id)))
+         (get-route-by-id id))
+        (else '())))

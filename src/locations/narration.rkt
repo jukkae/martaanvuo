@@ -8,7 +8,7 @@
          get-traverse-text
          route-shortname)
 
-(require "0-types/place.rkt"
+(require "0-types/location.rkt"
          "routes.rkt"
          "../core/api.rkt"
          "../actions/action.rkt")
@@ -20,7 +20,7 @@
   (define to (if (eq? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
-  (define key (list (location-id from) (location-id to)))
+  (define key (list from to))
   (times-begin-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-begin-traverse-narrated key))
   (case key
@@ -100,7 +100,7 @@
   (define to (if (eq? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
-  (define key (list (location-id from) (location-id to)))
+  (define key (list from to))
   (times-finish-traverse-narrated++ key) ; dumbass order of initialization but who cares
   (define n (times-finish-traverse-narrated key))
   (case key
@@ -211,10 +211,10 @@
 (define (get-traverse-text route start-location)
   (define direction
     (cond ((eq? (location-id start-location)
-                (location-id (route-a route)))
+                (route-a route))
            'a-to-b)
           ((eq? (location-id start-location)
-                (location-id (route-b route)))
+                (route-b route))
            'b-to-a)))
 
   (define (get-route-short-description)
@@ -222,7 +222,7 @@
     (case (location-id start-location)
 
       ['perimeter
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
 
          ['magpie-hill
           (if (route-fully-known? route)
@@ -233,10 +233,10 @@
           (if (route-fully-known? route)
               "Martaanvuo Swamp."
               "Soggy downhill path.")]
-         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['magpie-hill
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
          ['perimeter
           (if (route-fully-known? route)
               "Rocky stairs to Perimeter"
@@ -253,10 +253,10 @@
           (if (route-fully-known? route)
               "Luminous Precipice."
               "The trail along the edge of the plateau.")]
-         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['martaanvuo-swamp
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."
@@ -273,35 +273,35 @@
           (if (route-fully-known? route)
               "The Docks."
               "The broader path straight ahead.")]
-         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['crematory
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The lone path.")]
-         [else (format "[go to: ~a" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a" (route-other-end-from route start-location))])]
 
       ['martaanvuo-docks
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The vehicle trail out.")]
-         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['power-plant-ruins
-       (case (location-id (route-other-end-from route start-location))
+       (case (route-other-end-from route start-location)
          ['cache
           (if (route-fully-known? route)
               "The cache."
               "The previously locked door.")]
          ['sewers-1 "The sewers."]
          ['magpie-hill "Go outside."]
-         [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
-      [else (format "[go to: ~a]" (location-id (route-other-end-from route start-location)))]))
+      [else (format "[go to: ~a]" (route-other-end-from route start-location))]))
 
   #;(cond ((route-fully-known? route)
            ; Currently, "fully known" implies having been at the other end, fix as needed

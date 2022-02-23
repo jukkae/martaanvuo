@@ -11,7 +11,6 @@
   "fragment-handler.rkt"
 
   "../../actors/actor.rkt"
-  "../../actors/condition.rkt"
 
   "../../core/io.rkt"
   "../../core/utils.rkt"
@@ -19,11 +18,13 @@
   "../../fragments/fragment.rkt"
 
   "../../locations/0-types/location.rkt"
-  "../../locations/0-types/place.rkt"
-  "../../locations/0-types/route.rkt"
   "../../locations/routes.rkt"
 
-  "../../state/state.rkt")
+  "../../state/state.rkt"
+
+  "../../world/world.rkt"
+
+  )
 
 
 (lazy-require
@@ -53,9 +54,9 @@
      ; todo logic is shit here (should maybe happen in traversal action resolution)
      (let ([location (current-location)])
       (when (place? location)
-        (for ([route (place-routes location)])
+        (for ([route-id (place-routes location)])
           (when #t ; if not hidden
-            (set-route-endpoint-visited! route location)
+            (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
             ))
         ))
      (case round-begin-status

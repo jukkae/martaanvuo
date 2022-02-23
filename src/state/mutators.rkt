@@ -7,7 +7,6 @@
 
 (require
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
 
   "../core/io.rkt"
   "../core/utils.rkt"
@@ -17,6 +16,8 @@
   "../pc/character-sheet.rkt"
 
   "../quests/quest.rkt"
+
+  "../world/world.rkt"
 
   "../combat/stance.rkt")
 
@@ -96,7 +97,7 @@
 
 ; api
 (define (current-location)
-  (actor-location (pc)))
+  (get-location-by-id (actor-location-id (pc))))
 
 
 ; api
@@ -139,14 +140,16 @@
 ; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
-    (remove-actor-from-location! (actor-location enemy) enemy))
+    (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
   (end-combat!)
   (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
 
 
 ; scripting API
+; actor or ActorId
 (define (remove-enemy enemy)
-  (remove-actor-from-location! (actor-location enemy) enemy))
+  (when (or (symbol? enemy) (number? enemy)) (set! enemy (get-actor enemy)))
+  (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
 ; scripting API
 (provide actor-in-range?)

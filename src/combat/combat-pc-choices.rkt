@@ -1,7 +1,5 @@
 #lang at-exp racket
 
-(require rebellion/collection/association-list)
-
 (require
   "combat.rkt"
 
@@ -43,7 +41,7 @@
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `((resolve-flee-action! (pc)))))))
+               `((resolve-flee-action! 'pc))))))
          (set! combat-choices (append-element combat-choices run-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
@@ -57,10 +55,10 @@
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
 
          (define details
-           (association-list 'str-mod strength-mod))
+           (list 'str-mod strength-mod))
 
-         (define target
-          (take-random close-grabberkin))
+         (define target-id
+           (actor-id (take-random close-grabberkin)))
 
          (define break-free-choice
            (make-choice
@@ -71,11 +69,11 @@
                #:symbol 'break-free
                #:actor (pc)
                #:duration 1
-               #:target target
+               #:target target-id
                #:tags '(initiative-based-resolution fast)
                #:details details
                #:resolution-rules
-               `((resolve-break-free-action! (pc) ,target ,strength-mod))))))
+               `((resolve-break-free-action! (pc) ,target-id ,strength-mod))))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
 
   combat-choices
@@ -102,18 +100,15 @@
               'attack
               (format "Hit ~a [with bolt cutters]." (get-combatant-name target))
               (λ ()
-                (make-action
-                 #:symbol 'melee
+                (define target-id (actor-id target))
+                (make-melee-attack-action
                  #:actor (pc)
                  #:duration 1
-                 #:target target
-                 #:tags '(initiative-based-resolution)
-                 #:details details
-                 #:resolution-rules
-                 `(
-                   (displayln (format "ACTOR: ~a" (actor-name (pc))))
-                   (resolve-melee-action! (pc) ,target ,details)
-                   )))))
+                 #:target target-id
+                 #:n 1
+                 #:x 2
+                 #:bonus 0
+                 ))))
            (set! combat-choices (append-element combat-choices choice)))
           ))
   combat-choices)
@@ -125,6 +120,7 @@
   (define all-choices
     (for/list ([i (in-range 0 (length targets))])
       (define target (list-ref targets i))
+      (define target-id (actor-id target))
       (define stance (actor-stance target))
 
       (list
@@ -149,7 +145,7 @@
              #:symbol 'shoot
              #:actor (pc)
              #:duration 1
-             #:target target
+             #:target target-id
              #:tags '(initiative-based-resolution)
              #:details details
              #:resolution-rules
@@ -168,17 +164,15 @@
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
           (λ ()
-            (make-action
-             #:symbol 'melee
+            (define target-id (actor-id target))
+            (make-melee-attack-action
              #:actor (pc)
              #:duration 1
-             #:target target
-             #:tags '(initiative-based-resolution)
-             #:details details
-             #:resolution-rules
-             `(
-               (resolve-melee-action! pc ,target ,details)
-               )))))
+             #:target target-id
+             #:n 1
+             #:x 2
+             #:bonus 0
+             ))))
        )))
 
   (condense all-choices))

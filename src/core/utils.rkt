@@ -16,6 +16,7 @@
   (for/sum ([i n])
     (add1 (random sides))))
 
+
 ; list utils
 (define (take-n-random l n)
   (take (shuffle l) n))
@@ -35,13 +36,6 @@
       (car lst)
       (func (car lst) (reduce (cdr lst) func))))
 
-(define (all-fulfill-predicate? lst predicate)
-  (define result #t)
-  (for ([element lst])
-    (when (not (predicate element))
-      (set! result #f)))
-  result)
-
 (define (prune lst)
   (filter
    (λ (x) (and (not (null? x))
@@ -53,6 +47,10 @@
    (λ (x) (and (not (null? x))
                (not (void? x))))
    (flatten lst)))
+
+(define (insert-at lst pos x)
+  (define-values (before after) (split-at lst pos))
+  (append before (cons x after)))
 
 
 ; DSL macros

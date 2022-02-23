@@ -9,7 +9,6 @@
   "choice.rkt"
 
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
 
   "../blurbs/blurbs.rkt"
 
@@ -23,8 +22,6 @@
 
   "../locations/locations.rkt"
   "../locations/0-types/location.rkt"
-  "../locations/0-types/place.rkt"
-  "../locations/0-types/route.rkt"
   "../locations/narration.rkt"
 
   "../pc/pc.rkt"
@@ -144,21 +141,21 @@
                #:resolution-rules
                `(
                  (define food-tier
-                   (case (,item-id ,food)
+                   (case ',(item-id food)
                      ['fresh-berries 0]
                      ['ration 1]
                      ['vatruska 2]
                      [else
-                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
+                      (displayln (format "Unknown comestible ~a" ',(item-id food)))
                       1])
                    )
-                 (decrease-pc-hunger-level food-tier)
-
-                 (case (,item-id ,food)
+                 (case ',(item-id food)
                    ['fresh-berries (p "The berries are invigoratingly sweet.")]
                    ['ration (p "The ration's dry and bland, but filling.")]
                    ['vatruska (p "The vatruska tastes heavenly.")])
-                 (remove-item! (,item-id ,food))
+                 (decrease-pc-hunger-level food-tier)
+                 (remove-item! ',(item-id food))
+                 (notice "Comestible consumed.")
 
                  ))))
 
@@ -250,9 +247,9 @@
        ; route traversal can be canceled
        (when (route? (current-location))
          (define destination
-           (get-cancel-and-go-back-destination
-            (current-location)
-            (current-pending-action)))
+           (get-location-by-id (get-cancel-and-go-back-destination
+                                (current-location)
+                                (current-pending-action))))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -261,12 +258,12 @@
                  #:symbol 'cancel-traverse
                  #:actor (pc)
                  #:duration 100
-                 #:target destination
+                 #:target (location-id destination)
                  #:tags '(downtime)
                  #:resolution-rules
                  `(
                    (define from
-                     (cond ((,route? ,destination)
+                     (cond (,(route? destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-a destination)
                                 (route-b destination)))
@@ -275,7 +272,7 @@
                            ))
 
                    (define to
-                     (cond ((,route? ,destination)
+                     (cond (,(route? destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-b destination)
                                 (route-a destination)))
@@ -287,7 +284,7 @@
 
                    (describe-cancel-traverse-action from to)
                    (display-location-info-card (current-location))
-                   (when (not (null? (location-items ,destination)))
+                   (when (not (null? (location-items (current-location))))
                      (pick-up-items!))
                    'ok
 
@@ -300,14 +297,14 @@
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
 
          (when (place? (current-location))
-           (for/list ([route (place-routes (current-location))])
-
+           (for/list ([route-id (place-routes (current-location))])
+             (define route (get-route-by-id route-id))
              (define direction
                (cond ((eq? (location-id (current-location))
-                           (location-id (route-a route)))
+                           (route-a route))
                       'a-to-b)
                      ((eq? (location-id (current-location))
-                           (location-id (route-b route)))
+                           (route-b route))
                       'b-to-a)))
 
              (cond ((memq 'locked (location-details route))
@@ -324,7 +321,11 @@
                           (p "A gunshot pierces the still air of the Ruins and echoes through tunnels, as Otava shoots open the lock holding a heavy door. The latch swings open.")
                           (consume-ammo! 1)
                           (remove-detail-from-location! route 'locked)
-                          (make-empty-action))))
+                          (make-action
+                           #:symbol 'skip
+                           #:actor (pc)
+                           #:duration 0
+                           #:tags '(downtime)))))
                      (when (and (pc-has-item? 'bolt-cutters))
                        (make-choice
                         'cut-the-lock
@@ -340,6 +341,7 @@
                            #:tags '(downtime)
                            )))))
                     )
+
                    (else ; route is traversable
                     (define traverse-duration 100)
                     (make-choice
@@ -349,24 +351,27 @@
                             #:symbol 'traverse
                             #:actor (pc)
                             #:duration traverse-duration
-                            #:target route
+                            #:target (location-id route)
                             #:tags '(downtime)
                             #:details (list direction)
                             #:resolution-rules
                             `(
-                              (set-route-traversed! (get-route-by-id ,(location-id route)))
-                              (define next-location
-                                ,(if (eq? direction 'a-to-b)
-                                     (route-b route)
-                                     (route-a route)))
+                              (set-route-traversed! (get-route-by-id ',(location-id route)))
+
+                              (define next-location-id
+                                ',(if (eq? direction 'a-to-b)
+                                      (route-b route)
+                                      (route-a route)))
+                              (define next-location (get-location-by-id next-location-id))
                               (move-pc-to-location! next-location)
                               'ok
                               )
                             #:on-before-rules
                             `(
                               (let/ec return
-                                (describe-begin-traverse-action ,route ',direction)
-                                (move-pc-to-location! ,route)
+                                (describe-begin-traverse-action (get-route-by-id ',(location-id route)) ',direction)
+                                (define next-location (get-route-by-id ',(location-id route)))
+                                (move-pc-to-location! next-location)
                                 ;(dev-note "TODO: Handle pending actions")
                                 (define elapsed-time 0)
 
@@ -401,13 +406,14 @@
                                     (define tl (timeline all-metadata all-events duration))
 
                                     (process-timeline! tl)
-                                    (return tl)))
+                                    (return tl))
+                                  )
 
                                 'before-action-ok
                                 ))
                             #:on-after-rules
                             `(
-                              (describe-finish-traverse-action ,route ',direction)
+                              (describe-finish-traverse-action (get-route-by-id ',(location-id route)) ',direction)
                               (when (not (null? (location-items (current-location))))
                                 (pick-up-items!))
                               )
@@ -437,9 +443,9 @@
                   #:resolution-rules
                   `(
                     (define skill 0)
-                    (define target 8)
+                    (define target-number 8)
 
-                    (define successful? (skill-check "Forage" skill target))
+                    (define successful? (skill-check "Forage" skill target-number))
                     (cond (successful?
                            (define amount (d 1 4)) ; portions = days of survival
                            (define amount-string

@@ -6,8 +6,6 @@
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/condition.rkt"
-  "../actors/status.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"
@@ -67,11 +65,12 @@
 (define (make-grabberkin-action actor action-flag)
   (case action-flag
     ['pull-under
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'pull-under
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -90,11 +89,12 @@
       )]
 
     ['anklebreaker
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'anklebreaker
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -111,7 +111,7 @@
                  ('hit
                   (inflict-condition!
                    target
-                   (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+                   (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" '()))
                   (when critical?
                     (inflict-condition!
                      target
@@ -119,6 +119,7 @@
                      (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                                 ;"resolve-anklebreaker-action!: details for 'bleeding todo"
                                 '() ; details
+                                '() ; on-end-round-rules
                                 )))
                   (display-combatant-info target)
                   'ok)
@@ -180,11 +181,12 @@
 
     ['grab
      (define strength (+ (d 1 4) 0))
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'modify-status
       #:actor actor
       #:duration 0
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution fast)
       #:details (list (status 'bound strength))
       #:resolution-rules
@@ -209,7 +211,7 @@
       `(
         (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
         (award-xp! 3 "for surviving an encounter with a Grabberkin")
-        (remove-enemy ,actor)
+        (remove-enemy ',(actor-id actor))
         ))]
 
     [else

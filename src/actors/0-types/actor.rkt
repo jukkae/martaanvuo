@@ -1,35 +1,40 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
-(provide (all-defined-out))
+(provide (struct-out actor)
+         ActorId)
 
-(require racket/serialize)
+(require "../../core/maybe.rkt")
 
-(serializable-struct
- actor
- (name
+(require "status.rkt"
+         "condition.rkt")
 
-  ; symbol
-  [type #:mutable]
+(require "../../items/0-types/item.rkt"
+         "../../combat/stance.rkt"
+         "../../locations/0-types/location-ids.rkt")
 
-  ; always numbers
-  [hp #:mutable]
-  [max-hp #:mutable]
+(define-type ActorId (U Symbol Natural))
 
-  ; number or '()
-  [strength #:mutable]
-  [dexterity #:mutable]
-  [constitution #:mutable]
-  [intelligence #:mutable]
-  [charisma #:mutable]
+(struct actor
+  ([id : ActorId]
+   [name : String]
+   [type : Symbol]
+   [hp : Integer]
+   [max-hp : Natural]
 
-  ; hash of string-to-whatever-makes-sense
-  [traits #:mutable]
+   [strength : (Maybe Natural)]
+   [dexterity : (Maybe Natural)]
+   [constitution : (Maybe Natural)]
+   [intelligence : (Maybe Natural)]
+   [charisma : (Maybe Natural)]
 
-  ; lists of symbols
-  [statuses #:mutable]   ; (semi)temporary
-  [conditions #:mutable] ; (semi)permanent
+   [traits : (HashTable String (U Symbol Number Boolean String '()))]
 
-  [inventory #:mutable]
-  [location #:mutable]
-  [stance #:mutable]) ; only NPCs
- #:constructor-name actor*)
+   [statuses : (Listof status)]   ; (semi)temporary
+   [conditions : (Listof condition)] ; (semi)permanent
+
+   [inventory : (Listof (U item Symbol))]
+   [location-id : (Maybe LocationId)]
+   [stance : (Maybe stance)]) ; only NPCs
+  #:constructor-name actor*
+  #:mutable
+  #:prefab)

@@ -6,7 +6,6 @@
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
 
   "../combat/stance.rkt"
 
@@ -28,71 +27,65 @@
   (case action-flag
 
     ['attack
-     (define damage-roll '(λ () (d 1 2)))
-     (define details
-       `(list
-         (cons 'damage-roll ,damage-roll)
-         (cons 'damage-roll-formula "1d2")
-         ))
-     (make-action
-      #:symbol 'melee
+     (define target-id (actor-id (pc)))
+     (make-melee-attack-action
       #:actor actor
       #:duration 1
-      #:target (pc)
-      #:tags '(initiative-based-resolution)
-      #:details details
-      #:resolution-rules
-      `(
-        (displayln (format "ACTOR: ~a" (actor-name ,actor)))
-        (resolve-melee-action! ,actor (pc) ,details)
-        ))]
+      #:target target-id
+      #:n 1
+      #:x 2
+      #:bonus 0
+      )]
 
     ['go-to-engaged
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'go-to-engaged
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
       `(
         (define lp (pc-actor-lp (pc)))
-        (define dex (,actor-dexterity ,actor))
+        (define dex ,(actor-dexterity actor))
+        (displayln "GO TO ENGAGED: TODO: fix")
         (define success?
           (cond ((positive? lp)
                  (displayln "[LP positive]")
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
-        (if success?
-            (begin
-              (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        ; (if success?
+        ;     (begin
+        ;       (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-              (let ([enemy-stance (stance "α" 'engaged "right")])
-                (set-actor-stance! ,actor enemy-stance)))
+        ;       (let ([enemy-stance (stance "α" 'engaged "right")])
+        ;         (set-actor-stance! ,actor enemy-stance)))
 
-            (begin
-              (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-              (displayln "[-1 LP]")
-              (set-pc-actor-lp! (pc)
-                                (- (pc-actor-lp (pc))
-                                   1))
-              (when (< (pc-actor-lp (pc)) 0)
-                (set-pc-actor-lp! (pc)
-                                  0))
-              (displayln (pc-actor-lp (pc)))
-              'failure))
+        ;     (begin
+        ;       (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+        ;       (displayln "[-1 LP]")
+        ;       (set-pc-actor-lp! (pc)
+        ;                         (- (pc-actor-lp (pc))
+        ;                            1))
+        ;       (when (< (pc-actor-lp (pc)) 0)
+        ;         (set-pc-actor-lp! (pc)
+        ;                           0))
+        ;       (displayln (pc-actor-lp (pc)))
+        ;       'failure))
         'ok
         )
       )]
 
     ['go-to-close
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'go-to-close
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '()
       #:resolution-rules
@@ -108,11 +101,12 @@
         ))]
 
     ['blindscrape
+     (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'inflict-status
       #:actor actor
       #:duration 1
-      #:target (pc)
+      #:target target-id
       #:tags '(initiative-based-resolution)
       #:details '(blind)
       #:resolution-rules
@@ -180,6 +174,7 @@
                (make-blindscraper-action actor action-flag))))
 
            ((= (actor-hp actor) 1)
+            (define id (actor-id actor))
             (make-action
              #:symbol 'flee
              #:actor actor
@@ -188,7 +183,7 @@
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             `((resolve-flee-action! ,actor))))))
+             `((resolve-flee-action! ',id))))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 

@@ -1,30 +1,32 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "0-types/actor.rkt"))
+(provide (all-from-out "0-types/actor.rkt"
+                       "0-types/condition.rkt"
+                       "0-types/pc-actor.rkt"
+                       "0-types/status.rkt"))
 
-(require "0-types/actor.rkt")
+(require "0-types/actor.rkt"
+         "0-types/condition.rkt"
+         "0-types/pc-actor.rkt"
+         "0-types/status.rkt")
 
 (require racket/lazy-require)
 
-(require "condition.rkt"
-         "status.rkt"
-
-         "../items/item.rkt"
+(require "../items/item.rkt"
 
          "../core/io.rkt"
          "../core/utils.rkt")
 
+
 (lazy-require
- ["pc-actor.rkt"
-  (pc-actor?
-   pc-take-damage!
-   set-pc-actor-alive?!
-   set-pc-actor-cause-of-death!
-   )]
  ["../state/state.rkt"
   (pc
    current-location
+   current-last-numeric-actor-id
+   current-last-numeric-actor-id++
+   get-next-numeric-actor-id
+   display-combatant-info
    )]
  ["../world/world.rkt"
   (remove-actor-from-its-current-location!
@@ -37,7 +39,8 @@
          name
          type
          max-hp)
-  (actor* name type max-hp max-hp
+  (define id (get-next-numeric-actor-id))
+  (actor* id name type max-hp max-hp
           ; attributes
           '() '() '() '() '()
           ; traits etc
@@ -50,13 +53,16 @@
   (hash-set! (actor-traits actor) trait-name trait-value))
 
 (define (get-trait actor trait-name)
-  (define result (hash-ref (actor-traits actor) trait-name 'not-found))
-  (when (eq? result 'not-found)
-    (dev-note (format
-                "-- get-trait: trait [~a] not found on actor [~a]"
-                trait-name
-                (actor-name actor))))
-  result)
+  (cond (actor
+         (define result (hash-ref (actor-traits actor) trait-name 'not-found))
+         (when (eq? result 'not-found)
+           (dev-note (format
+                      "-- get-trait: trait [~a] not found on actor [~a]"
+                      trait-name
+                      (actor-name actor))))
+         result)
+        (else 'not-found)
+        ))
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
@@ -74,9 +80,9 @@
   (define s (findf (λ (status)
                      (eq? (status-type status) type))
                    (actor-statuses actor)))
-  (if s 
-    (status-lifetime s)
-    #f))
+  (if s
+      (status-lifetime s)
+      #f))
 
 (define (decrement-actor-status-lifetimes! actor)
   (for ([status (actor-statuses actor)])
@@ -87,8 +93,8 @@
         (set! new-statuses (append-element new-statuses status))
         (notice
          (format "~a: Status [~a] removed"
-          (actor-name actor)
-          (status-type status)))))
+                 (actor-name actor)
+                 (status-type status)))))
   (set-actor-statuses! actor new-statuses))
 
 ; think:
@@ -207,15 +213,15 @@
        (format "~a is dead. Cause of death: ~a"
                (actor-name actor)
                (cond ((symbol? cause-of-death)
-                        (describe-cause-of-death cause-of-death))
-                      ((string? cause-of-death)
-                        cause-of-death)
-                      ((symbol? (car cause-of-death))
-                        (describe-cause-of-death (car cause-of-death)))
-                      ((string? (car cause-of-death))
-                        (car cause-of-death))
-                      (else "NA"))
-                      )))
+                      (describe-cause-of-death cause-of-death))
+                     ((string? cause-of-death)
+                      cause-of-death)
+                     ((symbol? (car cause-of-death))
+                      (describe-cause-of-death (car cause-of-death)))
+                     ((string? (car cause-of-death))
+                      (car cause-of-death))
+                     (else "NA"))
+               )))
 
   (cond ((pc-actor? actor)
          (set-pc-actor-alive?! actor 'dead)
@@ -223,8 +229,8 @@
          )
         (else
          (remove-actor-from-its-current-location! actor)
-         (define corpse (cons 'corpse "Corpse (TODO)"))
-         (add-feature-to-location! (current-location) corpse))))
+         (dev-note "TODO: corpse")
+         (add-feature-to-location! (current-location) 'corpse))))
 
 
 (define (add-item-to-inventory! actor item)
@@ -234,8 +240,12 @@
                                 (list item))))
 
 (define (actor-has-item? actor item)
+  (define id (cond ((symbol? item) item)
+                   (else (item-id item))))
   (define inventory (actor-inventory actor))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
+  (findf (λ (inventory-item)
+           (cond ((symbol? item) (eq? id inventory-item))
+                 (else (eq? (item-id inventory-item) id))))
          inventory))
 
 
@@ -292,3 +302,71 @@
   (findf (λ (item) (ranged-weapon? item))
          items)
   )
+
+(define (process-condition-on-end-turn owner condition)
+  (case condition
+    ['bleed
+     (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
+     (cond ((= 1 bleed-damage-roll)
+            (notice "Bleed check: 1d6 = 1: [1] => 1 dmg")
+            (take-damage owner 1 'bleed)
+            (display-combatant-info owner)
+            )
+           (else
+            (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll))))]
+    ['ankle-broken '()]
+    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" (condition-type condition)))])
+  )
+
+
+(define (make-pc-actor
+         name
+         max-hp
+         max-lp)
+  (current-last-numeric-actor-id++) ; TODO: Dirty: symbol vs integer?
+  (pc-actor*
+   'pc name 'pc max-hp max-hp
+   ; attributes
+   '() '() '() '() '()
+   ; traits etc
+   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0
+   ; hunger
+   200))
+
+(define (pc-take-damage! actor damage damage-type)
+  (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
+
+  (cond ((not (positive? (actor-hp actor)))
+
+         (define new-hp (- (actor-hp actor) damage))
+         (set-actor-hp! actor new-hp)
+         (notice (format "Taking damage, new HP : ~a]" new-hp))
+
+         (define death-roll-dice (pc-actor-death-roll-dice actor))
+         (define death-roll (d 1 death-roll-dice))
+         (define result (+ death-roll
+                           (actor-hp actor)))
+         (notice (format "Death roll: 1d~a + HP = ~a – ~a = ~a"
+                         death-roll-dice
+                         death-roll
+                         (abs (actor-hp actor)) ; slightly dirty: actor-hp *should* be non-positive
+                         result))
+
+         (define cause-of-death damage-type)
+
+         (cond ((<= result 1)
+                (begin
+                  (kill actor cause-of-death)
+                  'dead))
+               (else
+                'hit)
+               ))
+
+        (else
+         (define new-hp (- (actor-hp actor) damage))
+         (when (not (positive? new-hp))
+           (displayln "[Otava is dying.]")
+           (wait-for-confirm))
+
+         (set-actor-hp! actor new-hp)
+         'hit)))

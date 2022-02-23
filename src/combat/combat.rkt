@@ -9,9 +9,6 @@
   "stance.rkt"
 
   "../actors/actor.rkt"
-  "../actors/condition.rkt"
-  "../actors/pc-actor.rkt"
-  "../actors/status.rkt"
 
   "../core/session.rkt"
   "../core/io.rkt"
@@ -94,12 +91,13 @@
       ['mid
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
       #;['close ; this is specific to enemy type etc
-       (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")])))
+         (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")])))
 
 (define (get-combatant-name actor)
   (cond ((pc-actor? actor)
          "Otava")
         (else
+         (when actor
          (define stance (actor-stance actor))
          (cond ((= (length (get-current-enemies)) 1)
                 (actor-name actor))
@@ -111,7 +109,7 @@
                       ""))
                 (cond ((eq? "" sign)
                        name)
-                      (else (format "~a ~a" name sign))))))))
+                      (else (format "~a ~a" name sign)))))))))
 
 
 (define (display-non-pc-combatant-info actor)
@@ -132,12 +130,12 @@
              "???"
              (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))
         (if (not (null? stance))
-         (tr
-          "range"
-          (format "~a" (stance-range stance)))
-         (tr
-          "range"
-          "N/A")))]
+            (tr
+             "range"
+             (format "~a" (stance-range stance)))
+            (tr
+             "range"
+             "N/A")))]
 
       [("Blindscraper")
        (tbody
@@ -145,12 +143,12 @@
          "size"
          (get-trait actor "size"))
         (if (not (null? stance))
-         (tr
-          "range"
-          (symbol->string (stance-range stance)))
-         (list
-          "range"
-          "N/A")))]))
+            (tr
+             "range"
+             (symbol->string (stance-range stance)))
+            (list
+             "range"
+             "N/A")))]))
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -203,7 +201,7 @@
   (define body
     (for/list ([event (current-combat-timeline)])
       (tr (number->string (combat-event-at event)) (combat-event-details event))
-    ))
+      ))
   (info-card body "Combat timeline")
   )
 

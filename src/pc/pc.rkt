@@ -6,7 +6,6 @@
 
 (require
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
   "../items/item.rkt"
   "../core/io.rkt"
   "../core/utils.rkt")

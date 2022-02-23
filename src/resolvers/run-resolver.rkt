@@ -55,15 +55,15 @@
   (current-run (add1 (current-run)))
   (current-round 0)
   (remove-flag 'ending-run-allowed)
-  (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
+  (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?))
 
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
   #;(current-round 0)
   (remove-flag 'ending-run-allowed)
-  (add-feature-to-location! (find-place-by-id (world-places (current-world)) 'martaanvuo-docks) 'mieli)
-  (move-pc-to-location! (find-place-by-id (world-places (current-world)) 'perimeter))
+  (add-feature-to-location! (get-place-by-id 'martaanvuo-docks) 'mieli)
+  (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-recurse-run))
 
 (define (on-continue-run)

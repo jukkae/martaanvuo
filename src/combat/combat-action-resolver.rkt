@@ -5,8 +5,6 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
-
 (lazy-require
  ["combat.rkt"
   (get-combatant-name
@@ -22,8 +20,6 @@
   "../actions/action.rkt"
 
   "../actors/actor.rkt"
-  "../actors/pc-actor.rkt"
-  "../actors/status.rkt"
 
   "../core/checks.rkt"
   "../core/io.rkt"
@@ -45,83 +41,92 @@
    describe-finish-traverse-action
    describe-cancel-traverse-action
    location-on-enter!
-   )])
-
-(lazy-require
- ["../round-resolver/event-handler.rkt"
+   )]
+ ["../resolvers/round-resolver/event-handler.rkt"
   (handle-interrupting-event!
-   )])
+   )]
+ ["../world/world.rkt"
+  (get-actor)])
 
 
 ; "generic" attack with type
-(define (resolve-melee-action! actor target details)
-  (define target-defense (get-trait target "defense"))
-  (define skill (get-trait actor "melee-attack-skill"))
+(define (resolve-melee-action! action)
+  (let/ec return
+    (define actor (get-actor (action-actor-id action)))
+    (when (not actor) (return 'actor-removed))
+    (define target (get-actor (action-target action)))
+    (when (not target) (return 'target-removed))
+    (define target-defense (get-trait target "defense"))
+    (define skill (get-trait actor "melee-attack-skill"))
 
-  ; (define bonus 0)
-  ; (cond ((member 'fallen (actor-statuses target))
-  ;        (displayln "[Target fallen, TN -2]")
-  ;        (set! bonus 2)
-  ;        ))
-  ; (cond ((engaged?)
-  ;        (displayln "[Engaged, TN +1]")
-  ;        (set! bonus -1)
-  ;        ))
-  ; (define action-target-number (- 7 bonus))
+    ; (define bonus 0)
+    ; (cond ((member 'fallen (actor-statuses target))
+    ;        (displayln "[Target fallen, TN -2]")
+    ;        (set! bonus 2)
+    ;        ))
+    ; (cond ((engaged?)
+    ;        (displayln "[Engaged, TN +1]")
+    ;        (set! bonus -1)
+    ;        ))
+    ; (define action-target-number (- 7 bonus))
 
-  (define title
-    (format "Melee attack, ~a vs ~a"
-            (get-combatant-name actor)
-            (get-combatant-name target)))
-  ; #;(define success? (skill-check title skill action-target-number))
-  (define success? #t)
+    (define title
+      (format "Melee attack, ~a vs ~a"
+              (get-combatant-name actor)
+              (get-combatant-name target)))
+    ; #;(define success? (skill-check title skill action-target-number))
+    (define success? #t)
+
+    (define damage-roll (melee-attack-action-damage-roll action))
+    (define damage-roll-result (d
+                                (standard-damage-roll-n damage-roll)
+                                (standard-damage-roll-x damage-roll)
+                                ; (standard-damage-roll-bonus damage-roll)
+                                ))
+    (define body
+      (tbody
+       (tr "damage"
+           (format "~a: [~a]"
+                   (damage-roll-formula damage-roll)
+                   damage-roll-result))))
+    (info-card body title)
+
+    (define action-result 'ok)
+    (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+    (when (eq? action-result 'dead)
+      ; TODO what's a smart place to store this? the actor?
+      (case (actor-name target)
+        [("Blindscraper") (award-xp! 7)]))
+
+    (display-combatant-info target)
+    (newline)
+
+    ; Urgh, refactor!
+    (when (eq? action-result 'dead)
+      (if (not (pc-actor? target))
+          (p "The " (actor-name target) " is dead.")
+          (begin
+            (p "Otava is dead.")
+            (set! action-result 'pc-dead))))
 
 
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
+    (define descr
+      (format "melee attack, ~a vs ~a (~a)"
+              (get-combatant-name actor)
+              (get-combatant-name target)
+              (case action-result
+                ['ok "hit"]
+                ['dead "hit and kill"]
+                [else action-result])))
+    (add-combat-event descr)
 
-  (define body
-    (tbody
-      (tr "damage"
-          (format "~a: [~a]" damage-roll-formula damage-roll-result))))
-  (info-card body title)
-
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-  (when (eq? action-result 'dead)
-    ; TODO what's a smart place to store this? the actor?
-    (case (actor-name target)
-      [("Blindscraper") (award-xp! 7)]))
-
-  (display-combatant-info target)
-  (newline)
-
-  ; Urgh, refactor!
-  (when (eq? action-result 'dead)
-    (if (not (pc-actor? target))
-        (p "The " (actor-name target) " is dead.")
-        (begin
-          (p "Otava is dead.")
-          (set! action-result 'pc-dead))))
-
-
-  (define descr
-    (format "melee attack, ~a vs ~a (~a)"
-    (get-combatant-name actor)
-    (get-combatant-name target)
-    (case action-result
-     ['ok "hit"]
-     ['dead "hit and kill"]
-     [else action-result])))
-  (add-combat-event descr)
-
-  action-result
+    (return action-result)
+    )
   )
 
 (define (resolve-successful-shoot-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+  (define actor (get-actor (action-actor-id action)))
+  (define target (get-actor (action-target action)))
   (define title
     (format "Ranged [firearms], ~a vs ~a"
             (get-combatant-name actor)
@@ -169,20 +174,23 @@
   )
 
 (define (resolve-shoot-action! action)
-  (define actor (action-actor action))
-  (define target (action-target action))
+  (define actor (get-actor (action-actor-id action)))
+  (define target (get-actor (action-target action)))
   (define gun (get-firearm actor))
   (case (ranged-weapon-ammo-left gun)
     [(0) (p "Click. Out of ammo.")
-         (award-xp! 1 "Whoops.")
-         (set-flag 'aware-of-being-out-of-ammo)
-         (increment-achievement! 'forgetful)
-         'failure]
+     (award-xp! 1 "Whoops.")
+     (set-flag 'aware-of-being-out-of-ammo)
+     (increment-achievement! 'forgetful)
+     'failure]
     [else (resolve-successful-shoot-action! action)]
     )
   )
 
 (define (resolve-break-free-action! actor target [str-mod 0])
+  (when (or (number? target)
+            (symbol? target))
+    (set! target (get-actor target)))
   (define target-stance (actor-stance target))
 
   (define statuses (actor-statuses actor))
@@ -194,57 +202,58 @@
            statuses))
 
   (cond (actor-bound-status
-    (define target-number (status-lifetime actor-bound-status))
+         (define target-number (status-lifetime actor-bound-status))
 
-    (define dice-sides 4)
-    (define bonus str-mod)
-    (define roll (d 1 dice-sides))
-    (define result (+ roll bonus))
+         (define dice-sides 4)
+         (define bonus str-mod)
+         (define roll (d 1 dice-sides))
+         (define result (+ roll bonus))
 
-    (define success?
-      (cond ((= roll 1) #f)
-            ((= roll dice-sides) #t)
-            (else (> result target-number))))
+         (define success?
+           (cond ((= roll 1) #f)
+                 ((= roll dice-sides) #t)
+                 (else (> result target-number))))
 
-    (define success-string
-      (if success?
-          "success"
-          "failure"))
+         (define success-string
+           (if success?
+               "success"
+               "failure"))
 
-    (notice
-     (format "Resolution: 1d10 + bonus > TN: ~a + ~a = ~a > ~a - ~a"
-             (number->string roll)
-             (number->string bonus)
-             (number->string result)
-             (number->string target-number)
-             success-string))
-    ; crit = nat MAX = always succeed,
-    ; crit fail = nat 1 = always fail, avoid hard failures?
-    (wait-for-confirm)
-    (cond (success?
-           (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
-           (award-xp! 4)
-           (define enemies (get-current-enemies))
-           (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
-           (remove-actor-from-its-current-location! grabberkin)
-           (actor-remove-status! actor actor-bound-status)
-           'ok)
-          (else
-           (p "The grip is still too strong for Otava to break it.")
-           (award-xp! 1)
-           'failed))
-  )
-  (else ; pc not bound
-    (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
-    (award-xp! 3)
-    (dev-note "Fix me: shouldn't end combat")
-    'end-combat
-    ))
+         (notice
+          (format "Resolution: 1d10 + bonus > TN: ~a + ~a = ~a > ~a - ~a"
+                  (number->string roll)
+                  (number->string bonus)
+                  (number->string result)
+                  (number->string target-number)
+                  success-string))
+         ; crit = nat MAX = always succeed,
+         ; crit fail = nat 1 = always fail, avoid hard failures?
+         (wait-for-confirm)
+         (cond (success?
+                (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
+                (award-xp! 4)
+                (define enemies (get-current-enemies))
+                (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
+                (remove-actor-from-its-current-location! grabberkin)
+                (actor-remove-status! actor actor-bound-status)
+                'ok)
+               (else
+                (p "The grip is still too strong for Otava to break it.")
+                (award-xp! 1)
+                'failed))
+         )
+        (else ; pc not bound
+         (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
+         (award-xp! 3)
+         (dev-note "Fix me: shouldn't end combat")
+         'end-combat
+         ))
   )
 
 
 ; skinnable, but in a sense generic action
-(define (resolve-flee-action! actor)
+(define (resolve-flee-action! actor-id)
+  (define actor (get-actor actor-id))
   (cond ((pc-actor? actor)
          (p "Otava turns her back to run.")
          (define skill (get-trait (pc) "athletics-skill"))

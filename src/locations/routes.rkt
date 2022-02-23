@@ -4,50 +4,69 @@
          route-shortname
          set-route-endpoint-visited!)
 
-(require "0-types/place.rkt"
+(require "0-types/location.rkt"
          "../core/api.rkt")
 
-(define (route-other-end-from route start-location)
+; returns id
+(define (route-other-end-from route-or-id startpoint-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
+  (when (location? startpoint-id) (set! startpoint-id (location-id startpoint-id)))
   (define start
-    (cond ((eq? (location-id start-location)
-                (location-id (route-a route)))
+    (cond ((eq? startpoint-id
+                (route-a route))
            'a)
-          ((eq? (location-id start-location)
-                (location-id (route-b route)))
+          ((eq? startpoint-id
+                (route-b route))
            'b)))
-  (define endpoint
+  (define endpoint-id
     (case start
       ['a (route-b route)]
       ['b (route-a route)]))
-  endpoint)
 
-(define (set-route-endpoint-visited! route location)
+  endpoint-id)
+
+(define (set-route-endpoint-visited! route-or-id endpoint-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define endpoint
-    (cond ((eq? (location-id location)
-                (location-id (route-a route)))
+    (cond ((eq? endpoint-id
+                (route-a route))
            'a)
-          ((eq? (location-id location)
-                (location-id (route-b route)))
+          ((eq? endpoint-id
+                (route-b route))
            'b)))
   (case endpoint
     ['a (add-detail-to-location! route 'a-visited)]
     ['b (add-detail-to-location! route 'b-visited)]))
 
 
-(define (route-place-known? route place)
+(define (route-place-known? route-or-id place)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define endpoint
     (cond ((eq? (location-id place)
-                (location-id (route-a route)))
+                (route-a route))
            'a)
           ((eq? (location-id place)
-                (location-id (route-b route)))
+                (route-b route))
            'b)))
   (case endpoint
     ['a (place-visited? (route-a route))]
     ['b (place-visited? (route-b route))])
   )
 
-(define (route-shortname route)
+(define (route-shortname route-or-id)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
   (define direction (get-pending-traverse-direction))
 
   (define startpoint
@@ -58,6 +77,11 @@
     (case direction
       ['a-to-b (route-b route)]
       ['b-to-a (route-a route)]))
+
+  (when (symbol? startpoint)
+    (set! startpoint (get-location-by-id startpoint)))
+  (when (symbol? endpoint)
+    (set! endpoint (get-location-by-id endpoint)))
 
   (cond ((route-fully-known? route)
          (format "En route: ~a – ~a"
