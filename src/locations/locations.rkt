@@ -35,11 +35,6 @@
                                (p "Otava takes the book in her hands. Bound in supple leather, heavier than you'd expect. The book fills her with apprehension and dread."))
                 #:next-fragment 'read-the-book
                 ))
-             (when (location-has-feature? location 'waiting-room-begin)
-               (make-decision
-                #:title "Enter waiting room."
-                #:next-fragment 'waiting-room-begin
-                ))
              (when (location-has-feature? location 'martaanvuo-console)
                (make-decision
                 #:title "Turn on the terminal."
