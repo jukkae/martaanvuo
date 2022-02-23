@@ -1,7 +1,5 @@
 #lang at-exp racket
 
-(require rebellion/collection/association-list)
-
 (require
   "combat.rkt"
 
@@ -57,7 +55,7 @@
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
 
          (define details
-           (association-list 'str-mod strength-mod))
+           (list 'str-mod strength-mod))
 
          (define target-id
            (actor-id (take-random close-grabberkin)))

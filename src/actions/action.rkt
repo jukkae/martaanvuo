@@ -14,7 +14,7 @@
    [duration : Natural]
    [target : (Maybe (U item ActorId LocationId))]
    [tags : (Listof Symbol)]
-   [details : (Listof (U Symbol status))]
+   [details : (Listof (U Symbol status Number))]
    [resolution-rules : (Maybe Sexp)]
    [on-before-rules : (Maybe Sexp)]
    [on-after-rules : (Maybe Sexp)])
@@ -28,7 +28,7 @@
                      #:duration Natural)
                     (#:target (Maybe (U item ActorId LocationId))
                      #:tags (Listof Symbol)
-                     #:details (Listof (U Symbol status))
+                     #:details (Listof (U Symbol status Number))
                      #:resolution-rules (Maybe Sexp)
                      #:on-before-rules (Maybe Sexp)
                      #:on-after-rules (Maybe Sexp))

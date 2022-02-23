@@ -5,8 +5,6 @@
 
 (require racket/lazy-require)
 
-(require rebellion/collection/association-list)
-
 (lazy-require
  ["combat.rkt"
   (get-combatant-name
@@ -44,7 +42,7 @@
    describe-cancel-traverse-action
    location-on-enter!
    )]
- ["../round-resolver/event-handler.rkt"
+ ["../resolvers/round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )]
  ["../world/world.rkt"
@@ -190,6 +188,9 @@
   )
 
 (define (resolve-break-free-action! actor target [str-mod 0])
+  (when (or (number? target)
+            (symbol? target))
+    (set! target (get-actor target)))
   (define target-stance (actor-stance target))
 
   (define statuses (actor-statuses actor))

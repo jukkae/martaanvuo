@@ -15,6 +15,7 @@
 
   "../../blurbs/blurbs.rkt"
 
+  "../../combat/combat.rkt"
   "../../combat/combat-action-resolver.rkt"
   "../../combat/stance.rkt"
 
