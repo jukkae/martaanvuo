@@ -37,7 +37,7 @@
             (λ ()
               (make-action
                #:symbol 'flee
-               #:actor 'pc
+               #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules

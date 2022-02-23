@@ -54,15 +54,15 @@
 
 (define (get-trait actor trait-name)
   (cond (actor
-    (define result (hash-ref (actor-traits actor) trait-name 'not-found))
-    (when (eq? result 'not-found)
-      (dev-note (format
-                "-- get-trait: trait [~a] not found on actor [~a]"
-                trait-name
-                (actor-name actor))))
-    result)
-    (else 'not-found)
-  ))
+         (define result (hash-ref (actor-traits actor) trait-name 'not-found))
+         (when (eq? result 'not-found)
+           (dev-note (format
+                      "-- get-trait: trait [~a] not found on actor [~a]"
+                      trait-name
+                      (actor-name actor))))
+         result)
+        (else 'not-found)
+        ))
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
@@ -240,8 +240,12 @@
                                 (list item))))
 
 (define (actor-has-item? actor item)
+  (define id (cond ((symbol? item) item)
+                   (else (item-id item))))
   (define inventory (actor-inventory actor))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) item))
+  (findf (λ (inventory-item)
+           (cond ((symbol? item) (eq? id inventory-item))
+                 (else (eq? (item-id inventory-item) id))))
          inventory))
 
 
