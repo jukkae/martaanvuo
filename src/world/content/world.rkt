@@ -45,7 +45,6 @@
    (make-place
     #:id 'crematory
     #:type 'crematory
-    #:features '(waiting-room-begin)
     #:shortname "Crematory")
 
    (make-place
@@ -107,7 +106,8 @@
     #:id 'slaughterhouse)
 
    (make-place
-    #:id 'waiting-room)
+    #:id 'waiting-room
+    #:features '(waiting-room-begin))
 
    (make-place
     #:id 'palsat)))
@@ -127,8 +127,9 @@
      (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
      (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
      (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
-     (make-path-between places 'crematory 'the-maw)
-     (make-path-between places 'the-maw 'waiting-room)
+     (make-path-between places 'crematory 'the-maw #:no-encounters? #t)
+     (make-path-between places 'the-maw 'waiting-room #:no-encounters? #t #:onedirectional? #t)
+
      (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
      (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
      (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
@@ -160,6 +161,7 @@
          id-b
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f]
+         #:onedirectional? [onedirectional? #f]
          #:details [details '()])
 
   (define (find-place place-id)
@@ -179,7 +181,8 @@
              #:actors actors))
   (define route-id (location-id r))
   (set-place-routes! place-a (append-element (place-routes place-a) route-id))
-  (set-place-routes! place-b (append-element (place-routes place-b) route-id))
+  (when (not onedirectional?)
+    (set-place-routes! place-b (append-element (place-routes place-b) route-id)))
   (when hidden? (error "Implement hidden paths"))
   r)
 
