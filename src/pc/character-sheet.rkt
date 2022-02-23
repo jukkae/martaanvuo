@@ -121,7 +121,11 @@
   (define items (actor-inventory actor))
   (define items-list
     (for/list ([item items])
-      (cond ((ranged-weapon? item)
+      (cond ((symbol? item)
+             (tr
+              (format "~a" item)
+              ""))
+            ((ranged-weapon? item)
              (tr
               (item-name item)
               (format "ammo left: ~a" (ranged-weapon-ammo-left item))))

@@ -32,7 +32,7 @@
    [statuses : (Listof status)]   ; (semi)temporary
    [conditions : (Listof condition)] ; (semi)permanent
 
-   [inventory : (Listof item)]
+   [inventory : (Listof (U item Symbol))]
    [location-id : (Maybe LocationId)]
    [stance : (Maybe stance)]) ; only NPCs
   #:constructor-name actor*

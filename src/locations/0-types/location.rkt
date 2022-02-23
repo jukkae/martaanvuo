@@ -28,10 +28,10 @@
 (define (remove-actor-from-location! [location : location] [actor : actor])
   (set-location-actors! location (remove actor (location-actors location))))
 
-(define (add-item-to-location! [location : location] [item : item])
+(define (add-item-to-location! [location : location] [item : (U item Symbol)])
   (set-location-items! location (cons item (location-items location))))
 
-(define (remove-item-from-location! [location : location] [item : item])
+(define (remove-item-from-location! [location : location] [item : (U item Symbol)])
   (set-location-items! location (remove item (location-items location))))
 
 (define (add-feature-to-location! [location : location] [feature : Symbol])
