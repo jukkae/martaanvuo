@@ -53,73 +53,77 @@
 
 ; "generic" attack with type
 (define (resolve-melee-action! action)
-  (define actor (get-actor (action-actor-id action)))
-  (define target (get-actor (action-target action)))
-  (define target-defense (get-trait target "defense"))
-  (define skill (get-trait actor "melee-attack-skill"))
+  (let/ec return
+    (define actor (get-actor (action-actor-id action)))
+    (when (not actor) (return 'actor-removed))
+    (define target (get-actor (action-target action)))
+    (when (not target) (return 'target-removed))
+    (define target-defense (get-trait target "defense"))
+    (define skill (get-trait actor "melee-attack-skill"))
 
-  ; (define bonus 0)
-  ; (cond ((member 'fallen (actor-statuses target))
-  ;        (displayln "[Target fallen, TN -2]")
-  ;        (set! bonus 2)
-  ;        ))
-  ; (cond ((engaged?)
-  ;        (displayln "[Engaged, TN +1]")
-  ;        (set! bonus -1)
-  ;        ))
-  ; (define action-target-number (- 7 bonus))
+    ; (define bonus 0)
+    ; (cond ((member 'fallen (actor-statuses target))
+    ;        (displayln "[Target fallen, TN -2]")
+    ;        (set! bonus 2)
+    ;        ))
+    ; (cond ((engaged?)
+    ;        (displayln "[Engaged, TN +1]")
+    ;        (set! bonus -1)
+    ;        ))
+    ; (define action-target-number (- 7 bonus))
 
-  (define title
-    (format "Melee attack, ~a vs ~a"
-            (get-combatant-name actor)
-            (get-combatant-name target)))
-  ; #;(define success? (skill-check title skill action-target-number))
-  (define success? #t)
+    (define title
+      (format "Melee attack, ~a vs ~a"
+              (get-combatant-name actor)
+              (get-combatant-name target)))
+    ; #;(define success? (skill-check title skill action-target-number))
+    (define success? #t)
 
-  (define damage-roll (melee-attack-action-damage-roll action))
-  (define damage-roll-result (d
-                              (standard-damage-roll-n damage-roll)
-                              (standard-damage-roll-x damage-roll)
-                              ; (standard-damage-roll-bonus damage-roll)
-                              ))
-  (define body
-    (tbody
-     (tr "damage"
-         (format "~a: [~a]"
-                 (damage-roll-formula damage-roll)
-                 damage-roll-result))))
-  (info-card body title)
+    (define damage-roll (melee-attack-action-damage-roll action))
+    (define damage-roll-result (d
+                                (standard-damage-roll-n damage-roll)
+                                (standard-damage-roll-x damage-roll)
+                                ; (standard-damage-roll-bonus damage-roll)
+                                ))
+    (define body
+      (tbody
+       (tr "damage"
+           (format "~a: [~a]"
+                   (damage-roll-formula damage-roll)
+                   damage-roll-result))))
+    (info-card body title)
 
-  (define action-result 'ok)
-  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-  (when (eq? action-result 'dead)
-    ; TODO what's a smart place to store this? the actor?
-    (case (actor-name target)
-      [("Blindscraper") (award-xp! 7)]))
+    (define action-result 'ok)
+    (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+    (when (eq? action-result 'dead)
+      ; TODO what's a smart place to store this? the actor?
+      (case (actor-name target)
+        [("Blindscraper") (award-xp! 7)]))
 
-  (display-combatant-info target)
-  (newline)
+    (display-combatant-info target)
+    (newline)
 
-  ; Urgh, refactor!
-  (when (eq? action-result 'dead)
-    (if (not (pc-actor? target))
-        (p "The " (actor-name target) " is dead.")
-        (begin
-          (p "Otava is dead.")
-          (set! action-result 'pc-dead))))
+    ; Urgh, refactor!
+    (when (eq? action-result 'dead)
+      (if (not (pc-actor? target))
+          (p "The " (actor-name target) " is dead.")
+          (begin
+            (p "Otava is dead.")
+            (set! action-result 'pc-dead))))
 
 
-  (define descr
-    (format "melee attack, ~a vs ~a (~a)"
-            (get-combatant-name actor)
-            (get-combatant-name target)
-            (case action-result
-              ['ok "hit"]
-              ['dead "hit and kill"]
-              [else action-result])))
-  (add-combat-event descr)
+    (define descr
+      (format "melee attack, ~a vs ~a (~a)"
+              (get-combatant-name actor)
+              (get-combatant-name target)
+              (case action-result
+                ['ok "hit"]
+                ['dead "hit and kill"]
+                [else action-result])))
+    (add-combat-event descr)
 
-  action-result
+    (return action-result)
+    )
   )
 
 (define (resolve-successful-shoot-action! action)
