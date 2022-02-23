@@ -247,9 +247,9 @@
        ; route traversal can be canceled
        (when (route? (current-location))
          (define destination
-           (get-cancel-and-go-back-destination
+           (get-location-by-id (get-cancel-and-go-back-destination
             (current-location)
-            (current-pending-action)))
+            (current-pending-action))))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -263,7 +263,7 @@
                  #:resolution-rules
                  `(
                    (define from
-                     (cond ((,route? ,destination)
+                     (cond (,(route? destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-a destination)
                                 (route-b destination)))
@@ -272,7 +272,7 @@
                            ))
 
                    (define to
-                     (cond ((,route? ,destination)
+                     (cond (,(route? destination)
                             (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
                                 (route-b destination)
                                 (route-a destination)))
@@ -284,7 +284,7 @@
 
                    (describe-cancel-traverse-action from to)
                    (display-location-info-card (current-location))
-                   (when (not (null? (location-items ,destination)))
+                   (when (not (null? (location-items (current-location))))
                      (pick-up-items!))
                    'ok
 

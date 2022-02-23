@@ -75,7 +75,7 @@
 
   (define target (get-location-by-id cancel-traverse-endpoint-id))
 
-  (format "Go back to ~a." (place-shortname target)))
+  (format "[cancel] Go back to ~a." (place-shortname target)))
 
 (define (get-cancel-and-go-back-destination
          route
