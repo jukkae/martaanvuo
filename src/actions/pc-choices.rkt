@@ -141,21 +141,21 @@
                #:resolution-rules
                `(
                  (define food-tier
-                   (case (,item-id ,food)
+                   (case ',(item-id food)
                      ['fresh-berries 0]
                      ['ration 1]
                      ['vatruska 2]
                      [else
-                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
+                      (displayln (format "Unknown comestible ~a" ',(item-id food)))
                       1])
                    )
-                 (decrease-pc-hunger-level food-tier)
-
-                 (case (,item-id ,food)
+                 (case ',(item-id food)
                    ['fresh-berries (p "The berries are invigoratingly sweet.")]
                    ['ration (p "The ration's dry and bland, but filling.")]
                    ['vatruska (p "The vatruska tastes heavenly.")])
-                 (remove-item! (,item-id ,food))
+                 (decrease-pc-hunger-level food-tier)
+                 (remove-item! ',(item-id food))
+                 (notice "Comestible consumed.")
 
                  ))))
 
@@ -248,8 +248,8 @@
        (when (route? (current-location))
          (define destination
            (get-location-by-id (get-cancel-and-go-back-destination
-            (current-location)
-            (current-pending-action))))
+                                (current-location)
+                                (current-pending-action))))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -407,7 +407,7 @@
 
                                     (process-timeline! tl)
                                     (return tl))
-                                    )
+                                  )
 
                                 'before-action-ok
                                 ))
