@@ -7,11 +7,13 @@
 (require "0-types/location.rkt"
          "../core/api.rkt")
 
+; returns id
 (define (route-other-end-from route-or-id startpoint-id)
   (define route
     (cond [(route? route-or-id)
            route-or-id]
           [else (get-location-by-id route-or-id)]))
+  (when (location? startpoint-id) (set! startpoint-id (location-id startpoint-id)))
   (define start
     (cond ((eq? startpoint-id
                 (route-a route))
@@ -19,11 +21,12 @@
           ((eq? startpoint-id
                 (route-b route))
            'b)))
-  (define endpoint
+  (define endpoint-id
     (case start
       ['a (route-b route)]
       ['b (route-a route)]))
-  endpoint)
+
+  endpoint-id)
 
 (define (set-route-endpoint-visited! route-or-id endpoint-id)
   (define route
