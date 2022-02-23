@@ -111,7 +111,7 @@
                  ('hit
                   (inflict-condition!
                    target
-                   (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo"))
+                   (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" '()))
                   (when critical?
                     (inflict-condition!
                      target
@@ -119,6 +119,7 @@
                      (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
                                 ;"resolve-anklebreaker-action!: details for 'bleeding todo"
                                 '() ; details
+                                '() ; on-end-round-rules
                                 )))
                   (display-combatant-info target)
                   'ok)
