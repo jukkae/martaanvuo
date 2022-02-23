@@ -146,7 +146,9 @@
 
 
 ; scripting API
+; actor or ActorId
 (define (remove-enemy enemy)
+  (when (or (symbol? enemy) (number? enemy)) (set! enemy (get-actor enemy)))
   (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
 ; scripting API

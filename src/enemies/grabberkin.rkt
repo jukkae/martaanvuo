@@ -210,7 +210,7 @@
       `(
         (p "The Grabberkin's hands let go of Otava's ankles and disappear under the moss.")
         (award-xp! 3 "for surviving an encounter with a Grabberkin")
-        (remove-enemy ,actor)
+        (remove-enemy ',(actor-id actor))
         ))]
 
     [else
