@@ -77,21 +77,6 @@
   (inventory)
   #t)
 
-(define (notes)
-  (define actor (pc))
-
-  (define list-items
-    (tbody
-     (tr "Martaanvuo" "The anomaly is very strong here.")))
-
-  (info-card
-   list-items
-   "Notes")
-
-  (wait-for-confirm)
-  #t)
-
-
 (define (display-tasks)
   (info-card
    (for/list ([t (tasks)])

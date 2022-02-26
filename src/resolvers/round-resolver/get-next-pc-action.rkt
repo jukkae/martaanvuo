@@ -34,7 +34,6 @@
   (display-tasks
    display-log
    inventory
-   notes
    quit
    restart
    )])
@@ -223,7 +222,6 @@
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
-  (hash-set! meta-commands "N" (cons "[N]: Notes." notes))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   #;(when (not (null? (actor-inventory (pc))))
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
