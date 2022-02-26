@@ -9,8 +9,8 @@
           "../items/item.rkt"
           "../locations/0-types/location.rkt"
           "../pc/pc.rkt"
-          "../quests/quest.rkt"
-          "../quests/quests.rkt"
+          "../tasks/task.rkt"
+          "../tasks/tasks.rkt"
 
           "../state/logging.rkt"
           "../state/state.rkt"
@@ -29,8 +29,8 @@
   "../locations/0-types/location.rkt"
 
   "../pc/pc.rkt"
-  "../quests/quest.rkt"
-  "../quests/quests.rkt"
+  "../tasks/task.rkt"
+  "../tasks/tasks.rkt"
 
   "../state/logging.rkt"
   "../state/state.rkt"

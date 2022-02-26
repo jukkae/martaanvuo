@@ -31,7 +31,7 @@
 
 (lazy-require
  ["ui.rkt"
-  (display-quests
+  (display-tasks
    display-log
    inventory
    notes
@@ -228,7 +228,7 @@
   #;(when (not (null? (actor-inventory (pc))))
     (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
+  (hash-set! meta-commands "T" (cons "[T]: Tasks." display-tasks))
   meta-commands)
 
 (define (print-decisions-with-keys decisions-with-keys)

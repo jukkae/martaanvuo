@@ -15,7 +15,7 @@
 
   "../pc/character-sheet.rkt"
 
-  "../quests/quest.rkt"
+  "../tasks/task.rkt"
 
   "../world/world.rkt"
 
@@ -27,7 +27,7 @@
                current-in-combat?
                current-life
                current-pc
-               current-quests
+               current-tasks
                current-run)])
 
 (lazy-require
@@ -108,27 +108,17 @@
    (location-actors (current-location))))
 
 ; api
-(define (quests)
-  (current-quests))
+(define (tasks)
+  (current-tasks))
 
-(define (find-quest id)
-  (findf (λ (q) (eq? (quest-id q) id))
-         (current-quests)))
+(define (find-task id)
+  (findf (λ (t) (eq? (task-id t) id))
+         (current-tasks)))
 
 
 
 (define (reduce-debt-by! amount)
-  (define debt-quest (find-quest 'pay-off-debt))
-
-  (define old-debt-amount (quest-details debt-quest))
-  (define new-debt-amount (- old-debt-amount amount))
-  (set-quest-details! debt-quest new-debt-amount)
-  (set-quest-notes! debt-quest
-                    (format "unsettled: ~a g gold" new-debt-amount))
-  (displayln "new-debt-amount:")
-  #;(displayln (~r new-debt-amount)) ; formatting todo
-  (displayln new-debt-amount)
-
+  (dev-note "FIXME: debt amount modification")
   '())
 
 
@@ -166,36 +156,6 @@
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))
   (inventory))
-
-(define (add-quest! quest)
-  (current-quests
-   (append-element (current-quests) quest)))
-
-(define (quest-exists? id)
-  (define quests (current-quests))
-  (if (null? quests)
-      #f
-      (findf (λ (quest) (eq? id (quest-id quest))) quests)))
-
-; set-quest-status! is obviously reserved
-(define (update-quest-status! id status)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-status! quest status)))
-
-; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
-(define (update-quest-notes! id notes)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-notes! quest notes)))
-
-(define (update-quest-details! id details)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-details! quest details)))
 
 (define (increment-achievement! achievement)
   (case achievement

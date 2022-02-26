@@ -7,7 +7,7 @@
   "../../core/session.rkt"
   "../../core/utils.rkt"
 
-  "../../quests/quest.rkt"
+  "../../tasks/task.rkt"
 
   "../../state/state.rkt")
 
@@ -33,9 +33,9 @@
   (define session-score (d (current-session-score-dice) 4))
   (define body
     (tbody
-      (tr (format "Total score: ~a" session-score))
-      (tr "")
-      (tr (format "~a" (current-session-score-reasons)))))
+     (tr (format "Total score: ~a" session-score))
+     (tr "")
+     (tr (format "~a" (current-session-score-reasons)))))
   (info-card body "Session stats")
   (newline))
 
@@ -52,8 +52,8 @@
 
          (define quit-message (get-quit-text))
          (when (not (equal? quit-message ""))
-          (prln quit-message)
-          (newline))
+           (prln quit-message)
+           (newline))
 
          (exit))
         (else
@@ -92,22 +92,15 @@
   #t)
 
 
-(define (display-quests)
-  (define body
-    (for/list ([q (quests)])
-      (format-quest-for-card q)))
-  (define sheet
-    (append
-     (tbody
-      (tr "quest" "status" "notes"))
-
-     body))
-
+(define (display-tasks)
   (info-card
-   sheet
-   "Quests")
-  (wait-for-confirm)
-  )
+   (for/list ([t (tasks)])
+      (tr
+       (~a (task-name t))
+       (~a (task-info-blurb t))
+       (~a (task-status-text t))))
+   "Tasks")
+  (wait-for-confirm))
 
 (define (display-log)
   (hr)

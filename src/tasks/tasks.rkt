@@ -4,66 +4,57 @@
 
 (require racket/lazy-require)
 
-(require "quest.rkt"
-         "../core/io.rkt")
+; TODO: This should reprovide task and act as 'module entrypoint'
+(require "task.rkt"
+         "../core/io.rkt"
+         "../core/utils.rkt")
 
-(lazy-require
- ["../state/state.rkt"
-  (add-quest!
-   quest-exists?)])
+(lazy-require ["../state/state.rkt"
+               (current-tasks)])
 
-(define (create-quest quest-symbol)
-  (define q
-    (case quest-symbol
+(define (add-task! task)
+  (current-tasks
+   (append-element (current-tasks) task)))
+
+; (-> Symbol (Maybe Task))
+(define (task-exists? id)
+  (define tasks (current-tasks))
+  (if (null? tasks)
+      #f
+      (findf (λ (task) (eq? id (task-id task))) tasks)))
+
+(define (create-task id)
+  (define t
+    (case id
       ['pay-off-debt
-       (quest 'pay-off-debt
-              "Debt to Mediator"
-              "in progress"
-              "unsettled: 10,111 grams of gold" ; MAKE A FUCKING PLOT POINT OF THIS
-              10111)]
+       (task
+        'pay-off-debt
+        "Pay off debt"
+        (partially-completed 0 10.111)
+        "Long story. But, this time she has it in writing."
+        "10,111 grams of gold left."
+        '()
+        '()
+        '()
+        )]
+
       ['anthead-monograph
-       (quest 'anthead-monograph
-              "Anthead Monograph"
-              "in progress"
-              "find the Maw, find the Book"
-              '())]
-      ['loot-the-cache
-       (quest 'loot-the-cache
-              "Loot the Cache"
-              "in progress"
-              "power plant (?) on the hill"
-              '())]
-      ['grabberkin-finger
-       (quest 'grabberkin-finger
-              "Grabberkin finger"
-              "in progress"
-              "Anthill: 29 g gold / each"
-              '())]))
+       (task
+        'find-anthead-monograph
+        "Anthead Monograph"
+        'in-progress
+        "Ancient book contains knowledge to become deathless."
+        "Find it. Should be in the Maw (?) of Martaanvuo."
+        '()
+        '()
+        'study-anthead-monograph
+        )]
 
-  (when (not (quest-exists? quest-symbol))
-    (add-quest! q)
-
-    (info-card
-     (tbody
-      (tr (format "~a" (quest-title q))
-          (format "~a" (quest-status q))
-          (format "~a" (quest-notes q))))
-     "New quest")
-
-    (wait-for-confirm)))
-
-
+      [else (error (format "Unknown task id: ~a" id))]))
+  (when (not (task-exists? id))
+    (add-task! t))
+)
 #|
-  (define-type task-state (U 'pending 'in-progress 'completed 'failed))
-
-  (task
-    id
-    title
-    requirements
-    rewards
-    failure-sanctions
-    state
-    )
 
 Magpie King's War
 - Loot Cache
@@ -78,7 +69,7 @@ Magpie King's War
   -> escape with a time limit
 - Fish for Magpie
 
-The Rise of the Anthill
+Rise of Anthill
 - Grabberkin Fingers (ongoing, will buy lots; there's a bag somewhere in the Facility)
 - Search for the Specific Cog
 - Eliminate Aberration
@@ -97,6 +88,8 @@ Annexed Murkwater Files, Batch 1
 - Information about More Gold
 
 Annexed Murkwater Files, Batch 2
+- Find It (in The Facility)
+- Study It
 - Information about Martaanvuo Source and Various Temporo-Ontological Fluxuations in the Environs
 - Information about The Tunnel Between The Worlds
 
@@ -104,7 +97,10 @@ The Extremist Faction
 - Destroy the World <- one actual ENDING
 
 The Debt
-- Pay It Off
+- Pay It Off (NOTE: "countdown" thing)
+
+"unsettled: 10,111 grams of gold" ; MAKE A FUCKING PLOT POINT OF THIS
+              10111
 
 Mieli
 - I will meet you again

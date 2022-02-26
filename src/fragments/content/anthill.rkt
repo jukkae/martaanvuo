@@ -22,7 +22,7 @@
   (make-decision
    #:title "GOAL: gold, REQUEST: work."
    #:description "\"GOAL: gold. REQUEST: work-for-gold <or: equivalent>\""
-   #:next-fragment 'anthill-quest
+   #:next-fragment 'anthill-task
    )
   (make-decision
    #:title "GOAL: freedom, REQUEST: help."
@@ -34,20 +34,13 @@
    #:description "\"GOAL: redacted. REQUEST: passage.\""
    #:next-fragment 'anthill-passage
    )
-  (make-decision
-   #:title "GOAL: anthead-monograph, REQUEST: information."
-   #:description "\"GOAL: anthead-monograph. REQUEST: information.\""
-   #:next-fragment 'anthill-monograph
-   #:requirement (λ () (quest-exists? 'anthead-monograph))
-   )
   ))
 
 (fragment
- 'anthill-quest
+ 'anthill-task
  (thunk
   (p
    "\"NEED: 1 grabberkin-finger, PAYMENT: 29 human-units gold\", Anthill says.")
-  (create-quest 'grabberkin-finger)
   (p "\"REQUEST: information <subject: grabberkin>\", Otava asks.")
   (p "\"GRABBERKIN: envious drowner-bonebreakers, water-dweller slowmovers\", Anthill replies, \"rotten strong-grips.\"")
   (p "\"REQUEST: information <subject: grabberkin-finger, uses>\", Otava continues.")

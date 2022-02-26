@@ -56,8 +56,7 @@
 
 (define current-in-combat? (make-parameter #f))
 
-(define current-quests (make-parameter '()))
-(define current-persistent-quests (make-parameter '()))
+(define current-tasks (make-parameter '()))
 
 (define current-pc (make-parameter '()))
 (define current-life (make-parameter 0))
@@ -86,8 +85,7 @@
   (current-run 0)
   (current-elapsed-time 0)
   (current-in-combat? #f)
-  (current-quests '())
-  (current-persistent-quests '())
+  (current-tasks '())
   (current-pc (make-new-pc))
   (current-life 0)
   (current-fragment-id '())
@@ -116,8 +114,7 @@
   [run #:mutable]
   [elapsed-time #:mutable]
   [in-combat? #:mutable]
-  [quests #:mutable]
-  [persistent-quests #:mutable]
+  [tasks #:mutable]
   [pc #:mutable]
   [life #:mutable]
   [current-fragment-id #:mutable]
@@ -148,8 +145,7 @@
      (current-run)
      (current-elapsed-time)
      (current-in-combat?)
-     (current-quests)
-     (current-persistent-quests)
+     (current-tasks)
      (current-pc)
      (current-life)
      (current-fragment-id)
@@ -183,8 +179,7 @@
   (current-run (state-run s))
   (current-elapsed-time (state-elapsed-time s))
   (current-in-combat? (state-in-combat? s))
-  (current-quests (state-quests s))
-  (current-persistent-quests (state-persistent-quests s))
+  (current-tasks (state-tasks s))
   (current-pc (state-pc s))
   (current-life (state-life s))
   (current-fragment-id (state-current-fragment-id s))
