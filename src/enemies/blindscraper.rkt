@@ -184,9 +184,31 @@
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             `((resolve-escape-action! ',id))))))
+             `(
+               (notice (format "~a tries to escape." (get-combatant-name actor)))
+               (define skill 1)
+               (define stance (actor-stance actor))
+               (define value (get-stance-range-numeric-value (stance-range stance)))
+               (define target-number
+                 (if (= value 0)
+                     10
+                     8))
+
+               (define success? (skill-check "Athletics" skill target-number))
+               (if success?
+                   (begin
+                     (p "The blindscraper skitters away and disappears in the foliage.")
+                     (award-xp! 1)
+                     (remove-actor-from-its-current-location! actor)
+                     'ok)
+                   (begin
+                     (p "The blindscraper tries to run away, its legs skittering and slipping, but it is not fast enough.")
+                     (actor-add-status! actor (status 'fallen 1))
+                     (display-combatant-info actor)
+                     'failure))
+               )))))
         (else
-         (begin (displayln "Blindscraper AI, not in combat")))))
+         (begin (dev-note "Blindscraper AI, not in combat")))))
 
 (define (get-blindscraper-reaction actor)
   '())

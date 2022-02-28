@@ -56,7 +56,7 @@
         "Hartmann Device"
         'in-progress'
         "\"Null-State Collapse Initiator, the Last Key to the Last Lock, World-Unfurler, Pain-Ender.\""
-        "Find it. Use it. ")]
+        "Find it. Use it. ")] ; Or destroy it... in this timeline only
 
       [else (error (format "Unknown task id: ~a" id))]))
   (when (not (task-exists? id))

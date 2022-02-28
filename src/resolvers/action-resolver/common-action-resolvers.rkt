@@ -12,7 +12,6 @@
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
-  "../../actors/pc-actor.rkt"
 
   "../../combat/combat-action-resolver.rkt"
 

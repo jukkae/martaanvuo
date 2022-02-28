@@ -41,7 +41,56 @@
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `((resolve-escape-action! 'pc))))))
+               `(
+                 (define enemies (get-current-enemies))
+                 (cond ((> (length enemies) 1)
+                        (displayln "resolve-escape-action!: Narration for multiple enemies"))
+                       ((= (length enemies) 0)
+                        (displayln "resolve-escape-action!: Narration for zero enemies"))
+                       (else
+                        (define enemy (get-current-enemy))
+                        (case (actor-type enemy)
+                          ['blindscraper
+                           (displayln "escaping from blindscraper")
+                           ]
+                          ['grabberkin
+                           (displayln "escaping from grabberkin")
+                           ])
+                        )
+                       )
+                 (p "Otava turns her back to run.")
+                 (define skill (get-trait (pc) "athletics-skill"))
+                 (displayln "TODO: Blurbify escape success/fail narration based on location")
+
+                 (define stance-range-values '())
+                 (for ([enemy enemies])
+                   (define stance (actor-stance enemy))
+                   (define value (get-stance-range-numeric-value (stance-range stance)))
+                   (set! stance-range-values (append-element stance-range-values value)))
+                 (define target-number
+                   ; if there's an enemy in engaged range, then more difficult check
+                   (if (member 0 stance-range-values)
+                       10
+                       8))
+
+                 (define success? (skill-check "Athletics" skill target-number))
+                 (if success?
+                     (begin ; TODO: only note failure
+                       (p "She dives behind a small bush and waits.")
+                       (wait-for-confirm)
+                       (if (luck-check)
+                           (p "PASS")
+                           (p "FAIL"))
+                       (p "Nothing seems to be following her.")
+                       (award-xp! 3 "for a working survival instinct")
+                       'end-combat)
+                     (begin
+                       (p "Otava's foot gets caught on a root. She falls face down in the mud.")
+                       (actor-add-status! (pc) (status 'fallen 1))
+                       (display-pc-combatant-info (pc))
+                       (wait-for-confirm)
+                       'failure))
+                 )))))
          (set! combat-choices (append-element combat-choices escape-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
