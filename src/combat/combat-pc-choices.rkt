@@ -30,19 +30,19 @@
 
   (cond ((and (not (engaged?))
               (not (actor-has-status-of-type? (pc) 'bound)))
-         (define run-choice
+         (define escape-choice
            (make-choice
-            'flee
-            "Run"
+            'escape
+            "Escape."
             (λ ()
               (make-action
-               #:symbol 'flee
+               #:symbol 'escape
                #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `((resolve-flee-action! 'pc))))))
-         (set! combat-choices (append-element combat-choices run-choice))))
+               `((resolve-escape-action! 'pc))))))
+         (set! combat-choices (append-element combat-choices escape-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
   (define close-grabberkin
@@ -50,7 +50,8 @@
                                'grabberkin))
             close-enemies))
 
-  (cond ((not (null? close-grabberkin))
+  (cond ((and (not (null? close-grabberkin))
+              (actor-has-condition-of-type? (pc) 'bound))
 
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
 

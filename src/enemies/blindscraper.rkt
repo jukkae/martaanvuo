@@ -48,9 +48,9 @@
       #:details '()
       #:resolution-rules
       `(
+        (displayln "GO TO ENGAGED: TODO: fix")
         (define lp (pc-actor-lp (pc)))
         (define dex ,(actor-dexterity actor))
-        (displayln "GO TO ENGAGED: TODO: fix")
         (define success?
           (cond ((positive? lp)
                  (displayln "[LP positive]")
@@ -90,6 +90,7 @@
       #:details '()
       #:resolution-rules
       `(
+        (displayln "GO TO CLOSE: TODO: fix")
         (define lp (pc-actor-lp (pc)))
         (define dex (,actor-dexterity ,actor))
 
@@ -176,14 +177,14 @@
            ((= (actor-hp actor) 1)
             (define id (actor-id actor))
             (make-action
-             #:symbol 'flee
+             #:symbol 'escape
              #:actor actor
              #:duration 1
              #:target '()
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             `((resolve-flee-action! ',id))))))
+             `((resolve-escape-action! ',id))))))
         (else
          (begin (displayln "Blindscraper AI, not in combat")))))
 

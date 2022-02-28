@@ -251,12 +251,28 @@
   )
 
 
-; skinnable, but in a sense generic action
-(define (resolve-flee-action! actor-id)
+(define (resolve-escape-action! actor-id)
   (define actor (get-actor actor-id))
   (cond ((pc-actor? actor)
+         (define enemies (get-current-enemies))
+         (cond ((> (length enemies) 1)
+                (dev-note "resolve-escape-action!: Narration for multiple enemies"))
+               ((= (length enemies) 0)
+                (dev-note "resolve-escape-action!: Narration for zero enemies"))
+               (else
+                (define enemy (get-current-enemy))
+                (case (actor-type enemy)
+                 ['blindscraper
+                  (dev-note "escaping from blindscraper")
+                  ]
+                 ['grabberkin
+                  (dev-note "escaping from grabberkin")
+                  ])
+               )
+               )
          (p "Otava turns her back to run.")
          (define skill (get-trait (pc) "athletics-skill"))
+         (dev-note "TODO: Blurbify escape success/fail narration based on location")
 
          (define stance-range-values '())
          (for ([enemy (get-current-enemies)])

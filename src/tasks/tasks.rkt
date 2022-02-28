@@ -50,6 +50,14 @@
         'study-anthead-monograph
         )]
 
+      ['hartmann-device
+       (task
+        'hartmann-device
+        "Hartmann Device"
+        'in-progress'
+        "\"Null-State Collapse Initiator, the Last Key to the Last Lock, World-Unfurler, Pain-Ender.\""
+        "Find it. Use it. ")]
+
       [else (error (format "Unknown task id: ~a" id))]))
   (when (not (task-exists? id))
     (add-task! t))

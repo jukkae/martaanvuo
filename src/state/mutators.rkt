@@ -107,6 +107,17 @@
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
+(define (get-current-enemy)
+ (define enemies (get-current-enemies))
+ (cond ((null? enemies)
+        #f)
+       ((> 1 (length enemies))
+        (dev-note "get-current-enemy: Multiple enemies present!")
+        (car enemies))
+       (else
+        (car enemies)))
+)
+
 ; api
 (define (tasks)
   (current-tasks))

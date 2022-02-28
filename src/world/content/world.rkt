@@ -75,8 +75,7 @@
 
    (make-place
     #:id 'workshop
-    ;#:features '(hartmann-device)
-    #:features '(martaanvuo-console)
+    #:features '(hartmann-device)
     #:type 'workshop)
 
    (make-place
@@ -91,7 +90,8 @@
     #:items '(anthead-monograph))
 
    (make-place
-    #:id 'control-room)
+    #:id 'control-room
+    #:features '(martaanvuo-console))
 
    (make-place
     #:id 'reactor-room)

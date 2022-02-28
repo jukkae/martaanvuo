@@ -26,7 +26,7 @@
 (provide resolve-turns!)
 (define (resolve-turns!)
   (let/ec end-round-early
-    (when (all-actions-of-type? action-queue 'flee)
+    (when (all-actions-of-type? action-queue 'escape)
       (p "Otava turns and ducks in the shadows. She waits a while.")
       (award-xp! 1)
       (end-combat)
