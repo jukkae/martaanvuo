@@ -48,7 +48,6 @@
       #:details '()
       #:resolution-rules
       `(
-        (displayln "GO TO ENGAGED: TODO: fix")
         (define lp (pc-actor-lp (pc)))
         (define dex ,(actor-dexterity actor))
         (define success?
@@ -57,24 +56,24 @@
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
-        ; (if success?
-        ;     (begin
-        ;       (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        (if success?
+            (begin
+              (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-        ;       (let ([enemy-stance (stance "α" 'engaged "right")])
-        ;         (set-actor-stance! ,actor enemy-stance)))
+              (let ([enemy-stance (stance "α" 'engaged "right")])
+                (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance)))
 
-        ;     (begin
-        ;       (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-        ;       (displayln "[-1 LP]")
-        ;       (set-pc-actor-lp! (pc)
-        ;                         (- (pc-actor-lp (pc))
-        ;                            1))
-        ;       (when (< (pc-actor-lp (pc)) 0)
-        ;         (set-pc-actor-lp! (pc)
-        ;                           0))
-        ;       (displayln (pc-actor-lp (pc)))
-        ;       'failure))
+            (begin
+              (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+              (displayln "[-1 LP]")
+              (set-pc-actor-lp! (pc)
+                                (- (pc-actor-lp (pc))
+                                   1))
+              (when (< (pc-actor-lp (pc)) 0)
+                (set-pc-actor-lp! (pc)
+                                  0))
+              (displayln (pc-actor-lp (pc)))
+              'failure))
         'ok
         )
       )]
@@ -90,14 +89,13 @@
       #:details '()
       #:resolution-rules
       `(
-        (displayln "GO TO CLOSE: TODO: fix")
         (define lp (pc-actor-lp (pc)))
         (define dex (,actor-dexterity ,actor))
 
         (p "The Blindscraper skitters towards Otava.")
 
         (let ([enemy-stance (stance "α" 'close "right")])
-          (set-actor-stance! ,actor enemy-stance))
+          (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance))
         'ok
         ))]
 
