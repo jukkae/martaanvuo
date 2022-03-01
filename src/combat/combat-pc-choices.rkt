@@ -58,7 +58,6 @@
                            ])
                         )
                        )
-                 (p "Otava turns her back to run.")
                  (define skill (get-trait (pc) "athletics-skill"))
                  (displayln "TODO: Blurbify escape success/fail narration based on location")
 
@@ -75,15 +74,17 @@
 
                  (define success? (skill-check "Athletics" skill target-number))
                  (if success?
-                     (begin ; TODO: only note failure
-                       (p "She dives behind a small bush and waits.")
+                     (begin
+                       (p "Otava dives in the shadows.")
                        (wait-for-confirm)
-                       (if (luck-check)
-                           (p "PASS")
-                           (p "FAIL"))
-                       (p "Nothing seems to be following her.")
-                       (award-xp! 3 "for a working survival instinct")
-                       'end-combat)
+                       (cond ((luck-check)
+                              (p "Nothing seems to be following her.")
+                              (award-xp! 3 "for a working survival instinct")
+                              'end-combat)
+                             (else
+                              (p "The blindscraper skitters and scrapes, leaping and running, its claws scratching and scraping through air. It's still following her.")
+                              'fail))
+                       )
                      (begin
                        (p "Otava's foot gets caught on a root. She falls face down in the mud.")
                        (actor-add-status! (pc) (status 'fallen 1))
