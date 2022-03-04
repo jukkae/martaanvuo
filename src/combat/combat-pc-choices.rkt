@@ -205,12 +205,6 @@
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
 
-         (define details
-           `(list
-             (cons 'damage-roll '(λ () 1))
-             (cons 'damage-roll-formula "1")
-             (cons 'damage-type 'bludgeoning)
-             ))
          (make-choice
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
@@ -221,8 +215,9 @@
              #:duration 1
              #:target target-id
              #:n 1
-             #:x 2
+             #:x 1
              #:bonus 0
+             #:damage-type 'bludgeoning
              ))))
        )))
 

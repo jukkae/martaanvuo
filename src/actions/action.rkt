@@ -53,6 +53,8 @@
   #:mutable
   )
 
+(define-type DamageType Symbol)
+
 (: damage-roll-formula (-> standard-damage-roll String))
 (define (damage-roll-formula roll)
   (define b (standard-damage-roll-bonus roll))
@@ -68,7 +70,8 @@
 
 (struct melee-attack-action
   action
-  ([damage-roll : standard-damage-roll])
+  ([damage-roll : standard-damage-roll]
+   [damage-type : (Maybe DamageType)])
   #:prefab
   #:mutable
   #:constructor-name melee-attack-action*
@@ -82,6 +85,7 @@
                                   #:bonus Integer
                                   )
                                  (
+                                  #:damage-type (Maybe DamageType)
                                   #:resolution-rules (Maybe Sexp)
                                   #:on-before-rules (Maybe Sexp)
                                   #:on-after-rules (Maybe Sexp)
@@ -98,6 +102,7 @@
          #:n n
          #:x x
          #:bonus bonus
+         #:damage-type [damage-type '()]
          )
   (define symbol 'melee)
   (define tags '(initiative-based-resolution))
@@ -106,7 +111,7 @@
                        n
                        x
                        bonus))
-  (melee-attack-action* symbol (actor-id actor) duration target tags details resolution-rules on-before-rules on-after-rules attack-roll))
+  (melee-attack-action* symbol (actor-id actor) duration target tags details resolution-rules on-before-rules on-after-rules attack-roll damage-type))
 
 
 
