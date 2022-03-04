@@ -13,8 +13,7 @@
 
 
 (define (current-fragment-on-begin-round!)
-  ((story-fragment-on-begin-round! (get-fragment (current-fragment-id))))
-  (wait-for-confirm))
+  ((story-fragment-on-begin-round! (get-fragment (current-fragment-id)))))
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)

@@ -31,7 +31,7 @@
         'pay-off-debt
         "Pay off debt"
         (partially-completed 0 10.111)
-        "Long story. But, this time she has it in writing."
+        "Long story."
         "10,111 grams of gold left."
         '()
         '()
@@ -50,6 +50,18 @@
         'study-anthead-monograph
         )]
 
+      ['grabberkin-fingers
+        (task
+        'grabberkin-fingers
+        "Grabberkin fingers for Anthill"
+        (partially-completed 0 5)
+        "Cause and effect: 5 fingers -> 1 g gold."
+        "In progress: 0"
+        '()
+        '()
+        '()
+        )]
+
       ['hartmann-device
        (task
         'hartmann-device
@@ -61,6 +73,18 @@
       [else (error (format "Unknown task id: ~a" id))]))
   (when (not (task-exists? id))
     (add-task! t))
+
+  (define body
+    (list
+     (tr
+       (~a (task-name t))
+       (~a (task-info-blurb t))
+       (~a (task-status-text t)))))
+  (info-card
+   body
+   "New task"
+   )
+  (wait-for-confirm)
 )
 #|
 

@@ -125,8 +125,4 @@
 
   (if #f
       (newline) ; This is the "extra" newline that separates rounds
-      '())
-
-  (if #f
-      (wait-for-confirm)
       '()))
