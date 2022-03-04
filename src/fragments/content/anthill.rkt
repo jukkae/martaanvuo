@@ -15,7 +15,7 @@
 
     "human / it-calls-itself Otava the Seeker.", Otava responds.
 
-    "CAUSE : Otava the Seeker BRINGS 5x GRABBERKIN FINGER
+    "CAUSE : Otava the Seeker BRINGS 1 BUNDLE OF 5 GRABBERKIN FINGERS
      EFFECT: 1 GRAM OF GOLD
      AGREE?", Anthill asks.
   }))

@@ -521,11 +521,10 @@
             ['anthill
              (make-choice
               'anthill
-              "Take a closer look at the anthill."
+              "Anthill."
               (λ ()
                 (go-to-story-fragment 'anthill-1)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
-
              ]
 
             ['waiting-room-begin
