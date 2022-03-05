@@ -109,7 +109,7 @@
             close-enemies))
 
   (cond ((and (not (null? close-grabberkin))
-              (actor-has-condition-of-type? (pc) 'bound))
+              (actor-has-status-of-type? (pc) 'bound))
 
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
 
