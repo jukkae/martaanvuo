@@ -125,18 +125,19 @@
 
 
 (define (reduce-debt-by! amount)
-  (dev-note "FIXME: debt amount modification")
+  (dev-note "TODO: debt amount modification")
   '())
 
 ; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
   (current-pc))
 
+; "clean up the board"
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
-  (end-combat!)
-  (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
+  (set-actor-statuses! (pc) '())
+  (end-combat!))
 
 
 ; actor or ActorId

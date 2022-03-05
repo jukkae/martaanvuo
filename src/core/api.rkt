@@ -4,6 +4,8 @@
           "io.rkt"
           "utils.rkt"
 
+          "../actors/actor.rkt"
+
           "../fragments/decision.rkt"
           "../fragments/fragment.rkt"
           "../items/item.rkt"
@@ -22,6 +24,8 @@
 (require
   "io.rkt"
   "utils.rkt"
+
+  "../actors/actor.rkt"
 
   "../fragments/decision.rkt"
   "../fragments/fragment.rkt"

@@ -44,7 +44,7 @@
         "Anthead Monograph"
         'in-progress
         "Ancient book contains knowledge to become deathless."
-        "Find it. Should be in the Maw (?) of Martaanvuo."
+        "Should be in the Maw (?) of Martaanvuo."
         '()
         '()
         'study-anthead-monograph

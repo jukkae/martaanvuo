@@ -140,7 +140,9 @@
              (tr
               (item-name item)
               (~v (item-quantity item))
-              (~v (item-details item))))
+              (if (not (null? (item-details item)))
+                  (~v (item-details item))
+                  "")))
             (else
              (tr
               (symbol->string item)

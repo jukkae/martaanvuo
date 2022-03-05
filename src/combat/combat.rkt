@@ -19,6 +19,11 @@
   "../world/world.rkt")
 
 (lazy-require
+ ["../resolvers/round-resolver/round-resolver.rkt"
+  (go-to-fragment
+   )])
+
+(lazy-require
  ["../state/state.rkt"  (current-in-combat?
                          current-log
                          current-location
@@ -214,4 +219,5 @@
   (current-combat-timeline '())
   (wait-for-confirm)
   (when (pc-is-alive?)
+    #;(go-to-fragment 'post-combat)
     (next-chapter!)))

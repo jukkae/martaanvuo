@@ -36,7 +36,7 @@
 
 (lazy-require
  ["../resolvers/round-resolver/round-resolver.rkt"
-  (go-to-story-fragment
+  (go-to-fragment
    )])
 
 
@@ -500,7 +500,7 @@
               "Magpie."
               (λ ()
                 (p "Despite the worsening rain, Otava goes into the monochrome bush.")
-                (go-to-story-fragment 'magpie)
+                (go-to-fragment 'magpie)
                 (remove-feature-from-location! (current-location) 'magpie-effigy)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
@@ -512,7 +512,7 @@
               "Check out the mesmerising overhang."
               (λ ()
                 (p "The glowing fog is starting to coalesce around her, as a rock gets loose under her foot. Otava slips.")
-                (go-to-story-fragment 'fall-down)
+                (go-to-fragment 'fall-down)
                 (wait-for-confirm)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
@@ -523,7 +523,7 @@
               'anthill
               "Anthill."
               (λ ()
-                (go-to-story-fragment 'anthill-1)
+                (go-to-fragment 'anthill-1)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
              ]
 
@@ -533,7 +533,7 @@
               "Enter the waiting room."
               (λ ()
                 (p "The penultimate step towards Ascending to a Higher Plane of Existence: To enter the waiting room!")
-                (go-to-story-fragment 'waiting-room-1)
+                (go-to-fragment 'waiting-room-1)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]

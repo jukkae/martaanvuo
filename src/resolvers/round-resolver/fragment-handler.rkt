@@ -36,7 +36,7 @@
   (when (procedure? next-fragment)
     (set! next-fragment (next-fragment)))
   (cond ((number? next-fragment)
-         (go-to-story-fragment next-fragment))
+         (go-to-fragment next-fragment))
 
         ((symbol? next-fragment)
          (cond
@@ -54,7 +54,7 @@
             'pc-dead)
 
            ; ... or it can be just a label
-           (else (go-to-story-fragment next-fragment))))
+           (else (go-to-fragment next-fragment))))
 
         ((null? next-fragment) ; treat '() as 'exit
          (unset-current-fragment-id!))
@@ -66,7 +66,7 @@
 (define (current-fragment-on-end-round!)
   '())
 
-(define (go-to-story-fragment id)
+(define (go-to-fragment id)
   (current-fragment-id id))
 
 (define (handle-fragment-decision decisions-with-keys input)
