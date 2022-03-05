@@ -53,7 +53,6 @@
 
 (define (in-combat?) (current-in-combat?))
 
-; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
 
@@ -64,7 +63,6 @@
 
   any-enemy-engaged?)
 
-; API
 (define (get-an-enemy-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-shuffled (shuffle current-enemies))
@@ -75,7 +73,6 @@
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
-; API
 (define (get-enemies-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-in-range '())
@@ -85,7 +82,10 @@
       (set! enemies-in-range (append-element enemies-in-range enemy))))
   enemies-in-range)
 
-; API
+(define (includes-enemy-of-type enemies type)
+  (findf (λ (enemy) (eq? (actor-type enemy) type))
+         enemies))
+
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee
@@ -95,12 +95,9 @@
      (dev-note "in-range? tbd")
      #f]))
 
-; api
 (define (current-location)
   (get-location-by-id (actor-location-id (pc))))
 
-
-; api
 (define (get-current-enemies)
   (filter
    (λ (actor) (and (actor-alive? actor)
@@ -118,7 +115,6 @@
         (car enemies)))
 )
 
-; api
 (define (tasks)
   (current-tasks))
 
@@ -132,13 +128,10 @@
   (dev-note "FIXME: debt amount modification")
   '())
 
-
-; scripting API / situation
-(provide pc)
+; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
   (current-pc))
 
-; scripting API / situation / implementation detail
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
@@ -146,20 +139,16 @@
   (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
 
 
-; scripting API
 ; actor or ActorId
 (define (remove-enemy enemy)
   (when (or (symbol? enemy) (number? enemy)) (set! enemy (get-actor enemy)))
   (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
-; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
 
-
-; api?
 (define (pick-up-items!)
   (p "Otava picks up everything there is to pick up.")
   (define all-items (location-items (current-location)))

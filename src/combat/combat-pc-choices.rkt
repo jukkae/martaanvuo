@@ -22,7 +22,15 @@
 
   (when (actor-has-item? (pc) 'bolt-cutters)
     (set! combat-choices
-          (append combat-choices (get-melee-choices))))
+          (append combat-choices (get-melee-choices)))
+    (when (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                          (get-enemies-at-range 'close))
+                                  'grabberkin)
+      (define e (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                                (get-enemies-at-range 'close))
+                                        'grabberkin))
+      (set! combat-choices
+            (append combat-choices (get-harvest-choice e)))))
 
   (when (actor-has-item? (pc) 'revolver)
     (set! combat-choices
@@ -164,7 +172,29 @@
           ))
   combat-choices)
 
-; implementation detail
+(define (get-harvest-choice target)
+  (list
+   (make-choice
+    'harvest-finger
+    (format "Harvest a finger from ~a [with bolt cutters]." (get-combatant-name target))
+    (λ ()
+      (define target-id (actor-id target))
+    (make-action
+      #:symbol 'harvest-finger
+      #:actor (pc)
+      #:duration 1
+      #:target target-id
+      #:tags '(initiative-based-resolution fast)
+      #:resolution-rules
+      `(
+        (add-item-to-inventory! (pc) 'grabberkin-finger)
+        (notice (format "Item added: ~a" "Grabberkin finger"))
+        (wait-for-confirm)
+        ))
+      ))))
+
+
+
 (define (get-ranged-choices)
   (define targets (get-current-enemies))
 
