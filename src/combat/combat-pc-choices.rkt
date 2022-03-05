@@ -179,18 +179,18 @@
     (format "Harvest a finger from ~a [with bolt cutters]." (get-combatant-name target))
     (λ ()
       (define target-id (actor-id target))
-    (make-action
-      #:symbol 'harvest-finger
-      #:actor (pc)
-      #:duration 1
-      #:target target-id
-      #:tags '(initiative-based-resolution fast)
-      #:resolution-rules
-      `(
-        (add-item-to-inventory! (pc) 'grabberkin-finger)
-        (notice (format "Item added: ~a" "Grabberkin finger"))
-        (wait-for-confirm)
-        ))
+      (make-action
+       #:symbol 'harvest-finger
+       #:actor (pc)
+       #:duration 1
+       #:target target-id
+       #:tags '(initiative-based-resolution fast)
+       #:resolution-rules
+       `(
+         (add-item! 'grabberkin-finger)
+         (notice (format "Item added: ~a" "Grabberkin finger"))
+         (wait-for-confirm)
+         ))
       ))))
 
 

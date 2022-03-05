@@ -463,7 +463,7 @@
                             "Forage results roll")
                            (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
                            (define item (list 'food (list amount)))
-                           (add-item-to-inventory! (pc) item)
+                           (add-item! item)
                            )
                           (else
                            (begin

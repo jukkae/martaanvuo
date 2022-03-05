@@ -8,7 +8,8 @@
 (struct item
   ([id : Symbol]
    [name : String]
-   [details : (Maybe Number)]) ; TODO:
+   [details : (Maybe Number)]
+   [quantity : (U Positive-Integer Positive-Float)])
   #:prefab
   #:mutable
   #:constructor-name item*)

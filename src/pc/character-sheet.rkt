@@ -116,7 +116,7 @@
 
   (define header
     (tbody
-     (tr "Item" "Notes")))
+     (tr "Item" "Quantity" "Notes")))
 
   (define items (actor-inventory actor))
   (define items-list
@@ -124,22 +124,27 @@
       (cond ((symbol? item)
              (tr
               (format "~a" item)
+              (~v (item-quantity item))
               ""))
             ((ranged-weapon? item)
              (tr
               (item-name item)
+              (~v (item-quantity item))
               (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
             ((eq? (item-id item) 'bolt-cutters)
              (tr
               (item-name item)
+              (~v (item-quantity item))
               ""))
             ((item? item)
              (tr
               (item-name item)
+              (~v (item-quantity item))
               (~v (item-details item))))
             (else
              (tr
               (symbol->string item)
+              (~v (item-quantity item))
               "")))
       ))
 

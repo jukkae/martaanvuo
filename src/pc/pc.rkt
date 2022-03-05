@@ -71,16 +71,10 @@
          #:title [title "Item added"]
          #:silent? [silent? #f])
   (define actor (pc))
-  (cond ((symbol? item)
-         (define new-item (make-item item #:amount amount))
-         (add-item-to-inventory! actor new-item)
-         (when (not silent?)
-           (item-info-card new-item #:title title)))
-        ((item? item)
-         (add-item-to-inventory! actor item)
+  (when (symbol? item) (set! item (make-item item #:amount amount)))
+  (add-item-to-inventory! actor item)
          (when (not silent?)
            (item-info-card item #:title title)))
-        (else (error "Error: add-item! expects symbol or item"))))
 
 (define (remove-item! id)
   (define items (actor-inventory (pc)))
