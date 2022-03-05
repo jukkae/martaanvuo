@@ -144,7 +144,8 @@
                   (inflict-condition!
                    target (condition
                            'ankle-broken
-                           "resolve-anklebreaker-action!: details todo"))
+                           "resolve-anklebreaker-action!: details todo"
+                           '()))
                   (when critical?
                     (inflict-condition!
                      target
