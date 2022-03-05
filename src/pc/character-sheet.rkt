@@ -1,6 +1,7 @@
 #lang at-exp racket
 
-(provide (all-defined-out))
+(provide character-sheet
+         display-inventory)
 
 (require racket/lazy-require)
 
@@ -15,7 +16,15 @@
   (pc
    )])
 
+
 (define (character-sheet)
+  (display-character-sheet)
+  (display-inventory)
+  (wait-for-confirm)
+  #t
+  )
+
+(define (display-character-sheet)
   (define actor (pc))
 
   (define sheet
@@ -94,24 +103,31 @@
   (when (not (null? traits-list))
     (set! traits-list (cons (tr "" "") traits-list)))
 
+
+  (define conditions (actor-conditions actor))
+  (define conditions-list
+    (for/list ([condition conditions])
+      (tr (format "[~a]" (condition-type condition)) "")))
+
+  ; append emptyline above
+  (when (not (null? conditions-list))
+    (set! conditions-list (cons (tr "" "") conditions-list)))
+
+
   (define hunger-list
     (list
      (tr "" "")
      (tr "hunger"
          (number->string (pc-actor-hunger actor)))))
 
-  (set! sheet (append sheet attributes-list traits-list hunger-list))
+  (set! sheet (append sheet attributes-list traits-list conditions-list hunger-list))
   (info-card
    sheet
    "Character sheet"
-   )
+   ))
 
-  (inventory)
-  (wait-for-confirm)
-  #t
-  )
 
-(define (inventory)
+(define (display-inventory)
   (define actor (pc))
 
   (define header
