@@ -16,7 +16,11 @@
   (pc
    )])
 
-
+; Eventually, maybe lift this to the same "level" as numbered options. Then:
+; Character sheet could be a treelike menu, where also letters are used.
+; '-' is used to go back one level.
+; Then, concrete actions with diegetic effects should return an action ultimately for (get-next-pc-action).
+; Otherwise, return #t or whatever's appropriate for round-resolver
 (define (character-sheet)
   (display-character-sheet)
   (display-inventory)

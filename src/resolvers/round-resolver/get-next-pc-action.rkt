@@ -55,6 +55,7 @@
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
 ; this pokes a hole through abstraction layers (as it should)
 ; (sort of like IO monad)
+; Returns action or symbol
 (define (get-next-pc-action)
   (let/ec return
     (let what-do-you-do ([question-repeated? #f])

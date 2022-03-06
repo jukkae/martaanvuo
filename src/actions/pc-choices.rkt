@@ -430,6 +430,27 @@
          (list
           (choice-factory 'eat)))
 
+       (when (not (null? (actor-conditions (pc))))
+        (list (make-choice
+                'treat-wounds
+                "Treat wounds."
+                (λ () (make-action
+                       #:symbol 'treat-wounds
+                       #:actor (pc)
+                       #:duration 80
+                       #:tags '(downtime)
+                       #:resolution-rules
+                       `(
+                         (for ([c (actor-conditions (pc))])
+                           (case (condition-type c)
+                             ['ankle-broken
+                              (p "Otava splints her purple, swollen ankle. She tries putting a little weight on it and immediately regrets it. There are multiple fractures in the small bones in her ankle.")]
+                             ['bleeding
+                              (p "Otava bandages her wounds. She's going to have some more scars.")])
+                           )
+                       )
+                       )))))
+
        (when (eq? (location-type (current-location)) 'swamp)
          (list
           (make-choice
