@@ -3,9 +3,9 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require
+  "combat-event.rkt"
   "stance.rkt"
 
   "../actors/actor.rkt"
@@ -164,13 +164,6 @@
    body
    name))
 
-
-(serializable-struct
- combat-event
- (details
-  at)
- #:constructor-name combat-event*
- #:transparent)
 
 (define (make-combat-event
          details)
