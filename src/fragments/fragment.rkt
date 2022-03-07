@@ -1,25 +1,26 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
 (provide (all-defined-out))
 
-(require racket/serialize)
+(require "decision.rkt")
 
-(serializable-struct
+(struct
  story-fragment
- (id
-  on-begin-round!
-  content
-  decisions))
+ ([id : Symbol]
+  [on-begin-round! : Procedure]
+  [content : String]
+  [decisions : (Listof decision)]))
 
 ; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere. (or s11n implemented somehow)
 
+(: *story-fragments* (HashTable Symbol story-fragment))
 (define *story-fragments* (make-hash))
 
 (define (fragment
-         id
-         on-begin-round!
-         #:content [content '()]
-         #:decisions [decisions '()]
+         [id : Symbol]
+         [on-begin-round! : Procedure]
+         #:content [content : String ""]
+         #:decisions [decisions : (Listof decision) '()]
          )
   (define frag
     (story-fragment
@@ -33,5 +34,6 @@
 ; this can currently error with
 ; hash-ref: no value found for key
 ; - if this happens during file load, then the cause is often a stale save file!
+(: get-fragment (-> Symbol story-fragment))
 (define (get-fragment id)
   (hash-ref *story-fragments* id #;(λ () '())))
