@@ -281,7 +281,7 @@
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The lone path.")]
-         [else (format "[go to: ~a" (route-other-end-from route start-location))])]
+         [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['martaanvuo-docks
        (case (route-other-end-from route start-location)
