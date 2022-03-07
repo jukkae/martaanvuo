@@ -1,13 +1,13 @@
-#lang at-exp racket
+#lang typed/racket
 
 (provide (all-defined-out))
 
-(require racket/serialize)
+(require "../../locations/0-types/location.rkt")
 
-(serializable-struct
- world
- (places
-  [routes #:mutable]
-  day
-  [elapsed-time #:mutable])
- #:transparent)
+(struct world
+  ([places : (Listof place)]
+   [routes : (Listof route)]
+   [day : Natural]
+   [elapsed-time : Natural])
+  #:prefab
+  #:mutable)
