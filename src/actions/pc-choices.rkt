@@ -248,8 +248,8 @@
        (when (route? (current-location))
          (define destination
            (get-location-by-id (get-cancel-and-go-back-destination
-            (current-location)
-            (current-pending-action))))
+                                (current-location)
+                                (current-pending-action))))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -407,7 +407,7 @@
 
                                     (process-timeline! tl)
                                     (return tl))
-                                    )
+                                  )
 
                                 'before-action-ok
                                 ))
@@ -431,7 +431,7 @@
           (choice-factory 'eat)))
 
        (when (not (null? (actor-conditions (pc))))
-        (list (make-choice
+         (list (make-choice
                 'treat-wounds
                 "Treat wounds."
                 (λ () (make-action
@@ -448,7 +448,7 @@
                              ['bleeding
                               (p "Otava bandages her wounds. She's going to have some more scars.")])
                            )
-                       )
+                         )
                        )))))
 
        (when (eq? (location-type (current-location)) 'swamp)
@@ -544,8 +544,15 @@
               'anthill
               "Anthill."
               (λ ()
-                (go-to-fragment 'anthill-1)
-                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+                (cond [(not (flag-set? 'anthill-seen))
+                       (set-flag 'anthill-seen)
+                       (go-to-fragment 'anthill-1)
+                       'end-chapter ; ie., 'end-round-early, plus next chapter on next round
+                       ]
+                      [else
+                       (go-to-fragment 'anthill-2)
+                       'end-chapter])
+                ))
              ]
 
             ['waiting-room-begin

@@ -2,7 +2,8 @@
 
 (provide (all-defined-out))
 
-(require "decision.rkt")
+(require "decision.rkt"
+         "../core/maybe.rkt")
 
 (struct story-fragment
   ([id : Symbol]
@@ -33,6 +34,6 @@
 ; this can currently error with
 ; hash-ref: no value found for key
 ; - if this happens during file load, then the cause is often a stale save file!
-(: get-fragment (-> Symbol story-fragment))
+(: get-fragment (-> Symbol (Maybe story-fragment)))
 (define (get-fragment id)
-  (hash-ref *story-fragments* id #;(λ () '())))
+  (hash-ref *story-fragments* id (λ () '())))
