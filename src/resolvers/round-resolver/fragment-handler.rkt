@@ -13,9 +13,8 @@
 
 
 (define (current-fragment-on-begin-round!)
-  (displayln (format "OBR: ~a" (story-fragment-on-begin-round! (get-fragment (current-fragment-id)))))
-  ;((story-fragment-on-begin-round! (get-fragment (current-fragment-id))))
-  (displayln "OK"))
+  ((story-fragment-on-begin-round! (get-fragment (current-fragment-id))))
+  )
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)

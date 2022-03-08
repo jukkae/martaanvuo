@@ -8,17 +8,17 @@
  'anthill-1
 
  (thunk
- (p @~a{
-    The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.
+  (p @~a{
+ The anthill is huge. It is much taller than Otava, and it is bustling. Workers transporting raw materials, preparing, cutting, gluing, constructing. Others are tending to their crops and livestock. An orderly platoon of soldiers marches round the base. When Otava gets closer, structure emerges from the chaos of thousands of ants, and the anthill is talking to her.
 
-    "BEGIN-COMMUNICATION. WHAT-IS: its type / identity?", Anthill asks.
+ "BEGIN-COMMUNICATION. WHAT-IS: its type / identity?", Anthill asks.
 
-    "human / it-calls-itself Otava the Seeker.", Otava responds.
+ "human / it-calls-itself Otava the Seeker.", Otava responds.
 
-    "CAUSE : Otava the Seeker BRINGS 1 BUNDLE OF 5 GRABBERKIN FINGERS
-     EFFECT: 1 GRAM OF GOLD
-     AGREE?", Anthill asks.
-  }))
+ "CAUSE : Otava the Seeker BRINGS 1 BUNDLE OF 5 GRABBERKIN FINGERS
+ EFFECT: 1 GRAM OF GOLD
+ AGREE?", Anthill asks.
+ }))
 
  #:decisions
  (list
@@ -36,6 +36,8 @@
 
 (fragment
  'anthill-grabberkin-fingers
+
  (thunk
   (create-task 'grabberkin-fingers)
+  (wait-for-confirm)
   ))
