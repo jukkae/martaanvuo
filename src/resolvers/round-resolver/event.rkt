@@ -1,22 +1,15 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
+(provide (all-from-out "0-types/event.rkt"))
 
-(require racket/serialize)
+(require "0-types/event.rkt"
 
-(require "../../core/io.rkt"
+         "../../core/io.rkt"
          "../../core/utils.rkt"
          "../../world/world.rkt"
 
          "../../state/state.rkt")
-
-(serializable-struct
- event
- (type
-  details
-  interrupting?
-  at)
- #:constructor-name event*)
 
 (define (make-event
          type

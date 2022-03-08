@@ -7,7 +7,7 @@
 (struct
  story-fragment
  ([id : Symbol]
-  [on-begin-round! : Procedure]
+  [on-begin-round! : (-> Null)] ; Actually, shouldn't return anything
   [content : String]
   [decisions : (Listof decision)]))
 
@@ -18,7 +18,7 @@
 
 (define (fragment
          [id : Symbol]
-         [on-begin-round! : Procedure]
+         [on-begin-round! : (-> Null) (λ () '())]
          #:content [content : String ""]
          #:decisions [decisions : (Listof decision) '()]
          )

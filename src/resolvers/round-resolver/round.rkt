@@ -48,7 +48,7 @@
      ; does this also need to happen when 'continue?
      (define round-begin-status
        (cond ((not (null? (current-fragment-id)))
-              (current-fragment-on-begin-round!))))
+              (current-fragment-on-begin-round!)))) ; TODO: This fails
 
      ; mark location as visited w.r.t routes
      ; todo logic is shit here (should maybe happen in traversal action resolution)
@@ -59,9 +59,10 @@
             (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
             ))
         ))
-     (case round-begin-status
+     #;(case round-begin-status
        ['ok 'ok]
-       ['pc-dead 'pc-dead])]
+       ['pc-dead 'pc-dead])
+     'ok]
 
     ['continue
      (when (current-show-round-summary?) (round-summary mode))
