@@ -4,12 +4,11 @@
 
 (require "decision.rkt")
 
-(struct
- story-fragment
- ([id : Symbol]
-  [on-begin-round! : (-> (U Null Void))] ; Actually, shouldn't return anything
-  [content : String]
-  [decisions : (Listof decision)]))
+(struct story-fragment
+  ([id : Symbol]
+   [on-begin-round! : (-> (U Null Void))] ; Actually, shouldn't return anything
+   [content : String]
+   [decisions : (Listof decision)]))
 
 ; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere. (or s11n implemented somehow)
 
