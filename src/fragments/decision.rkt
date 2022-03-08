@@ -10,16 +10,16 @@
   ([title : String]
    [description : (Maybe String)]
    [next-fragment : Symbol]
-   [requirement : Procedure]
-   [on-resolve! : Procedure])
+   [requirement : (-> Null)]
+   [on-resolve! : (-> Null)])
   #:constructor-name decision*)
 
 (define
   (make-decision #:title [title : String]
                  #:description [description : (Maybe String) '()]
                  #:next-fragment [next-fragment : Symbol]
-                 #:requirement [requirement : Procedure (λ () '())]
-                 #:on-resolve![on-resolve! : Procedure (λ () '())])
+                 #:requirement [requirement : (-> Null) (λ () '())]
+                 #:on-resolve![on-resolve! : (-> Null) (λ () '())])
 
   (decision* title
              description
