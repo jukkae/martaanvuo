@@ -1,15 +1,10 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
+(provide (all-from-out "0-types/timeline.rkt"))
 
-(require racket/serialize)
-(require "event.rkt")
-
-(serializable-struct
- timeline
- (metadata
-  events
-  duration))
+(require "0-types/timeline.rkt"
+         "event.rkt")
 
 (define (narrate-timeline timeline)
   (define
@@ -22,5 +17,5 @@
       (tbody (tr "at" "type" "details" "interrupts action?"))
       displayable-events)
      (format "Timeline, duration ~a" (timeline-duration timeline)))
-(for ([event (timeline-events timeline)])
-  (narrate-event event)))
+  (for ([event (timeline-events timeline)])
+    (narrate-event event)))
