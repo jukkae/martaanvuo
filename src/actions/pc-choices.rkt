@@ -540,19 +540,23 @@
              ]
 
             ['anthill
-             (make-choice
-              'anthill
-              "Anthill."
-              (λ ()
-                (cond [(not (flag-set? 'anthill-seen))
+             (cond [(not (flag-set? 'anthill-seen))
+                    (make-choice
+                     'anthill
+                     "Anthill."
+                     (λ ()
                        (set-flag 'anthill-seen)
                        (go-to-fragment 'anthill-1)
                        'end-chapter ; ie., 'end-round-early, plus next chapter on next round
-                       ]
-                      [else
+                       ))]
+                   [else
+                    (make-choice
+                     'anthill
+                     "Back to Anthill."
+                     (λ ()
                        (go-to-fragment 'anthill-2)
-                       'end-chapter])
-                ))
+                       'end-chapter ; ie., 'end-round-early, plus next chapter on next round
+                       ))])
              ]
 
             ['waiting-room-begin

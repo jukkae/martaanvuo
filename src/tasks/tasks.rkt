@@ -23,6 +23,25 @@
       #f
       (findf (λ (task) (eq? id (task-id task))) tasks)))
 
+
+
+(define (add-new-task task)
+  (when (not (task-exists? (task-id task)))
+    (add-task! task))
+
+  (define body
+    (list
+     (tr
+       (~a (task-name task))
+       (~a (task-info-blurb task))
+       (~a (task-status-text task)))))
+  (info-card
+   body
+   "New task"
+   )
+  (wait-for-confirm)
+)
+
 (define (create-task id)
   (define t
     (case id

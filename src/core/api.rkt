@@ -1,6 +1,7 @@
 #lang at-exp racket
 
 (provide (all-from-out
+          "checks.rkt"
           "io.rkt"
           "utils.rkt"
 
@@ -22,6 +23,7 @@
 
 
 (require
+  "checks.rkt"
   "io.rkt"
   "utils.rkt"
 
