@@ -8,6 +8,7 @@
 (struct story-fragment
   ([id : Symbol]
    [on-begin-round! : (-> (U Null Void))] ; Actually, shouldn't return anything
+   [time-taken-by-fragment : Natural]
    [content : String]
    [decisions : (Listof decision)]))
 
@@ -19,6 +20,7 @@
 (define (fragment
          [id : Symbol]
          [on-begin-round! : (-> (U Null Void)) (λ () '())]
+         #:time-taken-by-fragment [time-taken-by-fragment : Natural 0]
          #:content [content : String ""]
          #:decisions [decisions : (Listof decision) '()]
          )
@@ -26,6 +28,7 @@
     (story-fragment
      id
      on-begin-round!
+     time-taken-by-fragment
      content
      decisions
      ))

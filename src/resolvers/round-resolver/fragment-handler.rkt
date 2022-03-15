@@ -3,6 +3,8 @@
 (provide (all-defined-out))
 
 (require
+  "simulation.rkt"
+
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
@@ -65,8 +67,13 @@
                        next-fragment)))))
 
 (define (current-fragment-on-end-round!)
-  (current-completed-fragments (append-element (current-completed-fragments)
-                                               (current-fragment-id))))
+  (current-completed-fragments
+   (append-element (current-completed-fragments)
+                   (current-fragment-id)))
+  (advance-time-by-jiffies! (story-fragment-time-taken-by-fragment (get-fragment (current-fragment-id))))
+  (dev-note "TODO: check return value of advance-time-by-jiffies and handle events")
+  '()
+  )
 
 (define (go-to-fragment id)
   (current-fragment-id id))

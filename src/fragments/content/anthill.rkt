@@ -122,8 +122,10 @@
            (p "Dismayed, Otava turns back.")
 
            (wait-for-confirm)
-           (dev-note "TODO: advance-time-by-jiffies should be implemented as a field of fragment instead")
-           (advance-time-by-jiffies! 10)))
+           '()
+           )
+           #:time-taken-by-fragment 50
+           )
 
 (fragment 'anthill-complete-fingers
           (thunk
