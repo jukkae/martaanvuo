@@ -115,6 +115,13 @@
                              (tr
                               (item-name item)
                               (~v (item-details item))))
+                            ((eq? (item-id item) 'fresh-berries)
+                             (define quantity-text (if (= (item-quantity item) 1)
+                                                       "handful"
+                                                       "handfuls"))
+                             (tr
+                              (item-name item)
+                              (format "~a ~a" (item-quantity item) quantity-text)))
                             ((item? item)
                              (tr
                               (item-name item)

@@ -23,6 +23,8 @@
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
+  "../../items/item.rkt"
+
   "../../locations/0-types/location.rkt"
   "../../locations/locations.rkt"
   "../../locations/routes.rkt" ; not unused
@@ -74,7 +76,6 @@
         (when (not (procedure? on-before-rules))
           (set! on-before-rules (rules-to-lambda on-before-rules)))
         (define resolution-result ((eval on-before-rules ns)))
-        (dev-note (format "PRE-RESULT: ~a" resolution-result))
         (set! result resolution-result)))
 
 
@@ -92,8 +93,6 @@
           (set! rules (rules-to-lambda rules)))
         (define resolution-result ((eval rules ns)))
 
-        (dev-note (format "RESULT: ~a" resolution-result))
-
         (when (not (or (void? resolution-result) (empty? resolution-result)))
           (set! result resolution-result)))
       (define duration (action-duration action))
@@ -110,7 +109,7 @@
         (when (not (procedure? on-after-rules))
           (set! on-after-rules (rules-to-lambda on-after-rules)))
         (define resolution-result ((eval on-after-rules ns)))
-        (dev-note (format "POST-RESULT: ~a" resolution-result))
+
         (when (not (void? resolution-result))
           (set! result resolution-result)
           )

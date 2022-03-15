@@ -179,7 +179,7 @@
 
   (for ([food comestibles]
         [i (in-naturals 1)])
-    (prln (format "[~a] ~a (~a)" i (item-name food) (item-details food))))
+    (prln (format "[~a] ~a (~a)" i (item-name food) (item-quantity food))))
   (br)
   (define input (string->number (wait-for-input)))
   (cond ((and (number? input)
@@ -471,8 +471,8 @@
                            (define amount (d 1 4)) ; portions = days of survival
                            (define amount-string
                              (if (= amount 1)
-                                 (format "~a meal" amount)
-                                 (format "~a meals" amount)))
+                                 (format "~a handful" amount)
+                                 (format "~a handfuls" amount)))
 
                            (info-card
                             (tbody
@@ -482,22 +482,11 @@
                               (format "~a" amount-string))
                              )
                             "Forage results roll")
-                           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                           (define item (list 'food (list amount)))
+                           (p "Otava finds crowberries and bogberries. (" (number->string amount) " handfuls.)")
+                           (define item (make-item 'fresh-berries #:amount amount))
                            (add-item! item)
                            )
-                          (else
-                           (begin
-                             (p "Despite spending a while, Otava can't find anything to eat.")
-                             (define luck-roll (d 1 20))
-                             (info-card
-                              (tbody
-                               (tr
-                                "1d20"
-                                "="
-                                (format "~a" luck-roll)))
-                              "Luck roll")
-                             )))
+                          )
                     (if successful?
                         'successful
                         'failure)
@@ -657,5 +646,5 @@
 (define (describe-pc-intention pc-action)
   (when (not (null? pc-action)) ; should be checked at call site but eh
     (case (action-symbol pc-action)
-      ['forage (p "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+      ['forage (p "Otava is getting low on supplies, and it looks like there could be bogberries around.")]
       #;[else (p "TBD")])))
