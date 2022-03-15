@@ -65,7 +65,8 @@
                        next-fragment)))))
 
 (define (current-fragment-on-end-round!)
-  '())
+  (current-completed-fragments (append-element (current-completed-fragments)
+                                               (current-fragment-id))))
 
 (define (go-to-fragment id)
   (current-fragment-id id))

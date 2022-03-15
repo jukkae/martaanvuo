@@ -10,7 +10,7 @@
   ([title : String]
    [description : (Maybe String)]
    [next-fragment : Symbol]
-   [requirement : (-> Null)]
+   [requirement : (-> Boolean)]
    [on-resolve! : (-> Null)])
   #:constructor-name decision*)
 
@@ -18,7 +18,7 @@
   (make-decision #:title [title : String]
                  #:description [description : (Maybe String) '()]
                  #:next-fragment [next-fragment : Symbol]
-                 #:requirement [requirement : (-> Null) (λ () '())]
+                 #:requirement [requirement : (-> Boolean) (λ () #t)]
                  #:on-resolve![on-resolve! : (-> Null) (λ () '())])
 
   (decision* title

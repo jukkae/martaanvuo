@@ -30,11 +30,13 @@
             #:title "Inquire about Grabberkin."
             #:description "\"INQUIRY: grabberkin: WHAT-IS: its type, features, etc?\", Otava asks."
             #:next-fragment 'anthill-grabberkin-inquiry
+            #:requirement (λ () (not (fragment-completed? 'anthill-grabberkin-inquiry)))
             )
            (make-decision
             #:title "Inquire about Grabberkin fingers."
             #:description "\"INQUIRY: USES-FOR etc: grabberkin finger?\", Otava asks."
             #:next-fragment 'anthill-grabberkin-fingers-inquiry
+            #:requirement (λ () (not (fragment-completed? 'anthill-grabberkin-fingers-inquiry)))
             )
            (make-decision
             #:title "Ask for more."
@@ -85,6 +87,34 @@
            (wait-for-confirm)
            '()
            ))
+
+(fragment 'anthill-grabberkin-inquiry
+          (thunk
+           (dev-note "xyzzy")
+           (wait-for-confirm)
+           '()
+           )
+          #:decisions
+          (list
+           (make-decision
+            #:title "--"
+            #:description "[Info goes here]"
+            #:next-fragment 'anthill-1
+            )))
+
+(fragment 'anthill-grabberkin-fingers-inquiry
+          (thunk
+           (dev-note "bork")
+           (wait-for-confirm)
+           '()
+           )
+          #:decisions
+          (list
+           (make-decision
+            #:title "--"
+            #:description "[Info goes here]"
+            #:next-fragment 'anthill-1
+            )))
 
 (fragment 'anthill-2
           (thunk

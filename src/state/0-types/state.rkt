@@ -33,7 +33,8 @@
    [tasks : (Listof task)]
    [pc : pc-actor]
    [life : Natural]
-   [current-fragment-id : (Maybe Symbol)]
+   [current-fragment-id : (Maybe Symbol)] ; Symbol -> FragmentId
+   [completed-fragments : (Listof Symbol)] ; Symbol -> FragmentId
    [combat-timeline : (Maybe (Listof combat-event))]
    [show-round-summary? : Boolean]
    )

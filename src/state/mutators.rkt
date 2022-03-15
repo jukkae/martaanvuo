@@ -23,6 +23,7 @@
 
 (lazy-require
  ["state.rkt" (current-flags
+               current-completed-fragments
                current-fragment-id
                current-in-combat?
                current-life
@@ -167,3 +168,7 @@
 
 (define (unset-current-fragment-id!)
   (current-fragment-id '()))
+
+(define (fragment-completed? id)
+  (memq id (current-completed-fragments))
+)

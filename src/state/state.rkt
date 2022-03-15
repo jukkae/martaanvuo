@@ -65,6 +65,7 @@
 (define current-life (make-parameter 0))
 
 (define current-fragment-id (make-parameter '()))
+(define current-completed-fragments (make-parameter '()))
 
 (define current-combat-timeline (make-parameter '()))
 
@@ -92,6 +93,7 @@
   (current-pc (make-new-pc))
   (current-life 0)
   (current-fragment-id '())
+  (current-completed-fragments '())
   (current-combat-timeline '())
   (current-show-round-summary? #f)
   )
@@ -122,6 +124,7 @@
      (current-pc) ; pc-actor
      (current-life) ; Natural
      (current-fragment-id) ; Symbol
+     (current-completed-fragments) ; (Listof Symbol)
      (current-combat-timeline) ; timeline
      (current-show-round-summary?) ; Boolean
      ))
@@ -157,5 +160,6 @@
   (current-pc (State-pc s))
   (current-life (State-life s))
   (current-fragment-id (State-current-fragment-id s))
+  (current-completed-fragments (State-completed-fragments s))
   (current-combat-timeline (State-combat-timeline s))
   (current-show-round-summary? (State-show-round-summary? s)))
