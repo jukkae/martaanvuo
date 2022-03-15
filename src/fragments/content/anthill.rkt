@@ -65,7 +65,7 @@
                     ))
                   ]
                  [else
-                  (p "\"PREDICTION INCORRECT. PREVIOUS CAUSE: UNCHANGED. PREVIOUS EFFECT: CHANGED.\", Anthill finally says after a long while. \"NEW EFFECT: 1 GRAM.\"")
+                  (p "\"PREDICTION inconsistent-with-data / insightful. PREVIOUS CAUSE: UNCHANGED. PREVIOUS EFFECT: CHANGED.\", Anthill finally says after a long while. \"NEW EFFECT: 1 GRAM.\"")
                   (add-new-task
                    (task
                     'grabberkin-fingers
@@ -118,7 +118,15 @@
 
 (fragment 'anthill-2
           (thunk
-           (p "FOOBAR")
+           (p "There's a hostile air around the anthill. Soldiers run into position. Anthill does not wish to communicate.")
+           (p "Dismayed, Otava turns back.")
+           (wait-for-confirm)
+           '()
+           ))
+
+(fragment 'anthill-complete-fingers
+          (thunk
+           (p "Looming anthill rises far far above Otava, blocking out much of the sky.")
            (wait-for-confirm)
            '()
            ))

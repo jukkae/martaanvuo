@@ -550,11 +550,15 @@
                        'end-chapter ; ie., 'end-round-early, plus next chapter on next round
                        ))]
                    [else
+                    (define next-anthill-fragment
+                      (cond [(pc-has-item? 'grabberkin-finger)
+                             'anthill-complete-fingers]
+                            [else 'anthill-2]))
                     (make-choice
                      'anthill
                      "Back to Anthill."
                      (λ ()
-                       (go-to-fragment 'anthill-2)
+                       (go-to-fragment next-anthill-fragment)
                        'end-chapter ; ie., 'end-round-early, plus next chapter on next round
                        ))])
              ]
