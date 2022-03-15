@@ -121,22 +121,6 @@
     result))
 
 
-; note: this has overlap with handle-interrupting-event
-(define (process-timeline! tl)
-  (for ([event (timeline-events tl)])
-    (case (event-type event)
-      ['new-time-of-day ; proc dailies here
-       '()]
-      ['not-hungry '()]
-      ['hungry '()]
-      ['very-hungry '()]
-      ['starving '()]
-      [else
-       (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
-       '()]))
-  (narrate-timeline tl))
-
-
 (define (set-pending-action! action time-left)
   (define pending-action action)
   (set-action-duration! pending-action time-left)

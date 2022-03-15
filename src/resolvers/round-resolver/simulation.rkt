@@ -42,7 +42,7 @@
 
 ; increment world time
 ; return a list of events that occur at new timestamp
-(define (time++ [encounters? #f])
+(define (time++ [allow-interrupting-events? #f])
   (define events '())
 
   (define new-world-elapsed-time (add1 (world-elapsed-time (current-world))))
@@ -60,15 +60,6 @@
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
 
-
-(define (advance-time-by-jiffies! jiffies)
-  (for ([i jiffies])
-    (time++ #f)
-  )
-  (dev-note "TODO: events should be handled here")
-  )
-
-
 (define (get-daily-events-for-time time)
   (define events '())
 
@@ -80,6 +71,17 @@
     (set! events (append-element events ev)))
 
   events)
+
+; Think if this should internally, conditionally use advance-time-until-next-interesting-event?
+; (-> Natural (Listof Events)) ; s.b. diegetic time
+(define (advance-time-by-jiffies! jiffies)
+  (define metadata '())
+  (define events '())
+  (for ([t jiffies])
+    (set! events (append events (time++ #f)))
+  )
+  events
+  (timeline metadata events jiffies))
 
 ; breaks on first action-suspending event
 ; and finishes after duration of jiffies,

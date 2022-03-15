@@ -4,7 +4,10 @@
 (provide (all-from-out "0-types/timeline.rkt"))
 
 (require "0-types/timeline.rkt"
-         "event.rkt")
+         "event.rkt"
+
+         "../../core/io.rkt"
+         "../../core/utils.rkt")
 
 (define (narrate-timeline timeline)
   (define
@@ -19,3 +22,17 @@
      (format "Timeline, duration ~a" (timeline-duration timeline)))
   (for ([event (timeline-events timeline)])
     (narrate-event event)))
+
+(define (process-timeline! tl)
+  (for ([event (timeline-events tl)])
+    (case (event-type event)
+      ['new-time-of-day ; proc dailies here
+       '()]
+      ['not-hungry '()]
+      ['hungry '()]
+      ['very-hungry '()]
+      ['starving '()]
+      [else
+       (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
+       '()]))
+  (narrate-timeline tl))

@@ -4,6 +4,7 @@
 
 (require
   "simulation.rkt"
+  "timeline.rkt"
 
   "../../core/io.rkt"
   "../../core/utils.rkt"
@@ -70,8 +71,12 @@
   (current-completed-fragments
    (append-element (current-completed-fragments)
                    (current-fragment-id)))
-  (advance-time-by-jiffies! (story-fragment-time-taken-by-fragment (get-fragment (current-fragment-id))))
-  (dev-note "TODO: check return value of advance-time-by-jiffies and handle events")
+
+  (define tl
+    (advance-time-by-jiffies!
+     (story-fragment-time-taken-by-fragment
+      (get-fragment (current-fragment-id)))))
+  (process-timeline! tl)
   '()
   )
 
