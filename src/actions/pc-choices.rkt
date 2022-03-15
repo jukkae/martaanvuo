@@ -550,10 +550,13 @@
                        'end-chapter ; ie., 'end-round-early, plus next chapter on next round
                        ))]
                    [else
+
+                    ; TODO: This should be known and decided by in "content related to anthill" – for instance perhaps in fragments/anthill?
                     (define next-anthill-fragment
                       (cond [(pc-has-item? 'grabberkin-finger)
                              'anthill-complete-fingers]
                             [else 'anthill-2]))
+
                     (make-choice
                      'anthill
                      "Back to Anthill."

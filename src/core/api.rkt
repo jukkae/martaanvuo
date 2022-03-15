@@ -19,7 +19,10 @@
           "../state/state.rkt"
 
           "../world/world.rkt"
-          "../world/time.rkt"))
+          "../world/time.rkt"
+
+          "../resolvers/round-resolver/simulation.rkt"
+          ))
 
 
 (require
@@ -42,6 +45,9 @@
   "../state/state.rkt"
 
   "../world/world.rkt"
-  "../world/time.rkt")
+  "../world/time.rkt"
+
+  "../resolvers/round-resolver/simulation.rkt"
+  )
 
 (require racket/lazy-require)

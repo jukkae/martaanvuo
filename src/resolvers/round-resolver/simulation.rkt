@@ -1,6 +1,8 @@
 #lang at-exp racket
 
-(provide advance-time-until-next-interesting-event!)
+; TODO: This whole file should be moved under world
+(provide advance-time-until-next-interesting-event!
+         advance-time-by-jiffies!)
 
 (require racket/lazy-require)
 
@@ -43,7 +45,6 @@
 (define (time++ [encounters? #f])
   (define events '())
 
-
   (define new-world-elapsed-time (add1 (world-elapsed-time (current-world))))
   (set-world-elapsed-time!
    (current-world)
@@ -58,6 +59,14 @@
 
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
+
+
+(define (advance-time-by-jiffies! jiffies)
+  (for ([i jiffies])
+    (time++ #f)
+  )
+  (dev-note "TODO: events should be handled here")
+  )
 
 
 (define (get-daily-events-for-time time)

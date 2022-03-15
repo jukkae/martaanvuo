@@ -120,9 +120,10 @@
           (thunk
            (p "There's a hostile air around the anthill. Soldiers run into position. Anthill does not wish to communicate.")
            (p "Dismayed, Otava turns back.")
+
            (wait-for-confirm)
-           '()
-           ))
+           (dev-note "TODO: advance-time-by-jiffies should be implemented as a field of fragment instead")
+           (advance-time-by-jiffies! 10)))
 
 (fragment 'anthill-complete-fingers
           (thunk
