@@ -562,7 +562,7 @@
                      "Back to Anthill."
                      (λ ()
                        (go-to-fragment next-anthill-fragment)
-                       'end-chapter ; ie., 'end-round-early, plus next chapter on next round
+                       'end-round-early
                        ))])
              ]
 
