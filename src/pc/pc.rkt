@@ -177,7 +177,7 @@
         ['very-hungry "still very hungry"]
         ['starving "still starving"])
       )
-    (notice (format "Otava is ~a." hunger-string))
+    (notice (format "Otava is now ~a." hunger-string))
   )
 )
 

@@ -15,6 +15,8 @@
   "../../actions/pc-choices.rkt"
   "../../actions/choice.rkt"
 
+  "../../actors/0-types/pc-actor.rkt"
+
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
@@ -23,6 +25,7 @@
   "../../locations/locations.rkt"
 
   "../../pc/character-sheet.rkt"
+  "../../pc/pc.rkt"
 
   "../../state/state.rkt"
   "../../world/time.rkt"
@@ -41,13 +44,22 @@
 (define (display-statusline)
   (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
-          "~a~a, day ~a, ~a"
+          "~a~a, day ~a, ~a.~a"
           (if (current-in-combat?)
             "[In combat] "
             "")
           (get-location-short-description (current-location))
           current-day
           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
+          (when (>= (pc-actor-hunger (pc)) hunger-level-hungry)
+            (format " Hunger: ~a."
+              (case (pc-hunger-level)
+                ['satiated "satiated"]
+                ['not-hungry "not hungry"]
+                ['hungry "hungry"]
+                ['very-hungry "very hungry"]
+                ['starving "starving"]))
+            )
           ))
 )
 

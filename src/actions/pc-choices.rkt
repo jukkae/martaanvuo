@@ -122,13 +122,14 @@
          ['not-hungry "Not really hungry but she could eat."]
          ['hungry "Eat."]
          ['very-hungry "Eat, she's very hungry."]
-         ['starving "She's starving, eat. Eat now."]
+         ['starving "Eat. She's starving, eat. Eat now."]
          ))
      (make-choice
       'eat
       "Eat."
       (λ ()
         (define food (select-food-to-eat))
+        (define food-id (item-id food))
         (if (void? food)
             'cancel
             (begin
@@ -141,21 +142,19 @@
                #:resolution-rules
                `(
                  (define food-tier
-                   (case (,item-id ,food)
+                   ,(case food-id
                      ['fresh-berries 0]
                      ['ration 1]
                      ['vatruska 2]
-                     [else
-                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
-                      1])
+                     [else 1])
                    )
                  (decrease-pc-hunger-level food-tier)
 
-                 (case (,item-id ,food)
-                   ['fresh-berries (p "The berries are invigoratingly sweet.")]
-                   ['ration (p "The ration's dry and bland, but filling.")]
-                   ['vatruska (p "The vatruska tastes heavenly.")])
-                 (remove-item! (,item-id ,food))
+                ;  (case ',food-id
+                ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                ;    ['ration (p "The ration's dry and bland, but filling.")]
+                ;    ['vatruska (p "The vatruska tastes heavenly.")])
+                ;  (remove-item! ',food-id)
 
                  ))))
 
@@ -468,7 +467,7 @@
 
                     (define successful? (skill-check "Forage" skill target-number))
                     (cond (successful?
-                           (define amount (d 1 4)) ; portions = days of survival
+                           (define amount (d 1 2))
                            (define amount-string
                              (if (= amount 1)
                                  (format "~a handful" amount)
