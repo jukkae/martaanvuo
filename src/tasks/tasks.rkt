@@ -69,18 +69,6 @@
         'study-anthead-monograph
         )]
 
-      ['grabberkin-fingers
-        (task
-        'grabberkin-fingers
-        "Grabberkin fingers for Anthill"
-        (partially-completed 0 5)
-        "Cause and effect: 5 fingers -> 1 g gold."
-        "In progress: 0"
-        '()
-        '()
-        '()
-        )]
-
       ['hartmann-device
        (task
         'hartmann-device
