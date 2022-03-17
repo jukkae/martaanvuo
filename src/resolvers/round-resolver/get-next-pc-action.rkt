@@ -1,10 +1,10 @@
 #lang at-exp racket
 
 (provide
-  get-next-pc-action
-  meta-command-valid?
-  print-meta-commands-with-keys
-  )
+ get-next-pc-action
+ meta-command-valid?
+ print-meta-commands-with-keys
+ )
 
 (require racket/lazy-require)
 
@@ -44,24 +44,25 @@
 (define (display-statusline)
   (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
-          "~a~a, day ~a, ~a.~a"
-          (if (current-in-combat?)
-            "[In combat] "
-            "")
-          (get-location-short-description (current-location))
-          current-day
-          (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
-          (when (>= (pc-actor-hunger (pc)) hunger-level-hungry)
-            (format " Hunger: ~a."
-              (case (pc-hunger-level)
-                ['satiated "satiated"]
-                ['not-hungry "not hungry"]
-                ['hungry "hungry"]
-                ['very-hungry "very hungry"]
-                ['starving "starving"]))
-            )
-          ))
-)
+           "~a~a, day ~a, ~a.~a"
+           (if (current-in-combat?)
+               "[In combat] "
+               "")
+           (get-location-short-description (current-location))
+           current-day
+           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
+           (if (>= (pc-actor-hunger (pc)) hunger-level-hungry)
+               (format " Hunger: ~a."
+                       (case (pc-hunger-level)
+                         ['satiated "satiated"]
+                         ['not-hungry "not hungry"]
+                         ['hungry "hungry"]
+                         ['very-hungry "very hungry"]
+                         ['starving "starving"]))
+               ""
+               )
+           ))
+  )
 
 
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
@@ -109,9 +110,9 @@
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
       (if question-repeated?
-        (describe-situation #t)
-        (describe-situation #f)
-        )
+          (describe-situation #t)
+          (describe-situation #f)
+          )
 
       (newline)
       (display-statusline)
@@ -152,7 +153,7 @@
                   "Empty command"
                   (format "Unknown command: [~a]" input)
                   )
-                                )
+              )
              (what-do-you-do #t))))))
 
 
@@ -237,7 +238,7 @@
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   #;(when (not (null? (actor-inventory (pc))))
-    (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
+      (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
   (hash-set! meta-commands "T" (cons "[T]: Tasks." display-tasks))
   meta-commands)
