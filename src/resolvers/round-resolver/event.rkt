@@ -35,6 +35,7 @@
     ('hungry (notice "Otava is now hungry."))
     ('very-hungry (notice "Otava is now very hungry."))
     ('starving (notice "Otava is now starving."))
+    ['notice (notice (event-details event))]
     (else
      (dev-note (format "narrate-event: unknown event type ~a" (event-type event))))))
 

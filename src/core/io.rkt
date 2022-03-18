@@ -113,7 +113,8 @@ M A R T A A N V U O
 (define (notice . args)
   (define str (format "[~a]" (string-append* args)))
   (define s (format-for-printing str #:width 92 #:indent 0))
-  (print-paragraph s))
+  (set! *output-state* 'dirty)
+  (display s))
 
 ; only confirm if there's been something new – no redundant confirmations
 (define (wait-for-confirm)

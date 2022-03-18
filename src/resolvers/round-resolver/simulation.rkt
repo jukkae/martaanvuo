@@ -14,6 +14,10 @@
 
   "../../core/utils.rkt"
 
+  "../../items/item.rkt"
+
+  "../../pc/pc.rkt"
+
   "../../state/state.rkt"
 
   "../../world/time.rkt"
@@ -60,6 +64,18 @@
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
 
+(define (at-morning!)
+  (define events '())
+  (when (pc-has-item? 'fresh-berries)
+    (define item (pc-has-item? 'fresh-berries))
+    (set-item-id! item 'berries)
+    (set-item-name! item "Berries")
+    (define ev (make-event 'notice "The berries will go bad after today."  #:interrupting? #f))
+    (set! events (append-element events ev))
+    )
+  events
+  )
+
 (define (get-daily-events-for-time time)
   (define events '())
 
@@ -69,6 +85,9 @@
   (when (= (modulo time-today 100) 0)
     (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? #f))
     (set! events (append-element events ev)))
+
+  (when (= time-today 0)
+    (set! events (append events (at-morning!))))
 
   events)
 
