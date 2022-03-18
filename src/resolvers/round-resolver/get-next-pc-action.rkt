@@ -50,7 +50,7 @@
                "")
            (get-location-short-description (current-location))
            current-day
-           (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
+           (symbol->string (time-of-day-from-iotas (world-elapsed-time (current-world))))
            (if (>= (pc-actor-hunger (pc)) hunger-level-hungry)
                (format " Hunger: ~a."
                        (case (pc-hunger-level)

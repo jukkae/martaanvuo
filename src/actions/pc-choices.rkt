@@ -55,9 +55,9 @@
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'evening)
+        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
          (get-evening-choices world actor))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
+        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
@@ -100,7 +100,7 @@
 
     ['rest
      (define next-time-of-day
-       (time-of-day-from-jiffies (+ (world-elapsed-time (current-world))
+       (time-of-day-from-iotas (+ (world-elapsed-time (current-world))
                                     100)))
      (make-choice
       'rest
@@ -427,7 +427,7 @@
                             )))))
              )))
 
-       (when (and (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
+       (when (and (not (eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
                   (place? (current-location)))
          (list (choice-factory 'rest)))
 

@@ -2,7 +2,7 @@
 
 ; TODO: This whole file should be moved under world
 (provide advance-time-until-next-interesting-event!
-         advance-time-by-jiffies!)
+         advance-time-by-iotas!)
 
 (require racket/lazy-require)
 
@@ -39,7 +39,7 @@
   (if (not (eq? old-pc-hunger-level new-pc-hunger-level))
       (make-event
        new-pc-hunger-level
-       (time-of-day-from-jiffies (world-elapsed-time (current-world)))
+       (time-of-day-from-iotas (world-elapsed-time (current-world)))
        #:interrupting? #f)
 
       '()))
@@ -97,7 +97,7 @@
   (define time-today (remainder time day-length))
 
   (when (= (modulo time-today 100) 0)
-    (define ev (make-event 'new-time-of-day (time-of-day-from-jiffies (world-elapsed-time (current-world))) #:interrupting? #f))
+    (define ev (make-event 'new-time-of-day (time-of-day-from-iotas (world-elapsed-time (current-world))) #:interrupting? #f))
     (set! events (append-element events ev)))
 
   (when (= time-today 0)
@@ -107,24 +107,24 @@
 
 ; Think if this should internally, conditionally use advance-time-until-next-interesting-event?
 ; (-> Natural (Listof Events)) ; s.b. diegetic time
-(define (advance-time-by-jiffies! jiffies)
+(define (advance-time-by-iotas! iotas)
   (define metadata '())
   (define events '())
-  (for ([t jiffies])
+  (for ([t iotas])
     (set! events (append events (time++ #f)))
   )
   events
-  (timeline metadata events jiffies))
+  (timeline metadata events iotas))
 
 ; breaks on first action-suspending event
-; and finishes after duration of jiffies,
+; and finishes after duration of iotas,
 ; returns a timeline of events that occurred with metadata
-(define (advance-time-until-next-interesting-event! jiffies [encounters? #f])
+(define (advance-time-until-next-interesting-event! iotas [encounters? #f])
   (define metadata '())
   (define events '())
   (define counter 0)
   (let/ec break
-    (for ([t jiffies])
+    (for ([t iotas])
       (set! counter (add1 counter))
       (define events-at-t (time++ encounters?))
 

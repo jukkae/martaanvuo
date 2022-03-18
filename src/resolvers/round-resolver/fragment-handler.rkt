@@ -73,7 +73,7 @@
                    (current-fragment-id)))
 
   (define tl
-    (advance-time-by-jiffies!
+    (advance-time-by-iotas!
      (story-fragment-time-taken-by-fragment
       (get-fragment (current-fragment-id)))))
   (process-timeline! tl)
