@@ -129,7 +129,6 @@
       "Eat."
       (λ ()
         (define food (select-food-to-eat))
-        (define food-id (item-id food))
         (if (void? food)
             'cancel
             (begin
@@ -142,7 +141,7 @@
                #:resolution-rules
                `(
                  (define food-tier
-                   ,(case food-id
+                   ,(case (item-id food)
                      ['fresh-berries 0]
                      ['ration 1]
                      ['vatruska 2]
@@ -187,7 +186,7 @@
          (define index (- input 1))
          (list-ref comestibles index)
          )
-        (else (p "Nevermind.")))
+        (else '()#;(p "Nevermind.")))
   )
 
 

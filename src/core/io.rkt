@@ -120,6 +120,7 @@ M A R T A A N V U O
 (define (wait-for-confirm)
   (case *output-state*
    ['dirty
+    (newline)
     (prln "[Enter]")
     (newline)
     (define input (read-line))

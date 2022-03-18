@@ -155,6 +155,7 @@
                   (format "Unknown command: [~a]" input)
                   )
               )
+             (newline)
              (what-do-you-do #t))))))
 
 
