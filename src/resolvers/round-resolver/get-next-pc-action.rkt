@@ -116,6 +116,7 @@
 
       (newline)
       (display-statusline)
+      (newline)
 
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
