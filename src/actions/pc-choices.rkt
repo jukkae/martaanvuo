@@ -167,6 +167,7 @@
     (filter (λ (item) ; likely this should be stored as data on the item itself
               (case (item-id item)
                 ['fresh-berries #t]
+                ['berries #t]
                 ['ration #t]
                 ['vatruska #t]
                 [else #f]))
