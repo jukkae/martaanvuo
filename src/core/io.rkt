@@ -137,7 +137,6 @@ M A R T A A N V U O
    [else '()]))
 
 (define (wait-for-input)
-  (newline)
   (define input (read-line))
   (newline)
   input)
