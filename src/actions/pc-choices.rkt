@@ -129,7 +129,7 @@
       "Eat."
       (λ ()
         (define food (select-food-to-eat))
-        (if (void? food)
+        (if (or (void? food) (null? food))
             'cancel
             (begin
               (make-action
@@ -140,20 +140,26 @@
                #:tags '(downtime)
                #:resolution-rules
                `(
+                 (define id ',(item-id food))
                  (define food-tier
-                   ,(case (item-id food)
+                   (case id
                      ['fresh-berries 0]
+                     ['berries 0]
+                     ['slightly-moldy-berries 0]
                      ['ration 1]
                      ['vatruska 2]
                      [else 1])
                    )
                  (decrease-pc-hunger-level food-tier)
+                 (when (eq? id 'slightly-moldy-berries)
+                  (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
+                 )
 
                 ;  (case ',food-id
                 ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
                 ;    ['ration (p "The ration's dry and bland, but filling.")]
                 ;    ['vatruska (p "The vatruska tastes heavenly.")])
-                ;  (remove-item! ',food-id)
+                 (remove-item! id)
 
                  ))))
 
@@ -168,6 +174,7 @@
               (case (item-id item)
                 ['fresh-berries #t]
                 ['berries #t]
+                ['slightly-moldy-berries #t]
                 ['ration #t]
                 ['vatruska #t]
                 [else #f]))
