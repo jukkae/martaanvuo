@@ -73,27 +73,33 @@
   (define actor (pc))
   (when (symbol? item) (set! item (make-item item #:amount amount)))
   (add-item-to-inventory! actor item)
-         (when (not silent?)
-           (item-info-card item #:title title)))
+  (when (not silent?)
+    (item-info-card item #:title title)))
 
-(define (remove-item! id)
+(define (remove-item! id #:quantity-to-remove [quantity-to-remove 1])
   (define items (actor-inventory (pc)))
   (define it
     (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
            items))
   (cond (it
-          ; TODO: Add quantity to item
-         (define d (item-details it))
-         (cond ((and (number? d)
-                     (> d 1))
-                (set-item-details! it (- d 1)))
-               (else
+         (cond [(eq? quantity-to-remove 'all)
                 (set-actor-inventory! (pc)
                                       (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
                                               (actor-inventory (pc))
-                                              ))))
+                                              ))]
+               ; TODO: Refactor, shit
+               [else
+                (if (> (item-quantity it) 1)
+                    (set-item-quantity! (- (item-quantity it) 1))
+                    (set-actor-inventory! (pc)
+                                          (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                                  (actor-inventory (pc))
+                                                  ))
+                    )
+                ]
+               )
          (dev-note "item removed, show info about removed/remaining items"))
-         ))
+        ))
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
@@ -143,31 +149,31 @@
 (define (decrease-pc-hunger-level levels)
   (let ([current-hunger (pc-hunger-level)])
     (case current-hunger
-     ['satiated (set-pc-actor-hunger! (pc) 0)]
-     ['not-hungry (set-pc-actor-hunger! (pc) 0)]
-     ['hungry
-      (case levels
-       [(0) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
-       [(1) (set-pc-actor-hunger! (pc) 0)]
-       [(2) (set-pc-actor-hunger! (pc) 0)])]
-     ['very-hungry
-      (case levels
-       [(0) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
-       [(1) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
-       [(2) (set-pc-actor-hunger! (pc) 0)])]
-     ['starving
-      (case levels
-       [(0) (set-pc-actor-hunger! (pc) hunger-level-starving)]
-       [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
-       [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
+      ['satiated (set-pc-actor-hunger! (pc) 0)]
+      ['not-hungry (set-pc-actor-hunger! (pc) 0)]
+      ['hungry
+       (case levels
+         [(0) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
+         [(1) (set-pc-actor-hunger! (pc) 0)]
+         [(2) (set-pc-actor-hunger! (pc) 0)])]
+      ['very-hungry
+       (case levels
+         [(0) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+         [(1) (set-pc-actor-hunger! (pc) hunger-level-hungry)]
+         [(2) (set-pc-actor-hunger! (pc) 0)])]
+      ['starving
+       (case levels
+         [(0) (set-pc-actor-hunger! (pc) hunger-level-starving)]
+         [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
+         [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
 
-   (when (and (or (eq? current-hunger 'hungry)
-                  (eq? current-hunger 'very-hungry)
-                  (eq? current-hunger 'starving))
-              (= levels 2))
-           (p "Damn that tastes good.")
-           (award-xp! 50)
-           )
+    (when (and (or (eq? current-hunger 'hungry)
+                   (eq? current-hunger 'very-hungry)
+                   (eq? current-hunger 'starving))
+               (= levels 2))
+      (p "Damn that tastes good.")
+      (award-xp! 50)
+      )
 
     (define hunger-string
       (case (pc-hunger-level)
@@ -178,8 +184,8 @@
         ['starving "still starving"])
       )
     (notice (format "Otava is now ~a." hunger-string))
+    )
   )
-)
 
 (define (pc-hunger-level)
   (cond
@@ -198,10 +204,10 @@
 (define (pc-is-alive?)
   ; TODO this is dirty hack, think about "aliveness" vs hp etc
   (case (pc-actor-alive? (pc))
-   ['dead #f]
-   [else
-    (actor-alive? (pc)) 
-    ]))
+    ['dead #f]
+    [else
+     (actor-alive? (pc))
+     ]))
 
 (define (kill-pc! cause-of-death)
   (narrate-pc-death cause-of-death)

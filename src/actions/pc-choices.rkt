@@ -145,13 +145,13 @@
                    (case id
                      ['fresh-berries 0]
                      ['berries 0]
-                     ['slightly-moldy-berries 0]
+                     ['decaying-berries 0]
                      ['ration 1]
                      ['vatruska 2]
                      [else 1])
                    )
                  (decrease-pc-hunger-level food-tier)
-                 (when (eq? id 'slightly-moldy-berries)
+                 (when (eq? id 'decaying-berries)
                   (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
                  )
 
@@ -174,7 +174,7 @@
               (case (item-id item)
                 ['fresh-berries #t]
                 ['berries #t]
-                ['slightly-moldy-berries #t]
+                ['decaying-berries #t]
                 ['ration #t]
                 ['vatruska #t]
                 [else #f]))

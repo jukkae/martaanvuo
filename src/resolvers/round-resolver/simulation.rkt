@@ -66,18 +66,25 @@
 
 (define (at-morning!)
   (define events '())
-  (when (pc-has-item? 'slightly-moldy-berries)
-    (define item (pc-has-item? 'slightly-moldy-berries))
-    (set-item-id! item 'moldy-berries)
-    (set-item-name! item "Moldy berries")
+  (when (pc-has-item? 'decaying-berries)
+    ; TODO: Collapsing & stacking items in general should be done in inventory itself
+    (cond [(pc-has-item? 'moldy-berries)
+           (define moldy-berries (pc-has-item? 'moldy-berries))
+           (define decaying-berries (pc-has-item? 'decaying-berries))
+           (set-item-quantity! moldy-berries (+ (item-quantity moldy-berries) (item-quantity decaying-berries)))
+           (remove-item! 'decaying-berries #:quantity-to-remove 'all)]
+          [else
+           (define item (pc-has-item? 'decaying-berries))
+           (set-item-id! item 'moldy-berries)
+           (set-item-name! item "Moldy berries")])
     (define ev (make-event 'notice "The berries now have a lot of mold on them."  #:interrupting? #f))
     (set! events (append-element events ev))
     )
   (when (pc-has-item? 'berries)
     (define item (pc-has-item? 'berries))
-    (set-item-id! item 'slightly-moldy-berries)
-    (set-item-name! item "Slightly moldy berries")
-    (define ev (make-event 'notice "The berries now have a little mold on them."  #:interrupting? #f))
+    (set-item-id! item 'decaying-berries)
+    (set-item-name! item "Decaying berries")
+    (define ev (make-event 'notice "The berries have started going bad."  #:interrupting? #f))
     (set! events (append-element events ev))
     )
   (when (pc-has-item? 'fresh-berries)
@@ -112,7 +119,7 @@
   (define events '())
   (for ([t iotas])
     (set! events (append events (time++ #f)))
-  )
+    )
   events
   (timeline metadata events iotas))
 
