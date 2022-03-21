@@ -188,7 +188,6 @@
        #:resolution-rules
        `(
          (add-item! 'grabberkin-finger)
-         (notice (format "Item added: ~a" "Grabberkin finger"))
          (wait-for-confirm)
          ))
       ))))

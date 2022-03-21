@@ -84,7 +84,7 @@
                  (number->string (current-run)))
              (tr "gold collected"
                  (number->string (pc-gold-amount)))
-             #;(tr "debt still owed" ; TODO: fixme
+             #;(tr "debt still owed" ; TODO: fix this
                  (number->string (task-details debt-task))))
             (format "Run number ~a ended" (current-run))))
 
