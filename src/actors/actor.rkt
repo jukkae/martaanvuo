@@ -18,7 +18,6 @@
          "../core/io.rkt"
          "../core/utils.rkt")
 
-
 (lazy-require
  ["../state/state.rkt"
   (pc
@@ -33,6 +32,7 @@
    )]
  ["../locations/0-types/location.rkt"
   (add-feature-to-location!
+   add-item-to-location!
    )])
 
 (define (make-actor
@@ -229,8 +229,14 @@
          )
         (else
          (remove-actor-from-its-current-location! actor)
-         (dev-note "TODO: corpse")
-         (add-feature-to-location! (current-location) 'corpse))))
+         (add-item-to-location! (current-location) (make-corpse actor)))))
+
+(define (make-corpse actor)
+  (define i (new-item
+   (string-append (actor-name actor) " corpse")
+   #:id (string->symbol (string-append (string-downcase (actor-name actor)) "-corpse"))))
+  (notice (format "~a dropped." (string-append (actor-name actor) " corpse")))
+  i)
 
 (define (inventory-contains-item-id inventory id)
   (findf (λ (i) (eq? (item-id i) id))

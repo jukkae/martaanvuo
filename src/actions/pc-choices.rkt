@@ -55,11 +55,17 @@
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
-        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
-         (get-evening-choices world actor))
-        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
-         (get-nighttime-choices world actor))
-        (else (get-downtime-choices world actor))))
+        [else
+         (define world-choices '())
+         (when (not (null? (location-items (current-location))))
+                           (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
+         (cond [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
+                (set! world-choices (append world-choices (get-evening-choices world actor)))]
+               [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
+                (get-nighttime-choices world actor)]
+               [else (set! world-choices (append world-choices (get-downtime-choices world actor)))])
+         world-choices
+        ]))
 
 (define (choice-factory action-symbol)
   (case action-symbol
@@ -113,6 +119,21 @@
              `(
                (blurb 'rest-action))
              )))]
+
+    ; submenu
+    ['pick-up-item
+     (make-choice
+      'pick-up-item
+      "Pick up something."
+      (λ () (make-action
+             #:symbol 'pick-up
+             #:actor (pc)
+             #:duration 1 ; should be "negligible", aka 0.1 iota
+             #:resolution-rules
+             `(
+               (p "TODO: pick up items"))
+             )))
+     ]
 
     ; This opens a submenu
     ['eat
@@ -290,8 +311,6 @@
 
                    (describe-cancel-traverse-action from to)
                    (display-location-info-card (current-location))
-                   (when (not (null? (location-items (current-location))))
-                     (pick-up-items!))
                    'ok
 
                    )
@@ -420,8 +439,6 @@
                             #:on-after-rules
                             `(
                               (describe-finish-traverse-action (get-route-by-id ',(location-id route)) ',direction)
-                              (when (not (null? (location-items (current-location))))
-                                (pick-up-items!))
                               )
 
                             )))))

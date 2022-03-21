@@ -10,7 +10,6 @@
          "../core/utils.rkt")
 
 
-; not part of API
 (define (new-item
          name
          #:id id
@@ -18,7 +17,6 @@
          #:quantity (quantity 1))
   (item* id name details quantity))
 
-; not part of API
 (define (new-ranged-weapon
          name
          #:id id
