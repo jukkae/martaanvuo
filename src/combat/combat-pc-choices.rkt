@@ -22,7 +22,15 @@
 
   (when (actor-has-item? (pc) 'bolt-cutters)
     (set! combat-choices
-          (append combat-choices (get-melee-choices))))
+          (append combat-choices (get-melee-choices)))
+    (when (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                          (get-enemies-at-range 'close))
+                                  'grabberkin)
+      (define e (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                                (get-enemies-at-range 'close))
+                                        'grabberkin))
+      (set! combat-choices
+            (append combat-choices (get-harvest-choice e)))))
 
   (when (actor-has-item? (pc) 'revolver)
     (set! combat-choices
@@ -30,19 +38,69 @@
 
   (cond ((and (not (engaged?))
               (not (actor-has-status-of-type? (pc) 'bound)))
-         (define run-choice
+         (define escape-choice
            (make-choice
-            'flee
-            "Run"
+            'escape
+            "Escape."
             (λ ()
               (make-action
-               #:symbol 'flee
+               #:symbol 'escape
                #:actor (pc)
                #:duration 1
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
-               `((resolve-flee-action! 'pc))))))
-         (set! combat-choices (append-element combat-choices run-choice))))
+               `(
+                 (define enemies (get-current-enemies))
+                 (cond ((> (length enemies) 1)
+                        (displayln "resolve-escape-action!: Narration for multiple enemies"))
+                       ((= (length enemies) 0)
+                        (displayln "resolve-escape-action!: Narration for zero enemies"))
+                       (else
+                        (define enemy (get-current-enemy))
+                        (case (actor-type enemy)
+                          ['blindscraper
+                           (displayln "escaping from blindscraper")
+                           ]
+                          ['grabberkin
+                           (displayln "escaping from grabberkin")
+                           ])
+                        )
+                       )
+                 (define skill (get-trait (pc) "athletics-skill"))
+                 (displayln "TODO: Blurbify escape success/fail narration based on location")
+
+                 (define stance-range-values '())
+                 (for ([enemy enemies])
+                   (define stance (actor-stance enemy))
+                   (define value (get-stance-range-numeric-value (stance-range stance)))
+                   (set! stance-range-values (append-element stance-range-values value)))
+                 (define target-number
+                   ; if there's an enemy in engaged range, then more difficult check
+                   (if (member 0 stance-range-values)
+                       10
+                       8))
+
+                 (define success? (skill-check "Athletics" skill target-number))
+                 (if success?
+                     (begin
+                       (p "Otava dives in the shadows.")
+                       (wait-for-confirm)
+                       (cond ((luck-check)
+                              (p "Nothing seems to be following her.")
+                              (award-xp! 3 "for a working survival instinct")
+                              'end-combat)
+                             (else
+                              (p "The blindscraper skitters and scrapes, leaping and running, its claws scratching and scraping through air. It's still following her.")
+                              'fail))
+                       )
+                     (begin
+                       (p "Otava's foot gets caught on a root. She falls face down in the mud.")
+                       (actor-add-status! (pc) (status 'fallen 1))
+                       (display-pc-combatant-info (pc))
+                       (wait-for-confirm)
+                       'failure))
+                 )))))
+         (set! combat-choices (append-element combat-choices escape-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))
   (define close-grabberkin
@@ -50,7 +108,8 @@
                                'grabberkin))
             close-enemies))
 
-  (cond ((not (null? close-grabberkin))
+  (cond ((and (not (null? close-grabberkin))
+              (actor-has-status-of-type? (pc) 'bound))
 
          (define strength-mod (get-attribute-modifier-for (actor-strength (pc))))
 
@@ -113,7 +172,29 @@
           ))
   combat-choices)
 
-; implementation detail
+(define (get-harvest-choice target)
+  (list
+   (make-choice
+    'harvest-finger
+    (format "Harvest a finger from ~a [with bolt cutters]." (get-combatant-name target))
+    (λ ()
+      (define target-id (actor-id target))
+      (make-action
+       #:symbol 'harvest-finger
+       #:actor (pc)
+       #:duration 1
+       #:target target-id
+       #:tags '(initiative-based-resolution fast)
+       #:resolution-rules
+       `(
+         (add-item! 'grabberkin-finger)
+         (notice (format "Item added: ~a" "Grabberkin finger"))
+         (wait-for-confirm)
+         ))
+      ))))
+
+
+
 (define (get-ranged-choices)
   (define targets (get-current-enemies))
 
@@ -154,12 +235,6 @@
        (when (or (eq? (stance-range stance) 'close)
                  (eq? (stance-range stance) 'engaged))
 
-         (define details
-           `(list
-             (cons 'damage-roll '(λ () 1))
-             (cons 'damage-roll-formula "1")
-             (cons 'damage-type 'bludgeoning)
-             ))
          (make-choice
           'attack
           (format "Pistol whip the ~a [with revolver]." (get-combatant-name target))
@@ -170,8 +245,9 @@
              #:duration 1
              #:target target-id
              #:n 1
-             #:x 2
+             #:x 1
              #:bonus 0
+             #:damage-type 'bludgeoning
              ))))
        )))
 

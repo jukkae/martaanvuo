@@ -3,6 +3,9 @@
 (provide (all-defined-out))
 
 (require
+  "simulation.rkt"
+  "timeline.rkt"
+
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
@@ -14,7 +17,7 @@
 
 (define (current-fragment-on-begin-round!)
   ((story-fragment-on-begin-round! (get-fragment (current-fragment-id))))
-  (wait-for-confirm))
+  )
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)
@@ -37,7 +40,7 @@
   (when (procedure? next-fragment)
     (set! next-fragment (next-fragment)))
   (cond ((number? next-fragment)
-         (go-to-story-fragment next-fragment))
+         (go-to-fragment next-fragment))
 
         ((symbol? next-fragment)
          (cond
@@ -55,7 +58,7 @@
             'pc-dead)
 
            ; ... or it can be just a label
-           (else (go-to-story-fragment next-fragment))))
+           (else (go-to-fragment next-fragment))))
 
         ((null? next-fragment) ; treat '() as 'exit
          (unset-current-fragment-id!))
@@ -65,9 +68,19 @@
                        next-fragment)))))
 
 (define (current-fragment-on-end-round!)
-  '())
+  (current-completed-fragments
+   (append-element (current-completed-fragments)
+                   (current-fragment-id)))
 
-(define (go-to-story-fragment id)
+  (define tl
+    (advance-time-by-iotas!
+     (story-fragment-time-taken-by-fragment
+      (get-fragment (current-fragment-id)))))
+  (process-timeline! tl)
+  '()
+  )
+
+(define (go-to-fragment id)
   (current-fragment-id id))
 
 (define (handle-fragment-decision decisions-with-keys input)

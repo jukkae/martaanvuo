@@ -15,15 +15,16 @@
             }
         },
         {
-            "label": "Run interactive",
+            "label": "Run with --restart",
             "type": "shell",
-            "command": "racket -it martaanvuo.rkt",
+            "command": "racket martaanvuo.rkt --restart",
             "group": "build",
             "options": {
                 "cwd": "${workspaceRoot}/src",
             },
             "presentation": {
                 "reveal" : "always",
+                "focus" : true,
             }
         },
         {

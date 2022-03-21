@@ -50,31 +50,30 @@
       `(
         (define lp (pc-actor-lp (pc)))
         (define dex ,(actor-dexterity actor))
-        (displayln "GO TO ENGAGED: TODO: fix")
         (define success?
           (cond ((positive? lp)
                  (displayln "[LP positive]")
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
-        ; (if success?
-        ;     (begin
-        ;       (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
+        (if success?
+            (begin
+              (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-        ;       (let ([enemy-stance (stance "α" 'engaged "right")])
-        ;         (set-actor-stance! ,actor enemy-stance)))
+              (let ([enemy-stance (stance "α" 'engaged "right")])
+                (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance)))
 
-        ;     (begin
-        ;       (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-        ;       (displayln "[-1 LP]")
-        ;       (set-pc-actor-lp! (pc)
-        ;                         (- (pc-actor-lp (pc))
-        ;                            1))
-        ;       (when (< (pc-actor-lp (pc)) 0)
-        ;         (set-pc-actor-lp! (pc)
-        ;                           0))
-        ;       (displayln (pc-actor-lp (pc)))
-        ;       'failure))
+            (begin
+              (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
+              (displayln "[-1 LP]")
+              (set-pc-actor-lp! (pc)
+                                (- (pc-actor-lp (pc))
+                                   1))
+              (when (< (pc-actor-lp (pc)) 0)
+                (set-pc-actor-lp! (pc)
+                                  0))
+              (displayln (pc-actor-lp (pc)))
+              'failure))
         'ok
         )
       )]
@@ -96,7 +95,7 @@
         (p "The Blindscraper skitters towards Otava.")
 
         (let ([enemy-stance (stance "α" 'close "right")])
-          (set-actor-stance! ,actor enemy-stance))
+          (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance))
         'ok
         ))]
 
@@ -176,16 +175,38 @@
            ((= (actor-hp actor) 1)
             (define id (actor-id actor))
             (make-action
-             #:symbol 'flee
+             #:symbol 'escape
              #:actor actor
              #:duration 1
              #:target '()
              #:tags '(initiative-based-resolution fast)
              #:details '()
              #:resolution-rules
-             `((resolve-flee-action! ',id))))))
+             `(
+               (notice (format "~a tries to escape." (get-combatant-name actor)))
+               (define skill 1)
+               (define stance (actor-stance actor))
+               (define value (get-stance-range-numeric-value (stance-range stance)))
+               (define target-number
+                 (if (= value 0)
+                     10
+                     8))
+
+               (define success? (skill-check "Athletics" skill target-number))
+               (if success?
+                   (begin
+                     (p "The blindscraper skitters away and disappears in the foliage.")
+                     (award-xp! 1)
+                     (remove-actor-from-its-current-location! actor)
+                     'ok)
+                   (begin
+                     (p "The blindscraper tries to run away, its legs skittering and slipping, but it is not fast enough.")
+                     (actor-add-status! actor (status 'fallen 1))
+                     (display-combatant-info actor)
+                     'failure))
+               )))))
         (else
-         (begin (displayln "Blindscraper AI, not in combat")))))
+         (begin (dev-note "Blindscraper AI, not in combat")))))
 
 (define (get-blindscraper-reaction actor)
   '())

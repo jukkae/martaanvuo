@@ -3,9 +3,9 @@
 (provide (all-defined-out))
 
 (require racket/lazy-require)
-(require racket/serialize)
 
 (require
+  "combat-event.rkt"
   "stance.rkt"
 
   "../actors/actor.rkt"
@@ -17,6 +17,11 @@
   "../pc/pc.rkt"
 
   "../world/world.rkt")
+
+(lazy-require
+ ["../resolvers/round-resolver/round-resolver.rkt"
+  (go-to-fragment
+   )])
 
 (lazy-require
  ["../state/state.rkt"  (current-in-combat?
@@ -160,13 +165,6 @@
    name))
 
 
-(serializable-struct
- combat-event
- (details
-  at)
- #:constructor-name combat-event*
- #:transparent)
-
 (define (make-combat-event
          details)
   (combat-event* details (world-elapsed-time (current-world))))
@@ -214,4 +212,5 @@
   (current-combat-timeline '())
   (wait-for-confirm)
   (when (pc-is-alive?)
+    #;(go-to-fragment 'post-combat)
     (next-chapter!)))

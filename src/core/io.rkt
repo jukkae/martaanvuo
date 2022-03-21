@@ -20,6 +20,7 @@
   (append-to-log)])
 
 (define *output-state* 'clean) ; not serialized, local
+(define *most-recent-output-type* '()) ; not serialized, local
 
 (define (prln args)
   (set! *output-state* 'dirty)
@@ -29,6 +30,7 @@
 
 (define (info-card content title [padding? #t])
   (set! *output-state* 'dirty)
+  (set! *most-recent-output-type* 'info-card)
   (when (not (null? title)) (prln (format "[~a]" title)))
   (when (not (null? (prune content)))
     (if padding?
@@ -86,6 +88,7 @@ M A R T A A N V U O
 ; implementation detail
 (define (print-paragraph formatted-text)
   (set! *output-state* 'dirty)
+  (set! *most-recent-output-type* 'paragraph)
   (displayln formatted-text))
 
 (define (repeat-last-paragraph)
@@ -98,6 +101,9 @@ M A R T A A N V U O
   (newline))
 
 (define (paragraph #:suppress-logging? [suppress-logging? #f] . args)
+  (define previous-output-type *most-recent-output-type*)
+  (when (not (eq? 'paragraph previous-output-type))
+    (newline))
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))
          (define s (format-for-printing str #:width 84 #:indent 4))
@@ -113,12 +119,15 @@ M A R T A A N V U O
 (define (notice . args)
   (define str (format "[~a]" (string-append* args)))
   (define s (format-for-printing str #:width 92 #:indent 0))
-  (print-paragraph s))
+  (set! *output-state* 'dirty)
+  (set! *most-recent-output-type* 'notice)
+  (display s))
 
 ; only confirm if there's been something new – no redundant confirmations
 (define (wait-for-confirm)
   (case *output-state*
    ['dirty
+    (newline)
     (prln "[Enter]")
     (newline)
     (define input (read-line))
@@ -128,7 +137,6 @@ M A R T A A N V U O
    [else '()]))
 
 (define (wait-for-input)
-  (newline)
   (define input (read-line))
   (newline)
   input)

@@ -2,14 +2,17 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out "describe-situation.rkt"
-                       "mutators.rkt"
-                       "pending-action.rkt"
-                       "resolve-counts.rkt"))
+(provide (all-from-out
+          "0-types/state.rkt"
+          "describe-situation.rkt"
+          "mutators.rkt"
+          "pending-action.rkt"
+          "resolve-counts.rkt"))
 
 (require racket/serialize)
 
 (require
+  "0-types/state.rkt"
   "../pc/pc.rkt"
   "../world/world.rkt")
 
@@ -56,13 +59,13 @@
 
 (define current-in-combat? (make-parameter #f))
 
-(define current-quests (make-parameter '()))
-(define current-persistent-quests (make-parameter '()))
+(define current-tasks (make-parameter '()))
 
 (define current-pc (make-parameter '()))
 (define current-life (make-parameter 0))
 
 (define current-fragment-id (make-parameter '()))
+(define current-completed-fragments (make-parameter '()))
 
 (define current-combat-timeline (make-parameter '()))
 
@@ -86,75 +89,45 @@
   (current-run 0)
   (current-elapsed-time 0)
   (current-in-combat? #f)
-  (current-quests '())
-  (current-persistent-quests '())
+  (current-tasks '())
   (current-pc (make-new-pc))
   (current-life 0)
   (current-fragment-id '())
+  (current-completed-fragments '())
   (current-combat-timeline '())
   (current-show-round-summary? #f)
   )
-
-
-; s11n logistics are simpler when there is only one S-expression to serialize -> "wrapper" struct for global state
-(serializable-struct
- state
- ([world #:mutable]
-  [last-numeric-actor-id #:mutable]
-  [log #:mutable]
-  [last-paragraph #:mutable]
-  [part #:mutable]
-  [chapter #:mutable]
-  [prompt #:mutable]
-  [pending-action #:mutable]
-  [times-begin-traverse-narrated #:mutable]
-  [times-finish-traverse-narrated #:mutable]
-  [times-cancel-traverse-narrated #:mutable]
-  [times-species-encountered #:mutable]
-  [flags #:mutable]
-  [round #:mutable]
-  [run #:mutable]
-  [elapsed-time #:mutable]
-  [in-combat? #:mutable]
-  [quests #:mutable]
-  [persistent-quests #:mutable]
-  [pc #:mutable]
-  [life #:mutable]
-  [current-fragment-id #:mutable]
-  [combat-timeline #:mutable]
-  [show-round-summary? #:mutable])
- #:transparent)
-
 
 (define (save)
   (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
 
   (define st
-    (state
-     (current-world)
-     (current-last-numeric-actor-id)
-     (current-log)
-     (current-last-paragraph)
-     (current-part)
-     (current-chapter)
-     (current-prompt)
-     (current-pending-action)
-     (current-times-begin-traverse-narrated)
-     (current-times-finish-traverse-narrated)
-     (current-times-cancel-traverse-narrated)
-     (current-times-species-encountered)
-     (current-flags)
-     (current-round)
-     (current-run)
-     (current-elapsed-time)
-     (current-in-combat?)
-     (current-quests)
-     (current-persistent-quests)
-     (current-pc)
-     (current-life)
-     (current-fragment-id)
-     (current-combat-timeline)
-     (current-show-round-summary?)))
+    (State
+     (current-world) ; world
+     (current-last-numeric-actor-id) ; Natural
+     (current-log) ; String?
+     (current-last-paragraph) ; String?
+     (current-part) ; Natural
+     (current-chapter) ; Natural
+     (current-prompt) ; String?
+     (current-pending-action) ; action
+     (current-times-begin-traverse-narrated) ; Natural
+     (current-times-finish-traverse-narrated) ; Natural
+     (current-times-cancel-traverse-narrated) ; Natural
+     (current-times-species-encountered) ; Natural
+     (current-flags) ; (Listof Symbol)
+     (current-round) ; Natural
+     (current-run) ; Natural
+     (current-elapsed-time) ; Natural, should be in-world timestamp
+     (current-in-combat?) ; Boolean
+     (current-tasks) ; (Listof task)
+     (current-pc) ; pc-actor
+     (current-life) ; Natural
+     (current-fragment-id) ; Symbol
+     (current-completed-fragments) ; (Listof Symbol)
+     (current-combat-timeline) ; timeline
+     (current-show-round-summary?) ; Boolean
+     ))
 
   (define serialized-state (serialize st))
   (write serialized-state output-file)
@@ -166,27 +139,27 @@
 (define (load-situation-from-state serialized-state)
   (define s (deserialize serialized-state))
 
-  (current-world (state-world s))
-  (current-last-numeric-actor-id (state-last-numeric-actor-id s))
-  (current-log (state-log s))
-  (current-last-paragraph (state-last-paragraph s))
-  (current-part (state-part s))
-  (current-chapter (state-chapter s))
-  (current-prompt (state-prompt s))
-  (current-pending-action (state-pending-action s))
-  (current-times-begin-traverse-narrated (state-times-begin-traverse-narrated s))
-  (current-times-finish-traverse-narrated (state-times-finish-traverse-narrated s))
-  (current-times-cancel-traverse-narrated (state-times-cancel-traverse-narrated s))
-  (current-times-species-encountered (state-times-species-encountered s))
-  (current-flags (state-flags s))
-  (current-round (state-round s))
-  (current-run (state-run s))
-  (current-elapsed-time (state-elapsed-time s))
-  (current-in-combat? (state-in-combat? s))
-  (current-quests (state-quests s))
-  (current-persistent-quests (state-persistent-quests s))
-  (current-pc (state-pc s))
-  (current-life (state-life s))
-  (current-fragment-id (state-current-fragment-id s))
-  (current-combat-timeline (state-combat-timeline s))
-  (current-show-round-summary? (state-show-round-summary? s)))
+  (current-world (State-world s))
+  (current-last-numeric-actor-id (State-last-numeric-actor-id s))
+  (current-log (State-log s))
+  (current-last-paragraph (State-last-paragraph s))
+  (current-part (State-part s))
+  (current-chapter (State-chapter s))
+  (current-prompt (State-prompt s))
+  (current-pending-action (State-pending-action s))
+  (current-times-begin-traverse-narrated (State-times-begin-traverse-narrated s))
+  (current-times-finish-traverse-narrated (State-times-finish-traverse-narrated s))
+  (current-times-cancel-traverse-narrated (State-times-cancel-traverse-narrated s))
+  (current-times-species-encountered (State-times-species-encountered s))
+  (current-flags (State-flags s))
+  (current-round (State-round s))
+  (current-run (State-run s))
+  (current-elapsed-time (State-elapsed-time s))
+  (current-in-combat? (State-in-combat? s))
+  (current-tasks (State-tasks s))
+  (current-pc (State-pc s))
+  (current-life (State-life s))
+  (current-fragment-id (State-current-fragment-id s))
+  (current-completed-fragments (State-completed-fragments s))
+  (current-combat-timeline (State-combat-timeline s))
+  (current-show-round-summary? (State-show-round-summary? s)))

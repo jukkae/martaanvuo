@@ -3,19 +3,23 @@
 (provide (all-defined-out))
 
 (require "../../core/api.rkt")
-
+(require "../../combat/combat.rkt")
 
 (fragment
- 100
+ 'post-combat ; for instance, wound care (fast vs good), xp, summary etc
  (thunk
+  (display-pc-combatant-info (pc))
   (p
    "[post-combat steps]"
    ))
 
  #:decisions
- (list (make-decision
-        #:title "Exit combat."
-        #:description "Combat finished."
-        #:next-fragment 'exit
-        )))
+ (append
+  (list (make-decision
+         #:title "Don't treat wounds."
+         #:description "Combat finished."
+         #:next-fragment 'exit
+         )
+        )
+  ))
 

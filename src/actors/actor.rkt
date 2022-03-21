@@ -232,12 +232,19 @@
          (dev-note "TODO: corpse")
          (add-feature-to-location! (current-location) 'corpse))))
 
+(define (inventory-contains-item-id inventory id)
+  (findf (λ (i) (eq? (item-id i) id))
+         inventory)
+  )
 
 (define (add-item-to-inventory! actor item)
-
-  (set-actor-inventory! actor
-                        (append (actor-inventory actor)
-                                (list item))))
+  (cond ((inventory-contains-item-id (actor-inventory actor) (item-id item))
+         (define i (inventory-contains-item-id (actor-inventory actor) (item-id item)))
+         (set-item-quantity! i (+ (item-quantity i) (item-quantity item))))
+        (else
+         (set-actor-inventory! actor
+                               (append (actor-inventory actor)
+                                       (list item))))))
 
 (define (actor-has-item? actor item)
   (define id (cond ((symbol? item) item)
@@ -287,7 +294,7 @@
      (if (actor-has-condition-of-type? target 'ankle-broken)
          (begin
            (actor-remove-condition-of-type! target 'ankle-broken)
-           (actor-add-condition! target (condition 'both-ankles-broken "TODO"))
+           (actor-add-condition! target (condition 'both-ankles-broken "TODO" '()))
            )
          (actor-add-condition! target a-condition))
      ]

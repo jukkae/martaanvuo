@@ -1,15 +1,13 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
+(provide (all-from-out "0-types/timeline.rkt"))
 
-(require racket/serialize)
-(require "event.rkt")
+(require "0-types/timeline.rkt"
+         "event.rkt"
 
-(serializable-struct
- timeline
- (metadata
-  events
-  duration))
+         "../../core/io.rkt"
+         "../../core/utils.rkt")
 
 (define (narrate-timeline timeline)
   (define
@@ -22,5 +20,21 @@
       (tbody (tr "at" "type" "details" "interrupts action?"))
       displayable-events)
      (format "Timeline, duration ~a" (timeline-duration timeline)))
-(for ([event (timeline-events timeline)])
-  (narrate-event event)))
+  (for ([event (timeline-events timeline)])
+    (narrate-event event)))
+
+(define (process-timeline! tl)
+  (for ([event (timeline-events tl)])
+    (case (event-type event)
+      ['new-time-of-day ; proc dailies here
+       '()]
+      ['not-hungry '()]
+      ['hungry '()]
+      ['very-hungry '()]
+      ['starving '()]
+      ['spawn-enemies '()]
+      ['notice '()]
+      [else
+       (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))
+       '()]))
+  (narrate-timeline tl))

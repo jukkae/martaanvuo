@@ -7,3 +7,6 @@
    [lifetime : Natural])
   #:prefab
   #:mutable)
+
+;; Statuses are semi-temporary.
+;; They are often combat-related.

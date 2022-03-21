@@ -12,6 +12,15 @@
 (provide resolve-game)
 (define (resolve-game game-mode)
 
+  (when (vector-member "--restart" (current-command-line-arguments))
+    (if (file-exists? "save.txt")
+        (begin
+          (notice "--restart flag supplied, deleting save file.")
+          (delete-save-file))
+        (begin
+          (notice "--restart flag supplied, but no save exists.")))
+    (set! game-mode 'begin))
+
   (case game-mode
     ['begin
      (br)

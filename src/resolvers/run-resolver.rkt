@@ -10,8 +10,8 @@
   "../locations/0-types/location.rkt"
   "../locations/locations.rkt"
   "../pc/pc.rkt"
-  "../quests/quest.rkt"
-  "../quests/quests.rkt"
+  "../tasks/task.rkt"
+  "../tasks/tasks.rkt"
   "../state/state.rkt"
   "../state/logging.rkt"
   "../world/world.rkt")
@@ -31,13 +31,10 @@
   (case (current-run)
     [(1)
      (blurb 'begin-first-run-pt-1)
-     ;(dev-note "Fixme: Quests")
-     (wait-for-confirm)
-     (create-quest 'pay-off-debt)
+     (create-task 'pay-off-debt)
      (wait-for-confirm)
      (blurb 'begin-first-run-pt-2)
-     (wait-for-confirm)
-     (create-quest 'anthead-monograph)
+     (create-task 'anthead-monograph)
      (wait-for-confirm)
      ]))
 
@@ -73,13 +70,13 @@
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
-           (define debt-quest (find-quest 'pay-off-debt))
+           (define debt-task (find-task 'pay-off-debt))
            (define gold-collected (pc-gold-amount))
            (reduce-debt-by! gold-collected)
            (remove-item! 'gold)
 
-           (displayln "Quest:")
-           (displayln debt-quest)
+           (displayln "Task:")
+           (displayln debt-task)
 
            (info-card
             (tbody
@@ -87,8 +84,8 @@
                  (number->string (current-run)))
              (tr "gold collected"
                  (number->string (pc-gold-amount)))
-             (tr "debt still owed"
-                 (number->string (quest-details debt-quest))))
+             #;(tr "debt still owed" ; TODO: fixme
+                 (number->string (task-details debt-task))))
             (format "Run number ~a ended" (current-run))))
 
           (else

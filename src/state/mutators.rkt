@@ -15,7 +15,7 @@
 
   "../pc/character-sheet.rkt"
 
-  "../quests/quest.rkt"
+  "../tasks/task.rkt"
 
   "../world/world.rkt"
 
@@ -23,11 +23,12 @@
 
 (lazy-require
  ["state.rkt" (current-flags
+               current-completed-fragments
                current-fragment-id
                current-in-combat?
                current-life
                current-pc
-               current-quests
+               current-tasks
                current-run)])
 
 (lazy-require
@@ -53,7 +54,6 @@
 
 (define (in-combat?) (current-in-combat?))
 
-; API
 (define (engaged?)
   (define any-enemy-engaged? #f)
 
@@ -64,7 +64,6 @@
 
   any-enemy-engaged?)
 
-; API
 (define (get-an-enemy-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-shuffled (shuffle current-enemies))
@@ -75,7 +74,6 @@
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
-; API
 (define (get-enemies-at-range range)
   (define current-enemies (get-current-enemies))
   (define enemies-in-range '())
@@ -85,7 +83,10 @@
       (set! enemies-in-range (append-element enemies-in-range enemy))))
   enemies-in-range)
 
-; API
+(define (includes-enemy-of-type enemies type)
+  (findf (λ (enemy) (eq? (actor-type enemy) type))
+         enemies))
+
 (define (in-range? target attack-mode)
   (case attack-mode
     ['melee
@@ -95,107 +96,68 @@
      (dev-note "in-range? tbd")
      #f]))
 
-; api
 (define (current-location)
   (get-location-by-id (actor-location-id (pc))))
 
-
-; api
 (define (get-current-enemies)
   (filter
    (λ (actor) (and (actor-alive? actor)
                    (not (pc-actor? actor))))
    (location-actors (current-location))))
 
-; api
-(define (quests)
-  (current-quests))
+(define (get-current-enemy)
+ (define enemies (get-current-enemies))
+ (cond ((null? enemies)
+        #f)
+       ((> 1 (length enemies))
+        (dev-note "get-current-enemy: Multiple enemies present!")
+        (car enemies))
+       (else
+        (car enemies)))
+)
 
-(define (find-quest id)
-  (findf (λ (q) (eq? (quest-id q) id))
-         (current-quests)))
+(define (tasks)
+  (current-tasks))
+
+(define (find-task id)
+  (findf (λ (t) (eq? (task-id t) id))
+         (current-tasks)))
 
 
 
 (define (reduce-debt-by! amount)
-  (define debt-quest (find-quest 'pay-off-debt))
-
-  (define old-debt-amount (quest-details debt-quest))
-  (define new-debt-amount (- old-debt-amount amount))
-  (set-quest-details! debt-quest new-debt-amount)
-  (set-quest-notes! debt-quest
-                    (format "unsettled: ~a g gold" new-debt-amount))
-  (displayln "new-debt-amount:")
-  #;(displayln (~r new-debt-amount)) ; formatting todo
-  (displayln new-debt-amount)
-
+  (dev-note "TODO: debt amount modification")
   '())
 
-
-; scripting API / situation
-(provide pc)
+; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
   (current-pc))
 
-; scripting API / situation / implementation detail
+; "clean up the board"
 (define (remove-all-enemies-and-end-combat!)
   (for ([enemy (get-current-enemies)])
     (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
-  (end-combat!)
-  (dev-note "post-combat steps")) ; for instance, wound care (fast vs good), xp, summary etc
+  (set-actor-statuses! (pc) '())
+  (end-combat!))
 
 
-; scripting API
 ; actor or ActorId
 (define (remove-enemy enemy)
   (when (or (symbol? enemy) (number? enemy)) (set! enemy (get-actor enemy)))
   (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
-; scripting API
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
 
-
-; api?
 (define (pick-up-items!)
   (p "Otava picks up everything there is to pick up.")
   (define all-items (location-items (current-location)))
   (for ([item all-items])
     (remove-item-from-location! (current-location) item)
     (add-item-to-inventory! (pc) item))
-  (inventory))
-
-(define (add-quest! quest)
-  (current-quests
-   (append-element (current-quests) quest)))
-
-(define (quest-exists? id)
-  (define quests (current-quests))
-  (if (null? quests)
-      #f
-      (findf (λ (quest) (eq? id (quest-id quest))) quests)))
-
-; set-quest-status! is obviously reserved
-(define (update-quest-status! id status)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-status! quest status)))
-
-; would be nice to add instead of overwrite, but that requires smart linebreaking in info-cards
-(define (update-quest-notes! id notes)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-notes! quest notes)))
-
-(define (update-quest-details! id details)
-  (define quests (current-quests))
-  (define quest (findf (λ (quest) (eq? id (quest-id quest))) quests))
-  (when quest
-    (set-quest-details! quest details)))
+  (display-inventory))
 
 (define (increment-achievement! achievement)
   (case achievement
@@ -206,3 +168,7 @@
 
 (define (unset-current-fragment-id!)
   (current-fragment-id '()))
+
+(define (fragment-completed? id)
+  (memq id (current-completed-fragments))
+)

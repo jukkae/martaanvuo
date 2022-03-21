@@ -22,7 +22,7 @@
       (tr (format "round ~a" (current-round)))
       (tr (format "day ~a, ~a (~a)"
            day-number
-           (time-of-day-from-jiffies (world-elapsed-time (current-world)))
+           (time-of-day-from-iotas (world-elapsed-time (current-world)))
            time-today))
       (tr (if (and (not (null? (current-location)))
                     (not (void? (current-location))))

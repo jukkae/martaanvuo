@@ -1,6 +1,7 @@
 #lang at-exp racket
 
-(provide (all-defined-out))
+(provide character-sheet
+         display-inventory)
 
 (require racket/lazy-require)
 
@@ -15,7 +16,19 @@
   (pc
    )])
 
+; Eventually, maybe lift this to the same "level" as numbered options. Then:
+; Character sheet could be a treelike menu, where also letters are used.
+; '-' is used to go back one level.
+; Then, concrete actions with diegetic effects should return an action ultimately for (get-next-pc-action).
+; Otherwise, return #t or whatever's appropriate for round-resolver
 (define (character-sheet)
+  (display-character-sheet)
+  (display-inventory)
+  (wait-for-confirm)
+  #t
+  )
+
+(define (display-character-sheet)
   (define actor (pc))
 
   (define sheet
@@ -94,29 +107,36 @@
   (when (not (null? traits-list))
     (set! traits-list (cons (tr "" "") traits-list)))
 
+
+  (define conditions (actor-conditions actor))
+  (define conditions-list
+    (for/list ([condition conditions])
+      (tr (format "[~a]" (condition-type condition)) "")))
+
+  ; append emptyline above
+  (when (not (null? conditions-list))
+    (set! conditions-list (cons (tr "" "") conditions-list)))
+
+
   (define hunger-list
     (list
      (tr "" "")
      (tr "hunger"
          (number->string (pc-actor-hunger actor)))))
 
-  (set! sheet (append sheet attributes-list traits-list hunger-list))
+  (set! sheet (append sheet attributes-list traits-list conditions-list hunger-list))
   (info-card
    sheet
    "Character sheet"
-   )
+   ))
 
-  (inventory)
-  (wait-for-confirm)
-  #t
-  )
 
-(define (inventory)
+(define (display-inventory)
   (define actor (pc))
 
   (define header
     (tbody
-     (tr "Item" "Notes")))
+     (tr "Item" "Quantity" "Notes")))
 
   (define items (actor-inventory actor))
   (define items-list
@@ -124,22 +144,29 @@
       (cond ((symbol? item)
              (tr
               (format "~a" item)
+              (~v (item-quantity item))
               ""))
             ((ranged-weapon? item)
              (tr
               (item-name item)
+              (~v (item-quantity item))
               (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
             ((eq? (item-id item) 'bolt-cutters)
              (tr
               (item-name item)
+              (~v (item-quantity item))
               ""))
             ((item? item)
              (tr
               (item-name item)
-              (~v (item-details item))))
+              (~v (item-quantity item))
+              (if (not (null? (item-details item)))
+                  (~v (item-details item))
+                  "")))
             (else
              (tr
               (symbol->string item)
+              (~v (item-quantity item))
               "")))
       ))
 

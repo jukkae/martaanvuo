@@ -36,7 +36,7 @@
 
 (lazy-require
  ["../resolvers/round-resolver/round-resolver.rkt"
-  (go-to-story-fragment
+  (go-to-fragment
    )])
 
 
@@ -55,9 +55,9 @@
 (define (get-world-choices world actor)
   (cond ((in-combat?)
          (get-combat-choices))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'evening)
+        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
          (get-evening-choices world actor))
-        ((eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night)
+        ((eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
          (get-nighttime-choices world actor))
         (else (get-downtime-choices world actor))))
 
@@ -100,7 +100,7 @@
 
     ['rest
      (define next-time-of-day
-       (time-of-day-from-jiffies (+ (world-elapsed-time (current-world))
+       (time-of-day-from-iotas (+ (world-elapsed-time (current-world))
                                     100)))
      (make-choice
       'rest
@@ -122,14 +122,14 @@
          ['not-hungry "Not really hungry but she could eat."]
          ['hungry "Eat."]
          ['very-hungry "Eat, she's very hungry."]
-         ['starving "She's starving, eat. Eat now."]
+         ['starving "Eat. She's starving, eat. Eat now."]
          ))
      (make-choice
       'eat
       "Eat."
       (λ ()
         (define food (select-food-to-eat))
-        (if (void? food)
+        (if (or (void? food) (null? food))
             'cancel
             (begin
               (make-action
@@ -140,22 +140,26 @@
                #:tags '(downtime)
                #:resolution-rules
                `(
+                 (define id ',(item-id food))
                  (define food-tier
-                   (case (,item-id ,food)
+                   (case id
                      ['fresh-berries 0]
+                     ['berries 0]
+                     ['decaying-berries 0]
                      ['ration 1]
                      ['vatruska 2]
-                     [else
-                      (displayln (format "Unknown comestible ~a" (,item-id ,food)))
-                      1])
+                     [else 1])
                    )
                  (decrease-pc-hunger-level food-tier)
+                 (when (eq? id 'decaying-berries)
+                  (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
+                 )
 
-                 (case (,item-id ,food)
-                   ['fresh-berries (p "The berries are invigoratingly sweet.")]
-                   ['ration (p "The ration's dry and bland, but filling.")]
-                   ['vatruska (p "The vatruska tastes heavenly.")])
-                 (remove-item! (,item-id ,food))
+                ;  (case ',food-id
+                ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                ;    ['ration (p "The ration's dry and bland, but filling.")]
+                ;    ['vatruska (p "The vatruska tastes heavenly.")])
+                 (remove-item! id)
 
                  ))))
 
@@ -169,6 +173,8 @@
     (filter (λ (item) ; likely this should be stored as data on the item itself
               (case (item-id item)
                 ['fresh-berries #t]
+                ['berries #t]
+                ['decaying-berries #t]
                 ['ration #t]
                 ['vatruska #t]
                 [else #f]))
@@ -179,7 +185,7 @@
 
   (for ([food comestibles]
         [i (in-naturals 1)])
-    (prln (format "[~a] ~a (~a)" i (item-name food) (item-details food))))
+    (prln (format "[~a] ~a (~a)" i (item-name food) (item-quantity food))))
   (br)
   (define input (string->number (wait-for-input)))
   (cond ((and (number? input)
@@ -188,7 +194,7 @@
          (define index (- input 1))
          (list-ref comestibles index)
          )
-        (else (p "Nevermind.")))
+        (else '()#;(p "Nevermind.")))
   )
 
 
@@ -248,8 +254,8 @@
        (when (route? (current-location))
          (define destination
            (get-location-by-id (get-cancel-and-go-back-destination
-            (current-location)
-            (current-pending-action))))
+                                (current-location)
+                                (current-pending-action))))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -407,7 +413,7 @@
 
                                     (process-timeline! tl)
                                     (return tl))
-                                    )
+                                  )
 
                                 'before-action-ok
                                 ))
@@ -421,7 +427,7 @@
                             )))))
              )))
 
-       (when (and (not (eq? (time-of-day-from-jiffies (world-elapsed-time (current-world))) 'night))
+       (when (and (not (eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
                   (place? (current-location)))
          (list (choice-factory 'rest)))
 
@@ -429,6 +435,27 @@
                   (pc-has-item? 'ration))
          (list
           (choice-factory 'eat)))
+
+       (when (not (null? (actor-conditions (pc))))
+         (list (make-choice
+                'treat-wounds
+                "Treat wounds."
+                (λ () (make-action
+                       #:symbol 'treat-wounds
+                       #:actor (pc)
+                       #:duration 80
+                       #:tags '(downtime)
+                       #:resolution-rules
+                       `(
+                         (for ([c (actor-conditions (pc))])
+                           (case (condition-type c)
+                             ['ankle-broken
+                              (p "Otava splints her purple, swollen ankle. She tries putting a little weight on it and immediately regrets it. There are multiple fractures in the small bones in her ankle.")]
+                             ['bleeding
+                              (p "Otava bandages her wounds. She's going to have some more scars.")])
+                           )
+                         )
+                       )))))
 
        (when (eq? (location-type (current-location)) 'swamp)
          (list
@@ -447,11 +474,11 @@
 
                     (define successful? (skill-check "Forage" skill target-number))
                     (cond (successful?
-                           (define amount (d 1 4)) ; portions = days of survival
+                           (define amount (d 1 2))
                            (define amount-string
                              (if (= amount 1)
-                                 (format "~a meal" amount)
-                                 (format "~a meals" amount)))
+                                 (format "~a handful" amount)
+                                 (format "~a handfuls" amount)))
 
                            (info-card
                             (tbody
@@ -461,22 +488,11 @@
                               (format "~a" amount-string))
                              )
                             "Forage results roll")
-                           (p "After some time, Otava finds some edible fruits and roots. (" (number->string amount) " meals.)")
-                           (define item (list 'food (list amount)))
-                           (add-item-to-inventory! (pc) item)
+                           (p "Otava finds crowberries and bogberries. (" (number->string amount) " handfuls.)")
+                           (define item (make-item 'fresh-berries #:amount amount))
+                           (add-item! item)
                            )
-                          (else
-                           (begin
-                             (p "Despite spending a while, Otava can't find anything to eat.")
-                             (define luck-roll (d 1 20))
-                             (info-card
-                              (tbody
-                               (tr
-                                "1d20"
-                                "="
-                                (format "~a" luck-roll)))
-                              "Luck roll")
-                             )))
+                          )
                     (if successful?
                         'successful
                         'failure)
@@ -500,7 +516,7 @@
               "Magpie."
               (λ ()
                 (p "Despite the worsening rain, Otava goes into the monochrome bush.")
-                (go-to-story-fragment 'magpie)
+                (go-to-fragment 'magpie)
                 (remove-feature-from-location! (current-location) 'magpie-effigy)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
@@ -512,20 +528,37 @@
               "Check out the mesmerising overhang."
               (λ ()
                 (p "The glowing fog is starting to coalesce around her, as a rock gets loose under her foot. Otava slips.")
-                (go-to-story-fragment 'fall-down)
+                (go-to-fragment 'fall-down)
                 (wait-for-confirm)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
 
             ['anthill
-             (make-choice
-              'anthill
-              "Take a closer look at the anthill."
-              (λ ()
-                (go-to-story-fragment 'anthill-1)
-                'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+             (cond [(not (flag-set? 'anthill-seen))
+                    (make-choice
+                     'anthill
+                     "Anthill."
+                     (λ ()
+                       (set-flag 'anthill-seen)
+                       (go-to-fragment 'anthill-1)
+                       'end-chapter ; ie., 'end-round-early, plus next chapter on next round
+                       ))]
+                   [else
 
+                    ; TODO: This should be known and decided by in "content related to anthill" – for instance perhaps in fragments/anthill?
+                    (define next-anthill-fragment
+                      (cond [(pc-has-item? 'grabberkin-finger)
+                             'anthill-complete-fingers]
+                            [else 'anthill-2]))
+
+                    (make-choice
+                     'anthill
+                     "Back to Anthill."
+                     (λ ()
+                       (go-to-fragment next-anthill-fragment)
+                       'end-round-early
+                       ))])
              ]
 
             ['waiting-room-begin
@@ -534,7 +567,7 @@
               "Enter the waiting room."
               (λ ()
                 (p "The penultimate step towards Ascending to a Higher Plane of Existence: To enter the waiting room!")
-                (go-to-story-fragment 'waiting-room-1)
+                (go-to-fragment 'waiting-room-1)
                 'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
 
              ]
@@ -619,5 +652,5 @@
 (define (describe-pc-intention pc-action)
   (when (not (null? pc-action)) ; should be checked at call site but eh
     (case (action-symbol pc-action)
-      ['forage (p "Otava is getting low on supplies. Too low to be comfortable. Here looks good as any, so she decides to take a look around, see if there's anything edible.")]
+      ['forage (p "Otava is getting low on supplies, and it looks like there could be bogberries around.")]
       #;[else (p "TBD")])))

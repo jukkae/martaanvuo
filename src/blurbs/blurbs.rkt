@@ -13,17 +13,17 @@
                         current-times-species-encountered++]))
 
 (define (get-blurb name)
-(case name
+  (case name
     ['the-end
      @~a{
-The end.
+      The end.
 
 
 
-M A R T A A N V U O
-===================
+      M A R T A A N V U O
+      ===================
 
-Jukka Eerikäinen (2022)
+      Jukka Eerikäinen (2022)
 
 
       }]
@@ -35,33 +35,38 @@ Jukka Eerikäinen (2022)
   This should be worth it: There's a [cache] of valuables deep in the forest, but somewhere near it there's this basement lab too, a fucking abandoned junkie cellar kitchen, and if what she knows and what she's figured out is correct, she'll find the [Anthead Monograph] there.
 
   The first one: Should be enough gold for Otava to pay back Mediator her debt anyway. That alone would be good enough a reason.
-  }
+ }
  ] ; subsequent runs: if reached subtarget X, then blurb Y, otherwise blurb Z
- ['begin-first-run-pt-2
+    ['begin-first-run-pt-2
 
  @~a{
   The second one, though, the Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
 
   Otava the Seeker, become Otava the Deathless!
-  }
+ }
  ]
 
- ['martaanvuo-title
-  @~a{
-    M A R T A A N V U O
-    ===================
-  }]
+    ['martaanvuo-title
+     @~a{
+      M A R T A A N V U O
+      ===================
+      }]
 
-  ; idea: this (and other similar semi-random content stuff) could also either use p or notice, depending on situation
-  ['rest-action
-  @~a{
-    Time passes.
-  }]
+    ; idea: this (and other similar semi-random content stuff) could also either use p or notice, depending on situation
+    ['rest-action
+     (define str @~a{
+      Time passes.
+      Some time passes.
+      A while passes.
+     })
+     (define l (string-split str #rx"\n+"))
+     (take-random l)
+     ]
 
- [else (dev-note (format "Unknown blurb: ~a" name))
-       '()]
+    [else (dev-note (format "Unknown blurb: ~a" name))
+     '()]
 
-  ))
+    ))
 
 (define (blurb name)
   (p (get-blurb name))

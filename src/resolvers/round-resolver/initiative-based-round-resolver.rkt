@@ -6,7 +6,7 @@
 
   "../action-resolver/action-resolver.rkt"
 
-  "../../actors/0-types/actor.rkt"
+  "../../actors/actor.rkt"
 
   "../../actions/action.rkt"
 
@@ -26,8 +26,9 @@
 (provide resolve-turns!)
 (define (resolve-turns!)
   (let/ec end-round-early
-    (when (all-actions-of-type? action-queue 'flee)
-      (p "Otava turns and ducks in the shadows. She waits a while.")
+    (when (all-actions-of-type? action-queue 'escape)
+      (dev-note "consolidate this with pc-combat-action")
+      (p "Otava ducks in the shadows.")
       (award-xp! 1)
       (end-combat)
       (end-round-early))

@@ -1,10 +1,10 @@
 #lang at-exp racket
 
 (provide
-  get-next-pc-action
-  meta-command-valid?
-  print-meta-commands-with-keys
-  )
+ get-next-pc-action
+ meta-command-valid?
+ print-meta-commands-with-keys
+ )
 
 (require racket/lazy-require)
 
@@ -15,6 +15,8 @@
   "../../actions/pc-choices.rkt"
   "../../actions/choice.rkt"
 
+  "../../actors/0-types/pc-actor.rkt"
+
   "../../core/io.rkt"
   "../../core/utils.rkt"
 
@@ -23,6 +25,7 @@
   "../../locations/locations.rkt"
 
   "../../pc/character-sheet.rkt"
+  "../../pc/pc.rkt"
 
   "../../state/state.rkt"
   "../../world/time.rkt"
@@ -31,10 +34,9 @@
 
 (lazy-require
  ["ui.rkt"
-  (display-quests
+  (display-tasks
    display-log
    inventory
-   notes
    quit
    restart
    )])
@@ -42,20 +44,31 @@
 (define (display-statusline)
   (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
-          "~a~a, day ~a, ~a"
-          (if (current-in-combat?)
-            "[In combat] "
-            "")
-          (get-location-short-description (current-location))
-          current-day
-          (symbol->string (time-of-day-from-jiffies (world-elapsed-time (current-world))))
-          ))
-)
+           "~a~a, day ~a, ~a.~a"
+           (if (current-in-combat?)
+               "[In combat] "
+               "")
+           (get-location-short-description (current-location))
+           current-day
+           (symbol->string (time-of-day-from-iotas (world-elapsed-time (current-world))))
+           (if (>= (pc-actor-hunger (pc)) hunger-level-hungry)
+               (format " Hunger: ~a."
+                       (case (pc-hunger-level)
+                         ['satiated "satiated"]
+                         ['not-hungry "not hungry"]
+                         ['hungry "hungry"]
+                         ['very-hungry "very hungry"]
+                         ['starving "starving"]))
+               ""
+               )
+           ))
+  )
 
 
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
 ; this pokes a hole through abstraction layers (as it should)
 ; (sort of like IO monad)
+; Returns action or symbol
 (define (get-next-pc-action)
   (let/ec return
     (let what-do-you-do ([question-repeated? #f])
@@ -97,12 +110,13 @@
       (define meta-commands-with-keys (get-meta-commands-with-keys))
 
       (if question-repeated?
-        (describe-situation #t)
-        (describe-situation #f)
-        )
+          (describe-situation #t)
+          (describe-situation #f)
+          )
 
       (newline)
       (display-statusline)
+      (newline)
 
       (when (not (eq? "" (current-prompt)))
         (display-prompt))
@@ -140,7 +154,8 @@
                   "Empty command"
                   (format "Unknown command: [~a]" input)
                   )
-                                )
+              )
+             (newline)
              (what-do-you-do #t))))))
 
 
@@ -223,12 +238,11 @@
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
-  (hash-set! meta-commands "N" (cons "[N]: Notes." notes))
   (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
   #;(when (not (null? (actor-inventory (pc))))
-    (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
+      (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
-  (hash-set! meta-commands "Q" (cons "[Q]: Quests." display-quests))
+  (hash-set! meta-commands "T" (cons "[T]: Tasks." display-tasks))
   meta-commands)
 
 (define (print-decisions-with-keys decisions-with-keys)

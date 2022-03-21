@@ -14,8 +14,9 @@
 (define (new-item
          name
          #:id id
-         #:details (details '()))
-  (item* id name details))
+         #:details (details '())
+         #:quantity (quantity 1))
+  (item* id name details quantity))
 
 ; not part of API
 (define (new-ranged-weapon
@@ -30,6 +31,7 @@
 (define (make-item
          id
          #:amount [amount 1])
+
   (case id
     ['bolt-cutters
      (new-item
@@ -46,25 +48,25 @@
      (new-item
       "Ammo"
       #:id id
-      #:details 2)]
+      #:quantity 2)]
 
     ['ration
      (new-item
       "Food rations"
       #:id id
-      #:details amount)]
+      #:quantity amount)]
 
     ['fresh-berries
      (new-item
       "Berries, fresh"
       #:id id
-      #:details amount)]
+      #:quantity amount)]
 
     ['vatruska
      (new-item
       "Vatruska"
       #:id id
-      #:details amount)]
+      #:quantity amount)]
 
     ['knife
      (new-item
@@ -86,9 +88,13 @@
      (new-item
       "Gold" ; gold-198, to be more precise
       #:id id
-      #:details amount)] ; amount in grams, for now
+      #:quantity amount)] ; amount in grams, for now
 
-    [else (dev-note "make-item: unknown id:") (prln id)]))
+    [else
+     (new-item
+      (capitalize-first-letter (symbol->string id))
+      #:id id
+      #:quantity amount)]))
 
 (define (increase-ammo! gun)
   (set-ranged-weapon-ammo-left! gun (add1 (ranged-weapon-ammo-left gun))))
@@ -109,6 +115,13 @@
                              (tr
                               (item-name item)
                               (~v (item-details item))))
+                            ((eq? (item-id item) 'fresh-berries)
+                             (define quantity-text (if (= (item-quantity item) 1)
+                                                       "handful"
+                                                       "handfuls"))
+                             (tr
+                              (item-name item)
+                              (format "~a ~a" (item-quantity item) quantity-text)))
                             ((item? item)
                              (tr
                               (item-name item)

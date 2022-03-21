@@ -36,6 +36,7 @@
 
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))
+  #;(define round-begin-status 'ok)
 
   (enqueue-npc-actions)
 
