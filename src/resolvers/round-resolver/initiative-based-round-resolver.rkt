@@ -52,7 +52,6 @@
                ;(define action post-action-reaction-from-target?)
                (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
-             (dev-note (format "Turn result for ~a: ~a" (get-combatant-name (get-actor (action-actor-id action))) turn-result))
              (when (empty? (get-current-enemies))
                (dev-note (format "-- No more enemies"))
                (set! turn-result 'end-combat)
@@ -62,7 +61,6 @@
                (set! turn-result 'pc-dead))
 
              (case turn-result
-
                ['pc-dead
                 (end-combat)
                 (end-round-early)]
@@ -77,9 +75,9 @@
 
       )))
 
+; (: -> Action TurnResult)
 (define (resolve-turn! action)
   (cond ((melee-attack-action? action)
-         (displayln "TODO: Fix melee / combat action resolution!")
          (resolve-melee-action! action))
         (else (resolve-action! action))))
 

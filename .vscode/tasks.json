@@ -56,8 +56,11 @@
         {
             "label": "Clean",
             "type": "shell",
-            "command": "rm save.txt",
+            "command": "rm save.txt Martaanvuo",
             "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
             "presentation": {
                 "reveal": "always",
             }

@@ -30,7 +30,6 @@
   (define sorted (sort shuffled
                        (λ (a1 a2) (> (car a1) (car a2))))) ; intentionally flipped: Higher is better
 
-  (dev-note "Fix actor-name / actor-id thing")
   (define actions
     (for/list ([action-with-initiative sorted])
       (define action (cdr action-with-initiative))
@@ -39,7 +38,7 @@
 
         (format "~a" (actor-name (get-actor (action-actor-id action)))))
       (tr action-description (format "~a" initiative))))
-  ; TODO: Only show initiatives when more than one combatant do something, and exclude the ones that only "skip"
+
   (info-card actions "Action initiatives")
   (wait-for-confirm)
 
