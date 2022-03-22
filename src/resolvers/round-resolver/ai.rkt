@@ -5,6 +5,8 @@
 (require racket/lazy-require)
 
 (require
+  "action-initiative-resolver.rkt"
+
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
@@ -66,22 +68,4 @@
       ; blam blam
       #;(define action (make-shoot-action actor))
       (define action '())
-      (add-to-action-queue action (get-action-initiative action actor)))))
-
-; TODO: Figure out where to put this!
-(define (get-action-initiative action actor)
-  (dev-note "Find a place for this!")
-  (define dexterity-mod (get-attribute-modifier-for (actor-dexterity actor)))
-
-  (define action-mod 0)
-
-  (cond ((has-tag? action 'fast)
-         (set! action-mod 2))
-        ((has-tag? action 'slow)
-         (set! action-mod -4)))
-
-  (define dice-1 (d 1 6))
-  (define dice-2 (d 1 6))
-
-  (define total (+ dice-1 dice-2 action-mod dexterity-mod))
-  total)
+      (add-to-action-queue action (resolve-action-initiative action actor)))))

@@ -11,6 +11,7 @@
   "fragment-handler.rkt"
   "ui.rkt"
 
+  "action-initiative-resolver.rkt"
   "action-queue.rkt"
   "ai.rkt"
   "get-next-pc-action.rkt"
@@ -101,7 +102,7 @@
           (describe-pc-intention pc-action)
           (define round-exit-status 'ok)
           (cond ((initiative-based-resolution? pc-action)
-                 (add-to-action-queue pc-action (get-action-initiative pc-action (pc)))
+                 (add-to-action-queue pc-action (resolve-action-initiative pc-action (pc)))
                  (update-npc-reactions pc-action)
                  (sort-action-queue)
                  (resolve-turns!))
@@ -119,4 +120,4 @@
   (for ([actor actors])
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
-      (add-to-action-queue next-action (get-action-initiative next-action actor)))))
+      (add-to-action-queue next-action (resolve-action-initiative next-action actor)))))
