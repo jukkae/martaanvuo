@@ -22,7 +22,10 @@
 
   "../../fragments/decision.rkt"
 
+  "../../items/item.rkt"
+
   "../../locations/locations.rkt"
+  "../../locations/0-types/location.rkt"
 
   "../../pc/character-sheet.rkt"
   "../../pc/pc.rkt"
@@ -62,8 +65,18 @@
                ""
                )
            ))
-  )
 
+  (when (not (empty? (location-items (current-location))))
+    (define items (location-items (current-location)))
+    (case (length items)
+     [(1)
+      (define item (car items))
+      (define name (item-name item))
+      (notice (format "There is ~a here." name))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
+     [else
+      (notice "There are multiple items here.")]))
+
+  )
 
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
 ; this pokes a hole through abstraction layers (as it should)

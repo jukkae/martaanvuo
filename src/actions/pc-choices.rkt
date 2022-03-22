@@ -125,14 +125,22 @@
      (make-choice
       'pick-up-item
       "Pick up something."
-      (λ () (make-action
-             #:symbol 'pick-up
-             #:actor (pc)
-             #:duration 1 ; should be "negligible", aka 0.1 iota
-             #:resolution-rules
-             `(
-               (p "TODO: pick up items"))
-             )))
+      (λ ()
+        (define item (select-item-to-pick-up))
+        (if (or (void? item) (null? item))
+            'cancel
+            (begin
+              (remove-item-from-location! (current-location) item)
+              (add-item! item)
+              (notice (format "Picked up: ~a" (item-name item)))
+              (make-action
+               #:symbol 'pick-up
+               #:actor (pc)
+               #:duration 1 ; should be "negligible", aka 0.1 iota
+               #:resolution-rules '()
+               )
+              ))
+        ))
      ]
 
     ; This opens a submenu
@@ -214,6 +222,30 @@
               (<= input (length comestibles)))
          (define index (- input 1))
          (list-ref comestibles index)
+         )
+        (else '()#;(p "Nevermind.")))
+  )
+
+(define (select-item-to-pick-up)
+  (define items (location-items (current-location)))
+
+  (prln (format "Pick up what? [1-~a], anything else to cancel." (length items)))
+  (br)
+
+  (for ([item items]
+        [i (in-naturals 1)])
+    (if (= (item-quantity item) 1)
+        (prln (format "[~a] ~a" i (item-name item)))
+        (prln (format "[~a] ~a (~a)" i (item-name item) (item-quantity item))) ; TODO: pluralized
+        )
+    )
+  (br)
+  (define input (string->number (wait-for-input)))
+  (cond ((and (number? input)
+              (> input 0)
+              (<= input (length items)))
+         (define index (- input 1))
+         (list-ref items index)
          )
         (else '()#;(p "Nevermind.")))
   )
