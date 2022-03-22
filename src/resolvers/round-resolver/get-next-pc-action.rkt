@@ -186,6 +186,7 @@
 
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
+  (define current-choice (hash-ref choices-with-keys (string->number input) '()))
 
   (define action
     (cond ((procedure? resolution-effect) (resolution-effect))
@@ -193,15 +194,18 @@
           (else (error "resolve-choice-and-produce-action!: unknown type"))))
 
   ; dirty to do this here like this but eh
-  (define pending-choice-available? #f)
+  ; #f or choice
+  (define pending-choice? #f)
   (for/hash ([(k v) (in-hash choices-with-keys)])
     (values k
             (begin
               (when (string-prefix? (choice-name v) "[continue]")
-                (set! pending-choice-available? #t)))))
+                (set! pending-choice? v)))))
 
-  ; choice either is pending (= resolve it) or is not, in which case discard pending action
-  (when pending-choice-available? (reset-pending-action!))
+  (when (and pending-choice?
+             (eq? (choice-symbol pending-choice?) (choice-symbol current-choice)))
+             (reset-pending-action!)
+             )
 
   action)
 

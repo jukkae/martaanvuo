@@ -301,6 +301,7 @@
           (λ ()
             (begin0
               (current-pending-action)
+              ; continue and reset
               (reset-pending-action!)))))
 
        ; route traversal can be canceled

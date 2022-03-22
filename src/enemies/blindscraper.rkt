@@ -60,7 +60,7 @@
             (begin
               (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-              (let ([enemy-stance (stance "α" 'engaged "right")])
+              (let ([enemy-stance (stance "α" 'engaged "right")]) ; TODO: fix this
                 (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance)))
 
             (begin
@@ -90,11 +90,11 @@
       #:resolution-rules
       `(
         (define lp (pc-actor-lp (pc)))
-        (define dex (,actor-dexterity ,actor))
+        (define dex ,(actor-dexterity actor))
 
         (p "The Blindscraper skitters towards Otava.")
 
-        (let ([enemy-stance (stance "α" 'close "right")])
+        (let ([enemy-stance (stance "α" 'close "right")]) ; TODO: fix stance
           (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance))
         'ok
         ))]
@@ -183,7 +183,7 @@
              #:details '()
              #:resolution-rules
              `(
-               (notice (format "~a tries to escape." (get-combatant-name actor)))
+               (notice (format "~a tries to escape." (get-combatant-name (get-actor ,(actor-id actor)))))
                (define skill 1)
                (define stance (actor-stance actor))
                (define value (get-stance-range-numeric-value (stance-range stance)))
@@ -197,12 +197,12 @@
                    (begin
                      (p "The blindscraper skitters away and disappears in the foliage.")
                      (award-xp! 1)
-                     (remove-actor-from-its-current-location! actor)
+                     (remove-actor-from-its-current-location! (get-actor ,(actor-id actor)))
                      'ok)
                    (begin
                      (p "The blindscraper tries to run away, its legs skittering and slipping, but it is not fast enough.")
-                     (actor-add-status! actor (status 'fallen 1))
-                     (display-combatant-info actor)
+                     (actor-add-status! (get-actor ,(actor-id actor)) (status 'fallen 1))
+                     (display-combatant-info (get-actor ,(actor-id actor)))
                      'failure))
                )))))
         (else
