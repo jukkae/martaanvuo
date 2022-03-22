@@ -39,7 +39,7 @@
   (info-card body "Session stats")
   (newline))
 
-; TODO: clean up!
+
 ; Return value is tied to round resolution.
 (define (quit)
   (displayln "Your attention is the thin barrier between the world and the void. Really quit?")

@@ -184,7 +184,7 @@
   (when (eq? result 'dead)
     (kill actor))
 
-  ; TODO this belongs to grabberkin.rkt
+  ; should be moved to grabberkin.rkt
   ; -> subtype grabberkin-actor from actor?
   (when (equal? (actor-name actor)
                 "Grabberkin")
@@ -337,7 +337,7 @@
          name
          max-hp
          max-lp)
-  (current-last-numeric-actor-id++) ; TODO: Dirty: symbol vs integer?
+  (current-last-numeric-actor-id++)
   (pc-actor*
    'pc name 'pc max-hp max-hp
    ; attributes

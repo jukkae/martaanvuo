@@ -145,13 +145,13 @@
                   (inflict-condition!
                    target (condition
                            'ankle-broken
-                           "resolve-anklebreaker-action!: details todo"
+                           "resolve-anklebreaker-action!: details"
                            '()))
                   (when critical?
                     (inflict-condition!
                      target
 
-                     (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
+                     (condition 'bleeding ; This kind of involved definition belongs to, say, conditions.rkt or something
                                 ;"resolve-anklebreaker-action!: details for 'bleeding todo"
                                 '() ; details
                                 '() ; on-end-rules

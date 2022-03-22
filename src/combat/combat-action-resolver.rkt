@@ -94,7 +94,7 @@
     (define action-result 'ok)
     (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
     (when (eq? action-result 'dead)
-      ; TODO what's a smart place to store this? the actor?
+      ; move this to Actor
       (case (actor-name target)
         [("Blindscraper") (award-xp! 7)]))
 
@@ -132,7 +132,6 @@
             (get-combatant-name actor)
             (get-combatant-name target)))
 
-  ; TODO add sophistication regarding ranges etc
   (define success? #t)
   (consume-ammo! 1)
 
