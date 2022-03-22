@@ -42,11 +42,7 @@
         ['win-game (end-life 'win-game)]
         ['end-run (loop 'begin)]
         ['recurse (loop 'recurse)]
-        ['restart (end-life 'restart)]
-        [else
-         (dev-note "Unknown run exit status:")
-         (displayln run-exit-status)
-         (error "FIXME")])
+        ['restart (end-life 'restart)])
       )
     ))
 

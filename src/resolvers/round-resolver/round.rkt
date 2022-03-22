@@ -45,13 +45,11 @@
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)
 
-     ; does this also need to happen when 'continue?
      (define round-begin-status
        (cond ((not (null? (current-fragment-id)))
-              (current-fragment-on-begin-round!)))) ; TODO: This fails
+              (current-fragment-on-begin-round!))))
 
      ; mark location as visited w.r.t routes
-     ; todo logic is shit here (should maybe happen in traversal action resolution)
      (let ([location (current-location)])
       (when (place? location)
         (for ([route-id (place-routes location)])
@@ -70,7 +68,7 @@
 
 (define (on-end-round)
   #;(displayln "[End round]")
-  (set-prompt! "") ; TODO: can be done much much earlier in the round - when should it be done?
+  (set-prompt! "")
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
@@ -79,7 +77,7 @@
   #;(wait-for-confirm)
 
   (when (not (null? (current-fragment-id)))
-    (current-fragment-on-end-round!)) ; TODO fragment-rounds should maybe not increase round?
+    (current-fragment-on-end-round!))
 
   ; remove statuses
   (for ([enemy (get-current-enemies)])
