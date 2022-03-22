@@ -224,7 +224,7 @@
                )))
 
   (cond ((pc-actor? actor)
-         (set-pc-actor-alive?! actor 'dead)
+         (set-pc-actor-alive?! actor #f)
          (set-pc-actor-cause-of-death! actor cause-of-death)
          )
         (else

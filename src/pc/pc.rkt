@@ -62,9 +62,7 @@
   #;(character-sheet)
   )
 
-; TODO dispatching based on type should be done elsewhere,
-; this should really be only concerned with adding an existing item
-; but this works for now
+; (: -> (U Item Symbol) Natural String Boolean '())
 (define (add-item!
          item
          #:amount [amount 1]
@@ -87,7 +85,6 @@
                                       (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
                                               (actor-inventory (pc))
                                               ))]
-               ; TODO: Refactor, shit
                [else
                 (if (> (item-quantity it) 1)
                     (set-item-quantity! (- (item-quantity it) 1))
@@ -202,7 +199,6 @@
     ))
 
 (define (pc-is-alive?)
-  ; TODO this is dirty hack, think about "aliveness" vs hp etc
   (case (pc-actor-alive? (pc))
     ['dead #f]
     [else

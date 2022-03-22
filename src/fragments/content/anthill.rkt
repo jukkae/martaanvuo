@@ -46,7 +46,7 @@
            (make-decision
             #:title "Disagree."
             #:description "\"NO DEAL.\", Otava says and leaves."
-            #:next-fragment 'exit ; TODO: could make this optional or '() instead?
+            #:next-fragment 'exit
             )
            ))
 

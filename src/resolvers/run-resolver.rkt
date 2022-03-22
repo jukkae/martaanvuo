@@ -67,6 +67,7 @@
   '())
 
 (define (on-end-run exit-status)
+  (reset-pending-action!)
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)

@@ -80,7 +80,8 @@
         (p "The thing pulls her deeper. She fights back, but her arms get caught in the massive algae congesting the grimy waters. She cannot hold her breath much longer.") ; -> fragments -> saving throw, not direct death
         (wait-for-confirm)
 
-        (p "Otava opens her mouth and drowns four feet under the surface of a nameless pool in Martaanvuo.") ; -> todo: name it 'the drowning pools' in subsequent rounds
+        (p "Otava opens her mouth and drowns four feet under the surface of a nameless pool in Martaanvuo.")
+        (add-feature-to-location! (current-location) 'drowning-pools)
         (kill (pc) 'drowned)
 
 

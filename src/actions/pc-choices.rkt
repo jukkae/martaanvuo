@@ -310,7 +310,7 @@
            (get-location-by-id (get-cancel-and-go-back-destination
                                 (current-location)
                                 (current-pending-action))))
-           (define cancel-action-duration (/ (action-duration (current-pending-action)) 2))
+           (define cancel-action-duration (floor (/ (action-duration (current-pending-action)) 2)))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
