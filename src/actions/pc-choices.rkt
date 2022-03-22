@@ -317,32 +317,33 @@
           (λ () (make-action
                  #:symbol 'cancel-traverse
                  #:actor (pc)
-                 #:duration 100
+                 #:duration 100 ; TODO: should be like a half of what's left
                  #:target (location-id destination)
                  #:tags '(downtime)
                  #:resolution-rules
                  `(
                    (define from
-                     (cond (,(route? destination)
-                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                     (cond [,(route? destination)
+                            (if (memq 'a-to-b (action-details (current-pending-action)))
                                 (route-a destination)
-                                (route-b destination)))
-                           (else
-                            (current-location))
+                                (route-b destination))]
+                           [else
+                            (current-location)]
                            ))
 
+                   (define destination-id ',(location-id destination))
                    (define to
-                     (cond (,(route? destination)
-                            (if (memq 'a-to-b (action-details (current-pending-action))) ; TODO check that this is OK
+                     (cond [,(route? destination)
+                            (if (memq 'a-to-b (action-details (current-pending-action)))
                                 (route-b destination)
-                                (route-a destination)))
-                           (else
-                            ,destination)
+                                (route-a destination))]
+                           [else
+                            (get-location-by-id destination-id)]
                            ))
-                   (reset-pending-action!)
-                   (move-pc-to-location! ,destination)
 
+                   (move-pc-to-location! (get-location-by-id destination-id))
                    (describe-cancel-traverse-action from to)
+                   (reset-pending-action!)
                    (display-location-info-card (current-location))
                    'ok
 

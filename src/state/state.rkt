@@ -32,9 +32,9 @@
   (current-last-numeric-actor-id))
 
 (define current-log (make-parameter '()))
+(define current-last-paragraph (make-parameter ""))
 (define current-part (make-parameter 0))
 (define current-chapter (make-parameter 0))
-(define current-last-paragraph (make-parameter ""))
 (define current-prompt (make-parameter ""))
 
 (define current-pending-action (make-parameter '()))
@@ -99,8 +99,6 @@
   )
 
 (define (save)
-  (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
-
   (define st
     (State
      (current-world) ; world
@@ -130,6 +128,8 @@
      ))
 
   (define serialized-state (serialize st))
+
+  (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
   (write serialized-state output-file)
   (close-output-port output-file))
 

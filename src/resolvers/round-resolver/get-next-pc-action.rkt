@@ -69,12 +69,12 @@
   (when (not (empty? (location-items (current-location))))
     (define items (location-items (current-location)))
     (case (length items)
-     [(1)
-      (define item (car items))
-      (define name (item-name item))
-      (notice (format "There is ~a here." name))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
-     [else
-      (notice "There are multiple items here.")]))
+      [(1)
+       (define item (car items))
+       (define name (item-name item))
+       (notice (format "There is ~a here." name))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
+      [else
+       (notice "There are multiple items here.")]))
 
   )
 
@@ -193,19 +193,9 @@
           ((action? resolution-effect) resolution-effect)
           (else (error "resolve-choice-and-produce-action!: unknown type"))))
 
-  ; dirty to do this here like this but eh
-  ; #f or choice
-  (define pending-choice? #f)
-  (for/hash ([(k v) (in-hash choices-with-keys)])
-    (values k
-            (begin
-              (when (string-prefix? (choice-name v) "[continue]")
-                (set! pending-choice? v)))))
-
-  (when (and pending-choice?
-             (eq? (choice-symbol pending-choice?) (choice-symbol current-choice)))
-             (reset-pending-action!)
-             )
+  (when (or (string-prefix? (choice-name current-choice) "[continue]")
+            (string-prefix? (choice-name current-choice) "[cancel]"))
+    (reset-pending-action!))
 
   action)
 

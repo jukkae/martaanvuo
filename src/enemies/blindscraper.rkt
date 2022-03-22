@@ -56,11 +56,14 @@
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
+        (define old-stance (actor-stance (get-actor ,(actor-id actor))))
+        (define sign (stance-sign old-stance))
+        (define description (stance-description old-stance))
         (if success?
             (begin
               (p "The Blindscraper suddenly leaps forward and gets a hold of Otava's forearm with a couple of its lanky fingers. One of its long claws is swinging free, looking for an opening.")
 
-              (let ([enemy-stance (stance "α" 'engaged "right")]) ; TODO: fix this
+              (let ([enemy-stance (stance sign 'engaged description)])
                 (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance)))
 
             (begin
@@ -92,9 +95,13 @@
         (define lp (pc-actor-lp (pc)))
         (define dex ,(actor-dexterity actor))
 
+        (define old-stance (actor-stance (get-actor ,(actor-id actor))))
+        (define sign (stance-sign old-stance))
+        (define description (stance-description old-stance))
+
         (p "The Blindscraper skitters towards Otava.")
 
-        (let ([enemy-stance (stance "α" 'close "right")]) ; TODO: fix stance
+        (let ([enemy-stance (stance sign 'close description)])
           (set-actor-stance! (get-actor ,(actor-id actor)) enemy-stance))
         'ok
         ))]
@@ -183,9 +190,9 @@
              #:details '()
              #:resolution-rules
              `(
-               (notice (format "~a tries to escape." (get-combatant-name (get-actor ,(actor-id actor)))))
+               (notice (format "~a tries to escape." (get-combatant-name (get-actor ,id))))
                (define skill 1)
-               (define stance (actor-stance actor))
+               (define stance (actor-stance (get-actor ,id)))
                (define value (get-stance-range-numeric-value (stance-range stance)))
                (define target-number
                  (if (= value 0)

@@ -195,7 +195,7 @@
 
 (define (describe-cancel-traverse-action from to)
 
-  (define key (list from to))
+  (define key (list (location-id from) (location-id to)))
   (times-cancel-traverse-narrated++ key) ; dumbass order of initialization
   (define n (times-cancel-traverse-narrated key))
   (case key
