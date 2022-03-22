@@ -62,7 +62,7 @@
          (cond [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
                 (set! world-choices (append world-choices (get-evening-choices world actor)))]
                [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
-                (get-nighttime-choices world actor)]
+                (set! world-choices (append world-choices (get-nighttime-choices world actor)))]
                [else (set! world-choices (append world-choices (get-downtime-choices world actor)))])
          world-choices
         ]))
