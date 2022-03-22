@@ -53,7 +53,6 @@
                (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
              (when (empty? (get-current-enemies))
-               (dev-note (format "-- No more enemies"))
                (set! turn-result 'end-combat)
                )
 

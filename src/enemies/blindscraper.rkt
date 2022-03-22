@@ -109,16 +109,15 @@
     ['blindscrape
      (define target-id (actor-id (pc)))
      (make-action
-      #:symbol 'inflict-status
+      #:symbol 'inflict-condition
       #:actor actor
       #:duration 1
       #:target target-id
       #:tags '(initiative-based-resolution)
-      #:details '(blind)
       #:resolution-rules
       `(
         (define target (pc))
-        (inflict-status! (pc) 'blind))
+        (inflict-condition! (pc) 'blind))
       )]
 
     [else

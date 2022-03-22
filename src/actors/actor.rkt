@@ -278,18 +278,6 @@
 
 (define (inflict-status! target status-type . status-strength)
   (match status-type
-    ['blind
-     (dev-note "todo: blind should be a condition, not a status")
-     (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
-     (define roll (d 1 2))
-     (wait-for-confirm)
-     (case roll
-       [(1)
-        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
-        (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
-       [(2)
-        (p "A searing pain cuts through her eyes as her vision goes black.")])
-     ]
     ['bound
      (actor-set-status! target status-type (car status-strength))]
     [else (notice (format "Status inflicted on ~a: [~a : ~a]" (actor-name target) status-type))]))
@@ -310,7 +298,18 @@
          (notice "Already bleeding."))
 
      ]
-    [else (dev-note (format "todo: unknown condition ~a" condition))]))
+    ['blind
+     (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+     (define roll (d 1 2))
+     (wait-for-confirm)
+     (case roll
+       [(1)
+        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+        (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
+       [(2)
+        (p "A searing pain cuts through her eyes as her vision goes black.")])
+     ]
+    [else (dev-note (format "Unknown condition ~a" condition))]))
 
 (define (get-firearm actor)
   (define items (actor-inventory actor))
