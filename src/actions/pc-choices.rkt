@@ -310,6 +310,7 @@
            (get-location-by-id (get-cancel-and-go-back-destination
                                 (current-location)
                                 (current-pending-action))))
+           (define cancel-action-duration (/ (action-duration (current-pending-action)) 2))
          (make-choice
           'cancel-traverse
           ; the pending action's direction is needed
@@ -317,7 +318,7 @@
           (λ () (make-action
                  #:symbol 'cancel-traverse
                  #:actor (pc)
-                 #:duration 100 ; TODO: should be like a half of what's left
+                 #:duration cancel-action-duration
                  #:target (location-id destination)
                  #:tags '(downtime)
                  #:resolution-rules
