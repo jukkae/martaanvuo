@@ -4,12 +4,3 @@
 
 (require "../../core/api.rkt")
 
-
-(fragment
-'mieli-first-meeting
-(thunk
-  (p @~a{
-
-  })
-  (dev-note "todo!")
-  ))
