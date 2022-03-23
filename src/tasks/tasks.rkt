@@ -1,10 +1,10 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
+(provide (all-from-out "task.rkt"))
 
 (require racket/lazy-require)
 
-; TODO: This should reprovide task and act as 'module entrypoint'
 (require "task.rkt"
          "../core/io.rkt"
          "../core/utils.rkt")
