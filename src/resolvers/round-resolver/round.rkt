@@ -108,11 +108,11 @@
     (decrement-actor-status-lifetimes! (pc)))
 
   (for ([condition (actor-conditions (pc))])
-    (process-condition-on-end-turn (pc) condition))
+    (condition-on-end-round! condition (actor-id (pc))))
 
   (for ([enemy (get-current-enemies)])
     (for ([condition (actor-conditions enemy)])
-      (process-condition-on-end-turn enemy condition)))
+      (condition-on-end-round! condition (actor-id enemy))))
 
   ; mark location itself as visited, as opposed to its routes
   (let ([location (current-location)])

@@ -112,15 +112,15 @@
                  ('hit
                   (inflict-condition!
                    target
-                   (condition 'ankle-broken "resolve-anklebreaker-action!: details for 'ankle-broken todo" '()))
-                  (when critical?
+                   (condition 'ankle-broken
+                    "Can't walk, fucking painful."))
+                  (when #t ; critical?
                     (inflict-condition!
                      target
 
-                     (condition 'bleeding ; TODO: This kind of involved definition belongs to, say, conditions.rkt or something
-                                ;"resolve-anklebreaker-action!: details for 'bleeding todo"
-                                '() ; details
-                                '() ; on-end-round-rules
+                     ; TODO: extract to generic conditions file
+                     (condition 'bleeding
+                                "Bleeding, should get this patched ASAP."
                                 )))
                   (display-combatant-info target)
                   'ok)

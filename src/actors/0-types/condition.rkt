@@ -6,8 +6,7 @@
 
 (struct condition
  ([type : Symbol]
-  [details : (U String (Listof (U Symbol String Number)))]
-  [on-end-round-rules : (Maybe Sexp)])
+  [details : (U String (Listof (U Symbol String Number)))])
   #:prefab
   #:mutable)
 

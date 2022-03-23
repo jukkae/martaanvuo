@@ -4,12 +4,16 @@
 (provide (all-from-out "0-types/actor.rkt"
                        "0-types/condition.rkt"
                        "0-types/pc-actor.rkt"
-                       "0-types/status.rkt"))
+                       "0-types/status.rkt"
+
+                       "conditions.rkt"))
 
 (require "0-types/actor.rkt"
          "0-types/condition.rkt"
          "0-types/pc-actor.rkt"
-         "0-types/status.rkt")
+         "0-types/status.rkt"
+
+         "conditions.rkt")
 
 (require racket/lazy-require)
 
@@ -306,22 +310,6 @@
   (findf (λ (item) (ranged-weapon? item))
          items)
   )
-
-(define (process-condition-on-end-turn owner condition)
-  (case condition
-    ['bleed
-     (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-     (cond ((= 1 bleed-damage-roll)
-            (notice "Bleed check: 1d6 = 1: [1] => 1 dmg")
-            (take-damage owner 1 'bleed)
-            (display-combatant-info owner)
-            )
-           (else
-            (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll))))]
-    ['ankle-broken '()]
-    [else (dev-note (format "process-condition-on-end-turn: unknown condition ~a" (condition-type condition)))])
-  )
-
 
 (define (make-pc-actor
          name
