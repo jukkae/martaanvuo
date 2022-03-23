@@ -93,7 +93,6 @@
         (define meta-command-result (meta-command))
         (when (eq? meta-command-result 'restart) (return 'restart))
 
-        ; TODO: Assumes that this is a re-description
         (what-do-you-do #t))
 
       (define actor (pc))

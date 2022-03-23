@@ -52,7 +52,7 @@
         (define dex ,(actor-dexterity actor))
         (define success?
           (cond ((positive? lp)
-                 (displayln "[LP positive]")
+                 (notice "LP positive")
                  (attribute-check "Dexterity" dex))
                 (else #t)))
 
@@ -68,14 +68,14 @@
 
             (begin
               (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-              (displayln "[-1 LP]")
+              (notice "[-1 LP]")
               (set-pc-actor-lp! (pc)
                                 (- (pc-actor-lp (pc))
                                    1))
               (when (< (pc-actor-lp (pc)) 0)
                 (set-pc-actor-lp! (pc)
                                   0))
-              (displayln (pc-actor-lp (pc)))
+              (notice (pc-actor-lp (pc)))
               'failure))
         'ok
         )

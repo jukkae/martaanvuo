@@ -41,40 +41,38 @@
 (define (on-begin-round mode)
   (case mode
     ['begin
-     (current-round (add1 (current-round)))
-     (when (current-show-round-summary?) (round-summary mode))
-     (clear-action-queue!)
+ (current-round (add1 (current-round)))
+ (when (current-show-round-summary?) (round-summary mode))
+ (clear-action-queue!)
 
-     (define round-begin-status
-       (cond ((not (null? (current-fragment-id)))
-              (current-fragment-on-begin-round!))))
+ (define round-begin-status
+   (cond ((not (null? (current-fragment-id)))
+          (current-fragment-on-begin-round!))))
 
-     ; mark location as visited w.r.t routes
-     (let ([location (current-location)])
-      (when (place? location)
-        (for ([route-id (place-routes location)])
-          (when #t ; if not hidden
-            (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
-            ))
-        ))
-     #;(case round-begin-status
-       ['ok 'ok]
-       ['pc-dead 'pc-dead])
-     'ok]
+ ; mark location as visited w.r.t routes
+ (let ([location (current-location)])
+   (when (place? location)
+     (for ([route-id (place-routes location)])
+       (when #t ; if not hidden
+         (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
+         ))
+     ))
+ #;(case round-begin-status
+     ['ok 'ok]
+     ['pc-dead 'pc-dead])
+ 'ok]
 
     ['continue
      (when (current-show-round-summary?) (round-summary mode))
      (clear-action-queue!)]))
 
 (define (on-end-round)
-  #;(displayln "[End round]")
   (set-prompt! "")
   (define current-enemies (get-current-enemies))
 
   (when (and (in-combat?)
              (= (length current-enemies) 0))
     (end-combat!))
-  #;(wait-for-confirm)
 
   (when (not (null? (current-fragment-id)))
     (current-fragment-on-end-round!))
@@ -113,14 +111,13 @@
   (define pc-conditions (actor-conditions (pc)))
   (for ([condition pc-conditions])
     (process-condition-on-end-turn (pc) condition)
-    #;((condition-on-end-round! condition)) ; lambdas don't serialize, rethink this
     '())
 
-; mark location itself as visited, as opposed to its routes
-     (let ([location (current-location)])
-      (when (place? location)
-        (set-place-visited?! location #t)
-        ))
+  ; mark location itself as visited, as opposed to its routes
+  (let ([location (current-location)])
+    (when (place? location)
+      (set-place-visited?! location #t)
+      ))
 
   (if #f
       (newline) ; This is the "extra" newline that separates rounds

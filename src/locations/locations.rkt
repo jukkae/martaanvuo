@@ -20,8 +20,7 @@
          "routes.rkt")
 
 (define (location-on-enter! location)
-  (dev-note "location-on-enter! tbd for location")
-  (displayln location))
+  (dev-note (format "location-on-enter! tbd for location ~a" location)))
 
 
 (define (get-location-decisions location)

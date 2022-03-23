@@ -379,7 +379,7 @@
         (else
          (define new-hp (- (actor-hp actor) damage))
          (when (not (positive? new-hp))
-           (displayln "[Otava is dying.]")
+           (notice "Otava is dying.")
            (wait-for-confirm))
 
          (set-actor-hp! actor new-hp)

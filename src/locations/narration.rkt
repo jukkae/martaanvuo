@@ -89,8 +89,8 @@
      ]
 
     [else
-     (dev-note "describe-begin-traverse-action: unknown key:")
-     (displayln key)])
+     (dev-note (format "describe-begin-traverse-action: unknown key: ~a" key))
+     ])
   )
 
 (define (describe-finish-traverse-action route direction)
@@ -189,8 +189,8 @@
      ]
 
     [else
-     (dev-note "describe-finish-traverse-action: unknown key:")
-     (displayln key)]
+     (dev-note (format "describe-finish-traverse-action: unknown key: ~a" key))
+     ]
     ))
 
 (define (describe-cancel-traverse-action from to)
@@ -392,5 +392,4 @@
         ((route? location)
          (display-route-info-card location))
         (else
-         (displayln "location-info-card: unknown location:")
-         (displayln location))))
+         (dev-note (format "location-info-card: unknown location: ~a" location)))))
