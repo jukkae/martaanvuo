@@ -12,6 +12,12 @@
 (lazy-require ["../state/state.rkt"
                (current-tasks)])
 
+(define-namespace-anchor anc)
+(define ns (namespace-anchor->namespace anc))
+
+(define (rules-to-lambda rules)
+  `(λ () ,@rules))
+
 (define (add-task! task)
   (current-tasks
    (append-element (current-tasks) task)))
@@ -23,6 +29,31 @@
       #f
       (findf (λ (task) (eq? id (task-id task))) tasks)))
 
+(define (complete-task! id)
+  (define t (task-exists? id))
+  (cond [(not (null? t))
+
+         (when (not (null (task-on-complete! t)))
+           ((rules-to-lambda (task-on-complete! t))))
+         (set-task-state! t 'completed)]
+
+        [else
+         '()
+         ])
+  )
+
+(define (fail-task! id)
+  (define t (task-exists? id))
+  (cond [(not (null? t))
+
+         (when (not (null (task-on-fail! t)))
+           ((rules-to-lambda (task-on-fail! t))))
+         (set-task-state! t 'failed)]
+
+        [else
+         '()
+         ])
+  )
 
 
 (define (add-new-task task)
@@ -32,15 +63,15 @@
   (define body
     (list
      (tr
-       (~a (task-name task))
-       (~a (task-info-blurb task))
-       (~a (task-status-text task)))))
+      (~a (task-name task))
+      (~a (task-info-blurb task))
+      (~a (task-status-text task)))))
   (info-card
    body
    "New task"
    )
   (wait-for-confirm)
-)
+  )
 
 (define (create-task id)
   (define t
@@ -84,15 +115,15 @@
   (define body
     (list
      (tr
-       (~a (task-name t))
-       (~a (task-info-blurb t))
-       (~a (task-status-text t)))))
+      (~a (task-name t))
+      (~a (task-info-blurb t))
+      (~a (task-status-text t)))))
   (info-card
    body
    "New task"
    )
   (wait-for-confirm)
-)
+  )
 #|
 
 Magpie King's War

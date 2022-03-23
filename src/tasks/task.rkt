@@ -15,8 +15,6 @@
 
 (define-type TaskState (U 'pending 'in-progress partially-completed 'completed 'failed))
 
-; TODO:
-; + complete-task! and fail-task!
 (struct task
   ([id : Symbol]
    [name : String]
