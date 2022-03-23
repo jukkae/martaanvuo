@@ -68,14 +68,14 @@
 
             (begin
               (p "The Blindscraper leaps at Otava, but she dives under it and stumbles back to her feet.")
-              (notice "[-1 LP]")
+              (notice "-1 LP")
               (set-pc-actor-lp! (pc)
                                 (- (pc-actor-lp (pc))
                                    1))
               (when (< (pc-actor-lp (pc)) 0)
                 (set-pc-actor-lp! (pc)
                                   0))
-              (notice (pc-actor-lp (pc)))
+              (notice (format "~a" (pc-actor-lp (pc))))
               'failure))
         'ok
         )
@@ -117,7 +117,25 @@
       #:resolution-rules
       `(
         (define target (pc))
-        (inflict-condition! (pc) 'blind))
+        (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
+         (wait-for-confirm)
+         (case (d 1 2)
+           [(1)
+            ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
+            (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")
+            (inflict-condition! (pc)
+                                (condition 'one-eye-blind
+                                           "One eye blind."
+                                           '()))
+            ]
+           [(2)
+            (p "A searing pain cuts through her eyes as her vision goes black.")
+            (inflict-condition! (pc)
+                                (condition 'both-eyes-blind
+                                           "Blind."
+                                           '()))
+            ])
+        )
       )]
 
     [else

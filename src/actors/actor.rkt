@@ -296,19 +296,9 @@
      (if (not (actor-has-condition-of-type? target 'bleeding))
          (actor-add-condition! target a-condition)
          (notice "Already bleeding."))
-
      ]
-    ['blind
-     (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
-     (define roll (d 1 2))
-     (wait-for-confirm)
-     (case roll
-       [(1)
-        ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
-        (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")]
-       [(2)
-        (p "A searing pain cuts through her eyes as her vision goes black.")])
-     ]
+    ['one-eye-blind '()]
+    ['both-eyes-blind '()]
     [else (dev-note (format "Unknown condition ~a" condition))]))
 
 (define (get-firearm actor)

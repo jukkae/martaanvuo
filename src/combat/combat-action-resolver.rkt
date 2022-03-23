@@ -244,7 +244,5 @@
         (else ; pc not bound
          (p "Grabberkin hand lets loose. Otava pulls her hurt foot free and stumbles back. When Otava turns to look, rotting grabberkin has disappeared, slithered back unto the mucid dark whence it came.")
          (award-xp! 3)
-         (dev-note "Fix me: shouldn't end combat")
-         'end-combat
          ))
   )

@@ -183,14 +183,14 @@
       #:details '(slow silent))]
 
     ['grab
-     (define strength (+ (d 1 4) 0))
+     (define strength (+ (d 1 2) 0))
      (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'modify-status
       #:actor actor
       #:duration 0
       #:target target-id
-      #:tags '(initiative-based-resolution fast)
+      #:tags '(initiative-based-resolution slow)
       #:details (list (status 'bound strength))
       #:resolution-rules
       `(

@@ -97,7 +97,7 @@
   (begin-combat!)
   (spawn-enemies 'grabberkin 1)
 
-  (inflict-status! (pc) 'bound (d 2 3)))
+  (inflict-status! (pc) 'bound (d 1 4)))
 
 (define (spawn-blindscraper-encounter!)
   (p (blindscraper-spawn-text))
@@ -121,7 +121,7 @@
   (p "Otava briefly looks at her restrainted lower appendage, then notices movement in the corner of her eye. Long, fingerlike limbs of a Blindscraper approach silently, folding and bending through the shadows, then its pus-filled drooping sac comes to view.")
 
   (spawn-enemies 'grabberkin 1)
-  (inflict-status! (pc) 'bound (d 2 3))
+  (inflict-status! (pc) 'bound (d 1 4))
 
   (spawn-enemies 'blindscraper 1)
   )
