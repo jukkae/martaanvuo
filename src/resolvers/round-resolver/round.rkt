@@ -107,11 +107,12 @@
     (define description-suffix "]")
     (decrement-actor-status-lifetimes! (pc)))
 
-  ; proc conditions - TODO this is currently only for PC, fix if needed!
-  (define pc-conditions (actor-conditions (pc)))
-  (for ([condition pc-conditions])
-    (process-condition-on-end-turn (pc) condition)
-    '())
+  (for ([condition (actor-conditions (pc))])
+    (process-condition-on-end-turn (pc) condition))
+
+  (for ([enemy (get-current-enemies)])
+    (for ([condition (actor-conditions enemy)])
+      (process-condition-on-end-turn enemy condition)))
 
   ; mark location itself as visited, as opposed to its routes
   (let ([location (current-location)])
