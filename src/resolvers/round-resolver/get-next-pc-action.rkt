@@ -45,7 +45,7 @@
    )])
 
 (define (display-statusline)
-  (define current-day (add1 (floor (/ (world-elapsed-time (current-world)) day-length))))
+  (define current-day (add1 (exact-floor (/ (world-elapsed-time (current-world)) day-length))))
   (notice (format
            "~a~a, day ~a, ~a [~a ι].~a"
            (if (current-in-combat?)

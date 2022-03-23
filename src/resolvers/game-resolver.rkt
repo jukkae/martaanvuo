@@ -134,7 +134,7 @@
 
 (define (narrate-restart)
   (p
-   (take-random ; TODO: probabilitify these kinds of take-random calls
+   (take-random
     (list
      "An unfinished timeline continues its chaotic growth, an eldritch tentacle tying itself in a thousand knots through dimensions of time and space."
      "Unpruned, abandoned, the story ends here."
@@ -143,7 +143,8 @@
      "Unpruned, abandoned, this story of this Otava ends here."
      "In the depths of the Maw, the Heart of the World stops."
      (get-blurb 'the-end)
-     "[data missing - 13 days later] Otava comes upon a mountain range. She finds a way over, and begins a new life on the other side, deep within the vast unnamed forests."))))
+     "[data missing - 13 days later] Otava comes upon a mountain range. She finds a way over, and begins a new life on the other side, deep within the vast unnamed forests.")
+    #:distribution 'quadratic)))
 
 (define (handle-broken-save)
   (br)
