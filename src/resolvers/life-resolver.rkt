@@ -47,9 +47,6 @@
     ))
 
 (define (on-begin-life)
-  (define lst (list 'a 'b 'c 'd 'e 'f))
-  (for ([i 100])
-    (take-random lst))
 
   (when (not (session-flag-set? 'began-life))
     (set-session-flag 'began-life)
