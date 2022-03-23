@@ -66,7 +66,6 @@
 (struct place
   location
   ([routes : (Listof RouteId)]
-   [on-enter-symbol : (Maybe Symbol)] ; symbol, because lambdas cannot be easily serialized -> fix!
    [visited? : Boolean]
    [actions-provided : (Listof Symbol)]
    [shortname : String])
@@ -85,7 +84,6 @@
                     #:items (Listof (U item Symbol))
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol)
-                    #:on-enter-symbol (Maybe Symbol) ; TODO: s-exp
                     #:visited? Boolean
                     #:actions-provided (Listof Symbol)
                     #:shortname String)
@@ -99,7 +97,6 @@
          #:features [features '()]
          #:tags [tags '()]
          #:routes [routes '()]
-         #:on-enter-symbol [on-enter-symbol '()]
          #:visited? [visited? #f]
          #:actions-provided [actions-provided '()]
          #:shortname [shortname ""])
@@ -122,7 +119,6 @@
           features
           tags
           routes
-          on-enter-symbol
           visited?
           actions-provided
           shortname))
