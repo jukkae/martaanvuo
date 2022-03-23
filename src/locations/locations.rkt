@@ -85,6 +85,7 @@
 
 (define (move-pc-to-location! location)
   ; TODO: location on-exit / on-enter triggers here
+  (reset-pending-action!)
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location-id! (pc) (location-id location))
   (add-actor-to-location! location (pc)))

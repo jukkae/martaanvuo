@@ -420,7 +420,7 @@
                                 (describe-begin-traverse-action (get-route-by-id ',(location-id route)) ',direction)
                                 (define next-location (get-route-by-id ',(location-id route)))
                                 (move-pc-to-location! next-location)
-                                ;(dev-note "TODO: Handle pending actions")
+
                                 (define elapsed-time 0)
 
                                 (when (not (location-has-detail? (current-location) 'no-encounters))
