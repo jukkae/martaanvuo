@@ -39,18 +39,6 @@
   (go-to-fragment
    )])
 
-
-
-; TODO: action / time helpers, move these somewhere
-(define (time-until-next-morning)
-  (let* ([time (world-elapsed-time (current-world))]
-         [time-today (remainder time day-length)])
-    (- day-length time-today)))
-
-(define (time-until-next-time-of-day)
-  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
-
-
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (cond ((in-combat?)

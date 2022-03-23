@@ -4,7 +4,8 @@
 (require racket/lazy-require)
 
 (require "0-types/world.rkt"
-         "content/world.rkt")
+         "content/world.rkt"
+         "time.rkt")
 
 (require "../actors/actor.rkt"
          "../items/item.rkt"
@@ -42,6 +43,18 @@
   (remove-actor-from-its-current-location! actor)
   (set-actor-location-id! actor (location-id location))
   (add-actor-to-location! location actor))
+
+
+; time helpers
+(provide time-until-next-morning)
+(define (time-until-next-morning)
+  (let* ([time (world-elapsed-time (current-world))]
+         [time-today (remainder time day-length)])
+    (- day-length time-today)))
+
+(provide time-until-next-time-of-day)
+(define (time-until-next-time-of-day)
+  (- 100 (remainder (world-elapsed-time (current-world)) 100)))
 
 (provide (all-from-out
           "0-types/world.rkt"
