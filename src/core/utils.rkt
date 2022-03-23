@@ -28,7 +28,7 @@
 ; 'constant: every value equally likely
 ; 'quadratic: every value half as likely as the previous one
 ; 'golden-ratio: every value phi times less likely as the previous one
-(define (take-random l #:distribution [distribution 'golden-ratio])
+(define (take-random l #:distribution [distribution 'constant])
   (case distribution
    ['constant
     (list-ref l (random (length l)))]
@@ -45,8 +45,7 @@
     (define max_roll (exact-floor (expt base n)))
     (define roll (d 1 max_roll))
     (define index (- (- n (exact-floor (log roll base))) 1))
-    (list-ref l index)
-   ]
+    (list-ref l index)]
    [else (error (format "Unknown distribution ~a" distribution))])
   )
 

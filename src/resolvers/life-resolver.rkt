@@ -47,7 +47,6 @@
     ))
 
 (define (on-begin-life)
-
   (when (not (session-flag-set? 'began-life))
     (set-session-flag 'began-life)
     (current-session-score-dice++)
