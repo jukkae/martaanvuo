@@ -114,7 +114,7 @@
                    target
                    (condition 'ankle-broken
                     "Can't walk, fucking painful."))
-                  (when #t ; critical?
+                  (when critical?
                     (inflict-condition!
                      target
 
@@ -145,27 +145,13 @@
                   (inflict-condition!
                    target (condition
                            'ankle-broken
-                           "resolve-anklebreaker-action!: details"
-                           '()))
+                           "Can't walk, fucking painful."))
                   (when critical?
                     (inflict-condition!
                      target
 
-                     (condition 'bleeding ; This kind of involved definition belongs to, say, conditions.rkt or something
-                                ;"resolve-anklebreaker-action!: details for 'bleeding todo"
-                                '() ; details
-                                '() ; on-end-rules
-                                #;(λ ()
-                                    (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
-                                    (cond ((= 1 bleed-damage-roll)
-                                           (notice "Bleed check: 1d6 = 1: [1] => 1 dmg")
-                                           (take-damage target 1 'bleed)
-                                           (display-combatant-info target)
-                                           )
-                                          (else
-                                           (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll)))))
-
-
+                     (condition 'bleeding
+                                "Bleeding, should get this patched ASAP."
                                 )))
                   'ok)
                  ('dead
@@ -183,7 +169,7 @@
       #:details '(slow silent))]
 
     ['grab
-     (define strength (+ (d 1 2) 0))
+     (define strength (+ (d 1 3) 0))
      (define target-id (actor-id (pc)))
      (make-action
       #:symbol 'modify-status

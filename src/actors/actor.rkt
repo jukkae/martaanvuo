@@ -292,7 +292,7 @@
      (if (actor-has-condition-of-type? target 'ankle-broken)
          (begin
            (actor-remove-condition-of-type! target 'ankle-broken)
-           (actor-add-condition! target (condition 'both-ankles-broken "TODO" '()))
+           (actor-add-condition! target (condition 'both-ankles-broken "Can only crawl."))
            )
          (actor-add-condition! target a-condition))
      ]
