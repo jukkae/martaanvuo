@@ -123,6 +123,13 @@ M A R T A A N V U O
   (set! *most-recent-output-type* 'notice)
   (display s))
 
+(define (info-card-header . args)
+  (define str (format "[~a]" (string-append* args)))
+  (define s (format-for-printing str #:width 92 #:indent 0))
+  (set! *output-state* 'dirty)
+  (set! *most-recent-output-type* 'info-card)
+  (display s))
+
 ; only confirm if there's been something new – no redundant confirmations
 (define (wait-for-confirm)
   (case *output-state*
