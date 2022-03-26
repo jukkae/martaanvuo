@@ -132,14 +132,15 @@
 (struct route
   location
   ([a : PlaceId]
-   [b : PlaceId])
+   [b : PlaceId]
+   [traverse-time : Natural])
   #:mutable
   #:prefab
   #:constructor-name route*)
 
 (define *number-of-routes* 0)
 
-(: make-route (->* (PlaceId PlaceId)
+(: make-route (->* (PlaceId PlaceId Natural)
                    (#:id RouteId
                     #:type (Maybe Symbol)
                     #:details (Listof Symbol)
@@ -150,6 +151,7 @@
                    route))
 (define (make-route a
                     b
+                    traverse-time
                     #:id [id *number-of-routes*]
                     #:type [type '()]
                     #:details [details '()]
@@ -174,7 +176,8 @@
           features
           tags
           a
-          b))
+          b
+          traverse-time))
 
 (: route-traversed? (->* (route) () Boolean))
 (define (route-traversed? route)

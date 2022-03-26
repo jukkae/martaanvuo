@@ -391,7 +391,7 @@
                     )
 
                    (else ; route is traversable
-                    (define traverse-duration 100)
+                    (define traverse-duration (route-traverse-time route))
                     (make-choice
                      'traverse
                      (get-traverse-text route (current-location))

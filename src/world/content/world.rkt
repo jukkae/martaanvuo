@@ -120,32 +120,31 @@
   (define routes
     (list
      #; (make-path-between perimeter martaanvuo-swamp 'hidden)
-     (make-path-between places 'perimeter 'magpie-hill #:no-encounters? #t)
-     (make-path-between places 'perimeter 'martaanvuo-swamp #:no-encounters? #t)
-     (make-path-between places 'martaanvuo-swamp 'crematory)
-     (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks #:no-encounters? #t)
-     (make-path-between places 'martaanvuo-docks 'murkwater-docks #:no-encounters? #t) ; temporary: this should require water transport!
-     (make-path-between places 'martaanvuo-docks 'palsat #:no-encounters? #t)
-     (make-path-between places 'martaanvuo-swamp 'luminous-precipice)
-     (make-path-between places 'crematory 'the-maw #:no-encounters? #t)
-     (make-path-between places 'the-maw 'waiting-room #:no-encounters? #t #:onedirectional? #t)
-
-     (make-path-between places 'magpie-hill 'power-plant-ruins #:no-encounters? #t)
-     (make-path-between places 'magpie-hill 'luminous-precipice #:no-encounters? #t)
-     (make-path-between places 'power-plant-ruins 'cache #:no-encounters? #t #:details '(locked))
-     (make-path-between places 'power-plant-ruins 'sewers-1)
-     (make-path-between places 'sewers-1 'sewers-2)
-     (make-path-between places 'sewers-1 'workshop)
-     (make-path-between places 'sewers-1 'compound-entrance)
-     (make-path-between places 'compound-entrance 'murkwater-docks)
-     (make-path-between places 'compound-entrance 'workshop)
-     (make-path-between places 'murkwater-docks 'workshop #:no-encounters? #t)
-     (make-path-between places 'murkwater-docks 'palsat #:no-encounters? #t)
-     (make-path-between places 'sewers-2 'storage-closet)
-     (make-path-between places 'storage-closet 'workshop)
-     (make-path-between places 'workshop 'control-room #:no-encounters? #t)
-     (make-path-between places 'workshop 'martaanvuo-source)
-     (make-path-between places 'control-room 'reactor-room)
+     (make-path-between places 'perimeter 'magpie-hill 110 #:no-encounters? #t)
+     (make-path-between places 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-swamp 'crematory 70)
+     (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
+     (make-path-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-swamp 'luminous-precipice 120)
+     (make-path-between places 'crematory 'the-maw 1 #:no-encounters? #t)
+     (make-path-between places 'the-maw 'waiting-room 1 #:no-encounters? #t #:onedirectional? #t)
+     (make-path-between places 'magpie-hill 'power-plant-ruins 30 #:no-encounters? #t)
+     (make-path-between places 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
+     (make-path-between places 'power-plant-ruins 'cache 2 #:no-encounters? #t #:details '(locked))
+     (make-path-between places 'power-plant-ruins 'sewers-1 5)
+     (make-path-between places 'sewers-1 'sewers-2 10)
+     (make-path-between places 'sewers-1 'workshop 10)
+     (make-path-between places 'sewers-1 'compound-entrance 10)
+     (make-path-between places 'compound-entrance 'murkwater-docks 2)
+     (make-path-between places 'compound-entrance 'workshop 2)
+     (make-path-between places 'murkwater-docks 'workshop 2 #:no-encounters? #t)
+     (make-path-between places 'murkwater-docks 'palsat 130 #:no-encounters? #t)
+     (make-path-between places 'sewers-2 'storage-closet 1)
+     (make-path-between places 'storage-closet 'workshop 1)
+     (make-path-between places 'workshop 'control-room 2 #:no-encounters? #t)
+     (make-path-between places 'workshop 'martaanvuo-source 2)
+     (make-path-between places 'control-room 'reactor-room 1)
      ))
 
   (world places routes 0 0))
@@ -159,6 +158,7 @@
          places
          id-a
          id-b
+         traverse-time
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f]
          #:onedirectional? [onedirectional? #f]
@@ -177,6 +177,7 @@
   (define r (make-route
              id-a
              id-b
+             traverse-time
              #:details details
              #:actors actors))
   (define route-id (location-id r))
