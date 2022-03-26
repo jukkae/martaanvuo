@@ -67,7 +67,9 @@
 
 (define (get-location-short-description location)
   (cond [(place? location)
-         (place-shortname location)]
+         (if (eq? (place-shortname location) "")
+             (string-titlecase (~a (location-id location)))
+             (place-shortname location))]
         [(route? location)
          (route-shortname (location-id location))]))
 
