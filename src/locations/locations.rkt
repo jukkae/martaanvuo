@@ -1,6 +1,8 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
+(provide (all-from-out "routes.rkt"
+                       "0-types/route.rkt"))
 
 (require racket/lazy-require)
 
@@ -17,6 +19,7 @@
 
 (require "0-types/location-ids.rkt"
          "0-types/location.rkt"
+         "0-types/route.rkt"
          "routes.rkt")
 
 (define (location-on-enter! location)

@@ -9,6 +9,7 @@
          route-shortname)
 
 (require "0-types/location.rkt"
+         "0-types/route.rkt"
          "routes.rkt"
          "../core/api.rkt"
          "../actions/action.rkt")

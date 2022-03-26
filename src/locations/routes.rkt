@@ -4,7 +4,7 @@
          route-shortname
          set-route-endpoint-visited!)
 
-(require "0-types/location.rkt"
+(require "0-types/route.rkt"
          "../core/api.rkt")
 
 ; returns id
