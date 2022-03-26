@@ -65,25 +65,11 @@
           ((take-random encounter-types))))
   )
 
-; internal
 (define (get-location-short-description location)
-  (define name
-    (cond ((place? location)
-           (place-shortname location))
-          ((route? location)
-           (route-shortname (location-id location)))
-          ))
-  (define features-str
-    ; Disabled for now, just do empty string
-    #;(cond ((not (null? (location-features location)))
-             (cond ((memq 'magpie-effigy (location-features location))
-                    "Magpie Effigy")
-                   (else "Unknown features TODO")))
-            (else ; no features
-             ""))
-    "")
-  (format "~a~a" name features-str)
-  )
+  (cond [(place? location)
+         (place-shortname location)]
+        [(route? location)
+         (route-shortname (location-id location))]))
 
 
 (define (move-pc-to-location! location)
