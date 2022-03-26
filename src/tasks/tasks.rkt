@@ -81,7 +81,7 @@
         'pay-off-debt
         "Pay off debt"
         (partially-completed 0 10.111)
-        "Long story."
+        "\"Mediator is lenient\", until now."
         "10,111 grams of gold left."
         '()
         '()

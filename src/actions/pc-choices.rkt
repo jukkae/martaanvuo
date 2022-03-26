@@ -112,7 +112,7 @@
     ['pick-up-item
      (make-choice
       'pick-up-item
-      "Pick up something."
+      "Pick up an item."
       (λ ()
         (define item (select-item-to-pick-up))
         (if (or (void? item) (null? item))

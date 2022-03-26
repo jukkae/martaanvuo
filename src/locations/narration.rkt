@@ -224,7 +224,6 @@
 
       ['perimeter
        (case (route-other-end-from route start-location)
-
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."
@@ -232,7 +231,7 @@
 
          ['martaanvuo-swamp
           (if (route-fully-known? route)
-              "Martaanvuo Swamp."
+              "Martaanvuo swamp."
               "Soggy downhill path.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
@@ -240,11 +239,11 @@
        (case (route-other-end-from route start-location)
          ['perimeter
           (if (route-fully-known? route)
-              "Rocky stairs to Perimeter"
+              "Rocky hill down to perimeter."
               "The steep descent.")]
          ['martaanvuo-swamp
           (if (route-fully-known? route)
-              "The path to the fork in Martaanvuo Swamp."
+              "The path to the fork in Martaanvuo swamp."
               "The downhill path.")]
          ['power-plant-ruins
           (if (route-fully-known? route)
