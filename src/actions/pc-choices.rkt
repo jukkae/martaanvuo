@@ -425,12 +425,14 @@
 
                                 (when (not (location-has-detail? (current-location) 'no-encounters))
                                   (define encounter-roll (d 1 6))
-                                  (notice (format "Encounter roll: 1d6 < 6: [~a] – ~a"
+                                  (define tn 3)
+                                  (notice (format "Encounter roll: 1d6 < ~a: [~a] – ~a"
                                                   encounter-roll
-                                                  (if (< encounter-roll 6)
+                                                  tn
+                                                  (if (< encounter-roll tn)
                                                       "fail"
                                                       "success")))
-                                  (when (< encounter-roll 6)
+                                  (when (< encounter-roll tn)
 
                                     (define resolve-events
                                       (list

@@ -514,7 +514,7 @@
  #:decisions
  (list (make-decision
         #:title "Wait."
-        #:next-fragment 'dead-end-2
+        #:next-fragment 'waiting-room-dead-end-2
         )))
 
 (fragment
@@ -530,7 +530,7 @@
  #:decisions
  (list (make-decision
         #:title "Wait."
-        #:next-fragment 'dead-end-3
+        #:next-fragment 'waiting-room-dead-end-3
         )))
 
 (fragment
@@ -567,6 +567,62 @@
 
  The door is real. It is locked and it can't be broken down.
  }))
+ #:decisions
+ (list (make-decision
+        #:title "Wait."
+        #:next-fragment 'treachery-of-images
+        )))
+
+
+(fragment
+ 'treachery-of-images
+ (thunk
+  (p @~a{
+ Oh. She gets it.
+
+ She finally gets it now. She *got it*.
+
+ God damn!
+
+ Treachery of images, the whole "they don't think it be like is, but it do" thing. The shape of reality.
+
+ She's not looking at a blank wall. It is not air that she's breathing. Not in the sense that it's a simulation, that's a ludicrous thought. Preposterous. She raps her knuckles on the creaky chair. The amount of details is just flabbergasting: the scents, the myriad ways of photons bouncing around, the thirty-or-so different kinds of touch, like the hefty weight of a good pair of bolt cutters. The people and the animals and the plants and the chemical processes and people and thoughts and like fuck, love, how would you even begin to simulate something like that?
+
+ Nah.
+
+ But still, it's not a wall she sees, it's just a representation of a wall. It's just neurons firing in patterns. *That* is what is not real, not the physical reality of the wall and the chair. That must still exist. Some form of physical reality must exist, independently of her. If a tree falls in the woods, it makes a sound-as-physical-vibrations, but if nobody's listening, then it does not make a sound-as-a-perception.
+
+ Language games, that's what it all boils down to. Language games, tricking things to look and feel like other things, or to look and feel *as if* they look and feel like something. The chair exists, but she can't see it, she can only see her inner mental representation of it.
+ }))
+ #:decisions
+ (list (make-decision
+        #:title "Wait."
+        #:next-fragment 'enlightenment-1
+        )))
+
+
+(fragment
+ 'enlightenment-1
+ (thunk
+  (p @~a{
+ After a while, the walls of the room begin to recede. At first it's almost imperceptible, like they're breathing. There's a saturated light shining through the cracks, getting brighter and more colorful.
+
+ Her body comfortably fades away and it is neither hot nor cold. The tensions and pain and the hurt, regret and sorrow disappear. A veil is lifted off and the world turns insubstantial.
+ })
+  (wait-for-confirm)
+  (p @~a{
+ Is this it? The other world? Was it always within her? All this time?
+  })
+  (if (flag-set? 'boar-hunter-discussions-had)
+      (p "Ohh. Was this what the boar hunter meant when he said that there's no freedom, only accepting your chains?")
+      (dev-note "add the boar hunter discussion flag"))
+  (wait-for-confirm)
+  (p @~a{
+   Then she notices the clanking of the AC.
+
+   Fuck.
+  })
+ )
  #:decisions
  (list (make-decision
         #:title "Wait."

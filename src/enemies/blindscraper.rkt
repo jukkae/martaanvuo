@@ -125,15 +125,13 @@
             (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")
             (inflict-condition! (pc)
                                 (condition 'one-eye-blind
-                                           "One eye blind."
-                                           '()))
+                                           "One eye blind."))
             ]
            [(2)
             (p "A searing pain cuts through her eyes as her vision goes black.")
             (inflict-condition! (pc)
                                 (condition 'both-eyes-blind
-                                           "Blind."
-                                           '()))
+                                           "Blind."))
             ])
         )
       )]
