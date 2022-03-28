@@ -1,9 +1,9 @@
 #lang at-exp racket
 
 (provide (all-from-out
-          "checks.rkt"
-          "io.rkt"
-          "utils.rkt"
+          "../core/checks.rkt"
+          "../core/io.rkt"
+          "../core/utils.rkt"
 
           "../actors/actor.rkt"
 
@@ -26,9 +26,9 @@
 
 
 (require
-  "checks.rkt"
-  "io.rkt"
-  "utils.rkt"
+  "../core/checks.rkt"
+  "../core/io.rkt"
+  "../core/utils.rkt"
 
   "../actors/actor.rkt"
 

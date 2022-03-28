@@ -5,7 +5,7 @@
          set-route-endpoint-visited!)
 
 (require "0-types/route.rkt"
-         "../core/api.rkt")
+         "../0-api/api.rkt")
 
 ; returns id
 (define (route-other-end-from route-or-id startpoint-id)

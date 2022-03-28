@@ -14,7 +14,7 @@
 
 (require
   "../actors/actor.rkt"
-  "../core/api.rkt"
+  "../0-api/api.rkt"
   "../enemies/encounters.rkt")
 
 (require "0-types/location-ids.rkt"
