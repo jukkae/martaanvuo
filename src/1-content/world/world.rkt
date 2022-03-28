@@ -9,10 +9,9 @@
          "../../0-engine/items/item.rkt"
          "../../0-engine/locations/0-types/location.rkt"
          "../../0-engine/locations/0-types/route.rkt"
-         "../../0-engine/core/utils.rkt")
+         "../../0-engine/core/utils.rkt"
+         "../../0-engine/state/state.rkt")
 
-(require racket/lazy-require)
-(lazy-require ["../../0-engine/state/state.rkt" (current-world)])
 
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
