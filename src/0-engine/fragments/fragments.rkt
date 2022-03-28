@@ -12,4 +12,4 @@
   "content/mieli.rkt")
 
 (require
-  "../1-content/fragments.rkt")
+  "../../1-content/fragments.rkt")

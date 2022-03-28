@@ -1,8 +1,8 @@
 #lang at-exp racket
 
-(require "fragments/fragments.rkt") ; requiring fragments has side effects and is necessary
+(require "0-engine/fragments/fragments.rkt") ; requiring fragments has side effects and is necessary
 
-(require "resolvers/game-resolver.rkt")
+(require "0-engine/resolvers/game-resolver.rkt")
 
 (define (begin-session)
   ; (random-seed 13)
