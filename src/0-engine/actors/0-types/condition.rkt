@@ -11,9 +11,3 @@
   #:mutable)
 
 ;; Conditions are semi-permanent.
-
-; Wounds: Move from state to state
-; Fresh wound [acquired-at]
-; -> Treated wound [treated-at time-until-healed] (well treated / poorly treated; healing / not healing)
-; -> Healed wound
-; -> Poorly healed wound -> possible permanent condition = negative modifiers

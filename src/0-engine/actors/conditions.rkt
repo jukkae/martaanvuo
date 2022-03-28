@@ -38,3 +38,13 @@
     [else
      (dev-note (format "TODO: Something else: ~a" (condition-type condition)))])
   '())
+
+
+; Wounds: Move from state to state
+; Fresh wound [acquired-at]
+; -> Treated wound [treated-at time-until-healed] (well treated / poorly treated; healing / not healing)
+; -> Healed wound
+; -> Poorly healed wound -> possible permanent condition = negative modifiers
+
+(define (treat-wound! condition)
+  (dev-note "TO DO: Treat wound"))

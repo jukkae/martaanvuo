@@ -97,7 +97,7 @@
   (begin-combat!)
   (spawn-enemies 'grabberkin 1)
 
-  (inflict-status! (pc) 'bound (d 1 4)))
+  (inflict-status! (pc) 'bound (d 2 2)))
 
 (define (spawn-blindscraper-encounter!)
   (p (blindscraper-spawn-text))

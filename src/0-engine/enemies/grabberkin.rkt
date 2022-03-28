@@ -180,7 +180,6 @@
       #:details (list (status 'bound strength))
       #:resolution-rules
       `(
-
         (define target (pc))
         (p "The Grabberkin seems to realize its grip is loosening. Its rotting fingers curl around Otava's ankle again with dreadful might.")
         (modify-actor-status-lifetime target 'bound ,strength)
@@ -217,9 +216,9 @@
   (cond
     ((and (actor-has-status-of-type? (pc) 'bound)
           (> (actor-lifetime-of-status-of-type? (pc) 'bound)
-             2))
+             1))
      (define options
-       '(anklebreaker anklebreaker grab grab skip skip))
+       '(anklebreaker anklebreaker anklebreaker anklebreaker grab skip))
 
      (define roll (d 1 6))
      (define index (- roll 1))
