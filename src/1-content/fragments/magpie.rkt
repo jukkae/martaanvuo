@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../../core/api.rkt")
+(require "../../0-engine/core/api.rkt")
 
 (fragment
  'magpie

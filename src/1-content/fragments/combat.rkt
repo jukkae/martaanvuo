@@ -2,8 +2,8 @@
 
 (provide (all-defined-out))
 
-(require "../../core/api.rkt")
-(require "../../combat/combat.rkt")
+(require "../../0-engine/core/api.rkt")
+(require "../../0-engine/combat/combat.rkt")
 
 (fragment
  'post-combat ; for instance, wound care (fast vs good), xp, summary etc
