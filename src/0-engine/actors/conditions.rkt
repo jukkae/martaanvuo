@@ -43,28 +43,27 @@
   '())
 
 
-; Wounds: Move from state to state
-; Fresh wound [acquired-at]
-; -> Treated wound [treated-at time-until-healed] (well treated / poorly treated; healing / not healing)
-; -> Healed wound
-; -> Poorly healed wound -> possible permanent condition = negative modifiers
+; Fresh injury [acquired-at]
+; -> Treated injury [treated-at time-until-healed] (well treated / poorly treated; healing / not healing)
+; -> Healed injury
+; -> Poorly healed injury -> possible permanent condition = negative modifiers
 
-(define (treat-wound! c)
+(define (treat-injury! c)
   (define time-to-treat 10)
   (advance-time-by-iotas! time-to-treat)
   (notice (format "~a treated [~a ι]" (condition-type c) time-to-treat))
   )
 
-(define (treat-wounds!)
+(define (treat-injuries!)
   (for ([c (actor-conditions (pc))])
     (case (condition-type c)
       ['ankle-broken
       (p "Otava splints her purple, swollen ankle. She tries putting a little weight on it and immediately regrets it. There are multiple fractures in the small bones in her ankle.")
-      (treat-wound! c)]
+      (treat-injury! c)]
       ['both-ankles-broken
       (p "Otava splints her macerated ankles. She won't be walking anytime soon.")
-      (treat-wound! c)]
+      (treat-injury! c)]
       ['bleeding
       (p "Otava bandages her wounds.")
-      (treat-wound! c)])
+      (treat-injury! c)])
     ))

@@ -112,7 +112,10 @@
                  ('hit
                   (inflict-condition!
                    target
-                   (condition 'ankle-broken
+                   (FreshInjury 'ankle-broken "Can't walk, fucking painful."
+                     (current-elapsed-time)
+                     )
+                   #;(condition 'ankle-broken
                     "Can't walk, fucking painful."))
                   (when critical?
                     (inflict-condition!

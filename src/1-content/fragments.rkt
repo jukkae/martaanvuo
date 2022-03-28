@@ -6,7 +6,6 @@
 (require
   "fragments/anthill.rkt"
   "fragments/begin-life.rkt"
-  "fragments/combat.rkt"
   "fragments/luminous-precipice.rkt"
   "fragments/magpie.rkt"
   "fragments/martaanvuo-terminal.rkt"

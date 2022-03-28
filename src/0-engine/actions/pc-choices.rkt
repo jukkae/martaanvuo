@@ -480,15 +480,15 @@
 
        (when (not (null? (actor-conditions (pc))))
          (list (make-choice
-                'treat-wounds
-                "Treat wounds."
+                'treat-injuries
+                "Treat injuries."
                 (λ () (make-action
-                       #:symbol 'treat-wounds
+                       #:symbol 'treat-injuries
                        #:actor (pc)
                        #:duration 80
                        #:tags '(downtime)
                        #:resolution-rules
-                       `((treat-wounds!))
+                       `((treat-injuries!))
                        )))))
 
        (when (eq? (location-type (current-location)) 'swamp)
