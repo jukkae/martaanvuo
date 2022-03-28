@@ -21,7 +21,9 @@
   (pc
    )]
  ["../world/world.rkt"
-  (get-actor)])
+  (get-actor)]
+ ["../resolvers/round-resolver/simulation.rkt"
+  (advance-time-by-iotas!)])
 
 (define (condition-on-end-round! condition owner-id)
   (define owner (get-actor owner-id))
@@ -46,5 +48,8 @@
 ; -> Healed wound
 ; -> Poorly healed wound -> possible permanent condition = negative modifiers
 
-(define (treat-wound! condition)
-  (dev-note "TO DO: Treat wound"))
+(define (treat-wound! c)
+  (define time-to-treat 10)
+  (advance-time-by-iotas! time-to-treat)
+  (notice (format "~a treated [~a ι]" (condition-type c) time-to-treat))
+  )
