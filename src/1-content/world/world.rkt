@@ -2,16 +2,17 @@
 
 (provide (all-defined-out))
 
-(require "../0-types/world.rkt")
+(require "../../0-engine/world/0-types/world.rkt"
+         "../../0-engine/world/world.rkt")
 
-(require "../../actors/actor.rkt"
-         "../../items/item.rkt"
-         "../../locations/0-types/location.rkt"
-         "../../locations/0-types/route.rkt"
-         "../../core/utils.rkt")
+(require "../../0-engine/actors/actor.rkt"
+         "../../0-engine/items/item.rkt"
+         "../../0-engine/locations/0-types/location.rkt"
+         "../../0-engine/locations/0-types/route.rkt"
+         "../../0-engine/core/utils.rkt")
 
 (require racket/lazy-require)
-(lazy-require ["../../state/state.rkt" (current-world)])
+(lazy-require ["../../0-engine/state/state.rkt" (current-world)])
 
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down
 ;  Negative sum game: Every possible outcome is worse than how it was before; "the only winning move is to not play"
@@ -150,64 +151,3 @@
 
   (world places routes 0 0))
 
-
-; not content
-
-; Uniqueness constraints(?), unidirectional paths(?), yada yada
-; NB: Modifies a and b in places, and returns route r between the two
-(define (make-path-between
-         places
-         id-a
-         id-b
-         traverse-time
-         #:hidden? [hidden? #f]
-         #:no-encounters? [no-encounters? #f]
-         #:onedirectional? [onedirectional? #f]
-         #:details [details '()])
-
-  (define (find-place place-id)
-    (findf (λ (place) (eq? (location-id place) place-id))
-           places))
-
-  (define place-a (find-place id-a))
-  (define place-b (find-place id-b))
-
-  (when no-encounters? (set! details (append-element details 'no-encounters)))
-
-  (define actors '())
-  (define r (make-route
-             id-a
-             id-b
-             traverse-time
-             #:details details
-             #:actors actors))
-  (define route-id (location-id r))
-  (set-place-routes! place-a (append-element (place-routes place-a) route-id))
-  (when (not onedirectional?)
-    (set-place-routes! place-b (append-element (place-routes place-b) route-id)))
-  (when hidden? (error "Implement hidden paths"))
-  r)
-
-(provide get-route-by-id)
-(define (get-route-by-id id)
-  (define w (current-world))
-  (define routes (world-routes w))
-  (define r (findf (λ (route) (eq? id (location-id route)))
-                   routes))
-  (if r r '()))
-
-(provide get-place-by-id)
-(define (get-place-by-id id)
-  (define w (current-world))
-  (define places (world-places w))
-  (define r (findf (λ (place) (eq? (location-id place) id))
-                   places))
-  (if r r '()))
-
-(provide get-location-by-id)
-(define (get-location-by-id id)
-  (cond ((not (null? (get-place-by-id id)))
-         (get-place-by-id id))
-        ((not (null? (get-route-by-id id)))
-         (get-route-by-id id))
-        (else '())))
