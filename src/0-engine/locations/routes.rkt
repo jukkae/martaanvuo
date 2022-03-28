@@ -4,8 +4,11 @@
          route-shortname
          set-route-endpoint-visited!)
 
-(require "0-types/route.rkt"
-         "../0-api/api.rkt")
+(require
+  "0-types/location.rkt"
+  "0-types/route.rkt"
+  "../world/world.rkt"
+  "../state/pending-action.rkt")
 
 ; returns id
 (define (route-other-end-from route-or-id startpoint-id)

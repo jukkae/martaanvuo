@@ -14,12 +14,11 @@
    [on-resolve! : (-> Null)])
   #:constructor-name decision*)
 
-(define
-  (make-decision #:title [title : String]
-                 #:description [description : (Maybe String) '()]
-                 #:next-fragment [next-fragment : Symbol]
-                 #:requirement [requirement : (-> Boolean) (λ () #t)]
-                 #:on-resolve![on-resolve! : (-> Null) (λ () '())])
+(define (make-decision #:title [title : String]
+                        #:description [description : (Maybe String) '()]
+                        #:next-fragment [next-fragment : Symbol]
+                        #:requirement [requirement : (-> Boolean) (λ () #t)]
+                        #:on-resolve![on-resolve! : (-> Null) (λ () '())])
 
   (decision* title
              description

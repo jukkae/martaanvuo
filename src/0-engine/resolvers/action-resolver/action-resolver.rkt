@@ -9,6 +9,8 @@
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
+  "../../1-index/index.rkt"
+
   "../../actions/action.rkt"
 
   "../../actors/actor.rkt"
@@ -41,14 +43,6 @@
 (lazy-require
  ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
-   )])
-
-(lazy-require
- ["../../locations/narration.rkt"
-  (describe-begin-traverse-action
-   describe-finish-traverse-action
-   describe-cancel-traverse-action
-   display-location-info-card
    )])
 
 (lazy-require

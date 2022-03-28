@@ -3,8 +3,21 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-api/api.rkt"
-  "../../locations/locations.rkt")
+  "../../core/io.rkt"
+  "../../core/utils.rkt"
+  "../../pc/pc.rkt"
+  "../../locations/locations.rkt"
+  "../../world/0-types/world.rkt"
+  "../../world/time.rkt")
+
+(require
+  racket/lazy-require)
+
+(lazy-require
+  ["../../state/state.rkt"
+    (current-round
+     current-world
+     current-location)])
 
 (define (round-summary mode)
   (define title

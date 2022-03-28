@@ -5,6 +5,7 @@
 (require racket/lazy-require)
 
 (require
+  "../1-index/index.rkt"
   "../round-resolver/event.rkt"
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
@@ -28,14 +29,6 @@
 (lazy-require
  ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
-   )])
-
-(lazy-require
- ["../../locations/narration.rkt"
-  (describe-begin-traverse-action
-   describe-finish-traverse-action
-   describe-cancel-traverse-action
-   display-location-info-card
    )])
 
 (lazy-require

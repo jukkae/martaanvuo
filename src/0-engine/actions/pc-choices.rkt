@@ -8,6 +8,8 @@
   "action.rkt"
   "choice.rkt"
 
+  "../1-index/index.rkt"
+
   "../actors/actor.rkt"
 
   "../blurbs/blurbs.rkt"
@@ -22,7 +24,6 @@
 
   "../locations/locations.rkt"
   "../locations/0-types/location.rkt"
-  "../locations/narration.rkt"
 
   "../pc/pc.rkt"
 

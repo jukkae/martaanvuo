@@ -10,12 +10,21 @@
   ["../actions/action.rkt"
     (action-details)]
   ["../combat/combat.rkt"
-    (begin-combat!)])
+    (begin-combat!)]
+  ["../state/mutators.rkt"
+    (current-location
+     pc)]
+  ["../state/pending-action.rkt"
+    (reset-pending-action!)]
+  ["../world/world.rkt"
+    (remove-actor-from-its-current-location!)])
 
 (require
+  "../core/io.rkt"
+  "../core/utils.rkt"
   "../actors/actor.rkt"
-  "../0-api/api.rkt"
-  "../enemies/encounters.rkt")
+  "../enemies/encounters.rkt"
+  "../fragments/decision.rkt")
 
 (require "0-types/location-ids.rkt"
          "0-types/location.rkt"
