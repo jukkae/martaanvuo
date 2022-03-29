@@ -2,15 +2,18 @@
 
 (provide (all-defined-out))
 
-(require "../../0-engine/world/0-types/world.rkt"
-         "../../0-engine/world/world.rkt")
+(require
+  "../../0-engine/world/0-types/world.rkt"
+  "../../0-engine/world/world.rkt")
 
-(require "../../0-engine/actors/actor.rkt"
-         "../../0-engine/items/item.rkt"
-         "../../0-engine/locations/0-types/location.rkt"
-         "../../0-engine/locations/0-types/route.rkt"
-         "../../0-engine/2-core/core.rkt"
-         "../../0-engine/state/state.rkt")
+(require
+  "../../0-engine/actors/actor.rkt"
+  "../../0-engine/items/item.rkt"
+  "../../0-engine/2-core/core.rkt"
+  "../../0-engine/3-types/location.rkt"
+  "../../0-engine/3-types/route.rkt"
+  "../../0-engine/state/state.rkt"
+  )
 
 
 ;  Think in terms of acquisition and attrition: First phase, gather equipment and tools; second phase: live it down

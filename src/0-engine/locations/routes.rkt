@@ -5,8 +5,8 @@
          set-route-endpoint-visited!)
 
 (require
-  "0-types/location.rkt"
-  "0-types/route.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
   "../world/world.rkt"
   "../state/pending-action.rkt")
 

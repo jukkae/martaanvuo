@@ -15,10 +15,10 @@
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
   "../../3-types/actor.rkt"
+  "../../3-types/location.rkt"
 
   "../../fragments/fragment.rkt"
 
-  "../../locations/0-types/location.rkt"
   "../../locations/routes.rkt"
 
   "../../state/state.rkt"

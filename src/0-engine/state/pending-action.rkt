@@ -6,8 +6,8 @@
 
 (require
   "../3-types/action.rkt"
-  "../locations/0-types/location.rkt"
-  "../locations/0-types/route.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
   "../world/world.rkt"
   )
 

@@ -1,8 +1,10 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "routes.rkt"
-                       "0-types/route.rkt"))
+(provide
+  (all-from-out
+    "routes.rkt"
+    ))
 
 (require racket/lazy-require)
 
@@ -23,12 +25,12 @@
   "../2-core/io.rkt"
   "../2-core/core.rkt"
   "../3-types/location-ids.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
   "../3-types/actor.rkt"
   "../actors/actor.rkt"
   "../enemies/encounters.rkt"
   "../fragments/decision.rkt"
-  "0-types/location.rkt"
-  "0-types/route.rkt"
   "routes.rkt"
   )
 

@@ -8,10 +8,16 @@
   "choice.rkt"
 
   "../1-index/index.rkt"
+
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
+
   "../3-types/action.rkt"
   "../3-types/actor.rkt"
   "../3-types/pc-actor.rkt"
   "../3-types/item.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
 
   "../actors/actor.rkt"
 
@@ -20,13 +26,10 @@
   "../combat/combat-pc-choices.rkt"
 
   "../checks/checks.rkt"
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
 
   "../items/item.rkt"
 
   "../locations/locations.rkt"
-  "../locations/0-types/location.rkt"
 
   "../pc/pc.rkt"
 

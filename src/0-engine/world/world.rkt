@@ -7,12 +7,12 @@
          "time.rkt")
 
 (require
+  "../2-core/core.rkt"
   "../3-types/actor.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
   "../actors/actor.rkt"
   "../items/item.rkt"
-  "../locations/0-types/location.rkt"
-  "../locations/0-types/route.rkt"
-  "../2-core/core.rkt"
   )
 
 (lazy-require

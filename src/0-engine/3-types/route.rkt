@@ -5,10 +5,10 @@
 (require
   "location.rkt"
 
-  "../../2-core/maybe.rkt"
-  "../../3-types/location-ids.rkt"
-  "../../3-types/actor.rkt"
-  "../../3-types/item.rkt"
+  "../2-core/maybe.rkt"
+  "../3-types/location-ids.rkt"
+  "../3-types/actor.rkt"
+  "../3-types/item.rkt"
   )
 
 (struct route

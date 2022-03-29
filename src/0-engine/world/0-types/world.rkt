@@ -2,8 +2,10 @@
 
 (provide (all-defined-out))
 
-(require "../../locations/0-types/location.rkt"
-         "../../locations/0-types/route.rkt")
+(require
+  "../../3-types/location.rkt"
+  "../../3-types/route.rkt"
+  )
 
 (struct world
   ([places : (Listof place)]

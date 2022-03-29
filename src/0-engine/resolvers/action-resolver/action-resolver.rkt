@@ -15,6 +15,8 @@
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/condition.rkt"
+  "../../3-types/location.rkt"
+  "../../3-types/route.rkt"
 
   "../../actors/actor.rkt"
 
@@ -30,7 +32,6 @@
 
   "../../items/item.rkt"
 
-  "../../locations/0-types/location.rkt"
   "../../locations/locations.rkt"
   "../../locations/routes.rkt" ; not unused
 

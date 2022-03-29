@@ -10,14 +10,14 @@
     "../3-types/action.rkt"
     "../3-types/actor.rkt"
     "../3-types/item.rkt"
+    "../3-types/location.rkt"
+    "../3-types/route.rkt"
 
     "../actors/actor.rkt"
 
     "../fragments/decision.rkt"
     "../fragments/fragment.rkt"
     "../items/item.rkt"
-    "../locations/0-types/location.rkt"
-    "../locations/0-types/route.rkt"
     "../locations/routes.rkt"
 
     "../pc/pc.rkt"
@@ -44,14 +44,14 @@
   "../3-types/action.rkt"
   "../3-types/actor.rkt"
   "../3-types/item.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
 
   "../actors/actor.rkt"
 
   "../fragments/decision.rkt"
   "../fragments/fragment.rkt"
   "../items/item.rkt"
-  "../locations/0-types/location.rkt"
-  "../locations/0-types/route.rkt"
   "../locations/routes.rkt"
 
   "../pc/pc.rkt"

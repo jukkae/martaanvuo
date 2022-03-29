@@ -34,7 +34,7 @@
  ["../world/world.rkt"
   (remove-actor-from-its-current-location!
    )]
- ["../locations/0-types/location.rkt"
+ ["../3-types/location.rkt"
   (add-feature-to-location!
    add-item-to-location!
    )])

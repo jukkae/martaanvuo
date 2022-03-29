@@ -17,6 +17,7 @@
 
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/location.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
@@ -26,7 +27,6 @@
   "../../items/item.rkt"
 
   "../../locations/locations.rkt"
-  "../../locations/0-types/location.rkt"
 
   "../../pc/character-sheet.rkt"
   "../../pc/pc.rkt"

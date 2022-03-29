@@ -11,6 +11,7 @@
   "../round-resolver/timeline.rkt"
 
   "../../3-types/action.rkt"
+  "../../3-types/location.rkt"
 
   "../../actors/actor.rkt"
 
@@ -19,7 +20,6 @@
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
-  "../../locations/0-types/location.rkt"
   "../../locations/locations.rkt"
 
   "../../state/state.rkt"
