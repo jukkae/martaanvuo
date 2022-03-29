@@ -5,7 +5,7 @@
 
 (require
   "../../2-core/maybe.rkt"
-  "status.rkt"
+  "../../3-types/status.rkt"
   "condition.rkt"
   "../../items/0-types/item.rkt"
   "../../combat/stance.rkt"

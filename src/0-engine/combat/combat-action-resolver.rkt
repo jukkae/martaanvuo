@@ -18,6 +18,7 @@
   "stance.rkt"
 
   "../3-types/action.rkt"
+  "../3-types/status.rkt"
 
   "../actors/actor.rkt"
 

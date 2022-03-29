@@ -4,7 +4,6 @@
 (provide (all-from-out "0-types/actor.rkt"
                        "0-types/condition.rkt"
                        "0-types/pc-actor.rkt"
-                       "0-types/status.rkt"
 
                        "conditions.rkt"
                        "statuses.rkt"))
@@ -12,7 +11,6 @@
 (require "0-types/actor.rkt"
          "0-types/condition.rkt"
          "0-types/pc-actor.rkt"
-         "0-types/status.rkt"
 
          "conditions.rkt"
          "statuses.rkt")
