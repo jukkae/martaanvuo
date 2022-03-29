@@ -8,7 +8,7 @@
 (require "../2-core/list-utils.rkt")
 
 (lazy-require
- ["../state/state.rkt"
+ ["../7-state/state/state.rkt"
   (current-part
    current-chapter
    current-log
@@ -16,7 +16,7 @@
    current-prompt)])
 
 (lazy-require
- ["../state/logging.rkt"
+ ["../7-state/state/logging.rkt"
   (append-to-log)])
 
 

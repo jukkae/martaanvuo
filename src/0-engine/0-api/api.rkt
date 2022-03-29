@@ -3,9 +3,8 @@
 (provide
   (all-from-out
     "../2-core/core.rkt"
-
-    "../checks/checks.rkt"
     "../2-core/io.rkt"
+    "../2-core/core.rkt"
 
     "../3-types/action.rkt"
     "../3-types/actor.rkt"
@@ -13,31 +12,27 @@
     "../3-types/location.rkt"
     "../3-types/route.rkt"
 
-    "../actors/actor.rkt"
+    "../4-rules/checks/checks.rkt"
+    "../4-rules/actors/actor.rkt"
+    "../4-rules/fragments/decision.rkt"
+    "../4-rules/fragments/fragment.rkt"
+    "../4-rules/items/item.rkt"
+    "../4-rules/locations/routes.rkt"
+    "../4-rules/pc/pc.rkt"
+    "../4-rules/tasks/task.rkt"
+    "../4-rules/tasks/tasks.rkt"
+    "../4-rules/world/world.rkt"
+    "../4-rules/world/time.rkt"
 
-    "../fragments/decision.rkt"
-    "../fragments/fragment.rkt"
-    "../items/item.rkt"
-    "../locations/routes.rkt"
+    "../5-resolvers/round-resolver/simulation.rkt"
 
-    "../pc/pc.rkt"
-    "../tasks/task.rkt"
-    "../tasks/tasks.rkt"
-
-    "../state/logging.rkt"
-    "../state/state.rkt"
-
-    "../world/world.rkt"
-    "../world/time.rkt"
-
-    "../resolvers/round-resolver/simulation.rkt"
+    "../7-state/state/logging.rkt"
+    "../7-state/state/state.rkt"
     ))
 
 
 (require
   "../2-core/core.rkt"
-
-  "../checks/checks.rkt"
   "../2-core/io.rkt"
   "../2-core/core.rkt"
 
@@ -47,24 +42,22 @@
   "../3-types/location.rkt"
   "../3-types/route.rkt"
 
-  "../actors/actor.rkt"
+  "../4-rules/checks/checks.rkt"
+  "../4-rules/actors/actor.rkt"
+  "../4-rules/fragments/decision.rkt"
+  "../4-rules/fragments/fragment.rkt"
+  "../4-rules/items/item.rkt"
+  "../4-rules/locations/routes.rkt"
+  "../4-rules/pc/pc.rkt"
+  "../4-rules/tasks/task.rkt"
+  "../4-rules/tasks/tasks.rkt"
+  "../4-rules/world/world.rkt"
+  "../4-rules/world/time.rkt"
 
-  "../fragments/decision.rkt"
-  "../fragments/fragment.rkt"
-  "../items/item.rkt"
-  "../locations/routes.rkt"
+  "../5-resolvers/round-resolver/simulation.rkt"
 
-  "../pc/pc.rkt"
-  "../tasks/task.rkt"
-  "../tasks/tasks.rkt"
-
-  "../state/logging.rkt"
-  "../state/state.rkt"
-
-  "../world/world.rkt"
-  "../world/time.rkt"
-
-  "../resolvers/round-resolver/simulation.rkt"
+  "../7-state/state/logging.rkt"
+  "../7-state/state/state.rkt"
   )
 
 (require racket/lazy-require)

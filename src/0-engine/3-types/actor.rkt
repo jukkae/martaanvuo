@@ -11,7 +11,7 @@
   "../3-types/item.rkt"
   "../3-types/location-ids.rkt"
   "../3-types/status.rkt"
-  "../combat/stance.rkt"
+  "../6-combat/stance.rkt"
   )
 
 (define-type ActorId (U Symbol Natural))
