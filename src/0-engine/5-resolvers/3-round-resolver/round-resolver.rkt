@@ -17,7 +17,7 @@
   "initiative-based-round-resolver.rkt"
   "round.rkt"
 
-  "../action-resolver/action-resolver.rkt"
+  "../4-action-resolver/action-resolver.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"

@@ -3,9 +3,10 @@
 (provide resolve-action-initiative)
 
 (require
+  "../../2-core/core.rkt"
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
-  "../../2-core/core.rkt")
+  )
 
 ; (: -> Action Actor Natural) ; or maybe Initiative instead of Natural
 (define (resolve-action-initiative action actor)

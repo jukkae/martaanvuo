@@ -3,20 +3,19 @@
 (provide (all-defined-out))
 
 (require
-  "run-resolver.rkt"
+  "../2-run-resolver/run-resolver.rkt"
+  "../3-round-resolver/round-resolver.rkt"
 
-  "round-resolver/round-resolver.rkt"
+  "../../2-core/io.rkt"
+  "../../2-core/core.rkt"
 
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
+  "../../3-types/pc-actor.rkt"
 
-  "../3-types/pc-actor.rkt"
+  "../../4-rules/pc/pc.rkt"
+  "../../4-rules/actors/actor.rkt"
 
-  "../4-rules/pc/pc.rkt"
-  "../4-rules/actors/actor.rkt"
-
-  "../7-state/session/session.rkt"
-  "../7-state/state/state.rkt"
+  "../../7-state/session/session.rkt"
+  "../../7-state/state/state.rkt"
   )
 
 

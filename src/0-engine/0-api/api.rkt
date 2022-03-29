@@ -24,7 +24,7 @@
     "../4-rules/world/world.rkt"
     "../4-rules/world/time.rkt"
 
-    "../5-resolvers/round-resolver/simulation.rkt"
+    "../5-resolvers/3-round-resolver/simulation.rkt"
 
     "../7-state/state/logging.rkt"
     "../7-state/state/state.rkt"
@@ -54,7 +54,7 @@
   "../4-rules/world/world.rkt"
   "../4-rules/world/time.rkt"
 
-  "../5-resolvers/round-resolver/simulation.rkt"
+  "../5-resolvers/3-round-resolver/simulation.rkt"
 
   "../7-state/state/logging.rkt"
   "../7-state/state/state.rkt"

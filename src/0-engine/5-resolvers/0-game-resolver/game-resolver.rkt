@@ -1,16 +1,16 @@
 #lang at-exp racket
 
 (require
-  "life-resolver.rkt"
-  "round-resolver/round-resolver.rkt"
+  "../1-life-resolver/life-resolver.rkt"
+  "../3-round-resolver/round-resolver.rkt"
 
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
+  "../../2-core/io.rkt"
+  "../../2-core/core.rkt"
 
-  "../4-rules/blurbs/blurbs.rkt"
+  "../../4-rules/blurbs/blurbs.rkt"
 
-  "../7-state/state/state.rkt"
-  "../7-state/save-game/save-game.rkt"
+  "../../7-state/state/state.rkt"
+  "../../7-state/save-game/save-game.rkt"
   )
 
 (provide resolve-game)

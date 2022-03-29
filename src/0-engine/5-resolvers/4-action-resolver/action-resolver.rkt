@@ -5,9 +5,9 @@
 (require racket/lazy-require)
 
 (require
-  "../round-resolver/event.rkt"
-  "../round-resolver/simulation.rkt"
-  "../round-resolver/timeline.rkt"
+  "../3-round-resolver/event.rkt"
+  "../3-round-resolver/simulation.rkt"
+  "../3-round-resolver/timeline.rkt"
 
   "../../1-index/content.rkt"
   "../../2-core/io.rkt"
@@ -33,7 +33,7 @@
   "../../7-state/state/state.rkt"
   )
 
-(lazy-require ["../round-resolver/event-handler.rkt"
+(lazy-require ["../3-round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 

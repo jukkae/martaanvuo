@@ -3,22 +3,22 @@
 (provide (all-defined-out))
 
 (require
-  "round-resolver/round-resolver.rkt"
+  "../3-round-resolver/round-resolver.rkt"
 
-  "../2-core/core.rkt"
-  "../2-core/io.rkt"
+  "../../2-core/core.rkt"
+  "../../2-core/io.rkt"
 
-  "../3-types/location.rkt"
+  "../../3-types/location.rkt"
 
-  "../4-rules/blurbs/blurbs.rkt"
-  "../4-rules/locations/locations.rkt"
-  "../4-rules/pc/pc.rkt"
-  "../4-rules/tasks/task.rkt"
-  "../4-rules/tasks/tasks.rkt"
-  "../4-rules/world/world.rkt"
+  "../../4-rules/blurbs/blurbs.rkt"
+  "../../4-rules/locations/locations.rkt"
+  "../../4-rules/pc/pc.rkt"
+  "../../4-rules/tasks/task.rkt"
+  "../../4-rules/tasks/tasks.rkt"
+  "../../4-rules/world/world.rkt"
 
-  "../7-state/state/state.rkt"
-  "../7-state/state/logging.rkt"
+  "../../7-state/state/state.rkt"
+  "../../7-state/state/logging.rkt"
   )
 
 ; content should be provided "somewhere"

@@ -9,7 +9,7 @@
   "../../../3-types/pc-actor.rkt"
   "../../../3-types/world.rkt"
   "../../../4-rules/tasks/task.rkt"
-  "../../../5-resolvers/round-resolver/0-types/timeline.rkt"
+  "../../../5-resolvers/3-round-resolver/0-types/timeline.rkt"
   "../../../6-combat/combat-event.rkt"
   )
 
