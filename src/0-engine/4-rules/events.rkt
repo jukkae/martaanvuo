@@ -3,13 +3,13 @@
 (provide (all-defined-out))
 
 (require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
 
-  "../../3-types/event.rkt"
-  "../../3-types/world.rkt"
+  "../3-types/event.rkt"
+  "../3-types/world.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../7-state/state/state.rkt"
   )
 
 (define (make-event

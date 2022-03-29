@@ -7,9 +7,6 @@
 (require racket/lazy-require)
 
 (require
-  "event.rkt"
-  "timeline.rkt"
-
   "../../2-core/core.rkt"
 
   "../../3-types/event.rkt"
@@ -18,6 +15,8 @@
   "../../3-types/timeline.rkt"
   "../../3-types/world.rkt"
 
+  "../../4-rules/events.rkt"
+  "../../4-rules/timelines.rkt"
   "../../4-rules/items/item.rkt"
   "../../4-rules/pc/pc.rkt"
   "../../4-rules/world/time.rkt"

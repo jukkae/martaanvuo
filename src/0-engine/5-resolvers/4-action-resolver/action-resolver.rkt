@@ -5,9 +5,7 @@
 (require racket/lazy-require)
 
 (require
-  "../3-round-resolver/event.rkt"
   "../3-round-resolver/simulation.rkt"
-  "../3-round-resolver/timeline.rkt"
 
   "../../1-index/content.rkt"
 
@@ -22,7 +20,11 @@
   "../../3-types/pc-actor.rkt"
   "../../3-types/route.rkt"
   "../../3-types/timeline.rkt"
+  "../../3-types/timeline.rkt"
+  "../../3-types/event.rkt"
 
+  "../../4-rules/events.rkt"
+  "../../4-rules/timelines.rkt"
   "../../4-rules/actors/actor.rkt"
   "../../4-rules/blurbs/blurbs.rkt"
   "../../4-rules/checks/checks.rkt"

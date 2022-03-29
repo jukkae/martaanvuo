@@ -3,15 +3,15 @@
 (provide (all-defined-out))
 
 (require
-  "event.rkt"
+  "events.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
 
-  "../../3-types/event.rkt"
-  "../../3-types/timeline.rkt"
+  "../3-types/event.rkt"
+  "../3-types/timeline.rkt"
 
-  "../../../1-content/narration/narrate-timeline.rkt"
+  "../../1-content/narration/narrate-timeline.rkt"
   )
 
 (define (process-timeline! tl)
