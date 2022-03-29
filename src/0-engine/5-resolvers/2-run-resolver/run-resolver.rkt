@@ -13,25 +13,22 @@
   "../../4-rules/blurbs/blurbs.rkt"
   "../../4-rules/locations/locations.rkt"
   "../../4-rules/pc/pc.rkt"
-  "../../4-rules/tasks/task.rkt"
   "../../4-rules/tasks/tasks.rkt"
   "../../4-rules/world/world.rkt"
 
   "../../7-state/state/state.rkt"
   "../../7-state/state/logging.rkt"
+
+  "../../../1-content/narration/run-resolver.rkt"
   )
 
-; content should be provided "somewhere"
-; content is game-specific, not engine stuff
-; but figure out where this should be called from
 ; engine / run-resolver
-(define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
-  (when (not suppress-new-chapter?) (next-chapter!))
-
-  ; Don't show this until the second run!
-  (when (not (= 1 (current-run)))
-    (notice (format "Begin run number ~a" (current-run))))
-
+(define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
+  (current-run (add1 (current-run)))
+  (current-round 0)
+  (remove-flag 'ending-run-allowed)
+  (move-pc-to-location! (get-place-by-id 'perimeter))
+  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
 
   (case (current-run)
     [(1)
@@ -41,24 +38,8 @@
      (blurb 'begin-first-run-pt-2)
      (create-task 'anthead-monograph)
      (wait-for-confirm)
-     ]))
-
-(define (narrate-begin-recurse-run)
-  (next-chapter!)
-
-  (p @~a{
-    Otava is on Mediator's path in the foggy cardboard cutout woods. She gets to Fork and Anthill.
-  }))
-  ; Otava is on Brokerstrail and comes to Fork-and-Anthill BUT THIS TIME KNOWY OF HARTMAN-DEVICE
-  ; sort of like "worlds" 1-2-3
-
-; engine / run-resolver
-(define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
-  (current-run (add1 (current-run)))
-  (current-round 0)
-  (remove-flag 'ending-run-allowed)
-  (move-pc-to-location! (get-place-by-id 'perimeter))
-  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?))
+     ])
+  )
 
 ; recursions mess with reality -> change world state, give bonuses, open new doors
 ; but PC / instance / incarnation / 'life' continues
