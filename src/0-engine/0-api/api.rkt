@@ -4,7 +4,7 @@
   (all-from-out
     "../2-core/core.rkt"
 
-    "../core/checks.rkt"
+    "../checks/checks.rkt"
     "../core/io.rkt"
 
     "../actions/action.rkt"
@@ -35,7 +35,7 @@
 (require
   "../2-core/core.rkt"
 
-  "../core/checks.rkt"
+  "../checks/checks.rkt"
   "../core/io.rkt"
   "../2-core/core.rkt"
 

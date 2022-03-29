@@ -21,7 +21,7 @@
 
   "../actors/actor.rkt"
 
-  "../core/checks.rkt"
+  "../checks/checks.rkt"
   "../core/io.rkt"
   "../2-core/core.rkt"
 
