@@ -8,7 +8,7 @@
   "choice.rkt"
 
   "../1-index/index.rkt"
-  "../3-types/types.rkt"
+  "../3-types/action.rkt"
 
   "../actors/actor.rkt"
 

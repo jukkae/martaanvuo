@@ -7,7 +7,7 @@
     "../checks/checks.rkt"
     "../2-core/io.rkt"
 
-    "../3-types/types.rkt"
+    "../3-types/action.rkt"
 
     "../actors/actor.rkt"
 
@@ -39,7 +39,7 @@
   "../2-core/io.rkt"
   "../2-core/core.rkt"
 
-  "../3-types/types.rkt"
+  "../3-types/action.rkt"
 
   "../actors/actor.rkt"
 

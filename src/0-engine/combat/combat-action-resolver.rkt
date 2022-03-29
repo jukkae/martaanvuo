@@ -17,7 +17,7 @@
 (require
   "stance.rkt"
 
-  "../3-types/types.rkt"
+  "../3-types/action.rkt"
 
   "../actors/actor.rkt"
 

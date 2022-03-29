@@ -8,7 +8,7 @@
 
   "../../actors/actor.rkt"
 
-  "../../3-types/types.rkt"
+  "../../3-types/action.rkt"
 
   "../../combat/combat.rkt"
   "../../combat/combat-action-resolver.rkt"

@@ -11,7 +11,7 @@
 (require
   "fragment-handler.rkt"
 
-  "../../3-types/types.rkt"
+  "../../3-types/action.rkt"
   "../../actions/pc-choices.rkt"
   "../../actions/choice.rkt"
 

@@ -5,7 +5,7 @@
 (require racket/lazy-require)
 
 (require
-  "../3-types/types.rkt"
+  "../3-types/action.rkt"
   "../locations/0-types/location.rkt"
   "../locations/0-types/route.rkt"
   "../world/world.rkt"

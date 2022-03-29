@@ -7,7 +7,7 @@
 (require racket/lazy-require)
 
 (lazy-require
-  ["../3-types/types.rkt"
+  ["../3-types/action.rkt"
     (action-details)]
   ["../combat/combat.rkt"
     (begin-combat!)]

@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 (require racket/lazy-require)
-(require "../3-types/types.rkt")
+(require "../3-types/action.rkt")
 (lazy-require
  ["../state/state.rkt"
   (pc

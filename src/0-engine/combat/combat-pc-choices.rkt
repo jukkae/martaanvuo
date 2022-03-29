@@ -3,7 +3,7 @@
 (require
   "combat.rkt"
 
-  "../3-types/types.rkt"
+  "../3-types/action.rkt"
   "../actions/choice.rkt"
 
   "../actors/actor.rkt"

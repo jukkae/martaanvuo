@@ -4,7 +4,7 @@
 
 (require
   "../../actors/actor.rkt"
-  "../../3-types/types.rkt"
+  "../../3-types/action.rkt"
   "../../2-core/io.rkt"
   "../../2-core/core.rkt")
 
