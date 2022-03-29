@@ -2,12 +2,11 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out "0-types/item.rkt"))
 
-(require "0-types/item.rkt")
-
-(require "../2-core/io.rkt"
-         "../2-core/core.rkt")
+(require
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
+  "../3-types/item.rkt")
 
 
 (define (new-item

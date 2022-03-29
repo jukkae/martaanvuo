@@ -6,8 +6,8 @@
   "../../2-core/maybe.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/actor.rkt"
+  "../../3-types/item.rkt"
   "../../actors/actor.rkt"
-  "../../items/item.rkt"
   )
 
 (struct

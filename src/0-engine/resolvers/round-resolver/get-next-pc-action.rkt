@@ -16,6 +16,7 @@
   "../../pc-choices/choice.rkt"
 
   "../../3-types/pc-actor.rkt"
+  "../../3-types/item.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"

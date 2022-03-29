@@ -14,6 +14,7 @@
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
+  "../../3-types/condition.rkt"
 
   "../../actors/actor.rkt"
 

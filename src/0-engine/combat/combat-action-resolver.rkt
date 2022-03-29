@@ -21,6 +21,7 @@
   "../3-types/status.rkt"
   "../3-types/actor.rkt"
   "../3-types/pc-actor.rkt"
+  "../3-types/item.rkt"
 
   "../actors/actor.rkt"
 

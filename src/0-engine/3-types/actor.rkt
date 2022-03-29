@@ -7,10 +7,10 @@
 
 (require
   "../2-core/maybe.rkt"
-  "../3-types/status.rkt"
   "../3-types/condition.rkt"
+  "../3-types/item.rkt"
   "../3-types/location-ids.rkt"
-  "../items/0-types/item.rkt"
+  "../3-types/status.rkt"
   "../combat/stance.rkt"
   )
 

@@ -12,6 +12,7 @@
 
   "../../2-core/core.rkt"
   "../../3-types/pc-actor.rkt"
+  "../../3-types/item.rkt"
 
   "../../items/item.rkt"
 

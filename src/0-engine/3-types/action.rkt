@@ -7,8 +7,7 @@
   "../3-types/actor.rkt"
   "../3-types/location-ids.rkt"
   "../3-types/status.rkt"
-
-  "../items/0-types/item.rkt"
+  "../3-types/item.rkt"
   )
 
 (struct action

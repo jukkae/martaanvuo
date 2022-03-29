@@ -14,7 +14,6 @@
 (lazy-require
  ["actor.rkt"
   (take-damage
-   actor-conditions
    )]
  ["../combat/combat.rkt"
   (display-combatant-info

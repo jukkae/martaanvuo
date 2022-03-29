@@ -8,8 +8,7 @@
   "../../2-core/maybe.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/actor.rkt"
-
-  "../../items/0-types/item.rkt"
+  "../../3-types/item.rkt"
   )
 
 (struct route
