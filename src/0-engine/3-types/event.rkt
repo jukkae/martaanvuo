@@ -12,4 +12,14 @@
    )
   #:prefab
   #:mutable
-  #:constructor-name event*)
+  #:constructor-name event*
+  )
+
+(define (format-event-for-display (event : event))
+  (list
+   (number->string (event-at event))
+   (symbol->string (event-type event))
+   (~s (event-details event))
+   (if (event-interrupting? event)
+       "yes"
+       "no")))

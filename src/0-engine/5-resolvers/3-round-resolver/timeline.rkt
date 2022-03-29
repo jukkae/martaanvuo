@@ -10,6 +10,8 @@
 
   "../../3-types/event.rkt"
   "../../3-types/timeline.rkt"
+
+  "../../../1-content/narration/narrate-event.rkt"
   )
 
 (define (narrate-timeline timeline)
