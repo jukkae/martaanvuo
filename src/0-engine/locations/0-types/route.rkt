@@ -5,7 +5,7 @@
 (require "location-ids.rkt"
          "location.rkt"
 
-         "../../core/maybe.rkt"
+         "../../2-core/maybe.rkt"
 
          "../../actors/0-types/actor.rkt"
          "../../items/0-types/item.rkt")

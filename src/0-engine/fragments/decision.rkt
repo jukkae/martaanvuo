@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../core/maybe.rkt")
+(require "../2-core/maybe.rkt")
 
 ; requirement is a lambda that's run on fragment's on-enter!
 ; on-resolve! is a lambda that's run when the decision is resolved

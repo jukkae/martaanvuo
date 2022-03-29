@@ -3,7 +3,7 @@
 (provide (struct-out actor)
          ActorId)
 
-(require "../../core/maybe.rkt")
+(require "../../2-core/maybe.rkt")
 
 (require "status.rkt"
          "condition.rkt")

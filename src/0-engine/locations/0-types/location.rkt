@@ -7,7 +7,7 @@
 (require "../../actors/actor.rkt"
          "../../items/item.rkt")
 
-(require "../../core/maybe.rkt")
+(require "../../2-core/maybe.rkt")
 
 (struct
   location

@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require "decision.rkt"
-         "../core/maybe.rkt"
+         "../2-core/maybe.rkt"
          "../2-core/core.rkt"
          "../core/io.rkt")
 

@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../core/maybe.rkt"
+  "../../2-core/maybe.rkt"
   "../../actions/action.rkt"
   "../../actors/0-types/pc-actor.rkt"
   "../../combat/combat-event.rkt"
