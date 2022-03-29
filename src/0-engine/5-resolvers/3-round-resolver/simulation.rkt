@@ -11,12 +11,17 @@
   "timeline.rkt"
 
   "../../2-core/core.rkt"
-  "../../3-types/pc-actor.rkt"
+
+  "../../3-types/event.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/pc-actor.rkt"
+  "../../3-types/timeline.rkt"
   "../../3-types/world.rkt"
+
   "../../4-rules/items/item.rkt"
   "../../4-rules/pc/pc.rkt"
   "../../4-rules/world/time.rkt"
+
   "../../7-state/state/state.rkt"
   )
 

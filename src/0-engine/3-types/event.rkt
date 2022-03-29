@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../../../2-core/maybe.rkt")
+(require "../2-core/maybe.rkt")
 
 (struct event
   ([type : Symbol] ; should be enumerated

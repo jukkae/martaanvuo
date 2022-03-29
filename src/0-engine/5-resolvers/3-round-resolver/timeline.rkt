@@ -1,13 +1,16 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "0-types/timeline.rkt"))
 
-(require "0-types/timeline.rkt"
-         "event.rkt"
+(require
+  "event.rkt"
 
-         "../../2-core/io.rkt"
-         "../../2-core/core.rkt")
+  "../../2-core/io.rkt"
+  "../../2-core/core.rkt"
+
+  "../../3-types/event.rkt"
+  "../../3-types/timeline.rkt"
+  )
 
 (define (narrate-timeline timeline)
   (define

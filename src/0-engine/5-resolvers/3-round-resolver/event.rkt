@@ -1,14 +1,12 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "0-types/event.rkt"))
 
 (require
-  "0-types/event.rkt"
-
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
+  "../../3-types/event.rkt"
   "../../3-types/world.rkt"
 
   "../../7-state/state/state.rkt"
