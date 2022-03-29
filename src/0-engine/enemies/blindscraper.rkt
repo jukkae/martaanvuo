@@ -4,6 +4,7 @@
 
 (require
   "../3-types/action.rkt"
+  "../3-types/actor.rkt"
 
   "../actors/actor.rkt"
 
@@ -13,7 +14,8 @@
   "../2-core/io.rkt"
   "../2-core/core.rkt"
 
-  "../state/state.rkt")
+  "../state/state.rkt"
+  )
 
 (define (make-blindscraper)
   (define enemy (make-actor "Blindscraper" 'blindscraper 3))

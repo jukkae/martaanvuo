@@ -13,6 +13,7 @@
 
   "../2-core/io.rkt"
   "../2-core/core.rkt"
+  "../3-types/actor.rkt"
 
   "../state/state.rkt"
 

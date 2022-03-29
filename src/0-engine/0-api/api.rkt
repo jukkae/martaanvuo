@@ -8,6 +8,7 @@
     "../2-core/io.rkt"
 
     "../3-types/action.rkt"
+    "../3-types/actor.rkt"
 
     "../actors/actor.rkt"
 
@@ -40,6 +41,7 @@
   "../2-core/core.rkt"
 
   "../3-types/action.rkt"
+  "../3-types/actor.rkt"
 
   "../actors/actor.rkt"
 

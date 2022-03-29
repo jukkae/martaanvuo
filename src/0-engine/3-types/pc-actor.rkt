@@ -2,7 +2,7 @@
 
 (provide (struct-out pc-actor))
 
-(require "../../2-core/maybe.rkt")
+(require "../2-core/maybe.rkt")
 
 (require "actor.rkt")
 

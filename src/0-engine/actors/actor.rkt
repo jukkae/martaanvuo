@@ -1,16 +1,11 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "0-types/actor.rkt"
-                       "0-types/pc-actor.rkt"
+(provide (all-from-out
+  "conditions.rkt"
+  "statuses.rkt"))
 
-                       "conditions.rkt"
-                       "statuses.rkt"))
-
-(require "0-types/actor.rkt"
-         "0-types/pc-actor.rkt"
-
-         "conditions.rkt"
+(require "conditions.rkt"
          "statuses.rkt")
 
 (require racket/lazy-require)
@@ -21,6 +16,8 @@
          "../2-core/core.rkt"
 
          "../3-types/condition.rkt"
+         "../3-types/actor.rkt"
+         "../3-types/pc-actor.rkt"
          )
 
 (lazy-require
@@ -68,20 +65,6 @@
          result)
         (else 'not-found)
         ))
-
-(define (get-attribute-modifier-for attribute)
-  (cond ((= attribute 3) -3)
-        ((<= 4  attribute  5) -2)
-        ((<= 6  attribute  8) -1)
-        ((<= 9  attribute 12)  0)
-        ((<= 13 attribute 15)  1)
-        ((<= 16 attribute 17)  2)
-        ((= attribute 18) 3)))
-
-(define (get-modifier-string modifier)
-  (cond ((negative? modifier) (number->string modifier))
-        ((= 0 modifier) (number->string modifier))
-        ((positive? modifier) (format "+~a" modifier))))
 
 
 (define (non-pc-take-damage! actor damage damage-type)

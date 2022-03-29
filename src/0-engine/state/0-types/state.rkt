@@ -5,9 +5,9 @@
 (require
   "../../2-core/maybe.rkt"
   "../../3-types/action.rkt"
-  "../../actors/0-types/pc-actor.rkt"
-  "../../combat/combat-event.rkt"
   "../../3-types/location-ids.rkt"
+  "../../3-types/pc-actor.rkt"
+  "../../combat/combat-event.rkt"
   "../../resolvers/round-resolver/0-types/timeline.rkt"
   "../../tasks/task.rkt"
   "../../world/0-types/world.rkt")

@@ -5,10 +5,10 @@
 (require racket/lazy-require)
 
 (require
-  "0-types/actor.rkt"
   "../2-core/io.rkt"
   "../2-core/core.rkt"
   "../3-types/condition.rkt"
+  "../3-types/actor.rkt"
   )
 
 (lazy-require

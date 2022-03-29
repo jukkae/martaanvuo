@@ -6,10 +6,11 @@
 (require racket/lazy-require)
 
 (require
-  "../actors/actor.rkt"
   "../items/item.rkt"
   "../2-core/io.rkt"
   "../2-core/core.rkt"
+  "../3-types/actor.rkt"
+  "../3-types/pc-actor.rkt"
   "../3-types/condition.rkt"
   )
 

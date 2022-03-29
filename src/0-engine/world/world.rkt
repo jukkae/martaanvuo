@@ -6,11 +6,14 @@
 (require "0-types/world.rkt"
          "time.rkt")
 
-(require "../actors/actor.rkt"
-         "../items/item.rkt"
-         "../locations/0-types/location.rkt"
-         "../locations/0-types/route.rkt"
-         "../2-core/core.rkt")
+(require
+  "../3-types/actor.rkt"
+  "../actors/actor.rkt"
+  "../items/item.rkt"
+  "../locations/0-types/location.rkt"
+  "../locations/0-types/route.rkt"
+  "../2-core/core.rkt"
+  )
 
 (lazy-require
   ["../state/state.rkt"

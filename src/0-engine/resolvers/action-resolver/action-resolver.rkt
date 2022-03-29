@@ -12,6 +12,8 @@
   "../../1-index/index.rkt"
 
   "../../3-types/action.rkt"
+  "../../3-types/actor.rkt"
+  "../../3-types/pc-actor.rkt"
 
   "../../actors/actor.rkt"
 

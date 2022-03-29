@@ -7,8 +7,8 @@
 
   "../../2-core/maybe.rkt"
   "../../3-types/location-ids.rkt"
+  "../../3-types/actor.rkt"
 
-  "../../actors/0-types/actor.rkt"
   "../../items/0-types/item.rkt"
   )
 

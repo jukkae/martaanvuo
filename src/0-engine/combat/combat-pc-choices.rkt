@@ -4,6 +4,7 @@
   "combat.rkt"
 
   "../3-types/action.rkt"
+  "../3-types/actor.rkt"
   "../pc-choices/choice.rkt"
 
   "../actors/actor.rkt"

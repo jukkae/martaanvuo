@@ -6,13 +6,14 @@
 
 (require
   "../actors/actor.rkt"
+  "../3-types/actor.rkt"
   "../2-core/io.rkt"
-  "../2-core/core.rkt")
+  "../2-core/core.rkt"
+  )
 
 (lazy-require
- ["../martaanvuo.rkt"
-  (
-   pc)])
+ ["../state/mutators.rkt"
+  (pc)])
 
 (define (luck-check)
   (define wangernumbs

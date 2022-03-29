@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../actors/actor.rkt"
+  "../../3-types/actor.rkt"
   "../../3-types/action.rkt"
   "../../2-core/io.rkt"
   "../../2-core/core.rkt")

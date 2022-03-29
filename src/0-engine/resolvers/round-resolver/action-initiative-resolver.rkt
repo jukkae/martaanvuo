@@ -4,7 +4,7 @@
 
 (require
   "../../3-types/action.rkt"
-  "../../actors/actor.rkt"
+  "../../3-types/actor.rkt"
   "../../2-core/core.rkt")
 
 ; (: -> Action Actor Natural) ; or maybe Initiative instead of Natural
