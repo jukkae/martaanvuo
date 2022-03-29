@@ -7,7 +7,8 @@
   "../blurbs/blurbs.rkt"
   "../core/io.rkt"
   "../2-core/core.rkt"
-  "../state/state.rkt")
+  "../state/state.rkt"
+  "../save-game/save-game.rkt")
 
 (provide resolve-game)
 (define (resolve-game game-mode)
