@@ -170,7 +170,7 @@
         ((eq? (action-actor-id action2) 'pc) #f)))
 
 
-(: all-fulfill-predicate? (All (A) (-> (Listof A) (-> A Boolean) Boolean)))
+(: all-fulfill-predicate? (∀ (A) (-> (Listof A) (-> A Boolean) Boolean)))
 (define (all-fulfill-predicate? lst predicate)
   (define result #t)
   (for ([element lst])

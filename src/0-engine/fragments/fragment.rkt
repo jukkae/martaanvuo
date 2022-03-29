@@ -3,7 +3,16 @@
 (provide (all-defined-out))
 
 (require "decision.rkt"
-         "../core/maybe.rkt")
+         "../core/maybe.rkt"
+         "../2-core/core.rkt"
+         "../core/io.rkt")
+
+(require/typed "../2-core/list-utils.rkt"
+               [append-element (∀ (A) (-> (Listof A) A (Listof A)))])
+
+(require/typed "../core/io.rkt"
+               [wait-for-input (-> String)]
+               [p (-> String)])
 
 (struct story-fragment
   ([id : Symbol]
