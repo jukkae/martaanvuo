@@ -8,7 +8,7 @@
   "0-types/status.rkt"
   "0-types/actor.rkt"
   "../core/io.rkt"
-  "../core/utils.rkt"
+  "../2-core/core.rkt"
   )
 
 (define (actor-add-status! actor status)

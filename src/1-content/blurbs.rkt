@@ -6,7 +6,7 @@
 
 (require
   "../0-engine/core/io.rkt"
-  "../0-engine/core/utils.rkt")
+  "../0-engine/2-core/core.rkt")
 
 (lazy-require
  ("../o-engine/state/state.rkt" [current-times-species-encountered

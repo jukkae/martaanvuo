@@ -23,7 +23,7 @@
 
   "../../core/checks.rkt"
   "../../core/io.rkt"
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
 
   "../../items/item.rkt"
 

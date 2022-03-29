@@ -10,7 +10,7 @@
          "../items/item.rkt"
          "../locations/0-types/location.rkt"
          "../locations/0-types/route.rkt"
-         "../core/utils.rkt")
+         "../2-core/core.rkt")
 
 (lazy-require
   ["../state/state.rkt"

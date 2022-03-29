@@ -9,7 +9,7 @@
          "../../0-engine/items/item.rkt"
          "../../0-engine/locations/0-types/location.rkt"
          "../../0-engine/locations/0-types/route.rkt"
-         "../../0-engine/core/utils.rkt"
+         "../../0-engine/2-core/core.rkt"
          "../../0-engine/state/state.rkt")
 
 

@@ -11,7 +11,7 @@
 
   "../../actors/actor.rkt"
 
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
 
   "../../enemies/blindscraper.rkt"
   "../../enemies/grabberkin.rkt"

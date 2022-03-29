@@ -7,7 +7,7 @@
          "event.rkt"
 
          "../../core/io.rkt"
-         "../../core/utils.rkt")
+         "../../2-core/core.rkt")
 
 (define (narrate-timeline timeline)
   (define

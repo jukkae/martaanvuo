@@ -26,7 +26,7 @@
   "../../actors/actor.rkt"
 
   "../../core/io.rkt"
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
 
   "../../locations/0-types/location.rkt"
 

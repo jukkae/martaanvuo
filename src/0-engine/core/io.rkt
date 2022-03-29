@@ -5,7 +5,7 @@
 (require racket/lazy-require)
 (require text-table)
 
-(require "utils.rkt")
+(require "../2-core/list-utils.rkt")
 
 (lazy-require
  ["../state/state.rkt"

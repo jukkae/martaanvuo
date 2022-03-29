@@ -5,7 +5,7 @@
 (require 
   "event.rkt"
 
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
   "../../locations/locations.rkt")
 
 (define (handle-interrupting-event! event)

@@ -10,7 +10,7 @@
 
   "../combat/stance.rkt"
 
-  "../core/utils.rkt"
+  "../2-core/core.rkt"
 
   "../state/state.rkt")
 

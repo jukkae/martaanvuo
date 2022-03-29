@@ -21,7 +21,7 @@
 
 (require
   "../core/io.rkt"
-  "../core/utils.rkt"
+  "../2-core/core.rkt"
   "../actors/actor.rkt"
   "../enemies/encounters.rkt"
   "../fragments/decision.rkt")

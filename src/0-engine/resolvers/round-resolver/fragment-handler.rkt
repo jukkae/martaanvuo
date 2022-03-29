@@ -7,7 +7,7 @@
   "timeline.rkt"
 
   "../../core/io.rkt"
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
 
   "../../fragments/decision.rkt"
   "../../fragments/fragment.rkt"

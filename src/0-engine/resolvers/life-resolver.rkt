@@ -11,7 +11,7 @@
 
   "../core/io.rkt"
   "../core/session.rkt"
-  "../core/utils.rkt"
+  "../2-core/core.rkt"
 
 
   "../pc/pc.rkt"

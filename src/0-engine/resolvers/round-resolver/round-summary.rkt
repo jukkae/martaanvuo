@@ -4,7 +4,7 @@
 
 (require
   "../../core/io.rkt"
-  "../../core/utils.rkt"
+  "../../2-core/core.rkt"
   "../../pc/pc.rkt"
   "../../locations/locations.rkt"
   "../../world/0-types/world.rkt"

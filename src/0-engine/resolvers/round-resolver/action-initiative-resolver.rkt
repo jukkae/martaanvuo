@@ -5,7 +5,7 @@
 (require
   "../../actions/action.rkt"
   "../../actors/actor.rkt"
-  "../../core/utils.rkt")
+  "../../2-core/core.rkt")
 
 ; (: -> Action Actor Natural) ; or maybe Initiative instead of Natural
 (define (resolve-action-initiative action actor)
