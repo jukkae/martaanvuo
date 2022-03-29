@@ -18,6 +18,7 @@
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/world.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"

@@ -13,6 +13,7 @@
   "../../2-core/core.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/world.rkt"
 
   "../../items/item.rkt"
 
@@ -21,7 +22,7 @@
   "../../state/state.rkt"
 
   "../../world/time.rkt"
-  "../../world/world.rkt")
+  )
 
 
 (lazy-require

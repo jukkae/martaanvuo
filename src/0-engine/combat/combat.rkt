@@ -17,10 +17,10 @@
   "../3-types/pc-actor.rkt"
   "../3-types/status.rkt"
   "../3-types/condition.rkt"
+  "../3-types/world.rkt"
 
   "../pc/pc.rkt"
-
-  "../world/world.rkt")
+  )
 
 (lazy-require
  ["../resolvers/round-resolver/round-resolver.rkt"

@@ -7,7 +7,7 @@
 
          "../../2-core/io.rkt"
          "../../2-core/core.rkt"
-         "../../world/world.rkt"
+         "../../3-types/world.rkt"
 
          "../../state/state.rkt")
 

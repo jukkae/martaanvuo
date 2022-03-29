@@ -5,9 +5,9 @@
 (require
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+  "../../3-types/world.rkt"
   "../../pc/pc.rkt"
   "../../locations/locations.rkt"
-  "../../world/0-types/world.rkt"
   "../../world/time.rkt")
 
 (require

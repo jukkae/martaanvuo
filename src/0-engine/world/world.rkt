@@ -3,14 +3,13 @@
 
 (require racket/lazy-require)
 
-(require "0-types/world.rkt"
-         "time.rkt")
-
 (require
+  "time.rkt"
   "../2-core/core.rkt"
   "../3-types/actor.rkt"
   "../3-types/location.rkt"
   "../3-types/route.rkt"
+  "../3-types/world.rkt"
   "../actors/actor.rkt"
   "../items/item.rkt"
   )
@@ -21,10 +20,6 @@
      current-location)]
   ["../../1-content/world/world.rkt"
     (make-new-world)])
-
-
-(provide (all-from-out
-          "0-types/world.rkt"))
 
 
 ; API

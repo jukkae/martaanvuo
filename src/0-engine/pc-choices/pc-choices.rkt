@@ -18,6 +18,7 @@
   "../3-types/item.rkt"
   "../3-types/location.rkt"
   "../3-types/route.rkt"
+  "../3-types/world.rkt"
 
   "../actors/actor.rkt"
 

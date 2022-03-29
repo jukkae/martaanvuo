@@ -3,7 +3,6 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-engine/world/0-types/world.rkt"
   "../../0-engine/world/world.rkt")
 
 (require
@@ -12,6 +11,7 @@
   "../../0-engine/2-core/core.rkt"
   "../../0-engine/3-types/location.rkt"
   "../../0-engine/3-types/route.rkt"
+  "../../0-engine/3-types/world.rkt"
   "../../0-engine/state/state.rkt"
   )
 

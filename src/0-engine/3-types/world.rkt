@@ -3,8 +3,8 @@
 (provide (all-defined-out))
 
 (require
-  "../../3-types/location.rkt"
-  "../../3-types/route.rkt"
+  "location.rkt"
+  "route.rkt"
   )
 
 (struct world
