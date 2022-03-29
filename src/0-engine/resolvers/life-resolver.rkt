@@ -46,6 +46,8 @@
       )
     ))
 
+; the world and reality stays intact, world state persists
+; eventually, Otava should become aware of the loop
 (define (on-begin-life)
   (when (not (session-flag-set? 'began-life))
     (set-session-flag 'began-life)

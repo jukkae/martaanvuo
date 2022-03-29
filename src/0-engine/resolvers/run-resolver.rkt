@@ -55,6 +55,8 @@
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?))
 
+; recursions mess with reality -> change world state, give bonuses, open new doors
+; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
   #;(current-round 0)
