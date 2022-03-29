@@ -6,7 +6,6 @@
 (require racket/lazy-require)
 
 (require
-  "round-summary.rkt"
   "action-queue.rkt"
   "fragment-handler.rkt"
 
@@ -22,6 +21,8 @@
   "../../4-rules/world/world.rkt"
 
   "../../7-state/state/state.rkt"
+
+  "../../../1-content/narration/round-summary.rkt"
   )
 
 

@@ -3,16 +3,16 @@
 (provide (all-defined-out))
 
 (require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../../0-engine/2-core/io.rkt"
+  "../../0-engine/2-core/core.rkt"
 
-  "../../3-types/world.rkt"
+  "../../0-engine/3-types/world.rkt"
 
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/locations/locations.rkt"
-  "../../4-rules/world/time.rkt"
+  "../../0-engine/4-rules/pc/pc.rkt"
+  "../../0-engine/4-rules/locations/locations.rkt"
+  "../../0-engine/4-rules/world/time.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../0-engine/7-state/state/state.rkt"
   )
 
 
