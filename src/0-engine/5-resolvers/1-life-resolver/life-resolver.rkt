@@ -12,10 +12,11 @@
   "../../3-types/pc-actor.rkt"
 
   "../../4-rules/pc/pc.rkt"
-  "../../4-rules/actors/actor.rkt"
 
   "../../7-state/session/session.rkt"
   "../../7-state/state/state.rkt"
+
+  "../../../1-content/narration/life-resolver.rkt"
   )
 
 
@@ -63,12 +64,5 @@
     (dev-note "Show life info")))
 
 (define (on-end-life)
-  (let ([body
-         (tbody
-          (tr "Round"
-              (format "~a" (current-round)))
-          (tr "XP"
-              (format "~a" (pc-actor-xp (pc)))))]
-        [title "Life summary"])
-    (info-card body title))
+  (display-end-of-life-summary)
   (wait-for-confirm))
