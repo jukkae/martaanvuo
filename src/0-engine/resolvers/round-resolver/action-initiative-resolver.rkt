@@ -3,7 +3,7 @@
 (provide resolve-action-initiative)
 
 (require
-  "../../actions/action.rkt"
+  "../../3-types/types.rkt"
   "../../actors/actor.rkt"
   "../../2-core/core.rkt")
 

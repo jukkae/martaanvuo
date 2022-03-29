@@ -10,7 +10,7 @@
   "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
-  "../../actions/action.rkt"
+  "../../3-types/types.rkt"
 
   "../../actors/actor.rkt"
 

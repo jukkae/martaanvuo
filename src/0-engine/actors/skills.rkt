@@ -1,7 +1,7 @@
 #lang at-exp racket
 
 (require
-  "../actions/action.rkt"
+  "../3-types/types.rkt"
   "../actions/choice.rkt"
   "../pc/pc.rkt")
 

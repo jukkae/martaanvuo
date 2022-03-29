@@ -4,7 +4,7 @@
 
 (require
   "../../2-core/maybe.rkt"
-  "../../actions/action.rkt"
+  "../../3-types/types.rkt"
   "../../actors/0-types/pc-actor.rkt"
   "../../combat/combat-event.rkt"
   "../../locations/0-types/location-ids.rkt"

@@ -5,10 +5,10 @@
 (require racket/lazy-require)
 
 (require
-  "action.rkt"
   "choice.rkt"
 
   "../1-index/index.rkt"
+  "../3-types/types.rkt"
 
   "../actors/actor.rkt"
 

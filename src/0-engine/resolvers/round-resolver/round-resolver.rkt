@@ -20,7 +20,7 @@
 
   "../action-resolver/action-resolver.rkt"
 
-  "../../actions/action.rkt"
+  "../../3-types/types.rkt"
   "../../actions/pc-choices.rkt"
 
   "../../actors/actor.rkt"
