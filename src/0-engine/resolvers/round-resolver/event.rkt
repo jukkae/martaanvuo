@@ -5,7 +5,7 @@
 
 (require "0-types/event.rkt"
 
-         "../../core/io.rkt"
+         "../../2-core/io.rkt"
          "../../2-core/core.rkt"
          "../../world/world.rkt"
 

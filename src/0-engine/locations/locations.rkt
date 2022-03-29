@@ -20,7 +20,7 @@
     (remove-actor-from-its-current-location!)])
 
 (require
-  "../core/io.rkt"
+  "../2-core/io.rkt"
   "../2-core/core.rkt"
   "../actors/actor.rkt"
   "../enemies/encounters.rkt"

@@ -6,7 +6,7 @@
 (require racket/lazy-require)
 
 (require "task.rkt"
-         "../core/io.rkt"
+         "../2-core/io.rkt"
          "../2-core/core.rkt")
 
 (lazy-require ["../state/state.rkt"

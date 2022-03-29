@@ -6,7 +6,7 @@
 (require "0-types/timeline.rkt"
          "event.rkt"
 
-         "../../core/io.rkt"
+         "../../2-core/io.rkt"
          "../../2-core/core.rkt")
 
 (define (narrate-timeline timeline)

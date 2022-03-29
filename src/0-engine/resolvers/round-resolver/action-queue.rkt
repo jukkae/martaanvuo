@@ -5,7 +5,7 @@
 (require
   "../../actors/actor.rkt"
   "../../actions/action.rkt"
-  "../../core/io.rkt"
+  "../../2-core/io.rkt"
   "../../2-core/core.rkt")
 
 (require racket/lazy-require)

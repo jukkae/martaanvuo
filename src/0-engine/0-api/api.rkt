@@ -5,7 +5,7 @@
     "../2-core/core.rkt"
 
     "../checks/checks.rkt"
-    "../core/io.rkt"
+    "../2-core/io.rkt"
 
     "../actions/action.rkt"
 
@@ -36,7 +36,7 @@
   "../2-core/core.rkt"
 
   "../checks/checks.rkt"
-  "../core/io.rkt"
+  "../2-core/io.rkt"
   "../2-core/core.rkt"
 
   "../actions/action.rkt"

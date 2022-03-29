@@ -7,7 +7,7 @@
 (require
   "0-types/condition.rkt"
   "0-types/actor.rkt"
-  "../core/io.rkt"
+  "../2-core/io.rkt"
   "../2-core/core.rkt"
   )
 

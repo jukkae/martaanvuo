@@ -5,7 +5,7 @@
 (require
   "round-resolver/round-resolver.rkt"
   "../blurbs/blurbs.rkt"
-  "../core/io.rkt"
+  "../2-core/io.rkt"
   "../2-core/core.rkt"
   "../locations/0-types/location.rkt"
   "../locations/locations.rkt"

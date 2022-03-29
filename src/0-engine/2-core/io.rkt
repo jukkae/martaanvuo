@@ -1,6 +1,5 @@
 #lang at-exp racket
 
-(provide (all-defined-out))
 (provide (all-from-out "output.rkt"))
 (require "output.rkt")
 

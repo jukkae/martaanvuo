@@ -5,12 +5,12 @@
 (require "decision.rkt"
          "../2-core/maybe.rkt"
          "../2-core/core.rkt"
-         "../core/io.rkt")
+         "../2-core/io.rkt")
 
 (require/typed "../2-core/list-utils.rkt"
                [append-element (∀ (A) (-> (Listof A) A (Listof A)))])
 
-(require/typed "../core/io.rkt"
+(require/typed "../2-core/io.rkt"
                [wait-for-input (-> String)]
                [p (-> String)])
 

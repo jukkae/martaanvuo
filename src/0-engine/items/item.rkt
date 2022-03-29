@@ -6,7 +6,7 @@
 
 (require "0-types/item.rkt")
 
-(require "../core/io.rkt"
+(require "../2-core/io.rkt"
          "../2-core/core.rkt")
 
 

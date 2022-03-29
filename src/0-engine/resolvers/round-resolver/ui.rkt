@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../core/io.rkt"
+  "../../2-core/io.rkt"
   "../../session/session.rkt"
   "../../2-core/core.rkt"
 

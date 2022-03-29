@@ -21,7 +21,7 @@
 
 (require "../items/item.rkt"
 
-         "../core/io.rkt"
+         "../2-core/io.rkt"
          "../2-core/core.rkt")
 
 (lazy-require
