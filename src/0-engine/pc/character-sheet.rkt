@@ -9,7 +9,9 @@
   "../actors/actor.rkt"
   "../items/item.rkt"
   "../2-core/io.rkt"
-  "../2-core/core.rkt")
+  "../2-core/core.rkt"
+  "../3-types/condition.rkt"
+  )
 
 (lazy-require
  ["../state/state.rkt"

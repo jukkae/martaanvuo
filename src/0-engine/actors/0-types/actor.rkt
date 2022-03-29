@@ -6,10 +6,10 @@
 (require
   "../../2-core/maybe.rkt"
   "../../3-types/status.rkt"
-  "condition.rkt"
+  "../../3-types/condition.rkt"
+  "../../3-types/location-ids.rkt"
   "../../items/0-types/item.rkt"
   "../../combat/stance.rkt"
-  "../../3-types/location-ids.rkt"
   )
 
 (define-type ActorId (U Symbol Natural))

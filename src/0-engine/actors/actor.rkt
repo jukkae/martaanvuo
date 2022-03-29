@@ -2,14 +2,12 @@
 
 (provide (all-defined-out))
 (provide (all-from-out "0-types/actor.rkt"
-                       "0-types/condition.rkt"
                        "0-types/pc-actor.rkt"
 
                        "conditions.rkt"
                        "statuses.rkt"))
 
 (require "0-types/actor.rkt"
-         "0-types/condition.rkt"
          "0-types/pc-actor.rkt"
 
          "conditions.rkt"
@@ -20,7 +18,10 @@
 (require "../items/item.rkt"
 
          "../2-core/io.rkt"
-         "../2-core/core.rkt")
+         "../2-core/core.rkt"
+
+         "../3-types/condition.rkt"
+         )
 
 (lazy-require
  ["../state/state.rkt"

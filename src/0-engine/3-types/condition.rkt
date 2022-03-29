@@ -4,7 +4,7 @@
   (struct-out condition)
   (struct-out FreshInjury))
 
-(require "../../2-core/maybe.rkt")
+(require "../2-core/maybe.rkt")
 
 (struct condition
  ([type : Symbol]
