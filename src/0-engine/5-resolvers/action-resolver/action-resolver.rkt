@@ -33,13 +33,11 @@
   "../../7-state/state/state.rkt"
   )
 
-(lazy-require
- ["../round-resolver/event-handler.rkt"
+(lazy-require ["../round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 
-(lazy-require
- ["../../4-rules/locations/locations.rkt"
+(lazy-require ["../../4-rules/locations/locations.rkt"
   (move-pc-to-location!
    )])
 

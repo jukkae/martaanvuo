@@ -25,15 +25,13 @@
   )
 
 
-(lazy-require
- ["../../6-combat/combat.rkt"
+(lazy-require ["../../6-combat/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
    end-combat!)])
 
-(lazy-require
- ["../../7-state/state/logging.rkt"
+(lazy-require ["../../7-state/state/logging.rkt"
   (set-prompt!)])
 
 (define (on-begin-round mode)

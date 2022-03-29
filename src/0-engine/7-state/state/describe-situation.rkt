@@ -15,17 +15,19 @@
   "../../4-rules/pc/pc.rkt"
   )
 
-(lazy-require
- ["state.rkt" (current-flags
-               current-fragment-id
-               current-in-combat?
-               current-life
-               current-location
-               current-pc
-               current-quests)])
+(lazy-require ["state.rkt"
+ (current-flags
+  current-fragment-id
+  current-in-combat?
+  current-life
+  current-location
+  current-pc
+  current-quests
+  )])
 
-(lazy-require
- ["../6-combat/combat.rkt" (describe-combat-situation)])
+(lazy-require ["../6-combat/combat.rkt"
+ (describe-combat-situation
+  )])
 
 (define (describe-non-combat-situation repeated?)
   (cond ((null? (current-fragment-id))

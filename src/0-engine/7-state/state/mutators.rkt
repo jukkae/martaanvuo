@@ -18,18 +18,20 @@
   "../../6-combat/stance.rkt"
   )
 
-(lazy-require
- ["state.rkt" (current-flags
-               current-completed-fragments
-               current-fragment-id
-               current-in-combat?
-               current-life
-               current-pc
-               current-tasks
-               current-run)])
+(lazy-require ["state.rkt"
+ (current-flags
+  current-completed-fragments
+  current-fragment-id
+  current-in-combat?
+  current-life
+  current-pc
+  current-tasks
+  current-run
+  )])
 
-(lazy-require
- ["../6-combat/combat.rkt" (end-combat!)])
+(lazy-require ["../../6-combat/combat.rkt"
+  (end-combat!
+   )])
 
 ;; bad name for this file, this is sort of "misc"
 

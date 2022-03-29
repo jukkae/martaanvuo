@@ -16,11 +16,10 @@
 (require
   racket/lazy-require)
 
-(lazy-require
-  ["../../7-state/state/state.rkt"
-    (current-round
-     current-world
-     current-location)])
+(lazy-require ["../../7-state/state/state.rkt"
+  (current-round
+   current-world
+   current-location)])
 
 (define (round-summary mode)
   (define title

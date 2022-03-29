@@ -5,14 +5,6 @@
 
 (require racket/lazy-require)
 
-(lazy-require
- ["combat.rkt"
-  (get-combatant-name
-   display-combatant-info
-   display-pc-combatant-info
-   add-combat-flag
-   add-combat-event
-   )])
 
 (require
   "stance.rkt"
@@ -35,19 +27,28 @@
   "../7-state/state/state.rkt"
   )
 
+(lazy-require ["combat.rkt"
+  (get-combatant-name
+   display-combatant-info
+   display-pc-combatant-info
+   add-combat-flag
+   add-combat-event
+   )])
 
-(lazy-require
- ["../locations/locations.rkt"
+(lazy-require ["../4-rules/locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
    location-on-enter!
-   )]
- ["../resolvers/round-resolver/event-handler.rkt"
+   )])
+
+(lazy-require ["../4-rules/world/world.rkt"
+  (get-actor
+   )])
+
+(lazy-require ["../5-resolvers/round-resolver/event-handler.rkt"
   (handle-interrupting-event!
-   )]
- ["../world/world.rkt"
-  (get-actor)])
+   )])
 
 
 ; "generic" attack with type

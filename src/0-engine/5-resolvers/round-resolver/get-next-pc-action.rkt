@@ -30,8 +30,7 @@
   "../../7-state/state/state.rkt"
   )
 
-(lazy-require
- ["ui.rkt"
+(lazy-require ["ui.rkt"
   (display-tasks
    display-log
    inventory

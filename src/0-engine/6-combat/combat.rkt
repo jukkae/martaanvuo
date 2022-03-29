@@ -20,13 +20,11 @@
   "../7-state/session/session.rkt"
   )
 
-(lazy-require
- ["../5-resolvers/round-resolver/round-resolver.rkt"
+(lazy-require ["../5-resolvers/round-resolver/round-resolver.rkt"
   (go-to-fragment
    )])
 
-(lazy-require
- ["../7-state/state/state.rkt"
+(lazy-require ["../7-state/state/state.rkt"
   (current-in-combat?
    current-log
    current-location
@@ -34,11 +32,11 @@
    current-world
    get-current-enemies
    pc
-   )]
-  )
+   )])
 
 (lazy-require ["../7-state/state/logging.rkt"
-               (next-chapter!)])
+  (next-chapter!
+   )])
 
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))

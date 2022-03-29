@@ -22,23 +22,21 @@
   "../../3-types/item.rkt"
   )
 
-(lazy-require
- ["../world/world.rkt"
+(lazy-require ["../world/world.rkt"
   (remove-actor-from-its-current-location!
-   )]
- ["../../3-types/location.rkt"
+   )])
+(lazy-require ["../../3-types/location.rkt"
   (add-feature-to-location!
    add-item-to-location!
-   )]
- ["../../7-state/state/state.rkt"
+   )])
+(lazy-require ["../../7-state/state/state.rkt"
   (pc
    current-location
    current-last-numeric-actor-id
    current-last-numeric-actor-id++
    get-next-numeric-actor-id
    display-combatant-info
-   )]
-  )
+   )])
 
 (define (make-actor
          name

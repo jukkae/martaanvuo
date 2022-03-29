@@ -31,8 +31,7 @@
   )
 
 
-(lazy-require
- ["../resolvers/round-resolver/round-resolver.rkt"
+(lazy-require ["../resolvers/round-resolver/round-resolver.rkt"
   (go-to-fragment
    )])
 

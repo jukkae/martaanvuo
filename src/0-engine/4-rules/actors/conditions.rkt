@@ -11,21 +11,21 @@
   "../../3-types/actor.rkt"
   )
 
-(lazy-require
- ["actor.rkt"
+(lazy-require ["actor.rkt"
   (take-damage
-   )]
- ["../world/world.rkt"
-  (get-actor)]
- ["../../6-combat/combat.rkt"
+   )])
+(lazy-require ["../world/world.rkt"
+  (get-actor
+   )])
+(lazy-require ["../../6-combat/combat.rkt"
   (display-combatant-info
-   )]
- ["../../7-state/state/mutators.rkt"
+   )])
+(lazy-require ["../../7-state/state/mutators.rkt"
   (pc
-   )]
- ["../../5-resolvers/round-resolver/simulation.rkt"
-  (advance-time-by-iotas!)]
-  )
+   )])
+(lazy-require ["../../5-resolvers/round-resolver/simulation.rkt"
+  (advance-time-by-iotas!
+   )])
 
 (define (condition-on-end-round! condition owner-id)
   (define owner (get-actor owner-id))

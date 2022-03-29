@@ -21,9 +21,9 @@
   )
 
 
-(lazy-require
- ["../../4-rules/pc/pc.rkt"
-  (pc-hunger-level)])
+(lazy-require ["../../4-rules/pc/pc.rkt"
+  (pc-hunger-level
+   )])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry
 (define (hunger++)

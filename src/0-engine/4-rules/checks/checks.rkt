@@ -11,9 +11,9 @@
   "../../3-types/actor.rkt"
   )
 
-(lazy-require
- ["../../7-state/state/mutators.rkt"
-  (pc)])
+(lazy-require ["../../7-state/state/mutators.rkt"
+  (pc
+   )])
 
 (define (luck-check)
   (define wangernumbs

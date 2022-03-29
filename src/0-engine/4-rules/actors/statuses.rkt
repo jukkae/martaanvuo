@@ -2,8 +2,6 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-
 (require
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"

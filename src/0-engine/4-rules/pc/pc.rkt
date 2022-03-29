@@ -14,8 +14,7 @@
   "../../3-types/item.rkt"
   )
 
-(lazy-require
- ["../../7-state/state/state.rkt"
+(lazy-require ["../../7-state/state/state.rkt"
   (pc
    )])
 

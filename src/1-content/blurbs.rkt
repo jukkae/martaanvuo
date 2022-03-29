@@ -8,9 +8,10 @@
   "../0-engine/2-core/io.rkt"
   "../0-engine/2-core/core.rkt")
 
-(lazy-require
- ("../o-engine/state/state.rkt" [current-times-species-encountered
-                                 current-times-species-encountered++]))
+(lazy-require ("../0-engine/7-state/state/state.rkt"
+  [current-times-species-encountered
+   current-times-species-encountered++
+   ]))
 
 (define (get-blurb name)
   (case name

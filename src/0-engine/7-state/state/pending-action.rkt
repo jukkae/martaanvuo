@@ -11,8 +11,8 @@
   "../../4-rules/world/world.rkt"
   )
 
-(lazy-require
- ["state.rkt" (current-pending-action)])
+(lazy-require ["state.rkt"
+  (current-pending-action)])
 
 (define (reset-pending-action!)
   (current-pending-action '()))

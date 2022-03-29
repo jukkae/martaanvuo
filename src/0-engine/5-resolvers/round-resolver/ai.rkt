@@ -19,9 +19,12 @@
 
 (require "action-queue.rkt")
 
-(lazy-require
- ["round-resolver.rkt" (get-next-pc-action)]
- ["../../world/world.rkt" (get-actor)])
+(lazy-require ["round-resolver.rkt"
+  (get-next-pc-action
+   )])
+(lazy-require ["../../world/world.rkt"
+ (get-actor
+  )])
 
 
 (define (get-next-npc-action actor)

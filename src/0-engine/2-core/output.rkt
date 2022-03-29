@@ -7,17 +7,17 @@
 
 (require "../2-core/list-utils.rkt")
 
-(lazy-require
- ["../7-state/state/state.rkt"
+(lazy-require ["../7-state/state/state.rkt"
   (current-part
    current-chapter
    current-log
    current-last-paragraph
-   current-prompt)])
+   current-prompt
+   )])
 
-(lazy-require
- ["../7-state/state/logging.rkt"
-  (append-to-log)])
+(lazy-require ["../7-state/state/logging.rkt"
+  (append-to-log
+  )])
 
 
 (define *output-state* 'clean) ; not serialized, local

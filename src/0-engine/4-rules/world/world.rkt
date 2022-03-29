@@ -12,13 +12,11 @@
   "../../3-types/world.rkt"
   )
 
-(lazy-require
-  ["../../7-state/state/state.rkt"
+(lazy-require ["../../7-state/state/state.rkt"
     (current-world
-     current-location)]
-  ["../../../1-content/world/world.rkt"
-    (make-new-world)]
-  )
+     current-location)])
+(lazy-require ["../../../1-content/world/world.rkt"
+    (make-new-world)])
 
 
 ; API

@@ -8,19 +8,22 @@
 
 (require racket/lazy-require)
 
-(lazy-require
-  ["../world/world.rkt"
-    (remove-actor-from-its-current-location!)]
-  ["../../3-types/action.rkt"
-    (action-details)]
-  ["../../6-combat/combat.rkt"
-    (begin-combat!)]
-  ["../../7-state/state/mutators.rkt"
-    (current-location
-     pc)]
-  ["../../7-state/state/pending-action.rkt"
-    (reset-pending-action!)]
-  )
+(lazy-require ["../world/world.rkt"
+  (remove-actor-from-its-current-location!
+   )])
+(lazy-require ["../../3-types/action.rkt"
+  (action-details
+   )])
+(lazy-require ["../../6-combat/combat.rkt"
+  (begin-combat!
+   )])
+(lazy-require ["../../7-state/state/mutators.rkt"
+  (current-location
+   pc
+   )])
+(lazy-require ["../../7-state/state/pending-action.rkt"
+  (reset-pending-action!
+  )])
 
 (require
   "routes.rkt"
