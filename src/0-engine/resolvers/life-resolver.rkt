@@ -10,7 +10,7 @@
   "../actors/actor.rkt"
 
   "../core/io.rkt"
-  "../core/session.rkt"
+  "../session/session.rkt"
   "../2-core/core.rkt"
 
 
