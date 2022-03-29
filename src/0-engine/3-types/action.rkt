@@ -2,10 +2,13 @@
 
 (provide (all-defined-out))
 
-(require "../2-core/maybe.rkt")
-(require "../actors/actor.rkt")
-(require "../items/0-types/item.rkt")
-(require "../locations/0-types/location-ids.rkt")
+(require
+  "../2-core/maybe.rkt"
+
+  "../actors/0-types/actor.rkt"
+  "../actors/0-types/status.rkt"
+  "../items/0-types/item.rkt"
+  "../locations/0-types/location-ids.rkt")
 
 (struct action
   ([symbol : Symbol]
