@@ -12,8 +12,8 @@
   "fragment-handler.rkt"
 
   "../../3-types/action.rkt"
-  "../../actions/pc-choices.rkt"
-  "../../actions/choice.rkt"
+  "../../pc-choices/pc-choices.rkt"
+  "../../pc-choices/choice.rkt"
 
   "../../actors/0-types/pc-actor.rkt"
 
