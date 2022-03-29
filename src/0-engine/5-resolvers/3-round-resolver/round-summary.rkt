@@ -11,15 +11,10 @@
   "../../4-rules/pc/pc.rkt"
   "../../4-rules/locations/locations.rkt"
   "../../4-rules/world/time.rkt"
+
+  "../../7-state/state/state.rkt"
   )
 
-(require
-  racket/lazy-require)
-
-(lazy-require ["../../7-state/state/state.rkt"
-  (current-round
-   current-world
-   current-location)])
 
 (define (round-summary mode)
   (define title
