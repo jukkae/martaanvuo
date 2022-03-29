@@ -59,3 +59,10 @@
 (define (insert-at lst pos x)
   (define-values (before after) (split-at lst pos))
   (append before (cons x after)))
+
+(define (collect-similar lst)
+  (hash->list
+   (foldl (lambda (key ht)
+            (hash-update ht key add1 0))
+          '#hash()
+          lst)))
