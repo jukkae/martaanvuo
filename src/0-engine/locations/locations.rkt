@@ -22,14 +22,14 @@
 (require
   "../2-core/io.rkt"
   "../2-core/core.rkt"
+  "../3-types/location-ids.rkt"
   "../actors/actor.rkt"
   "../enemies/encounters.rkt"
-  "../fragments/decision.rkt")
-
-(require "0-types/location-ids.rkt"
-         "0-types/location.rkt"
-         "0-types/route.rkt"
-         "routes.rkt")
+  "../fragments/decision.rkt"
+  "0-types/location.rkt"
+  "0-types/route.rkt"
+  "routes.rkt"
+  )
 
 (define (location-on-enter! location)
   (dev-note (format "location-on-enter! tbd for location ~a" location)))

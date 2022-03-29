@@ -3,14 +3,14 @@
 (provide (struct-out actor)
          ActorId)
 
-(require "../../2-core/maybe.rkt")
-
-(require "status.rkt"
-         "condition.rkt")
-
-(require "../../items/0-types/item.rkt"
-         "../../combat/stance.rkt"
-         "../../locations/0-types/location-ids.rkt")
+(require
+  "../../2-core/maybe.rkt"
+  "status.rkt"
+  "condition.rkt"
+  "../../items/0-types/item.rkt"
+  "../../combat/stance.rkt"
+  "../../3-types/location-ids.rkt"
+  )
 
 (define-type ActorId (U Symbol Natural))
 

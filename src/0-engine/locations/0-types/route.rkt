@@ -2,13 +2,15 @@
 
 (provide (all-defined-out))
 
-(require "location-ids.rkt"
-         "location.rkt"
+(require
+  "location.rkt"
 
-         "../../2-core/maybe.rkt"
+  "../../2-core/maybe.rkt"
+  "../../3-types/location-ids.rkt"
 
-         "../../actors/0-types/actor.rkt"
-         "../../items/0-types/item.rkt")
+  "../../actors/0-types/actor.rkt"
+  "../../items/0-types/item.rkt"
+  )
 
 (struct route
   location

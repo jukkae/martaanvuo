@@ -4,11 +4,12 @@
 
 (require
   "../2-core/maybe.rkt"
+  "../3-types/location-ids.rkt"
 
   "../actors/0-types/actor.rkt"
   "../actors/0-types/status.rkt"
   "../items/0-types/item.rkt"
-  "../locations/0-types/location-ids.rkt")
+  )
 
 (struct action
   ([symbol : Symbol]
