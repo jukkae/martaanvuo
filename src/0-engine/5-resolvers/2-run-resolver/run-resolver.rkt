@@ -67,15 +67,7 @@
            (displayln "Task:")
            (displayln debt-task)
 
-           (info-card
-            (tbody
-             (tr "run"
-                 (number->string (current-run)))
-             (tr "gold collected"
-                 (number->string (pc-gold-amount)))
-             #;(tr "debt still owed" ; TODO: fix this
-                 (number->string (task-details debt-task))))
-            (format "Run number ~a ended" (current-run))))
+           (display-run-summary))
 
           (else
            (notice (format "End run number ~a [failed]" (number->string (current-run)))))))
@@ -89,7 +81,7 @@
      '()]
     ['pc-dead '()]
     [else
-     (dev-note (format "narrate-end-run: unhandled exit status: ~a" exit-status))])
+     (dev-note (format "on-end-run: unhandled exit status: ~a" exit-status))])
 
   (when (not (eq? exit-status 'pc-dead))
     (wait-for-confirm)))
