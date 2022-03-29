@@ -4,7 +4,6 @@
 
 (provide (all-from-out
           "0-types/state.rkt"
-          "describe-situation.rkt"
           "mutators.rkt"
           "pending-action.rkt"
           "resolve-counts.rkt"))
@@ -16,10 +15,11 @@
   "../../4-rules/pc/pc.rkt"
   "../../4-rules/world/world.rkt")
 
-(require "describe-situation.rkt"
-         "mutators.rkt"
-         "pending-action.rkt"
-         "resolve-counts.rkt")
+(require
+  "mutators.rkt"
+  "pending-action.rkt"
+  "resolve-counts.rkt"
+  )
 
 (define current-world (make-parameter '()))
 

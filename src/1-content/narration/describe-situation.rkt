@@ -5,27 +5,20 @@
 (require racket/lazy-require)
 
 (require
-  "logging.rkt"
-  "mutators.rkt"
+  "../../0-engine/2-core/io.rkt"
+  "../../0-engine/2-core/core.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
-  "../../3-types/location.rkt"
-  "../../4-rules/blurbs/blurbs.rkt"
-  "../../4-rules/pc/pc.rkt"
+  "../../0-engine/3-types/location.rkt"
+
+  "../../0-engine/4-rules/blurbs/blurbs.rkt"
+  "../../0-engine/4-rules/pc/pc.rkt"
+
+  "../../0-engine/7-state/state/logging.rkt"
+  "../../0-engine/7-state/state/mutators.rkt"
+  "../../0-engine/7-state/state/state.rkt"
   )
 
-(lazy-require ["state.rkt"
- (current-flags
-  current-fragment-id
-  current-in-combat?
-  current-life
-  current-location
-  current-pc
-  current-quests
-  )])
-
-(lazy-require ["../6-combat/combat.rkt"
+(lazy-require ["../../6-combat/combat.rkt"
  (describe-combat-situation
   )])
 

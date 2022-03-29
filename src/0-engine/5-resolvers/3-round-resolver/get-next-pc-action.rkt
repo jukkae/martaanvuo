@@ -31,6 +31,7 @@
   "../../7-state/state/state.rkt"
 
   "../../../1-content/narration/display-statusline.rkt"
+  "../../../1-content/narration/describe-situation.rkt"
   )
 
 (lazy-require ["ui.rkt"
