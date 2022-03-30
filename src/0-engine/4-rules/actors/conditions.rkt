@@ -14,6 +14,9 @@
 (lazy-require ["actor.rkt"
   (take-damage
    )])
+(lazy-require ["../simulation.rkt"
+  (advance-time-by-iotas!
+   )])
 (lazy-require ["../world/world.rkt"
   (get-actor
    )])
@@ -22,9 +25,6 @@
    )])
 (lazy-require ["../../7-state/state/mutators.rkt"
   (pc
-   )])
-(lazy-require ["../../5-resolvers/round-resolver/simulation.rkt"
-  (advance-time-by-iotas!
    )])
 
 (define (condition-on-end-round! condition owner-id)

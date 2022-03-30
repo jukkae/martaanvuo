@@ -1,31 +1,30 @@
 #lang at-exp racket
 
-; TODO: This whole file should be moved under world
 (provide advance-time-until-next-interesting-event!
          advance-time-by-iotas!)
 
 (require racket/lazy-require)
 
 (require
-  "../../2-core/core.rkt"
+  "events.rkt"
+  "timelines.rkt"
+  "items/item.rkt"
+  "pc/pc.rkt"
+  "world/time.rkt"
 
-  "../../3-types/event.rkt"
-  "../../3-types/item.rkt"
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/timeline.rkt"
-  "../../3-types/world.rkt"
+  "../2-core/core.rkt"
 
-  "../../4-rules/events.rkt"
-  "../../4-rules/timelines.rkt"
-  "../../4-rules/items/item.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/world/time.rkt"
+  "../3-types/event.rkt"
+  "../3-types/item.rkt"
+  "../3-types/pc-actor.rkt"
+  "../3-types/timeline.rkt"
+  "../3-types/world.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../7-state/state/state.rkt"
   )
 
 
-(lazy-require ["../../4-rules/pc/pc.rkt"
+(lazy-require ["pc/pc.rkt"
   (pc-hunger-level
    )])
 

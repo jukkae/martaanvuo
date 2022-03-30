@@ -19,12 +19,11 @@
     "../4-rules/items/item.rkt"
     "../4-rules/locations/routes.rkt"
     "../4-rules/pc/pc.rkt"
+    "../4-rules/simulation.rkt"
     "../4-rules/tasks/task.rkt"
     "../4-rules/tasks/tasks.rkt"
     "../4-rules/world/world.rkt"
     "../4-rules/world/time.rkt"
-
-    "../5-resolvers/3-round-resolver/simulation.rkt"
 
     "../7-state/state/logging.rkt"
     "../7-state/state/state.rkt"
@@ -49,12 +48,11 @@
   "../4-rules/items/item.rkt"
   "../4-rules/locations/routes.rkt"
   "../4-rules/pc/pc.rkt"
+  "../4-rules/simulation.rkt"
   "../4-rules/tasks/task.rkt"
   "../4-rules/tasks/tasks.rkt"
   "../4-rules/world/world.rkt"
   "../4-rules/world/time.rkt"
-
-  "../5-resolvers/3-round-resolver/simulation.rkt"
 
   "../7-state/state/logging.rkt"
   "../7-state/state/state.rkt"

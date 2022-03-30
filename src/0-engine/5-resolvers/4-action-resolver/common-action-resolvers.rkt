@@ -6,7 +6,6 @@
 
 (require
   "../round-resolver/event.rkt"
-  "../round-resolver/simulation.rkt"
   "../round-resolver/timeline.rkt"
 
   "../../1-index/content.rkt"
@@ -19,6 +18,7 @@
 
   "../../4-rules/actors/actor.rkt"
   "../../4-rules/locations/locations.rkt"
+  "../../4-rules/simulation.rkt"
 
   "../../6-combat/combat-action-resolver.rkt"
 

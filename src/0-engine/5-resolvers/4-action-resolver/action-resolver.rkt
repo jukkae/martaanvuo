@@ -5,8 +5,6 @@
 (require racket/lazy-require)
 
 (require
-  "../3-round-resolver/simulation.rkt"
-
   "../../1-index/content.rkt"
 
   "../../2-core/io.rkt"
@@ -33,6 +31,7 @@
   "../../4-rules/locations/routes.rkt"
   "../../4-rules/pc/pc.rkt"
   "../../4-rules/world/world.rkt"
+  "../../4-rules/simulation.rkt"
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
