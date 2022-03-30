@@ -16,8 +16,10 @@
   "../world/world.rkt"
 
   "../../1-index/content.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
@@ -25,7 +27,9 @@
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
   "../../3-types/world.rkt"
+
   "../../6-combat/combat-pc-choices.rkt"
+
   "../../7-state/state/logging.rkt"
   "../../7-state/state/state.rkt"
   )
@@ -530,11 +534,6 @@
 
                   )))))
 
-       (when (place? (current-location))
-         (for/list ([action (place-actions-provided (current-location))])
-           (case action
-             [else (error (format "get-downtime-choices: unknown action provided ~a" action))])))
-
        (filter
         (λ (x) (and (not (null? x))
                     (not (void? x))))
@@ -605,20 +604,9 @@
             [else (dev-note (format "unknown feature ~a" feature))])))
 
 
-       (when (eq? (location-type (current-location)) 'perimeter)
+       (when (eq? (location-id (current-location)) 'perimeter)
          (get-perimeter-choices))
        ))))
 
   (define condensed (condense all-actions))
   condensed)
-
-
-; where does this belong? some module auxilliary to round-resolver?
-; store in the action, handle calling from here
-; -> code to action handler?
-(provide describe-pc-intention)
-(define (describe-pc-intention pc-action)
-  (when (not (null? pc-action)) ; should be checked at call site but eh
-    (case (action-symbol pc-action)
-      ['forage (p "Otava is getting low on supplies, and it looks like there could be bogberries around.")]
-      #;[else (p "TBD")])))

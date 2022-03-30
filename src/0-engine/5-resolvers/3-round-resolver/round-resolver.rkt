@@ -32,6 +32,8 @@
 
   "../../7-state/state/logging.rkt"
   "../../7-state/state/state.rkt"
+
+  "../../../1-content/narration/describe-pc-intention.rkt"
   )
 
 (define (resolve-round mode)
