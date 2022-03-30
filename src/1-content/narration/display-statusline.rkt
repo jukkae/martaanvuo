@@ -3,12 +3,9 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-engine/2-core/io.rkt"
+  "../../0-engine/0-api/types.rkt"
 
-  "../../0-engine/3-types/item.rkt"
-  "../../0-engine/3-types/location.rkt"
-  "../../0-engine/3-types/pc-actor.rkt"
-  "../../0-engine/3-types/world.rkt"
+  "../../0-engine/2-core/io.rkt"
 
   "../../0-engine/4-rules/locations/locations.rkt"
   "../../0-engine/4-rules/pc/pc.rkt"
