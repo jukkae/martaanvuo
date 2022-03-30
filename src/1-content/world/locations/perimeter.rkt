@@ -4,7 +4,7 @@
 
 (require "../../../0-engine/0-api/api.rkt")
 
-(require "../../../0-engine/4-rules/pc-choices/choice.rkt")
+(require "../../../0-engine/3-types/choice.rkt")
 
 (define (get-perimeter-choices)
   (define actor (pc))

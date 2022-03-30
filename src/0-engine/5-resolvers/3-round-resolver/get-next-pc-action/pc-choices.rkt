@@ -5,37 +5,38 @@
 (require racket/lazy-require)
 
 (require
-  "choice.rkt"
-  "../actors/actor.rkt"
-  "../blurbs/blurbs.rkt"
-  "../checks/checks.rkt"
-  "../items/item.rkt"
-  "../locations/locations.rkt"
-  "../pc/pc.rkt"
-  "../world/time.rkt"
-  "../world/world.rkt"
+  "../../../1-index/content.rkt"
 
-  "../../1-index/content.rkt"
+  "../../../2-core/io.rkt"
+  "../../../2-core/core.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../../../3-types/action.rkt"
+  "../../../3-types/actor.rkt"
+  "../../../3-types/choice.rkt"
+  "../../../3-types/item.rkt"
+  "../../../3-types/location.rkt"
+  "../../../3-types/pc-actor.rkt"
+  "../../../3-types/route.rkt"
+  "../../../3-types/world.rkt"
 
-  "../../3-types/action.rkt"
-  "../../3-types/actor.rkt"
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/item.rkt"
-  "../../3-types/location.rkt"
-  "../../3-types/route.rkt"
-  "../../3-types/world.rkt"
 
-  "../../6-combat/combat-pc-choices.rkt"
+  "../../../4-rules/actors/actor.rkt"
+  "../../../4-rules/blurbs/blurbs.rkt"
+  "../../../4-rules/checks/checks.rkt"
+  "../../../4-rules/items/item.rkt"
+  "../../../4-rules/locations/locations.rkt"
+  "../../../4-rules/pc/pc.rkt"
+  "../../../4-rules/world/time.rkt"
+  "../../../4-rules/world/world.rkt"
 
-  "../../7-state/state/logging.rkt"
-  "../../7-state/state/state.rkt"
+  "../../../6-combat/combat-pc-choices.rkt"
+
+  "../../../7-state/state/logging.rkt"
+  "../../../7-state/state/state.rkt"
   )
 
 
-(lazy-require ["../resolvers/round-resolver/round-resolver.rkt"
+(lazy-require ["../round-resolver.rkt"
   (go-to-fragment
    )])
 

@@ -5,11 +5,15 @@
   "narration.rkt"
 
   "../2-core/core.rkt"
+
   "../3-types/action.rkt"
   "../3-types/actor.rkt"
-  "../4-rules/pc-choices/choice.rkt"
+  "../3-types/choice.rkt"
+
   "../4-rules/actors/actor.rkt"
+
   "../6-combat/stance.rkt"
+
   "../7-state/state/state.rkt"
   )
 

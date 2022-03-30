@@ -9,13 +9,14 @@
 (require
   "fragment-handler.rkt"
   "ui.rkt"
-
   "action-initiative-resolver.rkt"
   "action-queue.rkt"
   "ai.rkt"
-  "get-next-pc-action.rkt"
   "initiative-based-round-resolver.rkt"
   "round.rkt"
+
+  "get-next-pc-action/pc-choices.rkt"
+  "get-next-pc-action/get-next-pc-action.rkt"
 
   "../4-action-resolver/action-resolver.rkt"
 
@@ -28,7 +29,6 @@
 
   "../../4-rules/actors/actor.rkt"
   "../../4-rules/pc/pc.rkt"
-  "../../4-rules/pc-choices/pc-choices.rkt"
 
   "../../7-state/state/logging.rkt"
   "../../7-state/state/state.rkt"

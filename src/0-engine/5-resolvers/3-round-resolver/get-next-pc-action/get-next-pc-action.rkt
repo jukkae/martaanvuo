@@ -9,32 +9,33 @@
 (require racket/lazy-require)
 
 (require
-  "fragment-handler.rkt"
+  "pc-choices.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../fragment-handler.rkt"
 
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/item.rkt"
-  "../../3-types/location.rkt"
-  "../../3-types/world.rkt"
-  "../../3-types/action.rkt"
+  "../../../2-core/io.rkt"
+  "../../../2-core/core.rkt"
 
-  "../../4-rules/pc-choices/pc-choices.rkt"
-  "../../4-rules/pc-choices/choice.rkt"
-  "../../4-rules/fragments/decision.rkt"
-  "../../4-rules/locations/locations.rkt"
-  "../../4-rules/pc/character-sheet.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/world/time.rkt"
+  "../../../3-types/action.rkt"
+  "../../../3-types/choice.rkt"
+  "../../../3-types/item.rkt"
+  "../../../3-types/location.rkt"
+  "../../../3-types/pc-actor.rkt"
+  "../../../3-types/world.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../../4-rules/fragments/decision.rkt"
+  "../../../4-rules/locations/locations.rkt"
+  "../../../4-rules/pc/character-sheet.rkt"
+  "../../../4-rules/pc/pc.rkt"
+  "../../../4-rules/world/time.rkt"
 
-  "../../../1-content/narration/display-statusline.rkt"
-  "../../../1-content/narration/describe-situation.rkt"
+  "../../../7-state/state/state.rkt"
+
+  "../../../../1-content/narration/display-statusline.rkt"
+  "../../../../1-content/narration/describe-situation.rkt"
   )
 
-(lazy-require ["ui.rkt"
+(lazy-require ["../ui.rkt"
   (display-tasks
    display-log
    inventory
