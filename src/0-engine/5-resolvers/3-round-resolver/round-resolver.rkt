@@ -3,8 +3,6 @@
 (provide resolve-round)
 (provide (all-from-out "fragment-handler.rkt"
                        "ui.rkt"))
-(provide print-meta-commands-with-keys
-         meta-command-valid?)
 
 (require
   "fragment-handler.rkt"

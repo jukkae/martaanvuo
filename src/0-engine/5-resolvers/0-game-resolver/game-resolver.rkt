@@ -2,7 +2,8 @@
 
 (require
   "../1-life-resolver/life-resolver.rkt"
-  "../3-round-resolver/round-resolver.rkt"
+  "../3-round-resolver/get-next-pc-action/menu.rkt"
+  "../3-round-resolver/ui.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
