@@ -1,20 +1,19 @@
 #lang at-exp racket
 
 (provide resolve-round)
-(provide (all-from-out "fragment-handler.rkt"
-                       "ui.rkt"))
+(provide (all-from-out "fragment-handler.rkt"))
 
 (require
   "fragment-handler.rkt"
-  "ui.rkt"
   "action-initiative-resolver.rkt"
   "action-queue.rkt"
   "ai.rkt"
   "initiative-based-round-resolver.rkt"
   "round.rkt"
 
-  "get-next-pc-action/pc-choices.rkt"
   "get-next-pc-action/get-next-pc-action.rkt"
+  "get-next-pc-action/pc-choices.rkt"
+  "get-next-pc-action/ui.rkt"
 
   "../4-action-resolver/action-resolver.rkt"
 

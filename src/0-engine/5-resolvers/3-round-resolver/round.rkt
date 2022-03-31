@@ -27,10 +27,14 @@
 
 
 (lazy-require ["../../6-combat/combat.rkt"
+  (end-combat!
+   )])
+
+(lazy-require ["../../6-combat/narration.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
-   end-combat!)])
+   )])
 
 (lazy-require ["../../7-state/state/logging.rkt"
   (set-prompt!)])

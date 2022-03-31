@@ -245,8 +245,8 @@
                                   (define encounter-roll (d 1 6))
                                   (define tn 3)
                                   (notice (format "Encounter roll: 1d6 < ~a: [~a] – ~a"
-                                                  encounter-roll
                                                   tn
+                                                  encounter-roll
                                                   (if (< encounter-roll tn)
                                                       "fail"
                                                       "success")))

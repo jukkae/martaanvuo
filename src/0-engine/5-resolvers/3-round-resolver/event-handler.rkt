@@ -3,9 +3,10 @@
 (provide handle-interrupting-event!)
 
 (require
-  "event.rkt"
-
   "../../2-core/core.rkt"
+
+  "../../3-types/event.rkt"
+
   "../../4-rules/locations/locations.rkt"
   )
 

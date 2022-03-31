@@ -37,7 +37,7 @@
   "../../../../1-content/narration/describe-situation.rkt"
   )
 
-(lazy-require ["../ui.rkt"
+(lazy-require ["ui.rkt"
   (display-tasks
    display-log
    inventory

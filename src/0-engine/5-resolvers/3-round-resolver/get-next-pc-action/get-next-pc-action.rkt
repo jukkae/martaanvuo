@@ -4,8 +4,6 @@
  get-next-pc-action
  )
 
-(require racket/lazy-require)
-
 (require
   "menu.rkt"
   "pc-choices.rkt"
@@ -33,15 +31,6 @@
   "../../../../1-content/narration/display-statusline.rkt"
   "../../../../1-content/narration/describe-situation.rkt"
   )
-
-(lazy-require ["../ui.rkt"
-  (display-tasks
-   display-log
-   inventory
-   quit
-   restart
-   )])
-
 
 ; From an "outside" perspective, this should be called "handle-meta-or-get-next-pc-action", or something like that –
 ; this pokes a hole through abstraction layers (as it should)

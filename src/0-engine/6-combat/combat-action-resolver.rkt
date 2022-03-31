@@ -28,11 +28,14 @@
   )
 
 (lazy-require ["combat.rkt"
+  (add-combat-flag
+   add-combat-event
+   )])
+
+(lazy-require ["narration.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info
-   add-combat-flag
-   add-combat-event
    )])
 
 (lazy-require ["../4-rules/locations/locations.rkt"

@@ -22,7 +22,7 @@
 (lazy-require ["round-resolver.rkt"
   (get-next-pc-action
    )])
-(lazy-require ["../../../4-rules/world/world.rkt"
+(lazy-require ["../../4-rules/world/world.rkt"
  (get-actor
   )])
 

@@ -11,7 +11,7 @@
 
 (require racket/lazy-require)
 
-(lazy-require ["../../world/world.rkt" (get-actor)])
+(lazy-require ["../../4-rules/world/world.rkt" (get-actor)])
 
 ; This is not serialized!
 (define action-queue '())

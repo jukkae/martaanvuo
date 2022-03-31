@@ -3,15 +3,14 @@
 (provide (all-defined-out))
 
 (require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
-  "../../4-rules/tasks/task.rkt"
-  "../../7-state/session/session.rkt"
-  "../../7-state/state/state.rkt"
-  )
+  "../../../2-core/io.rkt"
+  "../../../2-core/core.rkt"
 
-; This is sort-of "player AI" / player controller type of stuff, not just strictly ui.
-; This is because at the time of writing this, cleaning up round-resolver.rkt is priority.
+  "../../../4-rules/tasks/task.rkt"
+
+  "../../../7-state/session/session.rkt"
+  "../../../7-state/state/state.rkt"
+  )
 
 (define (get-quit-text)
   (define r (d 1 100))
