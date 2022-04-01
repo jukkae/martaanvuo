@@ -102,23 +102,19 @@
     ['fell-to-death "Concussion and internal bleeding."]
     [else (symbol->string cause-of-death)]))
 
-(define (kill actor . cause-of-death)
+(define (kill actor [cause-of-death '()])
   (set-actor-hp! actor 0)
   (notice
    (if (null? cause-of-death)
        (format "~a is dead." (actor-name actor))
        (format "~a is dead. Cause of death: ~a"
                (actor-name actor)
-               (cond ((symbol? cause-of-death)
-                      (describe-cause-of-death cause-of-death))
-                     ((string? cause-of-death)
-                      cause-of-death)
-                     ((symbol? (car cause-of-death))
-                      (describe-cause-of-death (car cause-of-death)))
-                     ((string? (car cause-of-death))
-                      (car cause-of-death))
-                     (else "NA"))
-               )))
+               (cond [(symbol? cause-of-death)
+                      (describe-cause-of-death cause-of-death)]
+                     [(string? cause-of-death)
+                      cause-of-death]
+                     [else "NA"]
+               ))))
 
   (cond ((pc-actor? actor)
          (set-pc-actor-alive?! actor #f)

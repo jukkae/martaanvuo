@@ -20,7 +20,7 @@
 (lazy-require ["../world/world.rkt"
   (get-actor
    )])
-(lazy-require ["../../6-combat/combat.rkt"
+(lazy-require ["../../6-combat/narration.rkt"
   (display-combatant-info
    )])
 (lazy-require ["../../7-state/state/mutators.rkt"

@@ -12,7 +12,7 @@
   [max-lp : Natural]
   [death-roll-dice : Natural]
   [alive? : Boolean]
-  [cause-of-death : (Maybe Symbol)]
+  [cause-of-death : (Maybe (U Symbol String))]
   [xp : Natural]
   [hunger : Integer])
  #:constructor-name pc-actor*
