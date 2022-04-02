@@ -5,9 +5,12 @@
 (require
   "../../0-engine/2-core/io.rkt"
   "../../0-engine/2-core/core.rkt"
+
+  "../../0-engine/3-types/task.rkt"
+
   "../../0-engine/4-rules/blurbs/blurbs.rkt"
   "../../0-engine/4-rules/pc/pc.rkt"
-  "../../0-engine/4-rules/tasks/task.rkt"
+
   "../../0-engine/7-state/state/state.rkt"
   "../../0-engine/7-state/state/logging.rkt"
   )

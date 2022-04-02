@@ -1,16 +1,19 @@
 #lang at-exp racket
 
 (provide (all-defined-out))
-(provide (all-from-out "task.rkt"))
 
 (require racket/lazy-require)
 
-(require "task.rkt"
-         "../../2-core/io.rkt"
-         "../../2-core/core.rkt")
+(require
+  "../../2-core/io.rkt"
+  "../../2-core/core.rkt"
 
-(lazy-require ["../../7-state/state/state.rkt"
-               (current-tasks)])
+  "../../3-types/task.rkt"
+  )
+
+(lazy-require ["../../7-state/state/state.rkt" (
+  current-tasks
+  )])
 
 (define-namespace-anchor anc)
 (define ns (namespace-anchor->namespace anc))

@@ -8,18 +8,21 @@
 (require
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+
   "../../3-types/actor.rkt"
-  "../../3-types/pc-actor.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/pc-actor.rkt"
+  "../../3-types/task.rkt"
+
   "../../4-rules/actors/actor.rkt"
   "../../4-rules/pc/character-sheet.rkt"
-  "../../4-rules/tasks/task.rkt"
   "../../4-rules/world/world.rkt"
+
   "../../6-combat/stance.rkt"
   )
 
-(lazy-require ["state.rkt"
- (current-flags
+(lazy-require ["state.rkt" (
+  current-flags
   current-completed-fragments
   current-fragment-id
   current-in-combat?
@@ -29,9 +32,9 @@
   current-run
   )])
 
-(lazy-require ["../../6-combat/combat.rkt"
-  (end-combat!
-   )])
+(lazy-require ["../../6-combat/combat.rkt" (
+  end-combat!
+  )])
 
 ;; bad name for this file, this is sort of "misc"
 

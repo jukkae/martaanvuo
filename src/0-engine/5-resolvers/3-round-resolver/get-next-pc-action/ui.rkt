@@ -6,7 +6,7 @@
   "../../../2-core/io.rkt"
   "../../../2-core/core.rkt"
 
-  "../../../4-rules/tasks/task.rkt"
+  "../../../3-types/task.rkt"
 
   "../../../7-state/session/session.rkt"
   "../../../7-state/state/state.rkt"
