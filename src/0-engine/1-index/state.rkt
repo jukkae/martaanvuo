@@ -6,6 +6,7 @@
 
 (provide
   append-to-log
+  next-chapter!
 
   current-chapter
   current-combat-timeline
@@ -21,8 +22,6 @@
   current-tasks
   current-world
 
-
-  display-combatant-info
   get-current-enemies
   get-next-numeric-actor-id
   pc
@@ -31,6 +30,7 @@
 
 (lazy-require ["../7-state/state/logging.rkt" (
   append-to-log
+  next-chapter!
   )])
 
 (lazy-require ["../7-state/state/state.rkt" (
@@ -48,8 +48,6 @@
   current-tasks
   current-world
 
-
-  display-combatant-info
   get-current-enemies
   get-next-numeric-actor-id
   pc

@@ -9,6 +9,8 @@
   "narration.rkt"
   "stance.rkt"
 
+  "../1-index/state.rkt"
+
   "../2-core/io.rkt"
   "../2-core/core.rkt"
   "../2-core/session.rkt"
@@ -27,21 +29,6 @@
   (go-to-fragment
    )])
 
-(lazy-require ["../7-state/state/state.rkt"
-  (current-in-combat?
-   current-log
-   current-location
-   current-combat-timeline
-   current-world
-   get-current-enemies
-   pc
-   )])
-
-(lazy-require ["../7-state/state/logging.rkt"
-  (next-chapter!
-   )])
-
-
 (define (make-combat-event details)
   (combat-event* details (world-elapsed-time (current-world))))
 
@@ -53,6 +40,7 @@
   (next-chapter!)
   (current-in-combat? #t)
 
+  ; TODO: move this kind of stuff to content
   (current-session-times-in-combat++)
   (when (= (current-session-times-in-combat) 3)
     (notice "Attainment: Way of Blood"))
