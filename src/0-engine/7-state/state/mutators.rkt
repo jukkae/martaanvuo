@@ -126,11 +126,6 @@
          (current-tasks)))
 
 
-
-(define (reduce-debt-by! amount)
-  (dev-note "TODO: debt amount modification")
-  '())
-
 ; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
   (current-pc))

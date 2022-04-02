@@ -61,7 +61,7 @@
     (cond ((> (pc-gold-amount) 0)
            (define debt-task (find-task 'pay-off-debt))
            (define gold-collected (pc-gold-amount))
-           (reduce-debt-by! gold-collected)
+           (dev-note "TODO: reduce debt")
            (remove-item! 'gold)
 
            (displayln "Task:")
