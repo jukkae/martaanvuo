@@ -4,18 +4,22 @@
 
 (provide (all-from-out
           "0-types/state.rkt"
+          "flags.rkt"
           "mutators.rkt"
           "pending-action.rkt"
-          "resolve-counts.rkt"))
+          "resolve-counts.rkt"
+          ))
 
 (require racket/serialize)
 
 (require
   "0-types/state.rkt"
   "../../4-systems/pc/pc.rkt"
-  "../../4-systems/world/world.rkt")
+  "../../4-systems/world/world.rkt"
+  )
 
 (require
+  "flags.rkt"
   "mutators.rkt"
   "pending-action.rkt"
   "resolve-counts.rkt"
