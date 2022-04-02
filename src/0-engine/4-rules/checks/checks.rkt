@@ -2,18 +2,16 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-
 (require
   "../actors/actor.rkt"
+
+  "../../1-index/state.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+
   "../../3-types/actor.rkt"
   )
-
-(lazy-require ["../../7-state/state/mutators.rkt"
-  (pc
-   )])
 
 (define (luck-check [target-number 7] [bonus 0])
   (define d1 (d 1 6))
@@ -27,7 +25,8 @@
                           "success"
                           "failure"))
 
-  (notice (format "Luck check (7): 2d6~a = ~a – ~a" 
+  (notice (format "Luck check (~a): 2d6~a = ~a – ~a"
+                  target-number
                   bonus
                   total
                   result-text))
@@ -68,7 +67,6 @@
   successful?)
 
 ; returns boolean
-; (eventually: 'critical-success and 'critical-failure?)
 (define (attribute-check title attribute)
   (define roll (d 1 20))
   (define successful? (< roll attribute))
@@ -119,10 +117,6 @@
   successful?)
 
 
-;;; CRIT ROLL IDEA:
-; Base chances are like 1/6 for "certain" attack failing, 1/6 for crit,
-; but PC's attribute/skill bonuses can shift that balance
-; - or would failures be based on saving throw? maybe.
 (define (roll-crit? sides)
   (define crit-roll (d 1 sides))
   (define critical? (= crit-roll 6))

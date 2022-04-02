@@ -5,18 +5,17 @@
 
 (require
   "time.rkt"
+
+  "../../1-index/state.rkt"
+  "../../1-index/content.rkt"
+
   "../../2-core/core.rkt"
+
   "../../3-types/actor.rkt"
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
   "../../3-types/world.rkt"
   )
-
-(lazy-require ["../../7-state/state/state.rkt"
-    (current-world
-     current-location)])
-(lazy-require ["../../../1-content/world/world.rkt"
-    (make-new-world)])
 
 
 ; API

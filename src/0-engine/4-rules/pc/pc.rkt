@@ -2,21 +2,19 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-
 (require
   "../actors/actor.rkt"
   "../items/item.rkt"
+
+  "../../1-index/state.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
   )
-
-(lazy-require ["../../7-state/state/state.rkt"
-  (pc
-   )])
 
 ; PC hp <= 0 starts a "dying" counter of 1-2 rounds
 ; - this as an "upgrade" or talent or build thing or whatever

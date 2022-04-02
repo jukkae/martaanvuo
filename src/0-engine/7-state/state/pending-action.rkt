@@ -2,17 +2,15 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
-
 (require
+  "../../1-index/state.rkt"
+
   "../../3-types/action.rkt"
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
+
   "../../4-rules/world/world.rkt"
   )
-
-(lazy-require ["state.rkt"
-  (current-pending-action)])
 
 (define (reset-pending-action!)
   (current-pending-action '()))

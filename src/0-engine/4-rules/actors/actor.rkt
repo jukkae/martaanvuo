@@ -13,6 +13,8 @@
 (require
   "../items/item.rkt"
 
+  "../../1-index/state.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
@@ -28,14 +30,6 @@
 (lazy-require ["../../3-types/location.rkt"
   (add-feature-to-location!
    add-item-to-location!
-   )])
-(lazy-require ["../../7-state/state/state.rkt"
-  (pc
-   current-location
-   current-last-numeric-actor-id
-   current-last-numeric-actor-id++
-   get-next-numeric-actor-id
-   display-combatant-info
    )])
 
 (define (make-actor

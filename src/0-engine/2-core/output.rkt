@@ -2,23 +2,13 @@
 
 (provide (all-defined-out))
 
-(require racket/lazy-require)
 (require text-table)
 
-(require "../2-core/list-utils.rkt")
+(require
+  "../1-index/state.rkt"
 
-(lazy-require ["../7-state/state/state.rkt"
-  (current-part
-   current-chapter
-   current-log
-   current-last-paragraph
-   current-prompt
-   )])
-
-(lazy-require ["../7-state/state/logging.rkt"
-  (append-to-log
-  )])
-
+  "../2-core/list-utils.rkt"
+  )
 
 (define *output-state* 'clean) ; not serialized, local
 

@@ -6,8 +6,10 @@
   "combat-event.rkt"
   "stance.rkt"
 
-  "../2-core/io.rkt"
+  "../1-index/state.rkt"
+
   "../2-core/core.rkt"
+  "../2-core/io.rkt"
 
   "../3-types/actor.rkt"
   "../3-types/pc-actor.rkt"
@@ -18,18 +20,6 @@
   "../4-rules/actors/actor.rkt"
   "../4-rules/pc/pc.rkt"
   )
-
-(require racket/lazy-require)
-
-(lazy-require ["../7-state/state/state.rkt"
-  (current-in-combat?
-   current-log
-   current-location
-   current-combat-timeline
-   current-world
-   get-current-enemies
-   pc
-   )])
 
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
