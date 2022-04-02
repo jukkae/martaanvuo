@@ -15,34 +15,22 @@
   (pc
    )])
 
-(define (luck-check)
-  (define wangernumbs
-    (list
-     "i"
-     "8-4"
-     "21.3"
-     ".01"
-     "41"
-     "9Ɛ"
-     "12"
-     "70"
-     "26"
-     "2"
-     "-3"
-     "±6"))
-  (define wanger-index (random (length wangernumbs)))
-  (define result (if (< wanger-index (/ (length wangernumbs) 2))
+(define (luck-check [target-number 7] [bonus 0])
+  (define d1 (d 1 6))
+  (define d2 (d 1 6))
+
+  (define total (+ d1 d2 bonus))
+  (define result (if (>= total target-number)
                      #t
                      #f))
   (define result-text (if result
                           "success"
                           "failure"))
-  (define wangernumb (list-ref wangernumbs wanger-index))
-  (info-card
-   (tbody
-    (tr "luck" wangernumb)
-    (tr "" result-text))
-   "Luck check")
+
+  (notice (format "Luck check (7): 2d6~a = ~a – ~a" 
+                  bonus
+                  total
+                  result-text))
   (wait-for-confirm)
   result)
 
