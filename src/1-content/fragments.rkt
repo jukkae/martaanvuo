@@ -1,7 +1,7 @@
 #lang at-exp racket
 
 (provide (all-from-out
-  "waiting-room/fragments.rkt"))
+  "world/locations/waiting-room/fragments.rkt"))
 
 (require
   "fragments/anthill.rkt"
@@ -12,4 +12,4 @@
   "fragments/mieli.rkt")
 
 (require
-  "waiting-room/fragments.rkt")
+  "world/locations/waiting-room/fragments.rkt")
