@@ -11,6 +11,7 @@
 
   "../2-core/io.rkt"
   "../2-core/core.rkt"
+  "../2-core/session.rkt"
 
   "../3-types/actor.rkt"
   "../3-types/pc-actor.rkt"
@@ -20,8 +21,6 @@
 
   "../4-rules/actors/actor.rkt"
   "../4-rules/pc/pc.rkt"
-
-  "../7-state/session/session.rkt"
   )
 
 (lazy-require ["../5-resolvers/round-resolver/round-resolver.rkt"

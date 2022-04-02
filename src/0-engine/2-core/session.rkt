@@ -2,7 +2,9 @@
 
 (provide (all-defined-out))
 
-(require "../../2-core/core.rkt")
+(require
+  "core.rkt"
+  )
 
 (define current-session-score-dice (make-parameter 0))
 (define (current-session-score-dice++ . reason)

@@ -8,12 +8,12 @@
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+  "../../2-core/session.rkt"
 
   "../../3-types/pc-actor.rkt"
 
   "../../4-rules/pc/pc.rkt"
 
-  "../../7-state/session/session.rkt"
   "../../7-state/state/state.rkt"
 
   "../../../1-content/narration/life-resolver.rkt"
