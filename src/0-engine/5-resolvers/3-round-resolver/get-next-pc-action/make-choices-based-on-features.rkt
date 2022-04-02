@@ -20,7 +20,7 @@
   "../../../4-systems/world/time.rkt"
   "../../../4-systems/world/world.rkt"
 
-  "../../../7-state/state/state.rkt"
+  "../../../7-state/state.rkt"
   )
 
 (require racket/lazy-require)

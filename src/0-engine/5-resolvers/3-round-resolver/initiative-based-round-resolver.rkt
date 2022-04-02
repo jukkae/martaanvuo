@@ -19,7 +19,7 @@
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 

@@ -8,7 +8,7 @@
   "../../../3-types/location.rkt"
   "../../../3-types/route.rkt"
 
-  "../../../7-state/state/state.rkt"
+  "../../../7-state/state.rkt"
   )
 
 (provide make-forage-choice)

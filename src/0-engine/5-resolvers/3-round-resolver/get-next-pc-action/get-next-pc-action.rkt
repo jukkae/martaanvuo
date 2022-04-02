@@ -26,7 +26,7 @@
   "../../../4-systems/pc/pc.rkt"
   "../../../4-systems/world/time.rkt"
 
-  "../../../7-state/state/state.rkt"
+  "../../../7-state/state.rkt"
 
   "../../../../1-content/narration/display-statusline.rkt"
   "../../../../1-content/narration/describe-situation.rkt"

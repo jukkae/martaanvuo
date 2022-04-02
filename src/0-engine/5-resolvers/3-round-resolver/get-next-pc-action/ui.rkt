@@ -9,7 +9,7 @@
 
   "../../../3-types/task.rkt"
 
-  "../../../7-state/state/state.rkt"
+  "../../../7-state/state.rkt"
   )
 
 (define (get-quit-text)

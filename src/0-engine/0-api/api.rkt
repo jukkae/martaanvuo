@@ -27,8 +27,8 @@
     "../4-systems/world/world.rkt"
     "../4-systems/world/time.rkt"
 
-    "../7-state/state/logging.rkt"
-    "../7-state/state/state.rkt"
+    "../7-state/logging.rkt"
+    "../7-state/state.rkt"
     ))
 
 
@@ -58,6 +58,6 @@
   "../4-systems/world/world.rkt"
   "../4-systems/world/time.rkt"
 
-  "../7-state/state/logging.rkt"
-  "../7-state/state/state.rkt"
+  "../7-state/logging.rkt"
+  "../7-state/state.rkt"
   )

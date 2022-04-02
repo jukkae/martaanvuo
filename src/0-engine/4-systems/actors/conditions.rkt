@@ -23,7 +23,7 @@
 (lazy-require ["../../6-combat/narration.rkt"
   (display-combatant-info
    )])
-(lazy-require ["../../7-state/state/mutators.rkt"
+(lazy-require ["../../7-state/mutators.rkt"
   (pc
    )])
 

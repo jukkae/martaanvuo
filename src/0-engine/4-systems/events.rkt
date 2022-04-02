@@ -9,7 +9,7 @@
   "../3-types/event.rkt"
   "../3-types/world.rkt"
 
-  "../7-state/state/state.rkt"
+  "../7-state/state.rkt"
   )
 
 (define (make-event

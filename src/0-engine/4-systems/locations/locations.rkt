@@ -17,11 +17,11 @@
 (lazy-require ["../../6-combat/combat.rkt"
   (begin-combat!
    )])
-(lazy-require ["../../7-state/state/mutators.rkt"
+(lazy-require ["../../7-state/mutators.rkt"
   (current-location
    pc
    )])
-(lazy-require ["../../7-state/state/pending-action.rkt"
+(lazy-require ["../../7-state/pending-action.rkt"
   (reset-pending-action!
   )])
 

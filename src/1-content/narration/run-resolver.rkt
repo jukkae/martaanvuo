@@ -11,8 +11,8 @@
   "../../0-engine/4-systems/blurbs/blurbs.rkt"
   "../../0-engine/4-systems/pc/pc.rkt"
 
-  "../../0-engine/7-state/state/state.rkt"
-  "../../0-engine/7-state/state/logging.rkt"
+  "../../0-engine/7-state/state.rkt"
+  "../../0-engine/7-state/logging.rkt"
   )
 
 (define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])

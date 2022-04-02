@@ -35,8 +35,8 @@
 
   "../../../6-combat/combat-pc-choices.rkt"
 
-  "../../../7-state/state/logging.rkt"
-  "../../../7-state/state/state.rkt"
+  "../../../7-state/logging.rkt"
+  "../../../7-state/state.rkt"
   )
 
 

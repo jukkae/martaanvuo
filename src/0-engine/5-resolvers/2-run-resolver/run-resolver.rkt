@@ -16,8 +16,8 @@
   "../../4-systems/tasks/tasks.rkt"
   "../../4-systems/world/world.rkt"
 
-  "../../7-state/state/state.rkt"
-  "../../7-state/state/logging.rkt"
+  "../../7-state/state.rkt"
+  "../../7-state/logging.rkt"
 
   "../../../1-content/narration/run-resolver.rkt"
   )

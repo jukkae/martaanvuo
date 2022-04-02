@@ -8,7 +8,7 @@
   "../0-engine/2-core/io.rkt"
   "../0-engine/2-core/core.rkt")
 
-(lazy-require ("../0-engine/7-state/state/state.rkt"
+(lazy-require ("../0-engine/7-state/state.rkt"
   [current-times-species-encountered
    current-times-species-encountered++
    ]))

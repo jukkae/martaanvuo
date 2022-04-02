@@ -12,7 +12,7 @@
   "../../4-systems/timelines.rkt"
   "../../4-systems/simulation.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 

@@ -14,7 +14,7 @@
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/enemies/blindscraper.rkt"
   "../../4-systems/enemies/grabberkin.rkt"
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 (require "action-queue.rkt")

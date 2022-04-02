@@ -20,7 +20,7 @@
   "../3-types/timeline.rkt"
   "../3-types/world.rkt"
 
-  "../7-state/state/state.rkt"
+  "../7-state/state.rkt"
   )
 
 

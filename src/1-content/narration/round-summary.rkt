@@ -12,7 +12,7 @@
   "../../0-engine/4-systems/locations/locations.rkt"
   "../../0-engine/4-systems/world/time.rkt"
 
-  "../../0-engine/7-state/state/state.rkt"
+  "../../0-engine/7-state/state.rkt"
   )
 
 

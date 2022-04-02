@@ -24,7 +24,7 @@
   "../4-systems/items/item.rkt"
   "../4-systems/pc/pc.rkt"
 
-  "../7-state/state/state.rkt"
+  "../7-state/state.rkt"
   )
 
 (lazy-require ["combat.rkt"

@@ -10,7 +10,7 @@
 
   "../../0-engine/4-systems/pc/pc.rkt"
   "../../0-engine/4-systems/actors/actor.rkt"
-  "../../0-engine/7-state/state/state.rkt"
+  "../../0-engine/7-state/state.rkt"
   )
 
 (define (display-end-of-life-summary)

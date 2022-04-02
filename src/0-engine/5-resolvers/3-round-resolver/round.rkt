@@ -20,7 +20,7 @@
   "../../4-systems/locations/routes.rkt"
   "../../4-systems/world/world.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
 
   "../../../1-content/narration/round-summary.rkt"
   )
@@ -36,7 +36,7 @@
    display-pc-combatant-info
    )])
 
-(lazy-require ["../../7-state/state/logging.rkt"
+(lazy-require ["../../7-state/logging.rkt"
   (set-prompt!)])
 
 (define (on-begin-round mode)

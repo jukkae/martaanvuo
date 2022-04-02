@@ -9,7 +9,7 @@
 
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
-  "../../7-state/state/pending-action.rkt"
+  "../../7-state/pending-action.rkt"
   )
 
 ; returns id

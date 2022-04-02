@@ -13,9 +13,9 @@
   "../../0-engine/4-systems/blurbs/blurbs.rkt"
   "../../0-engine/4-systems/pc/pc.rkt"
 
-  "../../0-engine/7-state/state/logging.rkt"
-  "../../0-engine/7-state/state/mutators.rkt"
-  "../../0-engine/7-state/state/state.rkt"
+  "../../0-engine/7-state/logging.rkt"
+  "../../0-engine/7-state/mutators.rkt"
+  "../../0-engine/7-state/state.rkt"
   )
 
 (lazy-require ["../../0-engine/6-combat/narration.rkt"

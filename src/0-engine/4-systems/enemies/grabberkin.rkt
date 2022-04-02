@@ -12,7 +12,7 @@
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
   "../../3-types/status.rkt"
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 (require racket/lazy-require)

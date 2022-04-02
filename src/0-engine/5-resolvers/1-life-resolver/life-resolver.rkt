@@ -14,7 +14,7 @@
 
   "../../4-systems/pc/pc.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
 
   "../../../1-content/narration/life-resolver.rkt"
   )

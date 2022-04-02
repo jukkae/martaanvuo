@@ -38,8 +38,8 @@
   "../../6-combat/narration.rkt"
   "../../6-combat/stance.rkt"
 
-  "../../7-state/state/logging.rkt"
-  "../../7-state/state/state.rkt"
+  "../../7-state/logging.rkt"
+  "../../7-state/state.rkt"
   )
 
 (lazy-require ["../3-round-resolver/event-handler.rkt"

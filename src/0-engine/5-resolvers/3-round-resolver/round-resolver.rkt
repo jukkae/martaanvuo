@@ -27,8 +27,8 @@
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/pc/pc.rkt"
 
-  "../../7-state/state/logging.rkt"
-  "../../7-state/state/state.rkt"
+  "../../7-state/logging.rkt"
+  "../../7-state/state.rkt"
 
   "../../../1-content/narration/describe-pc-intention.rkt"
   )

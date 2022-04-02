@@ -22,7 +22,7 @@
 
   "../../6-combat/combat-action-resolver.rkt"
 
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 (lazy-require ["../round-resolver/event-handler.rkt"

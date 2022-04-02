@@ -14,7 +14,7 @@
 
   "../6-combat/stance.rkt"
 
-  "../7-state/state/state.rkt"
+  "../7-state/state.rkt"
   )
 
 (provide get-combat-choices)

@@ -13,7 +13,7 @@
   "../../3-types/actor.rkt"
   "../../6-combat/combat.rkt"
   "../../6-combat/stance.rkt"
-  "../../7-state/state/state.rkt"
+  "../../7-state/state.rkt"
   )
 
 (define (grabberkin-spawn-text)
