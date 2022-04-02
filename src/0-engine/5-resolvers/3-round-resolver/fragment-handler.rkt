@@ -7,10 +7,10 @@
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
-  "../../4-rules/fragments/decision.rkt"
-  "../../4-rules/fragments/fragment.rkt"
-  "../../4-rules/timelines.rkt"
-  "../../4-rules/simulation.rkt"
+  "../../4-systems/fragments/decision.rkt"
+  "../../4-systems/fragments/fragment.rkt"
+  "../../4-systems/timelines.rkt"
+  "../../4-systems/simulation.rkt"
 
   "../../7-state/state/state.rkt"
   )

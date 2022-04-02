@@ -8,8 +8,8 @@
 
   "../../0-engine/3-types/pc-actor.rkt"
 
-  "../../0-engine/4-rules/pc/pc.rkt"
-  "../../0-engine/4-rules/actors/actor.rkt"
+  "../../0-engine/4-systems/pc/pc.rkt"
+  "../../0-engine/4-systems/actors/actor.rkt"
   "../../0-engine/7-state/state/state.rkt"
   )
 

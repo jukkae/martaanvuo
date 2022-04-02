@@ -24,8 +24,8 @@
   "../../3-types/pc-actor.rkt"
   "../../3-types/location.rkt"
 
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/pc/pc.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/pc/pc.rkt"
 
   "../../7-state/state/logging.rkt"
   "../../7-state/state/state.rkt"

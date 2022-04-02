@@ -7,9 +7,9 @@
 
   "../../0-engine/2-core/io.rkt"
 
-  "../../0-engine/4-rules/locations/locations.rkt"
-  "../../0-engine/4-rules/pc/pc.rkt"
-  "../../0-engine/4-rules/world/time.rkt"
+  "../../0-engine/4-systems/locations/locations.rkt"
+  "../../0-engine/4-systems/pc/pc.rkt"
+  "../../0-engine/4-systems/world/time.rkt"
 
   "../../0-engine/7-state/state/state.rkt"
   )

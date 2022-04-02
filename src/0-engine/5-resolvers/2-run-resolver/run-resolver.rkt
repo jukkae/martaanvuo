@@ -10,11 +10,11 @@
 
   "../../3-types/location.rkt"
 
-  "../../4-rules/blurbs/blurbs.rkt"
-  "../../4-rules/locations/locations.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/tasks/tasks.rkt"
-  "../../4-rules/world/world.rkt"
+  "../../4-systems/blurbs/blurbs.rkt"
+  "../../4-systems/locations/locations.rkt"
+  "../../4-systems/pc/pc.rkt"
+  "../../4-systems/tasks/tasks.rkt"
+  "../../4-systems/world/world.rkt"
 
   "../../7-state/state/state.rkt"
   "../../7-state/state/logging.rkt"

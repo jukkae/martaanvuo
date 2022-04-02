@@ -9,7 +9,7 @@
   "../../2-core/core.rkt"
   "../../2-core/save-game.rkt"
 
-  "../../4-rules/blurbs/blurbs.rkt"
+  "../../4-systems/blurbs/blurbs.rkt"
 
   "../../7-state/state/state.rkt"
 

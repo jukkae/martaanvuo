@@ -9,7 +9,7 @@
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
 
-  "../../4-rules/world/world.rkt"
+  "../../4-systems/world/world.rkt"
   )
 
 (define (reset-pending-action!)

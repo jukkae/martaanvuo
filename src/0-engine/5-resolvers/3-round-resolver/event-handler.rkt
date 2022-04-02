@@ -7,7 +7,7 @@
 
   "../../3-types/event.rkt"
 
-  "../../4-rules/locations/locations.rkt"
+  "../../4-systems/locations/locations.rkt"
   )
 
 (define (handle-interrupting-event! event)

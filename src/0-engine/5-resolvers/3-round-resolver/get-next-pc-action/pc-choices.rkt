@@ -24,14 +24,14 @@
   "../../../3-types/world.rkt"
 
 
-  "../../../4-rules/actors/actor.rkt"
-  "../../../4-rules/blurbs/blurbs.rkt"
-  "../../../4-rules/checks/checks.rkt"
-  "../../../4-rules/items/item.rkt"
-  "../../../4-rules/locations/locations.rkt"
-  "../../../4-rules/pc/pc.rkt"
-  "../../../4-rules/world/time.rkt"
-  "../../../4-rules/world/world.rkt"
+  "../../../4-systems/actors/actor.rkt"
+  "../../../4-systems/blurbs/blurbs.rkt"
+  "../../../4-systems/checks/checks.rkt"
+  "../../../4-systems/items/item.rkt"
+  "../../../4-systems/locations/locations.rkt"
+  "../../../4-systems/pc/pc.rkt"
+  "../../../4-systems/world/time.rkt"
+  "../../../4-systems/world/world.rkt"
 
   "../../../6-combat/combat-pc-choices.rkt"
 

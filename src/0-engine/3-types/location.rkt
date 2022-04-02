@@ -7,7 +7,7 @@
   "../3-types/location-ids.rkt"
   "../3-types/actor.rkt"
   "../3-types/item.rkt"
-  "../4-rules/actors/actor.rkt"
+  "../4-systems/actors/actor.rkt"
   )
 
 (struct

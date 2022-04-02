@@ -15,10 +15,10 @@
   "../../3-types/actor.rkt"
   "../../3-types/location.rkt"
 
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/fragments/fragment.rkt"
-  "../../4-rules/locations/routes.rkt"
-  "../../4-rules/world/world.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/fragments/fragment.rkt"
+  "../../4-systems/locations/routes.rkt"
+  "../../4-systems/world/world.rkt"
 
   "../../7-state/state/state.rkt"
 

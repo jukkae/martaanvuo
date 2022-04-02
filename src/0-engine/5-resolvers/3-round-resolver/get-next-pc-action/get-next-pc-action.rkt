@@ -20,11 +20,11 @@
   "../../../3-types/pc-actor.rkt"
   "../../../3-types/world.rkt"
 
-  "../../../4-rules/fragments/decision.rkt"
-  "../../../4-rules/locations/locations.rkt"
-  "../../../4-rules/pc/character-sheet.rkt"
-  "../../../4-rules/pc/pc.rkt"
-  "../../../4-rules/world/time.rkt"
+  "../../../4-systems/fragments/decision.rkt"
+  "../../../4-systems/locations/locations.rkt"
+  "../../../4-systems/pc/character-sheet.rkt"
+  "../../../4-systems/pc/pc.rkt"
+  "../../../4-systems/world/time.rkt"
 
   "../../../7-state/state/state.rkt"
 

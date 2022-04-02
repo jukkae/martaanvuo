@@ -18,11 +18,11 @@
   "../3-types/pc-actor.rkt"
   "../3-types/item.rkt"
 
-  "../4-rules/actors/actor.rkt"
-  "../4-rules/checks/checks.rkt"
-  "../4-rules/world/world.rkt"
-  "../4-rules/items/item.rkt"
-  "../4-rules/pc/pc.rkt"
+  "../4-systems/actors/actor.rkt"
+  "../4-systems/checks/checks.rkt"
+  "../4-systems/world/world.rkt"
+  "../4-systems/items/item.rkt"
+  "../4-systems/pc/pc.rkt"
 
   "../7-state/state/state.rkt"
   )
@@ -38,14 +38,14 @@
    display-pc-combatant-info
    )])
 
-(lazy-require ["../4-rules/locations/locations.rkt"
+(lazy-require ["../4-systems/locations/locations.rkt"
   (describe-begin-traverse-action
    describe-finish-traverse-action
    describe-cancel-traverse-action
    location-on-enter!
    )])
 
-(lazy-require ["../4-rules/world/world.rkt"
+(lazy-require ["../4-systems/world/world.rkt"
   (get-actor
    )])
 

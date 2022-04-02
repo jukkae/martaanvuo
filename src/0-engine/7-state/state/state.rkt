@@ -12,8 +12,8 @@
 
 (require
   "0-types/state.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/world/world.rkt")
+  "../../4-systems/pc/pc.rkt"
+  "../../4-systems/world/world.rkt")
 
 (require
   "mutators.rkt"

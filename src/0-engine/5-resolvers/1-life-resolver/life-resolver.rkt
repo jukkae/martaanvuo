@@ -12,7 +12,7 @@
 
   "../../3-types/pc-actor.rkt"
 
-  "../../4-rules/pc/pc.rkt"
+  "../../4-systems/pc/pc.rkt"
 
   "../../7-state/state/state.rkt"
 

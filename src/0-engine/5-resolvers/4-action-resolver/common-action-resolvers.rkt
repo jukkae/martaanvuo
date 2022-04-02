@@ -16,9 +16,9 @@
   "../../3-types/action.rkt"
   "../../3-types/location.rkt"
 
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/locations/locations.rkt"
-  "../../4-rules/simulation.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/locations/locations.rkt"
+  "../../4-systems/simulation.rkt"
 
   "../../6-combat/combat-action-resolver.rkt"
 
@@ -29,7 +29,7 @@
   (handle-interrupting-event!
    )])
 
-(lazy-require ["../../4-rules/locations/locations.rkt"
+(lazy-require ["../../4-systems/locations/locations.rkt"
   (move-pc-to-location!
    )])
 

@@ -21,8 +21,8 @@
   "../3-types/condition.rkt"
   "../3-types/world.rkt"
 
-  "../4-rules/actors/actor.rkt"
-  "../4-rules/pc/pc.rkt"
+  "../4-systems/actors/actor.rkt"
+  "../4-systems/pc/pc.rkt"
   )
 
 (lazy-require ["../5-resolvers/round-resolver/round-resolver.rkt"

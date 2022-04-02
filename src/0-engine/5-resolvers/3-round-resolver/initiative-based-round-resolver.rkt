@@ -12,9 +12,9 @@
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
 
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/world/world.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/pc/pc.rkt"
+  "../../4-systems/world/world.rkt"
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"

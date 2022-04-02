@@ -11,9 +11,9 @@
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/enemies/blindscraper.rkt"
-  "../../4-rules/enemies/grabberkin.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/enemies/blindscraper.rkt"
+  "../../4-systems/enemies/grabberkin.rkt"
   "../../7-state/state/state.rkt"
   )
 
@@ -22,7 +22,7 @@
 (lazy-require ["round-resolver.rkt"
   (get-next-pc-action
    )])
-(lazy-require ["../../4-rules/world/world.rkt"
+(lazy-require ["../../4-systems/world/world.rkt"
  (get-actor
   )])
 

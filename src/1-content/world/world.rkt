@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-engine/4-rules/world/world.rkt"
+  "../../0-engine/4-systems/world/world.rkt"
 
   "../../0-engine/2-core/core.rkt"
 
@@ -11,8 +11,8 @@
   "../../0-engine/3-types/route.rkt"
   "../../0-engine/3-types/world.rkt"
 
-  "../../0-engine/4-rules/actors/actor.rkt"
-  "../../0-engine/4-rules/items/item.rkt"
+  "../../0-engine/4-systems/actors/actor.rkt"
+  "../../0-engine/4-systems/items/item.rkt"
 
   "../../0-engine/7-state/state/state.rkt"
   )

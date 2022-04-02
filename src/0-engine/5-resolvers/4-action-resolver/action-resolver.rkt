@@ -21,17 +21,17 @@
   "../../3-types/timeline.rkt"
   "../../3-types/event.rkt"
 
-  "../../4-rules/events.rkt"
-  "../../4-rules/timelines.rkt"
-  "../../4-rules/actors/actor.rkt"
-  "../../4-rules/blurbs/blurbs.rkt"
-  "../../4-rules/checks/checks.rkt"
-  "../../4-rules/items/item.rkt"
-  "../../4-rules/locations/locations.rkt"
-  "../../4-rules/locations/routes.rkt"
-  "../../4-rules/pc/pc.rkt"
-  "../../4-rules/world/world.rkt"
-  "../../4-rules/simulation.rkt"
+  "../../4-systems/events.rkt"
+  "../../4-systems/timelines.rkt"
+  "../../4-systems/actors/actor.rkt"
+  "../../4-systems/blurbs/blurbs.rkt"
+  "../../4-systems/checks/checks.rkt"
+  "../../4-systems/items/item.rkt"
+  "../../4-systems/locations/locations.rkt"
+  "../../4-systems/locations/routes.rkt"
+  "../../4-systems/pc/pc.rkt"
+  "../../4-systems/world/world.rkt"
+  "../../4-systems/simulation.rkt"
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
@@ -46,7 +46,7 @@
   (handle-interrupting-event!
    )])
 
-(lazy-require ["../../4-rules/locations/locations.rkt"
+(lazy-require ["../../4-systems/locations/locations.rkt"
   (move-pc-to-location!
    )])
 
