@@ -28,6 +28,7 @@
       #f
       (findf (λ (task) (eq? id (task-id task))) tasks)))
 
+
 (define (complete-task! id)
   (define t (task-exists? id))
   (cond [(not (null? t))

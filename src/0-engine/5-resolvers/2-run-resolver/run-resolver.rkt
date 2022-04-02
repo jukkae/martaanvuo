@@ -59,7 +59,7 @@
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
-           (define debt-task (find-task 'pay-off-debt))
+           (define debt-task (task-exists? 'pay-off-debt))
            (define gold-collected (pc-gold-amount))
            (dev-note "TODO: reduce debt")
            (remove-item! 'gold)

@@ -77,7 +77,7 @@
 
 (define (display-tasks)
   (info-card
-   (for/list ([t (tasks)])
+   (for/list ([t (current-tasks)])
       (tr
        (~a (task-name t))
        (~a (task-info-blurb t))

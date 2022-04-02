@@ -91,13 +91,6 @@
         (car enemies)))
 )
 
-(define (tasks)
-  (current-tasks))
-
-(define (find-task id)
-  (findf (λ (t) (eq? (task-id t) id))
-         (current-tasks)))
-
 
 ; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
