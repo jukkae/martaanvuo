@@ -3,13 +3,13 @@
 (provide (all-defined-out))
 
 (require
-  "../../1-index/state.rkt"
+  "../1-index/state.rkt"
 
-  "../../3-types/action.rkt"
-  "../../3-types/location.rkt"
-  "../../3-types/route.rkt"
+  "../3-types/action.rkt"
+  "../3-types/location.rkt"
+  "../3-types/route.rkt"
 
-  "../../4-systems/world/world.rkt"
+  "../4-systems/world/world.rkt"
   )
 
 (define (reset-pending-action!)

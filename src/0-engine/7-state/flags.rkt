@@ -6,8 +6,8 @@
 (require racket/lazy-require)
 
 (require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
   )
 
 (lazy-require ["state.rkt" (

@@ -6,19 +6,19 @@
 (require racket/lazy-require)
 
 (require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../2-core/io.rkt"
+  "../2-core/core.rkt"
 
-  "../../3-types/actor.rkt"
-  "../../3-types/location.rkt"
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/task.rkt"
+  "../3-types/actor.rkt"
+  "../3-types/location.rkt"
+  "../3-types/pc-actor.rkt"
+  "../3-types/task.rkt"
 
-  "../../4-systems/actors/actor.rkt"
-  "../../4-systems/pc/character-sheet.rkt"
-  "../../4-systems/world/world.rkt"
+  "../4-systems/actors/actor.rkt"
+  "../4-systems/pc/character-sheet.rkt"
+  "../4-systems/world/world.rkt"
 
-  "../../6-combat/stance.rkt"
+  "../6-combat/stance.rkt"
   )
 
 (lazy-require ["state.rkt" (
@@ -32,7 +32,7 @@
   current-run
   )])
 
-(lazy-require ["../../6-combat/combat.rkt" (
+(lazy-require ["../6-combat/combat.rkt" (
   end-combat!
   )])
 

@@ -4,8 +4,8 @@
 
 (require racket/lazy-require)
 
-(lazy-require ["state.rkt"
- (current-times-begin-traverse-narrated
+(lazy-require ["state.rkt" (
+  current-times-begin-traverse-narrated
   current-times-finish-traverse-narrated
   current-times-cancel-traverse-narrated
   )])
