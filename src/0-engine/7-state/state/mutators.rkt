@@ -153,13 +153,6 @@
   (define stance (actor-stance enemy))
   (eq? (stance-range stance) range))
 
-(define (pick-up-items!)
-  (p "Otava picks up everything there is to pick up.")
-  (define all-items (location-items (current-location)))
-  (for ([item all-items])
-    (remove-item-from-location! (current-location) item)
-    (add-item-to-inventory! (pc) item))
-  (display-inventory))
 
 (define (increment-achievement! achievement)
   (case achievement
