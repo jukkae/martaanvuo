@@ -83,9 +83,17 @@
 
     ['gold
      (new-item
-      "Gold" ; gold-198, to be more precise
+      "Gold"
       #:id id
-      #:quantity amount)] ; amount in grams, for now
+      #:quantity amount)]
+
+    ['lucky-charm-slot-machine
+     (new-item
+      "Lucky charm (slot machine)"
+      #:id 'lucky-charm-slot-machine
+      #:details '(active)
+      )
+      ]
 
     [else
      (new-item
