@@ -31,10 +31,13 @@
   (case game-mode
     ['begin
      (br)
-     (prln "Progress is saved automatically.")]
+     (prln "Progress is saved automatically.")
+     (reset-rng!)
+     ]
 
     ['restart
-     '()]
+     (reset-rng!)
+     ]
 
     ['continue
      (define input-file (open-input-file "save.txt"))

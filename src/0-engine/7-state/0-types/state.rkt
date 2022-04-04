@@ -15,8 +15,14 @@
   "../../6-combat/combat-event.rkt"
   )
 
+(define-type Rng-state-vector (Vector Integer Integer Integer Integer Integer Integer))
+
 (struct State
-  ([world : world]
+  (
+   [rng-seed : Integer]
+   [rng-state : Rng-state-vector]
+
+   [world : world]
    [last-numeric-actor-id : Natural]
    [log : (Listof String)]
    [last-paragraph : String]

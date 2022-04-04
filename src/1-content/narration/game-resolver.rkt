@@ -39,6 +39,8 @@
                   (current-life)
                   (if (= (current-life) 1) "life" "lives")
                   ))
+      (tr "")
+      (tr (format "[Random seed: ~a]" (current-rng-seed)))
       ))
   (newline)
   (info-card body '()))

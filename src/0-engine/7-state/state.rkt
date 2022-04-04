@@ -29,6 +29,8 @@
   "resolve-counts.rkt"
   )
 
+(define current-rng-seed (make-parameter 0))
+
 (define current-world (make-parameter '()))
 
 ; Where does this belong?
@@ -106,17 +108,26 @@
   (current-show-round-summary? #f)
   )
 
+(define rng-max-seed (sub1 (expt 2 31)))
+
 (define (reset-rng!)
-  (dev-note "TODO: fix rng state"))
+  (current-pseudo-random-generator (make-pseudo-random-generator)) ; based on current-milliseconds
+  (define seed (random rng-max-seed))
+  (random-seed seed)
+  (current-rng-seed seed)
+  )
 
 (define (reset-game!)
-  (reset-world!)
   (reset-rng!)
+  (reset-world!)
   )
 
 (define (save)
   (define st
     (State
+     (current-rng-seed)
+     (pseudo-random-generator->vector (current-pseudo-random-generator))
+
      (current-world) ; world
      (current-last-numeric-actor-id) ; Natural
      (current-log) ; String?
@@ -154,6 +165,9 @@
 ; - https://docs.racket-lang.org/reference/serialization.html
 (define (load-situation-from-state serialized-state)
   (define s (deserialize serialized-state))
+
+  (current-rng-seed (State-rng-seed s))
+  (current-pseudo-random-generator (vector->pseudo-random-generator (State-rng-state s)))
 
   (current-world (State-world s))
   (current-last-numeric-actor-id (State-last-numeric-actor-id s))
