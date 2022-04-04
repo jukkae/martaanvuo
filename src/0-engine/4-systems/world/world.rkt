@@ -121,5 +121,3 @@
         ((not (null? (get-route-by-id id)))
          (get-route-by-id id))
         (else '())))
-
-(provide make-new-world)

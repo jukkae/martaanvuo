@@ -118,7 +118,7 @@
    (make-place
     #:id 'palsat)))
 
-
+(provide make-new-world)
 (define (make-new-world)
 
   (define places (make-places))

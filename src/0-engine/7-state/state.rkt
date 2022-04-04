@@ -14,6 +14,10 @@
 
 (require
   "0-types/state.rkt"
+
+  "../1-index/content.rkt"
+  "../2-core/core.rkt"
+
   "../4-systems/pc/pc.rkt"
   "../4-systems/world/world.rkt"
   )
@@ -75,7 +79,7 @@
 
 (define current-show-round-summary? (make-parameter #f))
 
-(define (reset-situation!)
+(define (reset-world!)
   (current-world (make-new-world))
   (current-last-numeric-actor-id 0)
   (current-log '())
@@ -100,6 +104,14 @@
   (current-completed-fragments '())
   (current-combat-timeline '())
   (current-show-round-summary? #f)
+  )
+
+(define (reset-rng!)
+  (dev-note "TODO: fix rng state"))
+
+(define (reset-game!)
+  (reset-world!)
+  (reset-rng!)
   )
 
 (define (save)

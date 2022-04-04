@@ -25,6 +25,6 @@
 
 (provide
   make-new-world)
-(lazy-require ["../../../1-content/world/world.rkt" (
+(lazy-require ["../../1-content/world/world.rkt" (
   make-new-world
   )])

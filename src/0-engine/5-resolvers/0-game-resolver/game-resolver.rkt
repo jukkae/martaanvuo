@@ -110,7 +110,7 @@
      (display-playthrough-stats)
      (wait-for-confirm)
 
-     (reset-situation!)
+     (reset-game!)
      (delete-save-file)
      (prln "Progress deleted. Starting from the beginning.")
      (newline)
@@ -145,4 +145,4 @@
          (exit))))
 
 (define (on-begin-playthrough!)
-  (reset-situation!))
+  (reset-world!))
