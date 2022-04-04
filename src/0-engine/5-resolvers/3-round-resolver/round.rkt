@@ -13,12 +13,14 @@
   "../../2-core/core.rkt"
 
   "../../3-types/actor.rkt"
+  "../../3-types/item.rkt"
   "../../3-types/location.rkt"
 
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/fragments/fragment.rkt"
   "../../4-systems/locations/routes.rkt"
   "../../4-systems/world/world.rkt"
+  "../../4-systems/pc/pc.rkt"
 
   "../../7-state/state.rkt"
 

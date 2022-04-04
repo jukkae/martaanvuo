@@ -91,7 +91,7 @@
      (new-item
       "Lucky charm (slot machine)"
       #:id 'lucky-charm-slot-machine
-      #:details 'active
+      #:details 'passive
       )
       ]
 

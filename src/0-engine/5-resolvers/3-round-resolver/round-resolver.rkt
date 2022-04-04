@@ -21,6 +21,7 @@
   "../../2-core/core.rkt"
 
   "../../3-types/action.rkt"
+  "../../3-types/item.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/location.rkt"
 
@@ -47,6 +48,13 @@
     (if (eq? mode 'continue)
         '()#;(describe-situation #t)
         '()#;(describe-situation #f)))
+
+  (when (and (pc-has-item? 'lucky-charm-slot-machine)
+             (eq? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'active))
+    (define n (ephemeral-random-in-range 111 999))
+    (p (format "\"Bu-di-du-duh.\" The slot machine sings a little melody, and then bloinks and whirrs. Chunk-chunk-chunk, the numbers lock into place. ~a." n))
+    (for ([i n])
+      (random)))
 
   ; this fixes save files after death
   (when (not (pc-is-alive?))

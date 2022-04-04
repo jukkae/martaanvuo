@@ -121,6 +121,10 @@
   (seed-rng! seed)
   )
 
+(define (ephemeral-random-in-range min max)
+  (define generator (make-pseudo-random-generator))
+  (random min max generator))
+
 
 (define (save)
   (define st
