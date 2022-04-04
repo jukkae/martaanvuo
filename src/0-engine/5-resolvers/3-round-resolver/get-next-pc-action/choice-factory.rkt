@@ -101,7 +101,7 @@
               (make-action
                #:symbol 'pick-up
                #:actor (pc)
-               #:duration 1 ; should be "negligible", aka 0.1 iota
+               #:duration 1 ; should be "negligible" when not in combat, aka 0.1 iota
                #:resolution-rules '()
                )
               ))

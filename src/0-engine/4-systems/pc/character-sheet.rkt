@@ -25,7 +25,6 @@
 (define (character-sheet)
   (display-character-sheet)
   (display-inventory)
-  (wait-for-confirm)
   ; TODO: until interaction-result is == go-back-to-game loop: select-interaction-target
   (define interaction-target (select-interaction-target))
   (when (not (null? interaction-target))
@@ -223,15 +222,16 @@
     ))
 )
 
+; TODO: These must be filtered w.r.t combat
 (define (select-interaction-target)
-  (define targets (list select-item))
+  (define targets (list (cons "Select item" select-item)))
 
   (prln (format "Select [1-~a], or anything else to go back to game." (length targets)))
   (br)
 
   (for ([target targets]
         [i (in-naturals 1)])
-    (prln (format "[~a] ~a" i target))
+    (prln (format "[~a] ~a" i (car target)))
     )
   (br)
   (define input (string->number (wait-for-input)))
@@ -239,7 +239,7 @@
               (> input 0)
               (<= input (length targets)))
          (define index (- input 1))
-         (list-ref targets index)
+         (cdr (list-ref targets index))
          )
         (else '()#;(p "Nevermind.")))
   )

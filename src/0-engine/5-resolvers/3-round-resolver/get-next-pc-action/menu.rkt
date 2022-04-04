@@ -45,16 +45,10 @@
    restart
    )])
 
-(define (key-from-index i)
-  (cond ((< i 0) (error "negative index!"))
-        ((<= i 8) (add1 i))
-        ((= i 9) 0)
-        ((> i 9) (error "too many things to do!"))))
-
 (define (build-keys-to-choices-map choices first-index)
   (define choices-with-keys (make-hash))
   (for ([i (in-range (length choices))])
-    (define key (key-from-index (+ first-index i -1)))
+    (define key (+ first-index i))
     (hash-set! choices-with-keys key (list-ref choices i)))
   choices-with-keys)
 
@@ -88,7 +82,7 @@
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
-  (hash-set! meta-commands "C" (cons "[C]: Character sheet." character-sheet))
+  (hash-set! meta-commands "0" (cons "[0]: Character sheet. [additional actions]" character-sheet))
   #;(when (not (null? (actor-inventory (pc))))
       (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))
@@ -110,13 +104,18 @@
               (λ (c1 c2) (< (car c1) (car c2)))))
 
   (for ([choice choices])
-    (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice)))))
+    (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice))))
+    )
   (newline))
 
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
     (display (car v))
-    (display " "))
+    (cond [(eq? k "0")
+           (displayln "") (displayln "")]
+          [else
+           (display " ")])
+    )
   (newline)
   (newline))
 
