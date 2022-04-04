@@ -26,8 +26,13 @@
   (display-character-sheet)
   (display-inventory)
   (wait-for-confirm)
+  ; TODO: until interaction-result is == go-back-to-game loop: select-interaction-target
+  (define interaction-target (select-interaction-target))
+  (when (not (null? interaction-target))
+    (interaction-target))
   #t
   )
+
 
 (define (display-character-sheet)
   (define actor (pc))
@@ -180,3 +185,61 @@
    sheet
    "Inventory"
    ))
+
+(define (select-item)
+  (define items (actor-inventory (pc)))
+
+  (prln (format "Select item [1-~a], anything else to cancel." (length items)))
+  (br)
+
+  (for ([item items]
+        [i (in-naturals 1)])
+    (if (= (item-quantity item) 1)
+        (prln (format "[~a] ~a" i (item-name item)))
+        (prln (format "[~a] ~a (~a)" i (item-name item) (item-quantity item))) ; TODO: pluralized
+        )
+    )
+  (br)
+  (define input (string->number (wait-for-input)))
+  (define selected-item '())
+  (cond ((and (number? input)
+              (> input 0)
+              (<= input (length items)))
+         (define index (- input 1))
+         (set! selected-item (list-ref items index))
+         )
+        (else '()#;(p "Nevermind.")))
+  (when (not (null? selected-item))
+    (dev-note (format "Item: ~a" selected-item))
+    (when (eq? (item-id selected-item) 'lucky-charm-slot-machine)
+      (cond [(eq? (item-details selected-item) 'active)
+             (set-item-details! selected-item 'passive)
+             (notice "Slot machine is now passive.")]
+            [(eq? (item-details selected-item) 'passive)
+             (set-item-details! selected-item 'active)
+             (notice "Slot machine is now active.")]
+            [else
+             (notice (format "Unknown state: ~a" (item-details selected-item)))])
+    ))
+)
+
+(define (select-interaction-target)
+  (define targets (list select-item))
+
+  (prln (format "Select [1-~a], or anything else to go back to game." (length targets)))
+  (br)
+
+  (for ([target targets]
+        [i (in-naturals 1)])
+    (prln (format "[~a] ~a" i target))
+    )
+  (br)
+  (define input (string->number (wait-for-input)))
+  (cond ((and (number? input)
+              (> input 0)
+              (<= input (length targets)))
+         (define index (- input 1))
+         (list-ref targets index)
+         )
+        (else '()#;(p "Nevermind.")))
+  )

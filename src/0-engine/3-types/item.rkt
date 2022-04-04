@@ -8,7 +8,7 @@
 (struct item
   ([id : Symbol]
    [name : String]
-   [details : (Maybe (U Number (Listof Symbol)))]
+   [details : (Maybe (U Number Symbol (Listof Symbol)))]
    [quantity : (U Positive-Integer Positive-Float)])
   #:prefab
   #:mutable
