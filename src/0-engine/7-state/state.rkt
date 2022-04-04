@@ -110,17 +110,17 @@
 
 (define rng-max-seed (sub1 (expt 2 31)))
 
+(define (seed-rng! seed)
+  (current-rng-seed seed)
+  (random-seed seed)
+  )
+
 (define (reset-rng!)
   (current-pseudo-random-generator (make-pseudo-random-generator)) ; based on current-milliseconds
   (define seed (random rng-max-seed))
-  (random-seed seed)
-  (current-rng-seed seed)
+  (seed-rng! seed)
   )
 
-(define (reset-game!)
-  (reset-rng!)
-  (reset-world!)
-  )
 
 (define (save)
   (define st

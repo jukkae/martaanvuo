@@ -19,24 +19,38 @@
 (provide resolve-game)
 (define (resolve-game game-mode)
 
-  (when (vector-member "--restart" (current-command-line-arguments))
-    (if (file-exists? "save.txt")
-        (begin
-          (notice "--restart flag supplied, deleting save file.")
-          (delete-save-file))
-        (begin
-          (notice "--restart flag supplied, but no save exists.")))
-    (set! game-mode 'begin))
+  (define seed-flag '())
+
+  (command-line
+   #:once-each
+   [("-s" "--seed") seed "Set random seed for new game"
+                    (seed-rng! (exact-floor (string->number seed)))
+                    (set! seed-flag (exact-floor (string->number seed)))]
+   [("-r" "--restart") "Restart (deletes old game)"
+                    (if (file-exists? "save.txt")
+                        (begin
+                          (notice "--restart flag supplied, deleting save file.")
+                          (delete-save-file))
+                        (begin
+                          (notice "--restart flag supplied, but there is no previous save file.")))
+                    (set! game-mode 'begin)])
+
+  (dev-note (format "CLI args: ~a" (current-command-line-arguments)))
+  (dev-note (format "seed-flag: ~a" seed-flag))
 
   (case game-mode
     ['begin
      (br)
      (prln "Progress is saved automatically.")
-     (reset-rng!)
+     (if (not (null? seed-flag))
+         (seed-rng! seed-flag)
+         (reset-rng!))
      ]
 
     ['restart
-     (reset-rng!)
+     (if (not (null? seed-flag))
+         (seed-rng! seed-flag)
+         (reset-rng!))
      ]
 
     ['continue
@@ -113,7 +127,7 @@
      (display-playthrough-stats)
      (wait-for-confirm)
 
-     (reset-game!)
+     (reset-world!)
      (delete-save-file)
      (prln "Progress deleted. Starting from the beginning.")
      (newline)

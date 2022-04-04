@@ -28,6 +28,19 @@
             }
         },
         {
+            "label": "Run with --seed 13 --restart",
+            "type": "shell",
+            "command": "racket martaanvuo.rkt --seed 13 --restart",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}/src",
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+            }
+        },
+        {
             "label": "Build",
             "type": "shell",
             "command": "raco exe -o martaanvuo --vv src/martaanvuo.rkt",
