@@ -15,9 +15,9 @@
 (define (make-traverse-choice route direction)
   (define traverse-duration (route-traverse-time route))
   (make-choice
-    'traverse
-    (get-traverse-text route (current-location))
-    (λ () (make-action
+   'traverse
+   (get-traverse-text route (current-location))
+   (λ () (make-action
           #:symbol 'traverse
           #:actor (pc)
           #:duration traverse-duration
@@ -58,9 +58,9 @@
 
                   (define resolve-events
                     (list
-                      (make-event ,''spawn-enemies
-                                  '() ; pack info about enemies / event here
-                                  #:interrupting? #t)))
+                     (make-event ,''spawn-enemies
+                                 '() ; pack info about enemies / event here
+                                 #:interrupting? #t)))
                   (define metadata '(interrupted))
                   (define duration
                     (exact-floor (/

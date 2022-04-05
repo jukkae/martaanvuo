@@ -24,28 +24,25 @@
   (command-line
    #:once-each
    [("-s" "--seed") seed "Set random seed for new game"
-                    (seed-rng! (exact-floor (string->number seed)))
-                    (set! seed-flag (exact-floor (string->number seed)))]
+    (seed-rng! (exact-floor (string->number seed)))
+    (set! seed-flag (exact-floor (string->number seed)))]
    [("-r" "--restart") "Restart (deletes old game)"
-                    (if (file-exists? "save.txt")
-                        (begin
-                          (notice "--restart flag supplied, deleting save file.")
-                          (delete-save-file))
-                        (begin
-                          (notice "--restart flag supplied, but there is no previous save file.")))
-                    (set! game-mode 'begin)])
-
-  (dev-note (format "CLI args: ~a" (current-command-line-arguments)))
-  (dev-note (format "seed-flag: ~a" seed-flag))
+    (if (file-exists? "save.txt")
+        (begin
+          (notice "--restart flag supplied, deleting save file.")
+          (delete-save-file))
+        (begin
+          (notice "--restart flag supplied, but there is no previous save file.")))
+    (set! game-mode 'begin)])
 
   (case game-mode
     ['begin
-     (br)
-     (prln "Progress is saved automatically.")
-     (if (not (null? seed-flag))
-         (seed-rng! seed-flag)
-         (reset-rng!))
-     ]
+ (br)
+ (prln "Progress is saved automatically.")
+ (if (not (null? seed-flag))
+     (seed-rng! seed-flag)
+     (reset-rng!))
+ ]
 
     ['restart
      (if (not (null? seed-flag))

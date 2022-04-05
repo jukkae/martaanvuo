@@ -114,9 +114,9 @@
             (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
             (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
 
-    (on-end-round)
-    (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
-    round-exit-status)))
+     (on-end-round)
+     (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
+     round-exit-status)))
 
 (define (enqueue-npc-actions)
   (define actors (location-actors (current-location)))

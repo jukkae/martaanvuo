@@ -78,10 +78,10 @@
 (define (display-tasks)
   (info-card
    (for/list ([t (current-tasks)])
-      (tr
-       (~a (task-name t))
-       (~a (task-info-blurb t))
-       (~a (task-status-text t))))
+     (tr
+      (~a (task-name t))
+      (~a (task-info-blurb t))
+      (~a (task-status-text t))))
    "Tasks")
   (wait-for-confirm))
 

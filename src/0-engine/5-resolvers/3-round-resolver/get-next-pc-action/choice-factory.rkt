@@ -72,7 +72,7 @@
     ['rest
      (define next-time-of-day
        (time-of-day-from-iotas (+ (world-elapsed-time (current-world))
-                                    100)))
+                                  100)))
      (make-choice
       'rest
       (format "Rest. [until ~a]" next-time-of-day)
@@ -146,13 +146,13 @@
                    )
                  (decrease-pc-hunger-level food-tier)
                  (when (eq? id 'decaying-berries)
-                  (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
-                 )
+                   (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
+                   )
 
-                ;  (case ',food-id
-                ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
-                ;    ['ration (p "The ration's dry and bland, but filling.")]
-                ;    ['vatruska (p "The vatruska tastes heavenly.")])
+                 ;  (case ',food-id
+                 ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
+                 ;    ['ration (p "The ration's dry and bland, but filling.")]
+                 ;    ['vatruska (p "The vatruska tastes heavenly.")])
                  (remove-item! id)
 
                  ))))

@@ -14,9 +14,9 @@
 (provide make-forage-choice)
 (define (make-forage-choice)
   (make-choice
-    'forage
-    "Forage."
-    (λ () (make-action
+   'forage
+   "Forage."
+   (λ () (make-action
           #:symbol 'forage
           #:actor (pc)
           #:duration 100
@@ -28,24 +28,24 @@
 
             (define successful? (skill-check "Forage" skill target-number))
             (cond (successful?
-                    (define amount (d 1 2))
-                    (define amount-string
-                      (if (= amount 1)
-                          (format "~a handful" amount)
-                          (format "~a handfuls" amount)))
+                   (define amount (d 1 2))
+                   (define amount-string
+                     (if (= amount 1)
+                         (format "~a handful" amount)
+                         (format "~a handfuls" amount)))
 
-                    (info-card
+                   (info-card
                     (tbody
-                      (tr
+                     (tr
                       "1d4"
                       "="
                       (format "~a" amount-string))
-                      )
+                     )
                     "Forage results roll")
-                    (p "Otava finds crowberries and bogberries. (" (number->string amount) " handfuls.)")
-                    (define item (make-item 'fresh-berries #:amount amount))
-                    (add-item! item)
-                    )
+                   (p "Otava finds crowberries and bogberries. (" (number->string amount) " handfuls.)")
+                   (define item (make-item 'fresh-berries #:amount amount))
+                   (add-item! item)
+                   )
                   )
             (if successful?
                 'successful

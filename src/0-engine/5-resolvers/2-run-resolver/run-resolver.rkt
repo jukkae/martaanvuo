@@ -76,7 +76,7 @@
     ['end-run
      (p "She's still alive.")]
     ['recurse
-      (blurb 'martaanvuo-title)]
+     (blurb 'martaanvuo-title)]
     ['restart
      '()]
     ['pc-dead '()]
