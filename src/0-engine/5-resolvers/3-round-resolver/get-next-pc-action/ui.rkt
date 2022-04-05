@@ -9,22 +9,10 @@
 
   "../../../3-types/task.rkt"
 
+  "../../../4-systems/blurbs/blurbs.rkt"
+  
   "../../../7-state/state.rkt"
   )
-
-(define (get-quit-text)
-  (define r (d 1 100))
-  (cond
-    ((= r 1)
-     "Martaanvuo will always be there for you, as it always has.")
-    ((= r 1)
-     "There has never been a time that Martaanvuo hasn't existed.")
-    ((< r 5)
-     "")
-    ((< r 20)
-     "Martaanvuo is always there for you.")
-    (else
-     "Martaanvuo awaits your return.")))
 
 (define (display-session-stats)
   (newline)
@@ -48,7 +36,7 @@
   (cond ((equal? input "Q")
          (display-session-stats)
 
-         (define quit-message (get-quit-text))
+         (define quit-message (get-blurb 'quit))
          (when (not (equal? quit-message ""))
            (prln quit-message)
            (newline))

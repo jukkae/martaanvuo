@@ -9,9 +9,9 @@
   "../0-engine/2-core/core.rkt")
 
 (lazy-require ("../0-engine/7-state/state.rkt"
-  [current-times-species-encountered
-   current-times-species-encountered++
-   ]))
+               [current-times-species-encountered
+                current-times-species-encountered++
+                ]))
 
 (define (get-blurb name)
   (case name
@@ -59,9 +59,20 @@
       Time passes.
       Some time passes.
       A while passes.
-     })
+      })
      (define l (string-split str #rx"\n+"))
      (take-random l)
+     ]
+
+    ['quit
+     (define str @~a{
+      Martaanvuo awaits your return.
+      Martaanvuo is always there for you.
+      There has never been a time that Martaanvuo hasn't existed.
+      Martaanvuo will always be there for you, as it always has.
+      })
+     (define l (string-split str #rx"\n+"))
+     (take-random l #:distribution 'quadratic)
      ]
 
     [else (dev-note (format "Unknown blurb: ~a" name))
