@@ -37,7 +37,7 @@
            (display-run-summary)
            (wait-for-confirm)
 
-           (remove-item! 'gold)
+           (remove-item! 'gold #:quantity-to-remove 'all)
            (define completion (task-state debt-task))
            (match completion
             [(partially-completed x y)
