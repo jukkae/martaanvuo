@@ -33,8 +33,11 @@
            (define debt-task (task-exists? 'the-debt))
 
            (define gold-collected (pc-gold-amount))
-           (remove-item! 'gold)
 
+           (display-run-summary)
+           (wait-for-confirm)
+
+           (remove-item! 'gold)
            (define completion (task-state debt-task))
            (match completion
             [(partially-completed x y)
@@ -44,8 +47,6 @@
 
            (display-tasks)
 
-           (display-run-summary)
-           (wait-for-confirm)
            )
 
           (else
