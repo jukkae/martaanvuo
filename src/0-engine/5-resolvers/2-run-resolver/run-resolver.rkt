@@ -38,7 +38,8 @@
      (blurb 'begin-first-run-pt-2)
      (create-task 'anthead-monograph)
      (wait-for-confirm)
-     ])
+     ]
+    )
   )
 
 ; recursions mess with reality -> change world state, give bonuses, open new doors
