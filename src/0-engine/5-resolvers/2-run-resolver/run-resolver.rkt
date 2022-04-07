@@ -29,7 +29,6 @@
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
   #;(current-round 0)
-  (remove-flag 'ending-run-allowed)
   (add-feature-to-location! (get-place-by-id 'martaanvuo-docks) 'mieli)
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-recurse-run))

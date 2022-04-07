@@ -83,7 +83,7 @@
 
     ['gold
      (new-item
-      "Gold"
+      "gold"
       #:id id
       #:quantity amount)]
 

@@ -89,7 +89,7 @@
                                               ))]
                [else
                 (if (> (item-quantity it) 1)
-                    (set-item-quantity! (- (item-quantity it) 1))
+                    (set-item-quantity! it (- (item-quantity it) 1))
                     (set-actor-inventory! (pc)
                                           (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
                                                   (actor-inventory (pc))
@@ -123,7 +123,7 @@
   (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
                        items))
   (if gold?
-      (item-details gold?)
+      (item-quantity gold?)
       0))
 
 (define (pc-has-ammo-left?)

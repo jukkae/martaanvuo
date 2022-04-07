@@ -144,7 +144,7 @@
   (define action
     (cond ((procedure? resolution-effect) (resolution-effect))
           ((action? resolution-effect) resolution-effect)
-          (else (error "resolve-choice-and-produce-action!: unknown type"))))
+          (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
 
   (when (or (string-prefix? (choice-name current-choice) "[continue]")
             (string-prefix? (choice-name current-choice) "[cancel]"))

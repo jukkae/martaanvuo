@@ -10,7 +10,6 @@
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
   (current-round 0)
-  (remove-flag 'ending-run-allowed)
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
 
@@ -31,9 +30,9 @@
   (when (and (not (eq? exit-status 'restart))
              (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
-           (define debt-task (task-exists? 'pay-off-debt))
+           (define debt-task (task-exists? 'the-debt))
            (define gold-collected (pc-gold-amount))
-           (dev-note "TODO: reduce debt")
+           (dev-note (format "TODO: reduce debt by ~a" gold-collected))
            (remove-item! 'gold)
 
            (displayln "Task:")
