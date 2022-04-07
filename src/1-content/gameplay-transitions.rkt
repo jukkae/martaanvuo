@@ -31,14 +31,22 @@
              (not (eq? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
            (define debt-task (task-exists? 'the-debt))
+
            (define gold-collected (pc-gold-amount))
-           (dev-note (format "TODO: reduce debt by ~a" gold-collected))
            (remove-item! 'gold)
 
-           (displayln "Task:")
-           (displayln debt-task)
+           (define completion (task-state debt-task))
+           (match completion
+            [(partially-completed x y)
+             (set-partially-completed-x! completion (+ x gold-collected))])
 
-           (display-run-summary))
+           (set-task-status-text! debt-task (format "10.111 grams of gold (~a paid)" (partially-completed-x completion)))
+
+           (display-tasks)
+
+           (display-run-summary)
+           (wait-for-confirm)
+           )
 
           (else
            (notice (format "End run number ~a [failed]" (number->string (current-run)))))))

@@ -30,9 +30,9 @@
  })
              (wait-for-confirm)
              (next-chapter!) ; end chapter, but not run!
-             (p "Otava is getting close to what she's looking for, but she has trouble remembering how she got here. Did she follow the path of the Mediator? What was it that she was after?")
+             (p "Otava can't shake the feeling of déjà vu, she's been here before. She's looking for the it the whatsit the hidebound book and the Maw and the Cache and the gold and the anomaly. The yeah, that's the book. The Maw's the miiiiiind. Ha ha ha. It's already seen.")
              (wait-for-confirm)
-             (p "The Maw, the Monograph, the Cache, and the Gold. A single mind, laser-focused on four targets, one of which is the same as the other, ultimately, just two stages to both. Like, if you think about it, one's a way to freedom, one's a way to freedom, one's a way to a way to freedom, and one's a way to a way to freedom. One's a one way away from... Fucking hippies were right afterall, got to be free, man, 'cause otherwise what's the point? Die a fucking slave? Ha ha.")
+             (p "Find the Cache, take the Gold, pay the Debt, become Unfettered, find the Maw, find the Book, become Deathless.")
              (p "This should be simple, Otava thinks.")
              (award-xp! 25 "for good thinking")
              'failure))
