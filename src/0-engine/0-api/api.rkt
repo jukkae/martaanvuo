@@ -17,9 +17,11 @@
 
     "../4-systems/checks/checks.rkt"
     "../4-systems/actors/actor.rkt"
+    "../4-systems/blurbs/blurbs.rkt"
     "../4-systems/fragments/decision.rkt"
     "../4-systems/fragments/fragment.rkt"
     "../4-systems/items/item.rkt"
+    "../4-systems/locations/locations.rkt"
     "../4-systems/locations/routes.rkt"
     "../4-systems/pc/pc.rkt"
     "../4-systems/simulation.rkt"
@@ -48,9 +50,11 @@
 
   "../4-systems/checks/checks.rkt"
   "../4-systems/actors/actor.rkt"
+  "../4-systems/blurbs/blurbs.rkt"
   "../4-systems/fragments/decision.rkt"
   "../4-systems/fragments/fragment.rkt"
   "../4-systems/items/item.rkt"
+  "../4-systems/locations/locations.rkt"
   "../4-systems/locations/routes.rkt"
   "../4-systems/pc/pc.rkt"
   "../4-systems/simulation.rkt"

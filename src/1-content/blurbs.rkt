@@ -15,27 +15,13 @@
 
 (define (get-blurb name)
   (case name
-    ['the-end
-     @~a{
-      The end.
-
-
-
-      M A R T A A N V U O
-      ===================
-
-      Jukka Eerikäinen (2022)
-
-
-      }]
     ['begin-first-run-pt-1
-
  @~a{
-  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the freedom still almost the same. She, the same? Yeah, kinda.
+  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the freedom still the same.
 
-  Damn it's good to be out on the plains again. The patterns on the rock formations whirling past roadside blend into another. She's now in a narrow canyon, rocks whirling past her a hundred miles per hour, and she's more alive than ever.
+  Damn it's good to be out on the plains again, not a single person in sight – unless she's unlucky – and then she remembers the debt again.
 
-  She's through the canyon and she remembers the debt again. The fucking debt, her very own chains, dearly paid for. Well, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to who knows, used by looters and scavengers and various unsavory elements of society through the years, and if she's right, there's a hefty amount of gold there, left there by a certain individual known only as M. If she's right, she's gonna find the cache, break in, take the gold, pay back her debt and be free, move on, unfettered.
+  The fucking debt, her very own chains, dearly paid for. Well, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to who knows, used by looters and scavengers and various unsavory elements of society through the years, and if she's right, there's a hefty amount of gold there, left there by a certain individual known only as M. If she's right, she's gonna find the cache, break in, take the gold, pay back her debt and be free, move on, unfettered.
  }
  ] ; subsequent runs: if reached subtarget X, then blurb Y, otherwise blurb Z
     ['begin-first-run-pt-2
@@ -48,6 +34,19 @@
   Otava the Seeker, become Otava the Deathless!
  }
  ]
+ ['the-end
+     @~a{
+      The end.
+
+
+
+      M A R T A A N V U O
+      ===================
+
+      Jukka Eerikäinen (2022)
+
+
+      }]
 
     ['martaanvuo-title
      @~a{

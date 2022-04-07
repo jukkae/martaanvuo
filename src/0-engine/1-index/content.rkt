@@ -28,3 +28,11 @@
 (lazy-require ["../../1-content/world/world.rkt" (
   make-new-world
   )])
+
+(provide
+  on-begin-run
+  on-end-run)
+(lazy-require ["../../1-content/gameplay-transitions.rkt" (
+  on-begin-run
+  on-end-run
+  )])

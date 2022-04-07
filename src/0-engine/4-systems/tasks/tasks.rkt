@@ -76,13 +76,13 @@
 (define (create-task id)
   (define t
     (case id
-      ['pay-off-debt
+      ['the-debt
        (task
-        'pay-off-debt
-        "Pay off debt"
-        (partially-completed 0 10.111)
-        "\"Mediator is lenient\", until now."
-        "10,111 grams of gold left."
+        'the-debt
+        "The debt"
+        (partially-completed 45 10.111)
+        "Due on day 11"
+        "10.111 grams of gold (45 paid)"
         '()
         '()
         '()
