@@ -18,7 +18,7 @@
 
   "../../7-state/state.rkt"
 
-  "../../../1-content/narration/life-resolver.rkt"
+  "../../../1-content/narration/gameplay-transitions.rkt"
   )
 
 

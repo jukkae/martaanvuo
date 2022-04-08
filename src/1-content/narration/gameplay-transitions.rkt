@@ -7,6 +7,7 @@
   "../../0-engine/2-core/core.rkt"
 
   "../../0-engine/3-types/task.rkt"
+  "../../0-engine/3-types/pc-actor.rkt"
 
   "../../0-engine/4-systems/blurbs/blurbs.rkt"
   "../../0-engine/4-systems/pc/pc.rkt"
@@ -38,3 +39,13 @@
       (tr "gold collected"
           (number->string (pc-gold-amount))))
     (format "Run number ~a ended" (current-run))))
+
+(define (display-end-of-life-summary)
+  (let ([body
+         (tbody
+          (tr "Round"
+              (format "~a" (current-round)))
+          (tr "XP"
+              (format "~a" (pc-actor-xp (pc)))))]
+        [title "Life summary"])
+    (info-card body title)))

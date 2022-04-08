@@ -31,11 +31,13 @@
 
 (provide
   on-begin-run
+  on-begin-recurse-run
   on-end-run
   on-begin-life
   on-end-life)
 (lazy-require ["../../1-content/gameplay-transitions.rkt" (
   on-begin-run
+  on-begin-recurse-run
   on-end-run
   on-begin-life
   on-end-life

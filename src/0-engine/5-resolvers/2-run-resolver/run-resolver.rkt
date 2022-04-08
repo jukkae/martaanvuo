@@ -21,17 +21,7 @@
   "../../7-state/state.rkt"
   "../../7-state/logging.rkt"
 
-  "../../../1-content/narration/run-resolver.rkt"
   )
-
-; recursions mess with reality -> change world state, give bonuses, open new doors
-; but PC / instance / incarnation / 'life' continues
-(define (on-begin-recurse-run)
-  (current-run (add1 (current-run)))
-  #;(current-round 0)
-  (add-feature-to-location! (get-place-by-id 'martaanvuo-docks) 'mieli)
-  (move-pc-to-location! (get-place-by-id 'perimeter))
-  (narrate-begin-recurse-run))
 
 (define (on-continue-run)
   '())

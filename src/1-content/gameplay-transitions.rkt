@@ -4,8 +4,7 @@
 
 (require
   "../0-engine/0-api/api.rkt"
-  "narration/run-resolver.rkt"
-  "narration/life-resolver.rkt"
+  "narration/gameplay-transitions.rkt"
 )
 
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
@@ -25,6 +24,15 @@
      ]
     )
   )
+
+; recursions mess with reality -> change world state, give bonuses, open new doors
+; but PC / instance / incarnation / 'life' continues
+(define (on-begin-recurse-run)
+  (current-run (add1 (current-run)))
+  #;(current-round 0)
+  (add-feature-to-location! (get-place-by-id 'martaanvuo-docks) 'mieli)
+  (move-pc-to-location! (get-place-by-id 'perimeter))
+  (narrate-begin-recurse-run))
 
 (define (on-end-run exit-status)
   (reset-pending-action!)
