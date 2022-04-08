@@ -87,7 +87,6 @@
   (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
   (set-base-build!)
-  (go-to-fragment 'begin-life)
   (when (not (= 1 (current-life)))
     (dev-note "Show life info")))
 
