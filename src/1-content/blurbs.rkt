@@ -17,13 +17,13 @@
   (case name
     ['begin-first-run-pt-1
  @~a{
-  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the freedom still the same.
+  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the freedom still the same. Damn it's good to be out on the plains again.
 
-  Damn it's good to be out on the plains again, not a single person in sight – unless she's unlucky – and then she remembers the debt again.
+  Then she remembers the debt.
 
-  The fucking debt, the bill finally come due. "31 days", Mediator had said, "as an act of goodwill".
+  The fucking debt, the bill finally come due, her reason for being here. "31 days", Mediator had said, "as an act of goodwill". And an insane amount of gold. Well, she's all kinds of insane.
 
-  Well, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to who knows, used by looters and scavengers and various unsavory elements of society through the years, and if she's right, there's a hefty amount of gold there, left there by a certain individual known only as M. If she's right, she's gonna find the cache, break in, take the gold, pay back her debt and be free, move on, unfettered.
+  First of all, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to the Once-Was, used by looters and scavengers and various unsavory elements of society through the years. Abandoned, ever since the blindscraper outbreak, but that was years ago. And these days this is *way* far out, so likely nobody's been there since.
  }
  ] ; subsequent runs: if reached subtarget X, then blurb Y, otherwise blurb Z
     ['begin-first-run-pt-2
