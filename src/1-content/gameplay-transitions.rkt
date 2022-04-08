@@ -5,6 +5,7 @@
 (require
   "../0-engine/0-api/api.rkt"
   "narration/run-resolver.rkt"
+  "narration/life-resolver.rkt"
 )
 
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
@@ -65,3 +66,23 @@
 
   (when (not (eq? exit-status 'pc-dead))
     (wait-for-confirm)))
+
+
+; the world and reality stays intact, world state persists
+; eventually, Otava should become aware of the loop
+(define (on-begin-life)
+  (when (not (session-flag-set? 'began-life))
+    (set-session-flag 'began-life)
+    (current-session-score-dice++)
+    )
+
+  (current-life (add1 (current-life)))
+  (current-pc (make-new-pc))
+  (set-base-build!)
+  (go-to-fragment 'begin-life)
+  (when (not (= 1 (current-life)))
+    (dev-note "Show life info")))
+
+(define (on-end-life)
+  (display-end-of-life-summary)
+  (wait-for-confirm))

@@ -6,6 +6,8 @@
   "../2-run-resolver/run-resolver.rkt"
   "../3-round-resolver/round-resolver.rkt"
 
+  "../../1-index/content.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
   "../../2-core/session.rkt"
@@ -47,22 +49,3 @@
         ['restart (end-life 'restart)])
       )
     ))
-
-; the world and reality stays intact, world state persists
-; eventually, Otava should become aware of the loop
-(define (on-begin-life)
-  (when (not (session-flag-set? 'began-life))
-    (set-session-flag 'began-life)
-    (current-session-score-dice++)
-    )
-
-  (current-life (add1 (current-life)))
-  (current-pc (make-new-pc))
-  (set-base-build!)
-  (go-to-fragment 'begin-life)
-  (when (not (= 1 (current-life)))
-    (dev-note "Show life info")))
-
-(define (on-end-life)
-  (display-end-of-life-summary)
-  (wait-for-confirm))

@@ -9,6 +9,8 @@
 
   "../../4-systems/fragments/decision.rkt"
   "../../4-systems/fragments/fragment.rkt"
+
+  "../../4-systems/fragments.rkt"
   "../../4-systems/timelines.rkt"
   "../../4-systems/simulation.rkt"
 
@@ -80,9 +82,6 @@
   (process-timeline! tl)
   '()
   )
-
-(define (go-to-fragment id)
-  (current-fragment-id id))
 
 (define (handle-fragment-decision decisions-with-keys input)
   (define decision (hash-ref decisions-with-keys (string->number input)))

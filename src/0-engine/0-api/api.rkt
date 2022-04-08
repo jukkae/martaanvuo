@@ -6,7 +6,7 @@
 
     "../2-core/core.rkt"
     "../2-core/io.rkt"
-    "../2-core/core.rkt"
+    "../2-core/session.rkt"
 
     "../3-types/action.rkt"
     "../3-types/actor.rkt"
@@ -29,6 +29,8 @@
     "../4-systems/world/world.rkt"
     "../4-systems/world/time.rkt"
 
+    "../4-systems/fragments.rkt"
+
     "../5-resolvers/3-round-resolver/get-next-pc-action/ui.rkt"
 
     "../7-state/logging.rkt"
@@ -41,7 +43,7 @@
 
   "../2-core/core.rkt"
   "../2-core/io.rkt"
-  "../2-core/core.rkt"
+  "../2-core/session.rkt"
 
   "../3-types/action.rkt"
   "../3-types/actor.rkt"
@@ -63,6 +65,8 @@
   "../4-systems/tasks/tasks.rkt"
   "../4-systems/world/world.rkt"
   "../4-systems/world/time.rkt"
+
+  "../4-systems/fragments.rkt"
 
   "../5-resolvers/3-round-resolver/get-next-pc-action/ui.rkt"
 
