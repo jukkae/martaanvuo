@@ -30,7 +30,7 @@
  })
              (wait-for-confirm)
              (next-chapter!) ; end chapter, but not run!
-             (p "Otava can't shake the feeling of déjà vu, she's been here before. She's looking for the it the whatsit the hidebound book and the Maw and the Cache and the gold and the anomaly. The yeah, that's the book. The Maw's the miiiiiind. Ha ha ha. It's already seen.")
+             (p "Otava can't shake the feeling of déjà vu, she's been here before. She's looking for the it the whatsit the hidebound book in the Maw and the Cache and the gold. The yeah, that's the book. The Maw's the miiiiiind. Ha ha ha. It's already seen.")
              (wait-for-confirm)
              (p "Find the Cache, take the Gold, pay the Debt, become Unfettered, find the Maw, find the Book, become Deathless.")
              (p "This should be simple, Otava thinks.")

@@ -81,7 +81,7 @@
         'the-debt
         "The debt"
         (partially-completed 45 10.111)
-        "Due on day 11"
+        "Due on day 31"
         "10.111 grams of gold (45 paid)"
         '()
         '()

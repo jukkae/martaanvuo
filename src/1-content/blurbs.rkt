@@ -21,7 +21,9 @@
 
   Damn it's good to be out on the plains again, not a single person in sight – unless she's unlucky – and then she remembers the debt again.
 
-  The fucking debt, her very own chains, dearly paid for. Well, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to who knows, used by looters and scavengers and various unsavory elements of society through the years, and if she's right, there's a hefty amount of gold there, left there by a certain individual known only as M. If she's right, she's gonna find the cache, break in, take the gold, pay back her debt and be free, move on, unfettered.
+  The fucking debt, the bill finally come due. "31 days", Mediator had said, "as an act of goodwill".
+
+  Well, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to who knows, used by looters and scavengers and various unsavory elements of society through the years, and if she's right, there's a hefty amount of gold there, left there by a certain individual known only as M. If she's right, she's gonna find the cache, break in, take the gold, pay back her debt and be free, move on, unfettered.
  }
  ] ; subsequent runs: if reached subtarget X, then blurb Y, otherwise blurb Z
     ['begin-first-run-pt-2
