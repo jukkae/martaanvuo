@@ -9,3 +9,14 @@
 ## Development
 
 To update packages, `raco pkg update --all`.
+
+## Cross-compilation
+
+For cross-compilation, `raco pkg install raco-cross` is needed.
+
+To cross-compile, `raco cross --target x86_64-linux exe martaanvuo.rkt`.
+
+### macOS host, 8.4
+
+`raco cross --target x86_64-win pkg install at-exp-lib text-table rebellion reprovide-lang-lib`
+
