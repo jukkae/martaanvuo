@@ -78,5 +78,17 @@
                 "reveal": "always",
             }
         },
+        {
+            "label": "Clean compiled files",
+            "type": "shell",
+            "command": "find . -type d -name compiled | xargs rm -rf",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "always",
+            }
+        },
     ]
 }
