@@ -24,13 +24,6 @@
     (notice (format "Begin run number ~a" (current-run))))
   )
 
-(define (narrate-begin-recurse-run)
-  (next-chapter!)
-
-  (p @~a{
-    Otava is on Mediator's path in the foggy cardboard cutout woods. She gets to Fork and Anthill.
-  }))
-
 (define (display-run-summary)
   (info-card
     (tbody

@@ -7,8 +7,17 @@
   "narration/gameplay-transitions.rkt"
 )
 
+(define (on-begin-nth-run n)
+  (case n
+   [(1)
+    '()]
+   [(2)
+    (dev-note "Second run, trigger new task")])
+)
+
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
+  (on-begin-nth-run (current-run))
   (current-round 0)
   (advance-time-by-iotas! 35)
   (move-pc-to-location! (get-place-by-id 'perimeter))
@@ -19,22 +28,23 @@
 ; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
   (current-run (add1 (current-run)))
+  (on-begin-nth-run (current-run))
   (current-recursion-depth (add1 (current-recursion-depth)))
 
   #;(current-round 0)
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (when (= (current-recursion-depth) 1)
+    (next-chapter!)
     (p @~a{
-  Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
 
-  The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
+The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
 
-  Otava the Seeker, become Otava the Deathless!
- })
-     (create-task 'anthead-monograph)
-     (wait-for-confirm)
-  )
-  (narrate-begin-recurse-run))
+Otava the Seeker, become Otava the Deathless!
+    })
+    (create-task 'anthead-monograph)
+    (wait-for-confirm)
+    ))
 
 (define (on-end-run exit-status)
   (reset-pending-action!)
