@@ -13,7 +13,7 @@
     '()]
    [(2)
     (p @~a{
-She can't stop thinking about the gas station attendant, and her message that was "to be delivered to termites". Uhh. Well, the wasteland can definitely get to you, and the small settlements here have definitely been hit worse.
+She can't stop thinking about the gas station attendant, and her message that was to be delivered to the termites: The Hartmann device is in the workshop. Not her business, but...
     })
     (create-task 'gas-station-attendant)
     (wait-for-confirm)])

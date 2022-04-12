@@ -94,7 +94,7 @@
         "Gas station attendant's message"
         'in-progress
         "Deliver to termites"
-        ""
+        "'Hartmann device is in the workshop'."
         '()
         '()
         '()
