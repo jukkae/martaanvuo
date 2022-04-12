@@ -97,7 +97,7 @@
 
  The best case? Wherever that door leads, obviously, but she'll take going back, too.
 
- The worst case? Who the fuck knows, the instructions said nothing about knocking, but by not knocking she will certainly do no harm.
+ The worst case? Who knows, the instructions said nothing about knocking, but by not knocking she will certainly do no harm.
 
  It is clearly, objectively better not to knock. She can knock whenever, later, no harm done, but she can never un-knock. It said "wait", not "wait and knock". They'll call her eventually.
 

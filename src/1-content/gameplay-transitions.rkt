@@ -40,7 +40,7 @@ She can't stop thinking about the gas station attendant, and her message that wa
   (when (= (current-recursion-depth) 1)
     (next-chapter!)
     (p @~a{
-Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, an abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
 
 The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
 
