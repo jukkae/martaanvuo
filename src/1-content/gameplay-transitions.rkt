@@ -12,15 +12,19 @@
    [(1)
     '()]
    [(2)
-    (dev-note "Second run, trigger new task")])
+    (p @~a{
+She can't stop thinking about the gas station attendant, and her message that was "to be delivered to termites". Uhh. Well, the wasteland can definitely get to you, and the small settlements here have definitely been hit worse.
+    })
+    (create-task 'gas-station-attendant)
+    (wait-for-confirm)])
 )
 
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
-  (on-begin-nth-run (current-run))
   (current-round 0)
   (advance-time-by-iotas! 35)
   (move-pc-to-location! (get-place-by-id 'perimeter))
+  (on-begin-nth-run (current-run))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
   )
 

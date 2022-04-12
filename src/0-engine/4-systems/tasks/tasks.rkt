@@ -88,6 +88,18 @@
         '()
         )]
 
+      ['the-message
+       (task
+        'the-message
+        "Gas station attendant's message"
+        'in-progress
+        "Deliver to termites"
+        ""
+        '()
+        '()
+        '()
+       )]
+
       ['anthead-monograph
        (task
         'find-anthead-monograph
