@@ -93,7 +93,7 @@
 
    (make-place
     #:id 'storage-closet
-    #:items '(anthead-monograph))
+    #:features '(martaanvuo-book))
 
    (make-place
     #:id 'control-room
@@ -147,7 +147,7 @@
      (make-path-between places 'murkwater-docks 'workshop 2 #:no-encounters? #t)
      (make-path-between places 'murkwater-docks 'palsat 130 #:no-encounters? #t)
      (make-path-between places 'sewers-2 'storage-closet 1)
-     (make-path-between places 'storage-closet 'workshop 1)
+     (make-path-between places 'storage-closet 'workshop 1 #:no-encounters? #t)
      (make-path-between places 'workshop 'control-room 2 #:no-encounters? #t)
      (make-path-between places 'workshop 'martaanvuo-source 2)
      (make-path-between places 'control-room 'reactor-room 1)

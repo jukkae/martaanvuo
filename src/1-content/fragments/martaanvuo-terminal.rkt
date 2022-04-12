@@ -28,8 +28,7 @@
 (fragment
  'read-the-book
  (thunk
-  (p
-   ""))
+  '())
  #:decisions
  (list
   (make-decision
