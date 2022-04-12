@@ -78,11 +78,15 @@
      ]
 
     ['(martaanvuo-swamp burnt-tree)
-     (p "Otava takes the small side path. Some of the trees look burned, and there's a lingering smell of acrid smoke and ash in the air.")
+     (p "Otava takes the small side path. Some of the stubby trees look partly burned. There's a dry, resinous, incense-like smoky smell in the air.")
      ]
 
     ['(burnt-tree martaanvuo-swamp)
      '()
+     ]
+
+    ['(burnt-tree the-maw)
+     (p "Inside the big tree, it is cool and wet. The ground drops, and there's an earthen tunnel.")
      ]
 
     [else
@@ -263,7 +267,7 @@
               "The lone path away from the fork.")]
          ['burnt-tree
           (if (route-fully-known? route)
-              "Burnt tree."
+              "The path to the burnt tree."
               "The small footpath to the right.")]
          ['martaanvuo-docks
           (if (route-fully-known? route)

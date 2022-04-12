@@ -10,7 +10,6 @@
 (define (get-perimeter-choices)
   (define actor (pc))
 
-  (dev-note (format "flags: ~a" (current-flags)))
   (cond [(and (= (current-run) 1)
               (not (flag-set? 'tried-to-go-back))
               (not (> (pc-gold-amount) 0)))

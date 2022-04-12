@@ -19,6 +19,12 @@
 (define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (when (not suppress-new-chapter?) (next-chapter!))
 
+  (case (current-run)
+   [(1)
+    (p "The road disappears under rocks. This is it, the rest of the way is by foot. Otava parks the bike and follows a narrow path to the canyons.")]
+   [(2)
+    (p "Otava parks her bike and heads to the canyons.")])
+
   ; Don't show this until the second run!
   (when (not (= 1 (current-run)))
     (notice (format "Begin run number ~a" (current-run))))
