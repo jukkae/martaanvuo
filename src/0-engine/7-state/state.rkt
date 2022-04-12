@@ -65,6 +65,7 @@
 
 (define current-round (make-parameter 0))
 (define current-run (make-parameter 0))
+(define current-recursion-depth (make-parameter 0))
 (define current-elapsed-time (make-parameter 0))
 
 (define current-in-combat? (make-parameter #f))
@@ -147,6 +148,7 @@
      (current-flags) ; (Listof Symbol)
      (current-round) ; Natural
      (current-run) ; Natural
+     (current-recursion-depth)
      (current-elapsed-time) ; Natural, should be in-world timestamp
      (current-in-combat?) ; Boolean
      (current-tasks) ; (Listof task)
@@ -188,6 +190,7 @@
   (current-flags (State-flags s))
   (current-round (State-round s))
   (current-run (State-run s))
+  (current-recursion-depth (State-recursion-depth s))
   (current-elapsed-time (State-elapsed-time s))
   (current-in-combat? (State-in-combat? s))
   (current-tasks (State-tasks s))

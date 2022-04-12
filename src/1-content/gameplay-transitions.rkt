@@ -12,9 +12,20 @@
   (current-round 0)
   (advance-time-by-iotas! 35)
   (move-pc-to-location! (get-place-by-id 'perimeter))
-  (when (= (current-run) 2)
+  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
+  )
+
+; recursions mess with reality -> change world state, give bonuses, open new doors
+; but PC / instance / incarnation / 'life' continues
+(define (on-begin-recurse-run)
+  (current-run (add1 (current-run)))
+  (current-recursion-depth (add1 (current-recursion-depth)))
+
+  #;(current-round 0)
+  (move-pc-to-location! (get-place-by-id 'perimeter))
+  (when (= (current-recursion-depth) 1)
     (p @~a{
-  There's rumors that somewhere around Martaanvuo, there's this basement lab too, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+  Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
 
   The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
 
@@ -23,16 +34,6 @@
      (create-task 'anthead-monograph)
      (wait-for-confirm)
   )
-  (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
-  )
-
-; recursions mess with reality -> change world state, give bonuses, open new doors
-; but PC / instance / incarnation / 'life' continues
-(define (on-begin-recurse-run)
-  (current-run (add1 (current-run)))
-  #;(current-round 0)
-  (add-feature-to-location! (get-place-by-id 'martaanvuo-docks) 'mieli)
-  (move-pc-to-location! (get-place-by-id 'perimeter))
   (narrate-begin-recurse-run))
 
 (define (on-end-run exit-status)
@@ -94,17 +95,15 @@
   (case (current-life)
     [(1)
      (p @~a{
-  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the freedom still the same. Damn it's good to be out on the plains again.
+  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the air still the same.
 
-  Then she remembers the debt.
+  So, her being here, riding towards Martaanvuo, an opportune happenstance. A handful of flies with a single swat.
 
-  The fucking debt, the bill finally come due, her reason for being here. "31 days", Mediator had said, "as an act of goodwill". And an insane amount of gold.
+  The debt. "31 days", Mediator had said, "as an act of goodwill". And, frankly speaking, an insane amount of gold racked up over time.
  })
      (create-task 'the-debt)
      (p @~a{
-  Well, she's all kinds of insane.
-
-  First of all, her research says, in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to the Once-Was, used by looters and scavengers and various unsavory elements of society through the years. Abandoned, ever since the blindscraper outbreak, but that was years ago. And these days this is *way* far out, so likely nobody's been there since.
+  To that end, her information says that in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to the Once-Was, used by looters and scavengers and various unsavory elements of society through the years. Abandoned, ever since the blindscraper outbreak, but that was years ago. And these days this is *way* far out, so likely nobody's been there since.
  })
      (wait-for-confirm)
      ]

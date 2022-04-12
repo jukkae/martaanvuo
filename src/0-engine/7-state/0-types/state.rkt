@@ -37,6 +37,7 @@
    [flags : (Listof Symbol)]
    [round : Natural]
    [run : Natural]
+   [recursion-depth : Natural]
    [elapsed-time : Natural] ; should be in-world time
    [in-combat? : Boolean]
    [tasks : (Listof task)]
