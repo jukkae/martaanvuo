@@ -21,3 +21,5 @@ Then, `raco cross --target x86_64-win pkg install at-exp-lib text-table rebellio
 Then, `raco cross --target x86_64-win make src/martaanvuo`.
 
 Then, to compile, `raco cross --target x86_64-win exe --orig-exe --embed-dlls -o build/martaanvuo.exe src/martaanvuo.rkt`.
+
+Clean compiled files between swithing build platforms (there's a VSC task for it). Compiled files  cause `fasl-read: incompatible fasl-object machine-type 'ta6nt found in #<binary input port bytevector>` issue.
