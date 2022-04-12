@@ -49,7 +49,7 @@
   (get-actor
    )])
 
-(lazy-require ["../5-resolvers/round-resolver/event-handler.rkt"
+(lazy-require ["../5-resolvers/3-round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 
