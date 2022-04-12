@@ -29,6 +29,7 @@
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))))
 
+  ; TODO: extract this to a function
   (case (location-id (current-location))
     ['perimeter
      (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. A natural staircase leads up.")
@@ -44,7 +45,9 @@
     )
      (when (not (flag-set? 'tried-to-go-back))
        '())
-     ]))
+     ]
+    ['burnt-tree
+      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]))
 
 
 (define (describe-situation repeated?)

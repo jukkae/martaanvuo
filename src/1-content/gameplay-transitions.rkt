@@ -31,8 +31,6 @@ She can't stop thinking about the gas station attendant, and her message that wa
 ; recursions mess with reality -> change world state, give bonuses, open new doors
 ; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
-  (current-run (add1 (current-run)))
-  (on-begin-nth-run (current-run))
   (current-recursion-depth (add1 (current-recursion-depth)))
 
   #;(current-round 0)

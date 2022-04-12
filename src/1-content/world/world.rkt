@@ -49,9 +49,9 @@
     #:shortname "Precipice")
 
    (make-place
-    #:id 'crematory
-    #:type 'crematory
-    #:shortname "Crematory")
+    #:id 'burnt-tree
+    #:type 'burnt-tree
+    #:shortname "Burnt tree")
 
    (make-place
     #:id 'martaanvuo-docks
@@ -128,12 +128,12 @@
      #; (make-path-between perimeter martaanvuo-swamp 'hidden)
      (make-path-between places 'perimeter 'magpie-hill 110 #:no-encounters? #t)
      (make-path-between places 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
-     (make-path-between places 'martaanvuo-swamp 'crematory 70)
+     (make-path-between places 'martaanvuo-swamp 'burnt-tree 70)
      (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
      (make-path-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
      (make-path-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
      (make-path-between places 'martaanvuo-swamp 'luminous-precipice 120)
-     (make-path-between places 'crematory 'the-maw 1 #:no-encounters? #t)
+     (make-path-between places 'burnt-tree 'the-maw 1 #:no-encounters? #t)
      (make-path-between places 'the-maw 'waiting-room 1 #:no-encounters? #t #:onedirectional? #t)
      (make-path-between places 'magpie-hill 'power-plant-ruins 30 #:no-encounters? #t)
      (make-path-between places 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)

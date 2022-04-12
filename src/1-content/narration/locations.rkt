@@ -77,12 +77,12 @@
          "Otava climbs up the vehicle trail, away from the docks and the river.")])
      ]
 
-    ['(martaanvuo-swamp crematory)
+    ['(martaanvuo-swamp burnt-tree)
      (p "Otava takes the small side path. Some of the trees look burned, and there's a lingering smell of acrid smoke and ash in the air.")
      ]
 
-    ['(crematory martaanvuo-swamp)
-     (p "Otava goes from the dreary lime courtyard of the crematory to the small path.")
+    ['(burnt-tree martaanvuo-swamp)
+     '()
      ]
 
     [else
@@ -173,15 +173,15 @@
       "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
      ]
 
-    ['(martaanvuo-swamp crematory)
+    ['(martaanvuo-swamp burnt-tree)
      (case n
        [(1)
-        (p "The ruins of a lime-white stone building appear from the mist. There's a row of metal rings high along one wall, and the wall is stained dark under the rings.")]
+        (p "A huge, angular hulk of burnt tree looms over Otava.")]
        [else
         (p
-         "Otava comes to the Crematory.")])]
+         "Otava comes to the burnt tree.")])]
 
-    ['(crematory martaanvuo-swamp)
+    ['(burnt-tree martaanvuo-swamp)
      (p "The path leads Otava to the fork in Martaanvuo swamp.")
      ]
 
@@ -261,22 +261,26 @@
           (if (route-fully-known? route)
               "Go back to Perimeter."
               "The lone path away from the fork.")]
-         ['crematory
+         ['burnt-tree
           (if (route-fully-known? route)
-              "Crematory."
-              "The small side path to the right.")]
+              "Burnt tree."
+              "The small footpath to the right.")]
          ['martaanvuo-docks
           (if (route-fully-known? route)
               "The Docks."
               "The broader path straight ahead.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
-      ['crematory
+      ['burnt-tree
        (case (route-other-end-from route start-location)
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Back to Martaanvuo Swamp."
               "The lone path.")]
+         ['the-maw
+          (if (route-fully-known? route)
+              "The slit to the Maw."
+              "The slit.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['martaanvuo-docks
