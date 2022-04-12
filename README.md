@@ -12,10 +12,12 @@ To update packages, `raco pkg update --all`.
 
 ## Cross-compilation for Windows
 
-NB: Doesn't work on Intel mac!
+NB: Tested on x86_64 Linux, Racket 8.4.
 
 For cross-compilation, `raco pkg install raco-cross` is needed.
 
-Then, `raco cross --target x86_64-win pkg install at-exp-lib text-table rebellion reprovide-lang-lib`
+Then, `raco cross --target x86_64-win pkg install at-exp-lib text-table rebellion reprovide-lang-lib`.
 
-Then, to compile, `raco cross --target x86_64-win exe src/martaanvuo.rkt`.
+Then, `raco cross --target x86_64-win make src/martaanvuo`.
+
+Then, to compile, `raco cross --target x86_64-win exe --orig-exe --embed-dlls -o build/martaanvuo.exe src/martaanvuo.rkt`.

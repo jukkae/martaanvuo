@@ -2,6 +2,7 @@
 *.rkt~
 *.rkt#*
 compiled/
+build/
 save.txt
 save.txt~
 martaanvuo
