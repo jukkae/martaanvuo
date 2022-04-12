@@ -54,6 +54,19 @@
             }
         },
         {
+            "label": "Cross-compile for x64-win",
+            "type": "shell",
+            "command": "raco cross --target x86_64-win exe --orig-exe --embed-dlls -o build/martaanvuo.exe src/martaanvuo.rkt",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}",
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+            }
+        },
+        {
             "label": "Run compiled build",
             "type": "shell",
             "command": "build/martaanvuo",
