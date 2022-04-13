@@ -39,8 +39,6 @@
       (p #:suppress-logging? repeated? "The hot, stale air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something dirty and heavy in it. Otava's chest feels tight.")
       (p #:suppress-logging? repeated? "The hot air is filthy and wrong and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
     )
-     (when (not (flag-set? 'tried-to-go-back))
-       '())
      ]
     ['burnt-tree
       (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")])
