@@ -140,7 +140,7 @@
      (make-path-between places 'power-plant-ruins 'cache 2 #:no-encounters? #t #:details '(locked))
      (make-path-between places 'power-plant-ruins 'sewers-1 5 #:no-encounters? #t)
      (make-path-between places 'sewers-1 'sewers-2 10)
-     (make-path-between places 'sewers-1 'workshop 10 #:no-encounters? #t)
+     (make-path-between places 'sewers-1 'workshop 10)
      (make-path-between places 'sewers-1 'compound-entrance 10)
      (make-path-between places 'compound-entrance 'murkwater-docks 2)
      (make-path-between places 'compound-entrance 'workshop 2)

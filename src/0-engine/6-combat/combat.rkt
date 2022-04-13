@@ -42,18 +42,7 @@
 
   ; TODO: move this kind of stuff to content
   (current-session-times-in-combat++)
-  (when (= (current-session-times-in-combat) 3)
-    (notice "Attainment: Way of Blood"))
-  (when (= (current-session-times-in-combat) 7)
-    (notice "Attainment: Way of Carnage"))
-  (when (= (current-session-times-in-combat) 16)
-    (notice "Attainment: Way of Bloodshed"))
-  (when (= (current-session-times-in-combat) 31)
-    (notice "Attainment: Way of Death"))
-  (when (= (current-session-times-in-combat) 100)
-    (notice "Attainment: Hecatomb")) ; award this for 100 *kills*
-  ; (when (not (session-flag-set? 'got-in-combat))
-  ;   (set-session-flag 'got-in-combat)
+
   (current-session-score-dice++ (if (= (current-session-times-in-combat) 1) "Got in combat." '()))
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started"))
