@@ -5,7 +5,7 @@
 
 (require
   "fragments/anthill.rkt"
-  "fragments/fragments.rkt"
+  "fragments/uncategorized-fragments.rkt"
   "fragments/luminous-precipice.rkt"
   "fragments/magpie.rkt"
   "fragments/martaanvuo-terminal.rkt"
