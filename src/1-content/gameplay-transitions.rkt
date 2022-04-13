@@ -111,11 +111,11 @@ Otava the Seeker, become Otava the Deathless!
 
   So, her being here, riding towards Martaanvuo, an opportune happenstance. A handful of flies with a single swat.
 
-  The debt. "31 days", Mediator had said, "as an act of goodwill". And, frankly speaking, an insane amount of gold racked up over time.
+  The debt. "15 days", Mediator had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a worrisome sum total.
  })
      (create-task 'the-debt)
      (p @~a{
-  To that end, her information says that in the forests around Martaanvuo dam, there's a [cache] of valuables there. The canyon walls are criss-crossed by old tunnels dating back to the Once-Was, used by looters and scavengers and various unsavory elements of society through the years. Abandoned, ever since the blindscraper outbreak, but that was years ago. And these days this is *way* far out, so likely nobody's been there since.
+  Mediator wouldn't take payment in anything other than gold, so Otava is now chasing the rumour of a [cache] of valuables in Martaanvuo wasteland.
  })
      (wait-for-confirm)
      ]

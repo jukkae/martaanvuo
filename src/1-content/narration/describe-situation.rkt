@@ -32,11 +32,11 @@
   ; TODO: extract this to a function
   (case (location-id (current-location))
     ['perimeter
-     (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. A natural staircase leads up.")
+     (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. It's steep, but the path continues promisingly.")
      ;(next-blurb 'ants)
      (if (not (place-visited? (current-location)))
-      (p #:suppress-logging? repeated? "It takes a while for Otava to notice the other fork. A crew of ants is carrying chopped-up leaves down a soggy downhill path to the right that's barely there, behind a rock.")
-      (p #:suppress-logging? repeated? "There's a soggy downhill path to the right.")
+      (p #:suppress-logging? repeated? "It takes a while for Otava to notice the other fork under fallen rock. A crew of ants is carrying chopped-up leaves of a hardy plant down the second path.")
+      (p #:suppress-logging? repeated? "A second path leads to the right.")
        )
 
     (if (not (place-visited? (current-location)))

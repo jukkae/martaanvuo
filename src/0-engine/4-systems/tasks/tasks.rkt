@@ -80,9 +80,9 @@
        (task
         'the-debt
         "The debt"
-        (partially-completed 45 10.111)
-        "Due on day 31"
-        "10.111 grams of gold (45 paid)"
+        (partially-completed 3.8 101.11)
+        "Due on day 15"
+        "101.11 grams of gold (3.8 paid)" ; assume a rough PP of 1 g = 100 generic dollar-like (gold tooth ~2 g)
         '()
         '()
         '()
