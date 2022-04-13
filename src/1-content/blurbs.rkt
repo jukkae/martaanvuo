@@ -41,6 +41,10 @@
       Time passes.
       Some time passes.
       A while passes.
+      A moment passes.
+      A brief while passes.
+      A brief moment passes.
+      A short while passes.
       })
      (define l (string-split str #rx"\n+"))
      (take-random l)
