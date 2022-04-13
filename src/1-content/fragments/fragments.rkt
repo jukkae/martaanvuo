@@ -9,6 +9,7 @@
            (p @~a{
  Otava comes to a narrow, rickety-looking bridge. This is it, then, the narrow bridge – the locals say that after this there's no turning back, that wot crosses the bridge, they won't come back.
  }))
+          #:time-taken-by-fragment 2
           #:decisions
           (list
            (make-decision

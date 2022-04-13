@@ -77,7 +77,7 @@
 
   (define tl
     (advance-time-by-iotas!
-     (story-fragment-time-taken-by-fragment
+     (story-fragment-time-taken-by-fragment ; TODO: This is broken, should happen on exiting from fragment, or on enter, or something
       (get-fragment (current-fragment-id)))))
   (process-timeline! tl)
   '()

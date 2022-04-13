@@ -76,7 +76,7 @@
 
    (make-place
     #:id 'cache
-    #:items (list (make-item 'gold #:amount 2))
+    #:items (list (make-item 'gold #:amount 7))
     #:type 'cache)
 
    (make-place
