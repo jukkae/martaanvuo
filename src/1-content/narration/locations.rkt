@@ -227,19 +227,19 @@
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."
-              "Rocky slope.")]
+              "The rocky climb up.")]
 
          ['martaanvuo-swamp
           (if (route-fully-known? route)
               "Martaanvuo swamp."
-              "Soggy downhill path.")]
+              "The narrow path.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['magpie-hill
        (case (route-other-end-from route start-location)
          ['perimeter
           (if (route-fully-known? route)
-              "Rocky hill down to perimeter."
+              "The rocky descent down to perimeter."
               "The steep descent.")]
          ['martaanvuo-swamp
           (if (route-fully-known? route)
