@@ -34,6 +34,11 @@
              (not (equal? (decision-description decision) "")))
     (p (decision-description decision)))
 
+  (define tl
+    (advance-time-by-iotas!
+     (decision-time-taken decision)))
+  (process-timeline! tl)
+
   (when (not (null? (decision-on-resolve! decision)))
     ((decision-on-resolve! decision)))
 

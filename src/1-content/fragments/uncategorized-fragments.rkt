@@ -15,6 +15,7 @@
            (make-decision
             #:title "Cross the narrow bridge."
             #:description "Otava crosses the bridge. It creaks and whines, but doesn't break."
+            #:time-taken 2
             #:next-fragment 'exit
             )
            (make-decision

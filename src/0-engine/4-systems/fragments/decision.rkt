@@ -10,6 +10,7 @@
   ([title : String]
    [description : (Maybe String)]
    [next-fragment : Symbol]
+   [time-taken : Natural]
    [requirement : (-> Boolean)]
    [on-resolve! : (-> Null)])
   #:constructor-name decision*)
@@ -17,11 +18,13 @@
 (define (make-decision #:title [title : String]
                         #:description [description : (Maybe String) '()]
                         #:next-fragment [next-fragment : Symbol]
+                        #:time-taken [time-taken : Natural 0]
                         #:requirement [requirement : (-> Boolean) (λ () #t)]
                         #:on-resolve![on-resolve! : (-> Null) (λ () '())])
 
   (decision* title
              description
              next-fragment
+             time-taken
              requirement
              on-resolve!))
