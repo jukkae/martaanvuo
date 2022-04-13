@@ -63,6 +63,14 @@
 
 (define current-flags (make-parameter '()))
 
+(define current-counters (make-parameter (make-hash)))
+(define (current-counters++ tag)
+  (hash-set! (current-counters)
+             tag
+             (add1 (hash-ref (current-counters)
+                             tag
+                             0))))
+
 (define current-round (make-parameter 0))
 (define current-run (make-parameter 0))
 (define current-recursion-depth (make-parameter 0))
@@ -96,6 +104,7 @@
   (current-times-cancel-traverse-narrated (make-hash))
   (current-times-species-encountered (make-hash))
   (current-flags '())
+  (current-counters (make-hash))
   (current-round 0)
   (current-run 0)
   (current-elapsed-time 0)
@@ -146,6 +155,7 @@
      (current-times-cancel-traverse-narrated) ; Natural
      (current-times-species-encountered) ; Natural
      (current-flags) ; (Listof Symbol)
+     (current-counters) ; (Hash Symbol Natural)
      (current-round) ; Natural
      (current-run) ; Natural
      (current-recursion-depth)
@@ -188,6 +198,7 @@
   (current-times-cancel-traverse-narrated (State-times-cancel-traverse-narrated s))
   (current-times-species-encountered (State-times-species-encountered s))
   (current-flags (State-flags s))
+  (current-counters (State-counters s))
   (current-round (State-round s))
   (current-run (State-run s))
   (current-recursion-depth (State-recursion-depth s))

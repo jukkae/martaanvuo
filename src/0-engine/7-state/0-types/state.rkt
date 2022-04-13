@@ -35,6 +35,7 @@
    [times-cancel-traverse-narrated : (HashTable (List LocationId LocationId) Natural)]
    [times-species-encountered : (HashTable Symbol Natural)]
    [flags : (Listof Symbol)]
+   [counters : (HashTable Symbol Natural)]
    [round : Natural]
    [run : Natural]
    [recursion-depth : Natural]

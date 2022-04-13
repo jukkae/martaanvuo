@@ -31,8 +31,11 @@
   "../enemies/encounters.rkt"
   "../fragments/decision.rkt"
 
+  "../../1-index/state.rkt"
+
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
+
   "../../3-types/location-ids.rkt"
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
@@ -67,23 +70,26 @@
 
 ; TODO: This belongs under content
 (define (spawn-enemies)
+  (current-counters++ 'enemy-encounters)
   (define encounter-types
-    (list
-     spawn-blindscraper-encounter!
-     spawn-grabberkin-encounter!
-     spawn-grabberkin-and-blindscraper-encounter!
-     spawn-two-blindscrapers-encounter!
-    ))
+    ; TODO: Better accessors for hashtable params
+    (case (hash-ref (current-counters) 'enemy-encounters 0)
+      [(1) (list spawn-grabberkin-encounter!)]
+      [(2) (list spawn-blindscraper-encounter!)]
+      [else
+        (list
+          spawn-blindscraper-encounter!
+          spawn-grabberkin-encounter!
+          spawn-grabberkin-and-blindscraper-encounter!
+          spawn-two-blindscrapers-encounter!
+          )
+      ])
+    )
 
   (cond ((place? (current-location))
-          (cond ((eq? (location-type (current-location)) 'ridges)
-                 (spawn-blindscraper-encounter!))
-                ((eq? (location-type (current-location)) 'valleys)
-                 (spawn-grabberkin-encounter!))
-                (else ((take-random encounter-types)))))
+          ((take-random encounter-types)))
         ((route? (current-location))
-          ((take-random encounter-types))))
-  )
+          ((take-random encounter-types)))))
 
 (define (get-location-short-description location)
   (cond [(place? location)

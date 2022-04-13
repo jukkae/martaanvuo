@@ -10,6 +10,8 @@
 
   current-chapter
   current-combat-timeline
+  current-counters
+  current-counters++
   current-fragment-id
   current-in-combat?
   current-last-numeric-actor-id
@@ -39,6 +41,8 @@
 (lazy-require ["../7-state/state.rkt" (
   current-chapter
   current-combat-timeline
+  current-counters
+  current-counters++
   current-fragment-id
   current-in-combat?
   current-last-numeric-actor-id
