@@ -48,10 +48,16 @@
 
     ['quit
      (define str @~a{
+      Martaanvuo waits for you.
+      Martaanvuo looks forward to seeing you again.
+      Martaanvuo expects your return.
+      Martaanvuo looks forward to your return.
+      Martaanvuo waits your return.
+      Martaanvuo is eager for your return.
       Martaanvuo awaits your return.
       Martaanvuo is always there for you.
-      There has never been a time that Martaanvuo hasn't existed.
-      Martaanvuo will always be there for you, as it always has.
+      Martaanvuo will always be there.
+      Martaanvuo will always be there for you.
       })
      (define l (string-split str #rx"\n+"))
      (take-random l #:distribution 'quadratic)
