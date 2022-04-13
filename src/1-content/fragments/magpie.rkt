@@ -8,24 +8,14 @@
  'magpie
  (thunk
   (p
-   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes, trying to keep dry. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\"")
+   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\"")
   )
 
  #:decisions
  (list
   (make-decision
-   #:title "I am Otava the Seeker (of gold)."
+   #:title "I am Otava the Seeker."
    #:description "\"Good day, Magpie, King of Magpies. I am Otava the Seeker, and I seek gold.\""
-   #:next-fragment 'magpie-cache
-   )
-  (make-decision
-   #:title "I am Otava the Seeker (of a book)."
-   #:description "\"Good day, Magpie, King of Magpies. I am Otava the Seeker, and I seek a book called the Anthead Monograph.\""
-   #:next-fragment 'magpie-cache
-   )
-  (make-decision
-   #:title "I am Otava the Seeker (of deathlessness)."
-   #:description "\"Good day, Magpie, King of Magpies. I am Otava the Seeker, and I seek to transform into Otava the Deathless.\""
    #:next-fragment 'magpie-cache
    )))
 
@@ -33,7 +23,7 @@
  'magpie-cache
  (thunk
   (p
-   "\"You're in luck\", Magpie says. It ruffles its feathers, as it asks you to come closer and leans in. In low voice that is all but lost under the falling rain, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 gold coins. What do you say?\"")
+   "\"You're in luck\", Magpie says. It ruffles its feathers, as it asks you to come closer and leans in. In low voice, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 gold coins. What do you say?\"")
   )
 
  #:decisions

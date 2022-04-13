@@ -15,7 +15,8 @@
     (p @~a{
 She can't stop thinking about the gas station attendant, and her message that was to be delivered to the termites: The Hartmann device is in the workshop. Not her business, but...
     })
-    (create-task 'gas-station-attendant)
+    (create-task 'the-message)
+    (p "Fly. Swat.")
     (wait-for-confirm)])
 )
 

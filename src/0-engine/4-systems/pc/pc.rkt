@@ -208,6 +208,7 @@
      ]))
 
 (define (kill-pc! cause-of-death)
+  (unset-current-fragment-id!) ; TODO: this should be called "clear current fragment" or something
   (narrate-pc-death cause-of-death)
   (kill (pc) cause-of-death))
 

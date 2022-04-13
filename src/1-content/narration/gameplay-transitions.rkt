@@ -23,7 +23,7 @@
    [(1)
     (p "The road disappears under rocks. This is it, the rest of the way is by foot. Otava parks the bike and follows a narrow path to the canyons.")]
    [(2)
-    (p "Otava parks her bike and heads to the canyons.")])
+    (p "Otava parks her bike and heads to the canyons and crosses the creaky narrow bridge.")])
 
   ; Don't show this until the second run!
   (when (not (= 1 (current-run)))

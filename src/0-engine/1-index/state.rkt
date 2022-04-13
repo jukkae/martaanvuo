@@ -26,6 +26,8 @@
   get-current-enemies
   get-next-numeric-actor-id
   pc
+
+  unset-current-fragment-id!
   )
 
 
@@ -53,4 +55,6 @@
   get-current-enemies
   get-next-numeric-actor-id
   pc
+
+  unset-current-fragment-id!
   )])
