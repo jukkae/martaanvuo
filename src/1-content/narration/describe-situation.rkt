@@ -27,27 +27,25 @@
          (cond ((eq? (location-id (current-location)) 'magpie-hill)
                 (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. A small trail leads along the edge of the plateau.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))))
-
-  ; TODO: extract this to a function
-  (case (location-id (current-location))
+                (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))
+         ; TODO: extract this to a function
+         (case (location-id (current-location))
     ['perimeter
-     (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. It's steep, but the path continues promisingly.")
-     ;(next-blurb 'ants)
-     (if (not (place-visited? (current-location)))
-      (p #:suppress-logging? repeated? "It takes a while for Otava to notice the other fork under fallen rock. A crew of ants is carrying chopped-up leaves of a hardy plant down the second path.")
-      (p #:suppress-logging? repeated? "A second path leads to the right.")
-       )
+     (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. Another path leads to the right.")
+     (when (not (place-visited? (current-location)))
+      (p #:suppress-logging? repeated? "A crew of ants is carrying chopped-up leaves of a hardy plant down the second path."))
 
     (if (not (place-visited? (current-location)))
-      (p #:suppress-logging? repeated? "The air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something wet and dirty and heavy in it. Otava's chest feels tight.")
-      (p #:suppress-logging? repeated? "The air is filthy and wrong and rotten and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
+      (p #:suppress-logging? repeated? "The hot, stale air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something dirty and heavy in it. Otava's chest feels tight.")
+      (p #:suppress-logging? repeated? "The hot air is filthy and wrong and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
     )
      (when (not (flag-set? 'tried-to-go-back))
        '())
      ]
     ['burnt-tree
-      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]))
+      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")])
+                ))
+  )
 
 
 (define (describe-situation repeated?)

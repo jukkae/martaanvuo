@@ -25,10 +25,10 @@
      (case n
        [(1)
         (p
-         "Drawn by the magpie's call, Otava begins her ascent. The trail turns into a narrow, natural staircase of rocks, as the hillside steepens to a cliff.")]
+         "Otava begins the climb. The trail turns into a narrow natural staircase of rocks, as the hillside steepens to a cliff.")]
        [else
         (p
-         "Otava climbs the natural stairs up to Magpie Hill.")])
+         "Otava climbs up Magpie Hill.")])
      ]
     ['(magpie-hill perimeter)
      (case n
@@ -36,26 +36,23 @@
         (p
          "The sharply-angled terraced rocks along the first, steepest part of the descent tear some new holes in Otava's pants.")]
        [else
-        (p
-         "Otava prepares herself for the descent, careful this time.")])
+        '()])
      ]
     ['(perimeter martaanvuo-swamp)
      (case n
        [(1)
         (p
-         "Otava follows the ants and takes the right-hand path. The trail descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns soggy, and the smell of suopursu fills the air as the forested swamp turns into an open marsh.")]
+         "The trail, following the ants, descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns into soggy mud, and there are some reeds growing here and there. In the deepest troughs, there is some stinking, oily water.")]
        [else
-        (p
-         "As the trail disappears as she goes down towards the marsh, Otava notices some cracked bones under the underbrush.")])
+        '()])
      ]
     ['(martaanvuo-swamp perimeter)
      (case n
        [(1)
         (p
-         "The path comes to a barely traversable marsh.")]
+         "The path comes to a muddy, oily swamp.")]
        [else
-        (p
-         "The marsh smells like suopursu.")])
+        '()])
      ]
 
     ['(martaanvuo-swamp martaanvuo-docks)
@@ -108,8 +105,7 @@
     ['(perimeter magpie-hill)
      (case n
        [(1)
-        (p "Otava comes to a slab of stone with a painting of a human figure on it. The being has the head of an ant, and its six arms are contorted in a mad dance, one pair of hands gesturing wildly with the control rods of a puppeteer. The bottom of the painting is washed away. The figure's unsettling gaze follows Otava as she goes past the painting and fills her with apprehension. It begins to drizzle.")
-        (p "Soon after the dreadful painting, the rocky stairs turn back to a trail that levels out. The thick fog and the drizzle that's now a steady rain obscure much of the view. Otava is at the edge of a large plateau. The silhouette of a decaying industrial building looms in the distance. Is this it? The Facility?")]
+        (p "Otava comes to a slab of stone with a painting of a human figure on it. The being has the head of an ant, and its six arms are contorted in a mad dance, one pair of hands gesturing wildly with the control rods of a puppeteer. The bottom of the painting is washed away. The figure's unsettling gaze follows Otava as she goes past the painting.")]
        [else
         (p
          "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
@@ -128,7 +124,7 @@
      (case n
        [(1)
         (p
-         "A narrow, long overhang leads into the mist that has acquired a soft milky glow.")]
+         "A narrow, long overhang leads into the clear air.")]
        [else
         (p
          "Otava arrives at Luminous Precipice.")])
@@ -138,7 +134,7 @@
      (case n
        [(1)
         (p
-         "A trail leads along the edge of the plateau into deepening fog.")]
+         "A trail leads along the edge of the plateau.")]
        [else
         (p
          "Otava arrives at Luminous Precipice.")])
@@ -148,29 +144,20 @@
      (case n
        [(1)
         (p
-         "After the barely-traversable marsh, Otava finds a footpath to follow once again. Soon, the hills come closer to her on her left again, and there is a fork in the path.")
+         "The path is visible again through the muck, and it splits in two.")
         ]
        [else
-        (p
-         "Otava comes to Martaanvuo Fork.")])]
+        '()])]
     ['(martaanvuo-swamp perimeter)
-     (case n
-       [(1)
-        (p
-         "The path begins to rise, and ground turns more solid. Otava gets to Perimeter.")
-        ]
-       [else
-        (p
-         "Otava comes to Perimeter.")])]
+     '()]
 
     ['(martaanvuo-swamp martaanvuo-docks)
      (case n
        [(1)
-        (p "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and old, decaying docks slowly appear from the fog. There's a secluded cove, surrounded by cliffs, a couple of sheds by the shoreline, and a few berths. A small fishing boat with a pile of fish on the deck explains the smell.")
-        (p "Through the fog, Otava sees a stilted figure moving spastically on the water maybe fifteen meters away from the shore. She watches the figure from behind a webbing that's hanging from a winch. The figure is fishing, throwing a bait and then dragging the catch in with sudden, jerky motions.")]
+        (p "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and a small village comes to view. A small, drying lake with oily water, a couple of sheds, meters out from the receding shoreline. A pile of fish by the dock explains the smell.")
+        ]
        [else
-        (p
-         "The docks slowly appear from the mist.")])]
+        '()])]
 
     ['(martaanvuo-docks martaanvuo-swamp)
      (p
@@ -268,11 +255,11 @@
          ['burnt-tree
           (if (route-fully-known? route)
               "The path to the burnt tree."
-              "The small footpath to the right.")]
+              "The small side path to the right.")]
          ['martaanvuo-docks
           (if (route-fully-known? route)
-              "The Docks."
-              "The broader path straight ahead.")]
+              "The village."
+              "The wider path straight ahead.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       ['burnt-tree

@@ -10,7 +10,7 @@
 (define (on-begin-nth-run n)
   (case n
    [(1)
-    '()]
+    (go-to-fragment 'narrow-bridge)]
    [(2)
     (p @~a{
 She can't stop thinking about the gas station attendant, and her message that was to be delivered to the termites: The Hartmann device is in the workshop. Not her business, but...
@@ -107,15 +107,17 @@ Otava the Seeker, become Otava the Deathless!
   (case (current-life)
     [(1)
      (p @~a{
-  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill from behind a hill, a curve after a curve, one much alike another. Here it still kind of feels like the Once-Was, the plains still the same, the air still the same.
+  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill after a hill, a curve after a curve, here it still kind of feels like the Once-Was, the plains still the same, the air still the same.
 
-  So, her being here, riding towards Martaanvuo, an opportune happenstance. A handful of flies with a single swat.
+  Her being here, riding towards the rotten, cursed Martaanvuo wasteland, definitely caused by running out of good options. But, now that she's here, there is definitely a many flies – single swat situation.
 
-  The debt. "15 days", Mediator had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a worrisome sum total.
+  The debt. "15 days", Mediator had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a rather worrisome sum total.
  })
      (create-task 'the-debt)
      (p @~a{
-  Mediator wouldn't take payment in anything other than gold, so Otava is now chasing the rumour of a [cache] of valuables in Martaanvuo wasteland.
+  Mediator wouldn't take payment in anything other than gold, so, after getting rid of the bracelet, Otava is now chasing the rumor of a [cache] of valuables in the wasteland.
+
+  Fly. Swat.
  })
      (wait-for-confirm)
      ]
