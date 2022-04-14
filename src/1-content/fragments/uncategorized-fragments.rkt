@@ -27,7 +27,7 @@
 (fragment 'turn-back-from-narrow-bridge
           (thunk
            (p @~a{
- Nah. There's something else, she thinks. She'll figure something out.
+ There's *got to* be something else, she thinks. She'll figure something out.
 
  Wrong on both counts: There isn't, she doesn't. And, while she was away, things got worse, much worse, and they needed to send a message.
  })

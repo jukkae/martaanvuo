@@ -108,19 +108,17 @@ Otava the Seeker, become Otava the Deathless!
   (case (current-life)
     [(1)
      (p @~a{
-Otava's bike roars and thunders as she speeds through the badlands. Morning light filtering through arid, dusty air. She stops to put on her goggles, to keep out sand as much as light.
+Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. She stops to put on her goggles, to keep out dust as much as light.
 
-Here, up north in the wastes, not much changed with water wars, really, the arid plains still the same, the air still the same. Makes you forget that the world is not what it used to, that it didn't have to come to that, but here we are.
+Here in the wastes, not much changed with the water wars, really. The arid plains are still the same, the dusty wind still the same. Kind of makes you forget about the wars and the current state of the world, kind of reminds you of when there were still good options.
 
-This truly is the worst timeline.
+Her being here, riding towards rotten, cursed Martaanvuo wasteland, is definitely caused by running out of good options. But maybe there's now at least a chance to fix many problems at once.
 
-Her being here, riding towards the rotten, cursed Martaanvuo wasteland, definitely caused by running out of good options. But maybe there's at least a chance to fix multiple issues at once.
-
-First and foremost, there's the debt. "15 days", Merchant had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a rather worrisome sum total.
+First and foremost, there's the debt. "15 days", Merchant had said, "two weeks and one day extra, as an act of goodwill". And a rather handsome sum total.
  })
      (create-task 'the-debt)
      (p @~a{
-Merchant wouldn't take payment in anything other than gold, or assault weapons, another fucking act of goodwill. So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in the wasteland.
+Merchant wouldn't take payment in anything other than gold, or assault weapons, another fucking act of goodwill. So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in the wasteland. The only thing she could think of that could generate enough gold in short enough time. Who even *has* that much gold?
  })
      (wait-for-confirm)
      ]
