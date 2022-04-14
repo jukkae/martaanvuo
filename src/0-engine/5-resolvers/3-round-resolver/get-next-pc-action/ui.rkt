@@ -3,6 +3,8 @@
 (provide (all-defined-out))
 
 (require
+  "../../../../version.rkt"
+
   "../../../2-core/io.rkt"
   "../../../2-core/core.rkt"
   "../../../2-core/session.rkt"
@@ -40,6 +42,11 @@
          (when (not (equal? quit-message ""))
            (prln quit-message)
            (newline))
+
+         (define (print-version)
+           (prln (format "[Martaanvuo v~a]" martaanvuo-version)))
+
+         (print-version)
 
          (exit))
         (else
