@@ -20,8 +20,8 @@
      "Unpruned, abandoned, the story of this Otava ends here."
      "Unpruned, abandoned, this story of this Otava ends here."
      "In the depths of the Maw, the heart of the world stops."
-     (get-blurb 'the-end)
-    #:distribution 'quadratic))))
+     (get-blurb 'the-end))
+    #:distribution 'quadratic)))
 
 (define (display-playthrough-stats)
   (define body

@@ -133,7 +133,8 @@
                       'b-to-a)))
 
              (cond ((memq 'locked (location-details route))
-                    (when (not (pc-has-ammo-left?))
+                    (when (and (pc-has-item? 'revolver)
+                               (not (pc-has-ammo-left?)))
                       (p ; this belongs elsewhere
                        "Out of ammo, can't shoot the lock. Damn."))
                     (list

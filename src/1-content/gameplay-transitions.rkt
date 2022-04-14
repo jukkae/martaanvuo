@@ -46,6 +46,7 @@ The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it
 Otava the Seeker, become Otava the Deathless!
     })
     (create-task 'anthead-monograph)
+    (p "Fly. Swat.")
     (wait-for-confirm)
     ))
 
@@ -78,7 +79,8 @@ Otava the Seeker, become Otava the Deathless!
 
   (case exit-status
     ['end-run
-     (p "She's still alive.")]
+     ;(p "She's still alive.")
+     '()]
     ['recurse
      (blurb 'martaanvuo-title)]
     ['restart

@@ -14,6 +14,7 @@
   "../../../4-systems/actors/actor.rkt"
   "../../../4-systems/blurbs/blurbs.rkt"
   "../../../4-systems/checks/checks.rkt"
+  "../../../4-systems/fragments.rkt"
   "../../../4-systems/items/item.rkt"
   "../../../4-systems/locations/locations.rkt"
   "../../../4-systems/pc/pc.rkt"
@@ -22,12 +23,6 @@
 
   "../../../7-state/state.rkt"
   )
-
-(require racket/lazy-require)
-
-(lazy-require ["../round-resolver.rkt"
-               (go-to-fragment
-                )])
 
 (provide make-choices-based-on-features)
 (define (make-choices-based-on-features)

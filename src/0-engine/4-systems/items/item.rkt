@@ -21,7 +21,7 @@
          #:id id
          #:details (details '())
          #:ammo-left ammo-left)
-  (ranged-weapon* id name details ammo-left))
+  (ranged-weapon* id name details 1 ammo-left))
 
 
 ; API
