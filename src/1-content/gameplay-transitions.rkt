@@ -12,12 +12,8 @@
    [(1)
     (go-to-fragment 'narrow-bridge)]
    [(2)
-    (p @~a{
-She can't stop thinking about the gas station attendant, and her message that was to be delivered to the termites: The Hartmann device is in the workshop. Not her business, but...
-    })
-    (create-task 'the-message)
-    (p "Fly. Swat.")
-    (wait-for-confirm)])
+    '()]
+    )
 )
 
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
@@ -39,14 +35,13 @@ She can't stop thinking about the gas station attendant, and her message that wa
   (when (= (current-recursion-depth) 1)
     (next-chapter!)
     (p @~a{
-Martaanvuo. According to rumors, there's this basement lab here somewhere near the dam, an abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+Martaanvuo. According to rumors, there's this basement laboratory here somewhere near the dam, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
 
-The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks. Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh into the divine sausage machine, and out comes something magnificent:
+The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks, the last step in outgrowing this flesh prison that is doomed to die and rot! Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh in the divine sausage machine, and out comes something magnificent:
 
 Otava the Seeker, become Otava the Deathless!
     })
     (create-task 'anthead-monograph)
-    (p "Fly. Swat.")
     (wait-for-confirm)
     ))
 
@@ -68,14 +63,16 @@ Otava the Seeker, become Otava the Deathless!
             [(partially-completed x y)
              (set-partially-completed-x! completion (+ x gold-collected))])
 
-           (set-task-status-text! debt-task (format "10.111 grams of gold (~a paid)" (partially-completed-x completion)))
+           (set-task-status-text! debt-task (format "10.111 grams of gold (~a g paid)" (partially-completed-x completion)))
 
            (display-tasks)
 
            )
 
           (else
-           (notice (format "End run number ~a [failed]" (number->string (current-run)))))))
+           (when (not (= (current-run) 0))
+             (notice (format "End run number ~a [failed]" (number->string (current-run)))))))
+)
 
   (case exit-status
     ['end-run
@@ -101,7 +98,8 @@ Otava the Seeker, become Otava the Deathless!
     (current-session-score-dice++)
     )
 
-  (current-life (add1 (current-life)))
+  (when (flag-set? 'narrow-bridge-crossed)
+    (current-life (add1 (current-life))))
   (current-pc (make-new-pc))
   (set-base-build!)
   (when (not (= 1 (current-life)))
@@ -110,20 +108,29 @@ Otava the Seeker, become Otava the Deathless!
   (case (current-life)
     [(1)
      (p @~a{
-  Otava's bike roars and thunders as she speeds through the badlands. Morning light filters through arid, dusty air. A hill after a hill, a curve after a curve, here it still kind of feels like the Once-Was, the plains still the same, the air still the same.
+Otava's bike roars and thunders as she speeds through the badlands. Morning light filtering through arid, dusty air. She stops to put on her goggles, to keep out sand as much as light.
 
-  Her being here, riding towards the rotten, cursed Martaanvuo wasteland, definitely caused by running out of good options. But, now that she's here, there is definitely a many flies – single swat situation.
+Here, up north in the wastes, not much changed with water wars, really, the arid plains still the same, the air still the same. Makes you forget that the world is not what it used to, that it didn't have to come to that, but here we are.
 
-  The debt. "15 days", Mediator had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a rather worrisome sum total.
+This truly is the worst timeline.
+
+Her being here, riding towards the rotten, cursed Martaanvuo wasteland, definitely caused by running out of good options. But maybe there's at least a chance to fix multiple issues at once.
+
+First and foremost, there's the debt. "15 days", Merchant had said, "two weeks and one day extra, as an act of goodwill". And, frankly speaking, a rather worrisome sum total.
  })
      (create-task 'the-debt)
      (p @~a{
-  Mediator wouldn't take payment in anything other than gold, so, after getting rid of the bracelet, Otava is now chasing the rumor of a [cache] of valuables in the wasteland.
-
-  Fly. Swat.
+Merchant wouldn't take payment in anything other than gold, or assault weapons, another fucking act of goodwill. So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in the wasteland.
  })
      (wait-for-confirm)
      ]
+    [(2)
+     (p @~a{
+She can't stop thinking about the gas station attendant, and her [message] that was to be delivered to the termites: The Hartmann device is in the workshop.
+     })
+     (create-task 'the-message)
+     (wait-for-confirm)
+    ]
     )
     )
 
