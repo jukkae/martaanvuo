@@ -42,7 +42,7 @@
   "../../7-state/state.rkt"
   )
 
-(lazy-require ["../3-round-resolver/event-handler.rkt"
+(lazy-require ["../1-round-resolver/event-handler.rkt"
   (handle-interrupting-event!
    )])
 

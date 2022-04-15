@@ -1,11 +1,9 @@
 #lang at-exp racket
 
 (require
-  "../1-life-resolver/life-resolver.rkt"
-
-  "../3-round-resolver/round-resolver.rkt"
-  "../3-round-resolver/get-next-pc-action/menu.rkt"
-  "../3-round-resolver/get-next-pc-action/ui.rkt"
+  "../1-round-resolver/round-resolver.rkt"
+  "../1-round-resolver/get-next-pc-action/menu.rkt"
+  "../1-round-resolver/get-next-pc-action/ui.rkt"
 
     "../../1-index/content.rkt"
 

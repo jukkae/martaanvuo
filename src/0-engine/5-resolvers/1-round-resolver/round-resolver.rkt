@@ -15,7 +15,7 @@
   "get-next-pc-action/pc-choices.rkt"
   "get-next-pc-action/ui.rkt"
 
-  "../4-action-resolver/action-resolver.rkt"
+  "../2-action-resolver/action-resolver.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"

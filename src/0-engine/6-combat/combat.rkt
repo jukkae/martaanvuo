@@ -25,10 +25,6 @@
   "../4-systems/pc/pc.rkt"
   )
 
-(lazy-require ["../5-resolvers/3-round-resolver/round-resolver.rkt"
-  (go-to-fragment
-   )])
-
 (define (make-combat-event details)
   (combat-event* details (world-elapsed-time (current-world))))
 
