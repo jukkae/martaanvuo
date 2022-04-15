@@ -16,6 +16,6 @@
    [else '()]))
 
 (define (wait-for-input)
-  (define input (read-line))
+  (define input (string-trim (read-line)))
   (newline)
   input)
