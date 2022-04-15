@@ -81,6 +81,7 @@
 (define current-tasks (make-parameter '()))
 
 (define current-pc (make-parameter '()))
+(define current-once-per-day-actions-done (make-parameter '()))
 (define current-life (make-parameter 0))
 
 (define current-fragment-id (make-parameter '()))
@@ -111,6 +112,7 @@
   (current-in-combat? #f)
   (current-tasks '())
   (current-pc (make-new-pc))
+  (current-once-per-day-actions-done '())
   (current-life 0)
   (current-fragment-id '())
   (current-completed-fragments '())
@@ -163,6 +165,7 @@
      (current-in-combat?) ; Boolean
      (current-tasks) ; (Listof task)
      (current-pc) ; pc-actor
+     (current-once-per-day-actions-done)
      (current-life) ; Natural
      (current-fragment-id) ; Symbol
      (current-completed-fragments) ; (Listof Symbol)
@@ -206,6 +209,7 @@
   (current-in-combat? (State-in-combat? s))
   (current-tasks (State-tasks s))
   (current-pc (State-pc s))
+  (current-once-per-day-actions-done (State-once-per-day-actions-done s))
   (current-life (State-life s))
   (current-fragment-id (State-current-fragment-id s))
   (current-completed-fragments (State-completed-fragments s))

@@ -15,7 +15,7 @@
 (define (make-forage-choice)
   (make-choice
    'forage
-   "Forage."
+   "Forage. [once per day]"
    (λ () (make-action
           #:symbol 'forage
           #:actor (pc)
@@ -27,6 +27,7 @@
             (define target-number 8)
 
             (define successful? (skill-check "Forage" skill target-number))
+            (mark-once-per-day-action-done! 'forage)
             (cond (successful?
                    (define amount (d 1 2))
                    (define amount-string

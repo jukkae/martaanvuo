@@ -6,6 +6,7 @@
 
 (require
   "../../1-index/content.rkt"
+  "../../1-index/state.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
@@ -37,9 +38,6 @@
   "../../6-combat/combat-action-resolver.rkt"
   "../../6-combat/narration.rkt"
   "../../6-combat/stance.rkt"
-
-  "../../7-state/logging.rkt"
-  "../../7-state/state.rkt"
   )
 
 (lazy-require ["../1-round-resolver/event-handler.rkt"

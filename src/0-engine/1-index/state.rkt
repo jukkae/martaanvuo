@@ -30,6 +30,9 @@
   pc
 
   unset-current-fragment-id!
+
+  once-per-day-action-done?
+  mark-once-per-day-action-done!
   )
 
 
@@ -61,4 +64,7 @@
   pc
 
   unset-current-fragment-id!
+
+  once-per-day-action-done?
+  mark-once-per-day-action-done!
   )])

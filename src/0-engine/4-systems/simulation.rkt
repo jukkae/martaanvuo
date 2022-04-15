@@ -13,6 +13,7 @@
   "world/time.rkt"
 
   "../2-core/core.rkt"
+  "../2-core/output.rkt"
 
   "../3-types/event.rkt"
   "../3-types/item.rkt"
@@ -66,6 +67,12 @@
 
 (define (at-morning!)
   (define events '())
+
+  (when (not (null? (current-once-per-day-actions-done)))
+    (notice (format "1 / day actions [~a] cleared." (current-once-per-day-actions-done)))
+    (current-once-per-day-actions-done '())
+    )
+
   (when (pc-has-item? 'decaying-berries)
     ; TODO: Collapsing & stacking items in general should be done in inventory itself
     (cond [(pc-has-item? 'moldy-berries)

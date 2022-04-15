@@ -195,7 +195,8 @@
                        `((treat-injuries!))
                        )))))
 
-       (when (eq? (location-type (current-location)) 'swamp)
+       (when (and (eq? (location-type (current-location)) 'swamp)
+                  (not (once-per-day-action-done? 'forage)))
          (list
           (make-forage-choice)))
 

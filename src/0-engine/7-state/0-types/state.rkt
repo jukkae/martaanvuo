@@ -43,6 +43,7 @@
    [in-combat? : Boolean]
    [tasks : (Listof task)]
    [pc : pc-actor]
+   [once-per-day-actions-done : (Listof Symbol)]
    [life : Natural]
    [current-fragment-id : (Maybe Symbol)] ; Symbol -> FragmentId
    [completed-fragments : (Listof Symbol)] ; Symbol -> FragmentId

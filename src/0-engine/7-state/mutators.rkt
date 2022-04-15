@@ -30,6 +30,7 @@
   current-pc
   current-tasks
   current-run
+  current-once-per-day-actions-done
   )])
 
 (lazy-require ["../6-combat/combat.rkt" (
@@ -90,6 +91,17 @@
        (else
         (car enemies)))
 )
+
+(define (once-per-day-action-done? action-symbol)
+  (if (member action-symbol (current-once-per-day-actions-done))
+      #t
+      #f))
+
+(define (mark-once-per-day-action-done! action-symbol)
+  (when (not (once-per-day-action-done? action-symbol))
+    (current-once-per-day-actions-done
+      (append-element (current-once-per-day-actions-done)
+                      action-symbol))))
 
 
 ; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
