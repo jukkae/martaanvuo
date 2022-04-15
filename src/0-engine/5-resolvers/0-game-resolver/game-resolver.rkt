@@ -92,7 +92,9 @@
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed."
                                                (thunk
-                                                 (dev-note "TODO: proceeding, make new PC"))))
+                                                 (on-begin-life)
+                                                 (on-begin-run)
+                                                 'ok)))
 
             (p "Otava is dead. Proceed?")
             (print-meta-commands-with-keys meta-commands)
@@ -101,14 +103,14 @@
             (newline)
 
             (cond ((meta-command-valid? meta-commands input)
-                   (handle-meta-command meta-commands input)
-                   (end-of-life-menu 'verbose))
+                   (handle-meta-command meta-commands input))
                   (else (end-of-life-menu 'abbreviated))))
            ]
           ['win-game
            (end-game 'win-game)]
           ['restart
            (end-game 'restart)]
+          ['ok '()]
           [else
            (dev-note (format "Unexpected round exit status: ~a" round-exit-status))]
           )
