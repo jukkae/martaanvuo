@@ -98,8 +98,7 @@ Otava the Seeker, become Otava the Deathless!
     (current-session-score-dice++)
     )
 
-  (when (flag-set? 'narrow-bridge-crossed)
-    (current-life (add1 (current-life))))
+  (current-life (add1 (current-life)))
   (current-pc (make-new-pc))
   (set-base-build!)
   (when (not (= 1 (current-life)))

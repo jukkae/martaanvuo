@@ -2,8 +2,12 @@
 
 (require
   "../1-life-resolver/life-resolver.rkt"
+
+  "../3-round-resolver/round-resolver.rkt"
   "../3-round-resolver/get-next-pc-action/menu.rkt"
   "../3-round-resolver/get-next-pc-action/ui.rkt"
+
+    "../../1-index/content.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
@@ -78,20 +82,17 @@
 
   (define end-game-status
     (let/ec end-game
-      (let begin-new-life ([mode (case game-mode
-                                   ['begin 'begin]
-                                   ['restart 'begin]
-                                   ['continue 'continue])])
-
-        (define pc-life-end-status (resolve-life mode))
-
-        (when (eq? pc-life-end-status 'pc-dead)
-          (let end-of-life-menu ([verbosity 'verbose])
+      (let loop ()
+        (define round-exit-status (resolve-round 'begin))
+        (case round-exit-status
+          ['pc-dead
+           (let end-of-life-menu ([verbosity 'verbose])
 
             (define meta-commands (make-hash))
             (hash-set! meta-commands "Q" (cons "[Q]: Quit." quit))
             (hash-set! meta-commands "P" (cons "[P]: Proceed."
-                                               (thunk (begin-new-life 'begin))))
+                                               (thunk
+                                                 (dev-note "TODO: proceeding, make new PC"))))
 
             (p "Otava is dead. Proceed?")
             (print-meta-commands-with-keys meta-commands)
@@ -102,10 +103,18 @@
             (cond ((meta-command-valid? meta-commands input)
                    (handle-meta-command meta-commands input)
                    (end-of-life-menu 'verbose))
-                  (else (end-of-life-menu 'abbreviated)))))
+                  (else (end-of-life-menu 'abbreviated))))
+           ]
+          ['win-game
+           (end-game 'win-game)]
+          ['restart
+           (end-game 'restart)]
+          [else
+           (dev-note (format "Unexpected round exit status: ~a" round-exit-status))]
+          )
 
-        (when (eq? pc-life-end-status 'win-game) (end-game 'win-game))
-        (when (eq? pc-life-end-status 'restart) (end-game 'restart)))))
+        (loop))))
+
 
   (case end-game-status
 
@@ -153,10 +162,14 @@
 
         (else
          (br)
-         (prln "It was [D] or [Q], but nevermind. Your saved progress was not deleted, but it is still corrupt or incompatible.")
+         (prln "Your saved progress was not deleted, but it is still corrupt or incompatible.")
          (br)
          (prln "Martaanvuo awaits your return.")
          (exit))))
 
 (define (on-begin-playthrough!)
-  (reset-world!))
+  (reset-world!)
+  ;TODO: Move these somewhere
+  (dev-note "TODO: fix init/reset logic")
+  (on-begin-life)
+  (on-begin-run))
