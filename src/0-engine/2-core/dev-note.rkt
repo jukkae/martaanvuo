@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "../../version.rkt")
+(require "../../metadata.rkt")
 
 (define-syntax (here stx)
   (with-syntax ([file (syntax-source stx)]

@@ -3,7 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../../../version.rkt"
+  "../../../../metadata.rkt"
 
   "../../../2-core/io.rkt"
   "../../../2-core/core.rkt"
