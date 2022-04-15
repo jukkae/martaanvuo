@@ -19,6 +19,6 @@
        #'(begin
            (displayln
             (format "< ~a:~a > ~a"
-                    (path->string (find-relative-path (current-directory) file))
+                    (some-system-path->string (find-relative-path (current-directory) file))
                     (number->string line)
                     message)))])))
