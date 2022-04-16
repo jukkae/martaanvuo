@@ -17,7 +17,7 @@
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
-      ['new-time-of-day ; proc dailies here
+      ['new-time-of-day
        '()]
       ['not-hungry '()]
       ['hungry '()]

@@ -12,6 +12,7 @@
   current-combat-timeline
   current-counters
   current-counters++
+  current-elapsed-time
   current-fragment-id
   current-in-combat?
   current-last-numeric-actor-id
@@ -48,6 +49,7 @@
   current-combat-timeline
   current-counters
   current-counters++
+  current-elapsed-time
   current-fragment-id
   current-in-combat?
   current-last-numeric-actor-id
