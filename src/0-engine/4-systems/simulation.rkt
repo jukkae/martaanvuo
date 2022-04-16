@@ -69,8 +69,9 @@
   (define events '())
 
   (when (not (null? (current-once-per-day-actions-done)))
-    (notice (format "1 / day actions [~a] cleared." (current-once-per-day-actions-done)))
+    (define ev (make-event 'notice (format "Once per day actions [~a] cleared." (current-once-per-day-actions-done))  #:interrupting? #f))
     (current-once-per-day-actions-done '())
+    (set! events (append-element events ev))
     )
 
   (when (pc-has-item? 'decaying-berries)

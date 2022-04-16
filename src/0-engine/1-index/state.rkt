@@ -33,6 +33,8 @@
 
   once-per-day-action-done?
   mark-once-per-day-action-done!
+
+  reset-pending-action!
   )
 
 
@@ -67,4 +69,6 @@
 
   once-per-day-action-done?
   mark-once-per-day-action-done!
+
+  reset-pending-action!
   )])
