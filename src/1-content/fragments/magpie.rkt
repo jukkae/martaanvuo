@@ -47,7 +47,7 @@
   (p
    "\"31 and perks\", Magpie replies, \"I'll explain the whole package in detail later, but it includes things like tailored excellent employee recognition messages, free armory credits, and fitness and wellness perks.\"")
   (p
-   "Otava agrees, and Magpie goes over the details. The cache is in the nearby power plant on the plateau. It should be possible to get enough power to open the doors, and if not, well, they're sure to come up with something.")
+   "Otava agrees, and Magpie goes over the details. The cache is in the nearby scientific outpost on the plateau.")
   )
 
   #:decisions

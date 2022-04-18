@@ -232,10 +232,10 @@
           (if (route-fully-known? route)
               "The path to the fork in Martaanvuo swamp."
               "The downhill path.")]
-         ['power-plant-ruins
+         ['outpost
           (if (route-fully-known? route)
-              "The power plant ruins."
-              "The decrepit building.")]
+              "The outpost."
+              "The building with the machine.")]
          ['luminous-precipice
           (if (route-fully-known? route)
               "Luminous Precipice."
@@ -282,13 +282,13 @@
               "The vehicle trail out.")]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
-      ['power-plant-ruins
+      ['outpost
        (case (route-other-end-from route start-location)
          ['cache
           (if (route-fully-known? route)
               "The cache."
               "The previously locked door.")]
-         ['sewers-1 "The sewers."]
+         ['sewers-1 "The sewers."] ; TODO: sewers -> tunnels
          ['magpie-hill "Go outside."]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 

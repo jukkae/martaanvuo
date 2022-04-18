@@ -41,7 +41,11 @@
     )
      ]
     ['burnt-tree
-      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")])
+      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]
+
+    ['ruins
+      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock.")]
+      )
                 ))
   )
 

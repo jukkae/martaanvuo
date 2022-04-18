@@ -60,9 +60,9 @@
     #:shortname "Martaanvuo docks")
 
    (make-place
-    #:id 'power-plant-ruins
-    #:type 'ruins
-    #:shortname "Ruined power plant")
+    #:id 'outpost
+    #:type 'outpost
+    #:shortname "Scientific outpost")
 
    (make-place
     #:id 'sewers-1
@@ -135,10 +135,10 @@
     ;  (make-path-between places 'martaanvuo-swamp 'luminous-precipice 120)
      (make-path-between places 'burnt-tree 'the-maw 1 #:no-encounters? #t)
      (make-path-between places 'the-maw 'waiting-room 1 #:no-encounters? #t #:onedirectional? #t)
-     (make-path-between places 'magpie-hill 'power-plant-ruins 30 #:no-encounters? #t)
+     (make-path-between places 'magpie-hill 'outpost 30 #:no-encounters? #t)
      (make-path-between places 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
-     (make-path-between places 'power-plant-ruins 'cache 2 #:no-encounters? #t #:details '(locked))
-     (make-path-between places 'power-plant-ruins 'sewers-1 5 #:no-encounters? #t)
+     (make-path-between places 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
+     (make-path-between places 'outpost 'sewers-1 5 #:no-encounters? #t)
      (make-path-between places 'sewers-1 'sewers-2 10)
      (make-path-between places 'sewers-1 'workshop 10)
      (make-path-between places 'sewers-1 'compound-entrance 10)
