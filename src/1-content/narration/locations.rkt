@@ -1,5 +1,6 @@
 #lang at-exp racket
 
+;TODO: This should be called routes, perhaps
 
 (provide describe-begin-traverse-action
          describe-finish-traverse-action
@@ -288,7 +289,7 @@
           (if (route-fully-known? route)
               "The cache."
               "The previously locked door.")]
-         ['sewers-1 "The sewers."] ; TODO: sewers -> tunnels
+         ['tunnels-1 "The tunnel."]
          ['magpie-hill "Go outside."]
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 

@@ -65,13 +65,13 @@
     #:shortname "Scientific outpost")
 
    (make-place
-    #:id 'sewers-1
-    #:type 'sewers
+    #:id 'tunnels-1
+    #:type 'tunnels
     #:items (list (make-item 'ammo)))
 
    (make-place
-    #:id 'sewers-2
-    #:type 'sewers
+    #:id 'tunnels-2
+    #:type 'tunnels
     #:items (list (make-item 'ammo)))
 
    (make-place
@@ -138,15 +138,15 @@
      (make-path-between places 'magpie-hill 'outpost 30 #:no-encounters? #t)
      (make-path-between places 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
      (make-path-between places 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
-     (make-path-between places 'outpost 'sewers-1 5 #:no-encounters? #t)
-     (make-path-between places 'sewers-1 'sewers-2 10)
-     (make-path-between places 'sewers-1 'workshop 10)
-     (make-path-between places 'sewers-1 'compound-entrance 10)
+     (make-path-between places 'outpost 'tunnels-1 5 #:no-encounters? #t)
+     (make-path-between places 'tunnels-1 'tunnels-2 10)
+     (make-path-between places 'tunnels-1 'workshop 10)
+     (make-path-between places 'tunnels-1 'compound-entrance 10)
      (make-path-between places 'compound-entrance 'murkwater-docks 2)
      (make-path-between places 'compound-entrance 'workshop 2)
      (make-path-between places 'murkwater-docks 'workshop 2 #:no-encounters? #t)
      (make-path-between places 'murkwater-docks 'palsat 130 #:no-encounters? #t)
-     (make-path-between places 'sewers-2 'storage-closet 1)
+     (make-path-between places 'tunnels-2 'storage-closet 1)
      (make-path-between places 'storage-closet 'workshop 1 #:no-encounters? #t)
      (make-path-between places 'workshop 'control-room 2 #:no-encounters? #t)
      (make-path-between places 'workshop 'martaanvuo-source 2)

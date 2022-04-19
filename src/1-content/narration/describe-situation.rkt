@@ -25,7 +25,7 @@
 (define (describe-non-combat-situation repeated?)
   (cond ((null? (current-fragment-id))
          (cond ((eq? (location-id (current-location)) 'magpie-hill)
-                (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a decrepit industrial building further ahead on the plateau in the fog. A small trail leads along the edge of the plateau.")))
+                (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a small, decrepit industrial-looking building further ahead on the plateau. A small trail leads along the edge of the plateau.")))
          (cond ((location-has-feature? (current-location) 'magpie-effigy)
                 (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))
          ; TODO: extract this to a function
@@ -43,8 +43,12 @@
     ['burnt-tree
       (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]
 
-    ['ruins
-      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock.")]
+    ['outpost
+      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock. Inside the building, there's a steel platform and a bench and some empty closets. Stairs lead down into a tunnel entrance.
+
+      There is drying blood on the platform, not a little.
+
+      There's also separate brick-walled room on ground level.")]
       )
                 ))
   )
@@ -52,13 +56,7 @@
 
 (define (describe-situation repeated?)
   (when (location-has-feature? (current-location) 'locked-door)
-    (cond ((and (pc-has-item? 'revolver)
-                (pc-has-ammo-left?))
-           (p "There's a door that's locked with a heavy padlock."))
-          ((and (pc-has-item? 'bolt-cutters))
-           (p "There's a door that's locked with a heavy padlock."))
-          (else
-           (p "There's a door that's locked with a heavy padlock. If only she had bolt cutters..."))))
+    (p "The door in the brick wall is locked with a heavy padlock."))
   (cond
     ((current-in-combat?) (describe-combat-situation))
     (else

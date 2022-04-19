@@ -170,6 +170,5 @@
 (define (on-begin-playthrough!)
   (reset-world!)
   ;TODO: Move these somewhere
-  (dev-note "TODO: fix init/reset logic")
   (on-begin-life)
   (on-begin-run))
