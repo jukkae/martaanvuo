@@ -1,7 +1,7 @@
 #lang racket
 
 (provide martaanvuo-version)
-(define martaanvuo-version "0.0.3-preview")
+(define martaanvuo-version "0.0.4")
 
 (provide project-root-path)
 (define project-root-path (this-file))
