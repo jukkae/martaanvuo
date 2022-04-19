@@ -47,7 +47,7 @@
 
               (when (not (location-has-detail? (current-location) 'no-encounters))
                 (define encounter-roll (d 1 6))
-                (define tn 3)
+                (define tn 5)
                 (notice (format "Encounter roll: 1d6 < ~a: [~a] – ~a"
                                 tn
                                 encounter-roll

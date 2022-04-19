@@ -74,8 +74,8 @@
   (define encounter-types
     ; TODO: Better accessors for hashtable params
     (case (hash-ref (current-counters) 'enemy-encounters 0)
-      [(1) (list spawn-grabberkin-encounter!)]
-      [(2) (list spawn-blindscraper-encounter!)]
+      ; [(1) (list spawn-grabberkin-encounter!)]
+      ; [(2) (list spawn-blindscraper-encounter!)]
       [else
         (list
           spawn-blindscraper-encounter!
