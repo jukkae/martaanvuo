@@ -27,6 +27,7 @@
   current-world
 
   get-current-enemies
+  get-current-enemy
   get-next-numeric-actor-id
   pc
 
@@ -64,6 +65,7 @@
   current-world
 
   get-current-enemies
+  get-current-enemy
   get-next-numeric-actor-id
   pc
 

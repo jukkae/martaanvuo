@@ -46,7 +46,7 @@
       [(1)
        (define item (car items))
        (define name (item-name item))
-       (notice (format "There is ~a here." name))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
+       (notice (format "There is ~a here." (string-downcase (format "~a" name))))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
       [else
        (notice "There are multiple items here.")]))
 

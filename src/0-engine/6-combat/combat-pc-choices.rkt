@@ -54,7 +54,7 @@
                #:resolution-rules
                `(
                  (define enemies (get-current-enemies))
-                 (cond ((> (length enemies) 1)
+                 #;(cond ((> (length enemies) 1)
                         (displayln "resolve-escape-action!: Narration for multiple enemies"))
                        ((= (length enemies) 0)
                         (displayln "resolve-escape-action!: Narration for zero enemies"))
@@ -70,7 +70,7 @@
                         )
                        )
                  (define skill (get-trait (pc) "athletics-skill"))
-                 (displayln "TODO: Blurbify escape success/fail narration based on location")
+                ; TODO: blurbify escape narration based on location and enemies
 
                  (define stance-range-values '())
                  (for ([enemy enemies])
@@ -86,20 +86,12 @@
                  (define success? (skill-check "Athletics" skill target-number))
                  (if success?
                      (begin
-                       (p "Otava dives in the shadows.")
+                       (p "Otava escapes from combat.")
                        (wait-for-confirm)
-                       (cond ((luck-check)
-                              (p "Nothing seems to be following her.")
-                              (award-xp! 3 "for a working survival instinct")
-                              'end-combat)
-                             (else
-                              (p "The blindscraper skitters and scrapes, leaping and running, its claws scratching and scraping through air. It's still following her.")
-                              'fail))
+                       'end-combat
                        )
                      (begin
-                       (p "Otava's foot gets caught on a root. She falls face down in the mud.")
-                       (actor-add-status! (pc) (status 'fallen 1))
-                       (display-pc-combatant-info (pc))
+                       (p "Otava fails to escape from combat.")
                        (wait-for-confirm)
                        'failure))
                  )))))

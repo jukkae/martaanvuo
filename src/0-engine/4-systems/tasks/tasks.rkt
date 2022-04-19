@@ -117,7 +117,7 @@
         'find-anthead-monograph
         "Anthead Monograph"
         'in-progress
-        "The knowledge how to become deathless."
+        "The book on transcending death."
         "Should be in the Maw (?) of Martaanvuo."
         '()
         '()
