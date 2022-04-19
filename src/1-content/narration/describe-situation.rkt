@@ -44,9 +44,9 @@
       (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]
 
     ['outpost
-      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock. Inside the building, there's a steel platform and a bench and some empty closets. Stairs lead down into a tunnel entrance.
+      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock. Inside the building, there's more heavy machinery, a steel platform, a bench and some empty closets. Stairs lead down to a tunnel entrance.
 
-      There is drying blood on the platform, not a little.
+      There is drying blood on the platform.
 
       There's also separate brick-walled room on ground level.")]
       )
