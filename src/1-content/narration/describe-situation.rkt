@@ -55,13 +55,15 @@
 
 
 (define (describe-situation repeated?)
-  (if (flag-set? 'perspective-switched)
-    (p "Otava is the space in which the world appears. There is a scavenger roaming through the wastelands of Martaanvuo. A pulsating heartbeat emanates from deep within the earth's crust.")
-    '())
   (when (location-has-feature? (current-location) 'locked-door)
     (p "The door in the brick wall is locked with a heavy padlock."))
   (cond
     ((current-in-combat?) (describe-combat-situation))
     (else
-      (describe-non-combat-situation repeated?))))
+      (describe-non-combat-situation repeated?)))
+  (if (flag-set? 'perspective-switched)
+    (p #:suppress-logging? repeated? "Otava is the space in which the world appears. Nothing is still, everything fluxating and pulsuating. Atomic particles thrown about by forces of cause and effect. A pulsating heartbeat emanates from deep within the earth's crust.")
+    '())
+
+  )
 

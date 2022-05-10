@@ -177,8 +177,8 @@
                   (place? (current-location)))
          (list (choice-factory 'rest)))
 
-       (when (and (>= (pc-actor-hunger (current-pc)) 100)
-                  (pc-has-item? 'ration))
+       (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
+                  (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (list
           (choice-factory 'eat)))
 
