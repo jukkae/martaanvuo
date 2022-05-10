@@ -25,5 +25,10 @@
 (define (flag-set? flag)
   (memq flag (current-flags)))
 
+(define (toggle-flag flag)
+  (if (flag-set? flag)
+      (remove-flag flag)
+      (set-flag flag)))
+
 (define (print-flags)
   (dev-note (format "flags: ~a" (current-flags))))

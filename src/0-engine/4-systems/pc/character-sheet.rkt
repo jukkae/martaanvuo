@@ -222,9 +222,36 @@
     ))
 )
 
+(define (use-skill)
+  (define skills '(switch-perspective))
+  (prln (format "Select skill [1-~a], anything else to cancel." (length skills)))
+  (br)
+
+  (for ([skill skills]
+        [i (in-naturals 1)])
+    (prln (format "[~a] ~a" i skill))
+    )
+  (br)
+  (define input (string->number (wait-for-input)))
+  (define selected-skill '())
+  (cond ((and (number? input)
+              (> input 0)
+              (<= input (length skills)))
+         (define index (- input 1))
+         (set! selected-skill (list-ref skills index))
+         )
+        (else '()#;(p "Nevermind.")))
+  (when (not (null? selected-skill))
+    (dev-note (format "Skill: ~a" selected-skill))
+    (case selected-skill
+     ['switch-perspective (toggle-flag 'perspective-switched)])
+    )
+  )
+
 ; TODO: These must be filtered w.r.t combat
 (define (select-interaction-target)
-  (define targets (list (cons "Select item" select-item)))
+  (define targets (list (cons "Select item" select-item)
+                        (cons "Use skill" use-skill)))
 
   (prln (format "Select [1-~a], or anything else to go back to game." (length targets)))
   (br)

@@ -37,12 +37,24 @@
   mark-once-per-day-action-done!
 
   reset-pending-action!
+
+  set-flag
+  remove-flag
+  flag-set?
+  toggle-flag
   )
 
 
 (lazy-require ["../7-state/logging.rkt" (
   append-to-log
   next-chapter!
+  )])
+
+(lazy-require ["../7-state/flags.rkt" (
+  set-flag
+  remove-flag
+  flag-set?
+  toggle-flag
   )])
 
 (lazy-require ["../7-state/state.rkt" (
