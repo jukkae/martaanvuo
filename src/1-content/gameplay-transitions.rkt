@@ -40,6 +40,13 @@ The Merchant had demanded payment in actual gold, or assault weapons, as another
 })
     (create-task 'the-debt)
     (wait-for-confirm)
+    )
+  (when (= (current-recursion-depth) 2)
+    (p @~a{
+Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, find the reactor chamber.
+})
+    (create-task 'storm-the-facility)
+    (wait-for-confirm)
     ))
 
 (define (on-end-run exit-status)
@@ -113,6 +120,13 @@ The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it
 Otava the Seeker, become Otava the Deathless!
 })
      (create-task 'anthead-monograph)
+     (wait-for-confirm)
+     ]
+    [(2)
+     (p @~a{
+The tunnels in Martaanvuo Canyon, some shady fuck is willing to pay good money for a map of the cave system. Find the stalactite gate, that's the important thing, map out the caves that far, and that's it.
+})
+     (create-task 'map-out-the-tunnels)
      (wait-for-confirm)
      ]
     )
