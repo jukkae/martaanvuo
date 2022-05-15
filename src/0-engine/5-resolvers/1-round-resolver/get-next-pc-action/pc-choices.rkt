@@ -201,10 +201,6 @@
           (make-forage-choice)))
 
        (make-choices-based-on-features)
-
-
-       (when (eq? (location-id (current-location)) 'perimeter)
-         (get-perimeter-choices))
        ))))
 
   (define condensed (condense all-actions))

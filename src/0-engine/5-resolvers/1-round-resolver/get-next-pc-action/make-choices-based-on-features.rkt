@@ -24,6 +24,7 @@
   "../../../7-state/state.rkt"
   )
 
+; TODO: this is content and should be provided by content files
 (provide make-choices-based-on-features)
 (define (make-choices-based-on-features)
   (filter

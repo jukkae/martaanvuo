@@ -25,6 +25,10 @@
   (reset-pending-action!
   )])
 
+(lazy-require ["../../../1-content/world/locations/location-choices.rkt"
+  (get-location-choices
+  )])
+
 (require
   "routes.rkt"
   "../actors/actor.rkt"
@@ -114,3 +118,6 @@
           (route-b location)))
         ((place? location)
          (place-routes location))))
+
+(define (get-current-location-choices)
+  (get-location-choices (current-location)))

@@ -116,7 +116,12 @@
     #:features '(waiting-room-begin))
 
    (make-place
-    #:id 'palsat)))
+    #:id 'palsat)
+
+   (make-place
+    #:id 'carnival
+    #:features '(the-endless-staircase bobo-the-clown the-merchant)) ; not the same merchant, not literally at least
+  ))
 
 (provide make-new-world)
 (define (make-new-world)
@@ -130,6 +135,7 @@
      (make-path-between places 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
      (make-path-between places 'martaanvuo-swamp 'burnt-tree 70)
      (make-path-between places 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
+     (make-path-between places 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
     ;  (make-path-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
     ;  (make-path-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
     ;  (make-path-between places 'martaanvuo-swamp 'luminous-precipice 120)

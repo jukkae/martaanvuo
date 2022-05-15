@@ -30,6 +30,12 @@
   )])
 
 (provide
+  get-location-choices)
+(lazy-require ["../../1-content/world/locations/get-location-choices.rkt" (
+  get-location-choices
+  )])
+
+(provide
   on-begin-run
   on-begin-recurse-run
   on-end-run
