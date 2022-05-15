@@ -4,7 +4,6 @@
 
 (require
   "choice-factory.rkt"
-  "make-choices-based-on-features.rkt"
   "make-cancel-traverse-choice.rkt"
   "make-forage-choice.rkt"
   "make-traverse-choice.rkt"
@@ -200,7 +199,7 @@
          (list
           (make-forage-choice)))
 
-       (make-choices-based-on-features)
+       (get-current-location-choices)
        ))))
 
   (define condensed (condense all-actions))
