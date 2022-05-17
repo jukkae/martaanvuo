@@ -6,29 +6,13 @@
   "../../../0-engine/0-api/api.rkt")
 
 (require
-  "perimeter.rkt")
+  "carnival.rkt"
+  "perimeter.rkt"
+  )
 
 
 (require
-  "../../../0-engine/2-core/io.rkt"
-  "../../../0-engine/2-core/core.rkt"
-
-  "../../../0-engine/3-types/action.rkt"
   "../../../0-engine/3-types/choice.rkt"
-  "../../../0-engine/3-types/location.rkt"
-  "../../../0-engine/3-types/route.rkt"
-
-  "../../../0-engine/4-systems/actors/actor.rkt"
-  "../../../0-engine/4-systems/blurbs/blurbs.rkt"
-  "../../../0-engine/4-systems/checks/checks.rkt"
-  "../../../0-engine/4-systems/fragments.rkt"
-  "../../../0-engine/4-systems/items/item.rkt"
-  "../../../0-engine/4-systems/locations/locations.rkt"
-  "../../../0-engine/4-systems/pc/pc.rkt"
-  "../../../0-engine/4-systems/world/time.rkt"
-  "../../../0-engine/4-systems/world/world.rkt"
-
-  "../../../0-engine/7-state/state.rkt"
   )
 
 
@@ -57,10 +41,11 @@
   )
 
 (define (get-location-choices location)
-  (case location-id
+  (case (location-id location)
    ['perimeter (get-perimeter-choices)]
    ['magpie-hill (get-magpie-hill-choices)]
    ['luminous-precipice (get-precipice-choices)]
+   ['carnival (get-carnival-choices)]
    [else
 
     (filter
