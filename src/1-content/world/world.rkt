@@ -120,7 +120,7 @@
 
    (make-place
     #:id 'carnival
-    #:features '(the-endless-staircase bobo-the-clown the-merchant)) ; not the same merchant, not literally at least
+    #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)) ; not the same merchant, not literally at least
   ))
 
 (provide make-new-world)

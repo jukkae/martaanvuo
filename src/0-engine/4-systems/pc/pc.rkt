@@ -126,6 +126,20 @@
       (item-quantity gold?)
       0))
 
+(define (pc-has-money amount)
+  (define dollars (* 10 (pc-gold-amount)))
+  (>= dollars amount))
+
+(define (decrease-pc-money! quantity)
+  (define gold-equiv (* 0.1 quantity))
+  (define items (actor-inventory (pc)))
+  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+                       items))
+  (cond [gold?
+         (set-item-quantity! gold? (- (item-quantity gold?) gold-equiv))])
+  (notice (format "Gold decreased by ~a, new quantity: ~a" gold-equiv (item-quantity gold?)))
+)
+
 (define (pc-has-ammo-left?)
   (define items (actor-inventory (pc)))
   (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
