@@ -4,6 +4,36 @@
 
 (require "../../0-engine/0-api/api.rkt")
 
+; destroy / prime / use / find / finish / fix / steal / steal plans to / prevent use of
+(fragment 'anthill-teleporter
+  (thunk
+   (p @~a{
+ANTHILL:
+It destroys the Teleporter.
+
+OTAVA:
+Yes. Where is it?
+
+ANTHILL:
+Underneath, in the darkbelow, strongwalls, bigheavy surrounding. Coldneath watercurrent throughabove fallsound.
+
+OTAVA:
+Yes. How do I find it?
+
+ANTHILL:
+Twosplit vectorspace pathkind known. Riverway upwards bigwall consistency alteration structures. Birdwing humankind peakthrough drillsite tunnelbore splitwalk.
+   })
+   (add-new-task
+    (task
+    'destroy-the-teleporter
+    "Destroy the Teleporter"
+    "It is underneath, in Martaanvuo."
+    "Not destroyed."
+    '()
+    '()
+    '()
+    ))))
+
 (fragment 'anthill-1
 
           (thunk

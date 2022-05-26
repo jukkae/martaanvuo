@@ -14,6 +14,7 @@
     "../3-types/location.rkt"
     "../3-types/route.rkt"
     "../3-types/task.rkt"
+    "../3-types/world.rkt"
 
     "../4-systems/checks/checks.rkt"
     "../4-systems/actors/actor.rkt"
@@ -51,6 +52,7 @@
   "../3-types/location.rkt"
   "../3-types/route.rkt"
   "../3-types/task.rkt"
+  "../3-types/world.rkt"
 
   "../4-systems/checks/checks.rkt"
   "../4-systems/actors/actor.rkt"

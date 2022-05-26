@@ -100,7 +100,8 @@
     #:features '(martaanvuo-terminal))
 
    (make-place
-    #:id 'reactor-room)
+    #:id 'reactor-room
+    #:features '(teleporter))
 
    (make-place
     #:id 'martaanvuo-source)

@@ -124,7 +124,9 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
 
 ; The carnival could be randomly generated, so you have to wander around until events are drawn from a deck
 (define (get-carnival-choices)
-  (list
+  (define current-day (add1 (exact-floor (/ (world-elapsed-time (current-world)) day-length)))) ; TODO: ACCESSOR!!!
+  (cond [(even? current-day)
+      (list
     (make-choice
       'bobo-the-clown
       "Bobo the Clown."
@@ -160,7 +162,12 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
         (go-to-fragment 'fortune-teller)
         'end-chapter ; ie., 'end-round-early, plus next chapter on next round
         ))
-  ))
+  )
+    ]
+    [else
+     '()
+    ])
+  )
 
 (define (get-carnival-forbidden-actions)
   (list 'rest))
