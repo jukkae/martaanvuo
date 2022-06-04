@@ -122,6 +122,71 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
         #:next-fragment 'exit
         )))
 
+(fragment
+ 'giant-hen
+ (thunk
+  (p @~a{
+Otava steps through the uncomfortably low circular aperture in the ass of the hen. It is a vast cavern, Otava's footsteps echoing from the walls.
+
+At the very center of it, there's a lone giant egg, with stairs on the side. There's loud music and flashing lights.
+
+Climb in the egg?
+  })
+  )
+ #:decisions
+ (list (make-decision
+        #:title "Climb in the egg."
+        #:next-fragment 'giant-egg-recurse
+        )
+       (make-decision
+        #:title "Exit the hen."
+        #:next-fragment 'exit
+        )
+      ))
+
+(fragment
+ 'giant-egg-recurse
+(thunk
+  (p @~a{
+Otava is inside a plastic egg. The muffled music from outside sounds through.
+
+There's a giant plastic hen roosting at the center of the plastic egg. The hen clanks and clatters as it ruffles its feathers, there's a little fanfare, tsssssssshhhh there's some theater smoke, lights flash, the hen screams, and then it goes silent.
+
+There's a circular door in the ass of the hen.
+
+Enter the hen?
+ }))
+ #:decisions
+ (list (make-decision
+        #:title "Enter the hen."
+        #:next-fragment 'giant-hen
+        )
+       (make-decision
+        #:title "Exit the egg."
+        #:next-fragment 'exit
+        )
+      ))
+
+; A random chance of sometimes containing something
+(fragment
+ 'giant-egg
+ (thunk
+  (p @~a{
+A giant plastic egg looming over Otava. Stairs on the side, loud music, flashing lights.
+
+Climb in the egg?
+ }))
+ #:decisions
+ (list (make-decision
+        #:title "Climb in the egg."
+        #:next-fragment 'giant-egg-recurse
+        )
+       (make-decision
+        #:title "Do not climb in the egg."
+        #:next-fragment 'exit
+        )
+      ))
+
 ; The carnival could be randomly generated, so you have to wander around until events are drawn from a deck
 (define (get-carnival-choices)
   (define current-day (add1 (exact-floor (/ (world-elapsed-time (current-world)) day-length)))) ; TODO: ACCESSOR!!!
@@ -160,6 +225,13 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
       "Fortune teller"
       (λ ()
         (go-to-fragment 'fortune-teller)
+        'end-chapter ; ie., 'end-round-early, plus next chapter on next round
+        ))
+    (make-choice
+      'giant-egg
+      "Giant egg"
+      (λ ()
+        (go-to-fragment 'giant-egg)
         'end-chapter ; ie., 'end-round-early, plus next chapter on next round
         ))
   )
