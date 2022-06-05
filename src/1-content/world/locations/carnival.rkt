@@ -23,6 +23,7 @@ Bobo the Clown puts a mask on his mouth, and there's a click and a TSCHHHHHHHHHH
 BOBO THE CLOWN:
 Two gas laughing new person ha ha ha you want? It will make your miiiiiiiiiiiiind ha haha your mind you'll think somebody yes new huh ha ha ha? Yes? Yeees?
  }))
+ #:time-taken-by-fragment 2
  #:decisions
  (list (make-decision
         #:requirement (λ () (pc-has-money 2))
@@ -52,6 +53,7 @@ Come and sit, child! Let Madame Sybil read your palm and tell you about your lif
 
 Level one palm reading costs two dollars, worms are three dollars, and the Sacred Orb of Seeing costs 52 dollars.
   }))
+  #:time-taken-by-fragment 2
  #:decisions
  (list (make-decision
         #:title "Level one palm reading. [-2 dollars]"
@@ -116,6 +118,7 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
   })
   (decrease-pc-money! 2)
   (award-xp! 4))
+ #:time-taken-by-fragment 7
  #:decisions
  (list (make-decision
         #:title "Exit the tent."
@@ -133,6 +136,7 @@ At the very center of it, there's a lone giant egg, with stairs on the side. The
 Climb in the egg?
   })
   )
+ #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
         #:title "Climb in the egg."
@@ -156,6 +160,7 @@ There's a circular door in the ass of the hen.
 
 Enter the hen?
  }))
+ #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
         #:title "Enter the hen."
@@ -176,6 +181,7 @@ A giant plastic egg looming over Otava. Stairs on the side, loud music, flashing
 
 Climb in the egg?
  }))
+ #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
         #:title "Climb in the egg."
