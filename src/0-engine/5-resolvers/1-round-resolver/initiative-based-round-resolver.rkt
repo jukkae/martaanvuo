@@ -27,8 +27,6 @@
 (define (resolve-turns!)
   (let/ec end-round-early
     (when (all-actions-of-type? action-queue 'escape)
-      (dev-note "consolidate this with pc-combat-action")
-      (p "Otava ducks in the shadows.")
       (award-xp! 1)
       (end-combat)
       (end-round-early))
