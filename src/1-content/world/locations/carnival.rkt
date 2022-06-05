@@ -41,6 +41,63 @@ Two gas laughing new person ha ha ha you want? It will make your miiiiiiiiiiiiin
         #:next-fragment 'exit
         )))
 
+(fragment
+ 'the-other-merchant-1
+ (thunk
+  (p @~a{
+The Bio-Mechanical Emporium is full of bizarre modifications, half machine, half flesh. Glass jars with organs in them line one wall. There are muscular spiky things, pointy and dangly things, assorted body parts held together by wire, mutations connected by pipes.
+
+Otava notes a pair of black chain-linked kind of marbles or more like a black eyeball, and there's a chain from the iris, leading to a hooked two-inch spike on the other end.
+
+MALE VOICE:
+May I help you?
+
+The voice belongs to an elegant man dressed in midnight blue satin, with a curled moustache. THE MERCHANT, his nametag says.
+ }))
+ #:time-taken-by-fragment 3
+ #:decisions
+ (list (make-decision
+        #:title "\"What are these?\" [black marble spike things]"
+        #:next-fragment 'sonar-eyeballs
+        )
+       (make-decision
+        #:title "\"Just looking.\""
+        #:next-fragment 'exit
+        )
+       (make-decision
+        #:title "\"What kind of a shop is this?\""
+        #:next-fragment 'exit
+        )
+       (make-decision
+        #:title "\"I wanna buy something.\""
+        #:next-fragment 'exit
+        )
+       (make-decision
+        #:title "\"I wanna sell something.\""
+        #:next-fragment 'exit
+        )
+        ))
+
+
+(fragment
+ 'sonar-eyeballs
+ (thunk
+  (p @~a{
+OTAVA:
+What are these?
+
+MERCHANT:
+They are sonar eyeballs, a rather genious invention. They replace the user's previous eyeballs and connect to the optic nerve with this hook here. A tiny loudspeaker emits clicks, and the eyeballs decode the reflections.
+ }))
+ #:time-taken-by-fragment 1
+ #:decisions
+ (list (make-decision
+        #:title "\"Cool, thanks.\""
+        #:next-fragment 'exit
+        )
+      ))
+
+
 ; alternate selves: Madam Sibyl, Adam Sybyl, Mad Sibylla, etc.
 (fragment
  'fortune-teller
