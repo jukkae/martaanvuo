@@ -22,14 +22,8 @@
  (describe-combat-situation
   )])
 
-(define (describe-non-combat-situation repeated?)
-  (cond ((null? (current-fragment-id))
-         (cond ((eq? (location-id (current-location)) 'magpie-hill)
-                (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a small, decrepit industrial-looking building further ahead on the plateau. A small trail leads along the edge of the plateau.")))
-         (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))
-         ; TODO: extract this to a function
-         (case (location-id (current-location))
+(define (describe-location repeated?)
+(case (location-id (current-location))
     ['perimeter
      (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. Another path leads to the right, through low, prickly bushes.")
      (when (not (place-visited? (current-location))) ; logic broken
@@ -50,6 +44,15 @@
 
       There's also separate brick-walled room on ground level.")]
       )
+  )
+
+(define (describe-non-combat-situation repeated?)
+  (cond ((null? (current-fragment-id))
+         (cond ((eq? (location-id (current-location)) 'magpie-hill)
+                (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a small, decrepit industrial-looking building further ahead on the plateau. A small trail leads along the edge of the plateau.")))
+         (cond ((location-has-feature? (current-location) 'magpie-effigy)
+                (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))
+         (describe-location repeated?)
                 ))
   )
 
