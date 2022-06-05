@@ -113,13 +113,12 @@
                    target
                    (FreshInjury 'ankle-broken "Can't walk, too painful."
                      (current-elapsed-time)
-                     )
-                   #;(condition 'ankle-broken
-                    "Can't walk, too painful."))
+                     ))
                   (when critical?
                     (inflict-condition!
                      target
 
+                     ; TODO: content
                      (condition 'bleeding
                                 "Bleeding, should get this patched ASAP."
                                 )))
