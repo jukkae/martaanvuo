@@ -120,7 +120,6 @@
                     (inflict-condition!
                      target
 
-                     ; TODO: extract to generic conditions file
                      (condition 'bleeding
                                 "Bleeding, should get this patched ASAP."
                                 )))
