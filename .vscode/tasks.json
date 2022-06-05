@@ -41,6 +41,19 @@
             }
         },
         {
+            "label": "Run editor",
+            "type": "shell",
+            "command": "racket 2-editor/editor.rkt",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}/src",
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+            }
+        },
+        {
             "label": "Build",
             "type": "shell",
             "command": "raco exe -o build/martaanvuo --vv src/martaanvuo.rkt",
