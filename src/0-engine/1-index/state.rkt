@@ -31,7 +31,7 @@
   get-next-numeric-actor-id
   pc
 
-  unset-current-fragment-id!
+  clear-current-fragment!
 
   once-per-day-action-done?
   mark-once-per-day-action-done!
@@ -81,7 +81,7 @@
   get-next-numeric-actor-id
   pc
 
-  unset-current-fragment-id!
+  clear-current-fragment!
 
   once-per-day-action-done?
   mark-once-per-day-action-done!

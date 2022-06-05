@@ -41,7 +41,7 @@
   (enqueue-npc-actions)
 
   (case round-begin-status
-    ['pc-dead (unset-current-fragment-id!)])
+    ['pc-dead (clear-current-fragment!)])
   (save) ; save before describing situation -> no double-logged paragraphs
 
   (when (current-show-round-summary?)

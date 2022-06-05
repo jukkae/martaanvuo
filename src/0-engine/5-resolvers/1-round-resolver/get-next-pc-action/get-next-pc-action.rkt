@@ -55,7 +55,7 @@
                                      (current-fragment-get-decisions)))
 
       (when (null? fragment-decisions)
-        (unset-current-fragment-id!)
+        (clear-current-fragment!)
         )
 
       ; launch a fragment directly -> no action resolution -> not a choice

@@ -54,22 +54,22 @@
          (cond
            ; it can either be a special symbol...
            ((eq? 'exit next-fragment)
-            (unset-current-fragment-id!))
+            (clear-current-fragment!))
 
            ((eq? 'recurse next-fragment)
-            (unset-current-fragment-id!)
+            (clear-current-fragment!)
             'recurse) ; !! important
 
            ((eq? 'pc-dead next-fragment)
             (dev-note "PC DEAD NEXT FRAG")
-            (unset-current-fragment-id!)
+            (clear-current-fragment!)
             'pc-dead)
 
            ; ... or it can be just a label
            (else (go-to-fragment next-fragment))))
 
         ((null? next-fragment) ; treat '() as 'exit
-         (unset-current-fragment-id!))
+         (clear-current-fragment!))
 
         (else (error
                (format "(current-fragment-handle-decision!): unexpected next-fragment type: ~a"

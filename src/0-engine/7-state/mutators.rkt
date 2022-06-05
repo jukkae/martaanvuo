@@ -134,7 +134,7 @@
      (displayln "increment-achievement!: unknown achievement:")
      (displayln achievement)]))
 
-(define (unset-current-fragment-id!)
+(define (clear-current-fragment!)
   (current-fragment-id '()))
 
 (define (fragment-completed? id)
