@@ -7,6 +7,13 @@
   "narration/gameplay-transitions.rkt"
 )
 
+; Main entrypoint of campaign
+(define (on-begin-playthrough!)
+  (reset-world!)
+  (on-begin-life)
+  (on-begin-run))
+
+
 (define (on-begin-nth-run n)
   (case n
    [(1)

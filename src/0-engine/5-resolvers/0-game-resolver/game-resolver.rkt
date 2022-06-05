@@ -166,9 +166,3 @@
          (br)
          (prln "Martaanvuo awaits your return.")
          (exit))))
-
-(define (on-begin-playthrough!)
-  (reset-world!)
-  ;TODO: Move these somewhere
-  (on-begin-life)
-  (on-begin-run))
