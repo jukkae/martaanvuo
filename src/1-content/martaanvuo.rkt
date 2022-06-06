@@ -50,7 +50,7 @@ The Merchant had demanded payment in actual gold, or assault weapons, as another
     )
   (when (= (current-recursion-depth) 2)
     (p @~a{
-Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
+Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
 })
     (create-task 'storm-the-facility)
     (wait-for-confirm)
@@ -59,9 +59,9 @@ Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Br
     (p @~a{
 The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
 
-A terrorist group operating from the Maw of Martaanvuo has managed to turn a transporter machine into a likely-workable Hartman Device. The terrorist group must be neutralized, and the device defused and safely obtained. It would be good to keep the device as intact as possible, to aid in study and in building countermeasures.
+A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
 })
-    (create-task 'destroy-the-hartman-device)
+    (create-task 'defuse-the-hartman-device)
     (wait-for-confirm)
     ))
 
@@ -140,13 +140,37 @@ Otava the Seeker, become Otava the Deathless!
      ]
     [(2)
      (p @~a{
-The plains surrounding Martaanvuo are desolate. Dried up riverbeds, starving cattle. People looking for water. Hungry people. Desperate people.
+Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people. Desperate people.
 
-Otava, the Seeker, is seeking a cure. Cure to suffering, cure to death. Such a cure can be found, the sages say, on the pages of the Anthead Monograph. The Monograph, in the Maw of Martaanvuo. The Maw of Martaanvuo, in Martaanvuo Wasteland.
+There's a waterfall far upriver, and surrounding the waterfall, there are caves there that go deep into the darks of the earth, to the heart of the world, with evil beings and innumerable treasures. With the treasures, she could do good.
+})
+     (create-task 'plunder-the-earth)
+     (wait-for-confirm)
+     ]
+    [(3)
+     (p @~a{
+Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people. Desperate people.
+
+She, Otava the Seeker, is seeking a cure. Cure to suffering, cure to death. Such a cure can be found, the sages say, on the pages of the Anthead Monograph. The Monograph is buried in the Maw of Martaanvuo.
 
 The Fox of the Waterfall knows more. The Waterfall is upriver Martaanvuo.
 })
      (create-task 'fox-of-the-waterfall)
+     (wait-for-confirm)
+     ]
+    [(4)
+     (p @~a{
+The ants are becoming conscious. There's an vile mind-control fungus roaming, infecting them, shaping and bending them, and spreading to larger animals too.
+
+It's originating from somewhere near the Waterfall. The origin must be found, burned to the ground, buried, destroyed.
+})
+     (create-task 'destroy the-origin)
+     (wait-for-confirm)
+     ]
+    [(5)
+     (p @~a{
+There's something really fucky going with Martaanvuo. Ever since Murkwater moved in with their trucks and heavy equipment, and dammed the Martaanvuo Waterfall, there's been strange rumors circulating among the peoples living in the Wastelands.
+})
      (wait-for-confirm)
      ]
     )
