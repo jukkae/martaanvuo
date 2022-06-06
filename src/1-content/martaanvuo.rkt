@@ -26,7 +26,7 @@
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
   (current-round 0)
-  (advance-time-by-iotas! 35)
+  (advance-time-by-iotas! (d 6 12))
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (on-begin-nth-run (current-run))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
@@ -50,9 +50,18 @@ The Merchant had demanded payment in actual gold, or assault weapons, as another
     )
   (when (= (current-recursion-depth) 2)
     (p @~a{
-Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, find the reactor chamber.
+Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
 })
     (create-task 'storm-the-facility)
+    (wait-for-confirm)
+    )
+  (when (= (current-recursion-depth) 3)
+    (p @~a{
+The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
+
+A terrorist group operating from the Maw of Martaanvuo has managed to turn a transporter machine into a likely-workable Hartman Device. The terrorist group must be neutralized, and the device defused and safely obtained. It would be good to keep the device as intact as possible, to aid in study and in building countermeasures.
+})
+    (create-task 'destroy-the-hartman-device)
     (wait-for-confirm)
     ))
 
@@ -131,9 +140,13 @@ Otava the Seeker, become Otava the Deathless!
      ]
     [(2)
      (p @~a{
-The tunnels in Martaanvuo Canyon, some shady fuck is willing to pay good money for a map of the cave system. Find the stalactite gate, that's the important thing, map out the caves that far, and that's it.
+The plains surrounding Martaanvuo are desolate. Dried up riverbeds, starving cattle. People looking for water. Hungry people. Desperate people.
+
+Otava, the Seeker, is seeking a cure. Cure to suffering, cure to death. Such a cure can be found, the sages say, on the pages of the Anthead Monograph. The Monograph, in the Maw of Martaanvuo. The Maw of Martaanvuo, in Martaanvuo Wasteland.
+
+The Fox of the Waterfall knows more. The Waterfall is upriver Martaanvuo.
 })
-     (create-task 'map-out-the-tunnels)
+     (create-task 'fox-of-the-waterfall)
      (wait-for-confirm)
      ]
     )
