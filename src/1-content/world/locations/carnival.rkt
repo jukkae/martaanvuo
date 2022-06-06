@@ -88,12 +88,32 @@ What are these?
 
 MERCHANT:
 They are sonar eyeballs, a rather genious invention. They replace the user's previous eyeballs and connect to the optic nerve with this hook here. A tiny loudspeaker emits clicks, and the eyeballs decode the reflections.
+
+OTAVA:
+How much?
+
+MERCHANT:
+21.
  }))
  #:time-taken-by-fragment 1
  #:decisions
- (list (make-decision
-        #:title "\"Cool, thanks.\""
+ (list
+ (make-decision
+        #:title "Sounds great."
         #:next-fragment 'exit
+        #:on-resolve! (thunk
+          (dev-note "TODO: sonar"))
+        #:requirement (λ () (pc-has-money 21))
+        )
+  (make-decision
+        #:title "No thanks. [exit]"
+        #:next-fragment 'exit
+        #:requirement (λ () (pc-has-money 21))
+        )
+       (make-decision
+        #:title "Can't afford it. [exit]"
+        #:next-fragment 'exit
+        #:requirement (λ () (not (pc-has-money 21)))
         )
       ))
 

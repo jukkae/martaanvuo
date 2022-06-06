@@ -4,7 +4,7 @@
 
 (require
   "../0-engine/0-api/api.rkt"
-  "narration/gameplay-transitions.rkt"
+  "narration/martaanvuo.rkt"
 )
 
 ; Main entrypoint of campaign
