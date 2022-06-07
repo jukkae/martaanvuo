@@ -12,9 +12,10 @@
   "../../0-engine/2-core/core.rkt"
 
   "../../0-engine/3-types/actor.rkt"
-  "../../0-engine/3-types/pc-actor.rkt"
   "../../0-engine/3-types/condition.rkt"
   "../../0-engine/3-types/item.rkt"
+  "../../0-engine/3-types/modification.rkt"
+  "../../0-engine/3-types/pc-actor.rkt"
   )
 
 ; Eventually, maybe lift this to the same "level" as numbered options. Then:
@@ -24,6 +25,8 @@
 ; Otherwise, return #t or whatever's appropriate for round-resolver
 (define (character-sheet)
   (display-character-sheet)
+  (when (not (empty? (pc-actor-modifications (pc))))
+    (display-modifications))
   (display-inventory)
   ; TODO: until interaction-result is == go-back-to-game loop: select-interaction-target
   (define interaction-target (select-interaction-target))
@@ -130,6 +133,7 @@
          (number->string (pc-actor-hunger actor)))))
 
   (set! sheet (append sheet #;attributes-list traits-list conditions-list hunger-list))
+
   (info-card
    sheet
    "Character sheet"
@@ -221,6 +225,31 @@
              (notice (format "Unknown state: ~a" (item-details selected-item)))])
     ))
 )
+
+(define (display-modifications)
+  (define actor (pc))
+
+  (define header
+    (tbody
+     (tr "Modification" "Details")))
+
+  (define modifications (pc-actor-modifications actor))
+  (define modifications-list
+    (for/list ([modification modifications])
+      (tr
+        (Modification-name modification)
+        (~v (Modification-details modification)))
+      ))
+
+  (define sheet
+    (append
+     header
+     modifications-list))
+
+  (info-card
+   sheet
+   "Modifications"
+   ))
 
 (define (use-skill)
   (define skills '(switch-perspective))
