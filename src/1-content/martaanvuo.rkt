@@ -4,7 +4,7 @@
 
 (require
   "../0-engine/0-api/api.rkt"
-  "narration/martaanvuo.rkt"
+  "narration/gameplay-transitions.rkt"
 )
 
 ; Main entrypoint of campaign
@@ -164,7 +164,7 @@ The ants are becoming conscious. There's an vile mind-control fungus roaming, in
 
 It's originating from somewhere near the Waterfall. The origin must be found, burned to the ground, buried, destroyed.
 })
-     (create-task 'destroy the-origin)
+     (create-task 'destroy-the-origin)
      (wait-for-confirm)
      ]
     [(5)

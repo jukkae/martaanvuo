@@ -34,9 +34,10 @@
   "../../../1-content/narration/describe-pc-intention.rkt"
   )
 
+; Returns round-result:
+; (U 'ok 'pc-dead)
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))
-  #;(define round-begin-status 'ok)
 
   (enqueue-npc-actions)
 

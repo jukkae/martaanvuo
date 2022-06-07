@@ -27,12 +27,12 @@
 
   "../../../4-systems/fragments/decision.rkt"
   "../../../4-systems/locations/locations.rkt"
-  "../../../4-systems/pc/character-sheet.rkt"
   "../../../4-systems/pc/pc.rkt"
   "../../../4-systems/world/time.rkt"
 
   "../../../7-state/state.rkt"
 
+  "../../../../1-content/character-sheet/character-sheet.rkt"
   "../../../../1-content/narration/display-statusline.rkt"
   )
 

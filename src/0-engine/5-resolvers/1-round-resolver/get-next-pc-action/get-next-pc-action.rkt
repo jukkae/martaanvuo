@@ -22,7 +22,7 @@
 
   "../../../4-systems/fragments/decision.rkt"
   "../../../4-systems/locations/locations.rkt"
-  "../../../4-systems/pc/character-sheet.rkt"
+  ;;; "../../../4-systems/pc/character-sheet.rkt"
   "../../../4-systems/pc/pc.rkt"
   "../../../4-systems/world/time.rkt"
 

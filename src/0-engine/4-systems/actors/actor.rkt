@@ -206,7 +206,9 @@
    ; traits etc
    (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0
    ; hunger
-   200))
+   200
+   ; modifications
+   '()))
 
 (define (pc-take-damage! actor damage damage-type)
   (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))

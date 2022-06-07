@@ -4,7 +4,10 @@
 
 (require "../2-core/maybe.rkt")
 
-(require "actor.rkt")
+(require
+  "actor.rkt"
+  "modification.rkt"
+)
 
 (struct pc-actor
  actor
@@ -14,7 +17,8 @@
   [alive? : Boolean]
   [cause-of-death : (Maybe (U Symbol String))]
   [xp : Natural]
-  [hunger : Integer])
+  [hunger : Integer]
+  [modifications : (Listof Modification)])
  #:constructor-name pc-actor*
  #:prefab
  #:mutable)

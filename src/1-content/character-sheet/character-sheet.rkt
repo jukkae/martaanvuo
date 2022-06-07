@@ -6,15 +6,15 @@
 (require racket/lazy-require)
 
 (require
-  "../../1-index/state.rkt"
+  "../../0-engine/1-index/state.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
+  "../../0-engine/2-core/io.rkt"
+  "../../0-engine/2-core/core.rkt"
 
-  "../../3-types/actor.rkt"
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/condition.rkt"
-  "../../3-types/item.rkt"
+  "../../0-engine/3-types/actor.rkt"
+  "../../0-engine/3-types/pc-actor.rkt"
+  "../../0-engine/3-types/condition.rkt"
+  "../../0-engine/3-types/item.rkt"
   )
 
 ; Eventually, maybe lift this to the same "level" as numbered options. Then:

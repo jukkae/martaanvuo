@@ -15,7 +15,7 @@
   "../3-types/task.rkt"
 
   "../4-systems/actors/actor.rkt"
-  "../4-systems/pc/character-sheet.rkt"
+  ;;; "../4-systems/pc/character-sheet.rkt"
   "../4-systems/world/world.rkt"
 
   "../6-combat/stance.rkt"
