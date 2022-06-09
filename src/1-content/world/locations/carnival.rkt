@@ -102,18 +102,21 @@ MERCHANT:
         #:title "Sounds great."
         #:next-fragment 'exit
         #:on-resolve! (thunk
-          (dev-note "TODO: sonar"))
-        #:requirement (λ () (pc-has-money 21))
+          (define sonar (Modification* 'sonar "Sonar Eyeballs" '()))
+          (decrease-pc-money! 21)
+          (add-modification! sonar)
+          '())
+        #:requirement (λ () (pc-has-money 2))
         )
   (make-decision
         #:title "No thanks. [exit]"
         #:next-fragment 'exit
-        #:requirement (λ () (pc-has-money 21))
+        #:requirement (λ () (pc-has-money 2))
         )
        (make-decision
         #:title "Can't afford it. [exit]"
         #:next-fragment 'exit
-        #:requirement (λ () (not (pc-has-money 21)))
+        #:requirement (λ () (not (pc-has-money 2)))
         )
       ))
 

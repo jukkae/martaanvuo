@@ -80,8 +80,8 @@
 
   (define end-game-status
     (let/ec end-game
-      (let loop ()
-        (define round-exit-status (resolve-round 'begin))
+      (let loop ([round-mode game-mode])
+        (define round-exit-status (resolve-round round-mode))
         (case round-exit-status
           ['pc-dead
            (let end-of-life-menu ([verbosity 'verbose])
@@ -113,7 +113,7 @@
            (dev-note (format "Unexpected round exit status: ~a" round-exit-status))]
           )
 
-        (loop))))
+        (loop 'begin))))
 
 
   (case end-game-status

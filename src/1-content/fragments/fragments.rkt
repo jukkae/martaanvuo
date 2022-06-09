@@ -12,3 +12,8 @@
   "../world/locations/waiting-room/fragments.rkt"))
 (require
   "../world/locations/waiting-room/fragments.rkt")
+
+(provide (all-from-out
+  "../world/locations/carnival.rkt"))
+(require
+  "../world/locations/carnival.rkt")

@@ -11,3 +11,8 @@
   #:prefab
   #:mutable
   #:constructor-name Modification*)
+
+; TODO: where?
+(provide modification-info-card)
+(define (modification-info-card modification #:title title)
+  (displayln "TODO: modification info card"))

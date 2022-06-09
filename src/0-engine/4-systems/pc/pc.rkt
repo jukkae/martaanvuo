@@ -12,8 +12,9 @@
   "../../2-core/core.rkt"
 
   "../../3-types/actor.rkt"
-  "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/modification.rkt"
+  "../../3-types/pc-actor.rkt"
   )
 
 ; PC hp <= 0 starts a "dying" counter of 1-2 rounds
@@ -63,6 +64,27 @@
   #;(inventory)
   #;(character-sheet)
   )
+
+; (: -> Modification '())
+(define (add-modification! modification)
+  (define old-modifications (pc-actor-modifications (pc)))
+  (set-pc-actor-modifications! (pc) (append-element old-modifications modification))
+  (modification-info-card modification #:title "Modification installed"))
+
+; (: -> modification-id '())
+(define (remove-modification! id)
+  (define modifications (pc-actor-modifications (pc)))
+  (define it
+    (findf (λ (modification) (eq? (Modification-id modification) id))
+           modifications))
+  (cond (it
+         (set-pc-actor-modifications!
+            (pc)
+            (filter (λ (modification) (not (eq? (Modification-id modification) id)))
+                    (actor-inventory (pc))
+                    ))
+         (dev-note "modification removed, show info about removed/remaining modifications"))
+        ))
 
 ; (: -> (U Item Symbol) Natural String Boolean '())
 (define (add-item!
