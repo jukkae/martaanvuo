@@ -42,18 +42,21 @@ Two gas laughing new person ha ha ha you want? It will make your miiiiiiiiiiiiin
         )))
 
 (fragment
- 'the-other-merchant-1
+ 'slink-1
  (thunk
   (p @~a{
-The Bio-Mechanical Emporium is full of bizarre modifications, half machine, half flesh. Glass jars with organs in them line one wall. There are muscular spiky things, pointy and dangly things, assorted body parts held together by wire, mutations connected by pipes.
+Slink's Bio-Mechanical Emporium is dimly lit. There's a background chatter of electronic hums, beeps and buzzes, interspersed with animal-like chirping sounds. Lights blink in the shadows, things move and slither. There's a warm humid smell in the air.
+
+Glass jars with organs. Amalgamations of flesh and machine, palm-sized six-legged metal insects with a fleshy carapace and a muscular eyestalk. Spiky things and spongy things, dangly things and clinky things, assorted body parts held together by wire, mutations connected by pipes.
 
 Otava notes a pair of black chain-linked kind of marbles or more like a black eyeball, and there's a chain from the iris, leading to a hooked two-inch spike on the other end.
 
-MALE VOICE:
-May I help you?
+A low, soft voice speaks startlingly close to Otava.
 
-The voice belongs to an elegant man dressed in midnight blue satin, with a curled moustache. THE MERCHANT, his nametag says.
- }))
+MALE VOICE:
+What can I do for you?
+ })
+ (when))
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
@@ -62,18 +65,6 @@ The voice belongs to an elegant man dressed in midnight blue satin, with a curle
         )
        (make-decision
         #:title "\"Just looking.\""
-        #:next-fragment 'exit
-        )
-       (make-decision
-        #:title "\"What kind of a shop is this?\""
-        #:next-fragment 'exit
-        )
-       (make-decision
-        #:title "\"I wanna buy something.\""
-        #:next-fragment 'exit
-        )
-       (make-decision
-        #:title "\"I wanna sell something.\""
         #:next-fragment 'exit
         )
         ))
@@ -86,13 +77,49 @@ The voice belongs to an elegant man dressed in midnight blue satin, with a curle
 OTAVA:
 What are these?
 
-MERCHANT:
-They are sonar eyeballs, a rather genious invention. They replace the user's previous eyeballs and connect to the optic nerve with this hook here. A tiny loudspeaker emits clicks, and the eyeballs decode the reflections.
+SLINK:
+It's an optic nerve highjacker. It taps into the visual feed before the visual cortex, and replaces the signal with a transcoded capture of reflections of a high-frequency audio pulse.
+
+OTAVA:
+How do you install it?
+
+SLINK:
+See this spike here? Just insert it through the tear duct and find the nerve, it sort of grabs it and pulls itself in place. Just be careful not to give yourself an accidental lobotomy if you go in too high, hah.
+
+OTAVA:
+And the original eye?
+
+SLINK:
+Pop right off. There's a local anaesthetic secreted by these little mandibles here, extracted and transplanted from a south american venomous species of snakes.
+
+OTAVA:
+And if you want to reverse it?
+
+SLINK:
+What do you mean?
+
+OTAVA:
+Like, you wanna go back?
+
+SLINK:
+Why?
+
+OTAVA:
+No but like, what if you want your original eyes back?
+
+SLINK:
+I guess somebody might.
+
+OTAVA:
+So can you uninstall it or not?
+
+SLINK:
+Yes.
 
 OTAVA:
 How much?
 
-MERCHANT:
+SLINK:
 21.
  }))
  #:time-taken-by-fragment 1
@@ -119,6 +146,12 @@ MERCHANT:
         #:requirement (λ () (not (pc-has-money 2)))
         )
       ))
+
+;;; OTAVA:
+;;; So it's irreversible, then?
+
+;;; SLINK:
+;;; Everything is.
 
 
 ; alternate selves: Madam Sibyl, Adam Sybyl, Mad Sibylla, etc.
@@ -301,9 +334,9 @@ Climb in the egg?
         ))
     (make-choice
       'emporium-of-oddities
-      "The Merchant's Bio-Mechanical Emporium of Oddities."
+      "Slink's Bio-Mechanical Emporium of Oddities."
       (λ ()
-        (go-to-fragment 'the-other-merchant-1)
+        (go-to-fragment 'slink-1)
         'end-chapter ; ie., 'end-round-early, plus next chapter on next round
         ))
     (make-choice
