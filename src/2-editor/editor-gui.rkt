@@ -13,7 +13,10 @@
  racket/list
  )
 
-(provide editor-gui-init main-window fragment-selector fragment-editor-canvas)
+(provide editor-gui-init
+         main-window
+         fragment-file-selector
+         fragment-editor-canvas)
 
 (define (label-bitmap-proc l)
   (let ((label (first l)) (image? (second l)) (file (third l)))
@@ -39,15 +42,19 @@
 (define tab-panel-20641 #f)
 (define tab-fragments #f)
 (define tab-fragments-layout #f)
+(define fragment-file-selector #f)
 (define fragment-selector #f)
 (define fragment-editor-canvas #f)
 (define tab-descriptions #f)
 (define tab-world #f)
 (define (editor-gui-init
          #:main-window-width
-         (main-window-width 700)
+         (main-window-width 1200)
          #:main-window-height
-         (main-window-height 500)
+         (main-window-height 800)
+         #:fragment-file-selector-callback
+         (fragment-file-selector-callback
+          (lambda (list-box control-event) (void)))
          #:fragment-selector-callback
          (fragment-selector-callback (lambda (list-box control-event) (void))))
   (set! main-window
@@ -129,16 +136,39 @@
      (min-height 0)
      (stretchable-width #t)
      (stretchable-height #t)))
-  (set! fragment-selector
+  (set! fragment-file-selector
     (new
      list-box%
      (parent tab-fragments-layout)
      (label "Fragment files")
      (choices (list "foo" "bar"))
+     (callback fragment-file-selector-callback)
+     (style
+      ((lambda (l) (list* (first l) (second l) (third l)))
+       (list 'single 'vertical-label '())))
+     (font
+      (list->font
+       (list 12 "Helvetica" 'default 'normal 'normal #f 'default #f)))
+     (selection 0)
+     (enabled #t)
+     (vert-margin 2)
+     (horiz-margin 2)
+     (min-width 0)
+     (min-height 0)
+     (stretchable-width #t)
+     (stretchable-height #t)
+     (columns (list "Column"))
+     (column-order #f)))
+  (set! fragment-selector
+    (new
+     list-box%
+     (parent tab-fragments-layout)
+     (label "Fragments")
+     (choices (list "First" "Second"))
      (callback fragment-selector-callback)
      (style
       ((lambda (l) (list* (first l) (second l) (third l)))
-       (list 'single 'horizontal-label '())))
+       (list 'single 'vertical-label '())))
      (font
       (list->font
        (list 12 "Helvetica" 'default 'normal 'normal #f 'default #f)))

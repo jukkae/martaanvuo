@@ -26,10 +26,10 @@
   )
 
 (editor-gui-init
- #:fragment-selector-callback fragment-file-selected)
+ #:fragment-file-selector-callback fragment-file-selected)
 
-(send fragment-selector clear)
+(send fragment-file-selector clear)
 (for ([file-name (map path->string fragment-files)])
-  (send fragment-selector append file-name))
+  (send fragment-file-selector append file-name))
 
 (send fragment-editor-canvas set-editor fragment-text)
