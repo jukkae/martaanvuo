@@ -129,5 +129,17 @@
                 "reveal": "always",
             }
         },
+        {
+            "label": "Run MrEd Designer",
+            "type": "shell",
+            "command": "racket -l mred-designer",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "reveal": "always",
+            }
+        },
     ]
 }

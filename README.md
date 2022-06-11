@@ -3,7 +3,7 @@
 ## Requirements
 
 - Download https://download.racket-lang.org/ or install cli Racket (`brew install racket`)
-- Install Racket packages: `text-table`, `rebellion`, and `reprovide-lang-lib` (if not installed). (`raco pkg install --auto text-table rebellion reprovide-lang-lib` for cli racket)
+- Install Racket packages: `text-table`, `rebellion`, `reprovide-lang-lib`, and `mred-designer` (if not installed). (`raco pkg install --auto text-table rebellion reprovide-lang-lib mred-designer` for cli racket)
 - VS Code might require `racket-langserver`.
 
 ## Development
