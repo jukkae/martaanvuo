@@ -11,8 +11,7 @@
 
 (fragment
  'bobo-the-clown-1
- (thunk
-  (p @~a{
+ @~a{
 Bobo the Clown waves his arms, squeezes his honking nose, breathes in from a balloon, and shouts in a voice turned chipmunk-like by the helium.
 
 BOBO THE CLOWN:
@@ -22,7 +21,7 @@ Bobo the Clown puts a mask on his mouth, and there's a click and a TSCHHHHHHHHHH
 
 BOBO THE CLOWN:
 Two gas laughing new person ha ha ha you want? It will make your miiiiiiiiiiiiind ha haha your mind you'll think somebody yes new huh ha ha ha? Yes? Yeees?
- }))
+ }
  #:time-taken-by-fragment 2
  #:decisions
  (list (make-decision
@@ -43,8 +42,7 @@ Two gas laughing new person ha ha ha you want? It will make your miiiiiiiiiiiiin
 
 (fragment
  'slink-1
- (thunk
-  (p @~a{
+ @~a{
 Slink's Bio-Mechanical Emporium is dimly lit. There's a background chatter of electronic hums, beeps and buzzes, interspersed with animal-like chirping sounds. Lights blink in the shadows, things move and slither. There's a warm humid smell in the air.
 
 Glass jars with organs. Amalgamations of flesh and machine, palm-sized six-legged metal insects with a fleshy carapace and a muscular eyestalk. Spiky things and spongy things, dangly things and clinky things, assorted body parts held together by wire, mutations connected by pipes.
@@ -55,7 +53,7 @@ A low, soft voice speaks startlingly close to Otava.
 
 MALE VOICE:
 What can I do for you?
- }))
+ }
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
@@ -71,8 +69,7 @@ What can I do for you?
 
 (fragment
  'sonar-eyeballs
- (thunk
-  (p @~a{
+ @~a{
 OTAVA:
 What are these?
 
@@ -120,7 +117,7 @@ How much?
 
 SLINK:
 21.
- }))
+ }
  #:time-taken-by-fragment 1
  #:decisions
  (list
@@ -156,15 +153,14 @@ SLINK:
 ; alternate selves: Madam Sibyl, Adam Sybyl, Mad Sibylla, etc.
 (fragment
  'fortune-teller
- (thunk
-  (p @~a{
+ @~a{
 Madame Sybil's tent is small and cramped, full of heavy-hanging plush purple velvet drapery. It is dimly lit by two candles on a table, behind which a fat old woman sits, wearing a plush purple velvet robe, thick-rimmed glasses and heavy, glittering jewelry. There's a plush purple velvet pouf, upon which she directs Otava to sit.
 
 MADAME SYBIL:
 Come and sit, child! Let Madame Sybil read your palm and tell you about your life lines! Or perhaps you'd like to ask the worms guidance. Or I can view you through the Sacred Orb of Seeing, and tell you your One True Purpose in Life!
 
 Level one palm reading costs two dollars, worms are three dollars, and the Sacred Orb of Seeing costs 52 dollars.
-  }))
+  }
   #:time-taken-by-fragment 2
  #:decisions
  (list (make-decision
@@ -196,8 +192,7 @@ Level one palm reading costs two dollars, worms are three dollars, and the Sacre
 
 (fragment
  'ft-standard-divination
- (thunk
-  (p @~a{
+ @~a{
 Madame Sybil takes Otava's right hand between her soft, pale fingers, and begins studying the patterns.
 
 MADAME SYBIL:
@@ -227,7 +222,9 @@ What other thing?
 
 MADAME SYBIL:
 Your life line. It's extremely weak, and there's a clear cut in it. I am afraid that this does not bode you well, my child. And here, see these swirling loops before the cut? If what I suspect is true, then not only will you encounter death, you will suffer along the way. Now, that'll be two dollars.
-  })
+  }
+ #:on-after-describe!
+ (thunk
   (decrease-pc-money! 2)
   (award-xp! 4))
  #:time-taken-by-fragment 7
@@ -239,15 +236,13 @@ Your life line. It's extremely weak, and there's a clear cut in it. I am afraid 
 
 (fragment
  'giant-hen
- (thunk
-  (p @~a{
+ @~a{
 Otava steps through the uncomfortably low circular aperture in the ass of the hen. It is a vast cavern, Otava's footsteps echoing from the walls.
 
 At the very center of it, there's a lone giant egg, with stairs on the side. There's loud music and flashing lights.
 
 Climb in the egg?
-  })
-  )
+  }
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
@@ -262,8 +257,7 @@ Climb in the egg?
 
 (fragment
  'giant-egg-recurse
-(thunk
-  (p @~a{
+@~a{
 Otava is inside a plastic egg. The muffled music from outside sounds through.
 
 There's a giant plastic hen roosting at the center of the plastic egg. The hen clanks and clatters as it ruffles its feathers, there's a little fanfare, tsssssssshhhh there's some theater smoke, lights flash, the hen screams, and then it goes silent.
@@ -271,7 +265,7 @@ There's a giant plastic hen roosting at the center of the plastic egg. The hen c
 There's a circular door in the ass of the hen.
 
 Enter the hen?
- }))
+ }
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
@@ -287,12 +281,11 @@ Enter the hen?
 ; A random chance of sometimes containing something
 (fragment
  'giant-egg
- (thunk
-  (p @~a{
+ @~a{
 A giant plastic egg looming over Otava. Stairs on the side, loud music, flashing lights.
 
 Climb in the egg?
- }))
+ }
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision
