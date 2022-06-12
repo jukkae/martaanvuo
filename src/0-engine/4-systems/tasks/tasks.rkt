@@ -56,7 +56,7 @@
   )
 
 
-(define (add-new-task task)
+(define (add-new-task! task)
   (when (not (task-exists? (task-id task)))
     (add-task! task))
 
@@ -71,6 +71,7 @@
    "New task"
    )
   (wait-for-confirm)
+  '()
   )
 
 (define (create-task id)

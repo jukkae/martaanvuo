@@ -8,13 +8,14 @@
   "../2-core/maybe.rkt"
   )
 
+(define-type FragmentDescription (U String Null))
+
 (struct story-fragment
   ([id : Symbol]
-   [description : String]
+   [description : FragmentDescription]
    [on-before-describe! : (-> Null)]
    [on-after-describe! : (-> Null)]
    [time-taken-by-fragment : Natural]
-   [content : String]
    [decisions : (Listof decision)]))
 
 ; NOTE: Fragments are not serialized themselves, only the current index is. This means that any possible fragment state will have to be stored elsewhere. (or s11n implemented somehow)
@@ -24,11 +25,10 @@
 
 (define (fragment
          [id : Symbol]
-         [description : String] ; TODO: this could very well be modified by sensory modality
+         [description : FragmentDescription]
          #:on-before-describe! [on-before-describe! : (-> Null) (λ () '())]
          #:on-after-describe! [on-after-describe! : (-> Null) (λ () '())]
          #:time-taken-by-fragment [time-taken-by-fragment : Natural 0]
-         #:content [content : String ""]
          #:decisions [decisions : (Listof decision) '()]
          )
   (define frag
@@ -38,7 +38,6 @@
      on-before-describe!
      on-after-describe!
      time-taken-by-fragment
-     content
      decisions
      ))
   (hash-set! *story-fragments* id frag))
