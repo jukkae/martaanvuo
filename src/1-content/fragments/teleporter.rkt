@@ -6,11 +6,9 @@
 
 (fragment
  'teleporter-1
- (thunk
-  (p @~a{
-...
-   })
-  )
+ @~a{
+ ...
+}
 
  #:decisions
  (list

@@ -6,10 +6,7 @@
 
 (fragment
  'magpie
- (thunk
-  (p
-   "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\"")
-  )
+ "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\""
 
  #:decisions
  (list
@@ -22,10 +19,7 @@
 
 (fragment
  'magpie-cache
- (thunk
-  (p
-   "\"You're in luck\", Magpie says. It ruffles its feathers, as it asks you to come closer and leans in. In low voice, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 silver coins. What do you say?\"")
-  )
+ "\"You're in luck\", Magpie says. It ruffles its feathers, as it asks you to come closer and leans in. In low voice, it begins: \"There's a cache nearby. I need someone with fingers to take care of various locks and other systems. In and out, we'll be done before the day is done. It looks like it's completely abandoned. I can assure you, it's absolutely almost risk-free. The pay is 23 silver coins. What do you say?\""
 
  #:decisions
  (list
@@ -41,16 +35,15 @@
 
 (fragment
  'magpie-interesting
- (thunk
-  (p
-   "\"It's, uh... 23 is an interesting number. Considering the requirements and the expertise required, I was thinking more along the lines of –\", Otava says, only briefly pausing while she does the math, \"– 37.\"")
-  (p
-   "\"31 and perks\", Magpie replies, \"I'll explain the whole package in detail later, but it includes things like tailored excellent employee recognition messages, free armory credits, and fitness and wellness perks.\"")
-  (p
-   "Otava agrees, and Magpie goes over the details. The cache is in the nearby scientific outpost on the plateau.")
-  )
+ @~a{
+ "It's, uh... 23 is an interesting number. Considering the requirements and the expertise required, I was thinking more along the lines of –", Otava says, only briefly pausing while she does the math, "– 37."
 
-  #:decisions
+ "31 and perks", Magpie replies, "I'll explain the whole package in detail later, but it includes things like tailored excellent employee recognition messages, free armory credits, and fitness and wellness perks."
+
+ Otava agrees, and Magpie goes over the details. The cache is in the nearby scientific outpost on the plateau.
+}
+
+ #:decisions
  (list
   (make-decision
    #:title "Ask about the benefits package."
@@ -65,11 +58,11 @@
 
 (fragment
  'magpie-gold
- (thunk
-  (p
-   "\"I'm looking for gold\", Otava says.")
-  (p
-   "\"I know, but I have none, you can exchange the silver, it's as good as gold, only cheaper\", Magpie says. \"So, what do you say, 23 silver coins? Would amount to, uh, 0.23 gold coins, which is, you know, a couple of grams.\""))
+ @~a{
+ "I'm looking for gold", Otava says.
+
+ "I know, but I have none, you can exchange the silver, it's as good as gold, only cheaper", Magpie says. "So, what do you say, 23 silver coins? Would amount to, uh, 0.23 gold coins, which is, you know, a couple of grams."
+}
  #:decisions
  (list
   (make-decision

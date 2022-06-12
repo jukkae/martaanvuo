@@ -7,9 +7,7 @@
 
 (fragment
  'turn-on-martaanvuo-terminal
- (thunk
-  (p
-   "The password is written down on a piece of paper. The terminal has access to heating and ventilation systems, including service access to reactor. There is also a lone executable with the name 'Martaanvuo'."))
+ "The password is written down on a piece of paper. The terminal has access to heating and ventilation systems, including service access to reactor. There is also a lone executable with the name 'Martaanvuo'."
  #:decisions
  (list
   (make-decision
@@ -27,8 +25,7 @@
 
 (fragment
  'read-the-book
- (thunk
-  '())
+ '()
  #:decisions
  (list
   (make-decision

@@ -7,11 +7,10 @@
 
 (fragment
  'post-combat ; for instance, wound care (fast vs good), xp, summary etc
- (thunk
-  (display-pc-combatant-info (pc))
-  (p
-   "[post-combat steps]"
-   ))
+  "[post-combat steps]"
+ #:on-before-describe!
+  (thunk
+    (display-pc-combatant-info (pc)))
 
  #:decisions
  (append
