@@ -17,6 +17,7 @@
 
   "../1-index/content.rkt"
   "../2-core/core.rkt"
+  "../3-types/fragment.rkt"
 
   "../4-systems/pc/pc.rkt"
   "../4-systems/world/world.rkt"
@@ -86,6 +87,7 @@
 
 (define current-fragment-id (make-parameter '()))
 (define current-completed-fragments (make-parameter '()))
+(define (current-fragment) (get-fragment (current-fragment-id)))
 
 (define current-combat-timeline (make-parameter '()))
 

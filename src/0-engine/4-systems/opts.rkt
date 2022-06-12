@@ -1,5 +1,10 @@
 #lang at-exp racket
 
+(require
+  "../2-core/list-utils.rkt"
+  "../2-core/io.rkt"
+  )
+
 ; shit implementation
 (define (opts . params)
   (define ks '())
@@ -20,5 +25,5 @@
     (displayln (format "[~a]: ~a" k v)))
 
   (define input (wait-for-input))
-  (define index (- (ann (string->number input) Natural) 1))
+  (define index (- (string->number input) 1))
   (p (list-ref vs index)))

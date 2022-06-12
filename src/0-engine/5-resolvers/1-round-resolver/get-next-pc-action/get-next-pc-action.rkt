@@ -15,12 +15,12 @@
 
   "../../../3-types/action.rkt"
   "../../../3-types/choice.rkt"
+  "../../../3-types/decision.rkt"
   "../../../3-types/item.rkt"
   "../../../3-types/location.rkt"
   "../../../3-types/pc-actor.rkt"
   "../../../3-types/world.rkt"
 
-  "../../../4-systems/fragments/decision.rkt"
   "../../../4-systems/locations/locations.rkt"
   ;;; "../../../4-systems/pc/character-sheet.rkt"
   "../../../4-systems/pc/pc.rkt"

@@ -10,6 +10,8 @@
 
     "../3-types/action.rkt"
     "../3-types/actor.rkt"
+    "../3-types/decision.rkt"
+    "../3-types/fragment.rkt"
     "../3-types/item.rkt"
     "../3-types/location.rkt"
     "../3-types/modification.rkt"
@@ -21,8 +23,7 @@
     "../4-systems/checks/checks.rkt"
     "../4-systems/actors/actor.rkt"
     "../4-systems/blurbs/blurbs.rkt"
-    "../4-systems/fragments/decision.rkt"
-    "../4-systems/fragments/fragment.rkt"
+    "../4-systems/fragments.rkt"
     "../4-systems/items/item.rkt"
     "../4-systems/locations/locations.rkt"
     "../4-systems/locations/routes.rkt"
@@ -31,8 +32,6 @@
     "../4-systems/tasks/tasks.rkt"
     "../4-systems/world/world.rkt"
     "../4-systems/world/time.rkt"
-
-    "../4-systems/fragments.rkt"
 
     "../5-resolvers/1-round-resolver/get-next-pc-action/ui.rkt"
 
@@ -50,6 +49,8 @@
 
   "../3-types/action.rkt"
   "../3-types/actor.rkt"
+  "../3-types/decision.rkt"
+  "../3-types/fragment.rkt"
   "../3-types/item.rkt"
   "../3-types/location.rkt"
   "../3-types/modification.rkt"
@@ -61,8 +62,7 @@
   "../4-systems/checks/checks.rkt"
   "../4-systems/actors/actor.rkt"
   "../4-systems/blurbs/blurbs.rkt"
-  "../4-systems/fragments/decision.rkt"
-  "../4-systems/fragments/fragment.rkt"
+  "../4-systems/fragments.rkt"
   "../4-systems/items/item.rkt"
   "../4-systems/locations/locations.rkt"
   "../4-systems/locations/routes.rkt"
@@ -71,8 +71,6 @@
   "../4-systems/tasks/tasks.rkt"
   "../4-systems/world/world.rkt"
   "../4-systems/world/time.rkt"
-
-  "../4-systems/fragments.rkt"
 
   "../5-resolvers/1-round-resolver/get-next-pc-action/ui.rkt"
 

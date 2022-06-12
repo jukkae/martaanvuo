@@ -12,8 +12,8 @@
 (define (get-selected-fragment-file list-box)
   (define selections (send list-box get-selections))
   (if (not (null? selections))
-    (list-ref fragment-files (first selections))
-    '()))
+      (list-ref fragment-files (first selections))
+      '()))
 
 
 (define (fragment-file-selected list-box event)

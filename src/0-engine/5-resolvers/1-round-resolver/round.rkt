@@ -13,11 +13,11 @@
   "../../2-core/core.rkt"
 
   "../../3-types/actor.rkt"
+  "../../3-types/fragment.rkt"
   "../../3-types/item.rkt"
   "../../3-types/location.rkt"
 
   "../../4-systems/actors/actor.rkt"
-  "../../4-systems/fragments/fragment.rkt"
   "../../4-systems/locations/routes.rkt"
   "../../4-systems/world/world.rkt"
   "../../4-systems/pc/pc.rkt"
@@ -29,28 +29,32 @@
 
 
 (lazy-require ["../../6-combat/combat.rkt"
-  (end-combat!
-   )])
+               (end-combat!
+                )])
 
 (lazy-require ["../../6-combat/narration.rkt"
-  (get-combatant-name
-   display-combatant-info
-   display-pc-combatant-info
-   )])
+               (get-combatant-name
+                display-combatant-info
+                display-pc-combatant-info
+                )])
 
 (lazy-require ["../../7-state/logging.rkt"
-  (set-prompt!)])
+               (set-prompt!)])
 
 (define (on-begin-round mode)
   (case mode
+
     ['begin
  (current-round (add1 (current-round)))
  (when (current-show-round-summary?) (round-summary mode))
  (clear-action-queue!)
 
  (define round-begin-status
-   (cond ((not (null? (current-fragment-id)))
-          (current-fragment-on-begin-round!))))
+   (when (not (null? (current-fragment-id)))
+     (story-fragment-on-before-describe! (current-fragment))
+     (p (story-fragment-description (current-fragment)))
+     (story-fragment-on-after-describe! (current-fragment))
+     ))
 
  ; mark location as visited w.r.t routes
  (let ([location (current-location)])

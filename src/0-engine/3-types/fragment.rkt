@@ -2,23 +2,17 @@
 
 (provide (all-defined-out))
 
-(require "decision.rkt"
+(require
+  "decision.rkt"
 
-         "../../1-index/state.rkt"
-         "../../2-core/maybe.rkt"
-         "../../2-core/core.rkt"
-         "../../2-core/io.rkt")
-
-(require/typed "../../2-core/list-utils.rkt"
-               [append-element (∀ (A) (-> (Listof A) A (Listof A)))])
-
-(require/typed "../../2-core/io.rkt"
-               [wait-for-input (-> String)]
-               [p (-> String)])
+  "../2-core/maybe.rkt"
+  )
 
 (struct story-fragment
   ([id : Symbol]
-   [on-begin-round! : (-> (U Null Void))] ; Actually, shouldn't return anything
+   [description : String]
+   [on-before-describe! : (-> Null)]
+   [on-after-describe! : (-> Null)]
    [time-taken-by-fragment : Natural]
    [content : String]
    [decisions : (Listof decision)]))
@@ -30,7 +24,9 @@
 
 (define (fragment
          [id : Symbol]
-         [on-begin-round! : (-> (U Null Void)) (λ () '())]
+         [description : String] ; TODO: this could very well be modified by sensory modality
+         #:on-before-describe! [on-before-describe! : (-> Null) (λ () '())]
+         #:on-after-describe! [on-after-describe! : (-> Null) (λ () '())]
          #:time-taken-by-fragment [time-taken-by-fragment : Natural 0]
          #:content [content : String ""]
          #:decisions [decisions : (Listof decision) '()]
@@ -38,7 +34,9 @@
   (define frag
     (story-fragment
      id
-     on-begin-round!
+     description
+     on-before-describe!
+     on-after-describe!
      time-taken-by-fragment
      content
      decisions

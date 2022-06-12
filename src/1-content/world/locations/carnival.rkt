@@ -55,8 +55,7 @@ A low, soft voice speaks startlingly close to Otava.
 
 MALE VOICE:
 What can I do for you?
- })
- (when))
+ }))
  #:time-taken-by-fragment 3
  #:decisions
  (list (make-decision

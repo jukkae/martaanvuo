@@ -7,8 +7,8 @@
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
-  "../../4-systems/fragments/decision.rkt"
-  "../../4-systems/fragments/fragment.rkt"
+  "../../3-types/decision.rkt"
+  "../../3-types/fragment.rkt"
 
   "../../4-systems/fragments.rkt"
   "../../4-systems/timelines.rkt"
@@ -17,10 +17,6 @@
   "../../7-state/state.rkt"
   )
 
-
-(define (current-fragment-on-begin-round!)
-  ((story-fragment-on-begin-round! (get-fragment (current-fragment-id))))
-  )
 
 (define (current-fragment-get-decisions)
   (filter (lambda (potential-decision)

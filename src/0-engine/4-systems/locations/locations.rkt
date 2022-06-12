@@ -33,13 +33,13 @@
   "routes.rkt"
   "../actors/actor.rkt"
   "../enemies/encounters.rkt"
-  "../fragments/decision.rkt"
 
   "../../1-index/state.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
+  "../../3-types/decision.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/location.rkt"
   "../../3-types/route.rkt"
