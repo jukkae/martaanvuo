@@ -18,7 +18,8 @@
    [actors : (Listof actor)]
    [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
-   [tags : (Listof Symbol)])
+   [tags : (Listof Symbol)]
+   [encounter-types : (Listof Symbol)])
   #:prefab
   #:mutable
   #:constructor-name location*)
@@ -85,6 +86,7 @@
                     #:items (Listof (U item Symbol))
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol)
+                    #:encounter-types (Listof Symbol)
                     #:visited? Boolean
                     #:actions-provided (Listof Symbol)
                     #:shortname String)
@@ -97,6 +99,7 @@
          #:items [items '()]
          #:features [features '()]
          #:tags [tags '()]
+         #:encounter-types [encounter-types '()]
          #:routes [routes '()]
          #:visited? [visited? #f]
          #:actions-provided [actions-provided '()]
@@ -119,6 +122,7 @@
           items
           features
           tags
+          encounter-types
           routes
           visited?
           actions-provided

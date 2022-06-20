@@ -64,14 +64,15 @@
 
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 ; NB: Modifies a and b in places, and returns route r between the two
-(provide make-path-between)
-(define (make-path-between
+(provide make-route-between)
+(define (make-route-between
          places
          id-a
          id-b
          traverse-time
          #:hidden? [hidden? #f]
-         #:no-encounters? [no-encounters? #f]
+         #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
+         #:encounter-types [encounter-types '()]
          #:onedirectional? [onedirectional? #f]
          #:details [details '()])
 
@@ -90,7 +91,8 @@
              id-b
              traverse-time
              #:details details
-             #:actors actors))
+             #:actors actors
+             #:encounter-types encounter-types))
   (define route-id (location-id r))
   (set-place-routes! place-a (append-element (place-routes place-a) route-id))
   (when (not onedirectional?)

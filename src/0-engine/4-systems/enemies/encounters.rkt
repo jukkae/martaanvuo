@@ -39,7 +39,7 @@
     ['blindscraper (make-blindscraper)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))
 
-(define (spawn-enemies type number)
+(define (spawn type number)
   (for ([i (in-range 0 number)])
     (define sign
       (if (= number 1)
@@ -87,13 +87,20 @@
   )
   '())
 
+(define (spawn-human-fighter-encounter!)
+  (p (blindscraper-spawn-text))
+
+  (begin-combat!)
+
+  (spawn 'human-fighter 1))
+
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll
 
   (p (grabberkin-spawn-text))
 
   (begin-combat!)
-  (spawn-enemies 'grabberkin 1)
+  (spawn 'grabberkin 1)
 
   (inflict-status! (pc) 'bound (d 2 2)))
 
@@ -102,14 +109,14 @@
 
   (begin-combat!)
 
-  (spawn-enemies 'blindscraper 1))
+  (spawn 'blindscraper 1))
 
 (define (spawn-two-blindscrapers-encounter!)
   (p "Two blindscrapers appear.")
 
   (begin-combat!)
 
-  (spawn-enemies 'blindscraper 2))
+  (spawn 'blindscraper 2))
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin
@@ -118,8 +125,8 @@
   (p (grabberkin-spawn-text))
   (p "Otava briefly looks at her restrainted lower appendage, then notices movement in the corner of her eye. Long, fingerlike limbs of a Blindscraper approach silently, folding and bending through the shadows, then its pus-filled drooping sac comes to view.")
 
-  (spawn-enemies 'grabberkin 1)
+  (spawn 'grabberkin 1)
   (inflict-status! (pc) 'bound (d 1 4))
 
-  (spawn-enemies 'blindscraper 1)
+  (spawn 'blindscraper 1)
   )

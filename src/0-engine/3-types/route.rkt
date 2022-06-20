@@ -29,7 +29,8 @@
                     #:actors (Listof actor)
                     #:items (Listof item)
                     #:features (Listof Symbol)
-                    #:tags (Listof Symbol))
+                    #:tags (Listof Symbol)
+                    #:encounter-types (Listof Symbol))
                    route))
 (define (make-route a
                     b
@@ -40,7 +41,8 @@
                     #:actors [actors '()]
                     #:items [items '()]
                     #:features [features '()]
-                    #:tags [tags '()])
+                    #:tags [tags '()]
+                    #:encounter-types [encounter-types '()])
 
   (set! *number-of-routes* (add1 *number-of-routes*))
 
@@ -57,6 +59,7 @@
           items
           features
           tags
+          encounter-types
           a
           b
           traverse-time))

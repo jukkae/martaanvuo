@@ -72,28 +72,10 @@
                 ))
              )))
 
-; TODO: This belongs under content
+
 (define (spawn-enemies)
   (current-counters++ 'enemy-encounters)
-  (define encounter-types
-    ; TODO: Better accessors for hashtable params
-    (case (hash-ref (current-counters) 'enemy-encounters 0)
-      ; [(1) (list spawn-grabberkin-encounter!)]
-      ; [(2) (list spawn-blindscraper-encounter!)]
-      [else
-        (list
-          spawn-blindscraper-encounter!
-          spawn-grabberkin-encounter!
-          spawn-grabberkin-and-blindscraper-encounter!
-          spawn-two-blindscrapers-encounter!
-          )
-      ])
-    )
-
-  (cond ((place? (current-location))
-          ((take-random encounter-types)))
-        ((route? (current-location))
-          ((take-random encounter-types)))))
+  (spawn (take-random (location-encounter-types (current-location)))))
 
 (define (get-location-short-description location)
   (cond [(place? location)
