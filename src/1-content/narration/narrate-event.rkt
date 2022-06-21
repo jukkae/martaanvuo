@@ -17,8 +17,8 @@
      (format "~a ι: ~a" (event-at event) event-text)
      ]
 
-    ; spawn-enemies is complicated to narrate outside of the event itself, so this is faster
-    ['spawn-enemies '()]
+    ; spawn-ecounter is complicated to narrate outside of the event itself, so this is faster
+    ['spawn-encounter '()]
     ['not-hungry '()] ; this is usually not relevant
     ['hungry (notice (format "~a ι: ~a" (event-at event) "Otava is now hungry."))]
     ['very-hungry (notice (format "~a ι: ~a" (event-at event) "Otava is now very hungry."))]

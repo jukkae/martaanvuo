@@ -5,6 +5,7 @@
 (require
   "blindscraper.rkt"
   "grabberkin.rkt"
+  "human-fighter.rkt"
   "../actors/actor.rkt"
   "../world/world.rkt"
 
@@ -25,6 +26,13 @@
     [(2) "A Grabberkin grips Otava by the shin and tries to bring her to the ground, jealous of what it can't have."]
     [else "A Grabberkin seizes Otava by the foot."]))
 
+(define (human-fighter-spawn-text)
+  (define times-encountered (hash-ref (current-times-species-encountered) 'human-fighter 0))
+
+  (case times-encountered
+    [(0) "A man wearing a tracksuit appears, wielding a heavy plumber's wrench."]
+    [else "A man wearing a jumpsuit appears, holding a heavy crowbar. There's blood on the jumpsuit."]))
+
 (define (blindscraper-spawn-text)
   (define times-encountered (hash-ref (current-times-species-encountered) 'blindscraper 0))
 
@@ -37,6 +45,7 @@
   (case type
     ['grabberkin (make-grabberkin)]
     ['blindscraper (make-blindscraper)]
+    ['human-fighter (make-human-fighter)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))
 
 (define (spawn type number)
@@ -78,6 +87,14 @@
         (set-actor-stance! enemy enemy-stance)
        '()]
 
+      ['human-fighter
+        (define range 'close) ; can't be grappled with, can be shot with long-barreled guns
+        (define description "")
+        (define enemy-stance
+          (stance sign range description))
+        (set-actor-stance! enemy enemy-stance)
+       '()]
+
       [else (dev-note (format "unknown enemy type: ~a" type))])
 
     (move-actor-to-location! enemy (current-location))
@@ -88,7 +105,7 @@
   '())
 
 (define (spawn-human-fighter-encounter!)
-  (p (blindscraper-spawn-text))
+  (p (human-fighter-spawn-text))
 
   (begin-combat!)
 

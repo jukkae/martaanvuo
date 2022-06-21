@@ -45,7 +45,7 @@
 
               (define elapsed-time 0)
 
-              (when (not (location-has-detail? (current-location) 'no-encounters))
+              (when (not (null? (location-encounter-types (current-location))))
                 (define encounter-roll (d 1 6))
                 (define tn 5)
                 (notice (format "Encounter roll: 1d6 < ~a: [~a] – ~a"
@@ -58,7 +58,7 @@
 
                   (define resolve-events
                     (list
-                     (make-event ,''spawn-enemies
+                     (make-event ,''spawn-encounter
                                  '() ; pack info about enemies / event here
                                  #:interrupting? #t)))
                   (define metadata '(interrupted))

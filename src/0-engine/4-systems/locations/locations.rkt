@@ -72,10 +72,20 @@
                 ))
              )))
 
+(define (spawn-enemies encounter-type)
+  (case encounter-type
+    ['human-fighter (spawn-human-fighter-encounter!)]
+    ['grabberkin (spawn-grabberkin-encounter!)]
+    ['blindscraper (spawn-blindscraper-encounter!)]
+    ['two-blindscrapers (spawn-two-blindscrapers-encounter!)]
+    ['grabberkin-and-blindscraper (spawn-grabberkin-and-blindscraper-encounter!)]
+    [else '()]))
 
-(define (spawn-enemies)
+(define (spawn-encounter)
   (current-counters++ 'enemy-encounters)
-  (spawn (take-random (location-encounter-types (current-location)))))
+
+  (when (not (null? (location-encounter-types (current-location))))
+    (spawn-enemies (take-random (location-encounter-types (current-location))))))
 
 (define (get-location-short-description location)
   (cond [(place? location)

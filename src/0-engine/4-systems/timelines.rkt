@@ -23,7 +23,7 @@
       ['hungry '()]
       ['very-hungry '()]
       ['starving '()]
-      ['spawn-enemies '()]
+      ['spawn-encounter '()]
       ['notice '()]
       [else
        (dev-note (format "process-timeline!: unknown event type ~a" (event-type event)))

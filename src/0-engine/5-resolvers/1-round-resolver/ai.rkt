@@ -14,6 +14,7 @@
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/enemies/blindscraper.rkt"
   "../../4-systems/enemies/grabberkin.rkt"
+  "../../4-systems/enemies/human-fighter.rkt"
   "../../7-state/state.rkt"
   )
 
@@ -31,6 +32,7 @@
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
     (["Grabberkin"] (get-grabberkin-action actor))
+    (["Human fighter"] (get-human-fighter-action actor))
     (else (displayln "get-next-npc-action: unknown actor"))))
 
 (define (get-next-action actor)
@@ -45,6 +47,8 @@
                 (get-grabberkin-reaction actor))
                ((equal? (actor-name actor) "Blindscraper")
                 (get-blindscraper-reaction actor))
+               ((equal? (actor-name actor) "Human fighter")
+                (get-human-fighter-reaction actor))
                (else
                 (displayln "unknown non-pc-actor type for reaction")
                 '())))
