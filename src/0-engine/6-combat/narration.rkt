@@ -139,6 +139,32 @@
              (symbol->string (stance-range stance)))
             (list
              "range"
+             "N/A")))]
+
+      [("Human fighter")
+       (tbody
+        (tr
+         "size"
+         (get-trait actor "size"))
+        (if (not (null? stance))
+            (tr
+             "range"
+             (symbol->string (stance-range stance)))
+            (list
+             "range"
+             "N/A")))]
+      [else
+        (dev-note (format "Unknown actor: ~a" (actor-name actor)))
+        (tbody
+        (tr
+         "size"
+         (get-trait actor "size"))
+        (if (not (null? stance))
+            (tr
+             "range"
+             (symbol->string (stance-range stance)))
+            (list
+             "range"
              "N/A")))]))
 
   (when (not (null? (actor-statuses actor)))

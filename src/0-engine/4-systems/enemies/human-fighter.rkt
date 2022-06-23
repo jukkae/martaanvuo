@@ -22,11 +22,14 @@
   (set-trait! enemy "size" "human")
   enemy)
 
-(define (make-human-fighter-action actor action-flag)
-  '())
-
 (define (get-human-fighter-action actor)
-  '())
+  (make-action
+    #:symbol 'skip
+    #:actor actor
+    #:duration 0
+    #:target '()
+    #:tags '(initiative-based-resolution)
+    #:details '(slow silent)))
 
 (define (get-human-fighter-reaction actor)
   '())
