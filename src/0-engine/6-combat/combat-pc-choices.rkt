@@ -133,6 +133,38 @@
   combat-choices
   )
 
+; TODO: named attack definitions should be moved to content!
+(define (make-named-attack action-name target)
+  ;(define damage-roll '(λ () d 1 2))
+  (define details
+    `(list
+      (cons 'damage-roll ,'(λ () (d 1 2)))
+      (cons 'damage-roll-formula "1d2")
+      (cons 'damage-type 'bludgeoning)
+      ))
+  (define attack-name
+    (case action-name
+      ['smash "Smash"]
+      ['parry "Parry"]
+      ['bludgeon "Bludgeon"]
+      [else (symbol->string attack-name)]))
+  (define choice
+    (make-choice
+    'attack
+    (format "~a the ~a [with bolt cutters]."
+            attack-name
+            (get-combatant-name target))
+    (λ ()
+      (define target-id (actor-id target))
+      (make-melee-attack-action
+        #:actor (pc)
+        #:duration 1
+        #:target target-id
+        #:n 1
+        #:x 2
+        #:bonus 0
+        ))))
+  choice)
 
 (define (get-melee-choices)
   (define targets (get-current-enemies))
@@ -142,28 +174,10 @@
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           ;(define damage-roll '(λ () d 1 2))
-           (define details
-             `(list
-               (cons 'damage-roll ,'(λ () (d 1 2)))
-               (cons 'damage-roll-formula "1d2")
-               (cons 'damage-type 'bludgeoning)
-               ))
-           (define choice
-             (make-choice
-              'attack
-              (format "Hit ~a [with bolt cutters]." (get-combatant-name target))
-              (λ ()
-                (define target-id (actor-id target))
-                (make-melee-attack-action
-                 #:actor (pc)
-                 #:duration 1
-                 #:target target-id
-                 #:n 1
-                 #:x 2
-                 #:bonus 0
-                 ))))
-           (set! combat-choices (append-element combat-choices choice)))
+           (for ([action-name (list 'smash 'parry 'bludgeon)])
+            (define choice (make-named-attack action-name target))
+            (set! combat-choices (append-element combat-choices choice))
+            ))
           ))
   combat-choices)
 
