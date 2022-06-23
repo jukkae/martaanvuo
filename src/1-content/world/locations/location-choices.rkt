@@ -86,6 +86,17 @@
               (go-to-fragment next-anthill-fragment)
               'end-round-early
               ))])]
+        ['new-enemy-bell
+         (make-choice
+          'ring-new-enemy-bell
+          "Ring the bell"
+          (λ ()
+            (displayln "RING RING, the bell sounds.")
+            (make-action #:symbol 'ring-new-enemy-bell
+              #:actor (pc)
+              #:duration 1)
+            ))
+         ]
 
        #;[else (dev-note (format "unknown feature ~a" feature))])))
 
