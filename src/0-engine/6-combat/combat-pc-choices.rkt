@@ -23,6 +23,9 @@
 
   (define combat-choices '())
 
+  (set! combat-choices
+        (append combat-choices (get-perceive-choices)))
+
   (when (actor-has-item? (pc) 'bolt-cutters)
     (set! combat-choices
           (append combat-choices (get-melee-choices)))
@@ -180,6 +183,21 @@
             ))
           ))
   combat-choices)
+
+(define (get-perceive-choices)
+  (define targets (get-current-enemies))
+  (define perceive-choices '())
+  (define choice
+    (make-choice 'perceive
+                  "Perceive. [with eyes]"
+                  (λ () (make-action #:symbol 'perceive-with-eyes
+                                     #:actor (pc)
+                                     #:duration 1
+                                     #:target null
+                                     #:tags '()
+                                     ))))
+  (set! perceive-choices (append-element perceive-choices choice))
+  perceive-choices)
 
 (define (get-harvest-choice target)
   (list
