@@ -89,12 +89,16 @@
         ['new-enemy-bell
          (make-choice
           'ring-new-enemy-bell
-          "Ring the bell"
+          "Ring the Bell of Surut."
           (λ ()
-            (displayln "RING RING, the bell sounds.")
             (make-action #:symbol 'ring-new-enemy-bell
               #:actor (pc)
-              #:duration 1)
+              #:duration 1
+              #:resolution-rules
+              `(
+                (spawn-encounter)
+                'ok
+                ))
             ))
          ]
 

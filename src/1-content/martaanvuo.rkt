@@ -34,7 +34,7 @@
   (current-run (add1 (current-run)))
   (current-round 0)
   (advance-time-by-iotas! (d 6 12))
-  (move-pc-to-location! (get-place-by-id 'perimeter))
+  (move-pc-to-location! (get-place-by-id 'ladder-of-surut))
   (on-begin-nth-run (current-run))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
   )

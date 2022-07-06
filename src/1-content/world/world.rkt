@@ -60,10 +60,11 @@
     #:shortname "Martaanvuo docks")
 
   (make-place
-    #:id 'boxing-ring
+    #:id 'ladder-of-surut
     #:features '(new-enemy-bell)
     #:type 'indoors
-    #:shortname "Boxing ring")
+    #:shortname "Ladder of Surut"
+    #:encounter-types '(grabberkin))
 
    (make-place
     #:id 'outpost
@@ -143,7 +144,7 @@
      (make-route-between places 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
      (make-route-between places 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
      (make-route-between places 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
-     (make-route-between places 'martaanvuo-docks 'boxing-ring 1 #:no-encounters? #t)
+     (make-route-between places 'martaanvuo-docks 'ladder-of-surut 1 #:no-encounters? #t)
     ;  (make-route-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
     ;  (make-route-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
     ;  (make-route-between places 'martaanvuo-swamp 'luminous-precipice 120)
