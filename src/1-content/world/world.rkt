@@ -64,7 +64,7 @@
     #:features '(new-enemy-bell)
     #:type 'indoors
     #:shortname "Ladder of Surut"
-    #:encounter-types '(grabberkin))
+    #:encounter-types '(voidfloater))
 
    (make-place
     #:id 'outpost

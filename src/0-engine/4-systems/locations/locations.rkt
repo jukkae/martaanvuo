@@ -73,13 +73,15 @@
              )))
 
 (define (spawn-enemies encounter-type)
+  ; TODO: move to encounter-specific content
   (case encounter-type
     ['human-fighter (spawn-human-fighter-encounter!)]
     ['grabberkin (spawn-grabberkin-encounter!)]
     ['blindscraper (spawn-blindscraper-encounter!)]
     ['two-blindscrapers (spawn-two-blindscrapers-encounter!)]
     ['grabberkin-and-blindscraper (spawn-grabberkin-and-blindscraper-encounter!)]
-    [else '()]))
+    ['voidfloater (spawn-voidfloater-encounter!)]
+    [else (dev-note (format "Unknown encounter type: ~a" encounter-type))]))
 
 (define (spawn-encounter)
   (current-counters++ 'enemy-encounters)

@@ -12,9 +12,13 @@
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
   "../../4-systems/actors/actor.rkt"
+
+  ; TODO: globber these; move to content
   "../../4-systems/enemies/blindscraper.rkt"
   "../../4-systems/enemies/grabberkin.rkt"
   "../../4-systems/enemies/human-fighter.rkt"
+  "../../4-systems/enemies/voidfloater.rkt"
+
   "../../7-state/state.rkt"
   )
 
@@ -27,13 +31,14 @@
  (get-actor
   )])
 
-
+; TODO: clean up!
 (define (get-next-npc-action actor)
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
     (["Grabberkin"] (get-grabberkin-action actor))
     (["Human fighter"] (get-human-fighter-action actor))
-    (else (displayln "get-next-npc-action: unknown actor"))))
+    (["Voidfloater"] (get-voidfloater-action actor))
+    (else (dev-note (format "get-next-npc-action: unknown actor ~a" (actor-name actor))))))
 
 (define (get-next-action actor)
   (cond ((not (pc-actor? actor)) (get-next-npc-action actor))

@@ -3,9 +3,12 @@
 (provide (all-defined-out))
 
 (require
+  ; TODO: globber these!
   "blindscraper.rkt"
   "grabberkin.rkt"
   "human-fighter.rkt"
+  "voidfloater.rkt"
+
   "../actors/actor.rkt"
   "../world/world.rkt"
 
@@ -46,6 +49,7 @@
     ['grabberkin (make-grabberkin)]
     ['blindscraper (make-blindscraper)]
     ['human-fighter (make-human-fighter)]
+    ['voidfloater (make-voidfloater)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))
 
 (define (spawn type number)
@@ -63,6 +67,7 @@
 
     (define enemy (make-enemy type))
 
+    ; TODO: content
     (case type
       ['blindscraper
         (define range
@@ -95,6 +100,14 @@
         (set-actor-stance! enemy enemy-stance)
        '()]
 
+      ['voidfloater
+        (define range 'close) ; can't be grappled with, can be shot with long-barreled guns
+        (define description "")
+        (define enemy-stance
+          (stance sign range description))
+        (set-actor-stance! enemy enemy-stance)
+       '()]
+
       [else (dev-note (format "unknown enemy type: ~a" type))])
 
     (move-actor-to-location! enemy (current-location))
@@ -104,12 +117,18 @@
   )
   '())
 
+; TODO: move these to content
 (define (spawn-human-fighter-encounter!)
   (p (human-fighter-spawn-text))
 
   (begin-combat!)
 
   (spawn 'human-fighter 1))
+
+(define (spawn-voidfloater-encounter!)
+
+  (begin-combat!)
+  (spawn 'voidfloater 1))
 
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll
