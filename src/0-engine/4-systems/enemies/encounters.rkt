@@ -2,12 +2,11 @@
 
 (provide (all-defined-out))
 
+(require reprovide/reprovide)
+(require reprovide/require-transformer/glob-in)
+
 (require
-  ; TODO: globber these!
-  "blindscraper.rkt"
-  "grabberkin.rkt"
-  "human-fighter.rkt"
-  "voidfloater.rkt"
+  (glob-in "./content/*.rkt")
 
   "../actors/actor.rkt"
   "../world/world.rkt"
@@ -20,6 +19,7 @@
   "../../7-state/state.rkt"
   )
 
+; TODO: move to content
 (define (grabberkin-spawn-text)
   (define times-encountered (hash-ref (current-times-species-encountered) 'grabberkin 0))
 

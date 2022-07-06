@@ -3,15 +3,15 @@
 (provide (all-defined-out))
 
 (require
-  "../actors/actor.rkt"
-  "../checks/checks.rkt"
+  "../../actors/actor.rkt"
+  "../../checks/checks.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
-  "../../3-types/action.rkt"
-  "../../3-types/actor.rkt"
-  "../../6-combat/stance.rkt"
-  "../../7-state/state.rkt"
+  "../../../2-core/io.rkt"
+  "../../../2-core/core.rkt"
+  "../../../3-types/action.rkt"
+  "../../../3-types/actor.rkt"
+  "../../../6-combat/stance.rkt"
+  "../../../7-state/state.rkt"
   )
 
 (define (make-voidfloater)

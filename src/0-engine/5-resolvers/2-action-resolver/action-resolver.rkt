@@ -80,13 +80,20 @@
     (when (not (eq? result 'interrupted))
 
       (define rules (action-resolution-rules action))
-      (when (not (empty? rules))
-        (when (not (procedure? rules))
-          (set! rules (rules-to-lambda rules)))
-        (define resolution-result ((eval rules ns)))
 
-        (when (not (or (void? resolution-result) (empty? resolution-result)))
-          (set! result resolution-result)))
+      (cond
+        [(not (empty? rules))
+         (when (not (procedure? rules))
+           (set! rules (rules-to-lambda rules)))
+         (define resolution-result ((eval rules ns)))
+
+         (when (not (or (void? resolution-result) (empty? resolution-result)))
+           (set! result resolution-result))]
+        [else
+         (dev-note (format "Empty rules for action ~a" (action-symbol action)))]
+      )
+
+
       (define duration (action-duration action))
       (define tl (advance-time-until-next-interesting-event! duration #f))
       (process-timeline! tl))

@@ -3,16 +3,16 @@
 (provide (all-defined-out))
 
 (require
-  "../actors/actor.rkt"
-  "../checks/checks.rkt"
-  "../pc/pc.rkt"
+  "../../actors/actor.rkt"
+  "../../checks/checks.rkt"
+  "../../pc/pc.rkt"
 
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
-  "../../3-types/action.rkt"
-  "../../3-types/actor.rkt"
-  "../../3-types/status.rkt"
-  "../../7-state/state.rkt"
+  "../../../2-core/io.rkt"
+  "../../../2-core/core.rkt"
+  "../../../3-types/action.rkt"
+  "../../../3-types/actor.rkt"
+  "../../../3-types/status.rkt"
+  "../../../7-state/state.rkt"
   )
 
 (require racket/lazy-require)

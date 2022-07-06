@@ -4,6 +4,8 @@
 
 (require racket/lazy-require)
 
+(require reprovide/require-transformer/glob-in)
+
 (require
   "action-initiative-resolver.rkt"
 
@@ -13,11 +15,7 @@
   "../../3-types/pc-actor.rkt"
   "../../4-systems/actors/actor.rkt"
 
-  ; TODO: globber these; move to content
-  "../../4-systems/enemies/blindscraper.rkt"
-  "../../4-systems/enemies/grabberkin.rkt"
-  "../../4-systems/enemies/human-fighter.rkt"
-  "../../4-systems/enemies/voidfloater.rkt"
+  (glob-in "../../4-systems/enemies/content/*.rkt")
 
   "../../7-state/state.rkt"
   )
