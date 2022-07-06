@@ -5,11 +5,18 @@
 (require
   "../0-engine/0-api/api.rkt"
   "narration/gameplay-transitions.rkt"
+  "world/world.rkt"
 )
 
+(define (setup-world! scenario)
+  (current-world (make-new-world)))
+
 ; Main entrypoint of campaign
-(define (on-begin-playthrough!)
-  (reset-world!)
+(define (on-begin-playthrough! scenario)
+  (reset-state!)
+  (setup-world! scenario)
+
+  ; housekeeping – TODO: semantically different from post-pc-death
   (on-begin-life)
   (on-begin-run))
 

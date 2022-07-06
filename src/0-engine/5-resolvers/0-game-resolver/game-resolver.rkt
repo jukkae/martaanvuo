@@ -5,7 +5,7 @@
   "../1-round-resolver/get-next-pc-action/menu.rkt"
   "../1-round-resolver/get-next-pc-action/ui.rkt"
 
-    "../../1-index/content.rkt"
+  "../../1-index/content.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
@@ -19,7 +19,7 @@
   )
 
 (provide resolve-game)
-(define (resolve-game game-mode)
+(define (resolve-game game-mode #:scenario [scenario '()])
 
   (define seed-flag '())
 
@@ -28,6 +28,7 @@
    [("-s" "--seed") seed "Set random seed for new game"
     (seed-rng! (exact-floor (string->number seed)))
     (set! seed-flag (exact-floor (string->number seed)))]
+   ; [("--scenario") scenario "Select scenario"] ; TODO:
    [("-r" "--restart") "Restart (deletes old game)"
     (if (file-exists? "save.txt")
         (begin
@@ -71,8 +72,8 @@
   (title)
 
   (case game-mode
-    ['begin   (on-begin-playthrough!)]
-    ['restart (on-begin-playthrough!)]
+    ['begin   (on-begin-playthrough! scenario)]
+    ['restart (on-begin-playthrough! scenario)]
     ['continue
      (for ([entry (current-log)])
        (print-paragraph (format-for-printing entry #:width 84 #:indent 4)))
@@ -133,7 +134,7 @@
      (display-playthrough-stats)
      (wait-for-confirm)
 
-     (reset-world!)
+     (reset-state!)
      (delete-save-file)
      (prln "Progress deleted. Starting from the beginning.")
      (newline)

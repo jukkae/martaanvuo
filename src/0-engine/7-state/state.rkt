@@ -93,8 +93,8 @@
 
 (define current-show-round-summary? (make-parameter #f))
 
-(define (reset-world!)
-  (current-world (make-new-world))
+(define (reset-state!)
+  (current-world '())
   (current-last-numeric-actor-id 0)
   (current-log '())
   (current-last-paragraph "")

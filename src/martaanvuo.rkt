@@ -6,6 +6,6 @@
 (define (begin-session)
   (if (file-exists? "save.txt")
       (resolve-game 'continue)
-      (resolve-game 'begin)))
+      (resolve-game 'begin #:scenario 'ladder-of-surut)))
 
 (begin-session)

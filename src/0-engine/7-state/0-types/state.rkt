@@ -22,7 +22,7 @@
    [rng-seed : Integer]
    [rng-state : Rng-state-vector]
 
-   [world : world]
+   [world : (Maybe world)]
    [last-numeric-actor-id : Natural]
    [log : (Listof String)]
    [last-paragraph : String]
