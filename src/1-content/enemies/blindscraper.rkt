@@ -3,15 +3,18 @@
 (provide (all-defined-out))
 
 (require
-  "../../actors/actor.rkt"
-  "../../checks/checks.rkt"
+  "../../0-engine/2-core/io.rkt"
+  "../../0-engine/2-core/core.rkt"
 
-  "../../../2-core/io.rkt"
-  "../../../2-core/core.rkt"
-  "../../../3-types/action.rkt"
-  "../../../3-types/actor.rkt"
-  "../../../6-combat/stance.rkt"
-  "../../../7-state/state.rkt"
+  "../../0-engine/3-types/action.rkt"
+  "../../0-engine/3-types/actor.rkt"
+
+  "../../0-engine/4-systems/actors/actor.rkt"
+  "../../0-engine/4-systems/checks/checks.rkt"
+
+  "../../0-engine/6-combat/stance.rkt"
+
+  "../../0-engine/7-state/state.rkt"
   )
 
 (define (make-blindscraper)

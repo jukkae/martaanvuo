@@ -22,14 +22,34 @@
   "../../3-types/actor.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
+
+  "../../6-combat/stance.rkt"
   )
 
 (lazy-require ["../world/world.rkt"
   (remove-actor-from-its-current-location!
+   move-actor-to-location!
    )])
 (lazy-require ["../../3-types/location.rkt"
   (add-feature-to-location!
    add-item-to-location!
+   )])
+(lazy-require ["../../7-state/state.rkt"
+  (current-times-species-encountered
+   current-times-species-encountered++
+   )])
+; TODO: refactor
+(lazy-require ["../../../1-content/enemies/grabberkin.rkt"
+  (make-grabberkin
+   )])
+(lazy-require ["../../../1-content/enemies/blindscraper.rkt"
+  (make-blindscraper
+   )])
+(lazy-require ["../../../1-content/enemies/human-fighter.rkt"
+  (make-human-fighter
+   )])
+(lazy-require ["../../../1-content/enemies/voidfloater.rkt"
+  (make-voidfloater
    )])
 
 (define (make-actor
@@ -247,3 +267,43 @@
 
          (set-actor-hp! actor new-hp)
          'hit)))
+
+
+; TODO: dispatching?
+(define (make-enemy type)
+  (case type
+    ['grabberkin (make-grabberkin)]
+    ['blindscraper (make-blindscraper)]
+    ['human-fighter (make-human-fighter)]
+    ['voidfloater (make-voidfloater)]
+    [else (dev-note (format "Unknown enemy type: ~a" type))]))
+
+; TODO: make stances nice
+(define (spawn type number range)
+  (for ([i (in-range 0 number)])
+    (define sign
+      (if (= number 1)
+          ""
+          (case i
+            [(0) "α"]
+            [(1) "β"]
+            [(2) "γ"]
+            [(3) "δ"]
+            [(4) "ε"]
+            [else (number->string (add1 i))])))
+
+    (define enemy (make-enemy type))
+
+    (define description
+          (case i
+            [(0) "right"]
+            [(1) "left"]
+            [else "right"]))
+    (define enemy-stance
+      (stance sign range description))
+    (set-actor-stance! enemy enemy-stance)
+
+    (move-actor-to-location! enemy (current-location)))
+
+  (current-times-species-encountered++ type)
+)

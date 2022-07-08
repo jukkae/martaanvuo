@@ -15,8 +15,6 @@
   "../../3-types/pc-actor.rkt"
   "../../4-systems/actors/actor.rkt"
 
-  (glob-in "../../4-systems/enemies/content/*.rkt")
-
   "../../7-state/state.rkt"
   )
 
@@ -28,6 +26,23 @@
 (lazy-require ["../../4-systems/world/world.rkt"
  (get-actor
   )])
+; TODO: refactor
+(lazy-require ["../../../1-content/enemies/grabberkin.rkt"
+  (get-grabberkin-action
+   get-grabberkin-reaction
+   )])
+(lazy-require ["../../../1-content/enemies/blindscraper.rkt"
+  (get-blindscraper-action
+   get-blindscraper-reaction
+   )])
+(lazy-require ["../../../1-content/enemies/human-fighter.rkt"
+  (get-human-fighter-action
+   get-human-fighter-reaction
+   )])
+(lazy-require ["../../../1-content/enemies/voidfloater.rkt"
+  (get-voidfloater-action
+   get-voidfloater-reaction
+   )])
 
 ; TODO: clean up!
 (define (get-next-npc-action actor)

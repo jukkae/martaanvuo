@@ -29,10 +29,18 @@
   (get-location-choices
   )])
 
+(lazy-require ["../../../1-content/encounters/encounters.rkt"
+  (spawn-human-fighter-encounter!
+   spawn-grabberkin-encounter!
+   spawn-blindscraper-encounter!
+   spawn-two-blindscrapers-encounter!
+   spawn-grabberkin-and-blindscraper-encounter!
+   spawn-voidfloater-encounter!
+   )])
+
 (require
   "routes.rkt"
   "../actors/actor.rkt"
-  "../enemies/encounters.rkt"
 
   "../../1-index/state.rkt"
 
