@@ -31,6 +31,7 @@
   "../../../7-state/state.rkt"
   )
 
+; TODO: action-symbol to choice mapping belongs to content
 (provide choice-factory)
 (define (choice-factory action-symbol)
   (case action-symbol

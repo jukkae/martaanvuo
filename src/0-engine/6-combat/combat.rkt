@@ -7,7 +7,6 @@
 (require
   "combat-event.rkt"
   "narration.rkt"
-  "stance.rkt"
 
   "../1-index/state.rkt"
 
@@ -16,9 +15,10 @@
   "../2-core/session.rkt"
 
   "../3-types/actor.rkt"
-  "../3-types/pc-actor.rkt"
-  "../3-types/status.rkt"
   "../3-types/condition.rkt"
+  "../3-types/pc-actor.rkt"
+  "../3-types/stance.rkt"
+  "../3-types/status.rkt"
   "../3-types/world.rkt"
 
   "../4-systems/actors/actor.rkt"

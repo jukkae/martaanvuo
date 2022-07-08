@@ -12,7 +12,7 @@
 
   "../4-systems/actors/actor.rkt"
 
-  "../6-combat/stance.rkt"
+  "../3-types/stance.rkt"
 
   "../7-state/state.rkt"
   )
@@ -75,14 +75,14 @@
                  (define skill (get-trait (pc) "athletics-skill"))
                 ; TODO: blurbify escape narration based on location and enemies
 
-                 (define stance-range-values '())
+                 (define stance-ranges '())
                  (for ([enemy enemies])
                    (define stance (actor-stance enemy))
-                   (define value (get-stance-range-numeric-value (stance-range stance)))
-                   (set! stance-range-values (append-element stance-range-values value)))
+                   (define value (stance-range stance))
+                   (set! stance-ranges (append-element stance-ranges value)))
                  (define target-number
                    ; if there's an enemy in engaged range, then more difficult check
-                   (if (member 0 stance-range-values)
+                   (if (member 'engaged stance-ranges)
                        10
                        8))
 

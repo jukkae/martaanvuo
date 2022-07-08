@@ -18,7 +18,7 @@
   ;;; "../4-systems/pc/character-sheet.rkt"
   "../4-systems/world/world.rkt"
 
-  "../6-combat/stance.rkt"
+  "../3-types/stance.rkt"
   )
 
 (lazy-require ["state.rkt" (

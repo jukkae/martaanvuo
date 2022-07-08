@@ -12,7 +12,7 @@
   "../../0-engine/4-systems/actors/actor.rkt"
   "../../0-engine/4-systems/checks/checks.rkt"
 
-  "../../0-engine/6-combat/stance.rkt"
+  "../../0-engine/3-types/stance.rkt"
 
   "../../0-engine/7-state/state.rkt"
   )

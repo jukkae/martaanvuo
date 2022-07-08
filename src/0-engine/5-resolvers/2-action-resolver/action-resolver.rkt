@@ -37,7 +37,7 @@
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
   "../../6-combat/narration.rkt"
-  "../../6-combat/stance.rkt"
+  "../../3-types/stance.rkt"
   )
 
 (lazy-require ["../1-round-resolver/event-handler.rkt"

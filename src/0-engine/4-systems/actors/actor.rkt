@@ -23,7 +23,7 @@
   "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
 
-  "../../6-combat/stance.rkt"
+  "../../3-types/stance.rkt"
   )
 
 (lazy-require ["../world/world.rkt"

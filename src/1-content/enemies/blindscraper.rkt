@@ -12,7 +12,7 @@
   "../../0-engine/4-systems/actors/actor.rkt"
   "../../0-engine/4-systems/checks/checks.rkt"
 
-  "../../0-engine/6-combat/stance.rkt"
+  "../../0-engine/3-types/stance.rkt"
 
   "../../0-engine/7-state/state.rkt"
   )
@@ -210,9 +210,9 @@
                (notice (format "~a tries to escape." (get-combatant-name (get-actor ,id))))
                (define skill 1)
                (define stance (actor-stance (get-actor ,id)))
-               (define value (get-stance-range-numeric-value (stance-range stance)))
+               (define value (stance-range stance))
                (define target-number
-                 (if (= value 0)
+                 (if (eq? value 'engaged)
                      10
                      8))
 
