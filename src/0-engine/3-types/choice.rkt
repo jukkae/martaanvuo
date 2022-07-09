@@ -7,7 +7,7 @@
 
 ; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
 (define-struct choice
-  ([symbol : Symbol]
+  ([id : Symbol]
    [name : String]
    [resolution-effect : (U action (->* () action))]))
 

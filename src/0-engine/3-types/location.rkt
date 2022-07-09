@@ -3,10 +3,12 @@
 (provide (all-defined-out))
 
 (require
+  "location-ids.rkt"
+  "actor.rkt"
+  "item.rkt"
+
   "../2-core/maybe.rkt"
-  "../3-types/location-ids.rkt"
-  "../3-types/actor.rkt"
-  "../3-types/item.rkt"
+  "../3-types/choice.rkt"
   "../4-systems/actors/actor.rkt"
   )
 
@@ -19,7 +21,8 @@
    [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
    [tags : (Listof Symbol)]
-   [encounter-types : (Listof Symbol)])
+   [encounter-types : (Listof Symbol)]
+   )
   #:prefab
   #:mutable
   #:constructor-name location*)
@@ -69,7 +72,7 @@
   location
   ([routes : (Listof RouteId)]
    [visited? : Boolean]
-   [actions-provided : (Listof Symbol)]
+   [choices : (Listof choice)]
    [shortname : String])
 
   #:constructor-name place*
@@ -87,8 +90,8 @@
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol)
                     #:encounter-types (Listof Symbol)
+                    #:choices (Listof choice)
                     #:visited? Boolean
-                    #:actions-provided (Listof Symbol)
                     #:shortname String)
                    place))
 (define (make-place
@@ -100,9 +103,9 @@
          #:features [features '()]
          #:tags [tags '()]
          #:encounter-types [encounter-types '()]
+         #:choices [choices '()]
          #:routes [routes '()]
          #:visited? [visited? #f]
-         #:actions-provided [actions-provided '()]
          #:shortname [shortname ""])
 
   (set! *number-of-places* (add1 *number-of-places*))
@@ -125,6 +128,6 @@
           encounter-types
           routes
           visited?
-          actions-provided
+          choices
           shortname))
 
