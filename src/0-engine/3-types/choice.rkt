@@ -1,10 +1,13 @@
-#lang at-exp racket
+#lang at-exp typed/racket
 
 (provide (all-defined-out))
 
+(require
+  "action.rkt")
+
 ; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
 (define-struct choice
-  (symbol
-   name
-   resolution-effect)) ; resolution-effect is either a paramless lambda that produces an action, or an action
+  ([symbol : Symbol]
+   [name : String]
+   [resolution-effect : (U action (->* () action))]))
 
