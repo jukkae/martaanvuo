@@ -3,6 +3,9 @@
 (provide (all-defined-out))
 
 (require
+  ; ; TODO: Globber!
+  ; "locations/ladder-of-surut.rkt"
+
   "../../0-engine/4-systems/world/world.rkt"
 
   "../../0-engine/2-core/core.rkt"
@@ -58,13 +61,6 @@
     #:features '(mieli)
     #:type 'docks
     #:shortname "Martaanvuo docks")
-
-  (make-place
-    #:id 'ladder-of-surut
-    #:features '(new-enemy-bell)
-    #:type 'indoors
-    #:shortname "Ladder of Surut"
-    #:encounter-types '(voidfloater))
 
    (make-place
     #:id 'outpost
@@ -131,10 +127,18 @@
     #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)) ; not the same merchant, not literally at least
   ))
 
+(define-namespace-anchor a)
+
 (provide make-new-world)
 (define (make-new-world)
 
   (define places (make-places))
+
+  (parameterize ([current-namespace (namespace-anchor->namespace a)])
+    (define ladder-of-surut (include "locations/ladder-of-surut.rkt"))
+    (set! places (append-element places ladder-of-surut))
+    ; (add-place-to-world ladder-of-surut)
+    )
 
   (define routes
     (list
