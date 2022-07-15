@@ -59,46 +59,27 @@
   (- 100 (remainder (world-elapsed-time (current-world)) 100)))
 
 
-
-
-
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-; NB: Modifies a and b in places, and returns route r between the two
 (provide make-route-between)
 (define (make-route-between
-         places
          id-a
          id-b
          traverse-time
          #:hidden? [hidden? #f]
          #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
          #:encounter-types [encounter-types '()]
-         #:onedirectional? [onedirectional? #f]
+         #:one-directional? [one-directional? #f]
          #:details [details '()])
 
-  (define (find-place place-id)
-    (findf (λ (place) (eq? (location-id place) place-id))
-           places))
-
-  (define place-a (find-place id-a))
-  (define place-b (find-place id-b))
-
+  (when hidden? (error "Implement hidden paths"))
   (when no-encounters? (set! details (append-element details 'no-encounters)))
 
-  (define actors '())
-  (define r (make-route
-             id-a
-             id-b
-             traverse-time
-             #:details details
-             #:actors actors
-             #:encounter-types encounter-types))
-  (define route-id (location-id r))
-  (set-place-routes! place-a (append-element (place-routes place-a) route-id))
-  (when (not onedirectional?)
-    (set-place-routes! place-b (append-element (place-routes place-b) route-id)))
-  (when hidden? (error "Implement hidden paths"))
-  r)
+  (make-route
+    id-a
+    id-b
+    traverse-time
+    #:details details
+    #:encounter-types encounter-types))
 
 (provide get-route-by-id)
 (define (get-route-by-id id)
@@ -123,3 +104,42 @@
         ((not (null? (get-route-by-id id)))
          (get-route-by-id id))
         (else '())))
+
+
+(define *number-of-places* 0)
+
+(provide make-place)
+(define (make-place
+         #:id [id *number-of-places*]
+         #:type [type '()]
+         #:details [details '()]
+         #:actors [actors '()]
+         #:items [items '()]
+         #:features [features '()]
+         #:tags [tags '()]
+         #:encounter-types [encounter-types '()]
+         #:choices [choices '()]
+         #:routes [routes '()]
+         #:visited? [visited? #f]
+         #:shortname [shortname ""])
+
+  (set! *number-of-places* (add1 *number-of-places*))
+
+  (define id-symbol
+    (match id
+     [(? symbol? id) id]
+     [Natural (string->symbol (format "place-~a" id))]
+     ))
+
+  (place* id-symbol
+          type
+          details
+          actors
+          items
+          features
+          tags
+          encounter-types
+          routes
+          visited?
+          choices
+          shortname))

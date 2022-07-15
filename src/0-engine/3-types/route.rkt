@@ -15,7 +15,8 @@
   location
   ([a : PlaceId]
    [b : PlaceId]
-   [traverse-time : Natural])
+   [traverse-time : Natural]
+   [one-directional? : Boolean])
   #:mutable
   #:prefab
   #:constructor-name route*)
@@ -23,7 +24,8 @@
 (define *number-of-routes* 0)
 
 (: make-route (->* (PlaceId PlaceId Natural)
-                   (#:id RouteId
+                   (Boolean
+                    #:id RouteId
                     #:type (Maybe Symbol)
                     #:details (Listof Symbol)
                     #:actors (Listof actor)
@@ -35,6 +37,7 @@
 (define (make-route a
                     b
                     traverse-time
+                    (one-directional? #f)
                     #:id [id *number-of-routes*]
                     #:type [type '()]
                     #:details [details '()]
@@ -62,7 +65,9 @@
           encounter-types
           a
           b
-          traverse-time))
+          traverse-time
+          one-directional?
+          ))
 
 (: route-traversed? (->* (route) () Boolean))
 (define (route-traversed? route)

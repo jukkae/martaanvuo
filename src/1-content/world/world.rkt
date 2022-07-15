@@ -125,52 +125,68 @@
    (make-place
     #:id 'carnival
     #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)) ; not the same merchant, not literally at least
+
+    (make-place
+    #:id 'ladder-of-surut
+    #:features '(new-enemy-bell)
+    #:type 'indoors
+    #:shortname "Ladder of Surut"
+    #:encounter-types '(voidfloater))
   ))
 
-(define-namespace-anchor a)
-
-(provide make-new-world)
-(define (make-new-world)
-
-  (define places (make-places))
-
-  (parameterize ([current-namespace (namespace-anchor->namespace a)])
-    (define ladder-of-surut (include "locations/ladder-of-surut.rkt"))
-    (set! places (append-element places ladder-of-surut))
-    ; (add-place-to-world ladder-of-surut)
-    )
-
-  (define routes
-    (list
+(define (make-routes)
+(list
      #; (make-route-between perimeter martaanvuo-swamp 'hidden)
-     (make-route-between places 'perimeter 'magpie-hill 110 #:no-encounters? #t)
-     (make-route-between places 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
-     (make-route-between places 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
-     (make-route-between places 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
-     (make-route-between places 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
-     (make-route-between places 'martaanvuo-docks 'ladder-of-surut 1 #:no-encounters? #t)
+     (make-route-between 'perimeter 'magpie-hill 110 #:no-encounters? #t)
+     (make-route-between 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
+     (make-route-between 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
+     (make-route-between 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
+     (make-route-between 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
+     (make-route-between 'martaanvuo-docks 'ladder-of-surut 1 #:no-encounters? #t)
     ;  (make-route-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
     ;  (make-route-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
     ;  (make-route-between places 'martaanvuo-swamp 'luminous-precipice 120)
-     (make-route-between places 'burnt-tree 'the-maw 1 #:no-encounters? #t)
-     (make-route-between places 'the-maw 'waiting-room 1 #:no-encounters? #t #:onedirectional? #t)
-     (make-route-between places 'magpie-hill 'outpost 30 #:no-encounters? #t)
-     (make-route-between places 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
-     (make-route-between places 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
-     (make-route-between places 'outpost 'tunnels-1 5 #:no-encounters? #t)
-     (make-route-between places 'tunnels-1 'tunnels-2 10)
-     (make-route-between places 'tunnels-1 'workshop 10)
-     (make-route-between places 'tunnels-1 'compound-entrance 10)
-     (make-route-between places 'compound-entrance 'murkwater-docks 2)
-     (make-route-between places 'compound-entrance 'workshop 2)
-     (make-route-between places 'murkwater-docks 'workshop 2 #:no-encounters? #t)
-     (make-route-between places 'murkwater-docks 'palsat 130 #:no-encounters? #t)
-     (make-route-between places 'tunnels-2 'storage-closet 1)
-     (make-route-between places 'storage-closet 'workshop 1 #:no-encounters? #t)
-     (make-route-between places 'workshop 'control-room 2 #:no-encounters? #t)
-     (make-route-between places 'workshop 'martaanvuo-source 2)
-     (make-route-between places 'control-room 'reactor-room 1)
-     ))
+     (make-route-between 'burnt-tree 'the-maw 1 #:no-encounters? #t)
+     (make-route-between 'the-maw 'waiting-room 1 #:no-encounters? #t #:one-directional? #t)
+     (make-route-between 'magpie-hill 'outpost 30 #:no-encounters? #t)
+     (make-route-between 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
+     (make-route-between 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
+     (make-route-between 'outpost 'tunnels-1 5 #:no-encounters? #t)
+     (make-route-between 'tunnels-1 'tunnels-2 10)
+     (make-route-between 'tunnels-1 'workshop 10)
+     (make-route-between 'tunnels-1 'compound-entrance 10)
+     (make-route-between 'compound-entrance 'murkwater-docks 2)
+     (make-route-between 'compound-entrance 'workshop 2)
+     (make-route-between 'murkwater-docks 'workshop 2 #:no-encounters? #t)
+     (make-route-between 'murkwater-docks 'palsat 130 #:no-encounters? #t)
+     (make-route-between 'tunnels-2 'storage-closet 1)
+     (make-route-between 'storage-closet 'workshop 1 #:no-encounters? #t)
+     (make-route-between 'workshop 'control-room 2 #:no-encounters? #t)
+     (make-route-between 'workshop 'martaanvuo-source 2)
+     (make-route-between 'control-room 'reactor-room 1)
+     )
+)
 
+(define (connect-places-and-routes! places routes)
+  (define (find-place place-id)
+    (findf (λ (place) (eq? (location-id place) place-id))
+           places))
+  (for ([route routes])
+    (define route-id (location-id route))
+    (define id-a (route-a route))
+    (define id-b (route-b route))
+    (define place-a (find-place id-a))
+    (define place-b (find-place id-b))
+    (set-place-routes! place-a (append-element (place-routes place-a) route-id))
+    (when (not (route-one-directional? route))
+      (set-place-routes! place-b (append-element (place-routes place-b) route-id)))
+    )
+)
+
+(provide make-new-world)
+(define (make-new-world)
+  (define places (make-places))
+  (define routes (make-routes))
+  (connect-places-and-routes! places routes)
   (world places routes 0 0))
 
