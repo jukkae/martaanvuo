@@ -159,4 +159,3 @@
 (define (make-new-world)
   (connect-places-and-routes! places routes)
   (world places routes 0 0))
-

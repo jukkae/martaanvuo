@@ -9,7 +9,9 @@
 )
 
 (define (setup-world! scenario)
-  (current-world (make-new-world)))
+  (current-world (make-new-world))
+  (dynamic-require "src/1-content/world/locations/ladder-of-surut.rkt" #f)
+  )
 
 ; Main entrypoint of campaign
 (define (on-begin-playthrough! scenario)

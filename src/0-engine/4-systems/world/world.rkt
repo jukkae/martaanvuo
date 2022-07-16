@@ -62,14 +62,14 @@
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
 (provide route-between)
 (define (route-between
-         id-a
-         id-b
-         traverse-time
-         #:hidden? [hidden? #f]
-         #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
-         #:encounter-types [encounter-types '()]
-         #:one-directional? [one-directional? #f]
-         #:details [details '()])
+  id-a
+  id-b
+  traverse-time
+  #:hidden? [hidden? #f]
+  #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
+  #:encounter-types [encounter-types '()]
+  #:one-directional? [one-directional? #f]
+  #:details [details '()])
 
   (when hidden? (error "Implement hidden paths"))
   (when no-encounters? (set! details (append-element details 'no-encounters)))
@@ -80,6 +80,40 @@
     traverse-time
     #:details details
     #:encounter-types encounter-types))
+
+(provide add-route-between!)
+(define (add-route-between!
+  id-a
+  id-b
+  traverse-time
+  #:hidden? [hidden? #f]
+  #:no-encounters? [no-encounters? #f]
+  #:encounter-types [encounter-types '()]
+  #:one-directional? [one-directional? #f]
+  #:details [details '()])
+
+  (define route
+    (route-between
+      id-a
+      id-b
+      traverse-time
+      #:hidden? hidden?
+      #:no-encounters? no-encounters?
+      #:encounter-types encounter-types
+      #:one-directional? one-directional?
+      #:details details))
+
+  (define route-id (location-id route))
+
+  (define place-a (get-place-by-id id-a))
+  (define place-b (get-place-by-id id-b))
+  (set-Place-routes! place-a (append-element (Place-routes place-a) route-id))
+  (when (not (route-one-directional? route))
+    (set-Place-routes! place-b (append-element (Place-routes place-b) route-id)))
+
+  (set-world-routes! (current-world)
+    (append-element (world-routes (current-world))
+                    route)))
 
 (provide get-route-by-id)
 (define (get-route-by-id id)
@@ -158,3 +192,9 @@
     (set-Place-routes! place-a (append-element (Place-routes place-a) route-id))
     (when (not (route-one-directional? route))
       (set-Place-routes! place-b (append-element (Place-routes place-b) route-id)))))
+
+(provide add-place!)
+(define (add-place! place)
+  (set-world-places! (current-world)
+    (append-element (world-places (current-world))
+                    place)))
