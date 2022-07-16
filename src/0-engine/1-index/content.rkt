@@ -17,17 +17,6 @@
    get-traverse-text
    )])
 
-(provide
-  get-perimeter-choices)
-(lazy-require ["../../1-content/world/locations/perimeter.rkt"
-  (get-perimeter-choices
-   )])
-
-(provide
-  make-new-world)
-(lazy-require ["../../1-content/world/world.rkt" (
-  make-new-world
-  )])
 
 (provide
   get-location-choices)

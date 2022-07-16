@@ -68,14 +68,14 @@
 
 
 
-(struct place
+(struct Place
   location
   ([routes : (Listof RouteId)]
    [visited? : Boolean]
    [choices : (Listof choice)]
    [shortname : String])
 
-  #:constructor-name place*
+  #:constructor-name Place*
   #:mutable
   #:prefab)
 

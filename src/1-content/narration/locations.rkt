@@ -338,7 +338,7 @@
            (prune
             (tbody
              (tr
-              (format "~a – ~a" (place-shortname startpoint) (place-shortname endpoint))
+              (format "~a – ~a" (Place-shortname startpoint) (Place-shortname endpoint))
               "[route]")
              (when (not (null? (location-features route)))
                (tr "features"
@@ -347,7 +347,7 @@
            (prune
             (tbody
              (tr
-              (format "~a – ???" (place-shortname startpoint))
+              (format "~a – ???" (Place-shortname startpoint))
               "[route]")
              (when (not (null? (location-features route)))
                (tr "features"
@@ -358,8 +358,8 @@
   (define id (location-id location))
   (define body
     (prune (tbody
-            (when (not (eq? (place-shortname location) ""))
-              (tr (place-shortname location)
+            (when (not (eq? (Place-shortname location) ""))
+              (tr (Place-shortname location)
                   " "))
             (when (not (null? (location-id location)))
               (tr "id"
@@ -379,7 +379,7 @@
   (info-card body title))
 
 (define (display-location-info-card location [title "Location"])
-  (cond ((place? location)
+  (cond ((Place? location)
          (display-place-info-card location))
         ((route? location)
          (display-route-info-card location))

@@ -63,8 +63,8 @@
                 (route-b route))
            'b)))
   (case endpoint
-    ['a (place-visited? (route-a route))]
-    ['b (place-visited? (route-b route))])
+    ['a (Place-visited? (route-a route))]
+    ['b (Place-visited? (route-b route))])
   )
 
 (define (route-shortname route-or-id)
@@ -90,7 +90,7 @@
 
   (cond ((route-fully-known? route)
          (format "En route: ~a – ~a"
-                 (place-shortname startpoint)
-                 (place-shortname endpoint)))
+                 (Place-shortname startpoint)
+                 (Place-shortname endpoint)))
         (else
-         (format "En route: ~a – ???" (place-shortname startpoint)))))
+         (format "En route: ~a – ???" (Place-shortname startpoint)))))

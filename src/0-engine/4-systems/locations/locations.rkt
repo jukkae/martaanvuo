@@ -98,10 +98,10 @@
     (spawn-enemies (take-random (location-encounter-types (current-location))))))
 
 (define (get-location-short-description location)
-  (cond [(place? location)
-         (if (eq? (place-shortname location) "")
+  (cond [(Place? location)
+         (if (eq? (Place-shortname location) "")
              (capitalize-first-letter (string-replace (~a (location-id location)) "-" " "))
-             (place-shortname location))]
+             (Place-shortname location))]
         [(route? location)
          (route-shortname (location-id location))]))
 
@@ -118,8 +118,8 @@
          (list
           (route-a location)
           (route-b location)))
-        ((place? location)
-         (place-routes location))))
+        ((Place? location)
+         (Place-routes location))))
 
 (define (get-current-location-choices)
   (get-location-choices (current-location)))

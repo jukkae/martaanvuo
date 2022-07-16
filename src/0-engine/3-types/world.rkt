@@ -8,7 +8,7 @@
   )
 
 (struct world
-  ([places : (Listof place)]
+  ([places : (Listof Place)]
    [routes : (Listof route)]
    [day : Natural]
    [elapsed-time : Natural])

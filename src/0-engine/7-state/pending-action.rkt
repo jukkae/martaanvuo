@@ -36,7 +36,7 @@
   (cond ((eq? (action-symbol pending-action) 'go-to-location)
          (define target (action-target pending-action))
          (when (symbol? target) (set! target (get-location-by-id target)))
-         (format "[continue] Continue towards ~a." (place-shortname target)))
+         (format "[continue] Continue towards ~a." (Place-shortname target)))
         ((eq? (action-symbol pending-action) 'traverse)
          (define target (action-target pending-action))
          (when (symbol? target) (set! target (get-location-by-id target)))
@@ -53,7 +53,7 @@
                                  ['a-to-b (route-b target)]
                                  ['b-to-a (route-a target)])))
 
-         (format "[continue] Continue towards ~a." (place-shortname endpoint)))
+         (format "[continue] Continue towards ~a." (Place-shortname endpoint)))
         (else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action)))))
 
 (define (get-cancel-pending-action-and-go-back-name
@@ -74,7 +74,7 @@
 
   (define target (get-location-by-id cancel-traverse-endpoint-id))
 
-  (format "[cancel] Go back to ~a." (place-shortname target)))
+  (format "[cancel] Go back to ~a." (Place-shortname target)))
 
 (define (get-cancel-and-go-back-destination
          route

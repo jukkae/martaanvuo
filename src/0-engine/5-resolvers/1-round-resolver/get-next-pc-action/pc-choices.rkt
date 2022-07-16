@@ -120,8 +120,8 @@
        (when (and (not (in-combat?))
                   (not (location-has-tag? (current-location) 'forbid-simple-exit)))
 
-         (when (place? (current-location))
-           (for/list ([route-id (place-routes (current-location))])
+         (when (Place? (current-location))
+           (for/list ([route-id (Place-routes (current-location))])
              (define route (get-route-by-id route-id))
              (define direction
                (cond ((eq? (location-id (current-location))
@@ -173,7 +173,7 @@
              )))
 
        (when (and (not (eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
-                  (place? (current-location)))
+                  (Place? (current-location)))
          (list (choice-factory 'rest)))
 
        (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)

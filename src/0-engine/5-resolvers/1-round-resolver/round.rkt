@@ -58,8 +58,8 @@
 
  ; mark location as visited w.r.t routes
  (let ([location (current-location)])
-   (when (place? location)
-     (for ([route-id (place-routes location)])
+   (when (Place? location)
+     (for ([route-id (Place-routes location)])
        (when #t ; if not hidden
          (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
          ))
@@ -123,8 +123,8 @@
 
   ; mark location itself as visited, as opposed to its routes
   (let ([location (current-location)])
-    (when (place? location)
-      (set-place-visited?! location #t)
+    (when (Place? location)
+      (set-Place-visited?! location #t)
       ))
 
   (if #f

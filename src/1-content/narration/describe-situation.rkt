@@ -26,10 +26,10 @@
 (case (location-id (current-location))
     ['perimeter
      (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. Another path leads to the right, through low, prickly bushes.")
-     (when (not (place-visited? (current-location))) ; logic broken
+     (when (not (Place-visited? (current-location))) ; logic broken
       (p #:suppress-logging? repeated? "A crew of ants is carrying chopped-up leaves of a hardy plant down the second path."))
 
-    (if (not (place-visited? (current-location)))
+    (if (not (Place-visited? (current-location)))
       (p #:suppress-logging? repeated? "The hot, stale air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something dirty and heavy in it. Otava's chest feels tight.")
       (p #:suppress-logging? repeated? "The hot air is filthy and wrong and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
     )

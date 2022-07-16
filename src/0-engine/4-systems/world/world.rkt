@@ -60,8 +60,8 @@
 
 
 ; Uniqueness constraints(?), unidirectional paths(?), yada yada
-(provide make-route-between)
-(define (make-route-between
+(provide route-between)
+(define (route-between
          id-a
          id-b
          traverse-time
@@ -108,8 +108,8 @@
 
 (define *number-of-places* 0)
 
-(provide make-place)
-(define (make-place
+(provide place)
+(define (place
          #:id [id *number-of-places*]
          #:type [type '()]
          #:details [details '()]
@@ -131,7 +131,7 @@
      [Natural (string->symbol (format "place-~a" id))]
      ))
 
-  (place* id-symbol
+  (Place* id-symbol
           type
           details
           actors
@@ -143,3 +143,18 @@
           visited?
           choices
           shortname))
+
+(provide connect-places-and-routes!)
+(define (connect-places-and-routes! places routes)
+  (define (find-place Place-id)
+    (findf (λ (place) (eq? (location-id place) Place-id))
+           places))
+  (for ([route routes])
+    (define route-id (location-id route))
+    (define id-a (route-a route))
+    (define id-b (route-b route))
+    (define place-a (find-place id-a))
+    (define place-b (find-place id-b))
+    (set-Place-routes! place-a (append-element (Place-routes place-a) route-id))
+    (when (not (route-one-directional? route))
+      (set-Place-routes! place-b (append-element (Place-routes place-b) route-id)))))
