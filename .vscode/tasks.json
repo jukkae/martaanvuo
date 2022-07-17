@@ -4,10 +4,10 @@
         {
             "label": "Run",
             "type": "shell",
-            "command": "racket martaanvuo.rkt",
+            "command": "racket src/martaanvuo.rkt",
             "group": "build",
             "options": {
-                "cwd": "${workspaceRoot}/src",
+                "cwd": "${workspaceRoot}",
             },
             "presentation": {
                 "reveal": "always",
@@ -17,10 +17,10 @@
         {
             "label": "Run with --restart",
             "type": "shell",
-            "command": "racket martaanvuo.rkt --restart",
+            "command": "racket src/martaanvuo.rkt --restart",
             "group": "build",
             "options": {
-                "cwd": "${workspaceRoot}/src",
+                "cwd": "${workspaceRoot}",
             },
             "presentation": {
                 "reveal": "always",
@@ -30,10 +30,23 @@
         {
             "label": "Run with --seed 13 --restart",
             "type": "shell",
-            "command": "racket martaanvuo.rkt --seed 13 --restart",
+            "command": "racket src/martaanvuo.rkt --seed 13 --restart",
             "group": "build",
             "options": {
-                "cwd": "${workspaceRoot}/src",
+                "cwd": "${workspaceRoot}",
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+            }
+        },
+        {
+            "label": "Compile bytecode",
+            "type": "shell",
+            "command": "raco make -v src/martaanvuo.rkt",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceRoot}",
             },
             "presentation": {
                 "reveal": "always",
@@ -43,10 +56,10 @@
         {
             "label": "Run editor",
             "type": "shell",
-            "command": "racket 2-editor/editor.rkt",
+            "command": "racket src/2-editor/editor.rkt",
             "group": "build",
             "options": {
-                "cwd": "${workspaceRoot}/src",
+                "cwd": "${workspaceRoot}",
             },
             "presentation": {
                 "reveal": "always",
