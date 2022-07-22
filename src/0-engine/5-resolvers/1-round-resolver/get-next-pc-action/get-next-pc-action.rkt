@@ -160,7 +160,7 @@
            (displayln result)
            (if (null? result)
              'end-round-early
-             'end-round-early)
+             result) ; TODO: result is an action result, specifically
            ]
           (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
 

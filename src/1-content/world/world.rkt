@@ -122,7 +122,15 @@
         (displayln "BAR")
         '()
         )
-      )))
+      )
+     (choice
+          'baz
+          "baz."
+          `(
+            (spawn-encounter)
+            '()
+            ))
+      ))
   ))
 
 (define routes
