@@ -122,4 +122,9 @@
          (Place-routes location))))
 
 (define (get-current-location-choices)
-  (get-location-choices (current-location)))
+  (append
+    (get-location-choices (current-location))
+    (if (Place? (current-location))
+      (Place-choices (current-location))
+      '())
+    ))

@@ -144,6 +144,7 @@
   (define action
     (cond ((procedure? resolution-effect) (resolution-effect))
           ((action? resolution-effect) resolution-effect)
+          ((null? resolution-effect) 'end-round-early)
           (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
 
   (when (or (string-prefix? (choice-name current-choice) "[continue]")
