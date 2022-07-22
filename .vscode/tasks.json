@@ -43,7 +43,7 @@
         {
             "label": "Compile bytecode",
             "type": "shell",
-            "command": "raco make -v src/martaanvuo.rkt",
+            "command": "raco make -v -j 16 src/martaanvuo.rkt",
             "group": "build",
             "options": {
                 "cwd": "${workspaceRoot}",
