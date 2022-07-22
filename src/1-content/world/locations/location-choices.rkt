@@ -10,12 +10,6 @@
   "perimeter.rkt"
   )
 
-
-(require
-  "../../../0-engine/3-types/choice.rkt"
-  )
-
-
 ; TODO: location-specific
 (define (get-magpie-hill-choices)
   (make-choice
