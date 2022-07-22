@@ -13,6 +13,7 @@
 
   "../../3-types/actor.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
   "../../3-types/route.rkt"
   "../../3-types/world.rkt"
   )

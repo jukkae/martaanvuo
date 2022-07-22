@@ -15,6 +15,7 @@
 
   "../../3-types/action.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
 
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/locations/locations.rkt"

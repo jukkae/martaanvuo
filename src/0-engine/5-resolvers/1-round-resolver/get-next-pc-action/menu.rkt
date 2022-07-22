@@ -24,6 +24,7 @@
   "../../../3-types/item.rkt"
   "../../../3-types/location.rkt"
   "../../../3-types/pc-actor.rkt"
+  "../../../3-types/place.rkt"
   "../../../3-types/world.rkt"
 
   "../../../4-systems/locations/locations.rkt"

@@ -7,6 +7,7 @@
 
   "../3-types/action.rkt"
   "../3-types/location.rkt"
+  "../3-types/place.rkt"
   "../3-types/route.rkt"
 
   "../4-systems/world/world.rkt"

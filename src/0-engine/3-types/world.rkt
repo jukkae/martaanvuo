@@ -4,6 +4,7 @@
 
 (require
   "location.rkt"
+  "place.rkt"
   "route.rkt"
   )
 

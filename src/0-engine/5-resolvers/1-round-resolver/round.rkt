@@ -16,6 +16,7 @@
   "../../3-types/fragment.rkt"
   "../../3-types/item.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
 
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/locations/routes.rkt"

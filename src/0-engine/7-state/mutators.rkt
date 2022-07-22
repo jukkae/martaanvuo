@@ -12,6 +12,7 @@
   "../3-types/actor.rkt"
   "../3-types/location.rkt"
   "../3-types/pc-actor.rkt"
+  "../3-types/place.rkt"
   "../3-types/task.rkt"
 
   "../4-systems/actors/actor.rkt"

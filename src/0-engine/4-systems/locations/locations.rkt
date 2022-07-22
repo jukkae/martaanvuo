@@ -50,6 +50,7 @@
   "../../3-types/decision.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
   "../../3-types/route.rkt"
   "../../3-types/actor.rkt"
   )
