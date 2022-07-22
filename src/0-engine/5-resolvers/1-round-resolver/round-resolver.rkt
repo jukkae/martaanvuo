@@ -39,8 +39,6 @@
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))
 
-  (enqueue-npc-actions)
-
   (case round-begin-status
     ['pc-dead (clear-current-fragment!)])
   (save) ; save before describing situation -> no double-logged paragraphs
@@ -80,6 +78,7 @@
 
     [else
      (let/ec end-round-early-with-round-status
+       (enqueue-npc-actions)
        (define pc-action (get-next-pc-action))
        (resolve-pc-action pc-action end-round-early-with-round-status) )]))
 

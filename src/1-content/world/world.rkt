@@ -114,7 +114,14 @@
     #:encounter-types '(voidfloater)
     #:choices
     (list
-     (choice 'foo "foo" '())))
+     (choice 'foo "foo" '())
+     (choice
+      'bar
+      "bar"
+      `(
+        (displayln "BAR")
+        )
+      )))
   ))
 
 (define routes

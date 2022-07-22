@@ -9,7 +9,7 @@
 (define-struct choice
   ([id : Symbol]
    [name : String]
-   [resolution-effect : (U '() action (->* () action))])
+   [resolution-effect : (U '() action (->* () action) Sexp)])
   #:mutable
   #:prefab)
 
