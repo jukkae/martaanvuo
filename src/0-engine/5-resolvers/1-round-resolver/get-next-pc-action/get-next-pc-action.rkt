@@ -156,8 +156,6 @@
           [(sexp? resolution-effect)
            (define rules (rules-to-lambda resolution-effect))
            (define result ((eval rules ns)))
-           (dev-note "RESULT:")
-           (displayln result)
            (if (null? result)
              'end-round-early
              result) ; TODO: result is an action result, specifically

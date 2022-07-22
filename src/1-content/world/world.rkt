@@ -108,29 +108,21 @@
 
     (place
     #:id 'ladder-of-surut
-    #:features '(new-enemy-bell)
     #:type 'indoors
     #:shortname "Ladder of Surut"
     #:encounter-types '(voidfloater)
     #:choices
     (list
-     (choice 'foo "foo" '())
      (choice
-      'bar
-      "bar"
-      `(
-        (displayln "BAR")
-        '()
-        )
-      )
-     (choice
-          'baz
-          "baz."
+          'ring-new-enemy-bell
+          "Ring the Bell of Surut"
           `(
             (spawn-encounter)
             '()
             ))
-      ))
+      )
+
+      )
   ))
 
 (define routes
