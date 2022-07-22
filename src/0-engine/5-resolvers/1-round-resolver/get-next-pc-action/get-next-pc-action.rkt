@@ -137,14 +137,31 @@
       decision
       #f))
 
+(define-namespace-anchor anc)
+(define ns (namespace-anchor->namespace anc))
+
+(define (rules-to-lambda rules)
+  `(λ () ,@rules))
+
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
 
   (define action
     (cond ((procedure? resolution-effect) (resolution-effect))
-          ((action? resolution-effect) resolution-effect)
-          ((null? resolution-effect) 'end-round-early)
+          [(action? resolution-effect)
+           resolution-effect]
+          [(null? resolution-effect)
+           'end-round-early]
+          [(sexp? resolution-effect)
+           (define rules (rules-to-lambda resolution-effect))
+           (define result ((eval rules ns)))
+           (dev-note "RESULT:")
+           (displayln result)
+           (if (null? result)
+             'end-round-early
+             'end-round-early)
+           ]
           (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
 
   (when (or (string-prefix? (choice-name current-choice) "[continue]")
