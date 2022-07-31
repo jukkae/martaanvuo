@@ -35,9 +35,6 @@
      (decision-time-taken decision)))
   (process-timeline! tl)
 
-  (when (not (null? (decision-on-resolve! decision)))
-    ((decision-on-resolve! decision)))
-
   (define next-fragment (decision-next-fragment decision))
 
   ; brilliant idea x dirty hack

@@ -10,6 +10,8 @@
   "menu-utils.rkt"
   "string-utils.rkt")
 
+(provide (all-defined-out))
+
 
 ; (: sexp? (-> Any Boolean : #:+ Sexp))
 (define (sexp? s)
