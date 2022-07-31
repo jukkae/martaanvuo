@@ -6,7 +6,9 @@
 
 (require
   "actor.rkt"
+  "manipulator.rkt"
   "modification.rkt"
+  "sense-organ.rkt"
 )
 
 (struct pc-actor
@@ -18,7 +20,10 @@
   [cause-of-death : (Maybe (U Symbol String))]
   [xp : Natural]
   [hunger : Integer]
-  [modifications : (Listof Modification)])
+  [modifications : (Listof Modification)]
+  [sense-organs : (Listof SenseOrgan)]
+  [manipulators : (Listof Manipulator)]
+  )
  #:constructor-name pc-actor*
  #:prefab
  #:mutable)
