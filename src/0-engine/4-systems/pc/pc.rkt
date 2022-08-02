@@ -14,6 +14,8 @@
   "../../3-types/actor.rkt"
   "../../3-types/item.rkt"
   "../../3-types/modification.rkt"
+  "../../3-types/sense-organ.rkt"
+  "../../3-types/manipulator.rkt"
   "../../3-types/pc-actor.rkt"
   )
 
@@ -25,6 +27,10 @@
    "Otava"
    6
    4
+   #:sense-organs (list
+    (SenseOrgan 'eyes "eyes") (SenseOrgan 'echolocation "echolocation"))
+   #:manipulators (list
+    (Manipulator 'nimble-hands "nimble hands") (Manipulator 'legs "legs"))
    ))
 
 (define (set-base-build!)

@@ -260,49 +260,28 @@
 (define (display-sense-organs)
   (define actor (pc))
 
-  (define header
-    (tbody
-     (tr "Sense organs")))
-
   (define sense-organs (pc-actor-sense-organs actor))
   (define sense-organs-list
     (for/list ([sense-organ sense-organs])
       (tr
-        (~v (SenseOrgan-name sense-organ)))
-      ))
-
-  (define sheet
-    (append
-     header
-     sense-organs-list))
+        (SenseOrgan-name sense-organ))))
 
   (info-card
-   sheet
+   sense-organs-list
    "Sense organs"
    ))
 
 (define (display-manipulators)
   (define actor (pc))
 
-  (define header
-    (tbody
-     (tr "Manipulator")))
-
-  (define manipulators (pc-actor-modifications actor))
+  (define manipulators (pc-actor-manipulators actor))
   (define manipulators-list
     (for/list ([manipulator manipulators])
       (tr
-        (Manipulator-name manipulator)
-        )
-      ))
-
-  (define sheet
-    (append
-     header
-     manipulators-list))
+        (Manipulator-name manipulator))))
 
   (info-card
-   sheet
+   manipulators-list
    "Manipulators"
    ))
 
