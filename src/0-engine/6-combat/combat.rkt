@@ -5,8 +5,6 @@
 (require racket/lazy-require)
 
 (require
-  "combat-event.rkt"
-  "narration.rkt"
 
   "../1-index/state.rkt"
 
@@ -15,6 +13,7 @@
   "../2-core/session.rkt"
 
   "../3-types/actor.rkt"
+  "../3-types/combat-event.rkt"
   "../3-types/condition.rkt"
   "../3-types/pc-actor.rkt"
   "../3-types/stance.rkt"
@@ -23,6 +22,8 @@
 
   "../4-systems/actors/actor.rkt"
   "../4-systems/pc/pc.rkt"
+
+  "../../1-content/narration/combat-narration.rkt"
   )
 
 (define (make-combat-event details)

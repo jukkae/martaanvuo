@@ -37,7 +37,6 @@
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
-  "../../6-combat/narration.rkt"
   "../../3-types/stance.rkt"
   )
 

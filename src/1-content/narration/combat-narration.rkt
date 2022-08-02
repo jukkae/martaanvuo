@@ -3,23 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "combat-event.rkt"
-
-  "../1-index/state.rkt"
-
-  "../2-core/core.rkt"
-  "../2-core/io.rkt"
-
-  "../3-types/actor.rkt"
-  "../3-types/condition.rkt"
-  "../3-types/pc-actor.rkt"
-  "../3-types/sense-organ.rkt"
-  "../3-types/stance.rkt"
-  "../3-types/status.rkt"
-  "../3-types/world.rkt"
-
-  "../4-systems/actors/actor.rkt"
-  "../4-systems/pc/pc.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (define (display-pc-combatant-info actor)

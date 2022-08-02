@@ -33,14 +33,14 @@
                (end-combat!
                 )])
 
-(lazy-require ["../../6-combat/narration.rkt"
+(lazy-require ["../../7-state/logging.rkt"
+               (set-prompt!)])
+
+(lazy-require ["../../../1-content/narration/combat-narration.rkt"
                (get-combatant-name
                 display-combatant-info
                 display-pc-combatant-info
                 )])
-
-(lazy-require ["../../7-state/logging.rkt"
-               (set-prompt!)])
 
 (define (on-begin-round mode)
   (case mode

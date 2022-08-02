@@ -19,7 +19,7 @@
   "../../0-engine/7-state/state.rkt"
   )
 
-(lazy-require ["../../0-engine/6-combat/narration.rkt"
+(lazy-require ["combat-narration.rkt"
  (describe-combat-situation
   )])
 
