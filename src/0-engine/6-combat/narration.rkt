@@ -13,6 +13,7 @@
   "../3-types/actor.rkt"
   "../3-types/condition.rkt"
   "../3-types/pc-actor.rkt"
+  "../3-types/sense-organ.rkt"
   "../3-types/stance.rkt"
   "../3-types/status.rkt"
   "../3-types/world.rkt"
@@ -153,6 +154,20 @@
             (list
              "range"
              "N/A")))]
+
+      [("Voidfloater")
+
+       ; TODO: extract function: contains-with-predicate or something more ergonomic
+       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'eyes)) (pc-actor-sense-organs (pc)))
+       (tbody
+        (if (not (null? stance))
+            (tr
+             "range"
+             (symbol->string (stance-range stance)))
+            (list
+             "range"
+             "N/A"))))]
+
       [else
         (dev-note (format "Unknown actor: ~a" (actor-name actor)))
         (tbody
