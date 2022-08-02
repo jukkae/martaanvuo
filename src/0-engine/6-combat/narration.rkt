@@ -156,17 +156,34 @@
              "N/A")))]
 
       [("Voidfloater")
-
-       ; TODO: extract function: contains-with-predicate or something more ergonomic
+       (define unpruned-rows '())
        (when (filter (λ (s) (eq? (SenseOrgan-id s) 'eyes)) (pc-actor-sense-organs (pc)))
-       (tbody
-        (if (not (null? stance))
-            (tr
-             "range"
-             (symbol->string (stance-range stance)))
-            (list
-             "range"
-             "N/A"))))]
+         (when (not (null? stance))
+           (set! unpruned-rows
+                 (append-element unpruned-rows
+                         (tr
+                          "range"
+                          (symbol->string (stance-range stance)))))
+                          )
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                       (tr
+                        "HP"
+                        (if hide-hp?
+                            "???"
+                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
+         )
+       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'echolocation)) (pc-actor-sense-organs (pc)))
+            (set! unpruned-rows
+                 (append-element unpruned-rows
+                         (tr
+                          "range"
+                          (symbol->string (stance-range stance)))))
+            )
+
+       (displayln unpruned-rows)
+       unpruned-rows
+       ]
 
       [else
         (dev-note (format "Unknown actor: ~a" (actor-name actor)))
