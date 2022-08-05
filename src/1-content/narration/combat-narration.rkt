@@ -117,7 +117,7 @@
        (tbody
         (tr
          "size"
-         (get-trait actor "size"))
+         (actor-size actor))
         (if (not (null? stance))
             (tr
              "range"
@@ -130,7 +130,7 @@
        (tbody
         (tr
          "size"
-         (get-trait actor "size"))
+         (actor-size actor))
         (if (not (null? stance))
             (tr
              "range"
@@ -174,7 +174,7 @@
         (tbody
         (tr
          "size"
-         (get-trait actor "size"))
+         (actor-size actor))
         (if (not (null? stance))
             (tr
              "range"

@@ -22,7 +22,6 @@
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)
   (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "size" "human")
   enemy)
 
 (define (get-human-fighter-action actor)

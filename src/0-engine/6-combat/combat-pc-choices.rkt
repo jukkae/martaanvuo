@@ -199,8 +199,8 @@
                                      #:resolution-rules
                                      '(
                                       (for ([enemy (get-current-enemies)])
-                                        (define size (get-trait enemy "size"))
-                                        (displayln (~a "There is something that is ~a." size)))
+                                        (define size (actor-size enemy))
+                                        (notice (format "There is a ~a something there." size)))
                                       '()
                                      )
                                      ))))

@@ -27,7 +27,7 @@
    "Otava"
    #:max-hp 6
    #:max-lp 4
-   #:size 'large
+   #:size 'small
    #:sense-organs (list
     (SenseOrgan 'eyes "eyes")
     (SenseOrgan 'ears "ears")
