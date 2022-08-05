@@ -190,12 +190,19 @@
   (define perceive-choices '())
   (define choice
     (make-choice 'perceive
-                  "Perceive. [with eyes]"
-                  (λ () (make-action #:symbol 'perceive-with-eyes
+                  "Perceive. [with echolocation]"
+                  (λ () (make-action #:symbol 'perceive-with-echolocation
                                      #:actor (pc)
                                      #:duration 1
                                      #:target null
                                      #:tags '()
+                                     #:resolution-rules
+                                     '(
+                                      (for ([enemy (get-current-enemies)])
+                                        (define size (get-trait enemy "size"))
+                                        (displayln (~a "There is something that is ~a." size)))
+                                      '()
+                                     )
                                      ))))
   (set! perceive-choices (append-element perceive-choices choice))
   perceive-choices)
