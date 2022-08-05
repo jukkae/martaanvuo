@@ -49,7 +49,9 @@
     (tbody
      (tr (actor-name actor) "" )
      (tr "" "")
-     (tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
+     (tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
+     (tr "Size" (format "~a" (actor-size actor)))
+     ))
 
   (when (not (= 0 (pc-actor-xp actor)))
     (set! sheet (append-element sheet
