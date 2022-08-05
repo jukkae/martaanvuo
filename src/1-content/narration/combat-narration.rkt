@@ -146,13 +146,13 @@
            (set! unpruned-rows
                  (append-element unpruned-rows
                          (tr
-                          "range"
+                          "range [perceived with eyes]"
                           (symbol->string (stance-range stance)))))
                           )
          (set! unpruned-rows
                (append-element unpruned-rows
                        (tr
-                        "HP"
+                        "HP    [perceived with eyes]"
                         (if hide-hp?
                             "???"
                             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
@@ -161,11 +161,10 @@
             (set! unpruned-rows
                  (append-element unpruned-rows
                          (tr
-                          "range"
+                          "range [perceived with echolocation]"
                           (symbol->string (stance-range stance)))))
             )
 
-       (displayln unpruned-rows)
        unpruned-rows
        ]
 
