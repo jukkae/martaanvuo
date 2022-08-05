@@ -55,9 +55,11 @@
 (define (make-actor
          name
          type
-         max-hp)
+         #:max-hp max-hp
+         #:size size
+         )
   (define id (get-next-numeric-actor-id))
-  (actor* id name type max-hp max-hp
+  (actor* id name type max-hp max-hp size
           ; attributes
           '() '() '() '() '()
           ; traits etc
@@ -216,8 +218,9 @@
 
 (define (make-pc-actor
          name
-         max-hp
-         max-lp
+         #:max-hp max-hp
+         #:size size
+         #:max-lp (max-lp 0)
          #:modifications (modifications '())
          #:sense-organs (sense-organs '())
          #:manipulators (manipulators '())
@@ -225,11 +228,15 @@
   (current-last-numeric-actor-id++)
   (define hunger 200)
   (pc-actor*
-   'pc name 'pc max-hp max-hp
+   'pc name 'pc
+   max-hp max-hp size
    ; attributes
    '() '() '() '() '()
    ; traits etc
-   (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0
+   (make-hash) '() '() '() '() '()
+
+   ; pc-actor-fields
+   max-lp max-lp 6 #t '() 0
    hunger
    modifications
    sense-organs

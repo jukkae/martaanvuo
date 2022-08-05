@@ -54,8 +54,7 @@
 
 
 (define (make-grabberkin)
-  (define hp 9)
-  (define enemy (make-actor "Grabberkin" 'grabberkin hp))
+  (define enemy (make-actor "Grabberkin" 'grabberkin #:max-hp 9 #:size 'large))
 
   (set-actor-dexterity! enemy 4)
   (set-actor-strength! enemy 11)

@@ -25,12 +25,21 @@
 (define (make-new-pc)
   (make-pc-actor
    "Otava"
-   6
-   4
+   #:max-hp 6
+   #:max-lp 4
+   #:size 'large
    #:sense-organs (list
-    (SenseOrgan 'eyes "eyes") (SenseOrgan 'echolocation "echolocation"))
+    (SenseOrgan 'eyes "eyes")
+    (SenseOrgan 'ears "ears")
+    (SenseOrgan 'echolocation "echolocation")
+    )
    #:manipulators (list
-    (Manipulator 'nimble-hands "nimble hands") (Manipulator 'legs "legs"))
+    ;(Manipulator 'nimble-hands "nimble hands")
+    ;(Manipulator 'legs "legs")
+    (Manipulator 'wings "wings")
+    (Manipulator 'prehensile-feet "prehensile feet")
+    (Manipulator 'sharp-incisors "sharp incisors")
+    )
    ))
 
 (define (set-base-build!)

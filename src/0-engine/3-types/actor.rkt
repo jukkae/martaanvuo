@@ -15,6 +15,10 @@
   )
 
 (define-type ActorId (U Symbol Natural))
+(define-type ActorSize (U
+  'small
+  'large
+  ))
 
 (struct actor
   ([id : ActorId]
@@ -22,6 +26,8 @@
    [type : Symbol]
    [hp : Integer]
    [max-hp : Natural]
+
+   [size : ActorSize]
 
    [strength : (Maybe Natural)]
    [dexterity : (Maybe Natural)]
