@@ -9,6 +9,7 @@
   "../../0-engine/2-core/core.rkt"
 
   "../../0-engine/3-types/location.rkt"
+  "../../0-engine/3-types/place.rkt"
 
   "../../0-engine/4-systems/blurbs/blurbs.rkt"
   "../../0-engine/4-systems/pc/pc.rkt"
@@ -18,7 +19,7 @@
   "../../0-engine/7-state/state.rkt"
   )
 
-(lazy-require ["../../0-engine/6-combat/narration.rkt"
+(lazy-require ["combat-narration.rkt"
  (describe-combat-situation
   )])
 

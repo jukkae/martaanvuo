@@ -32,7 +32,7 @@
    add-combat-event
    )])
 
-(lazy-require ["narration.rkt"
+(lazy-require ["../../1-content/narration/combat-narration.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info

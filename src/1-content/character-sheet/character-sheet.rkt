@@ -14,8 +14,10 @@
   "../../0-engine/3-types/actor.rkt"
   "../../0-engine/3-types/condition.rkt"
   "../../0-engine/3-types/item.rkt"
+  "../../0-engine/3-types/manipulator.rkt"
   "../../0-engine/3-types/modification.rkt"
   "../../0-engine/3-types/pc-actor.rkt"
+  "../../0-engine/3-types/sense-organ.rkt"
   )
 
 ; Eventually, maybe lift this to the same "level" as numbered options. Then:
@@ -27,6 +29,10 @@
   (display-character-sheet)
   (when (not (empty? (pc-actor-modifications (pc))))
     (display-modifications))
+  (when (not (empty? (pc-actor-sense-organs (pc))))
+    (display-sense-organs))
+  (when (not (empty? (pc-actor-manipulators (pc))))
+    (display-manipulators))
   (display-inventory)
   ; TODO: until interaction-result is == go-back-to-game loop: select-interaction-target
   (define interaction-target (select-interaction-target))
@@ -249,6 +255,34 @@
   (info-card
    sheet
    "Modifications"
+   ))
+
+(define (display-sense-organs)
+  (define actor (pc))
+
+  (define sense-organs (pc-actor-sense-organs actor))
+  (define sense-organs-list
+    (for/list ([sense-organ sense-organs])
+      (tr
+        (SenseOrgan-name sense-organ))))
+
+  (info-card
+   sense-organs-list
+   "Sense organs"
+   ))
+
+(define (display-manipulators)
+  (define actor (pc))
+
+  (define manipulators (pc-actor-manipulators actor))
+  (define manipulators-list
+    (for/list ([manipulator manipulators])
+      (tr
+        (Manipulator-name manipulator))))
+
+  (info-card
+   manipulators-list
+   "Manipulators"
    ))
 
 (define (use-skill)

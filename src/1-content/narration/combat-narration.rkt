@@ -3,22 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "combat-event.rkt"
-
-  "../1-index/state.rkt"
-
-  "../2-core/core.rkt"
-  "../2-core/io.rkt"
-
-  "../3-types/actor.rkt"
-  "../3-types/condition.rkt"
-  "../3-types/pc-actor.rkt"
-  "../3-types/stance.rkt"
-  "../3-types/status.rkt"
-  "../3-types/world.rkt"
-
-  "../4-systems/actors/actor.rkt"
-  "../4-systems/pc/pc.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (define (display-pc-combatant-info actor)
@@ -153,6 +138,37 @@
             (list
              "range"
              "N/A")))]
+
+      [("Voidfloater")
+       (define unpruned-rows '())
+       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'eyes)) (pc-actor-sense-organs (pc)))
+         (when (not (null? stance))
+           (set! unpruned-rows
+                 (append-element unpruned-rows
+                         (tr
+                          "range"
+                          (symbol->string (stance-range stance)))))
+                          )
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                       (tr
+                        "HP"
+                        (if hide-hp?
+                            "???"
+                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
+         )
+       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'echolocation)) (pc-actor-sense-organs (pc)))
+            (set! unpruned-rows
+                 (append-element unpruned-rows
+                         (tr
+                          "range"
+                          (symbol->string (stance-range stance)))))
+            )
+
+       (displayln unpruned-rows)
+       unpruned-rows
+       ]
+
       [else
         (dev-note (format "Unknown actor: ~a" (actor-name actor)))
         (tbody

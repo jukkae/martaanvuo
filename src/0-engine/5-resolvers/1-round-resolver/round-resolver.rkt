@@ -24,6 +24,8 @@
   "../../3-types/item.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
+  "../../3-types/route.rkt"
 
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/pc/pc.rkt"
@@ -38,8 +40,6 @@
 ; (U 'ok 'pc-dead)
 (define (resolve-round mode)
   (define round-begin-status (on-begin-round mode))
-
-  (enqueue-npc-actions)
 
   (case round-begin-status
     ['pc-dead (clear-current-fragment!)])
@@ -80,6 +80,7 @@
 
     [else
      (let/ec end-round-early-with-round-status
+       (enqueue-npc-actions)
        (define pc-action (get-next-pc-action))
        (resolve-pc-action pc-action end-round-early-with-round-status) )]))
 

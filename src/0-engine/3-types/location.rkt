@@ -66,16 +66,3 @@
 (define (location-has-tag? [location : location] [tag : Symbol])
   (memq tag (location-tags location)))
 
-
-
-(struct Place
-  location
-  ([routes : (Listof RouteId)]
-   [visited? : Boolean]
-   [choices : (Listof choice)]
-   [shortname : String])
-
-  #:constructor-name Place*
-  #:mutable
-  #:prefab)
-

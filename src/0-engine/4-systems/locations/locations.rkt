@@ -50,6 +50,7 @@
   "../../3-types/decision.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
   "../../3-types/route.rkt"
   "../../3-types/actor.rkt"
   )
@@ -65,18 +66,17 @@
              (when (location-has-feature? location 'martaanvuo-book)
                (make-decision
                 #:title "Pick up the book."
-                #:on-resolve! (thunk
-                               (p "Otava takes the book in her hands. Bound in supple leather, heavier than you'd expect. The book fills her with apprehension and dread.")
-                               '())
-                #:next-fragment 'read-the-book
+                #:next-fragment (thunk
+                                 (p "Otava takes the book in her hands. Bound in supple leather, heavier than you'd expect. The book fills her with apprehension and dread.")
+                                 'read-the-book
+                                 )
                 ))
              (when (location-has-feature? location 'martaanvuo-terminal)
                (make-decision
                 #:title "Turn on the terminal."
-                #:on-resolve! (thunk
-                               (p "Otava turns on the terminal. It clicks and whirrs, then the display comes to life.")
-                               '())
-                #:next-fragment 'turn-on-martaanvuo-terminal
+                #:next-fragment (thunk
+                                 (p "Otava turns on the terminal. It clicks and whirrs, then the display comes to life.")
+                                 'turn-on-martaanvuo-terminal)
                 ))
              )))
 
@@ -122,4 +122,9 @@
          (Place-routes location))))
 
 (define (get-current-location-choices)
-  (get-location-choices (current-location)))
+  (append
+    (get-location-choices (current-location))
+    (if (Place? (current-location))
+      (Place-choices (current-location))
+      '())
+    ))

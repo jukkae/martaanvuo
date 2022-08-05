@@ -48,11 +48,14 @@
   (make-decision
    #:title "Ask about the benefits package."
    #:description "Magpie explains the benefits package and armory credit system in detail, but it is all terribly confusing. In the end, Otava nevertheless gets a revolver."
-   #:on-resolve! (thunk
-                  (add-item! 'revolver)
-                  (wait-for-confirm)
-                  '())
-   #:next-fragment 'exit
+   #:next-fragment
+   (
+    thunk
+    (add-item! 'revolver)
+    (wait-for-confirm)
+    '()
+    'exit
+    )
    )
   ))
 

@@ -20,11 +20,11 @@
 (lazy-require ["../world/world.rkt"
   (get-actor
    )])
-(lazy-require ["../../6-combat/narration.rkt"
-  (display-combatant-info
-   )])
 (lazy-require ["../../7-state/mutators.rkt"
   (pc
+   )])
+(lazy-require ["../../../1-content/narration/combat-narration.rkt"
+  (display-combatant-info
    )])
 
 (define (condition-on-end-round! condition owner-id)

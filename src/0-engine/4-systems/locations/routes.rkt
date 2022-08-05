@@ -8,6 +8,7 @@
   "../world/world.rkt"
 
   "../../3-types/location.rkt"
+  "../../3-types/place.rkt"
   "../../3-types/route.rkt"
   "../../7-state/pending-action.rkt"
   )

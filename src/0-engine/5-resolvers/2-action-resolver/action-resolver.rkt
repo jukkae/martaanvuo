@@ -17,6 +17,7 @@
   "../../3-types/event.rkt"
   "../../3-types/location.rkt"
   "../../3-types/pc-actor.rkt"
+  "../../3-types/place.rkt"
   "../../3-types/route.rkt"
   "../../3-types/timeline.rkt"
   "../../3-types/timeline.rkt"
@@ -36,7 +37,6 @@
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
-  "../../6-combat/narration.rkt"
   "../../3-types/stance.rkt"
   )
 

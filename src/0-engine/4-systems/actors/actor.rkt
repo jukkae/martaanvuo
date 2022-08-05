@@ -217,18 +217,24 @@
 (define (make-pc-actor
          name
          max-hp
-         max-lp)
+         max-lp
+         #:modifications (modifications '())
+         #:sense-organs (sense-organs '())
+         #:manipulators (manipulators '())
+         )
   (current-last-numeric-actor-id++)
+  (define hunger 200)
   (pc-actor*
    'pc name 'pc max-hp max-hp
    ; attributes
    '() '() '() '() '()
    ; traits etc
    (make-hash) '() '() '() '() '() max-lp max-lp 6 #t '() 0
-   ; hunger
-   200
-   ; modifications
-   '()))
+   hunger
+   modifications
+   sense-organs
+   manipulators
+   ))
 
 (define (pc-take-damage! actor damage damage-type)
   (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))

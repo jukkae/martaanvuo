@@ -3,16 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-engine/4-systems/world/world.rkt"
-
-  "../../0-engine/2-core/core.rkt"
-
-  "../../0-engine/3-types/location.rkt"
-  "../../0-engine/3-types/route.rkt"
-  "../../0-engine/3-types/world.rkt"
-
-  "../../0-engine/4-systems/actors/actor.rkt"
-  "../../0-engine/4-systems/items/item.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (define places
@@ -117,10 +108,21 @@
 
     (place
     #:id 'ladder-of-surut
-    #:features '(new-enemy-bell)
     #:type 'indoors
     #:shortname "Ladder of Surut"
-    #:encounter-types '(voidfloater))
+    #:encounter-types '(voidfloater)
+    #:choices
+    (list
+     (choice
+          'ring-new-enemy-bell
+          "Ring the Bell of Surut"
+          `(
+            (spawn-encounter)
+            '()
+            ))
+      )
+
+      )
   ))
 
 (define routes

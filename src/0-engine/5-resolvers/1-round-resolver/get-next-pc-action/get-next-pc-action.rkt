@@ -18,6 +18,7 @@
   "../../../3-types/decision.rkt"
   "../../../3-types/item.rkt"
   "../../../3-types/location.rkt"
+  "../../../3-types/place.rkt"
   "../../../3-types/pc-actor.rkt"
   "../../../3-types/world.rkt"
 
@@ -137,13 +138,29 @@
       decision
       #f))
 
+(define-namespace-anchor anc)
+(define ns (namespace-anchor->namespace anc))
+
+(define (rules-to-lambda rules)
+  `(λ () ,@rules))
+
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
 
   (define action
     (cond ((procedure? resolution-effect) (resolution-effect))
-          ((action? resolution-effect) resolution-effect)
+          [(action? resolution-effect)
+           resolution-effect]
+          [(null? resolution-effect)
+           'end-round-early]
+          [(sexp? resolution-effect)
+           (define rules (rules-to-lambda resolution-effect))
+           (define result ((eval rules ns)))
+           (if (null? result)
+             'end-round-early
+             result) ; TODO: result is an action result, specifically
+           ]
           (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
 
   (when (or (string-prefix? (choice-name current-choice) "[continue]")

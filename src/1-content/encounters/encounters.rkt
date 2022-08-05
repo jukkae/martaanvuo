@@ -12,6 +12,7 @@
   "../../0-engine/2-core/core.rkt"
 
   "../../0-engine/3-types/location.rkt"
+  "../../0-engine/3-types/place.rkt"
 
   "../../0-engine/4-systems/actors/actor.rkt"
   "../../0-engine/4-systems/blurbs/blurbs.rkt"

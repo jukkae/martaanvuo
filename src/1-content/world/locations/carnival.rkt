@@ -123,12 +123,11 @@ SLINK:
  (list
  (make-decision
         #:title "Sounds great."
-        #:next-fragment 'exit
-        #:on-resolve! (thunk
+        #:next-fragment (thunk
           (define sonar (Modification* 'sonar "Sonar Eyeballs" '()))
           (decrease-pc-money! 21)
           (add-modification! sonar)
-          '())
+          'exit)
         #:requirement (λ () (pc-has-money 2))
         )
   (make-decision

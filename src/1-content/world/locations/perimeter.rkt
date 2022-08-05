@@ -4,8 +4,6 @@
 
 (require "../../../0-engine/0-api/api.rkt")
 
-(require "../../../0-engine/3-types/choice.rkt")
-
 ; (Optional (Listof choice))
 (define (get-perimeter-choices)
   (define actor (pc))

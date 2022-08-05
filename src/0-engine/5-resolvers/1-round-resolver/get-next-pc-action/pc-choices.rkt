@@ -18,6 +18,7 @@
   "../../../3-types/choice.rkt"
   "../../../3-types/item.rkt"
   "../../../3-types/location.rkt"
+  "../../../3-types/place.rkt"
   "../../../3-types/pc-actor.rkt"
   "../../../3-types/route.rkt"
   "../../../3-types/world.rkt"

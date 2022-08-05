@@ -6,13 +6,12 @@
   "../../2-core/maybe.rkt"
 
   "../../3-types/action.rkt"
+  "../../3-types/combat-event.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/pc-actor.rkt"
   "../../3-types/task.rkt"
   "../../3-types/timeline.rkt"
   "../../3-types/world.rkt"
-
-  "../../6-combat/combat-event.rkt"
   )
 
 (define-type Rng-state-vector (Vector Integer Integer Integer Integer Integer Integer))
