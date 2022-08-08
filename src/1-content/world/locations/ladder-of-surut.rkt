@@ -8,6 +8,16 @@
 (add-place!
   (place
     #:id 'forge
-    #:shortname "Forge of Master Seppo"))
+    #:shortname "Forge of Master Seppo"
+    #:choices
+    (list
+     (choice
+          'buy-mods
+          "Swap sensory outfit"
+          `(
+            (go-to-fragment 'seppo)
+            '()
+            ))
+    )))
 
 (add-route-between! 'ladder-of-surut 'forge 1)

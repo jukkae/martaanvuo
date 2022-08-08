@@ -155,6 +155,37 @@
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
          items))
 
+(define (pc-has-sense-organ? id)
+  (define sense-organs (pc-actor-sense-organs (pc)))
+  (findf (λ (sense-organ) (eq? (SenseOrgan-id sense-organ) id))
+         sense-organs))
+
+; (: -> SenseOrgan '())
+(define (add-sense-organ! sense-organ)
+  (define old-sense-organs (pc-actor-sense-organs (pc)))
+  (set-pc-actor-sense-organs! (pc) (append-element old-sense-organs sense-organ))
+  (notice (format "Sense organ added: ~a" (SenseOrgan-name sense-organ))))
+
+; (: -> SenseOrgan-id '())
+(define (remove-sense-organ! id)
+  (define sense-organs (pc-actor-sense-organs (pc)))
+  (define it
+    (findf (λ (sense-organ) (eq? (SenseOrgan-id sense-organ) id))
+           sense-organs))
+  (cond (it
+         (set-pc-actor-sense-organs!
+            (pc)
+            (filter (λ (sense-organ) (not (eq? (SenseOrgan-id sense-organ) id)))
+                    (pc-actor-sense-organs (pc))
+                    ))
+         (dev-note "sense-organ removed, show info about removed/remaining sense-organs"))
+        ))
+
+(define (pc-has-manipulator? id)
+  (define manipulators (pc-actor-manipulators (pc)))
+  (findf (λ (manipulator) (eq? (Manipulator-id manipulator) id))
+         manipulators))
+
 (define (pc-gold-amount)
   (define items (actor-inventory (pc)))
   (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
@@ -175,6 +206,20 @@
   (cond [gold?
          (set-item-quantity! gold? (- (item-quantity gold?) gold-equiv))])
   (notice (format "Gold decreased by ~a, new quantity: ~a" gold-equiv (item-quantity gold?)))
+)
+
+; TODO: combine
+(define (increase-pc-money! quantity)
+  (define gold-equiv (* 0.1 quantity))
+  (define items (actor-inventory (pc)))
+  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+                       items))
+  (cond [(not gold?)
+         (add-item! 'gold #:amount gold-equiv)
+         (notice (format "Otava now has ~a gold" gold-equiv))]
+        [else
+         (set-item-quantity! gold? (+ (item-quantity gold?) gold-equiv))
+         (notice (format "Gold increased by ~a, new quantity: ~a" gold-equiv (item-quantity gold?)))])
 )
 
 (define (pc-has-ammo-left?)

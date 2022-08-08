@@ -10,6 +10,8 @@
 
   "../fragment-handler.rkt"
 
+  "../../2-action-resolver/action-resolver.rkt"
+
   "../../../2-core/io.rkt"
   "../../../2-core/core.rkt"
 
@@ -25,6 +27,7 @@
   "../../../4-systems/locations/locations.rkt"
   ;;; "../../../4-systems/pc/character-sheet.rkt"
   "../../../4-systems/pc/pc.rkt"
+  "../../../4-systems/fragments.rkt"
   "../../../4-systems/world/time.rkt"
 
   "../../../7-state/state.rkt"
