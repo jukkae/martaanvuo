@@ -58,9 +58,8 @@
 (define (resolve-melee-action! action)
   (let/ec return
     (define actor (get-actor (action-actor-id action)))
-    (when (not actor) (return 'actor-removed))
     (define target (get-actor (action-target action)))
-    (when (not target) (return 'target-removed))
+
     (define target-defense (get-trait target "defense"))
     (define skill (get-trait actor "melee-attack-skill"))
 
@@ -82,11 +81,11 @@
     ; #;(define success? (skill-check title skill action-target-number))
     (define success? #t)
 
-    (define damage-roll (melee-attack-action-damage-roll action))
+    (define damage-roll (standard-damage-roll 1 2 0))
     (define damage-roll-result (d
                                 (standard-damage-roll-n damage-roll)
                                 (standard-damage-roll-x damage-roll)
-                                ; (standard-damage-roll-bonus damage-roll)
+                                (standard-damage-roll-bonus damage-roll)
                                 ))
     (define body
       (tbody

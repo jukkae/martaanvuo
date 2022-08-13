@@ -74,9 +74,19 @@
 
 ; (: -> Action TurnResult)
 (define (resolve-turn! action)
-  (cond ((melee-attack-action? action)
-         (resolve-melee-action! action))
-        (else (resolve-action! action))))
+  (let/ec return
+    (define actor (get-actor (action-actor-id action)))
+    (when (not actor) (return 'actor-removed))
+    (define target (get-actor (action-target action)))
+    (when (not target) (return 'target-removed))
+
+    (cond ((melee-attack-action? action)
+           (resolve-melee-action! action))
+          (else (resolve-action! action)))
+    (when (not (pc-is-alive?))
+      (dev-note "PC dead!")
+      return)
+    ))
 
 (define (end-combat)
   (remove-all-enemies-and-end-combat!)
