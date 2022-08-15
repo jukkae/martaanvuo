@@ -107,24 +107,6 @@
    (place
     #:id 'carnival
     #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)) ; not the same merchant, not literally at least
-
-    (place
-    #:id 'ladder-of-surut
-    #:type 'indoors
-    #:shortname "Ladder of Surut"
-    #:encounter-types '(voidfloater)
-    #:choices
-    (list
-     (choice
-          'ring-new-enemy-bell
-          "Ring the Bell of Surut"
-          `(
-            (spawn-encounter)
-            '()
-            ))
-      )
-
-      )
   ))
 
 (define routes

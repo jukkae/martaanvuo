@@ -11,6 +11,7 @@
 (define (setup-world! scenario)
   (current-world (make-new-world))
   (dynamic-require "src/1-content/world/locations/forge-of-master-seppo.rkt" #f)
+  (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   )
 
 ; Main entrypoint of campaign
