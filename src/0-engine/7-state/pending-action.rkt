@@ -34,28 +34,38 @@
 
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))
-  (cond ((eq? (action-symbol pending-action) 'go-to-location)
-         (define target (action-target pending-action))
-         (when (symbol? target) (set! target (get-location-by-id target)))
-         (format "[continue] Continue towards ~a." (Place-shortname target)))
-        ((eq? (action-symbol pending-action) 'traverse)
-         (define target (action-target pending-action))
-         (when (symbol? target) (set! target (get-location-by-id target)))
+  (case (action-symbol pending-action)
+    ['rest (format "[continue] Rest.")] ; TODO: fix: this should only elapse until the next time-of-day!
+    ['go-to-location
+      (define target (action-target pending-action))
+      (when (symbol? target) (set! target (get-location-by-id target)))
+      (format "[continue] Continue towards ~a." (Place-shortname target))
+      ]
+    ['go-to-location
+      (define target (action-target pending-action))
+      (when (symbol? target) (set! target (get-location-by-id target)))
+      (format "[continue] Continue towards ~a." (Place-shortname target))
+      ]
+    ['traverse
+      (define target (action-target pending-action))
+      (when (symbol? target) (set! target (get-location-by-id target)))
 
-         (define details (action-details pending-action))
+      (define details (action-details pending-action))
 
-         (define direction
-           (if (memq 'a-to-b details)
-               'a-to-b
-               'b-to-a))
+      (define direction
+        (if (memq 'a-to-b details)
+            'a-to-b
+            'b-to-a))
 
-         (define endpoint
-           (get-location-by-id (case direction
-                                 ['a-to-b (route-b target)]
-                                 ['b-to-a (route-a target)])))
+      (define endpoint
+        (get-location-by-id (case direction
+                              ['a-to-b (route-b target)]
+                              ['b-to-a (route-a target)])))
 
-         (format "[continue] Continue towards ~a." (Place-shortname endpoint)))
-        (else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action)))))
+      (format "[continue] Continue towards ~a." (Place-shortname endpoint))
+      ]
+    [else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action))])
+  )
 
 (define (get-cancel-pending-action-and-go-back-name
          route

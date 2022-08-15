@@ -23,6 +23,7 @@
   "../4-systems/items/item.rkt"
   "../4-systems/pc/pc.rkt"
   "../4-systems/world/world.rkt"
+  "../4-systems/simulation.rkt"
 
   "../7-state/state.rkt"
   )
@@ -74,6 +75,7 @@
     ;        ))
     ; (define action-target-number (- 7 bonus))
 
+    (advance-time-by-iotas! (action-duration action))
     (define title
       (format "Melee attack, ~a vs ~a"
               (get-combatant-name actor)

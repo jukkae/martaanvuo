@@ -116,7 +116,7 @@
           )
         ))
 
-    (wait-for-confirm)
+    #;(wait-for-confirm)
 
     result))
 
