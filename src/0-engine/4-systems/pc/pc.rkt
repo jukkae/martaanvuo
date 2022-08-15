@@ -27,7 +27,7 @@
    "Otava"
    #:max-hp 6
    #:max-lp 4
-   #:size 'small
+   #:size 'large
    #:sense-organs (list
     (SenseOrgan 'basic-homeostasis "basic homeostasis")
     (SenseOrgan 'nose "nose")
@@ -37,11 +37,14 @@
     ;(SenseOrgan 'touch-sensitive-skin "touch-sensitive skin")
     )
    #:manipulators (list
-    ;(Manipulator 'nimble-hands "nimble hands")
-    ;(Manipulator 'legs "legs")
-    (Manipulator 'wings "wings")
-    (Manipulator 'prehensile-feet "prehensile feet")
-    (Manipulator 'sharp-incisors "sharp incisors")
+    (Manipulator 'human-hands "hands at end of arms")
+    (Manipulator 'legs "feet at end of legs")
+    (Manipulator 'mouth "speech-capable mouth")
+    ; (Manipulator 'nimble-hands "nimble hands")
+    ; (Manipulator 'legs "legs")
+    ; (Manipulator 'wings "wings")
+    ; (Manipulator 'prehensile-feet "prehensile feet")
+    ; (Manipulator 'sharp-incisors "sharp incisors")
     )
    ))
 
@@ -55,11 +58,11 @@
   (set-pc-actor-max-lp! (pc) 1)
   (set-pc-actor-lp! (pc) 1)
 
-  (set-trait! (pc) "athletics-skill" 1)
+  ; (set-trait! (pc) "athletics-skill" 1)
   (set-trait! (pc) "melee-attack-skill" 3)
-  (set-trait! (pc) "wrestle-attack-skill" -1)
+  ; (set-trait! (pc) "wrestle-attack-skill" -1)
   (set-trait! (pc) "defense" 1)
-  (set-trait! (pc) "exploration-skill" 1)
+  ; (set-trait! (pc) "exploration-skill" 1)
 
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   (add-item! 'ration #:amount 2 #:silent? #t)

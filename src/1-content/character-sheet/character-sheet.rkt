@@ -49,7 +49,8 @@
     (tbody
      (tr (actor-name actor) "" )
      (tr "" "")
-     (tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
+     #;(tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
+     (tr "HP" "[unknown]") ; TODO: acquire nociception
      (tr "Size" (format "~a" (actor-size actor)))
      ))
 
@@ -57,62 +58,6 @@
     (set! sheet (append-element sheet
                                 (tr "XP"
                                     (number->string (pc-actor-xp actor))))))
-
-  ;;; (define attributes-list '())
-  ;;; (when (or (not (null? (actor-strength actor)))
-  ;;;           (not (null? (actor-dexterity actor)))
-  ;;;           (not (null? (actor-constitution actor)))
-  ;;;           (not (null? (actor-intelligence actor)))
-  ;;;           (not (null? (actor-charisma actor))))
-  ;;;   (set! attributes-list
-  ;;;         (append-element attributes-list
-  ;;;                         (tr "" ""))))
-
-  ;;; (when (not (null? (actor-strength actor)))
-  ;;;   (set! attributes-list (append-element attributes-list
-  ;;;                                         (tr
-  ;;;                                          "strength"
-  ;;;                                          (format "~a [~a]"
-  ;;;                                                  (actor-strength actor)
-  ;;;                                                  (get-modifier-string
-  ;;;                                                   (get-attribute-modifier-for
-  ;;;                                                    (actor-strength actor))))))))
-  ;;; (when (not (null? (actor-dexterity actor)))
-  ;;;   (set! attributes-list (append-element attributes-list
-  ;;;                                         (tr
-  ;;;                                          "dexterity"
-  ;;;                                          (format "~a [~a]"
-  ;;;                                                  (actor-dexterity actor)
-  ;;;                                                  (get-modifier-string
-  ;;;                                                   (get-attribute-modifier-for
-  ;;;                                                    (actor-dexterity actor))))))))
-  ;;; (when (not (null? (actor-constitution actor)))
-  ;;;   (set! attributes-list (append-element attributes-list
-  ;;;                                         (tr
-  ;;;                                          "constitution"
-  ;;;                                          (format "~a [~a]"
-  ;;;                                                  (actor-constitution actor)
-  ;;;                                                  (get-modifier-string
-  ;;;                                                   (get-attribute-modifier-for
-  ;;;                                                    (actor-constitution actor))))))))
-  ;;; (when (not (null? (actor-intelligence actor)))
-  ;;;   (set! attributes-list (append-element attributes-list
-  ;;;                                         (tr
-  ;;;                                          "intelligence"
-  ;;;                                          (format "~a [~a]"
-  ;;;                                                  (actor-intelligence actor)
-  ;;;                                                  (get-modifier-string
-  ;;;                                                   (get-attribute-modifier-for
-  ;;;                                                    (actor-intelligence actor))))))))
-  ;;; (when (not (null? (actor-charisma actor)))
-  ;;;   (set! attributes-list (append-element attributes-list
-  ;;;                                         (tr
-  ;;;                                          "charisma"
-  ;;;                                          (format "~a [~a]"
-  ;;;                                                  (actor-charisma actor)
-  ;;;                                                  (get-modifier-string
-  ;;;                                                   (get-attribute-modifier-for
-  ;;;                                                    (actor-charisma actor))))))))
 
   (define traits (actor-traits actor))
   (define traits-list
@@ -288,29 +233,33 @@
    ))
 
 (define (use-skill)
-  (define skills '(switch-perspective))
-  (prln (format "Select skill [1-~a], anything else to cancel." (length skills)))
-  (br)
+  (define skills '(#;switch-perspective))
+  (cond [(empty? skills)
+         (notice "No skills.")]
+        [else
+         (prln (format "Select skill [1-~a], anything else to cancel." (length skills)))
+         (br)
 
-  (for ([skill skills]
-        [i (in-naturals 1)])
-    (prln (format "[~a] ~a" i skill))
-    )
-  (br)
-  (define input (string->number (wait-for-input)))
-  (define selected-skill '())
-  (cond ((and (number? input)
-              (> input 0)
-              (<= input (length skills)))
-         (define index (- input 1))
-         (set! selected-skill (list-ref skills index))
-         )
-        (else '()#;(p "Nevermind.")))
-  (when (not (null? selected-skill))
-    (dev-note (format "Skill: ~a" selected-skill))
-    (case selected-skill
-     ['switch-perspective (toggle-flag 'perspective-switched)])
-    )
+         (for ([skill skills]
+               [i (in-naturals 1)])
+           (prln (format "[~a] ~a" i skill))
+           )
+         (br)
+         (define input (string->number (wait-for-input)))
+         (define selected-skill '())
+         (cond ((and (number? input)
+                     (> input 0)
+                     (<= input (length skills)))
+                (define index (- input 1))
+                (set! selected-skill (list-ref skills index))
+                )
+               (else '()#;(p "Nevermind.")))
+         (when (not (null? selected-skill))
+           (dev-note (format "Skill: ~a" selected-skill))
+           (case selected-skill
+             ['switch-perspective (toggle-flag 'perspective-switched)])
+           )
+         ])
   )
 
 ; TODO: These must be filtered w.r.t combat
