@@ -136,32 +136,32 @@
 
   (case (current-life)
     [(1)
-     (p @~a{
-Otava is getting closer to Martaanvuo wasteland. There's a rumor saying that near the Martaanvuo dam, there's this basement laboratory, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+     @p{
+      Otava is at the perimeter of Martaanvuo wasteland. There's a rumor saying that upriver Martaanvuo, near the dam, there's this basement laboratory called the Maw, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
 
-The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks! Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the toy box of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh in the divine sausage machine, and out comes something magnificent:
+      The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks! Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the clockwork of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh in the divine sausage machine, and out comes something magnificent:
 
-Otava the Seeker, become Otava the Deathless!
-})
+      Otava the Seeker, become Otava the Deathless!
+     }
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (move-pc-to-location! (get-place-by-id 'perimeter))
      ]
     [(2)
-     (p @~a{
-Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.
+     @p{
+      Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.
 
-There's a waterfall far upriver, and surrounding the waterfall, there are caves there that go deep into the darks of the earth, to the heart of the world, full of crawling evil beings and innumerable treasures.
-})
+      There's a waterfall far upriver, and surrounding the waterfall, there are caves there that go deep into the darks of the earth, to the heart of the world, full of crawling evil beings and innumerable treasures.
+     }
      (create-task 'plunder-the-earth)
      (wait-for-confirm)
      ]
     [(3)
-     (p @~a{
-There's something really fucky going with Martaanvuo. Ever since Murkwater moved in with their trucks and heavy equipment and dammed the Martaanvuo Waterfall, there's been strange rumors circulating among the peoples living in the Wastelands.
-})
+     @p{
+      There's something really fucky going with Martaanvuo. Ever since Murkwater moved in with their trucks and heavy equipment and dammed the Martaanvuo Waterfall, there's been strange rumors circulating among the peoples living in the Wastelands.
+      }
      (wait-for-confirm)
-     ]
+   ]
     )
     )
 

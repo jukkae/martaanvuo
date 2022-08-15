@@ -5,18 +5,7 @@
 (require racket/lazy-require)
 
 (require
-  "../../0-engine/2-core/io.rkt"
-  "../../0-engine/2-core/core.rkt"
-
-  "../../0-engine/3-types/location.rkt"
-  "../../0-engine/3-types/place.rkt"
-
-  "../../0-engine/4-systems/blurbs/blurbs.rkt"
-  "../../0-engine/4-systems/pc/pc.rkt"
-
-  "../../0-engine/7-state/logging.rkt"
-  "../../0-engine/7-state/mutators.rkt"
-  "../../0-engine/7-state/state.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (lazy-require ["combat-narration.rkt"
@@ -24,27 +13,60 @@
   )])
 
 (define (describe-location repeated?)
-(case (location-id (current-location))
-    ['perimeter
-     (p #:suppress-logging? repeated? "A magpie calls from high up the rocky hill on the left. Another path leads to the right, through low, prickly bushes.")
-     (when (not (Place-visited? (current-location))) ; logic broken
-      (p #:suppress-logging? repeated? "A crew of ants is carrying chopped-up leaves of a hardy plant down the second path."))
-
-    (if (not (Place-visited? (current-location)))
-      (p #:suppress-logging? repeated? "The hot, stale air is not quite right here, it's like she draws it in but it isn't *enough*, like there's too much filth and rottenness and something dirty and heavy in it. Otava's chest feels tight.")
-      (p #:suppress-logging? repeated? "The hot air is filthy and wrong and heavy. There's a faint smell of rotten flesh in it, a sticky metallic aftertaste in the mouth.")
-    )
-     ]
+  (case (location-id (current-location))
     ['burnt-tree
-      (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]
+     (p "The vengeful husk of the burnt tree, a vast deep black silhouette against the sky. Near ground, there's a slit in its outer shell, just wide enough for Otava to fit through. Inside, nothing but black and and an intense smell of ash.")]
 
     ['outpost
-      (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock. Inside the building, there's more heavy machinery, a steel platform, a bench and some empty closets. Stairs lead down to a tunnel entrance.
+     (p "The building is a research outpost. Outside the main building, there's a big, drill-like machine puncturing the rock. Inside the building, there's more heavy machinery, a steel platform, a bench and some empty closets. Stairs lead down to a tunnel entrance.
 
       There is drying blood on the platform.
 
       There's also separate brick-walled room on ground level.")]
+    )
+  (define body
+    (case (location-id (current-location))
+      ['perimeter
+        (define unpruned-rows '())
+        (when (pc-has-sense-organ? 'eyes)
+          (set! unpruned-rows
+                  (append-element unpruned-rows
+                                  (tr
+                                    "Connections [perceived with eyes]"
+                                    "A rocky climb uphill, a path through dry prickly bushes")))
+          )
+       (when (pc-has-sense-organ? 'echolocation)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Connections [perceived with echolocation]"
+                                "A climb uphill, a path through vegetation")))
+         )
+
+       (when (pc-has-sense-organ? 'nose)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Smells      [perceived with nose]"
+                                "Noxious smell of rotting flesh")))
+         )
+       (when (pc-has-sense-organ? 'ears)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Sounds      [perceived with ears]"
+                                "A magpie calls high up the hill")))
+         )
+        unpruned-rows
+        ]
       )
+    )
+  (info-card
+   body
+   (cond
+    [(Place? (current-location)) (format "Otava is in ~a." (Place-shortname (current-location)))]
+    [else (format "Otava is in ~a." (route-shortname (current-location)))])
+   )
   )
 
 (define (describe-non-combat-situation repeated?)

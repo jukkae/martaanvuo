@@ -41,7 +41,7 @@
      (case n
        [(1)
         (p
-         "The trail, following the ants, descends slightly, twisting and turning and eventually disappearing. The ground under her feet turns into soggy mud, and there are some reeds growing here and there. In the deepest troughs, there is some stinking, oily water.")]
+         "The trail descends slightly, twisting and turning, and eventually disappears. The ground under her feet turns into soggy mud, and there are some reeds growing here and there. In the deepest troughs, there is some stinking, oily water.")]
        [else
         '()])
      ]
@@ -213,7 +213,7 @@
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."
-              "The rocky climb up.")]
+              "The climb up.")]
 
          ['martaanvuo-swamp
           (if (route-fully-known? route)

@@ -119,7 +119,7 @@
         "Anthead Monograph"
         'in-progress
         "The book on transcending death."
-        "Should be in the Maw (?) of Martaanvuo."
+        "In the Maw of Martaanvuo."
         '()
         '()
         'study-anthead-monograph
