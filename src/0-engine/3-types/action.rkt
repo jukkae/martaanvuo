@@ -17,7 +17,7 @@
    [target : (Maybe (U item ActorId LocationId))]
    [tags : (Listof Symbol)]
    [details : (Listof (U Symbol status Number))]
-   [resolution-rules : (Maybe Sexp)]
+   [resolution-rules : (Maybe Sexp)] ; may return a timeline
    [on-before-rules : (Maybe Sexp)]
    [on-after-rules : (Maybe Sexp)])
   #:constructor-name action*

@@ -11,6 +11,7 @@
    (place
     #:id 'perimeter
     #:type 'perimeter
+    #:encounter-types '(voidfloater)
     #:shortname "Perimeter")
 
    (place
