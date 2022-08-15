@@ -54,10 +54,9 @@
      @p{
       Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
 
-      So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
+      So, after getting rid of the bracelet (3 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
       }
      (create-task 'the-debt)
-     (when (not (pc-has-sense-organ? 'eyes)) (add-sense-organ! (SenseOrgan 'eyes "eyes")))
      (wait-for-confirm)
      ]
     ; [(2)
@@ -76,7 +75,12 @@
     ;  (create-task 'defuse-the-hartman-device)
     ;  (wait-for-confirm)
     ;  ]
-    ))
+    )
+  (when (not (pc-has-sense-organ? 'eyes))
+    (p "There's a dim flat array of amorphous shapes. Fuzzy forms turn more solid. Otava begins to see.")
+    (add-sense-organ! (SenseOrgan 'eyes "eyes"))
+    (wait-for-confirm))
+  )
 
 (define (on-end-run exit-status)
   (reset-pending-action!)

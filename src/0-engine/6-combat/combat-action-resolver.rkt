@@ -80,6 +80,8 @@
       (format "Melee attack, ~a vs ~a"
               (get-combatant-name actor)
               (get-combatant-name target)))
+    (define pc-attack? (eq? (actor-id actor) 'pc))
+    (define target-originally-at-full-health? (eq? (actor-hp target) (actor-max-hp target)))
     ; #;(define success? (skill-check title skill action-target-number))
     (define success? #t)
 
@@ -95,6 +97,11 @@
                    (damage-roll-formula damage-roll)
                    damage-roll-result))))
     (info-card body title)
+    (when (and target-originally-at-full-health?
+               success?
+               (pc-has-sense-organ? 'nose))
+      (notice "Otava smells the gushing warm blood.")
+      )
 
     (define action-result 'ok)
     (when success? (set! action-result (take-damage target damage-roll-result 'melee)))

@@ -57,48 +57,11 @@
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
                `(
-                 (define enemies (get-current-enemies))
-                 #;(cond ((> (length enemies) 1)
-                        (displayln "resolve-escape-action!: Narration for multiple enemies"))
-                       ((= (length enemies) 0)
-                        (displayln "resolve-escape-action!: Narration for zero enemies"))
-                       (else
-                        (define enemy (get-current-enemy))
-                        (case (actor-type enemy)
-                          ['blindscraper
-                           (displayln "escaping from blindscraper")
-                           ]
-                          ['grabberkin
-                           (displayln "escaping from grabberkin")
-                           ])
-                        )
-                       )
-                 (define skill (get-trait (pc) "athletics-skill"))
-                ; TODO: blurbify escape narration based on location and enemies
-
-                 (define stance-ranges '())
-                 (for ([enemy enemies])
-                   (define stance (actor-stance enemy))
-                   (define value (stance-range stance))
-                   (set! stance-ranges (append-element stance-ranges value)))
-                 (define target-number
-                   ; if there's an enemy in engaged range, then more difficult check
-                   (if (member 'engaged stance-ranges)
-                       10
-                       8))
-
-                 (define success? (skill-check "Athletics" skill target-number))
-                 (if success?
-                     (begin
-                       (p "Otava escapes from combat.")
-                       (wait-for-confirm)
-                       'end-combat
-                       )
-                     (begin
-                       (p "Otava fails to escape from combat.")
-                       (wait-for-confirm)
-                       'failure))
-                 )))))
+                  (p "Otava escapes from combat.")
+                  (wait-for-confirm)
+                  'end-combat
+                 )
+                 ))))
          (set! combat-choices (append-element combat-choices escape-choice))))
 
   (define close-enemies (get-enemies-at-range 'close))

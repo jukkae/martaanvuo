@@ -2,9 +2,10 @@
 
 (provide (all-defined-out))
 
+(define-type StanceRange (U 'engaged 'close 'mid 'far))
 (struct stance
   ([sign : String]
-   [range : Symbol]
+   [range : StanceRange]
    [description : String])
   #:prefab
   #:mutable)

@@ -10,7 +10,7 @@
     #:id 'arena
     #:type 'outdoors
     #:shortname "The Arena"
-    #:encounter-types '(voidfloater)
+    #:encounter-types '(voidfloater blindscraper)
     #:choices
     (list
      (choice

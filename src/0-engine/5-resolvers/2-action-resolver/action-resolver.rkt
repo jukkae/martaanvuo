@@ -19,9 +19,9 @@
   "../../3-types/pc-actor.rkt"
   "../../3-types/place.rkt"
   "../../3-types/route.rkt"
+  "../../3-types/stance.rkt"
   "../../3-types/timeline.rkt"
   "../../3-types/timeline.rkt"
-  "../../3-types/event.rkt"
 
   "../../4-systems/events.rkt"
   "../../4-systems/timelines.rkt"
@@ -37,7 +37,6 @@
 
   "../../6-combat/combat.rkt"
   "../../6-combat/combat-action-resolver.rkt"
-  "../../3-types/stance.rkt"
 
   "../../../1-content/narration/combat-narration.rkt"
   )
@@ -48,6 +47,10 @@
 
 (lazy-require ["../../4-systems/locations/locations.rkt"
   (move-pc-to-location!
+   )])
+
+(lazy-require ["../../7-state/mutators.rkt"
+  (remove-all-enemies-and-end-combat!
    )])
 
 
@@ -64,6 +67,7 @@
 
     (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (pending? action)))
+
 
       (define on-before-rules (action-on-before-rules action))
       (when (not (empty? on-before-rules))
@@ -91,7 +95,7 @@
 
          (when (not (or (void? resolution-result) (empty? resolution-result)))
            (set! result resolution-result))]
-        #;[else ; TODO: 
+        #; [else ; TODO:
          (dev-note (format "Empty rules for action ~a" (action-symbol action)))]
       )
 

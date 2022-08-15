@@ -140,7 +140,8 @@
                     )
                 ]
                )
-         (dev-note "item removed, show info about removed/remaining items"))
+         #;(dev-note "item removed, show info about removed/remaining items") ; TODO: re-enable and implement this
+         )
         ))
 
 (define (add-ammo! amount)
@@ -201,31 +202,28 @@
       0))
 
 (define (pc-has-money amount)
-  (define dollars (* 10 (pc-gold-amount)))
-  (>= dollars amount))
+  (>= (pc-gold-amount) amount))
 
 (define (decrease-pc-money! quantity)
-  (define gold-equiv (* 0.1 quantity))
   (define items (actor-inventory (pc)))
   (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
                        items))
   (cond [gold?
-         (set-item-quantity! gold? (- (item-quantity gold?) gold-equiv))])
-  (notice (format "Gold decreased by ~a, new quantity: ~a" gold-equiv (item-quantity gold?)))
+         (set-item-quantity! gold? (- (item-quantity gold?) quantity))])
+  (notice (format "Gold decreased by ~a, new quantity: ~a" quantity (item-quantity gold?)))
 )
 
 ; TODO: combine
 (define (increase-pc-money! quantity)
-  (define gold-equiv (* 0.1 quantity))
   (define items (actor-inventory (pc)))
   (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
                        items))
   (cond [(not gold?)
-         (add-item! 'gold #:amount gold-equiv)
-         (notice (format "Otava now has ~a gold" gold-equiv))]
+         (add-item! 'gold #:amount quantity)
+         (notice (format "Otava now has ~a gold" quantity))]
         [else
-         (set-item-quantity! gold? (+ (item-quantity gold?) gold-equiv))
-         (notice (format "Gold increased by ~a, new quantity: ~a" gold-equiv (item-quantity gold?)))])
+         (set-item-quantity! gold? (+ (item-quantity gold?) quantity))
+         (notice (format "Gold increased by ~a, new quantity: ~a" quantity (item-quantity gold?)))])
 )
 
 (define (pc-has-ammo-left?)

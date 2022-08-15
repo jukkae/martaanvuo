@@ -12,7 +12,7 @@
     (tbody
      (tr
       "Condition [perceived with basic homeostasis]"
-      "Not good"
+      (if (> (actor-hp (pc)) 1) "Fine" "Not fine")
       )
      #;(tr
       "HP        [perceived with nociception]"
@@ -61,14 +61,14 @@
   (display-pc-combatant-info (pc))
 
   ; narrate
-  (define enemy-names
+  #;(define enemy-names
     (for/list ([enemy (get-current-enemies)])
       (actor-name enemy)))
 
-  (when (= (length (get-current-enemies)) 1)
+  #;(when (= (length (get-current-enemies)) 1)
     (define enemy (car (get-current-enemies)))
     (case (stance-range (actor-stance enemy))
-      ['mid
+      #;['mid
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
       #;['close ; this is specific to enemy type etc
          (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")])))
@@ -118,17 +118,45 @@
              "N/A")))]
 
       [("Blindscraper")
-       (tbody
-        (tr
-         "size"
-         (actor-size actor))
-        (if (not (null? stance))
-            (tr
-             "range"
-             (symbol->string (stance-range stance)))
-            (list
-             "range"
-             "N/A")))]
+       (define unpruned-rows '())
+       (when (pc-has-sense-organ? 'eyes)
+         (when (not (null? stance))
+           (set! unpruned-rows
+                 (append-element unpruned-rows
+                                 (tr
+                                  "range [perceived with eyes]"
+                                  (symbol->string (stance-range stance)))))
+           )
+         (set! unpruned-rows
+                 (append-element unpruned-rows
+                                 (tr
+                                  "size  [perceived with eyes]"
+                                  (format "~a" (actor-size actor)))))
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "HP    [perceived with eyes]"
+                                (if hide-hp?
+                                    "???"
+                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
+         )
+       (when (pc-has-sense-organ? 'echolocation)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "range [perceived with echolocation]"
+                                (symbol->string (stance-range stance)))))
+         )
+
+        (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "HP    [perceived with nose]"
+                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
+         )
+
+       unpruned-rows]
 
       [("Human fighter")
        (tbody
@@ -152,6 +180,11 @@
                                  (tr
                                   "range [perceived with eyes]"
                                   (symbol->string (stance-range stance)))))
+           (set! unpruned-rows
+                 (append-element unpruned-rows
+                                 (tr
+                                  "size  [perceived with eyes]"
+                                  (format "~a" (actor-size actor)))))
            )
          (set! unpruned-rows
                (append-element unpruned-rows

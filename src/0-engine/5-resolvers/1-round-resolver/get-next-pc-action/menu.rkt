@@ -82,7 +82,7 @@
 (define (get-meta-commands-with-keys)
   (define meta-commands (make-hash))
   (hash-set! meta-commands "M" (cons "[M]: Menu." menu))
-  (hash-set! meta-commands "0" (cons "[0]: Character sheet. [additional actions]" character-sheet))
+  (hash-set! meta-commands "0" (cons "[0]: Character sheet." character-sheet)) ; TODO: [additional actions] notice here
   #;(when (not (null? (actor-inventory (pc))))
       (hash-set! meta-commands "I" (cons "[I]: Inventory." inventory)))
   (hash-set! meta-commands "L" (cons "[L]: Logs." display-log))

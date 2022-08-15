@@ -19,7 +19,7 @@ Swap sensory outfit?
  #:decisions
  (list (make-decision
         #:requirement (λ () (any->bool (pc-has-sense-organ? 'eyes)))
-        #:title "Sell eyes. [+0.3 gold]"
+        #:title "Sell eyes. [+3 gold]"
         #:next-fragment
         (λ ()
           (increase-pc-money! 3)
@@ -29,7 +29,7 @@ Swap sensory outfit?
         )
        (make-decision
         #:requirement (λ () (any->bool (pc-has-sense-organ? 'echolocation)))
-        #:title "Sell echolocation. [+0.2 gold]"
+        #:title "Sell echolocation. [+2 gold]"
         #:next-fragment
         (λ ()
           (increase-pc-money! 2)
@@ -41,7 +41,7 @@ Swap sensory outfit?
         #:requirement
         (λ () (and (not (any->bool (pc-has-sense-organ? 'eyes)))
                    (pc-has-money 3)))
-        #:title "Buy eyes. [-0.3 gold]"
+        #:title "Buy eyes. [-3 gold]"
         #:next-fragment
         (λ ()
           (decrease-pc-money! 3)
@@ -53,7 +53,7 @@ Swap sensory outfit?
         #:requirement
         (λ () (and (not (any->bool (pc-has-sense-organ? 'echolocation)))
                    (pc-has-money 2)))
-        #:title "Buy echolocation. [-0.2 gold]"
+        #:title "Buy echolocation. [-2 gold]"
         #:next-fragment
         (λ ()
           (decrease-pc-money! 2)
