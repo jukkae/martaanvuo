@@ -110,6 +110,7 @@
           ['restart
            (end-game 'restart)]
           ['ok '()]
+          ['recurse (on-begin-recurse-run)]
           [else
            (dev-note (format "Unexpected round exit status: ~a" round-exit-status))]
           )

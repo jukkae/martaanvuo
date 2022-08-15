@@ -46,7 +46,7 @@
 
    (place
     #:id 'outpost
-    #:type 'outpost
+    #:type 'indoor
     #:shortname "Scientific outpost")
 
    (place
@@ -66,7 +66,7 @@
 
    (place
     #:id 'workshop
-    #:features '(hartmann-device)
+    #:features '(martaanvuo-terminal)
     #:type 'workshop)
 
    (place
@@ -82,7 +82,8 @@
 
    (place
     #:id 'control-room
-    #:features '(martaanvuo-terminal))
+    #:features '(hartmann-device)
+    )
 
    (place
     #:id 'reactor-room
@@ -124,21 +125,22 @@
     ; (route-between places 'martaanvuo-swamp 'luminous-precipice 120)
     (route-between 'burnt-tree 'the-maw 1 #:no-encounters? #t)
     (route-between 'the-maw 'waiting-room 1 #:no-encounters? #t #:one-directional? #t)
-    #;(route-between 'magpie-hill 'outpost 30 #:no-encounters? #t)
+    (route-between 'magpie-hill 'outpost 30 #:no-encounters? #t)
     #;(route-between 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
     (route-between 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
-    (route-between 'outpost 'tunnels-1 5 #:no-encounters? #t)
+    (route-between 'outpost 'workshop 2 #:no-encounters? #t)
+    #;(route-between 'outpost 'tunnels-1 5 #:no-encounters? #t)
     (route-between 'tunnels-1 'tunnels-2 10)
-    (route-between 'tunnels-1 'workshop 10)
+    #;(route-between 'tunnels-1 'workshop 10)
     (route-between 'tunnels-1 'compound-entrance 10)
     (route-between 'compound-entrance 'murkwater-docks 2)
-    (route-between 'compound-entrance 'workshop 2)
-    (route-between 'murkwater-docks 'workshop 2 #:no-encounters? #t)
+    #;(route-between 'compound-entrance 'workshop 2)
+    #;(route-between 'murkwater-docks 'workshop 2 #:no-encounters? #t)
     (route-between 'murkwater-docks 'palsat 130 #:no-encounters? #t)
     (route-between 'tunnels-2 'storage-closet 1)
-    (route-between 'storage-closet 'workshop 1 #:no-encounters? #t)
-    (route-between 'workshop 'control-room 2 #:no-encounters? #t)
-    (route-between 'workshop 'martaanvuo-source 2)
+    #;(route-between 'storage-closet 'workshop 1 #:no-encounters? #t)
+    #;(route-between 'workshop 'control-room 2 #:no-encounters? #t)
+    #;(route-between 'workshop 'martaanvuo-source 2)
     (route-between 'control-room 'reactor-room 1)
   ))
 

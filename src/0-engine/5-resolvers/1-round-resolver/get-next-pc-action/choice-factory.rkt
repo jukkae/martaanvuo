@@ -45,7 +45,7 @@
              #:actor (pc)
              #:duration (time-until-next-morning)
              )))]
-    ['tent
+    #;['tent
      (make-choice
       'camp
       "Set up a tent."
@@ -58,7 +58,7 @@
                (displayln "Camp action TODO")
                'ok))))]
 
-    ['campfire
+    #;['campfire
      (make-choice
       'campfire
       "Build campfire."
@@ -85,17 +85,17 @@
              #:on-before-rules
              `(
                (blurb 'rest-action)
-               (define bonus -6)
-               (define bonus-str "-6")
+               (define bonus 4)
+               (define bonus-str " + 4")
                (define encounter-roll (+ (d 1 6) bonus))
                (define tn 5)
                (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
                                bonus-str
                                tn
                                encounter-roll
-                               (if (< encounter-roll tn)
-                                   "fail"
-                                   "success")))
+                               (if (>= encounter-roll tn)
+                                   "success"
+                                   "fail")))
                (cond [(< encounter-roll tn)
                       (define resolve-events
                         (list

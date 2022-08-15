@@ -62,15 +62,15 @@
 
 
 (define (get-nighttime-choices world actor)
-  (dev-note "get-night-time-choices: not implemented yet")
+  #;(dev-note "get-night-time-choices: not implemented yet")
   (list
    (choice-factory 'sleep)))
 
 (define (get-evening-choices world actor)
-  (dev-note "get-evening-choices: not implemented yet")
+  #;(dev-note "get-evening-choices: not implemented yet")
   (list
-   (choice-factory 'tent)
-   (choice-factory 'campfire)
+  ;  (choice-factory 'tent)
+  ;  (choice-factory 'campfire)
    (choice-factory 'eat)
    (choice-factory 'rest)
    ))

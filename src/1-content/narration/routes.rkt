@@ -205,7 +205,7 @@
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."
-              "The climb up.")]
+              "Climb up the hill.")]
 
          ['martaanvuo-swamp
           (if (route-fully-known? route)
@@ -226,7 +226,7 @@
          ['outpost
           (if (route-fully-known? route)
               "The outpost."
-              "The building with the machine.")]
+              "The building.")]
          ['luminous-precipice
           (if (route-fully-known? route)
               "Luminous Precipice."

@@ -44,36 +44,37 @@
 ; recursions mess with reality -> change world state, give bonuses, open new doors
 ; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
+  (display-title)
   (current-recursion-depth (add1 (current-recursion-depth)))
 
   ; (current-round 0)
   (move-pc-to-location! (get-place-by-id 'perimeter))
   (case (current-recursion-depth)
     [(1)
-     (p @~a{
-      Otava stops her bike to correct her goggles on her way towards Martaanvuo wasteland. A dumb fucking plan, but she doesn't have much choice – the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
+     @p{
+      Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
 
-      The Merchant had demanded payment in actual gold, or assault weapons, as another fucking act of goodwill. So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland.
-      })
+      So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland.
+      }
      (create-task 'the-debt)
      (wait-for-confirm)
      ]
-    [(2)
-     (p @~a{
-      Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
-      })
-     (create-task 'storm-the-facility)
-     (wait-for-confirm)
-     ]
-    [(3)
-     (p @~a{
-      The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
+    ; [(2)
+    ;  (p @~a{
+    ;   Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
+    ;   })
+    ;  (create-task 'storm-the-facility)
+    ;  (wait-for-confirm)
+    ;  ]
+    ; [(3)
+    ;  (p @~a{
+    ;   The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
 
-      A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
-      })
-     (create-task 'defuse-the-hartman-device)
-     (wait-for-confirm)
-     ]
+    ;   A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
+    ;   })
+    ;  (create-task 'defuse-the-hartman-device)
+    ;  (wait-for-confirm)
+    ;  ]
     ))
 
 (define (on-end-run exit-status)
@@ -148,21 +149,21 @@
      (wait-for-confirm)
      (move-pc-to-location! (get-place-by-id 'perimeter))
      ]
-    [(2)
-     @p{
-      Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.
+  ;   [(2)
+  ;    @p{
+  ;     Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.
 
-      There's a waterfall far upriver, and surrounding the waterfall, there are caves there that go deep into the darks of the earth, to the heart of the world, full of crawling evil beings and innumerable treasures.
-     }
-     (create-task 'plunder-the-earth)
-     (wait-for-confirm)
-     ]
-    [(3)
-     @p{
-      There's something really fucky going with Martaanvuo. Ever since Murkwater moved in with their trucks and heavy equipment and dammed the Martaanvuo Waterfall, there's been strange rumors circulating among the peoples living in the Wastelands.
-      }
-     (wait-for-confirm)
-   ]
+  ;     There's a waterfall far upriver, and surrounding the waterfall, there are caves there that go deep into the darks of the earth, to the heart of the world, full of crawling evil beings and innumerable treasures.
+  ;    }
+  ;    (create-task 'plunder-the-earth)
+  ;    (wait-for-confirm)
+  ;    ]
+  ;   [(3)
+  ;    @p{
+  ;     There's something really fucky going with Martaanvuo. Ever since Murkwater moved in with their trucks and heavy equipment and dammed the Martaanvuo Waterfall, there's been strange rumors circulating among the peoples living in the Wastelands.
+  ;     }
+  ;    (wait-for-confirm)
+  ;  ]
     )
     )
 
