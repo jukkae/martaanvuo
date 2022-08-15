@@ -54,9 +54,10 @@
      @p{
       Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
 
-      So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland.
+      So, after getting rid of the bracelet (3.8 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
       }
      (create-task 'the-debt)
+     (when (not (pc-has-sense-organ? 'eyes)) (add-sense-organ! (SenseOrgan 'eyes "eyes")))
      (wait-for-confirm)
      ]
     ; [(2)

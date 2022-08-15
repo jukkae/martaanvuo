@@ -108,7 +108,7 @@
                (when (eq? fragment-decision-result 'recurse)
                  (set! result 'recurse))
                (when (eq? fragment-decision-result 'pc-dead)
-                 (dev-note "fragment-decision-result: PC DEAD")
+                ;  (dev-note "fragment-decision-result: PC DEAD")
                  (set! result 'pc-dead))
                return result))
 
