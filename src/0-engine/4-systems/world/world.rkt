@@ -190,6 +190,8 @@
     (define id-b (route-b route))
     (define place-a (find-place id-a))
     (define place-b (find-place id-b))
+    (when (not place-a) (dev-note (format "Null: ~a" id-a)))
+    (when (not place-b) (dev-note (format "Null: ~a" id-b)))
     (set-Place-routes! place-a (append-element (Place-routes place-a) route-id))
     (when (not (route-one-directional? route))
       (set-Place-routes! place-b (append-element (Place-routes place-b) route-id)))))

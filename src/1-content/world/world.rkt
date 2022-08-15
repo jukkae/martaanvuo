@@ -131,11 +131,12 @@
   (list
     ; (route-between perimeter martaanvuo-swamp 'hidden)
     (route-between 'perimeter 'magpie-hill 110)
-    (route-between 'perimeter 'martaanvuo-swamp 90 #:encounter-types '(human-fighter))
+    (route-between 'perimeter 'martaanvuo-docks 90 #:encounter-types '(human-fighter))
     (route-between 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
-    (route-between 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
-    (route-between 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
-    (route-between 'martaanvuo-docks 'ladder-of-surut 1 #:no-encounters? #t)
+    #;(route-between 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
+    #;(route-between 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport
+    #;(route-between 'martaanvuo-docks 'forge 5 #:no-encounters? #t)
+    ; (route-between 'martaanvuo-docks 'the-ring-of-surut 5 #:no-encounters? #t)
     ; (route-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
     ; (route-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
     ; (route-between places 'martaanvuo-swamp 'luminous-precipice 120)
