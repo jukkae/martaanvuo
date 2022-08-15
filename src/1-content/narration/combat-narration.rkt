@@ -169,7 +169,7 @@
                                 (symbol->string (stance-range stance)))))
          )
 
-        (when (pc-has-sense-organ? 'nose)
+        (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))
          (set! unpruned-rows
                (append-element unpruned-rows
                                (tr

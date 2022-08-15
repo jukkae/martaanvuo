@@ -1,4 +1,4 @@
-#lang racket
+#lang at-exp racket
 
 (require "../../0-engine/0-api/api.rkt")
 
@@ -99,6 +99,10 @@
        [else
         (p
          "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
+    ['(perimeter martaanvuo-docks)
+     @p{
+      Otava comes to a small village called Martaanvuo Docks. The river has dried. There's a blacksmith's forge, and a small pit arena of sorts, with a ladder leading down into the pit.
+     }]
 
     ; TODO: re-enable traversal description
     ; ['(magpie-hill perimeter)
