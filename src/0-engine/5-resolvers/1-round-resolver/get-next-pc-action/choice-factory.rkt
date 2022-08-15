@@ -81,51 +81,44 @@
       (λ () (make-action
              #:symbol 'rest
              #:actor (pc)
-             #:duration 0; (time-until-next-time-of-day) ; TODO: resolution-rules handle elapsing time!
-             #:resolution-rules
+             #:duration (time-until-next-time-of-day)
+             #:on-before-rules
              `(
-               (let/ec return
-                 (define elapsed-time 0) ; TODO: This, and similar in make-traverse-choice, should better be done while resolving; actions might have "don't interrupt" tag
-                 (define dur (time-until-next-time-of-day))
-                 (blurb 'rest-action)
-                 (define bonus -6)
-                 (define bonus-str "-6")
-                 (define encounter-roll (+ (d 1 6) bonus))
-                 (define tn 5)
-                 (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
-                                 bonus-str
-                                 tn
-                                 encounter-roll
-                                 (if (< encounter-roll tn)
-                                     "fail"
-                                     "success")))
-                 (when (< encounter-roll tn)
-                   (define resolve-events
-                     (list
-                      (make-event ,''spawn-encounter
-                                  '() ; pack info about enemies / event here
-                                  #:interrupting? #t)))
-                   (define metadata '(interrupted))
-                   (define duration
-                     (exact-floor (/
-                                   dur
-                                   3)))
+               (blurb 'rest-action)
+               (define bonus -6)
+               (define bonus-str "-6")
+               (define encounter-roll (+ (d 1 6) bonus))
+               (define tn 5)
+               (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
+                               bonus-str
+                               tn
+                               encounter-roll
+                               (if (< encounter-roll tn)
+                                   "fail"
+                                   "success")))
+               (cond [(< encounter-roll tn)
+                      (define resolve-events
+                        (list
+                         (make-event ,''spawn-encounter
+                                     '() ; pack info about enemies / event here
+                                     #:interrupting? #t)))
+                      (define metadata '(interrupted))
+                      (define duration
+                        (exact-floor (/
+                                      (time-until-next-time-of-day)
+                                      3)))
 
-                   (set! elapsed-time duration)
+                      (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                      (define world-events (timeline-events world-tl))
 
-                   (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                   (define world-events (timeline-events world-tl))
+                      (define all-events (append world-events resolve-events))
+                      (define all-metadata (append (timeline-metadata world-tl) metadata))
 
-                   (define all-events (append world-events resolve-events))
-                   (define all-metadata (append (timeline-metadata world-tl) metadata))
+                      (define tl (timeline all-metadata all-events duration))
 
-                   (define tl (timeline all-metadata all-events duration))
-
-                   (process-timeline! tl)
-                   (spawn-encounter)
-                   (return tl))
-                 'ok
-                 )
+                      (process-timeline! tl)
+                      tl]
+                     [else 'ok])
                )
              )))]
 
