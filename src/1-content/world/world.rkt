@@ -128,8 +128,8 @@
 (define routes
   (list
     ; (route-between perimeter martaanvuo-swamp 'hidden)
-    (route-between 'perimeter 'magpie-hill 110 #:no-encounters? #t)
-    (route-between 'perimeter 'martaanvuo-swamp 90 #:no-encounters? #t)
+    (route-between 'perimeter 'magpie-hill 110 #:encounter-types '(fly))
+    (route-between 'perimeter 'martaanvuo-swamp 90 #:encounter-types '(human-fighter))
     (route-between 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
     (route-between 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
     (route-between 'martaanvuo-docks 'carnival 250 #:no-encounters? #t) ; water transport

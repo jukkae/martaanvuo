@@ -18,7 +18,7 @@
   )
 
 (define (make-human-fighter)
-  (define enemy (make-actor "Human fighter" 'human-fighter #;max-hp 3 #:size 'large))
+  (define enemy (make-actor "Human fighter" 'human-fighter #:max-hp 4 #:size 'large))
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)
   (set-trait! enemy "melee-attack-skill" 1)

@@ -38,7 +38,8 @@
   (cond ((equal? input "Q")
          (display-session-stats)
 
-         (define quit-message (get-blurb 'quit))
+        ;  (define quit-message (get-blurb 'quit))
+         (define quit-message "")
          (when (not (equal? quit-message ""))
            (prln quit-message)
            (newline))
