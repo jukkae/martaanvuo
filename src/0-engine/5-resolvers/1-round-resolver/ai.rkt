@@ -68,7 +68,7 @@
                ((equal? (actor-name actor) "Human fighter")
                 (get-human-fighter-reaction actor))
                (else
-                (displayln "unknown non-pc-actor type for reaction")
+                #;(displayln "unknown non-pc-actor type for reaction")
                 '())))
         (else
          ; (displayln "PC REACTION")

@@ -11,7 +11,11 @@
   (define body
     (tbody
      (tr
-      "HP"
+      "Condition [perceived with basic homeostasis]"
+      "Not good"
+      )
+     #;(tr
+      "HP        [perceived with nociception]"
       (format "~a/~a"
               (actor-hp actor)
               (actor-max-hp actor)))))
@@ -141,29 +145,37 @@
 
       [("Voidfloater")
        (define unpruned-rows '())
-       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'eyes)) (pc-actor-sense-organs (pc)))
+       (when (pc-has-sense-organ? 'eyes)
          (when (not (null? stance))
            (set! unpruned-rows
                  (append-element unpruned-rows
-                         (tr
-                          "range [perceived with eyes]"
-                          (symbol->string (stance-range stance)))))
-                          )
+                                 (tr
+                                  "range [perceived with eyes]"
+                                  (symbol->string (stance-range stance)))))
+           )
          (set! unpruned-rows
                (append-element unpruned-rows
-                       (tr
-                        "HP    [perceived with eyes]"
-                        (if hide-hp?
-                            "???"
-                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
+                               (tr
+                                "HP    [perceived with eyes]"
+                                (if hide-hp?
+                                    "???"
+                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
          )
-       (when (filter (λ (s) (eq? (SenseOrgan-id s) 'echolocation)) (pc-actor-sense-organs (pc)))
-            (set! unpruned-rows
-                 (append-element unpruned-rows
-                         (tr
-                          "range [perceived with echolocation]"
-                          (symbol->string (stance-range stance)))))
-            )
+       (when (pc-has-sense-organ? 'echolocation)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "range [perceived with echolocation]"
+                                (symbol->string (stance-range stance)))))
+         )
+
+        (when (pc-has-sense-organ? 'nose)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "HP    [perceived with nose]"
+                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
+         )
 
        unpruned-rows
        ]

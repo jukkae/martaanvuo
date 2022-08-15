@@ -83,9 +83,8 @@
 
     (define damage-roll (standard-damage-roll 1 2 0))
     (define damage-roll-result (d
-                                (standard-damage-roll-n damage-roll)
-                                (standard-damage-roll-x damage-roll)
-                                (standard-damage-roll-bonus damage-roll)
+                                1
+                                2
                                 ))
     (define body
       (tbody

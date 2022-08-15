@@ -85,7 +85,7 @@
           (else (resolve-action! action)))
     (when (not (pc-is-alive?))
       (dev-note "PC dead!")
-      return)
+      return 'pc-dead)
     ))
 
 (define (end-combat)

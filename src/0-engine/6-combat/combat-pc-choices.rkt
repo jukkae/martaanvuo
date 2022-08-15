@@ -251,7 +251,7 @@
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (for ([action-name (list 'smash 'bludgeon 'strike)])
+           (for ([action-name (list 'smash #;'bludgeon #;'strike)])
             (define choice (make-named-attack action-name target))
             (set! combat-choices (append-element combat-choices choice))
             ))
@@ -259,26 +259,28 @@
   combat-choices)
 
 (define (get-perceive-choices)
-  (define targets (get-current-enemies))
-  (define perceive-choices '())
-  (define choice
-    (make-choice 'perceive
-                  "Perceive. [with echolocation]"
-                  (λ () (make-action #:symbol 'perceive-with-echolocation
-                                     #:actor (pc)
-                                     #:duration 1
-                                     #:target null
-                                     #:tags '()
-                                     #:resolution-rules
-                                     '(
-                                      (for ([enemy (get-current-enemies)])
-                                        (define size (actor-size enemy))
-                                        (notice (format "There is a ~a something there." size)))
-                                      '()
-                                     )
-                                     ))))
-  (set! perceive-choices (append-element perceive-choices choice))
-  perceive-choices)
+  ; (define targets (get-current-enemies))
+  ; (define perceive-choices '())
+  ; (define choice
+  ;   (make-choice 'perceive
+  ;                 "Perceive. [with echolocation]"
+  ;                 (λ () (make-action #:symbol 'perceive-with-echolocation
+  ;                                    #:actor (pc)
+  ;                                    #:duration 1
+  ;                                    #:target null
+  ;                                    #:tags '()
+  ;                                    #:resolution-rules
+  ;                                    '(
+  ;                                     (for ([enemy (get-current-enemies)])
+  ;                                       (define size (actor-size enemy))
+  ;                                       (notice (format "There is a ~a something there." size)))
+  ;                                     '()
+  ;                                    )
+  ;                                    ))))
+  ; (set! perceive-choices (append-element perceive-choices choice))
+  ; perceive-choices
+  '()
+  )
 
 (define (get-harvest-choice target)
   (list

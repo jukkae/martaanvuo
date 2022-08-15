@@ -29,9 +29,12 @@
    #:max-lp 4
    #:size 'small
    #:sense-organs (list
-    (SenseOrgan 'eyes "eyes")
+    (SenseOrgan 'basic-homeostasis "basic homeostasis")
+    (SenseOrgan 'nose "nose")
+    ;(SenseOrgan 'eyes "eyes")
     (SenseOrgan 'ears "ears")
     (SenseOrgan 'echolocation "echolocation")
+    ;(SenseOrgan 'touch-sensitive-skin "touch-sensitive skin")
     )
    #:manipulators (list
     ;(Manipulator 'nimble-hands "nimble hands")
