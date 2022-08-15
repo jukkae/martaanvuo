@@ -6,7 +6,7 @@
 
 (fragment
  'magpie
- "The young magpie is perched in a tree, a gray-and-black silhoutte amidst a gray-and-black forest of silhouettes. \"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\""
+ "\"Good day, human\", it says, \"I am... Magpie. I am King of Magpies, Guardian of Forest. State your affairs here.\""
 
  #:decisions
  (list

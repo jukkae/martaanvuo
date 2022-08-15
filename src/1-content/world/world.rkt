@@ -23,6 +23,7 @@
    (place
     #:id 'magpie-hill
     #:features '(magpie-effigy)
+    #:items (list (make-item 'revolver))
     #:type 'mountains
     #:shortname "Magpie hill")
 
@@ -129,7 +130,7 @@
 (define routes
   (list
     ; (route-between perimeter martaanvuo-swamp 'hidden)
-    (route-between 'perimeter 'magpie-hill 110 #:encounter-types '(fly))
+    (route-between 'perimeter 'magpie-hill 110)
     (route-between 'perimeter 'martaanvuo-swamp 90 #:encounter-types '(human-fighter))
     (route-between 'martaanvuo-swamp 'burnt-tree 70 #:encounter-types '(human-fighter))
     (route-between 'martaanvuo-swamp 'martaanvuo-docks 60 #:no-encounters? #t)
@@ -140,8 +141,8 @@
     ; (route-between places 'martaanvuo-swamp 'luminous-precipice 120)
     (route-between 'burnt-tree 'the-maw 1 #:no-encounters? #t)
     (route-between 'the-maw 'waiting-room 1 #:no-encounters? #t #:one-directional? #t)
-    (route-between 'magpie-hill 'outpost 30 #:no-encounters? #t)
-    (route-between 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
+    #;(route-between 'magpie-hill 'outpost 30 #:no-encounters? #t)
+    #;(route-between 'magpie-hill 'luminous-precipice 60 #:no-encounters? #t)
     (route-between 'outpost 'cache 2 #:no-encounters? #t #:details '(locked))
     (route-between 'outpost 'tunnels-1 5 #:no-encounters? #t)
     (route-between 'tunnels-1 'tunnels-2 10)

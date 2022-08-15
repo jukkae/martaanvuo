@@ -59,6 +59,50 @@
          )
         unpruned-rows
         ]
+      ['magpie-hill
+       (define unpruned-rows '())
+       (when (pc-has-sense-organ? 'eyes)
+         (set! unpruned-rows
+               (append unpruned-rows
+                       (list
+                        (tr
+                         "Connections [perceived with eyes]"
+                         "Rocky stairs down")
+                        ; (tr
+                        ;  ""
+                        ;  "Industrial building on further on plateau")
+                        ; (tr
+                        ;  ""
+                        ;  "Small path along the edge of the plateau")
+                        )))
+         )
+       (when (pc-has-sense-organ? 'echolocation)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Connections [perceived with echolocation]"
+                                "Rocky stairs down")))
+         )
+
+       (when (pc-has-sense-organ? 'nose)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Smells      [perceived with nose]"
+                                "Arid smell of desert flowers")))
+         )
+       (when (pc-has-sense-organ? 'ears)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Sounds      [perceived with ears]"
+                                ;"Chk-chk, a magpie calls insistently"
+                                "The magpie is now silent. The wind whistles."
+                                )))
+         )
+        unpruned-rows
+        ]
+      [else (dev-note "TODO: Fix place descriptions!") '()]
       )
     )
   (info-card
@@ -71,10 +115,8 @@
 
 (define (describe-non-combat-situation repeated?)
   (cond ((null? (current-fragment-id))
-         (cond ((eq? (location-id (current-location)) 'magpie-hill)
+         #;(cond ((eq? (location-id (current-location)) 'magpie-hill)
                 (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a small, decrepit industrial-looking building further ahead on the plateau. A small trail leads along the edge of the plateau.")))
-         (cond ((location-has-feature? (current-location) 'magpie-effigy)
-                (p #:suppress-logging? repeated?"\"Chk-chk\", the magpie calls insistently from the foliage of the skeletonlike forest on the plateau.")))
          (describe-location repeated?)
                 ))
   )
@@ -90,6 +132,5 @@
   (if (flag-set? 'perspective-switched)
     (p #:suppress-logging? repeated? "Otava is the space in which the world appears. Nothing is still, everything fluxating and pulsuating. Atomic particles thrown about by forces of cause and effect. A pulsating heartbeat emanates from deep within the earth's crust.")
     '())
-
   )
 

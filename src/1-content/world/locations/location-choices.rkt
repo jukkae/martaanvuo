@@ -12,14 +12,16 @@
 
 ; TODO: location-specific
 (define (get-magpie-hill-choices)
-  (make-choice
+
+  '()#;(list (make-choice
     'follow-the-magpie
-    "Magpie."
+    "Follow the magpie."
     (λ ()
-      (p "Despite the worsening rain, Otava goes into the monochrome bush.")
+      (p "Otava follows the sound of the magpie. It's not very far, but the magpie flies a couple of times further in on the plateau, deeper into a sparse forest of skeletonlike bushes and small trees. The magpie eventually settles on a branch in a tree on the edge of an unremarkable clearing.")
       (go-to-fragment 'magpie)
       (remove-feature-from-location! (current-location) 'magpie-effigy)
       'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
+      )
   )
 
 (define (get-precipice-choices)

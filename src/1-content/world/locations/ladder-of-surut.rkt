@@ -20,4 +20,4 @@
             ))
     )))
 
-(add-route-between! 'ladder-of-surut 'forge 1)
+(add-route-between! 'perimeter 'forge 1)

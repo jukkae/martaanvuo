@@ -21,69 +21,59 @@
   (define n (times-begin-traverse-narrated key))
   (case key
     ['(perimeter magpie-hill)
-     (case n
-       [(1)
-        (p
-         "Otava begins the climb. The trail turns into a narrow natural staircase of rocks, as the hillside steepens to a cliff.")]
-       [else
-        (p
-         "Otava climbs up Magpie Hill.")])
+     (p "The trail turns into a narrow staircase of rocks as the hillside steepens to a cliff.")
      ]
     ['(magpie-hill perimeter)
-     (case n
-       [(1)
-        (p
-         "The sharply-angled terraced rocks along the first, steepest part of the descent tear some new holes in Otava's pants.")]
-       [else
-        '()])
-     ]
-    ['(perimeter martaanvuo-swamp)
-     (case n
-       [(1)
-        (p
-         "The trail descends slightly, twisting and turning, and eventually disappears. The ground under her feet turns into soggy mud, and there are some reeds growing here and there. In the deepest troughs, there is some stinking, oily water.")]
-       [else
-        '()])
-     ]
-    ['(martaanvuo-swamp perimeter)
-     (case n
-       [(1)
-        (p
-         "The path comes to a muddy, oily swamp.")]
-       [else
-        '()])
-     ]
-
-    ['(martaanvuo-swamp martaanvuo-docks)
-     (case n
-       [(1)
-        (p
-         "The trail disappears for a bit in the middle of sharp rocks.")]
-       [else
-        (p
-         "Otava comes to the sharp rocks.")])
-     ]
-    ['(martaanvuo-docks martaanvuo-swamp)
-     (case n
-       [(1)
-        (p
-         "The smell of rotting fish slowly disappears as Otava climbs up the vehicle trail.")]
-       [else
-        (p
-         "Otava climbs up the vehicle trail, away from the docks and the river.")])
-     ]
-
-    ['(martaanvuo-swamp burnt-tree)
-     (p "Otava takes the small side path. Some of the stubby trees look partly burned. There's a dry, resinous, incense-like smoky smell in the air.")
-     ]
-
-    ['(burnt-tree martaanvuo-swamp)
      '()
      ]
+    ; TODO: re-enable traversal narration
+    ; ['(perimeter martaanvuo-swamp)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "The trail descends slightly, twisting and turning, and eventually disappears. The ground under her feet turns into soggy mud, and there are some reeds growing here and there. In the deepest troughs, there is some stinking, oily water.")]
+    ;    [else
+    ;     '()])
+    ;  ]
+    ; ['(martaanvuo-swamp perimeter)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "The path comes to a muddy, oily swamp.")]
+    ;    [else
+    ;     '()])
+    ;  ]
 
-    ['(burnt-tree the-maw)
-     (p "Inside the big tree, it is cool and wet. The ground drops, and there's an earthen tunnel.")
-     ]
+    ; ['(martaanvuo-swamp martaanvuo-docks)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "The trail disappears for a bit in the middle of sharp rocks.")]
+    ;    [else
+    ;     (p
+    ;      "Otava comes to the sharp rocks.")])
+    ;  ]
+    ; ['(martaanvuo-docks martaanvuo-swamp)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "The smell of rotting fish slowly disappears as Otava climbs up the vehicle trail.")]
+    ;    [else
+    ;     (p
+    ;      "Otava climbs up the vehicle trail, away from the docks and the river.")])
+    ;  ]
+
+    ; ['(martaanvuo-swamp burnt-tree)
+    ;  (p "Otava takes the small side path. Some of the stubby trees look partly burned. There's a dry, resinous, incense-like smoky smell in the air.")
+    ;  ]
+
+    ; ['(burnt-tree martaanvuo-swamp)
+    ;  '()
+    ;  ]
+
+    ; ['(burnt-tree the-maw)
+    ;  (p "Inside the big tree, it is cool and wet. The ground drops, and there's an earthen tunnel.")
+    ;  ]
 
     [else
      (dev-note (format "describe-begin-traverse-action: unknown key: ~a" key))
@@ -102,78 +92,80 @@
   (define n (times-finish-traverse-narrated key))
   (case key
     ['(perimeter magpie-hill)
-     (case n
+     (p "Eventually the cliff levels out, and Otava comes to a plateau.")
+     '()#;(case n
        [(1)
         (p "Otava comes to a slab of stone with a painting of a human figure on it. The being has the head of an ant, and its six arms are contorted in a mad dance, one pair of hands gesturing wildly with the control rods of a puppeteer. The bottom of the painting is washed away. The figure's unsettling gaze follows Otava as she goes past the painting.")]
        [else
         (p
          "The dreadful painting of Anthead God gazes at Otava mockingly as she passes the painted stone slab.")])]
 
-    ['(magpie-hill perimeter)
-     (case n
-       [(1)
-        (p
-         "Eventually, the boulders get smaller, and the path evens out.")]
-       [else
-        (p
-         "Otava gets to Perimeter.")])
-     ]
+    ; TODO: re-enable traversal description
+    ; ['(magpie-hill perimeter)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "Eventually, the boulders get smaller, and the path evens out.")]
+    ;    [else
+    ;     (p
+    ;      "Otava gets to Perimeter.")])
+    ;  ]
 
-    ['(magpie-hill luminous-precipice)
-     (case n
-       [(1)
-        (p
-         "A narrow, long overhang leads into the clear air.")]
-       [else
-        (p
-         "Otava arrives at Luminous Precipice.")])
-     ]
+    ; ['(magpie-hill luminous-precipice)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "A narrow, long overhang leads into the clear air.")]
+    ;    [else
+    ;     (p
+    ;      "Otava arrives at Luminous Precipice.")])
+    ;  ]
 
-    ['(luminous-precipice magpie-hill)
-     (case n
-       [(1)
-        (p
-         "A trail leads along the edge of the plateau.")]
-       [else
-        (p
-         "Otava arrives at Luminous Precipice.")])
-     ]
+    ; ['(luminous-precipice magpie-hill)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "A trail leads along the edge of the plateau.")]
+    ;    [else
+    ;     (p
+    ;      "Otava arrives at Luminous Precipice.")])
+    ;  ]
 
-    ['(perimeter martaanvuo-swamp)
-     (case n
-       [(1)
-        (p
-         "The path is visible again through the muck, and it splits in two.")
-        ]
-       [else
-        '()])]
-    ['(martaanvuo-swamp perimeter)
-     '()]
+    ; ['(perimeter martaanvuo-swamp)
+    ;  (case n
+    ;    [(1)
+    ;     (p
+    ;      "The path is visible again through the muck, and it splits in two.")
+    ;     ]
+    ;    [else
+    ;     '()])]
+    ; ['(martaanvuo-swamp perimeter)
+    ;  '()]
 
-    ['(martaanvuo-swamp martaanvuo-docks)
-     (case n
-       [(1)
-        (p "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and a small village comes to view. A small, drying lake with oily water, a couple of sheds, meters out from the receding shoreline. A pile of fish by the dock explains the smell.")
-        ]
-       [else
-        '()])]
+    ; ['(martaanvuo-swamp martaanvuo-docks)
+    ;  (case n
+    ;    [(1)
+    ;     (p "Otava finds herself following a fresh-looking vehicle track. The smell of rotting fish fills the air, and a small village comes to view. A small, drying lake with oily water, a couple of sheds, meters out from the receding shoreline. A pile of fish by the dock explains the smell.")
+    ;     ]
+    ;    [else
+    ;     '()])]
 
-    ['(martaanvuo-docks martaanvuo-swamp)
-     (p
-      "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
-     ]
+    ; ['(martaanvuo-docks martaanvuo-swamp)
+    ;  (p
+    ;   "The tracks disappear amids a rocky outcrop, and eventually Otava finds herself at the fork in Martaanvuo swamp again.")
+    ;  ]
 
-    ['(martaanvuo-swamp burnt-tree)
-     (case n
-       [(1)
-        (p "A huge, angular hulk of burnt tree looms over Otava.")]
-       [else
-        (p
-         "Otava comes to the burnt tree.")])]
+    ; ['(martaanvuo-swamp burnt-tree)
+    ;  (case n
+    ;    [(1)
+    ;     (p "A huge, angular hulk of burnt tree looms over Otava.")]
+    ;    [else
+    ;     (p
+    ;      "Otava comes to the burnt tree.")])]
 
-    ['(burnt-tree martaanvuo-swamp)
-     (p "The path leads Otava to the fork in Martaanvuo swamp.")
-     ]
+    ; ['(burnt-tree martaanvuo-swamp)
+    ;  (p "The path leads Otava to the fork in Martaanvuo swamp.")
+    ;  ]
 
     [else
      (dev-note (format "describe-finish-traverse-action: unknown key: ~a" key))
