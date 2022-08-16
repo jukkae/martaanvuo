@@ -12,7 +12,10 @@
 (fragment
  'seppo
  @~a{
-Swap sensory outfit?
+Seppo the Blacksmith buys and sells sense organs. Prices are as follows:
+- Ears         1
+- Echolocation 2
+- Eyes         3
 }
 
  #:time-taken-by-fragment 2
@@ -34,6 +37,16 @@ Swap sensory outfit?
         (λ ()
           (increase-pc-money! 2)
           (remove-sense-organ! 'echolocation)
+          'exit
+          )
+        )
+       (make-decision
+        #:requirement (λ () (any->bool (pc-has-sense-organ? 'ears)))
+        #:title "Sell ears. [+1 gold]"
+        #:next-fragment
+        (λ ()
+          (increase-pc-money! 1)
+          (remove-sense-organ! 'ears)
           'exit
           )
         )
@@ -60,6 +73,23 @@ Swap sensory outfit?
           (add-sense-organ! (SenseOrgan 'echolocation "echolocation"))
           'exit
           )
+        )
+       (make-decision
+        #:requirement
+        (λ () (and (not (any->bool (pc-has-sense-organ? 'ears)))
+                   (pc-has-money 1)))
+        #:title "Buy ears. [-1 gold]"
+        #:next-fragment
+        (λ ()
+          (decrease-pc-money! 1)
+          (add-sense-organ! (SenseOrgan 'ears "ears"))
+          'exit
+          )
+        )
+       (make-decision
+        #:title "Nevermind."
+        #:next-fragment
+        'exit
         )
        )
  )

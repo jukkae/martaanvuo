@@ -40,8 +40,17 @@
 
    (place
     #:id 'martaanvuo-docks
-    #:features '(mieli)
-    #:type 'docks
+    #:choices
+    (list
+     (choice
+      'buy-mods
+      "Visit the Forge of Master Seppo"
+      `(
+        (go-to-fragment 'seppo)
+        '()
+        ))
+    )
+    #:type 'village
     #:shortname "Martaanvuo docks")
 
    (place
@@ -75,7 +84,8 @@
 
    (place
     #:id 'murkwater-docks
-    #:type 'docks)
+    #:type 'docks
+    )
 
    (place
     #:id 'storage-closet
