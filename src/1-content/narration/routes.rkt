@@ -9,6 +9,7 @@
          route-shortname
          display-route-info-card)
 
+; TODO: these should be moved to content!
 (define (describe-begin-traverse-action route direction)
   (define from (if (eq? direction 'a-to-b)
                    (route-a route)
@@ -75,9 +76,11 @@
     ;  (p "Inside the big tree, it is cool and wet. The ground drops, and there's an earthen tunnel.")
     ;  ]
 
-    [else
-     (dev-note (format "describe-begin-traverse-action: unknown key: ~a" key))
-     ])
+    ; TODO: re-enable this warning
+    ; [else
+    ;  (dev-note (format "describe-begin-traverse-action: unknown key: ~a" key))
+    ;  ]
+     )
   )
 
 (define (describe-finish-traverse-action route direction)
@@ -171,9 +174,10 @@
     ;  (p "The path leads Otava to the fork in Martaanvuo swamp.")
     ;  ]
 
-    [else
-     (dev-note (format "describe-finish-traverse-action: unknown key: ~a" key))
-     ]
+    ; TODO: re-enable this warning
+    ; [else
+    ;  (dev-note (format "describe-finish-traverse-action: unknown key: ~a" key))
+    ;  ]
     ))
 
 (define (describe-cancel-traverse-action from to)

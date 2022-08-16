@@ -185,7 +185,7 @@
             (filter (λ (sense-organ) (not (eq? (SenseOrgan-id sense-organ) id)))
                     (pc-actor-sense-organs (pc))
                     ))
-         (dev-note "sense-organ removed, show info about removed/remaining sense-organs"))
+         (notice (format "Sense organ removed: ~a" (SenseOrgan-name it))))
         ))
 
 (define (pc-has-manipulator? id)

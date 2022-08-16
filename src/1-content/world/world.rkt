@@ -66,6 +66,7 @@
 
    (place
     #:id 'workshop
+    #:shortname "Workshop"
     #:features '(martaanvuo-terminal)
     #:type 'workshop)
 
