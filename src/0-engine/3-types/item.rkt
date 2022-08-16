@@ -9,7 +9,7 @@
   ([id : Symbol]
    [name : String]
    [details : (Maybe (U Number Symbol (Listof Symbol)))]
-   [quantity : (U Positive-Integer Positive-Float)])
+   [quantity : (U Nonnegative-Integer Nonnegative-Float)])
   #:prefab
   #:mutable
   #:constructor-name item*)
