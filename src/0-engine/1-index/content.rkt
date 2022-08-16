@@ -20,7 +20,7 @@
 
 (provide
   get-location-choices)
-(lazy-require ["../../1-content/world/locations/get-location-choices.rkt" (
+(lazy-require ["../../1-content/world/locations/location-choices.rkt" (
   get-location-choices
   )])
 

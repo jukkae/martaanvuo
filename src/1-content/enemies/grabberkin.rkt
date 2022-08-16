@@ -20,7 +20,7 @@
 
 (require racket/lazy-require)
 
-(lazy-require ["../../6-combat/combat.rkt"
+(lazy-require ["../../0-engine/6-combat/combat.rkt"
   (get-combatant-name
    display-combatant-info
    display-pc-combatant-info

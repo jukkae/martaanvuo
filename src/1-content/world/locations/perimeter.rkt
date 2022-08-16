@@ -9,8 +9,8 @@
   (define actor (pc))
 
   (cond
-   [(> (pc-gold-amount) 0)
-    (choice
+   #;[(> (pc-gold-amount) 0)
+    (list (choice
       'end-run
       "Go back to the bike."
       (make-action
@@ -22,6 +22,6 @@
       `(
         (p "Otava goes back to her bike.")
         'end-run))
-      )
+      ))
     ]
    [else '()]))
