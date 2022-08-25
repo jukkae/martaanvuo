@@ -10,6 +10,7 @@
   "../3-types/choice.rkt"
 
   "../4-systems/actors/actor.rkt"
+  "../4-systems/pc/pc.rkt"
 
   "../3-types/stance.rkt"
 
@@ -111,100 +112,124 @@
       ))
   (define attack-name
     (case action-name
-      ['smash "Smash"]
       ['strike "Strike"]
+      ['smash "Smash"]
       ['bludgeon "Bludgeon"]
       [else (symbol->string attack-name)]))
-  (define choice
-    (case action-name
-      ['strike
-       (make-choice
-        'attack
-        (format "~a the ~a~a."
-                attack-name
-                (get-combatant-name target)
-                " [with bolt cutters]") ; TODO: weapon name
-        (λ ()
-          (define target-id (actor-id target))
-          (make-action
-           #:actor (pc)
-           #:symbol 'strike
-           #:duration 1
-           #:target target-id
-           ; #:n 1
-           ; #:x 2
-           ; #:bonus 0
-           #:resolution-rules
-           `(
-             (define actor (pc))
-             (define target (get-actor ,target-id))
-             (define target-defense (get-trait target "defense"))
-             (define skill (get-trait actor "melee-attack-skill"))
+  (case action-name
+    ['strike
+     (define bonus 0)
+     (define to-hit-bonus-causes-text "")
+     (when (pc-has-sense-organ? 'eyes)
+       (set! bonus (+ bonus 4)))
+     (when (pc-has-sense-organ? 'echolocation)
+       (set! bonus (+ bonus 2)))
+     (define bonus-text
+      (cond [(not (negative? bonus))
+             (format "+~a" bonus)]
+            [else
+             (format "~a" bonus)]
+            ))
+     (define damage-bonus 0)
+     (define damage-bonus-text "+0")
+     (choice
+      'attack
+      (format "~a the ~a~a. [~a to hit~a, ~a dmg]"
+              attack-name
+              (get-combatant-name target)
+              " [with bolt cutters]"
+              bonus-text
+              to-hit-bonus-causes-text
+              damage-bonus-text)
+      (λ ()
+        (define target-id (actor-id target))
+        (make-action
+         #:actor (pc)
+         #:symbol 'strike
+         #:duration 1
+         #:target target-id
+         ; #:n 1
+         ; #:x 2
+         ; #:bonus 0
+         #:resolution-rules
+         `(
+           (define actor (pc))
+           (define target (get-actor ,target-id))
+           (define target-defense (get-trait target "defense"))
+           (define skill (get-trait actor "melee-attack-skill"))
 
 
-             (define title
-               (format "Melee attack, ~a vs ~a"
-                       (get-combatant-name actor)
-                       (get-combatant-name target)))
-             ; #;(define success? (skill-check title skill action-target-number))
-             (define success? #t)
+           (define title
+             (format "Melee attack, ~a vs ~a"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)))
 
-             (define damage-roll-result (d
-                                         1
-                                         2
-                                         ))
-             (define body
-               (tbody
-                (tr "damage"
-                    (format "~ad~a: [~a]"
-                            1 2
-                            damage-roll-result))))
-             (info-card body title)
+           (define target-number 8)
+           (define to-hit-roll-result (+ (d 2 6) ,bonus))
+           (define success? (>= to-hit-roll-result target-number))
+           (define success-text
+            (if success?
+              "success"
+              "fail"))
 
-             (define action-result 'ok) ; TODO: likely not useful anymore
-             (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-             (when (eq? action-result 'dead)
-               ; TODO: move this to Actor
-               (case (actor-name target)
-                 [("Blindscraper") (award-xp! 7)]))
+           (define damage-roll-result (+ (d 1 2) ,damage-bonus))
+           (define body
+             (prune (tbody
+              (tr "to hit"
+                  (format "~ad~a ~a: [~a >= ~a] [~a]"
+                          2 6 ,bonus-text
+                          to-hit-roll-result
+                          target-number
+                          success-text))
+              (tr "damage"
+                  (format "~ad~a ~a: [~a]"
+                          1 2 ,damage-bonus-text
+                          damage-roll-result)))))
+           (info-card body title)
 
-             (display-combatant-info target)
-             (newline)
+           (define action-result 'ok) ; TODO: likely not useful anymore
+           (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+           (when (eq? action-result 'dead)
+             ; TODO: move this to Actor
+             (case (actor-name target)
+               [("Blindscraper") (award-xp! 7)]))
 
-             (when (eq? action-result 'dead)
-               (p "The " (actor-name target) " is dead."))
+           (display-combatant-info target)
+           (newline)
 
-             (define descr
-               (format "melee attack, ~a vs ~a (~a)"
-                       (get-combatant-name actor)
-                       (get-combatant-name target)
-                       (case action-result
-                         ['ok "hit"]
-                         ['dead "hit and kill"]
-                         [else action-result])))
-             (add-combat-event descr)
+           (when (eq? action-result 'dead)
+             (p "The " (actor-name target) " is dead."))
 
-             action-result
-             )
-           )))]
-      [else
-       (make-choice
-        'attack
-        (format "~a the ~a~a."
-                attack-name
-                (get-combatant-name target)
-                " [with bolt cutters]") ; TODO: weapon name
-        (λ ()
-          (define target-id (actor-id target))
-          (make-melee-attack-action
-           #:actor (pc)
-           #:duration 1
-           #:target target-id
-           #:n 1
-           #:x 2
-           #:bonus 0
-           )))]))
-  choice)
+           (define descr
+             (format "melee attack, ~a vs ~a (~a)"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)
+                     (case action-result
+                       ['ok "hit"]
+                       ['dead "hit and kill"]
+                       [else action-result])))
+           (add-combat-event descr)
+
+           action-result
+           )
+         )))]
+    [else
+     (make-choice
+      'attack
+      (format "~a the ~a~a."
+              attack-name
+              (get-combatant-name target)
+              " [with bolt cutters]") ; TODO: weapon name
+      (λ ()
+        (define target-id (actor-id target))
+        (make-melee-attack-action
+         #:actor (pc)
+         #:duration 1
+         #:target target-id
+         #:n 1
+         #:x 2
+         #:bonus 0
+         )))]))
 
 (define (get-melee-choices)
   (define targets (get-current-enemies))
@@ -214,7 +239,7 @@
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'close)
                (eq? (stance-range stance) 'engaged))
-           (for ([action-name (list 'smash #;'bludgeon #;'strike)])
+           (for ([action-name (list #;'smash #;'bludgeon 'strike)])
             (define choice (make-named-attack action-name target))
             (set! combat-choices (append-element combat-choices choice))
             ))
