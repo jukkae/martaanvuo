@@ -119,11 +119,14 @@
   (case action-name
     ['strike
      (define bonus 0)
-     (define to-hit-bonus-causes-text "")
+     (define to-hit-bonus-causes-text "Δ to hit: ")
      (when (pc-has-sense-organ? 'eyes)
-       (set! bonus (+ bonus 4)))
+       (set! bonus (+ bonus 7))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7]")))
      (when (pc-has-sense-organ? 'echolocation)
-       (set! bonus (+ bonus 2)))
+       (set! bonus (+ bonus 5))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[echolocation: +5]"))
+       )
      (define bonus-text
       (cond [(not (negative? bonus))
              (format "+~a" bonus)]
@@ -134,11 +137,10 @@
      (define damage-bonus-text "+0")
      (choice
       'attack
-      (format "~a the ~a~a. [~a to hit~a, ~a dmg]"
+      (format "~a the ~a~a. [~a, Δ dmg: ~a]"
               attack-name
               (get-combatant-name target)
               " [with bolt cutters]"
-              bonus-text
               to-hit-bonus-causes-text
               damage-bonus-text)
       (λ ()
@@ -164,7 +166,7 @@
                      (get-combatant-name actor)
                      (get-combatant-name target)))
 
-           (define target-number 8)
+           (define target-number 10)
            (define to-hit-roll-result (+ (d 2 6) ,bonus))
            (define success? (>= to-hit-roll-result target-number))
            (define success-text
