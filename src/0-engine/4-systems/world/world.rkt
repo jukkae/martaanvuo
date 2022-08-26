@@ -19,7 +19,6 @@
   )
 
 
-; API
 (define (get-current-actors)
   (define actors (location-actors (current-location)))
   actors)
@@ -30,6 +29,21 @@
   (findf (λ (a) (eq? (actor-id a) id))
          actors)
   )
+
+(define (get-current-time-of-day)
+  (time-of-day-from-iotas (current-elapsed-time)))
+
+(provide get-current-light-level)
+(define (get-current-light-level)
+  (case (location-type (current-location))
+    ['int 'bright]
+    ['ext
+      (case (get-current-time-of-day)
+        ['morning 'bright]
+        ['midday 'bright]
+        ['afternoon 'bright]
+        ['evening 'dim]
+        ['night 'pitch-black])]))
 
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
@@ -66,6 +80,7 @@
   id-a
   id-b
   traverse-time
+  type
   #:hidden? [hidden? #f]
   #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
   #:encounter-types [encounter-types '()]
@@ -80,6 +95,7 @@
     id-b
     traverse-time
     #:details details
+    #:type type
     #:encounter-types encounter-types))
 
 (provide add-route-between!)
@@ -87,6 +103,7 @@
   id-a
   id-b
   traverse-time
+  type
   #:hidden? [hidden? #f]
   #:no-encounters? [no-encounters? #f]
   #:encounter-types [encounter-types '()]
@@ -98,6 +115,7 @@
       id-a
       id-b
       traverse-time
+      type
       #:hidden? hidden?
       #:no-encounters? no-encounters?
       #:encounter-types encounter-types

@@ -8,7 +8,7 @@
 (add-place!
   (place
     #:id 'arena
-    #:type 'outdoors
+    #:type 'int
     #:shortname "The Arena"
     #:encounter-types '(voidfloater)
     #:choices
@@ -22,4 +22,4 @@
             ))
     )))
 
-(add-route-between! 'martaanvuo-docks 'arena 5)
+(add-route-between! 'martaanvuo-docks 'arena 5 'int)

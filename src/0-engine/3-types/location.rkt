@@ -12,10 +12,12 @@
   "../4-systems/actors/actor.rkt"
   )
 
+(define-type LocationType (U 'int 'ext))
+
 (struct
   location
   ([id : LocationId]
-   [type : (Maybe Symbol)]
+   [type : LocationType]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
    [items : (Listof (U item Symbol))]

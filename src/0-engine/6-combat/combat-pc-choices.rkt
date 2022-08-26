@@ -11,6 +11,7 @@
 
   "../4-systems/actors/actor.rkt"
   "../4-systems/pc/pc.rkt"
+  "../4-systems/world/world.rkt"
 
   "../3-types/stance.rkt"
 
@@ -103,7 +104,6 @@
 
 ; TODO: named attack definitions should be moved to content!
 (define (make-named-attack action-name target)
-  ;(define damage-roll '(λ () d 1 2))
   (define details
     `(list
       (cons 'damage-roll ,'(λ () (d 1 2)))
@@ -118,20 +118,26 @@
       [else (symbol->string attack-name)]))
   (case action-name
     ['strike
-     (define bonus 0)
+     (define to-hit-bonus 0)
      (define to-hit-bonus-causes-text "Δ to hit: ")
-     (when (pc-has-sense-organ? 'eyes)
-       (set! bonus (+ bonus 7))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7]")))
-     (when (pc-has-sense-organ? 'echolocation)
-       (set! bonus (+ bonus 5))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[echolocation: +5]"))
-       )
+     (cond
+      [(pc-has-sense-organ? 'eyes)
+       (define light-level (get-current-light-level))
+       (case light-level
+        ['bright '()]
+        ['dim '()]
+        ['pitch-black '()])
+       (set! to-hit-bonus (+ to-hit-bonus 7))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7]"))]
+      [(pc-has-sense-organ? 'echolocation)
+       (set! to-hit-bonus (+ to-hit-bonus 5))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[echolocation: +5]"))]
+      )
      (define bonus-text
-      (cond [(not (negative? bonus))
-             (format "+~a" bonus)]
+      (cond [(not (negative? to-hit-bonus))
+             (format "+~a" to-hit-bonus)]
             [else
-             (format "~a" bonus)]
+             (format "~a" to-hit-bonus)]
             ))
      (define damage-bonus 0)
      (define damage-bonus-text "+0")
@@ -150,9 +156,6 @@
          #:symbol 'strike
          #:duration 1
          #:target target-id
-         ; #:n 1
-         ; #:x 2
-         ; #:bonus 0
          #:resolution-rules
          `(
            (define actor (pc))
@@ -167,7 +170,7 @@
                      (get-combatant-name target)))
 
            (define target-number 10)
-           (define to-hit-roll-result (+ (d 2 6) ,bonus))
+           (define to-hit-roll-result (+ (d 2 6) ,to-hit-bonus))
            (define success? (>= to-hit-roll-result target-number))
            (define success-text
             (if success?
