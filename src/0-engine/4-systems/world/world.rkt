@@ -42,7 +42,7 @@
         ['morning 'bright]
         ['midday 'bright]
         ['afternoon 'bright]
-        ['evening 'dim]
+        ['evening 'dark]
         ['night 'pitch-black])]))
 
 ; world-as-simulation / scripting API

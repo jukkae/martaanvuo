@@ -124,11 +124,13 @@
       [(pc-has-sense-organ? 'eyes)
        (define light-level (get-current-light-level))
        (case light-level
-        ['bright '()]
-        ['dim '()]
-        ['pitch-black '()])
-       (set! to-hit-bonus (+ to-hit-bonus 7))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7]"))]
+        ['bright
+          (set! to-hit-bonus (+ to-hit-bonus 7))
+          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7 (bright light)]"))]
+        ['dark
+          (set! to-hit-bonus (+ to-hit-bonus 3))
+          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +3 (dark)]"))]
+        ['pitch-black '()])]
       [(pc-has-sense-organ? 'echolocation)
        (set! to-hit-bonus (+ to-hit-bonus 5))
        (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[echolocation: +5]"))]

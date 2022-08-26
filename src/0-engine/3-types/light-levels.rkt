@@ -1,3 +1,3 @@
 #lang typed/racket
 
-(define-type LightLevel (U 'bright 'dim 'pitch-black))
+(define-type LightLevel (U 'bright 'dark 'pitch-black))
