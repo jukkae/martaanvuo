@@ -126,14 +126,14 @@
        (case light-level
         ['bright
           (set! to-hit-bonus (+ to-hit-bonus 7))
-          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +7 (bright light)]"))]
+          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[eyes: ~a (bright light)]" to-hit-bonus)))]
         ['dark
           (set! to-hit-bonus (+ to-hit-bonus 3))
           (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +3 (dark)]"))]
         ['pitch-black '()])]
       [(pc-has-sense-organ? 'echolocation)
-       (set! to-hit-bonus (+ to-hit-bonus 5))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[echolocation: +5]"))]
+       (set! to-hit-bonus (+ to-hit-bonus 6))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[echolocation: ~a]" to-hit-bonus)))]
       )
      (define bonus-text
       (cond [(not (negative? to-hit-bonus))

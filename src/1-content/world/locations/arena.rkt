@@ -11,6 +11,7 @@
     #:type 'int
     #:shortname "The Arena"
     #:encounter-types '(voidfloater)
+    #:light-level 'dark
     #:choices
     (list
      (choice

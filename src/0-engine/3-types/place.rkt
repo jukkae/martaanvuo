@@ -8,8 +8,9 @@
   "actor.rkt"
   "item.rkt"
 
-  "../2-core/maybe.rkt"
   "../3-types/choice.rkt"
+  "../2-core/maybe.rkt"
+  "../3-types/light-levels.rkt"
   "../4-systems/actors/actor.rkt"
   )
 

@@ -35,6 +35,7 @@
 
 (provide get-current-light-level)
 (define (get-current-light-level)
+  (case (location-light-level (current-location)))
   (case (location-type (current-location))
     ['int 'bright]
     ['ext
@@ -170,6 +171,7 @@
          #:items [items '()]
          #:features [features '()]
          #:tags [tags '()]
+         #:light-level [light-level 'natural]
          #:encounter-types [encounter-types '()]
          #:choices [choices '()]
          #:routes [routes '()]
@@ -191,6 +193,7 @@
           items
           features
           tags
+          light-level
           encounter-types
           routes
           visited?

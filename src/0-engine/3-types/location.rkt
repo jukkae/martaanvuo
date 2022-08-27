@@ -9,6 +9,7 @@
 
   "../2-core/maybe.rkt"
   "../3-types/choice.rkt"
+  "../3-types/light-levels.rkt"
   "../4-systems/actors/actor.rkt"
   )
 
@@ -17,12 +18,13 @@
 (struct
   location
   ([id : LocationId]
-   [type : LocationType]
+   [type : (Maybe LocationType)]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
    [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
    [tags : (Listof Symbol)]
+   [light-level : (U LightLevel 'natural)]
    [encounter-types : (Listof Symbol)]
    )
   #:prefab

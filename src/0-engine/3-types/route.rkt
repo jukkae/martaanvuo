@@ -6,9 +6,10 @@
   "location.rkt"
 
   "../2-core/maybe.rkt"
-  "../3-types/location-ids.rkt"
   "../3-types/actor.rkt"
   "../3-types/item.rkt"
+  "../3-types/light-levels.rkt"
+  "../3-types/location-ids.rkt"
   )
 
 (struct route
@@ -26,12 +27,13 @@
 (: make-route (->* (PlaceId PlaceId Natural)
                    (Boolean
                     #:id RouteId
-                    #:type (Maybe Symbol)
+                    #:type (Maybe LocationType)
                     #:details (Listof Symbol)
                     #:actors (Listof actor)
                     #:items (Listof item)
                     #:features (Listof Symbol)
                     #:tags (Listof Symbol)
+                    #:light-level (U LightLevel 'natural)
                     #:encounter-types (Listof Symbol))
                    route))
 (define (make-route a
@@ -45,6 +47,7 @@
                     #:items [items '()]
                     #:features [features '()]
                     #:tags [tags '()]
+                    #:light-level (light-level 'natural)
                     #:encounter-types [encounter-types '()])
 
   (set! *number-of-routes* (add1 *number-of-routes*))
@@ -62,6 +65,7 @@
           items
           features
           tags
+          light-level
           encounter-types
           a
           b
