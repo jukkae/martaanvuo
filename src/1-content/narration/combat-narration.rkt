@@ -186,13 +186,19 @@
                                   "size  [perceived with eyes]"
                                   (format "~a" (actor-size actor)))))
            )
-         (set! unpruned-rows
+         (case (get-current-light-level)
+          ['bright
+           (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
                                 "HP    [perceived with eyes]"
-                                (if hide-hp?
-                                    "???"
-                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
+                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))]
+          [else
+           (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "HP    [perceived with eyes]"
+                                (format "too dark to see"))))])
          )
        (when (pc-has-sense-organ? 'echolocation)
          (set! unpruned-rows

@@ -42,7 +42,7 @@
     #:id 'martaanvuo-docks
     #:choices
     (list
-     (choice
+     (make-choice
       'buy-mods
       "Visit the Forge of Master Seppo"
       `(

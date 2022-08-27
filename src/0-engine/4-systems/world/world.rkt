@@ -84,6 +84,7 @@
   type
   #:hidden? [hidden? #f]
   #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
+  #:light-level [light-level 'natural]
   #:encounter-types [encounter-types '()]
   #:one-directional? [one-directional? #f]
   #:details [details '()])
@@ -97,6 +98,7 @@
     traverse-time
     #:details details
     #:type type
+    #:light-level light-level
     #:encounter-types encounter-types))
 
 (provide add-route-between!)
@@ -107,6 +109,7 @@
   type
   #:hidden? [hidden? #f]
   #:no-encounters? [no-encounters? #f]
+  #:light-level [light-level 'natural]
   #:encounter-types [encounter-types '()]
   #:one-directional? [one-directional? #f]
   #:details [details '()])
@@ -119,6 +122,7 @@
       type
       #:hidden? hidden?
       #:no-encounters? no-encounters?
+      #:light-level light-level
       #:encounter-types encounter-types
       #:one-directional? one-directional?
       #:details details))

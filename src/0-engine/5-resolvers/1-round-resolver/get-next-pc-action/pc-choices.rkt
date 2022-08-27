@@ -47,7 +47,12 @@
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (cond ((in-combat?)
-         (get-combat-choices))
+         (append
+          (get-combat-choices)
+          (filter (lambda (c) (choice-available-in-combat? c))
+                  (get-current-location-choices))
+         )
+         )
         [else
          (define world-choices '())
          (when (not (null? (location-items (current-location))))
@@ -104,7 +109,7 @@
       (list
 
        (when (not (null? (current-pending-action)))
-         (choice
+         (make-choice
           (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
 
