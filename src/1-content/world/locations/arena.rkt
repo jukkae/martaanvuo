@@ -25,9 +25,15 @@
               "Toggle lights"
               `(
                 (case (get-current-light-level)
-                  ['bright '()]
-                  [else '()])
+                  ['bright
+                   (set-location-light-level! (current-location) 'pitch-black)
+                   ]
+                  [else
+                   (set-location-light-level! (current-location) 'bright)
+                   ]
+                  )
               )
+              #:available-in-combat? #t
               )
              )
   ))

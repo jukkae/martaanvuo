@@ -143,7 +143,7 @@
             ))
      (define damage-bonus 0)
      (define damage-bonus-text "+0")
-     (choice
+     (make-choice
       'attack
       (format "~a the ~a~a. [~a, Δ dmg: ~a]"
               attack-name

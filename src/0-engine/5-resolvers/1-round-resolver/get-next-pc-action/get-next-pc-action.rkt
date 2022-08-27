@@ -29,6 +29,7 @@
   "../../../4-systems/pc/pc.rkt"
   "../../../4-systems/fragments.rkt"
   "../../../4-systems/world/time.rkt"
+  "../../../4-systems/world/world.rkt"
 
   "../../../7-state/state.rkt"
 
@@ -160,7 +161,7 @@
           [(sexp? resolution-effect)
            (define rules (rules-to-lambda resolution-effect))
            (define result ((eval rules ns)))
-           (if (null? result)
+           (if (or (null? void?) result)
              'end-round-early
              result) ; TODO: result is an action result, specifically
            ]

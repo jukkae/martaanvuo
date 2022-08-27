@@ -35,16 +35,16 @@
 
 (provide get-current-light-level)
 (define (get-current-light-level)
-  (case (location-light-level (current-location)))
-  (case (location-type (current-location))
-    ['int 'bright]
-    ['ext
-      (case (get-current-time-of-day)
-        ['morning 'bright]
-        ['midday 'bright]
-        ['afternoon 'bright]
-        ['evening 'dark]
-        ['night 'pitch-black])]))
+  (case (location-light-level (current-location))
+    ['natural
+     (case (get-current-time-of-day)
+      ['morning 'bright]
+      ['midday 'bright]
+      ['afternoon 'bright]
+      ['evening 'dark]
+      ['night 'pitch-black])]
+    [else (location-light-level (current-location))])
+  )
 
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
