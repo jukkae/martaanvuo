@@ -141,11 +141,14 @@
           ['mid
             (set! bonus 3)]
           ['far
-            ("It's too far away to use sonar.")
+            (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
             (set! bonus 0)]
           [else (error)])
        (set! to-hit-bonus (+ to-hit-bonus 4))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[sonar: ~a]" to-hit-bonus)))]
+       (when (> bonus 0)
+        (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[sonar: ~a]" to-hit-bonus)))
+        )
+       ]
       )
      (define bonus-text
       (cond [(not (negative? to-hit-bonus))

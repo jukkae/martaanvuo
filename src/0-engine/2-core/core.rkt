@@ -8,6 +8,7 @@
   "dice.rkt"
   "list-utils.rkt"
   "menu-utils.rkt"
+  "output.rkt"
   "string-utils.rkt")
 
 (provide (all-defined-out))
