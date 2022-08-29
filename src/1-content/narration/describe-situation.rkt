@@ -36,11 +36,11 @@
                                     "Connections [perceived with eyes]"
                                     "A rocky climb uphill, a path through dry prickly bushes")))
           )
-       (when (pc-has-sense-organ? 'echolocation)
+       (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
-                                "Connections [perceived with echolocation]"
+                                "Connections [perceived with sonar]"
                                 "A climb uphill, a path through vegetation")))
          )
 
@@ -77,11 +77,11 @@
                         ;  "Small path along the edge of the plateau")
                         )))
          )
-       (when (pc-has-sense-organ? 'echolocation)
+       (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
-                                "Connections [perceived with echolocation]"
+                                "Connections [perceived with sonar]"
                                 "Rocky stairs down")))
          )
 

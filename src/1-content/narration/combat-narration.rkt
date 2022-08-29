@@ -140,11 +140,11 @@
                                     "???"
                                     (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
          )
-       (when (pc-has-sense-organ? 'echolocation)
+       (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
-                                "range [perceived with echolocation]"
+                                "range [perceived with sonar]"
                                 (symbol->string (stance-range stance)))))
          )
 
@@ -200,11 +200,11 @@
                                 "HP    [perceived with eyes]"
                                 (format "too dark to see"))))])
          )
-       (when (pc-has-sense-organ? 'echolocation)
+       (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
-                                "range [perceived with echolocation]"
+                                "range [perceived with sonar]"
                                 (symbol->string (stance-range stance)))))
          )
 

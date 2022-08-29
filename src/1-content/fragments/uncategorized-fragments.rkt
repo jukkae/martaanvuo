@@ -14,7 +14,7 @@
  @~a{
 Seppo the Blacksmith buys and sells sense organs. Prices are as follows:
 - Ears         1
-- Echolocation 2
+- sonar 2
 - Eyes         3
 }
 
@@ -31,12 +31,12 @@ Seppo the Blacksmith buys and sells sense organs. Prices are as follows:
           )
         )
        (make-decision
-        #:requirement (λ () (any->bool (pc-has-sense-organ? 'echolocation)))
-        #:title "Sell echolocation. [+2 gold]"
+        #:requirement (λ () (any->bool (pc-has-sense-organ? 'sonar)))
+        #:title "Sell sonar. [+2 gold]"
         #:next-fragment
         (λ ()
           (increase-pc-money! 2)
-          (remove-sense-organ! 'echolocation)
+          (remove-sense-organ! 'sonar)
           'exit
           )
         )
@@ -64,13 +64,13 @@ Seppo the Blacksmith buys and sells sense organs. Prices are as follows:
         )
        (make-decision
         #:requirement
-        (λ () (and (not (any->bool (pc-has-sense-organ? 'echolocation)))
+        (λ () (and (not (any->bool (pc-has-sense-organ? 'sonar)))
                    (pc-has-money 2)))
-        #:title "Buy echolocation. [-2 gold]"
+        #:title "Buy sonar. [-2 gold]"
         #:next-fragment
         (λ ()
           (decrease-pc-money! 2)
-          (add-sense-organ! (SenseOrgan 'echolocation "echolocation"))
+          (add-sense-organ! (SenseOrgan 'sonar "sonar"))
           'exit
           )
         )

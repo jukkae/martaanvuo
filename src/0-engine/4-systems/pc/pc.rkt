@@ -33,7 +33,7 @@
     ; (SenseOrgan 'nose "nose")
     (SenseOrgan 'eyes "eyes")
     ; (SenseOrgan 'ears "ears")
-    ; (SenseOrgan 'echolocation "echolocation")
+    ; (SenseOrgan 'sonar "sonar")
     ;(SenseOrgan 'touch-sensitive-skin "touch-sensitive skin")
     )
    #:manipulators (list

@@ -131,9 +131,21 @@
           (set! to-hit-bonus (+ to-hit-bonus 3))
           (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +3 (dark)]"))]
         ['pitch-black '()])]
-      [(pc-has-sense-organ? 'echolocation)
-       (set! to-hit-bonus (+ to-hit-bonus 6))
-       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[echolocation: ~a]" to-hit-bonus)))]
+      [(pc-has-sense-organ? 'sonar)
+       (define bonus 0)
+       (case (stance-range (actor-stance target))
+          ['engaged
+            (set! bonus 6)]
+          ['close
+            (set! bonus 7)]
+          ['mid
+            (set! bonus 3)]
+          ['far
+            ("It's too far away to use sonar.")
+            (set! bonus 0)]
+          [else (error)])
+       (set! to-hit-bonus (+ to-hit-bonus 4))
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[sonar: ~a]" to-hit-bonus)))]
       )
      (define bonus-text
       (cond [(not (negative? to-hit-bonus))
@@ -258,8 +270,8 @@
   ; (define perceive-choices '())
   ; (define choice
   ;   (make-choice 'perceive
-  ;                 "Perceive. [with echolocation]"
-  ;                 (λ () (make-action #:symbol 'perceive-with-echolocation
+  ;                 "Perceive. [with sonar]"
+  ;                 (λ () (make-action #:symbol 'perceive-with-sonar
   ;                                    #:actor (pc)
   ;                                    #:duration 1
   ;                                    #:target null
