@@ -110,7 +110,38 @@
 
    (place
     #:id 'the-maw
-    #:type 'int)
+    #:type 'int
+    #:shortname "The Maw"
+    #:encounter-types '(voidfloater)
+    #:light-level 'dark
+    #:choices (list
+               (make-choice
+                'ring-new-enemy-bell
+                "Ring the bell"
+                `(
+                  (spawn-encounter)
+                  '()
+                  ))
+               (make-choice
+                'toggle-lights
+                "Toggle lights"
+                `(
+                  (case (get-current-light-level)
+                    ['bright
+                     (p "There's a click and the background hum is gone. And so is the light.")
+                     (set-location-light-level! (current-location) 'pitch-black)
+                     ]
+                    [else
+                     (p "There's an echoing clank. Spotlights turn on, aimed at the stage.")
+                     (set-location-light-level! (current-location) 'bright)
+                     ]
+                    )
+                  (notice (format "Light level is now ~a." (get-current-light-level)))
+                  )
+                #:available-in-combat? #t
+                )
+               )
+    )
 
    (place
     #:id 'slaughterhouse
@@ -145,7 +176,8 @@
     ; (route-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
     ; (route-between places 'martaanvuo-swamp 'luminous-precipice 120)
     (route-between 'burnt-tree 'the-maw 1 'int #:no-encounters? #t)
-    (route-between 'the-maw 'waiting-room 1 'int #:no-encounters? #t #:one-directional? #t)
+    (route-between 'martaanvuo-docks 'the-maw 5 'int #:light-level 'dark)
+    ; (route-between 'the-maw 'waiting-room 1 'int #:no-encounters? #t #:one-directional? #t)
     (route-between 'magpie-hill 'outpost 30 'ext #:no-encounters? #t)
     #;(route-between 'magpie-hill 'luminous-precipice 60 'ext #:no-encounters? #t)
     (route-between 'outpost 'cache 2 'int #:no-encounters? #t #:details '(locked))
