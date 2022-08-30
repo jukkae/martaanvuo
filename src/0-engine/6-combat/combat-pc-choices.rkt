@@ -66,11 +66,62 @@
                  ))))
          (set! combat-choices (append-element combat-choices escape-choice))))
 
-  (define close-enemies (get-enemies-at-range 'close))
+  (cond [(and (not (engaged?))
+              (not (actor-has-status-of-type? (pc) 'bound)))
+
+         (define engaged-enemies (get-enemies-at-range 'engaged))
+         (define close-enemies (get-enemies-at-range 'close))
+         (define mid-range-enemies (get-enemies-at-range 'mid))
+         (define far-enemies (get-enemies-at-range 'far))
+
+         (cond
+           [(and (empty? close-enemies)
+                 (or (not (empty? mid-range-enemies))
+                     (not (empty? far-enemies))))
+            (define get-closer-choice
+              (make-choice
+               'get-closer
+               "Get closer."
+               (λ ()
+                 (make-action
+                  #:symbol 'get-closer
+                  #:actor (pc)
+                  #:duration 1
+                  #:tags '(initiative-based-resolution fast)
+                  #:resolution-rules
+                  `(
+                    (p "Otava gets closer.")
+                    )
+                  ))))
+            (set! combat-choices (append-element combat-choices get-closer-choice))
+            ])
+         (cond
+           [(or (not (empty? close-enemies))
+                (not (empty? mid-range-enemies)))
+            (define get-further-choice
+              (make-choice
+               'get-further
+               "Get further."
+               (λ ()
+                 (make-action
+                  #:symbol 'get-further
+                  #:actor (pc)
+                  #:duration 1
+                  #:tags '(initiative-based-resolution fast)
+                  #:resolution-rules
+                  `(
+                    (p "Otava gets further.")
+                    )
+                  ))))
+            (set! combat-choices (append-element combat-choices get-further-choice))
+            ])
+
+         ])
+
   (define close-grabberkin
     (filter (λ (enemy) (equal? (actor-type enemy)
                                'grabberkin))
-            close-enemies))
+            (get-enemies-at-range 'close)))
 
   (cond ((and (not (null? close-grabberkin))
               (actor-has-status-of-type? (pc) 'bound))
