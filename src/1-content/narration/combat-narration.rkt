@@ -145,7 +145,10 @@
                (append-element unpruned-rows
                                (tr
                                 "range [perceived with sonar]"
-                                (symbol->string (stance-range stance)))))
+                                (case (stance-range stance)
+                                 [('engaged 'adjacent 'close) (symbol->string (stance-range stance))]
+                                 [('nearby 'far) "???"])
+                                )))
          )
 
         (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))
@@ -203,9 +206,20 @@
        (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
-                               (tr
-                                "range [perceived with sonar]"
-                                (symbol->string (stance-range stance)))))
+                               (cond [(or (eq? (stance-range stance) 'engaged)
+                                          (eq? (stance-range stance) 'adjacent)
+                                          (eq? (stance-range stance) 'close))
+                                 (tr
+                                    "range [perceived with sonar]"
+                                    (symbol->string (stance-range stance))
+                                  )
+                                 ]
+                                 [else
+                                  (tr
+                                    "range [perceived with sonar]"
+                                    "???"
+                                  )])
+                               ))
          )
 
         (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))

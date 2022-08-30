@@ -63,9 +63,7 @@
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
                `(
-                  (p "Otava escapes from combat.")
-                  (dev-note "TODO: roll + bonus") ; depending on closest range an enemy has (further = better), for instance 2d6 >= 4; bonus +1
-                  (wait-for-confirm)
+                  (notice "Otava escapes from combat.")
                   'end-combat
                  )
                  ))))
@@ -129,18 +127,35 @@
                   #:tags '(initiative-based-resolution fast)
                   #:resolution-rules
                   `(
-                    (notice "Otava gets further.")
                     (for ([enemy (get-current-enemies)])
                       (case (stance-range (actor-stance enemy))
                         ['adjacent
+                         (notice "Otava gets further.")
                          (set-stance-range! (actor-stance enemy) 'close)
                          ]
                         ['close
+                         (notice "Otava gets further.")
                          (set-stance-range! (actor-stance enemy) 'nearby)
                          ]
                         ['nearby
-                         (dev-note "TODO: roll if using echolocation")
-                         (set-stance-range! (actor-stance enemy) 'far)
+                         (cond
+                          [(pc-has-sense-organ? 'eyes) ; TODO: or if pc has hearing and enemy is not silent
+                           (notice "Otava gets further.")
+                           (set-stance-range! (actor-stance enemy) 'far)
+                           ]
+                          [else
+                           (define roll (d 2 6))
+                           (notice (format "Random walk roll (2d6 >= 7): [~a]" roll))
+                           (cond
+                            [(>= roll 7)
+                             (notice "Otava gets further.")
+                             (set-stance-range! (actor-stance enemy) 'far)]
+                            [else
+                             (notice "Otava stumbles in the wrong direction.")
+                             ]
+                           )
+                           ]
+                          )
                          ]))
                     )
                   ))))
