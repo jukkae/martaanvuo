@@ -196,7 +196,23 @@
                                (tr
                                 "HP    [perceived with eyes]"
                                 (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))]
-          [else
+          ['dark
+           (set! unpruned-rows
+               (append-element unpruned-rows
+                               (cond [(or (eq? (stance-range stance) 'engaged)
+                                          (eq? (stance-range stance) 'adjacent)
+                                          (eq? (stance-range stance) 'close)
+                                          (eq? (stance-range stance) 'nearby))
+                                 (tr
+                                    "HP    [perceived with eyes]"
+                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
+                                 ]
+                                 [else
+                                  (tr
+                                    "HP    [perceived with eyes]"
+                                    (format "too dark to see this far"))])
+                               ))]
+          ['pitch-black
            (set! unpruned-rows
                (append-element unpruned-rows
                                (tr
