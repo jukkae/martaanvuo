@@ -184,6 +184,44 @@
   combat-choices
   )
 
+; returns (list bonus descr)
+(define (get-to-hit-bonus target)
+  (define to-hit-bonus 0)
+  (define to-hit-bonus-causes-text "Δ to hit: ")
+  (cond
+    [(pc-has-sense-organ? 'eyes)
+     (define light-level (get-current-light-level))
+     (case light-level
+       ['bright
+        (set! to-hit-bonus (+ to-hit-bonus 7))
+        (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[eyes: ~a (bright light)]" to-hit-bonus)))]
+       ['dark
+        (set! to-hit-bonus (+ to-hit-bonus 3))
+        (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +3 (dark)]"))]
+       ['pitch-black '()])]
+    [(pc-has-sense-organ? 'sonar)
+     (define bonus 0)
+     (case (stance-range (actor-stance target))
+       ['engaged
+        (set! bonus 5)]
+       ['adjacent
+        (set! bonus 7)]
+       ['close
+        (set! bonus 6)]
+       ['nearby
+        (set! bonus 3)]
+       ['far
+        (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
+        (set! bonus 0)]
+       [else (error)])
+     (set! to-hit-bonus (+ to-hit-bonus 4))
+     (when (> bonus 0)
+       (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[sonar: ~a]" to-hit-bonus)))
+       )
+     ]
+    )
+  (list to-hit-bonus to-hit-bonus-causes-text))
+
 ; TODO: named attack definitions should be moved to content!
 (define (make-named-attack action-name target)
   (define details
@@ -200,40 +238,9 @@
       [else (symbol->string attack-name)]))
   (case action-name
     ['strike
-     (define to-hit-bonus 0)
-     (define to-hit-bonus-causes-text "Δ to hit: ")
-     (cond
-      [(pc-has-sense-organ? 'eyes)
-       (define light-level (get-current-light-level))
-       (case light-level
-        ['bright
-          (set! to-hit-bonus (+ to-hit-bonus 7))
-          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[eyes: ~a (bright light)]" to-hit-bonus)))]
-        ['dark
-          (set! to-hit-bonus (+ to-hit-bonus 3))
-          (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text "[eyes: +3 (dark)]"))]
-        ['pitch-black '()])]
-      [(pc-has-sense-organ? 'sonar)
-       (define bonus 0)
-       (case (stance-range (actor-stance target))
-          ['engaged
-            (set! bonus 5)]
-          ['adjacent
-            (set! bonus 7)]
-          ['close
-            (set! bonus 6)]
-          ['nearby
-            (set! bonus 3)]
-          ['far
-            (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
-            (set! bonus 0)]
-          [else (error)])
-       (set! to-hit-bonus (+ to-hit-bonus 4))
-       (when (> bonus 0)
-        (set! to-hit-bonus-causes-text (string-append to-hit-bonus-causes-text (format "[sonar: ~a]" to-hit-bonus)))
-        )
-       ]
-      )
+     (define b (get-to-hit-bonus target))
+     (define to-hit-bonus (first b))
+     (define to-hit-bonus-causes-text (second b))
      (define bonus-text
       (cond [(not (negative? to-hit-bonus))
              (format "+~a" to-hit-bonus)]
