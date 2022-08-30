@@ -33,9 +33,11 @@
     (set! combat-choices
           (append combat-choices (get-melee-choices)))
     (when (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                          (get-enemies-at-range 'adjacent)
                                           (get-enemies-at-range 'close))
                                   'grabberkin)
       (define e (includes-enemy-of-type (append (get-enemies-at-range 'engaged)
+                                                (get-enemies-at-range 'adjacent)
                                                 (get-enemies-at-range 'close))
                                         'grabberkin))
       (set! combat-choices
@@ -46,6 +48,8 @@
           (append combat-choices (get-ranged-choices))))
 
   (cond ((and (not (engaged?))
+              (empty? (get-enemies-at-range 'adjacent))
+              (empty? (get-enemies-at-range 'close))
               (not (actor-has-status-of-type? (pc) 'bound)))
          (define escape-choice
            (make-choice
@@ -70,13 +74,15 @@
               (not (actor-has-status-of-type? (pc) 'bound)))
 
          (define engaged-enemies (get-enemies-at-range 'engaged))
+         (define adjacent-enemies (get-enemies-at-range 'adjacent))
          (define close-enemies (get-enemies-at-range 'close))
          (define mid-range-enemies (get-enemies-at-range 'mid))
          (define far-enemies (get-enemies-at-range 'far))
 
          (cond
-           [(and (empty? close-enemies)
-                 (or (not (empty? mid-range-enemies))
+           [(and (empty? adjacent-enemies)
+                 (or (not (empty? close-enemies))
+                     (not (empty? mid-range-enemies))
                      (not (empty? far-enemies))))
             (define get-closer-choice
               (make-choice
@@ -90,13 +96,25 @@
                   #:tags '(initiative-based-resolution fast)
                   #:resolution-rules
                   `(
-                    (p "Otava gets closer.")
+                    (notice "Otava gets closer.")
+                    (for ([enemy (get-current-enemies)])
+                      (case (stance-range (actor-stance enemy))
+                        ['close
+                         (set-stance-range! (actor-stance enemy) 'adjacent)
+                         ]
+                        ['mid
+                         (set-stance-range! (actor-stance enemy) 'close)
+                         ]
+                        ['far
+                         (set-stance-range! (actor-stance enemy) 'mid)
+                         ]))
                     )
                   ))))
             (set! combat-choices (append-element combat-choices get-closer-choice))
             ])
          (cond
            [(or (not (empty? close-enemies))
+                (not (empty? adjacent-enemies))
                 (not (empty? mid-range-enemies)))
             (define get-further-choice
               (make-choice
@@ -110,7 +128,18 @@
                   #:tags '(initiative-based-resolution fast)
                   #:resolution-rules
                   `(
-                    (p "Otava gets further.")
+                    (notice "Otava gets further.")
+                    (for ([enemy (get-current-enemies)])
+                      (case (stance-range (actor-stance enemy))
+                        ['adjacent
+                         (set-stance-range! (actor-stance enemy) 'close)
+                         ]
+                        ['close
+                         (set-stance-range! (actor-stance enemy) 'mid)
+                         ]
+                        ['mid
+                         (set-stance-range! (actor-stance enemy) 'far)
+                         ]))
                     )
                   ))))
             (set! combat-choices (append-element combat-choices get-further-choice))
@@ -186,9 +215,11 @@
        (define bonus 0)
        (case (stance-range (actor-stance target))
           ['engaged
-            (set! bonus 6)]
-          ['close
+            (set! bonus 5)]
+          ['adjacent
             (set! bonus 7)]
+          ['close
+            (set! bonus 6)]
           ['mid
             (set! bonus 3)]
           ['far
@@ -310,8 +341,9 @@
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
     (define stance (actor-stance target))
-    (cond ((or (eq? (stance-range stance) 'close)
-               (eq? (stance-range stance) 'engaged))
+    (cond ((or (eq? (stance-range stance) 'engaged) ; TODO: in-melee-range?
+               (eq? (stance-range stance) 'adjacent)
+               (eq? (stance-range stance) 'close))
            (for ([action-name (list #;'smash #;'bludgeon 'strike)])
             (define choice (make-named-attack action-name target))
             (set! combat-choices (append-element combat-choices choice))
@@ -402,8 +434,9 @@
              #:resolution-rules
              '(resolve-as-shoot-action)))))
 
-       (when (or (eq? (stance-range stance) 'close)
-                 (eq? (stance-range stance) 'engaged))
+       (when (or (eq? (stance-range stance) 'engaged)
+                 (eq? (stance-range stance) 'adjacent)
+                 (eq? (stance-range stance) 'close))
 
          (make-choice
           'attack
