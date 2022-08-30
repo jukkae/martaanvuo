@@ -64,6 +64,7 @@
                #:resolution-rules
                `(
                   (p "Otava escapes from combat.")
+                  (dev-note "TODO: roll + bonus") ; depending on closest range an enemy has (further = better), for instance 2d6 >= 4; bonus +1
                   (wait-for-confirm)
                   'end-combat
                  )
@@ -76,13 +77,13 @@
          (define engaged-enemies (get-enemies-at-range 'engaged))
          (define adjacent-enemies (get-enemies-at-range 'adjacent))
          (define close-enemies (get-enemies-at-range 'close))
-         (define mid-range-enemies (get-enemies-at-range 'mid))
+         (define nearby-enemies (get-enemies-at-range 'nearby))
          (define far-enemies (get-enemies-at-range 'far))
 
          (cond
            [(and (empty? adjacent-enemies)
                  (or (not (empty? close-enemies))
-                     (not (empty? mid-range-enemies))
+                     (not (empty? nearby-enemies))
                      (not (empty? far-enemies))))
             (define get-closer-choice
               (make-choice
@@ -102,20 +103,20 @@
                         ['close
                          (set-stance-range! (actor-stance enemy) 'adjacent)
                          ]
-                        ['mid
+                        ['nearby
                          (set-stance-range! (actor-stance enemy) 'close)
                          ]
                         ['far
-                         (set-stance-range! (actor-stance enemy) 'mid)
+                         (set-stance-range! (actor-stance enemy) 'nearby)
                          ]))
                     )
                   ))))
             (set! combat-choices (append-element combat-choices get-closer-choice))
             ])
          (cond
-           [(or (not (empty? close-enemies))
-                (not (empty? adjacent-enemies))
-                (not (empty? mid-range-enemies)))
+           [(or (not (empty? adjacent-enemies))
+                (not (empty? close-enemies))
+                (not (empty? nearby-enemies)))
             (define get-further-choice
               (make-choice
                'get-further
@@ -135,9 +136,10 @@
                          (set-stance-range! (actor-stance enemy) 'close)
                          ]
                         ['close
-                         (set-stance-range! (actor-stance enemy) 'mid)
+                         (set-stance-range! (actor-stance enemy) 'nearby)
                          ]
-                        ['mid
+                        ['nearby
+                         (dev-note "TODO: roll if using echolocation")
                          (set-stance-range! (actor-stance enemy) 'far)
                          ]))
                     )
@@ -220,7 +222,7 @@
             (set! bonus 7)]
           ['close
             (set! bonus 6)]
-          ['mid
+          ['nearby
             (set! bonus 3)]
           ['far
             (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
@@ -409,8 +411,9 @@
       (list
        (when (and (not (flag-set? 'aware-of-being-out-of-ammo))
                   (or (eq? (stance-range stance) 'far) ; always require roll
-                      (eq? (stance-range stance) 'mid) ; require roll if no proficiency
+                      (eq? (stance-range stance) 'nearby) ; require roll if no proficiency
                       (eq? (stance-range stance) 'close) ; never require roll
+                      (eq? (stance-range stance) 'adjacent)
                       (eq? (stance-range stance) 'engaged)))
          (define damage-roll (λ () (d 2 2)))
          (define details

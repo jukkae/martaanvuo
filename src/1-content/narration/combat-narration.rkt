@@ -68,7 +68,7 @@
   #;(when (= (length (get-current-enemies)) 1)
     (define enemy (car (get-current-enemies)))
     (case (stance-range (actor-stance enemy))
-      #;['mid
+      #;['nearby
        (p "The " (car enemy-names) " is a couple of paces away from Otava, trying to get closer. Otava is holding her revolver.")]
       #;['close ; this is specific to enemy type etc
          (p "The " (car enemy-names) " is closing in fast, its claws flickering as it jumps from a rock onto the trunk of a nearby tree.")])))

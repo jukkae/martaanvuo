@@ -62,7 +62,7 @@
 
   (begin-combat!)
 
-  (spawn 'blindscraper 1 'mid))
+  (spawn 'blindscraper 1 'nearby))
 
 (define (spawn-two-blindscrapers-encounter!)
   (begin-combat!)

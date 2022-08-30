@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(define-type StanceRange (U 'engaged 'adjacent 'close 'mid 'far))
+(define-type StanceRange (U 'engaged 'adjacent 'close 'nearby 'far))
 (struct stance
   ([sign : String]
    [range : StanceRange]
