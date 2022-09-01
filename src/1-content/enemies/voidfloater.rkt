@@ -34,7 +34,29 @@
       ['far 'nearby]))
   (define subject (actor-id actor))
   (make-action
-   #:symbol 'change-range
+   #:symbol 'get-closer
+   #:actor actor
+   #:duration 1
+   #:target '()
+   #:tags '(initiative-based-resolution)
+   #:resolution-rules
+   `(
+     (set-stance-range! (actor-stance (get-actor ,subject)) ',next-range)
+     (notice (format "The ~a is now ~a." (actor-name (get-actor ,subject)) (stance-range (actor-stance (get-actor ,subject)))))
+     'ok)
+   #:details '(slow)))
+
+; TODO: opposed roll
+(define (get-further-action actor)
+  (define next-range
+    (case (stance-range (actor-stance actor))
+      ['engaged 'adjacent]
+      ['adjacent 'close]
+      ['close 'nearby]
+      ['nearby 'far]))
+  (define subject (actor-id actor))
+  (make-action
+   #:symbol 'get-further
    #:actor actor
    #:duration 1
    #:target '()
@@ -59,13 +81,16 @@
          (get-closer-action actor)]))
 
 (define (flee-behavior actor)
-  (make-action
-    #:symbol 'skip
-    #:actor actor
-    #:duration 0
-    #:target '()
-    #:tags '(initiative-based-resolution)
-    #:details '(slow silent)))
+  (cond [(eq? (stance-range (actor-stance actor)) 'far)
+         (make-action
+          #:symbol 'skip
+          #:actor actor
+          #:duration 0
+          #:target '()
+          #:tags '(initiative-based-resolution)
+          #:details '(slow silent))]
+        [else
+         (get-further-action actor)]))
 
 (define (get-voidfloater-action actor)
   (cond
