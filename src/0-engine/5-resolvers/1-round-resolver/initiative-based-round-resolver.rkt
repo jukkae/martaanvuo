@@ -48,9 +48,12 @@
         (define tn 6)
         (define success? (>= pc-roll tn))
         (cond [success?
-               (notice (format "[~a] >= ~a – success!" pc-roll tn))]
+               (notice (format "[~a] >= ~a – success!" pc-roll tn))
+               (remove-from-action-queue (list non-pc-action))
+               ]
               [else
-               (notice (format "[~a] >= ~a – failure!" pc-roll tn))]
+               (notice (format "[~a] >= ~a – failure!" pc-roll tn))
+               (remove-from-action-queue (list pc-action))]
               )
         )
       )
