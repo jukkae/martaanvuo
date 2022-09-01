@@ -31,8 +31,14 @@
       (end-combat)
       (end-round-early))
     (when (= (length action-queue) 2)
-      (define action-a (first action-queue)) ; TODO: always compare pc action to...
-      (define action-b (second action-queue)); ... any enemy action
+      (define pc-action (findf
+        (lambda (a) (eq? (action-actor-id a) 'pc)) ; TODO: is-pc-action?
+        action-queue))
+      (define non-pc-action (findf
+        (lambda (a) (not (eq? (action-actor-id a) 'pc)))
+        action-queue))
+      (define action-a pc-action) ; TODO: always compare pc action to...
+      (define action-b non-pc-action); ... any enemy action
       (when (or (and (eq? (action-symbol action-a) 'get-closer)
                      (eq? (action-symbol action-b) 'get-further))
                 (and (eq? (action-symbol action-b) 'get-closer)
@@ -40,10 +46,12 @@
         (notice "Contested roll: DEX: [2d6]")
         (define pc-roll (d 2 6))
         (define tn 6)
-        (if (>= pc-roll tn)
-          (notice (format "[~a] >= ~a – success!" pc-roll tn))
-          (notice (format "[~a] >= ~a – failure!" pc-roll tn))
-          )
+        (define success? (>= pc-roll tn))
+        (cond [success?
+               (notice (format "[~a] >= ~a – success!" pc-roll tn))]
+              [else
+               (notice (format "[~a] >= ~a – failure!" pc-roll tn))]
+              )
         )
       )
     (for ([action action-queue])
