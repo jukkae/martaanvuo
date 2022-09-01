@@ -30,6 +30,22 @@
       (award-xp! 1)
       (end-combat)
       (end-round-early))
+    (when (= (length action-queue) 2)
+      (define action-a (first action-queue)) ; TODO: always compare pc action to...
+      (define action-b (second action-queue)); ... any enemy action
+      (when (or (and (eq? (action-symbol action-a) 'get-closer)
+                     (eq? (action-symbol action-b) 'get-further))
+                (and (eq? (action-symbol action-b) 'get-closer)
+                     (eq? (action-symbol action-a) 'get-further)))
+        (notice "Contested roll: DEX: [2d6]")
+        (define pc-roll (d 2 6))
+        (define tn 6)
+        (if (>= pc-roll tn)
+          (notice (format "[~a] >= ~a – success!" pc-roll tn))
+          (notice (format "[~a] >= ~a – failure!" pc-roll tn))
+          )
+        )
+      )
     (for ([action action-queue])
 
       (define actor (get-actor (action-actor-id action)))
