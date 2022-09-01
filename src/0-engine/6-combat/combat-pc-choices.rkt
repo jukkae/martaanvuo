@@ -36,7 +36,9 @@
          #:duration 0 ; TODO: a turn automatically consumes 1 tick even when this is 0
          #:target '()
          #:tags '(initiative-based-resolution)
-         #:details '(slow silent))))
+         #:details '(slow silent)
+         #:resolution-rules `('())
+         )))
      ))
 
   (set! combat-choices

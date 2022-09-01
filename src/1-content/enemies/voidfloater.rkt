@@ -24,6 +24,7 @@
   (set-trait! enemy "melee-attack-skill" 1)
   enemy)
 
+; TODO: get-closer vs. get-further should be resolved with an opposing roll
 (define (get-closer-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
@@ -31,6 +32,7 @@
       ['close 'adjacent]
       ['nearby 'close]
       ['far 'nearby]))
+  (define subject (actor-id actor))
   (make-action
    #:symbol 'change-range
    #:actor actor
@@ -39,7 +41,8 @@
    #:tags '(initiative-based-resolution)
    #:resolution-rules
    `(
-     (displayln "Change range TODO:")
+     (set-stance-range! (actor-stance (get-actor ,subject)) ',next-range)
+     (notice (format "The ~a is now ~a." (actor-name (get-actor ,subject)) (stance-range (actor-stance (get-actor ,subject)))))
      'ok)
    #:details '(slow)))
 

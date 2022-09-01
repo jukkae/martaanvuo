@@ -45,7 +45,7 @@
     (define (spawn-voidfloater-encounter!)
 
   (begin-combat!)
-  (spawn 'voidfloater 1 'close))
+  (spawn 'voidfloater 1 'nearby))
 
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll
