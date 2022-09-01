@@ -24,7 +24,20 @@
 (define (get-combat-choices)
   (define targets (get-current-enemies))
 
-  (define combat-choices '())
+  (define combat-choices
+    (list
+     (make-choice
+      'skip
+      "Skip."
+      (λ ()
+        (make-action
+         #:symbol 'skip
+         #:actor (pc)
+         #:duration 0 ; TODO: a turn automatically consumes 1 tick even when this is 0
+         #:target '()
+         #:tags '(initiative-based-resolution)
+         #:details '(slow silent))))
+     ))
 
   (set! combat-choices
         (append combat-choices (get-perceive-choices)))

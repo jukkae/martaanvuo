@@ -10,6 +10,10 @@
 
 To update packages, `raco pkg update --all`.
 
+## Recommended packages for DrRacket
+
+- `files-viewer`
+
 ## Cross-compilation for Windows
 
 NB: Tested on x86_64 Linux, Racket 8.4.
