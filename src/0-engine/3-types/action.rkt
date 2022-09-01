@@ -185,3 +185,7 @@
   (define predicate
     (λ ([action : action]) (eq? (action-symbol action) type)))
   (all-fulfill-predicate? actions predicate))
+
+
+(define (pc-action? [a : action])
+  (eq? (action-actor-id a) 'pc))

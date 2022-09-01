@@ -32,10 +32,10 @@
       (end-round-early))
     (when (= (length action-queue) 2)
       (define pc-action (findf
-        (lambda (a) (eq? (action-actor-id a) 'pc)) ; TODO: is-pc-action?
+        pc-action?
         action-queue))
       (define non-pc-action (findf
-        (lambda (a) (not (eq? (action-actor-id a) 'pc)))
+        (negate pc-action?)
         action-queue))
       (define action-a pc-action) ; TODO: always compare pc action to...
       (define action-b non-pc-action); ... any enemy action
