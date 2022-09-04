@@ -70,25 +70,51 @@
 
 (define (fight-behavior actor)
   (cond [(eq? (stance-range (actor-stance actor)) 'engaged)
-         (make-action
-          #:symbol 'skip
+         (define target-id (actor-id (pc)))
+         (make-melee-attack-action
           #:actor actor
-          #:duration 0
-          #:target '()
-          #:tags '(initiative-based-resolution)
-          #:details '(slow silent))]
+          #:duration 1
+          #:target target-id
+          #:n 1
+          #:x 2
+          #:bonus 0
+          )]
         [else
          (get-closer-action actor)]))
 
 (define (flee-behavior actor)
   (cond [(eq? (stance-range (actor-stance actor)) 'far)
+         ; TODO: extract function
+         (define id (actor-id actor))
          (make-action
-          #:symbol 'skip
+          #:symbol 'escape
           #:actor actor
-          #:duration 0
+          #:duration 1
           #:target '()
-          #:tags '(initiative-based-resolution)
-          #:details '(slow silent))]
+          #:tags '(initiative-based-resolution fast)
+          #:details '()
+          #:resolution-rules
+          `(
+            (notice (format "~a tries to escape." (get-combatant-name (get-actor ,id))))
+            (define skill 1)
+            (define stance (actor-stance (get-actor ,id)))
+            (define value (stance-range stance))
+            (define target-number
+              (if (eq? value 'engaged)
+                  10
+                  8))
+
+            ; (define success? (skill-check "Athletics" skill target-number))
+            (define success? #t)
+            (if success?
+                (begin
+                  (notice "The voidfloater escapes.")
+                  (award-xp! 1)
+                  (remove-actor-from-its-current-location! (get-actor ,(actor-id actor)))
+                  'ok)
+                (begin
+                  'failure))
+            ))]
         [else
          (get-further-action actor)]))
 
