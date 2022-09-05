@@ -43,7 +43,6 @@
 
   (set! combat-choices
         (append combat-choices (get-perceive-choices)))
-
   (when (actor-has-item? (pc) 'bolt-cutters)
     (set! combat-choices
           (append combat-choices (get-melee-choices)))
@@ -58,10 +57,10 @@
       (set! combat-choices
             (append combat-choices (get-harvest-choice e)))))
 
+
   (when (actor-has-item? (pc) 'revolver)
     (set! combat-choices
           (append combat-choices (get-ranged-choices))))
-
   (cond ((and (not (engaged?))
               (empty? (get-enemies-at-range 'adjacent))
               (empty? (get-enemies-at-range 'close))
@@ -92,7 +91,6 @@
          (define close-enemies (get-enemies-at-range 'close))
          (define nearby-enemies (get-enemies-at-range 'nearby))
          (define far-enemies (get-enemies-at-range 'far))
-
          (cond
            [(and (empty? adjacent-enemies)
                  (or (not (empty? close-enemies))
@@ -205,7 +203,6 @@
                #:resolution-rules
                `((resolve-break-free-action! (pc) ,target-id ,strength-mod))))))
          (set! combat-choices (append-element combat-choices break-free-choice))))
-
   combat-choices
   )
 
@@ -363,8 +360,6 @@
            )
          )))]
     ['choke
-     (when (not (eq? (stance-range (actor-stance target)) 'engaged))
-      (set-actor-stance-range! target 'engaged #t))
      (make-choice
       'attack
       (format "Strangle the ~a."
@@ -387,31 +382,32 @@
              (format "Strangle, ~a vs ~a"
                      (get-combatant-name actor)
                      (get-combatant-name target)))
-
+           (when (not (eq? (stance-range (actor-stance target)) 'engaged))
+             (set-actor-stance-range! target 'engaged #t))
            (define attack-roll (d 1 4))
            (notice (format "[1d4: ~a]" attack-roll))
            (define action-result 'ok) ; TODO: likely not useful anymore
            (case attack-roll
-            [(1 2) (notice (format "Otava can't get a good grip on the ~a's windpipe." (get-combatant-name target)))]
-            [(3)
-             (cond [(not (actor-has-condition-of-type? target 'windpipe-broken))
-                    (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
-                    (inflict-condition! target
-                                        (condition 'windpipe-broken
-                                                   "Broken windpipe."))
-                                                   (set! action-result (take-damage target 1 'strangling))
-                    ]
-                   [else ; has 'windpipe-broken
-                    (notice (format "Otava easily strangles the ~a to death." (get-combatant-name target)))
-                    (kill target 'strangled)
-                    (set! action-result 'dead)
-                    ]
-                   )
-             ]
-            [(4)
-             (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
-             (kill target 'strangled)
-             (set! action-result 'dead)])
+             [(1 2) (notice (format "Otava can't get a good grip on the ~a's windpipe." (get-combatant-name target)))]
+             [(3)
+              (cond [(not (actor-has-condition-of-type? target 'windpipe-broken))
+                     (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
+                     (inflict-condition! target
+                                         (condition 'windpipe-broken
+                                                    "Broken windpipe."))
+                     (set! action-result (take-damage target 1 'strangling))
+                     ]
+                    [else ; has 'windpipe-broken
+                     (notice (format "Otava easily strangles the ~a to death." (get-combatant-name target)))
+                     (kill target 'strangled)
+                     (set! action-result 'dead)
+                     ]
+                    )
+              ]
+             [(4)
+              (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
+              (kill target 'strangled)
+              (set! action-result 'dead)])
 
            (when (eq? action-result 'dead)
              ; TODO: move this to Actor
@@ -436,7 +432,8 @@
 
            action-result
            )
-         )))]
+         )))
+     ]
     [else
      (make-choice
       'attack
@@ -465,16 +462,17 @@
                (eq? (stance-range stance) 'adjacent)
                (eq? (stance-range stance) 'close))
            (for ([action-name (list #;'smash #;'bludgeon 'strike)])
-            (define choice (make-named-attack action-name target))
-            (set! combat-choices (append-element combat-choices choice))
-            ))
+             (define choice (make-named-attack action-name target))
+             (set! combat-choices (append-element combat-choices choice))
+             ))
           )
     (cond ((or (eq? (stance-range stance) 'engaged)
                (eq? (stance-range stance) 'adjacent))
            (for ([action-name (list 'choke)])
-            (define choice (make-named-attack action-name target))
-            (set! combat-choices (append-element combat-choices choice))
-            ))))
+             (define choice (make-named-attack action-name target))
+             (set! combat-choices (append-element combat-choices choice))
+             )))
+    )
   combat-choices)
 
 (define (get-perceive-choices)
