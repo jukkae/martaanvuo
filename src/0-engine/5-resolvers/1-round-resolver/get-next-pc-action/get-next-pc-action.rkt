@@ -62,18 +62,19 @@
       (when (null? fragment-decisions)
         (clear-current-fragment!)
         )
-
       ; launch a fragment directly -> no action resolution -> not a choice
       (define location-decisions (if (null? fragment-decisions)
                                      (get-location-decisions (current-location))
                                      '()))
 
+      (dev-note "FOO")
       (define world-choices (get-world-choices (current-world) actor))
+      (dev-note "BAR")
+
 
       (define choices (if (null? fragment-decisions)
                           world-choices
                           '()))
-
       (define all-decisions (append fragment-decisions location-decisions))
       (define decisions-with-keys (build-keys-to-choices-map all-decisions 1))
       (define first-free-index (add1 (length all-decisions)))

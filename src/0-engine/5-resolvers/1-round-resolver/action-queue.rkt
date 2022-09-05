@@ -40,7 +40,7 @@
         (format "~a" (actor-name (get-actor (action-actor-id action)))))
       (tr action-description (format "~a" initiative))))
 
-  (info-card actions "Action initiatives")
+  (info-card actions "Action initiatives [higher is faster]")
   (wait-for-confirm)
 
   (set! action-queue '())

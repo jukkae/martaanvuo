@@ -325,3 +325,42 @@
 
   (current-times-species-encountered++ type)
 )
+
+; it's always the enemy's stance that's modified, but
+; the action might be initiated by the pc
+(define (set-actor-stance-range! moving-actor new-range [pc? #f])
+  (dev-note (format "moving-actor: ~a new-range: ~a" (actor-name moving-actor) new-range))
+  (when (not (eq? (stance-range (actor-stance moving-actor)) new-range))
+    (set-stance-range! (actor-stance moving-actor) new-range)
+    (case (stance-range (actor-stance moving-actor))
+     ['engaged
+      (if pc?
+        (notice (format "Otava is now grappling with the ~a." (actor-name moving-actor)))
+        (notice (format "The ~a is now grappling with Otava." (actor-name moving-actor)))
+        )
+      ]
+     ['adjacent
+      (if pc?
+        (notice (format "Otava is now adjacent to the ~a." (actor-name moving-actor)))
+        (notice (format "The ~a is now adjacent to Otava." (actor-name moving-actor)))
+        )
+      ]
+     ['close
+      (if pc?
+        (notice (format "Otava is now close to the ~a." (actor-name moving-actor)))
+        (notice (format "The ~a is now close to Otava." (actor-name moving-actor)))
+        )
+      ]
+     ['nearby
+      (if pc?
+        (notice (format "Otava is now near ~a." (actor-name moving-actor)))
+        (notice (format "The ~a is now nearby." (actor-name moving-actor)))
+        )
+      ]
+     ['far
+      (if pc?
+        (notice (format "Otava is now far from ~a." (actor-name moving-actor)))
+        (notice (format "The ~a is now far." (actor-name moving-actor)))
+        )
+      ]))
+  )

@@ -159,7 +159,8 @@
      }
      (create-task 'anthead-monograph)
      (wait-for-confirm)
-     (move-pc-to-location! (get-place-by-id 'perimeter))
+     (move-pc-to-location! (get-place-by-id 'the-maw))
+     (spawn-encounter)
      ]
   ;   [(2)
   ;    @p{

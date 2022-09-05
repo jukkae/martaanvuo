@@ -98,33 +98,32 @@
                  (or (not (empty? close-enemies))
                      (not (empty? nearby-enemies))
                      (not (empty? far-enemies))))
-            (define get-closer-choice
-              (make-choice
-               'get-closer
-               "Get closer."
-               (λ ()
-                 (make-action
-                  #:symbol 'get-closer
-                  #:actor (pc)
-                  #:duration 1
-                  #:tags '(initiative-based-resolution fast)
-                  #:resolution-rules
-                  `(
-                    (notice "Otava gets closer.")
-                    (for ([enemy (get-current-enemies)])
-                      (case (stance-range (actor-stance enemy))
-                        ['close
-                         (set-stance-range! (actor-stance enemy) 'adjacent)
-                         ]
-                        ['nearby
-                         (set-stance-range! (actor-stance enemy) 'close)
-                         ]
-                        ['far
-                         (set-stance-range! (actor-stance enemy) 'nearby)
-                         ]))
-                    )
-                  ))))
-            (set! combat-choices (append-element combat-choices get-closer-choice))
+            (define enemies-in-range (append* close-enemies nearby-enemies far-enemies))
+            (for ([target enemies-in-range])
+              (define target-stance-range
+                (case (stance-range (actor-stance target))
+                  ['close 'adjacent]
+                  ['nearby 'close]
+                  ['far 'nearby]))
+              (define target-id (actor-id target))
+              (define get-closer-choice
+                (make-choice
+                 'get-closer
+                 (format "Get closer to ~a [target range: ~a]." (get-combatant-name target) target-stance-range)
+                 (λ ()
+                   (make-action
+                    #:symbol 'get-closer
+                    #:actor (pc)
+                    #:duration 1
+                    #:tags '(initiative-based-resolution fast)
+                    #:resolution-rules
+                    `(
+                      (set-actor-stance-range! (get-actor ,target-id) ',target-stance-range #t)
+                      )
+                    ))))
+              (set! combat-choices (append-element combat-choices get-closer-choice))
+              )
+
             ])
          (cond
            [(or (not (empty? adjacent-enemies))
@@ -145,26 +144,22 @@
                     (for ([enemy (get-current-enemies)])
                       (case (stance-range (actor-stance enemy))
                         ['adjacent
-                         (notice "Otava gets away.")
-                         (set-stance-range! (actor-stance enemy) 'close)
+                         (set-actor-stance-range! enemy 'close #t)
                          ]
                         ['close
-                         (notice "Otava gets away.")
-                         (set-stance-range! (actor-stance enemy) 'nearby)
+                         (set-actor-stance-range! enemy 'nearby #t)
                          ]
                         ['nearby
                          (cond
                           [(pc-has-sense-organ? 'eyes) ; TODO: or if pc has hearing and enemy is not silent
-                           (notice "Otava gets away.")
-                           (set-stance-range! (actor-stance enemy) 'far)
+                           (set-actor-stance-range! enemy 'far #t)
                            ]
                           [else
                            (define roll (d 2 6))
                            (notice (format "Random walk roll (2d6 >= 7): [~a]" roll))
                            (cond
                             [(>= roll 7)
-                             (notice "Otava gets away.")
-                             (set-stance-range! (actor-stance enemy) 'far)]
+                             (set-actor-stance-range! enemy 'far #t)]
                             [else
                              (notice "Otava stumbles in the wrong direction.")
                              ]
@@ -341,8 +336,8 @@
            (when (and (eq? (stance-range (actor-stance target)) 'engaged)
                       success?
                       (eq? (actor-size target) 'small))
-            (set-stance-range! (actor-stance target) 'adjacent)
-            (notice (format "The ~a is pushed back and is now ~a." (actor-name target) (stance-range (actor-stance target)))))
+            (notice (format "The ~a is pushed back." (actor-name target))))
+            (set-actor-stance-range! (actor-stance target) 'adjacent #t)
            (when (eq? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
@@ -369,7 +364,7 @@
          )))]
     ['choke
      (when (not (eq? (stance-range (actor-stance target)) 'engaged))
-      (set-stance-range! (actor-stance target) 'engaged))
+      (set-actor-stance-range! target 'engaged #t))
      (make-choice
       'attack
       (format "Strangle the ~a."
@@ -408,12 +403,14 @@
                     ]
                    [else ; has 'windpipe-broken
                     (notice (format "Otava easily strangles the ~a to death." (get-combatant-name target)))
+                    (kill target 'strangled)
                     (set! action-result 'dead)
                     ]
                    )
              ]
             [(4)
              (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
+             (kill target 'strangled)
              (set! action-result 'dead)])
 
            (when (eq? action-result 'dead)

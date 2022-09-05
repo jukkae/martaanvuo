@@ -24,7 +24,6 @@
   (set-trait! enemy "melee-attack-skill" 1)
   enemy)
 
-; TODO: get-closer vs. get-further should be resolved with an opposing roll
 (define (get-closer-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
@@ -32,6 +31,7 @@
       ['close 'adjacent]
       ['nearby 'close]
       ['far 'nearby]))
+  (dev-note (format "next range: ~a" next-range))
   (define subject (actor-id actor))
   (make-action
    #:symbol 'get-closer
@@ -41,12 +41,11 @@
    #:tags '(initiative-based-resolution)
    #:resolution-rules
    `(
-     (set-stance-range! (actor-stance (get-actor ,subject)) ',next-range)
-     (notice (format "The ~a is now ~a." (actor-name (get-actor ,subject)) (stance-range (actor-stance (get-actor ,subject)))))
+     (notice "TEST HELLO")
+     (set-actor-stance-range! (get-actor ,subject) ',next-range #f)
      'ok)
    #:details '(slow)))
 
-; TODO: opposed roll
 (define (get-further-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
@@ -63,8 +62,7 @@
    #:tags '(initiative-based-resolution)
    #:resolution-rules
    `(
-     (set-stance-range! (actor-stance (get-actor ,subject)) ',next-range)
-     (notice (format "The ~a is now ~a." (actor-name (get-actor ,subject)) (stance-range (actor-stance (get-actor ,subject)))))
+     (set-actor-stance-range! (get-actor ,subject) ',next-range)
      'ok)
    #:details '(slow)))
 
