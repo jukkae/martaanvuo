@@ -39,6 +39,8 @@
             )
            (else
             (notice (format "Bleed check: 1d6 = 1: [~a]" bleed-damage-roll))))]
+    ['windpipe-broken
+     (dev-note "windpipe crushed end-of-round")]
     [else
      (dev-note (format "TODO: Something else: ~a" (condition-type condition)))])
   '())

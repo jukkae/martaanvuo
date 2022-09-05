@@ -133,7 +133,7 @@
             (define get-further-choice
               (make-choice
                'get-further
-               "Get further."
+               "Get away."
                (λ ()
                  (make-action
                   #:symbol 'get-further
@@ -145,17 +145,17 @@
                     (for ([enemy (get-current-enemies)])
                       (case (stance-range (actor-stance enemy))
                         ['adjacent
-                         (notice "Otava gets further.")
+                         (notice "Otava gets away.")
                          (set-stance-range! (actor-stance enemy) 'close)
                          ]
                         ['close
-                         (notice "Otava gets further.")
+                         (notice "Otava gets away.")
                          (set-stance-range! (actor-stance enemy) 'nearby)
                          ]
                         ['nearby
                          (cond
                           [(pc-has-sense-organ? 'eyes) ; TODO: or if pc has hearing and enemy is not silent
-                           (notice "Otava gets further.")
+                           (notice "Otava gets away.")
                            (set-stance-range! (actor-stance enemy) 'far)
                            ]
                           [else
@@ -163,7 +163,7 @@
                            (notice (format "Random walk roll (2d6 >= 7): [~a]" roll))
                            (cond
                             [(>= roll 7)
-                             (notice "Otava gets further.")
+                             (notice "Otava gets away.")
                              (set-stance-range! (actor-stance enemy) 'far)]
                             [else
                              (notice "Otava stumbles in the wrong direction.")
@@ -265,6 +265,7 @@
       ['strike "Strike"]
       ['smash "Smash"]
       ['bludgeon "Bludgeon"]
+      ['choke "Choke"]
       [else (symbol->string attack-name)]))
   (case action-name
     ['strike
@@ -337,7 +338,9 @@
 
            (define action-result 'ok) ; TODO: likely not useful anymore
            (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-           (when (and success? (eq? (actor-size target) 'small))
+           (when (and (eq? (stance-range (actor-stance target)) 'engaged)
+                      success?
+                      (eq? (actor-size target) 'small))
             (set-stance-range! (actor-stance target) 'adjacent)
             (notice (format "The ~a is pushed back and is now ~a." (actor-name target) (stance-range (actor-stance target)))))
            (when (eq? action-result 'dead)
@@ -362,6 +365,92 @@
            (add-combat-event descr)
 
            action-result
+           )
+         )))]
+    ['choke
+     (when (not (eq? (stance-range (actor-stance target)) 'engaged))
+      (set-stance-range! (actor-stance target) 'engaged))
+     (make-choice
+      'attack
+      (format "Strangle the ~a."
+              (get-combatant-name target)
+              )
+      (λ ()
+        (define target-id (actor-id target))
+        (make-action
+         #:actor (pc)
+         #:symbol 'choke
+         #:duration 1
+         #:target target-id
+         #:tags '(initiative-based-resolution)
+         #:resolution-rules
+         `(
+           (define actor (pc))
+           (define target (get-actor ,target-id))
+
+           (define title
+             (format "Strangle, ~a vs ~a"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)))
+
+           (define attack-roll (d 1 4))
+           (notice (format "[1d4: ~a]" attack-roll))
+           (case attack-roll
+            [(1 2) (notice (format "Otava can't get a good grip on the ~a's windpipe." (get-combatant-name target)))]
+            [(3)
+             (cond ((not (actor-has-condition-of-type? target 'windpipe-broken))
+                    (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
+                    (inflict-condition! target
+                                (condition 'windpipe-broken
+                                           "Broken windpipe.")))
+                   (else
+                    (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
+                    )
+             )
+             ]
+            [(4) (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))])
+
+          ;  (define damage-roll-result (+ (d 1 2) ,damage-bonus))
+          ;  (define body
+          ;    (prune (tbody
+          ;     (tr "to hit"
+          ;         (format "~ad~a ~a: [~a >= ~a] [~a]"
+          ;                 2 6 ,bonus-text
+          ;                 to-hit-roll-result
+          ;                 target-number
+          ;                 success-text))
+          ;     (when success?
+          ;       (tr "damage"
+          ;         (format "~ad~a ~a: [~a]"
+          ;                 1 2 ,damage-bonus-text
+          ;                 damage-roll-result))))))
+          ;  (info-card body title)
+
+          ;  (define action-result 'ok) ; TODO: likely not useful anymore
+          ;  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+          ;  (when (eq? action-result 'dead)
+          ;    ; TODO: move this to Actor
+          ;    (case (actor-name target)
+          ;      [("Blindscraper") (award-xp! 7)]))
+
+          ;  (display-combatant-info target)
+          ;  (newline)
+
+          ;  (when (eq? action-result 'dead)
+          ;    (p "The " (actor-name target) " is dead."))
+
+          ;  (define descr
+          ;    (format "melee attack, ~a vs ~a (~a)"
+          ;            (get-combatant-name actor)
+          ;            (get-combatant-name target)
+          ;            (case action-result
+          ;              ['ok "hit"]
+          ;              ['dead "hit and kill"]
+          ;              [else action-result])))
+          ;  (add-combat-event descr)
+
+          ;  action-result
+          'ok
            )
          )))]
     [else
@@ -395,7 +484,13 @@
             (define choice (make-named-attack action-name target))
             (set! combat-choices (append-element combat-choices choice))
             ))
-          ))
+          )
+    (cond ((or (eq? (stance-range stance) 'engaged)
+               (eq? (stance-range stance) 'adjacent))
+           (for ([action-name (list 'choke)])
+            (define choice (make-named-attack action-name target))
+            (set! combat-choices (append-element combat-choices choice))
+            ))))
   combat-choices)
 
 (define (get-perceive-choices)

@@ -206,6 +206,11 @@
          (actor-add-condition! target a-condition)
          (notice "Already bleeding."))
      ]
+    ['windpipe-broken
+     (if (not (actor-has-condition-of-type? target 'windpipe-broken))
+         (actor-add-condition! target a-condition)
+         (notice "Windpipe already broken."))
+     ]
     ['one-eye-blind '()]
     ['both-eyes-blind '()]
     [else (dev-note (format "Unknown condition ~a" condition))]))
