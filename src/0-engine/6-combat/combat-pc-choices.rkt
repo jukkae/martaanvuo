@@ -279,6 +279,9 @@
             ))
      (define damage-bonus 0)
      (define damage-bonus-text "+0")
+     (when (eq? (stance-range (actor-stance target)) 'engaged)
+      (set! damage-bonus -1)
+      (set! damage-bonus-text "-1 (engaged)"))
      (make-choice
       'attack
       (format "~a the ~a~a. [~a, Δ dmg: ~a]"
@@ -325,10 +328,11 @@
                           to-hit-roll-result
                           target-number
                           success-text))
-              (tr "damage"
+              (when success?
+                (tr "damage"
                   (format "~ad~a ~a: [~a]"
                           1 2 ,damage-bonus-text
-                          damage-roll-result)))))
+                          damage-roll-result))))))
            (info-card body title)
 
            (define action-result 'ok) ; TODO: likely not useful anymore
