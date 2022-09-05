@@ -294,6 +294,7 @@
          #:symbol 'strike
          #:duration 1
          #:target target-id
+         #:tags '(initiative-based-resolution)
          #:resolution-rules
          `(
            (define actor (pc))
@@ -332,6 +333,9 @@
 
            (define action-result 'ok) ; TODO: likely not useful anymore
            (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
+           (when (and success? (eq? (actor-size target) 'small))
+            (set-stance-range! (actor-stance target) 'adjacent)
+            (notice (format "The ~a is pushed back and is now ~a." (actor-name target) (stance-range (actor-stance target)))))
            (when (eq? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
