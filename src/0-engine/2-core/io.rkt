@@ -1,7 +1,7 @@
 #lang at-exp racket
 
-(provide (all-from-out "output.rkt"))
-(require "output.rkt")
+(require reprovide/reprovide)
 
-(provide (all-from-out "input.rkt"))
-(require "input.rkt")
+(reprovide
+  "input.rkt"
+  "output.rkt")

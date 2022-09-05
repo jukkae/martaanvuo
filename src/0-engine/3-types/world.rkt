@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang racket
 
 (provide (all-defined-out))
 
@@ -9,9 +9,10 @@
   )
 
 (struct world
-  ([places : (Listof Place)]
-   [routes : (Listof route)]
-   [day : Natural]
-   [elapsed-time : Natural])
+  (places routes day elapsed-time
+   #;[places : (Listof Place)]
+   #;[routes : (Listof route)]
+   #;[day : Natural]
+   #;[elapsed-time : Natural])
   #:prefab
   #:mutable)

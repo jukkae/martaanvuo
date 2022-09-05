@@ -1,6 +1,6 @@
 #lang typed/racket
 
-(provide (all-defined-out))
+(provide (struct-out State))
 
 (require
   "../../2-core/maybe.rkt"
@@ -9,9 +9,19 @@
   "../../3-types/combat-event.rkt"
   "../../3-types/location-ids.rkt"
   "../../3-types/pc-actor.rkt"
+  "../../3-types/route.rkt"
   "../../3-types/task.rkt"
   "../../3-types/timeline.rkt"
+  )
+
+(require/typed
   "../../3-types/world.rkt"
+  [#:struct world (
+      [places : (Listof Place)]
+      [routes : (Listof route)]
+      [day : Natural]
+      [elapsed-time : Natural]
+      )]
   )
 
 (define-type Rng-state-vector (Vector Integer Integer Integer Integer Integer Integer))
