@@ -308,24 +308,24 @@
            (define to-hit-roll-result (+ (d 2 6) ,to-hit-bonus))
            (define success? (>= to-hit-roll-result target-number))
            (define success-text
-            (if success?
-              "success"
-              "fail"))
+             (if success?
+                 "success"
+                 "fail"))
 
            (define damage-roll-result (+ (d 1 2) ,damage-bonus))
            (define body
              (prune (tbody
-              (tr "to hit"
-                  (format "~ad~a ~a: [~a >= ~a] [~a]"
-                          2 6 ,bonus-text
-                          to-hit-roll-result
-                          target-number
-                          success-text))
-              (when success?
-                (tr "damage"
-                  (format "~ad~a ~a: [~a]"
-                          1 2 ,damage-bonus-text
-                          damage-roll-result))))))
+                     (tr "to hit"
+                         (format "~ad~a ~a: [~a >= ~a] [~a]"
+                                 2 6 ,bonus-text
+                                 to-hit-roll-result
+                                 target-number
+                                 success-text))
+                     (when success?
+                       (tr "damage"
+                           (format "~ad~a ~a: [~a]"
+                                   1 2 ,damage-bonus-text
+                                   damage-roll-result))))))
            (info-card body title)
 
            (define action-result 'ok) ; TODO: likely not useful anymore
@@ -333,8 +333,8 @@
            (when (and (eq? (stance-range (actor-stance target)) 'engaged)
                       success?
                       (eq? (actor-size target) 'small))
-            (notice (format "The ~a is pushed back." (actor-name target))))
-            (set-actor-stance-range! (actor-stance target) 'adjacent #t)
+             (notice (format "The ~a is pushed back." (actor-name target))))
+           (set-actor-stance-range! target 'adjacent #f) ; #f reads better here
            (when (eq? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
