@@ -395,62 +395,49 @@
 
            (define attack-roll (d 1 4))
            (notice (format "[1d4: ~a]" attack-roll))
+           (define action-result 'ok) ; TODO: likely not useful anymore
            (case attack-roll
             [(1 2) (notice (format "Otava can't get a good grip on the ~a's windpipe." (get-combatant-name target)))]
             [(3)
-             (cond ((not (actor-has-condition-of-type? target 'windpipe-broken))
+             (cond [(not (actor-has-condition-of-type? target 'windpipe-broken))
                     (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
                     (inflict-condition! target
-                                (condition 'windpipe-broken
-                                           "Broken windpipe.")))
-                   (else
-                    (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
-                    )
-             )
+                                        (condition 'windpipe-broken
+                                                   "Broken windpipe."))
+                                                   (set! action-result (take-damage target 1 'strangling))
+                    ]
+                   [else ; has 'windpipe-broken
+                    (notice (format "Otava easily strangles the ~a to death." (get-combatant-name target)))
+                    (set! action-result 'dead)
+                    ]
+                   )
              ]
-            [(4) (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))])
+            [(4)
+             (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
+             (set! action-result 'dead)])
 
-          ;  (define damage-roll-result (+ (d 1 2) ,damage-bonus))
-          ;  (define body
-          ;    (prune (tbody
-          ;     (tr "to hit"
-          ;         (format "~ad~a ~a: [~a >= ~a] [~a]"
-          ;                 2 6 ,bonus-text
-          ;                 to-hit-roll-result
-          ;                 target-number
-          ;                 success-text))
-          ;     (when success?
-          ;       (tr "damage"
-          ;         (format "~ad~a ~a: [~a]"
-          ;                 1 2 ,damage-bonus-text
-          ;                 damage-roll-result))))))
-          ;  (info-card body title)
+           (when (eq? action-result 'dead)
+             ; TODO: move this to Actor
+             (case (actor-name target)
+               [("Voidfloater") (award-xp! 3)]))
 
-          ;  (define action-result 'ok) ; TODO: likely not useful anymore
-          ;  (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-          ;  (when (eq? action-result 'dead)
-          ;    ; TODO: move this to Actor
-          ;    (case (actor-name target)
-          ;      [("Blindscraper") (award-xp! 7)]))
+           (display-combatant-info target)
+           (newline)
 
-          ;  (display-combatant-info target)
-          ;  (newline)
+           (when (eq? action-result 'dead)
+             (notice "The " (actor-name target) " is dead."))
 
-          ;  (when (eq? action-result 'dead)
-          ;    (p "The " (actor-name target) " is dead."))
+           (define descr
+             (format "strangulation, ~a vs ~a (~a)"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)
+                     (case action-result
+                       ['ok "successful"]
+                       ['dead "strangled to death"]
+                       [else action-result])))
+           (add-combat-event descr)
 
-          ;  (define descr
-          ;    (format "melee attack, ~a vs ~a (~a)"
-          ;            (get-combatant-name actor)
-          ;            (get-combatant-name target)
-          ;            (case action-result
-          ;              ['ok "hit"]
-          ;              ['dead "hit and kill"]
-          ;              [else action-result])))
-          ;  (add-combat-event descr)
-
-          ;  action-result
-          'ok
+           action-result
            )
          )))]
     [else
