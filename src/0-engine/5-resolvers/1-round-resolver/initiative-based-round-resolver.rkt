@@ -62,8 +62,6 @@
                 (and (eq? (action-symbol action-a) 'get-further)
                      (eq? (action-symbol action-b) 'get-further)))
         (remove-from-action-queue (list non-pc-action))
-        (dev-note "both are same direction, action-queue:")
-        (dev-note (format "~a" action-queue))
         )
       )
     (for ([action action-queue])

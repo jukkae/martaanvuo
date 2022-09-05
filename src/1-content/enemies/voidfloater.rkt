@@ -31,7 +31,6 @@
       ['close 'adjacent]
       ['nearby 'close]
       ['far 'nearby]))
-  (dev-note (format "next range: ~a" next-range))
   (define subject (actor-id actor))
   (make-action
    #:symbol 'get-closer
@@ -41,7 +40,6 @@
    #:tags '(initiative-based-resolution)
    #:resolution-rules
    `(
-     (notice "TEST HELLO")
      (set-actor-stance-range! (get-actor ,subject) ',next-range #f)
      'ok)
    #:details '(slow)))

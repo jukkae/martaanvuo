@@ -67,10 +67,7 @@
                                      (get-location-decisions (current-location))
                                      '()))
 
-      (dev-note "FOO")
       (define world-choices (get-world-choices (current-world) actor))
-      (dev-note "BAR")
-
 
       (define choices (if (null? fragment-decisions)
                           world-choices

@@ -81,7 +81,6 @@
     [else
      (let/ec end-round-early-with-round-status
        (enqueue-npc-actions)
-       (dev-note "enqueueing done")
        (define pc-action (get-next-pc-action))
        (resolve-pc-action pc-action end-round-early-with-round-status) )]))
 
@@ -118,7 +117,6 @@
             (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
 
      (on-end-round)
-     (dev-note "on-end-round done!")
      (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))
      round-exit-status)))
 
@@ -127,5 +125,4 @@
   (for ([actor actors])
     (when (not (pc-actor? actor))
       (define next-action (get-next-action actor))
-      (dev-note (format "enqueueing npc action ~a" next-action))
       (add-to-action-queue next-action (resolve-action-initiative next-action actor)))))

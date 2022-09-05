@@ -28,7 +28,7 @@
     (list
      (make-choice
       'skip
-      "Skip."
+      "Skip. [gain 'fast for next round]" ; TODO: implement this
       (λ ()
         (make-action
          #:symbol 'skip

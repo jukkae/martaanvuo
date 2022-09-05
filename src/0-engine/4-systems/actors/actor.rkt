@@ -329,7 +329,6 @@
 ; it's always the enemy's stance that's modified, but
 ; the action might be initiated by the pc
 (define (set-actor-stance-range! moving-actor new-range [pc? #f])
-  (dev-note (format "moving-actor: ~a new-range: ~a" (actor-name moving-actor) new-range))
   (when (not (eq? (stance-range (actor-stance moving-actor)) new-range))
     (set-stance-range! (actor-stance moving-actor) new-range)
     (case (stance-range (actor-stance moving-actor))
