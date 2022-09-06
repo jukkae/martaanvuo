@@ -213,6 +213,9 @@
      ]
     ['one-eye-blind '()]
     ['both-eyes-blind '()]
+    ['envenomed
+     (actor-add-condition! target a-condition)
+     ]
     [else (dev-note (format "Unknown condition ~a" condition))]))
 
 (define (get-firearm actor)

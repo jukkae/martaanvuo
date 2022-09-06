@@ -66,15 +66,22 @@
 
 (define (fight-behavior actor)
   (cond [(eq? (stance-range (actor-stance actor)) 'engaged)
-         (define target-id (actor-id (pc)))
-         (make-melee-attack-action
+         (cond [])
+         (make-action
+          #:symbol 'inject-venom
           #:actor actor
           #:duration 1
-          #:target target-id
-          #:n 1
-          #:x 2
-          #:bonus 0
-          )]
+          #:target 'pc
+          #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
+          #:resolution-rules
+          `(
+            (inflict-condition! (pc)
+                                (condition 'envenomed
+                                           (list 'age 0 "ι")))
+            '()
+          )
+          )
+         ]
         [else
          (get-closer-action actor)]))
 
