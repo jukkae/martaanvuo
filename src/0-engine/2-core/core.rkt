@@ -21,3 +21,7 @@
       (string? s)
       (and (pair? s) (sexp? (car s)) (sexp? (cdr s)))
       (null? s)))
+
+(define-syntax append-element!
+  (syntax-rules ()
+    ((_ lst elem) (begin (set! lst (append-element lst elem)) lst))))

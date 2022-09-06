@@ -6,26 +6,25 @@
   "../../0-engine/0-api/api.rkt"
   )
 
+
+
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
   (define body '())
 
   (when [pc-has-sense-organ? 'basic-homeostasis]
-    (set! body
-          (append body
-                  (tbody
-                   (tr
-                    "perceived with basic homeostasis"
-                    "Condition"
-                    (cond [(pc-envenomed-peaking?)
-                           "Really fucking bad"]
-                          [(<= (actor-hp (pc)) 1)
-                           "Pretty bad"]
-                          [(actor-has-condition-of-type? (pc) 'envenomed)
-                           "Bad"]
-                          [else
-                           "Fine"])
-                    ))))
+    (define percepts '())
+    (when (pc-envenomed-peaking?)
+      (append-element! percepts "Pretty bad"))
+    (when (<= (actor-hp (pc)) 1)
+      (append-element! percepts "Really fucking bad"))
+    ; (when (actor-has-condition-of-type? (pc) 'envenomed)
+    ;   (append-element! percepts "Bad"))
+    (when (empty? percepts)
+      (append-element! percepts "Fine"))
+    (for ([percept percepts])
+      (append-element! body
+        (tr "basic homeostasis" "" percept)))
     )
 
   (when [pc-has-sense-organ? 'nociception]
