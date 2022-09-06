@@ -292,6 +292,9 @@
      (when (eq? (stance-range (actor-stance target)) 'engaged)
       (set! damage-bonus -1)
       (set! damage-bonus-text "-1 (engaged)"))
+     (when (pc-envenomed-peaking?)
+      (set! damage-bonus -2)
+      (set! damage-bonus-text "-2 (envenomed)"))
      (make-choice
       'attack
       (format "~a the ~a~a. [~a, Δ dmg: ~a]"
@@ -349,7 +352,8 @@
            (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
            (when (and (eq? (stance-range (actor-stance target)) 'engaged)
                       success?
-                      (eq? (actor-size target) 'small))
+                      (eq? (actor-size target) 'small)
+                      (not (pc-envenomed-peaking?)))
              (notice (format "The ~a is pushed back." (actor-name target)))
              (set-actor-stance-range! target 'adjacent #f) ; #f reads better here
              )
@@ -403,6 +407,10 @@
            (when (not (eq? (stance-range (actor-stance target)) 'engaged))
              (set-actor-stance-range! target 'engaged #t))
            (define attack-roll (d 1 4))
+           (when (pc-envenomed-peaking?)
+            (notice "Envenomed, -2")
+            (set! attack-roll (- attack-roll 2))
+            )
            (notice (format "[1d4: ~a]" attack-roll))
            (define action-result 'ok) ; TODO: likely not useful anymore
            (case attack-roll

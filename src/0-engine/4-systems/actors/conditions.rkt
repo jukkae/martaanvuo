@@ -45,7 +45,8 @@
     ['windpipe-broken
      (dev-note "windpipe crushed end-of-round")]
     [else
-     (dev-note (format "TODO: Something else: ~a" (condition-type condition)))])
+     '()
+     #;(dev-note (format "TODO: Something else: ~a" (condition-type condition)))])
   '())
 
 

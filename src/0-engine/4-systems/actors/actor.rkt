@@ -85,7 +85,9 @@
 
 
 (define (non-pc-take-damage! actor damage damage-type)
-  (when (< damage 0) (error "non-pc-take-damage: damage cannot be less than 0"))
+  (when (< damage 0)
+    (notice (format "Negative damage ~a not allowed." damage))
+    (set! damage 0))
   (define new-hp (- (actor-hp actor) damage))
   (when (< new-hp 0) (set! new-hp 0))
   (set-actor-hp! actor new-hp)

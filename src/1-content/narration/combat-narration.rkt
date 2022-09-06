@@ -12,7 +12,14 @@
     (tbody
      (tr
       "Condition [perceived with basic homeostasis]"
-      (if (> (actor-hp (pc)) 1) "Fine" "Not fine")
+      (cond [(pc-envenomed-peaking?)
+             "Really fucking bad"]
+            [(<= (actor-hp (pc)) 1)
+             "Pretty bad"]
+            [(actor-has-condition-of-type? (pc) 'envenomed)
+             "Bad"]
+            [else
+             "Fine"])
       )
      #;(tr
       "HP        [perceived with nociception]"
