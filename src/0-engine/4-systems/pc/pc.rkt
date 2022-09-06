@@ -30,6 +30,7 @@
    #:size 'large
    #:sense-organs (list
     (SenseOrgan 'basic-homeostasis "basic homeostasis")
+    (SenseOrgan 'nociception "nociception")
     ; (SenseOrgan 'nose "nose")
     (SenseOrgan 'eyes "eyes")
     ; (SenseOrgan 'ears "ears")

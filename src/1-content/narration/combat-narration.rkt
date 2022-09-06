@@ -8,24 +8,37 @@
 
 (define (display-pc-combatant-info actor)
   (define name (get-combatant-name actor))
-  (define body
-    (tbody
-     (tr
-      "Condition [perceived with basic homeostasis]"
-      (cond [(pc-envenomed-peaking?)
-             "Really fucking bad"]
-            [(<= (actor-hp (pc)) 1)
-             "Pretty bad"]
-            [(actor-has-condition-of-type? (pc) 'envenomed)
-             "Bad"]
-            [else
-             "Fine"])
-      )
-     #;(tr
-      "HP        [perceived with nociception]"
-      (format "~a/~a"
-              (actor-hp actor)
-              (actor-max-hp actor)))))
+  (define body '())
+
+  (when [pc-has-sense-organ? 'basic-homeostasis]
+    (set! body
+          (append body
+                  (tbody
+                   (tr
+                    "perceived with basic homeostasis"
+                    "Condition"
+                    (cond [(pc-envenomed-peaking?)
+                           "Really fucking bad"]
+                          [(<= (actor-hp (pc)) 1)
+                           "Pretty bad"]
+                          [(actor-has-condition-of-type? (pc) 'envenomed)
+                           "Bad"]
+                          [else
+                           "Fine"])
+                    ))))
+    )
+
+  (when [pc-has-sense-organ? 'nociception]
+    (set! body
+          (append body
+                  (list
+                   (tr
+                    "perceived with nociception"
+                    "HP"
+                    (format "~a/~a"
+                            (actor-hp actor)
+                            (actor-max-hp actor))))))
+    )
 
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
@@ -36,7 +49,7 @@
                 (status-lifetime status))))
 
     (define statuses-list
-      (tr "statuses"
+      (tr "" "statuses"
           (string-join statuses-strings)))
     (set! body (append-element body statuses-list)))
 
@@ -47,7 +60,7 @@
         (format "[~a]" (condition-type condition))))
 
     (define conditions-list
-      (tr "conditions"
+      (tr "" "conditions"
           (string-join conditions-strings)))
     (set! body (append-element body conditions-list)))
   (info-card
