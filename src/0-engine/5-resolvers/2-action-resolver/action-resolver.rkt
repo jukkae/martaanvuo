@@ -53,6 +53,7 @@
 
 (lazy-require ["../../7-state/mutators.rkt"
   (remove-all-enemies-and-end-combat!
+   get-enemies-at-range
    )])
 
 

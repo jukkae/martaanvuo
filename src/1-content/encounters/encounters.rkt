@@ -42,10 +42,13 @@
     [(1) "A gleam of light from the shadows catches Otava's eye. It's another Blindscraper."]
     [else "A Blindscraper crawls to view, silently prowling through the shadows."]))
 
-    (define (spawn-voidfloater-encounter!)
+(define (spawn-voidfloater-encounter!)
 
+  (define range (take-random (list 'nearby 'close)))
+  (notice (format"A voidfloater appears ~a." range))
+  (spawn 'voidfloater 1 range)
   (begin-combat!)
-  (spawn 'voidfloater 1 'nearby))
+  )
 
 (define (spawn-grabberkin-encounter!)
   ; could cause fall-down on failed roll

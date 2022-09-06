@@ -35,7 +35,6 @@
 (define (on-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
   (current-run (add1 (current-run)))
   (current-round 0)
-  (advance-time-by-iotas! (d 6 12))
   (on-begin-nth-run (current-run))
   (narrate-begin-run #:suppress-new-chapter? suppress-new-chapter?)
   )
@@ -160,6 +159,7 @@
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (move-pc-to-location! (get-place-by-id 'the-maw))
+     (advance-time-by-iotas! (d 6 12))
      (spawn-encounter)
      ]
   ;   [(2)

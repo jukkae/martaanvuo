@@ -79,8 +79,22 @@
                #:tags '(initiative-based-resolution fast)
                #:resolution-rules
                `(
-                  (notice "Otava escapes from combat.")
-                  'end-combat
+                  (define nearby-enemies (append (get-enemies-at-range 'nearby) (get-enemies-at-range 'close)))
+                  (cond
+                    [(empty? nearby-enemies)
+                     (notice "Otava escapes from combat.")
+                     'end-combat]
+                    [else
+                     (define escape-roll (d 1 2))
+                     (case escape-roll
+                      [(1)
+                       (notice "[1d2: 1] Otava fails to escape.")
+                       '()]
+                      [(2)
+                       (notice "[1d2: 2] Otava escapes from combat.")
+                       'end-combat])
+                     ]
+                  )
                  )
                  ))))
          (set! combat-choices (append-element combat-choices escape-choice))))
@@ -233,7 +247,8 @@
        ['close
         (set! bonus 6)]
        ['nearby
-        (set! bonus 3)]
+        (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
+        (set! bonus 0)]
        ['far
         (notice (format "The ~a is too far away for sonar." (get-combatant-name target)))
         (set! bonus 0)]
@@ -463,8 +478,7 @@
     (define target (list-ref targets i))
     (define stance (actor-stance target))
     (cond ((or (eq? (stance-range stance) 'engaged) ; TODO: in-melee-range?
-               (eq? (stance-range stance) 'adjacent)
-               (eq? (stance-range stance) 'close))
+               (eq? (stance-range stance) 'adjacent))
            (for ([action-name (list #;'smash #;'bludgeon 'strike)])
              (define choice (make-named-attack action-name target))
              (set! combat-choices (append-element combat-choices choice))
