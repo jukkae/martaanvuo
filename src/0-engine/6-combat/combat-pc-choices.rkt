@@ -81,6 +81,7 @@
                `(
                   (define nearby-enemies (append (get-enemies-at-range 'nearby) (get-enemies-at-range 'close)))
                   (cond
+                    ; TODO: envenomed should give negatives to this - make this a 2d6 + bonus check, too?
                     [(empty? nearby-enemies)
                      (notice "Otava escapes from combat.")
                      'end-combat]
