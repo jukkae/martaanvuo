@@ -37,7 +37,9 @@
          #:target '()
          #:tags '(initiative-based-resolution)
          #:details '(slow silent)
-         #:resolution-rules `('())
+         #:resolution-rules `(
+          (actor-add-status! (pc) (status 'fast 2))
+         )
          )))
      ))
 

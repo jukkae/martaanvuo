@@ -7,11 +7,9 @@
   "../../2-core/io.rkt"
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
+  "../../4-systems/actors/statuses.rkt"
+  "../../4-systems/world/world.rkt"
   )
-
-(require racket/lazy-require)
-
-(lazy-require ["../../4-systems/world/world.rkt" (get-actor)])
 
 ; This is not serialized!
 (define action-queue '())
@@ -37,7 +35,11 @@
       (define initiative (car action-with-initiative))
       (define action-description
 
-        (format "~a" (actor-name (get-actor (action-actor-id action)))))
+        (format "~a~a"
+          (actor-name (get-actor (action-actor-id action)))
+          (if (actor-has-status-of-type? (get-actor (action-actor-id action)) 'fast)
+            " [fast: +4]"
+            "")))
       (tr action-description (format "~a" initiative))))
 
   (info-card actions "Action initiatives [higher is faster]")

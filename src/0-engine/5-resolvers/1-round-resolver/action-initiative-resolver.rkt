@@ -6,6 +6,7 @@
   "../../2-core/core.rkt"
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
+  "../../4-systems/actors/statuses.rkt"
   )
 
 ; (: -> Action Actor Natural) ; or maybe Initiative instead of Natural
@@ -18,6 +19,9 @@
          (set! action-mod 2))
         ((has-tag? action 'slow)
          (set! action-mod -4)))
+
+  (when (actor-has-status-of-type? actor 'fast)
+    (set! action-mod (+ action-mod 4)))
 
   (define dice-1 (d 1 6))
   (define dice-2 (d 1 6))
