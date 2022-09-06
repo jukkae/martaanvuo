@@ -335,8 +335,9 @@
            (when (and (eq? (stance-range (actor-stance target)) 'engaged)
                       success?
                       (eq? (actor-size target) 'small))
-             (notice (format "The ~a is pushed back." (actor-name target))))
-           (set-actor-stance-range! target 'adjacent #f) ; #f reads better here
+             (notice (format "The ~a is pushed back." (actor-name target)))
+             (set-actor-stance-range! target 'adjacent #f) ; #f reads better here
+             )
            (when (eq? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)

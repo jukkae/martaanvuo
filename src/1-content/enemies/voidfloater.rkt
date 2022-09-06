@@ -98,6 +98,7 @@
          (case (stance-range (actor-stance actor))
            ['engaged
             (define target-id (actor-id (pc)))
+            (define subject-id (actor-id actor))
             (make-action
              #:symbol 'inject-venom
              #:actor actor
@@ -106,11 +107,31 @@
              #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
              #:resolution-rules
              `(
-               (inflict-condition!
-                (pc)
-                (condition 'envenomed
-                           (current-elapsed-time)
-                           (list 'at (current-elapsed-time) "ι")))
+               ; check *current* range, at time of resolving action
+               (case (stance-range (actor-stance (get-actor ,subject-id)))
+                ['engaged
+                 (notice "The voidfloater's venom injector pierces Otava's skin.")
+                 (inflict-condition!
+                  (pc)
+                  (condition 'envenomed
+                            (current-elapsed-time)
+                            (list 'at (current-elapsed-time) "ι")))
+                 ]
+                 ['adjacent
+                  (cond [(= (d 1 2) 2)
+                         (notice "[1d2: 2] The voidfloater's venom injector pierces Otava's skin.")
+                         (inflict-condition!
+                          (pc)
+                          (condition 'envenomed
+                                     (current-elapsed-time)
+                                     (list 'at (current-elapsed-time) "ι")))
+                         ]
+                        [else
+                         (notice "[1d2: 1] The voidfloater barely misses Otava.")
+                         ])]
+                [else
+                 (notice "The voidfloater is too far to reach Otava.")
+                 ])
                '()
                )
              )]
