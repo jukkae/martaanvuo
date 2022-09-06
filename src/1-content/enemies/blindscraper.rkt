@@ -133,12 +133,14 @@
             ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
             (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")
             (inflict-condition! (pc)
+                                (current-elapsed-time)
                                 (condition 'one-eye-blind
                                            "One eye blind."))
             ]
            [(2)
             (p "A searing pain cuts through her eyes as her vision goes black.")
             (inflict-condition! (pc)
+                                (current-elapsed-time)
                                 (condition 'both-eyes-blind
                                            "Blind."))
             ])

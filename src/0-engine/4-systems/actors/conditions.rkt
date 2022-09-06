@@ -23,6 +23,9 @@
 (lazy-require ["../../7-state/mutators.rkt"
   (pc
    )])
+(lazy-require ["../../7-state/state.rkt"
+  (current-elapsed-time
+   )])
 (lazy-require ["../../../1-content/narration/combat-narration.rkt"
   (display-combatant-info
    )])
@@ -97,3 +100,11 @@
             (actor-conditions actor))
       #t
       #f))
+
+(define (actor-get-condition-of-type actor type)
+  (findf (λ (condition)
+           (eq? (condition-type condition) type))
+         (actor-conditions actor)))
+
+(define (condition-age condition)
+  (- (current-elapsed-time) (condition-acquired-at condition)))

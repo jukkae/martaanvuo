@@ -113,12 +113,14 @@
                  ('hit
                   (inflict-condition!
                    target
+                   (current-elapsed-time)
                    (FreshInjury 'ankle-broken "Can't walk, too painful."
                      (current-elapsed-time)
                      ))
                   (when critical?
                     (inflict-condition!
                      target
+                     (current-elapsed-time)
 
                      ; TODO: content
                      (condition 'bleeding
@@ -147,12 +149,14 @@
                   (inflict-condition!
                    target (condition
                            'ankle-broken
+                           (current-elapsed-time)
                            "Can't walk, too painful."))
                   (when critical?
                     (inflict-condition!
                      target
 
                      (condition 'bleeding
+                                (current-elapsed-time)
                                 "Bleeding, should get this patched ASAP."
                                 )))
                   'ok)

@@ -6,8 +6,10 @@
 
 (require "../2-core/maybe.rkt")
 
+; TODO: hide acquired-at from callers
 (struct condition
  ([type : Symbol]
+  [acquired-at : Natural] ; TODO: more precisely, timestamp
   [details : (U String (Listof (U Symbol String Number)))])
   #:prefab
   #:mutable)

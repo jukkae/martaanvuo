@@ -326,3 +326,8 @@
   (set-pc-actor-xp! (pc)
                     (+ (pc-actor-xp (pc))
                        amount)))
+
+(define (pc-envenomed-peaking?)
+  (and (actor-has-condition-of-type? (pc) 'envenomed)
+       (>= (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 5)
+       ))

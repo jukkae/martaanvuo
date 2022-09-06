@@ -33,7 +33,7 @@
         (make-action
          #:symbol 'skip
          #:actor (pc)
-         #:duration 0 ; TODO: a turn automatically consumes 1 tick even when this is 0
+         #:duration 1
          #:target '()
          #:tags '(initiative-based-resolution)
          #:details '(slow silent)
@@ -394,6 +394,7 @@
                      (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
                      (inflict-condition! target
                                          (condition 'windpipe-broken
+                                                    (current-elapsed-time)
                                                     "Broken windpipe."))
                      (set! action-result (take-damage target 1 'strangling))
                      ]

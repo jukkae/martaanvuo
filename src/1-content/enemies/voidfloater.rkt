@@ -10,7 +10,7 @@
   "../../0-engine/3-types/actor.rkt"
 
   "../../0-engine/4-systems/actors/actor.rkt"
-  "../../0-engine/4-systems/checks/checks.rkt"
+  "../../0-engine/4-systems/pc/pc.rkt"
 
   "../../0-engine/3-types/stance.rkt"
 
@@ -44,6 +44,15 @@
      'ok)
    #:details '(slow)))
 
+(define (get-skip-action actor)
+  (make-action
+   #:symbol 'skip
+   #:actor actor
+   #:duration 0
+   #:target '()
+   #:tags '(initiative-based-resolution)
+   #:details '(slow silent)))
+
 (define (get-further-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
@@ -65,25 +74,49 @@
    #:details '(slow)))
 
 (define (fight-behavior actor)
-  (cond [(eq? (stance-range (actor-stance actor)) 'engaged)
-         (cond [])
-         (make-action
-          #:symbol 'inject-venom
-          #:actor actor
-          #:duration 1
-          #:target 'pc
-          #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
-          #:resolution-rules
-          `(
-            (inflict-condition! (pc)
-                                (condition 'envenomed
-                                           (list 'age 0 "ι")))
-            '()
-          )
-          )
-         ]
+  (cond [(pc-envenomed-peaking?)
+         (case (stance-range (actor-stance actor))
+           [(engaged adjacent)
+            (define target-id (actor-id (pc)))
+            (make-melee-attack-action
+             #:actor actor
+             #:duration 1
+             #:target target-id
+             #:n 1
+             #:x 2
+             #:bonus 0
+             )]
+           [else (get-closer-action actor)]
+           )]
+        [(actor-has-condition-of-type? (pc) 'envenomed) ; envenomed, but not yet peaking
+         (case (stance-range (actor-stance actor))
+           [(engaged adjacent close)
+            (get-further-action actor)]
+           [else (get-skip-action actor)]
+           )]
         [else
-         (get-closer-action actor)]))
+         (case (stance-range (actor-stance actor))
+           ['engaged
+            (define target-id (actor-id (pc)))
+            (make-action
+             #:symbol 'inject-venom
+             #:actor actor
+             #:duration 1
+             #:target 'pc
+             #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
+             #:resolution-rules
+             `(
+               (inflict-condition!
+                (pc)
+                (condition 'envenomed
+                           (current-elapsed-time)
+                           (list 'at (current-elapsed-time) "ι")))
+               '()
+               )
+             )]
+           [else (get-closer-action actor)]
+           )]
+        ))
 
 (define (flee-behavior actor)
   (cond [(eq? (stance-range (actor-stance actor)) 'far)
