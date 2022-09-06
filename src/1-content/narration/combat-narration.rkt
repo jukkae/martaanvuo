@@ -1,4 +1,4 @@
-#lang at-exp racket
+#lang at-exp rackjure
 
 (provide (all-defined-out))
 
@@ -62,6 +62,7 @@
 
 (define (describe-combat-situation)
   ; show cards
+  (newline)
   (notice "Otava is in combat.")
   (for ([enemy (get-current-enemies)])
     (display-combatant-info enemy))

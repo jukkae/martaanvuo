@@ -4,7 +4,7 @@
 
 (struct status
   ([type : Symbol]
-   [lifetime : Natural])
+   [lifetime : Integer])
   #:prefab
   #:mutable)
 

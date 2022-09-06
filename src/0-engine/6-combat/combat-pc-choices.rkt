@@ -28,7 +28,7 @@
     (list
      (make-choice
       'skip
-      "Skip. [gain 'fast for next round]" ; TODO: implement this
+      "Skip. [gain fast for next round]"
       (λ ()
         (make-action
          #:symbol 'skip
@@ -38,7 +38,7 @@
          #:tags '(initiative-based-resolution)
          #:details '(slow silent)
          #:resolution-rules `(
-          (actor-add-status! (pc) (status 'fast 2))
+          (actor-add-status! (pc) (status 'fast 1))
          )
          )))
      ))
@@ -124,7 +124,7 @@
               (define get-closer-choice
                 (make-choice
                  'get-closer
-                 (format "Get closer to ~a [target range: ~a]." (get-combatant-name target) target-stance-range)
+                 (format "Get closer to ~a." (get-combatant-name target))
                  (λ ()
                    (make-action
                     #:symbol 'get-closer

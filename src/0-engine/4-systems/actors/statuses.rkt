@@ -11,8 +11,24 @@
 
 (define (actor-add-status! actor status)
   (when (not (null? actor))
-    (notice (format "~a: Status [~a] (~a turns) added" (actor-name actor) (status-type status) (status-lifetime status))))
-  (set-actor-statuses! actor (append-element (actor-statuses actor) status)))
+    (cond [(not (actor-has-status-of-type? actor (status-type status)))
+           (notice (format "~a: Status ~a [~a turns] added" (actor-name actor) (status-type status) (status-lifetime status)))
+           (set-actor-statuses! actor (append-element (actor-statuses actor) status))
+           ]
+          [else
+           (modify-actor-status-lifetime actor (status-type status) (status-lifetime status))
+           (notice
+            (format "~a: Lifetime of status ~a extended by ~a ~a, new lifetime: ~a."
+              (actor-name actor)
+              (status-type status)
+              (status-lifetime status)
+              (if (= (status-lifetime status) 1) "turn" "turns")
+              (actor-lifetime-of-status-of-type? actor (status-type status))
+            ))
+          ]
+    )
+    )
+  )
 
 (define (actor-has-status-of-type? actor type)
   (if (memf (λ (status)
@@ -34,7 +50,7 @@
     (set-status-lifetime! status (- (status-lifetime status) 1)))
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
-    (if (positive? (status-lifetime status))
+    (if (not (negative? (status-lifetime status)))
         (set! new-statuses (append-element new-statuses status))
         (notice
          (format "~a: Status [~a] removed"
@@ -48,7 +64,7 @@
 (define (modify-actor-status-lifetime actor type modify-amount)
   (for ([status (actor-statuses actor)])
     (when (eq? (status-type status) type)
-      (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
+      ; (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
   (define new-statuses '())
   (for ([status (actor-statuses actor)])
