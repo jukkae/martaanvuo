@@ -126,8 +126,7 @@
                        name)
                       (else (format "~a ~a" name sign)))))))))
 
-(define (display-enemy-info actor)
-  (dev-note "TODO: fix sensory perception")
+(define (display-non-pc-combatant-info actor)
   (define stance (actor-stance actor))
   (define name (get-combatant-name actor))
   (define body '())
@@ -210,122 +209,15 @@
        ]
       )
     )
-  (info-card
-   body
-   name)
-  )
-
-(define (display-non-pc-combatant-info actor)
-  (display-enemy-info actor)
-  (define stance (actor-stance actor))
-  (define name (get-combatant-name actor))
-  (define hide-hp?
-    (if (hash-ref (actor-traits actor) "hp-hidden" #f)
-        #t
-        #f))
-
-  (define body
-    (case (actor-name actor)
-      [("Grabberkin")
-       (tbody
-        (tr
-         "HP"
-         (if hide-hp?
-             "???"
-             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))
-        (if (not (null? stance))
-            (tr
-             "range"
-             (format "~a" (stance-range stance)))
-            (tr
-             "range"
-             "N/A")))]
-
-      [("Blindscraper")
-       (define unpruned-rows '())
-       (when (pc-has-sense-organ? 'eyes)
-         (when (not (null? stance))
-           (set! unpruned-rows
-                 (append-element unpruned-rows
-                                 (tr
-                                  "range [perceived with eyes]"
-                                  (symbol->string (stance-range stance)))))
-           )
-         (set! unpruned-rows
-                 (append-element unpruned-rows
-                                 (tr
-                                  "size  [perceived with eyes]"
-                                  (format "~a" (actor-size actor)))))
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "HP    [perceived with eyes]"
-                                (if hide-hp?
-                                    "???"
-                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))))
-         )
-       (when (pc-has-sense-organ? 'sonar)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "range [perceived with sonar]"
-                                (case (stance-range stance)
-                                 [('engaged 'adjacent 'close) (symbol->string (stance-range stance))]
-                                 [('nearby 'far) "???"])
-                                )))
-         )
-
-        (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "HP    [perceived with nose]"
-                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
-         )
-
-       unpruned-rows]
-
-      [("Human fighter")
-       (tbody
-        (tr
-         "size"
-         (actor-size actor))
-        (if (not (null? stance))
-            (tr
-             "range"
-             (symbol->string (stance-range stance)))
-            (list
-             "range"
-             "N/A")))]
-
-      [("Voidfloater")
-       (define unpruned-rows '())
-
-       unpruned-rows
-       ]
-
-      [else
-        (dev-note (format "Unknown actor: ~a" (actor-name actor)))
-        (tbody
-        (tr
-         "size"
-         (actor-size actor))
-        (if (not (null? stance))
-            (tr
-             "range"
-             (symbol->string (stance-range stance)))
-            (list
-             "range"
-             "N/A")))]))
-
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
     (define statuses-list
       (tr "statuses" (~s statuses)))
-    (set! body (append-element body statuses-list)))
+    (append-element! body statuses-list))
   (info-card
    body
-   name))
+   name)
+  )
 
 (define (display-combat-timeline)
   (define body
