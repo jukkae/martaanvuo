@@ -162,6 +162,10 @@
      (advance-time-by-iotas! (d 6 12))
      (spawn-encounter)
      ]
+    [else
+     (move-pc-to-location! (get-place-by-id 'the-maw))
+     (advance-time-by-iotas! (d 6 12))
+     (spawn-encounter)]
   ;   [(2)
   ;    @p{
   ;     Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.

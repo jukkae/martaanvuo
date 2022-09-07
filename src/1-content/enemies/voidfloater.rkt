@@ -113,9 +113,10 @@
                  (notice "The voidfloater's venom injector pierces Otava's skin.")
                  (inflict-condition!
                   (pc)
-                  (condition 'envenomed
+                  (Illness 'envenomed
                             (current-elapsed-time)
-                            (list 'at (current-elapsed-time) "ι")))
+                            (list 'at (current-elapsed-time) "ι")
+                            'incubating))
                  ]
                  ['adjacent
                   (cond [(= (d 1 2) 2)

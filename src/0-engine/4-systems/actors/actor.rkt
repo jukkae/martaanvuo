@@ -220,15 +220,18 @@
      ]
     [else (dev-note (format "Unknown condition ~a" condition))]))
 
+; TODO: this belongs to content
 (define (actor-process-condition-tick actor condition)
   (case (condition-type condition)
     ['envenomed
      (when (= (condition-age condition) 5)
-       (notice (format "[~a] [~a] Envenomation is now peaking." (actor-name actor) (current-elapsed-time))))
+       (notice (format "[~a] [~a] Envenomation is now acute." (actor-name actor) (current-elapsed-time)))
+       (set-Illness-state! condition 'acute))
      (when (= (condition-age condition) 100)
-       (notice (format "[~a] [~a] Envenomation is now subsiding." (actor-name actor) (current-elapsed-time))))
+       (notice (format "[~a] [~a] Envenomation is now postacute." (actor-name actor) (current-elapsed-time)))
+       (set-Illness-state! condition 'postacute))
      (when (= (condition-age condition) 700)
-       (notice (format "[~a] [~a] Envenomation is now gone." (actor-name actor) (current-elapsed-time)))
+       (notice (format "[~a] [~a] Envenomation has now healed." (actor-name actor) (current-elapsed-time)))
        (actor-remove-condition-of-type! actor 'envenomed))
      ]
     ))

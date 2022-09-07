@@ -2,6 +2,7 @@
 
 (provide
   (struct-out condition)
+  (struct-out Illness)
   (struct-out FreshInjury))
 
 (require "../2-core/maybe.rkt")
@@ -14,15 +15,20 @@
   #:prefab
   #:mutable)
 
+(define-type IllnessState (U 'incubating 'acute 'postacute))
+
+(struct Illness condition
+  ([state : IllnessState])
+  #:prefab
+  #:mutable
+  )
 
 (define-type Injury (U FreshInjury TreatedInjury HealedInjury))
-
 
 (struct FreshInjury condition
   ([acquired-at : Natural])
   #:prefab
   #:mutable)
-
 
 (define-type TreatmentSuccess (U 'poorly-treated 'well-treated))
 

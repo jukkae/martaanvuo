@@ -15,9 +15,9 @@
   (when [pc-has-sense-organ? 'basic-homeostasis]
     (define percepts '())
     (when (pc-envenomed-peaking?)
-      (append-element! percepts "Weak and queasy [envenomed peaking]"))
+      (append-element! percepts "Weak and dazed [envenomed – acute]"))
     (when (<= (actor-hp (pc)) 1)
-      (append-element! percepts "Really fucking bad"))
+      (append-element! percepts "Really fucking bad [severe blood loss – low HP]"))
     ; (when (actor-has-condition-of-type? (pc) 'envenomed)
     ;   (append-element! percepts "Bad"))
     (when (empty? percepts)
@@ -65,8 +65,11 @@
     (define conditions (actor-conditions actor))
     (define conditions-strings
       (for/list ([condition conditions])
-        (format "[~a (age: ~a ι)]"
+        (format "[~a~a (age: ~a ι)]"
           (condition-type condition)
+          (if (Illness? condition)
+            (format " – ~a" (Illness-state condition))
+            "")
           (condition-age condition)
         )))
 
@@ -123,8 +126,11 @@
                        name)
                       (else (format "~a ~a" name sign)))))))))
 
+(define (display-enemy-info actor)
+  (dev-note "TODO: fix sensory perception"))
 
 (define (display-non-pc-combatant-info actor)
+  (display-enemy-info actor)
   (define stance (actor-stance actor))
   (define name (get-combatant-name actor))
   (define hide-hp?
