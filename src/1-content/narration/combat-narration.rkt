@@ -127,7 +127,51 @@
                       (else (format "~a ~a" name sign)))))))))
 
 (define (display-enemy-info actor)
-  (dev-note "TODO: fix sensory perception"))
+  (dev-note "TODO: fix sensory perception")
+  (define stance (actor-stance actor))
+  (define name (get-combatant-name actor))
+  (define body '())
+  (for ([sense-organ (pc-actor-sense-organs (pc))])
+    (case (SenseOrgan-id sense-organ)
+      ['eyes
+       (append-element! body (tr
+                              "range [perceived with eyes]"
+                              (symbol->string (stance-range stance))))
+       (append-element! body (tr
+                              "size  [perceived with eyes]"
+                              (format "~a" (actor-size actor))))
+       (case (get-current-light-level)
+         ['bright
+          (append-element! body
+                           (tr
+                            "HP    [perceived with eyes]"
+                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))]
+         ['dark
+          (append-element! body
+                           (cond [(or (eq? (stance-range stance) 'engaged)
+                                      (eq? (stance-range stance) 'adjacent)
+                                      (eq? (stance-range stance) 'close)
+                                      (eq? (stance-range stance) 'nearby))
+                                  (tr
+                                   "HP    [perceived with eyes]"
+                                   (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
+                                  ]
+                                 [else
+                                  (tr
+                                   "HP    [perceived with eyes]"
+                                   (format "too dark to see this far"))])
+                           )]
+         ['pitch-black
+          (append-element! body
+                           (tr
+                            "HP    [perceived with eyes]"
+                            (format "too dark to see")))])
+       ])
+    )
+  (info-card
+   body
+   name)
+  )
 
 (define (display-non-pc-combatant-info actor)
   (display-enemy-info actor)
@@ -214,49 +258,6 @@
 
       [("Voidfloater")
        (define unpruned-rows '())
-       (when (pc-has-sense-organ? 'eyes)
-         (when (not (null? stance))
-           (set! unpruned-rows
-                 (append-element unpruned-rows
-                                 (tr
-                                  "range [perceived with eyes]"
-                                  (symbol->string (stance-range stance)))))
-           (set! unpruned-rows
-                 (append-element unpruned-rows
-                                 (tr
-                                  "size  [perceived with eyes]"
-                                  (format "~a" (actor-size actor)))))
-           )
-         (case (get-current-light-level)
-          ['bright
-           (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "HP    [perceived with eyes]"
-                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))]
-          ['dark
-           (set! unpruned-rows
-               (append-element unpruned-rows
-                               (cond [(or (eq? (stance-range stance) 'engaged)
-                                          (eq? (stance-range stance) 'adjacent)
-                                          (eq? (stance-range stance) 'close)
-                                          (eq? (stance-range stance) 'nearby))
-                                 (tr
-                                    "HP    [perceived with eyes]"
-                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
-                                 ]
-                                 [else
-                                  (tr
-                                    "HP    [perceived with eyes]"
-                                    (format "too dark to see this far"))])
-                               ))]
-          ['pitch-black
-           (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "HP    [perceived with eyes]"
-                                (format "too dark to see"))))])
-         )
        (when (pc-has-sense-organ? 'sonar)
          (set! unpruned-rows
                (append-element unpruned-rows
