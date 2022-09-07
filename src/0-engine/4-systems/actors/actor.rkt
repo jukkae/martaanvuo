@@ -339,7 +339,7 @@
   (when (not (eq? (stance-range (actor-stance moving-actor)) new-range))
     (set-stance-range! (actor-stance moving-actor) new-range)
     (notice
-     (format
+     (format "[~a ι] ~a" (current-elapsed-time) (format
       (case (stance-range (actor-stance moving-actor))
         ['engaged
          (if pc?
@@ -371,7 +371,7 @@
              "The ~a is now far."
              )
          ])
-      (actor-name moving-actor))
+      (actor-name moving-actor)))
      )
     )
   )

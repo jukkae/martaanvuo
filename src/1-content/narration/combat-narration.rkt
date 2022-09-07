@@ -65,7 +65,10 @@
     (define conditions (actor-conditions actor))
     (define conditions-strings
       (for/list ([condition conditions])
-        (format "[~a]" (condition-type condition))))
+        (format "[~a (age: ~a ι)]"
+          (condition-type condition)
+          (condition-age condition)
+        )))
 
     (define conditions-list
       (tr "" "conditions"

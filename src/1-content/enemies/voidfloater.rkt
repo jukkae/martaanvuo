@@ -35,7 +35,7 @@
   (make-action
    #:symbol 'get-closer
    #:actor actor
-   #:duration 1
+   #:duration 0
    #:target '()
    #:tags '(initiative-based-resolution)
    #:resolution-rules
@@ -64,7 +64,7 @@
   (make-action
    #:symbol 'get-further
    #:actor actor
-   #:duration 1
+   #:duration 0
    #:target '()
    #:tags '(initiative-based-resolution)
    #:resolution-rules
