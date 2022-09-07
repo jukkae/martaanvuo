@@ -134,19 +134,20 @@
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)
       ['eyes
+       (define eyes-text (format "eyes [~a]" (get-current-light-level)))
        (append-element! body (tr
-                              "eyes"
+                              eyes-text
                               "range"
                               (symbol->string (stance-range stance))))
        (append-element! body (tr
-                              "eyes"
+                              eyes-text
                               "size"
                               (format "~a" (actor-size actor))))
        (case (get-current-light-level)
          ['bright
           (append-element! body
                            (tr
-                            "eyes [bright]"
+                            eyes-text
                             "HP"
                             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))]
          ['dark
@@ -156,23 +157,58 @@
                                       (eq? (stance-range stance) 'close)
                                       (eq? (stance-range stance) 'nearby))
                                   (tr
-                                   "eyes [dark]"
+                                   eyes-text
                                    "HP"
                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
                                   ]
                                  [else
                                   (tr
-                                   "eyes [dark]"
+                                   eyes-text
                                    "HP"
                                    (format "too dark to see this far"))])
                            )]
          ['pitch-black
           (append-element! body
                            (tr
-                            "eyes [pitch black]"
+                            eyes-text
                             "HP"
                             (format "too dark to see")))])
-       ])
+       ]
+      ['sonar
+       (append-element! body
+                        (cond [(or (eq? (stance-range stance) 'engaged)
+                                          (eq? (stance-range stance) 'adjacent)
+                                          (eq? (stance-range stance) 'close))
+                                 (tr
+                                    "sonar"
+                                    "range"
+                                    (symbol->string (stance-range stance))
+                                  )
+                                 ]
+                                 [else
+                                  (tr
+                                    "sonar"
+                                    "range"
+                                    "???"
+                                  )]))
+       ]
+      ['nose
+       (append-element! body
+                          (tr
+                           "olfaction"
+                           "range"
+                           (symbol->string (stance-range stance))
+                           ))
+       (when (< (actor-hp actor) (actor-max-hp actor))
+         (append-element! body
+                          (tr
+                           "olfaction"
+                           "condition"
+                           "wounded [HP not full, bleeding]"
+                           #;(format "~a/~a" (actor-hp actor) (actor-max-hp actor))))
+         )
+       ]
+      )
     )
   (info-card
    body
@@ -264,32 +300,6 @@
 
       [("Voidfloater")
        (define unpruned-rows '())
-       (when (pc-has-sense-organ? 'sonar)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (cond [(or (eq? (stance-range stance) 'engaged)
-                                          (eq? (stance-range stance) 'adjacent)
-                                          (eq? (stance-range stance) 'close))
-                                 (tr
-                                    "range [perceived with sonar]"
-                                    (symbol->string (stance-range stance))
-                                  )
-                                 ]
-                                 [else
-                                  (tr
-                                    "range [perceived with sonar]"
-                                    "???"
-                                  )])
-                               ))
-         )
-
-        (when (and (pc-has-sense-organ? 'nose) (< (actor-hp actor) (actor-max-hp actor)))
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "HP    [perceived with nose]"
-                                (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))))
-         )
 
        unpruned-rows
        ]

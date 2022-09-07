@@ -31,11 +31,11 @@
    #:sense-organs (list
     (SenseOrgan 'basic-homeostasis "basic homeostasis")
     (SenseOrgan 'nociception "nociception")
-    ; (SenseOrgan 'nose "nose")
+    (SenseOrgan 'nose "nose")
     (SenseOrgan 'eyes "eyes")
-    ; (SenseOrgan 'ears "ears")
-    ; (SenseOrgan 'sonar "sonar")
-    ;(SenseOrgan 'touch-sensitive-skin "touch-sensitive skin")
+    (SenseOrgan 'ears "ears")
+    (SenseOrgan 'sonar "sonar")
+    (SenseOrgan 'haptics "haptics")
     )
    #:manipulators (list
     (Manipulator 'human-hands "hands at end of arms")
