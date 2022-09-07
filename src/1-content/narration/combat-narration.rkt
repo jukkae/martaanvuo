@@ -15,7 +15,7 @@
   (when [pc-has-sense-organ? 'basic-homeostasis]
     (define percepts '())
     (when (pc-envenomed-peaking?)
-      (append-element! percepts "Pretty bad"))
+      (append-element! percepts "Weak and queasy [envenomed peaking]"))
     (when (<= (actor-hp (pc)) 1)
       (append-element! percepts "Really fucking bad"))
     ; (when (actor-has-condition-of-type? (pc) 'envenomed)
@@ -24,19 +24,28 @@
       (append-element! percepts "Fine"))
     (for ([percept percepts])
       (append-element! body
-        (tr "basic homeostasis" "" percept)))
+        (tr "basic homeostasis" "base feeling" percept)))
     )
 
+  (when (and (pc-has-sense-organ? 'eyes)
+             (not (eq? (get-current-light-level) 'pitch-black)))
+    (define percept
+      (cond [(= (actor-hp actor) (actor-max-hp actor))
+             "Perfect"]
+            [(> (actor-hp actor) (/ (actor-max-hp actor) 2))
+             "Somewhat damaged"]
+            [else "Bad"]))
+    (append-element! body
+      (tr "eyes" "organism condition" percept)))
+
   (when [pc-has-sense-organ? 'nociception]
-    (set! body
-          (append body
-                  (list
-                   (tr
-                    "perceived with nociception"
-                    "HP"
-                    (format "~a/~a"
-                            (actor-hp actor)
-                            (actor-max-hp actor))))))
+    (append-element! body
+                     (tr
+                      "nociception"
+                      "HP"
+                      (format "~a/~a"
+                              (actor-hp actor)
+                              (actor-max-hp actor))))
     )
 
   (when (not (null? (actor-statuses actor)))

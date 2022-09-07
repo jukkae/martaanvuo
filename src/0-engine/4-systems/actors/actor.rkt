@@ -256,7 +256,7 @@
 (define (pc-take-damage! actor damage damage-type)
   (when (< damage 0) (error "pc-take-damage: damage cannot be less than 0"))
 
-  (cond ((not (positive? (actor-hp actor)))
+  (cond [(not (positive? (actor-hp actor)))
 
          (define new-hp (- (actor-hp actor) damage))
          (set-actor-hp! actor new-hp)
@@ -280,16 +280,17 @@
                   'dead))
                (else
                 'hit)
-               ))
+               )]
 
-        (else
+        [else
          (define new-hp (- (actor-hp actor) damage))
          (when (not (positive? new-hp))
            (notice "Otava is dying.")
            (wait-for-confirm))
 
          (set-actor-hp! actor new-hp)
-         'hit)))
+         (notice (format "Otava takes ~a damage. New HP: ~a." damage (actor-hp actor)))
+         'hit]))
 
 
 ; TODO: dispatching?
