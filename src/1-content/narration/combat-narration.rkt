@@ -135,16 +135,19 @@
     (case (SenseOrgan-id sense-organ)
       ['eyes
        (append-element! body (tr
-                              "range [perceived with eyes]"
+                              "eyes"
+                              "range"
                               (symbol->string (stance-range stance))))
        (append-element! body (tr
-                              "size  [perceived with eyes]"
+                              "eyes"
+                              "size"
                               (format "~a" (actor-size actor))))
        (case (get-current-light-level)
          ['bright
           (append-element! body
                            (tr
-                            "HP    [perceived with eyes]"
+                            "eyes [bright]"
+                            "HP"
                             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))]
          ['dark
           (append-element! body
@@ -153,18 +156,21 @@
                                       (eq? (stance-range stance) 'close)
                                       (eq? (stance-range stance) 'nearby))
                                   (tr
-                                   "HP    [perceived with eyes]"
+                                   "eyes [dark]"
+                                   "HP"
                                    (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
                                   ]
                                  [else
                                   (tr
-                                   "HP    [perceived with eyes]"
+                                   "eyes [dark]"
+                                   "HP"
                                    (format "too dark to see this far"))])
                            )]
          ['pitch-black
           (append-element! body
                            (tr
-                            "HP    [perceived with eyes]"
+                            "eyes [pitch black]"
+                            "HP"
                             (format "too dark to see")))])
        ])
     )
