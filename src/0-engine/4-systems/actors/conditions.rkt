@@ -49,7 +49,6 @@
      #;(dev-note (format "TODO: Something else: ~a" (condition-type condition)))])
   '())
 
-
 ; Fresh injury [acquired-at]
 ; -> Treated injury [treated-at time-until-healed] (well treated / poorly treated; healing / not healing)
 ; -> Healed injury

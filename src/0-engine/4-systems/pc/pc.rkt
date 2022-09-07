@@ -331,4 +331,5 @@
 (define (pc-envenomed-peaking?)
   (and (actor-has-condition-of-type? (pc) 'envenomed)
        (>= (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 5)
+       (<  (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 100)
        ))

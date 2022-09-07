@@ -6,6 +6,8 @@
 (require racket/lazy-require)
 
 (require
+  "actors/actor.rkt"
+  "actors/conditions.rkt"
   "events.rkt"
   "timelines.rkt"
   "items/item.rkt"
@@ -15,8 +17,10 @@
   "../2-core/core.rkt"
   "../2-core/output.rkt"
 
+  "../3-types/actor.rkt"
   "../3-types/event.rkt"
   "../3-types/item.rkt"
+  "../3-types/location.rkt"
   "../3-types/pc-actor.rkt"
   "../3-types/timeline.rkt"
   "../3-types/world.rkt"
@@ -61,6 +65,9 @@
   (when (not (null? new-hunger-level?))
     (set! events (append-element events new-hunger-level?)))
 
+  (for ([actor (location-actors (current-location))])
+    (for ([condition (actor-conditions actor)])
+      (actor-process-condition-tick actor condition)))
 
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
