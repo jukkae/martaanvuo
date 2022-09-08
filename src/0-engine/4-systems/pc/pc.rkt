@@ -58,6 +58,7 @@
 
   (set-pc-actor-max-lp! (pc) 1)
   (set-pc-actor-lp! (pc) 1)
+  (set-pc-actor-hunger! (pc) 350)
 
   ; (set-trait! (pc) "athletics-skill" 1)
   (set-trait! (pc) "melee-attack-skill" 3)
@@ -66,25 +67,9 @@
   ; (set-trait! (pc) "exploration-skill" 1)
 
   ; (add-item! 'knife #:amount 2 #:silent? #t)
-  (add-item! 'ration #:amount 2 #:silent? #t)
+  ; (add-item! 'ration #:amount 2 #:silent? #t)
   (add-item! 'bolt-cutters #:silent? #t)
   (add-item! 'lucky-charm-slot-machine #:silent? #t)
-  )
-
-(define (set-build! build)
-  (set-base-build!)
-  (case build
-    ['rope
-     (add-item! 'rope #:silent? #t)
-     ]
-
-    ['flashlight
-     (add-item! 'flashlight #:amount 1 #:silent? #t)
-     ]
-
-    [else (error (format "set-build!: unknown build type ~a" build))])
-  #;(inventory)
-  #;(character-sheet)
   )
 
 ; (: -> Modification '())

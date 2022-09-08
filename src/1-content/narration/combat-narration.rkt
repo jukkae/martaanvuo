@@ -36,7 +36,7 @@
              "Somewhat damaged"]
             [else "Bad"]))
     (append-element! body
-      (tr "eyes" "organism condition" percept)))
+      (tr "vision" "organism condition" percept)))
 
   (when [pc-has-sense-organ? 'nociception]
     (append-element! body
@@ -133,7 +133,7 @@
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)
       ['eyes
-       (define eyes-text (format "eyes [~a]" (get-current-light-level)))
+       (define eyes-text (format "vision [~a]" (get-current-light-level)))
        (append-element! body (tr
                               eyes-text
                               "range"

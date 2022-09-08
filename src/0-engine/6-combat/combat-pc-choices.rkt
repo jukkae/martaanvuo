@@ -113,7 +113,7 @@
                  (or (not (empty? close-enemies))
                      (not (empty? nearby-enemies))
                      (not (empty? far-enemies))))
-            (define enemies-in-range (append* close-enemies nearby-enemies far-enemies))
+            (define enemies-in-range (append close-enemies nearby-enemies far-enemies))
             (for ([target enemies-in-range])
               (define target-stance-range
                 (case (stance-range (actor-stance target))
