@@ -52,9 +52,7 @@
                           (define success? (>= pc-roll tn))
                           (cond [success?
                                  (notice (format "[~a] >= ~a – success!" pc-roll tn))
-                                 (for ([enemy-movement-action enemy-movement-actions])
-                                   (remove-from-action-queue (list enemy-movement-action))
-                                   )
+                                 (remove-from-action-queue enemy-movement-actions)
                                  ]
                                 [else
                                  (notice (format "[~a] >= ~a – failure!" pc-roll tn))
@@ -73,7 +71,7 @@
                           (define success? (>= enemy-roll tn))
                           (cond [success?
                                  (notice (format "[Enemy] [~a] >= ~a – success!" enemy-roll tn))
-                                 (remove-from-action-queue (list pc-movement-action))
+                                 (remove-from-action-queue pc-movement-action)
                                  ]
                                 [else
                                  (notice (format "[Enemy] [~a] >= ~a – failure!" enemy-roll tn))

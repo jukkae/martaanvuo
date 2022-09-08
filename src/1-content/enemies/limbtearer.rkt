@@ -75,36 +75,36 @@
    #:details '(slow)))
 
 (define (fight-behavior actor)
-  (case (stance-range (actor-stance actor))
-           ['engaged
-            (define target-id (actor-id (pc)))
-            (define subject-id (actor-id actor))
-            (make-action
-             #:symbol 'tear-limb
-             #:actor actor
-             #:duration 1
-             #:target 'pc
-             #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
-             #:resolution-rules
-             `(
-               ; check *current* range, at time of resolving action
-               (case (stance-range (actor-stance (get-actor ,subject-id)))
-                ['engaged
-                 (notice "The limbtearer's grabs Otava's arm and wrangles it behind her back. There's a wet, cracking, tearing sound.")
-                 (inflict-condition!
-                  (pc)
-                  (condition 'dislocated-shoulder
-                            (current-elapsed-time)
-                            "hand unusable"))
-                 ]
-                [else
-                 (notice "The limbtearer is too far to reach Otava.")
-                 ])
-               '()
-               )
-             )]
-           [else (get-closer-action actor)]
-           ))
+  (cond [(eq? (stance-range (actor-stance actor)) 'engaged)
+         (define target-id (actor-id (pc)))
+         (define subject-id (actor-id actor))
+         (make-action
+          #:symbol 'tear-limb
+          #:actor actor
+          #:duration 1
+          #:target 'pc
+          #:tags '(initiative-based-resolution) ; TODO: what to do with non-initiative-based actions in queue? just cancel?
+          #:resolution-rules
+          `(
+            ; check *current* range, at time of resolving action
+            (case (stance-range (actor-stance (get-actor ,subject-id)))
+              ['engaged
+               (notice "The limbtearer's grabs Otava's arm and wrangles it behind her back. There's a wet, cracking, tearing sound.")
+               (inflict-condition!
+                (pc)
+                (condition 'dislocated-shoulder
+                           (current-elapsed-time)
+                           "hand unusable"))
+               ]
+              [else
+               (notice "The limbtearer is too far to reach Otava.")
+               ])
+            '()
+            )
+          )
+         ]
+        [else (get-closer-action actor)]
+        ))
 
 (define (flee-behavior actor)
   (cond [else
