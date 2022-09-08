@@ -1,6 +1,8 @@
 #lang at-exp racket
 
 (require
+  racket/lazy-require
+
   "ai.rkt"
   "action-queue.rkt"
 
@@ -21,6 +23,10 @@
 
   "../../7-state/state.rkt"
   )
+
+(lazy-require ["../../../1-content/narration/combat-narration.rkt" (
+  get-combatant-name
+  )])
 
 
 (provide resolve-turns!)
@@ -46,16 +52,16 @@
             (cond [(pc-action? action)
                    (define enemy-movement-actions (find-all-enemy-movement-actions))
                    (cond [(not (null? enemy-movement-actions))
-                          (notice "Contested roll: DEX: [2d6]")
+                          (notice (format "[~a] Contested roll: DEX: [2d6]" (get-combatant-name actor)))
                           (define pc-roll (d 2 6))
                           (define tn 6)
                           (define success? (>= pc-roll tn))
                           (cond [success?
-                                 (notice (format "[~a] >= ~a – success!" pc-roll tn))
+                                 (notice (format "[~a] >= ~a – success! [Enemy movements discarded.]" pc-roll tn))
                                  (discard-actions! enemy-movement-actions)
                                  ]
                                 [else
-                                 (notice (format "[~a] >= ~a – failure!" pc-roll tn))
+                                 (notice (format "[~a] >= ~a – failure! [Otava's movement discarded.]" pc-roll tn))
                                  (discard-action! action)
                                  ])
                           '()]
@@ -65,16 +71,16 @@
                    ; list!
                    (define pc-movement-actions (find-pc-movement-actions))
                    (cond [(not (null? pc-movement-actions))
-                          (notice "[Enemy] Contested roll: DEX: [2d6]")
+                          (notice (format "[~a] Contested roll: DEX: [2d6]" (get-combatant-name actor)))
                           (define enemy-roll (d 2 6))
                           (define tn 8)
                           (define success? (>= enemy-roll tn))
                           (cond [success?
-                                 (notice (format "[Enemy] [~a] >= ~a – success!" enemy-roll tn))
+                                 (notice (format "[Enemy] [~a] >= ~a – success! [Otava's movement discarded.]" enemy-roll tn))
                                  (discard-actions! pc-movement-actions)
                                  ]
                                 [else
-                                 (notice (format "[Enemy] [~a] >= ~a – failure!" enemy-roll tn))
+                                 (notice (format "[Enemy] [~a] >= ~a – failure! [Movement discarded.]" enemy-roll tn))
                                  (discard-action! action)
                                  ])
                           '()]
