@@ -51,6 +51,9 @@
 (lazy-require ["../../../1-content/enemies/voidfloater.rkt"
   (make-voidfloater
    )])
+(lazy-require ["../../../1-content/enemies/limbtearer.rkt"
+  (make-limbtearer
+   )])
 
 (define (make-actor
          name
@@ -216,9 +219,9 @@
     ['one-eye-blind '()]
     ['both-eyes-blind '()]
     ['envenomed
-     (actor-add-condition! target a-condition)
-     ]
-    [else (dev-note (format "Unknown condition ~a" condition))]))
+     (actor-add-condition! target a-condition)]
+    ['dislocated-shoulder (actor-add-condition! target a-condition)]
+    [else (dev-note (format "Unknown condition ~a" a-condition))]))
 
 ; TODO: this belongs to content
 (define (actor-process-condition-tick actor condition)
@@ -316,6 +319,7 @@
     ['blindscraper (make-blindscraper)]
     ['human-fighter (make-human-fighter)]
     ['voidfloater (make-voidfloater)]
+    ['limbtearer (make-limbtearer)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))
 
 ; TODO: make stances nice

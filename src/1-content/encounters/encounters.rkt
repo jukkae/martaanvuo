@@ -45,8 +45,10 @@
 (define (spawn-voidfloater-encounter!)
 
   (define range (take-random (list 'nearby 'close)))
-  (notice (format"A voidfloater appears ~a." range))
+  (notice (format "A voidfloater appears ~a." range))
   (spawn 'voidfloater 1 range)
+  (notice (format "A limbtearer appears nearby."))
+  (spawn 'limbtearer 1 'nearby)
   (begin-combat!)
   )
 
