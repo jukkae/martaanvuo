@@ -65,44 +65,89 @@
         )
       )
     (for ([action action-queue])
-
       (define actor (get-actor (action-actor-id action)))
-      ; a bit hacky check to see if this actor has been removed already
       (define actor-removed?
         (or (not actor)
             (empty? (actor-location-id actor))))
 
-      (cond ((not actor-removed?)
-             (define pre-action-reaction? (get-pre-action-reaction action))
-             (when (not (null? pre-action-reaction?))
-               (set! action pre-action-reaction?))
+      (cond
+        [(not actor-removed?)
 
-             (define turn-result (resolve-turn! action))
+         (cond
+           [(or (eq? (action-symbol action) 'get-closer)
+                (eq? (action-symbol action) 'get-further))
+            (cond [(pc-action? action)
+                   (define enemy-movement-actions (find-all-enemy-movement-actions))
+                   (cond [(not (null? enemy-movement-actions))
+                          (notice "Contested roll: DEX: [2d6]")
+                          (define pc-roll (d 2 6))
+                          (define tn 6)
+                          (define success? (>= pc-roll tn))
+                          (cond [success?
+                                 (notice (format "[~a] >= ~a – success!" pc-roll tn))
+                                 (for ([enemy-movement-action enemy-movement-actions])
+                                   (remove-from-action-queue (list enemy-movement-action))
+                                   )
+                                 ]
+                                [else
+                                 (notice (format "[~a] >= ~a – failure!" pc-roll tn))
+                                 (remove-from-action-queue (find-pc-movement-action))
+                                 ])
+                          '()]
+                         )
+                   ]
+                  [(non-pc-action? action)
+                   ; list!
+                   (define pc-movement-action (find-pc-movement-action))
+                   (cond [(not (null? pc-movement-action))
+                          (notice "[Enemy] Contested roll: DEX: [2d6]")
+                          (define enemy-roll (d 2 6))
+                          (define tn 8)
+                          (define success? (>= enemy-roll tn))
+                          (cond [success?
+                                 (notice (format "[Enemy] [~a] >= ~a – success!" enemy-roll tn))
+                                 (remove-from-action-queue (list pc-movement-action))
+                                 ]
+                                [else
+                                 (notice (format "[Enemy] [~a] >= ~a – failure!" enemy-roll tn))
+                                 (remove-from-action-queue (list action))
+                                 ])
+                          '()]
+                         )
+                   ])])
 
-             (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
-             (when (not (null? post-action-reaction-from-target?))
-               ;(define action post-action-reaction-from-target?)
-               (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
+         (define turn-result 'ok)
 
-             (when (empty? (get-current-enemies))
-               (set! turn-result 'end-combat)
-               )
+         (define pre-action-reaction? (get-pre-action-reaction action))
+         (when (not (null? pre-action-reaction?))
+           (set! action pre-action-reaction?))
 
-             (when (not (pc-is-alive?))
-               (set! turn-result 'pc-dead))
+         (when (not (eq? (action-symbol action) 'discarded))
+           (set! turn-result (resolve-turn! action)))
 
-             (case turn-result
-               ['pc-dead
-                (end-combat)
-                (end-round-early)]
+         (define post-action-reaction-from-target? (get-post-action-reaction action turn-result))
+         (when (not (null? post-action-reaction-from-target?))
+           ;(define action post-action-reaction-from-target?)
+           (dev-note (format "-- post-action-reaction-from-target?: ~a" post-action-reaction-from-target?)))
 
-               ['end-combat
-                (end-combat)
-                (end-round-early)]
-               ))
+         (when (empty? (get-current-enemies))
+           (set! turn-result 'end-combat)
+           )
 
-            (else
-             'skipped))
+         (when (not (pc-is-alive?))
+           (set! turn-result 'pc-dead))
+
+         (case turn-result
+           ['pc-dead
+            (end-combat)
+            (end-round-early)]
+
+           ['end-combat
+            (end-combat)
+            (end-round-early)]
+           )]
+
+        [else 'skipped])
       )))
 
 ; (: -> Action TurnResult)

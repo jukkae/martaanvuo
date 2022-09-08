@@ -17,7 +17,10 @@
 (define (add-to-action-queue action initiative)
   (set! action-queue (cons (cons initiative action) action-queue)))
 
+; TODO: this "discards" the action -> does more than just remove it from queue
 (define (remove-from-action-queue actions)
+  (for ([action actions])
+    (set-action-symbol! action 'discarded))
   (set! action-queue (remq* actions action-queue)))
 
 (define (clear-action-queue!)
@@ -50,3 +53,21 @@
     (set! action-queue (append-element action-queue (cdr action-with-initiative))))
 
   action-queue)
+
+(define (movement-action? action)
+  (if (or (eq? (action-symbol action) 'get-closer)
+          (eq? (action-symbol action) 'get-further))
+      #t
+      #f))
+
+(define (non-pc-action? action)
+  (if (eq? (action-actor-id action) 'pc)
+    #f
+    #t))
+
+(define (find-all-enemy-movement-actions)
+  (filter non-pc-action? (filter movement-action? action-queue)))
+
+; as list!
+(define (find-pc-movement-action)
+  (filter pc-action? (filter movement-action? action-queue)))
