@@ -9,7 +9,10 @@
 (struct choice
   ([id : Symbol]
    [name : String]
-   [resolution-effect : (U '() action (->* () action) Sexp)]
+   [resolution-effect : (U '()
+                           action
+                           (->* () (U '() action))
+                           Sexp)]
    [available-in-combat? : Boolean]
    )
   #:mutable
@@ -17,7 +20,10 @@
   #:constructor-name choice*)
 
 (: make-choice (->* (Symbol String)
-                    ((U '() action (->* () action) Sexp)
+                    ((U '()
+                        action
+                        (->* () (U '() action))
+                        Sexp)
                      #:available-in-combat? Boolean)
                     choice))
 (define (make-choice

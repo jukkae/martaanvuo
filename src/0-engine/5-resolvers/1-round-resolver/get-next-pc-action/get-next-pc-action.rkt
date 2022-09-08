@@ -149,9 +149,9 @@
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
-
   (define action
-    (cond ((procedure? resolution-effect) (resolution-effect))
+    (cond ((procedure? resolution-effect)
+           (resolution-effect))
           [(action? resolution-effect)
            resolution-effect]
           [(null? resolution-effect)
@@ -164,6 +164,12 @@
              result) ; TODO: result is an action result, specifically
            ]
           (else (error (format "resolve-choice-and-produce-action!: unknown resolution-effect: ~a." resolution-effect)))))
+
+  ; TODO: uurgh
+  (when (null? action)
+    ; TODO: extract empty-action or something
+    (set! action
+      (make-action #:symbol 'empty-action #:actor (pc) #:duration 0)))
 
   (when (or (string-prefix? (choice-name current-choice) "[continue]")
             (string-prefix? (choice-name current-choice) "[cancel]"))

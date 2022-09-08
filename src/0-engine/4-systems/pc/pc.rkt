@@ -174,6 +174,12 @@
          (notice (format "Sense organ removed: ~a" (SenseOrgan-name it))))
         ))
 
+(define (remove-all-sense-organs!)
+  (define sense-organs (pc-actor-sense-organs (pc)))
+  (for ([sense-organ sense-organs])
+    (remove-sense-organ! (SenseOrgan-id sense-organ)))
+  (notice "Otava is an existence cut off completely from the outside world."))
+
 (define (pc-has-manipulator? id)
   (define manipulators (pc-actor-manipulators (pc)))
   (findf (λ (manipulator) (eq? (Manipulator-id manipulator) id))
@@ -318,3 +324,21 @@
        (>= (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 5)
        (<  (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 100)
        ))
+
+(define sense-organs
+  (list
+    (SenseOrgan 'basic-homeostasis "basic homeostasis")
+    (SenseOrgan 'nociception "nociception")
+    (SenseOrgan 'nose "nose")
+    (SenseOrgan 'eyes "eyes")
+    (SenseOrgan 'ears "ears")
+    (SenseOrgan 'sonar "sonar")
+    (SenseOrgan 'haptics "haptics")
+    ))
+
+(define (randomize-pc-senses!)
+  (define roll (d 1 6))
+  (notice (format "Gift roll (1d6): [~a]" roll))
+  (remove-all-sense-organs!)
+  (for ([sense-organ (take-n-random sense-organs roll)])
+    (add-sense-organ! sense-organ)))

@@ -12,16 +12,25 @@
 
 ; TODO: location-specific
 (define (get-magpie-hill-choices)
-
-  '()#;(list (make-choice
-    'follow-the-magpie
-    "Follow the magpie."
-    (λ ()
-      (p "Otava follows the sound of the magpie. It's not very far, but the magpie flies a couple of times further in on the plateau, deeper into a sparse forest of skeletonlike bushes and small trees. The magpie eventually settles on a branch in a tree on the edge of an unremarkable clearing.")
-      (go-to-fragment 'magpie)
-      (remove-feature-from-location! (current-location) 'magpie-effigy)
-      'end-chapter)) ; ie., 'end-round-early, plus next chapter on next round
-      )
+  (prune (list
+          (cond [(pc-has-item? 'voidfloater-corpse)
+                 (make-choice
+                  'make-an-offering
+                  "Make an offering to the Magpie Effigy."
+                  (λ ()
+                    (p "Otava offers a voidfloater corpse to the Magpie Effigy and kneels to receive the Gift.")
+                    (remove-item! 'voidfloater-corpse)
+                    (randomize-pc-senses!)
+                    (wait-for-confirm)
+                    '()
+                    ))
+                 ]
+                [else
+                 (notice "The Magpie Effigy demands an offering of voidfloater corpse!")
+                 (wait-for-confirm)
+                 '()]
+                 )
+          ))
   )
 
 (define (get-precipice-choices)
