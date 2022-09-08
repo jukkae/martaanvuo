@@ -150,11 +150,31 @@
             ))
          (define success-string (format "~a" check-outcome))
 
+         (for ([i tn])
+          (display ".")
+          (flush-output))
+         (newline)
          (for ([i roll-total])
-          (sleep 0.2)
+           (define sleep-time
+             (cond [(>= i tn)
+                    0.2]
+                   [(= i (- tn 2))
+                    (take-random (list 0.2 0.4 0.8 1.2))
+                    ]
+                   [(= i (- tn 1))
+                    (take-random (list 0.4 0.8 1.2 1.6))]
+                   [else
+                    (take-random (list 0.2 0.4 0.8))]))
+          (sleep sleep-time)
           (display ".")
           (flush-output)
           )
+         (define sleep-time
+           (cond
+            [(> roll-total tn) 0.2]
+            [else (take-random (list 0.4 0.8))]))
+         (sleep sleep-time)
+         (newline)
          (newline)
 
          (notice

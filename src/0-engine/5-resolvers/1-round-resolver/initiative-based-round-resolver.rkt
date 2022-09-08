@@ -71,16 +71,15 @@
                    ; list!
                    (define pc-movement-actions (find-pc-movement-actions))
                    (cond [(not (null? pc-movement-actions))
-                          (notice (format "[~a] Contested roll: DEX: [2d6]" (get-combatant-name actor)))
-                          (define enemy-roll (d 2 6))
-                          (define tn 8)
-                          (define success? (>= enemy-roll tn))
-                          (cond [success?
-                                 (notice (format "[Enemy] [~a] >= ~a – success! [Otava's movement discarded.]" enemy-roll tn))
-                                 (discard-actions! pc-movement-actions)
-                                 ]
+                          (define check-result
+                            (check "2d6"
+                                   #:title (format "[~a] Contested roll" (get-combatant-name actor))
+                                    #:target-number 8))
+                          (cond [(successful? check-result)
+                                 (notice "Otava's movement discarded.")
+                                 (discard-actions! pc-movement-actions)]
                                 [else
-                                 (notice (format "[Enemy] [~a] >= ~a – failure! [Movement discarded.]" enemy-roll tn))
+                                 (notice "Enemy's movement discarded.")
                                  (discard-action! action)
                                  ])
                           '()]
