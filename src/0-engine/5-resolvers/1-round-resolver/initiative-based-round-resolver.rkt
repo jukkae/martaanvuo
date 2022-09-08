@@ -52,30 +52,30 @@
                           (define success? (>= pc-roll tn))
                           (cond [success?
                                  (notice (format "[~a] >= ~a – success!" pc-roll tn))
-                                 (remove-from-action-queue enemy-movement-actions)
+                                 (discard-actions! enemy-movement-actions)
                                  ]
                                 [else
                                  (notice (format "[~a] >= ~a – failure!" pc-roll tn))
-                                 (remove-from-action-queue (find-pc-movement-action))
+                                 (discard-action! action)
                                  ])
                           '()]
                          )
                    ]
                   [(non-pc-action? action)
                    ; list!
-                   (define pc-movement-action (find-pc-movement-action))
-                   (cond [(not (null? pc-movement-action))
+                   (define pc-movement-actions (find-pc-movement-actions))
+                   (cond [(not (null? pc-movement-actions))
                           (notice "[Enemy] Contested roll: DEX: [2d6]")
                           (define enemy-roll (d 2 6))
                           (define tn 8)
                           (define success? (>= enemy-roll tn))
                           (cond [success?
                                  (notice (format "[Enemy] [~a] >= ~a – success!" enemy-roll tn))
-                                 (remove-from-action-queue pc-movement-action)
+                                 (discard-actions! pc-movement-actions)
                                  ]
                                 [else
                                  (notice (format "[Enemy] [~a] >= ~a – failure!" enemy-roll tn))
-                                 (remove-from-action-queue (list action))
+                                 (discard-action! action)
                                  ])
                           '()]
                          )

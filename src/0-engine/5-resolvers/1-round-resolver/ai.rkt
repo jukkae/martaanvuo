@@ -93,7 +93,7 @@
       (define actions (filter
                        (λ (action) (eq? (actor-id actor) (action-actor-id action)))
                        action-queue))
-      (remove-from-action-queue actions)
+      (discard-actions! actions)
       ; blam blam
       #;(define action (make-shoot-action actor))
       (define action '())
