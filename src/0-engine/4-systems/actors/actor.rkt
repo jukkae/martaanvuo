@@ -38,6 +38,9 @@
   (current-times-species-encountered
    current-times-species-encountered++
    )])
+(lazy-require ["../../7-state/mutators.rkt"
+  (get-enemies-at-range
+   )])
 ; TODO: refactor
 (lazy-require ["../../../1-content/enemies/grabberkin.rkt"
   (make-grabberkin
@@ -356,7 +359,9 @@
 ; the action might be initiated by the pc
 (define (set-actor-stance-range! moving-actor new-range [pc? #f])
   (define old-stance (actor-stance moving-actor))
-  (when (not (eq? (stance-range (actor-stance moving-actor)) new-range))
+  (when (and (not (eq? (stance-range (actor-stance moving-actor)) new-range))
+             (not (and (eq? new-range 'engaged)
+                       (not (null? (get-enemies-at-range 'engaged))))))
     (set-stance-range! (actor-stance moving-actor) new-range)
     (notice
      (format "[~a ι] ~a" (current-elapsed-time) (format
