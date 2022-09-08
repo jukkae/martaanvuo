@@ -15,6 +15,7 @@
   "../../3-types/actor.rkt"
 
   "../../4-systems/actors/actor.rkt"
+  "../../4-systems/checks/checks.rkt"
   "../../4-systems/pc/pc.rkt"
   "../../4-systems/world/world.rkt"
 
@@ -52,16 +53,15 @@
             (cond [(pc-action? action)
                    (define enemy-movement-actions (find-all-enemy-movement-actions))
                    (cond [(not (null? enemy-movement-actions))
-                          (notice (format "[~a] Contested roll: DEX: [2d6]" (get-combatant-name actor)))
-                          (define pc-roll (d 2 6))
-                          (define tn 6)
-                          (define success? (>= pc-roll tn))
-                          (cond [success?
-                                 (notice (format "[~a] >= ~a – success! [Enemy movements discarded.]" pc-roll tn))
-                                 (discard-actions! enemy-movement-actions)
-                                 ]
+                          (define check-result
+                            (check "2d6"
+                                   #:title (format "[~a] Contested roll" (get-combatant-name actor))
+                                    #:target-number 6))
+                          (cond [(successful? check-result)
+                                 (notice "Enemy movements discarded.")
+                                 (discard-actions! enemy-movement-actions)]
                                 [else
-                                 (notice (format "[~a] >= ~a – failure! [Otava's movement discarded.]" pc-roll tn))
+                                 (notice "Otava's movement discarded.")
                                  (discard-action! action)
                                  ])
                           '()]

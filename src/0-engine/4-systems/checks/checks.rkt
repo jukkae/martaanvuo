@@ -43,13 +43,13 @@
 
   (define attribute-value (get-trait (pc) "charisma"))
   (define modifier (get-attribute-modifier-for attribute-value))
-  (define successful? (> modifier target-number))
+  (define check-successful? (> modifier target-number))
 
   ; dirty but eh: for failures, flip successful here
   (case type
-    ['fail-charisma-mod (set! successful? (not successful?))])
+    ['fail-charisma-mod (set! check-successful? (not check-successful?))])
 
-  (define result (if successful?
+  (define result (if check-successful?
                      "check passed"
                      "check failed"))
   (define sheet
@@ -64,14 +64,14 @@
      "Passive check"))
 
   (wait-for-confirm)
-  successful?)
+  check-successful?)
 
 ; returns boolean
 (define (attribute-check title attribute)
   (define roll (d 1 20))
-  (define successful? (< roll attribute))
+  (define check-successful? (< roll attribute))
   (define success-string
-    (if successful?
+    (if check-successful?
         ", success"
         ", failure"))
   (define results
@@ -88,16 +88,16 @@
 
   (wait-for-confirm)
 
-  successful?)
+  check-successful?)
 
 ; returns boolean
 (define (skill-check title bonus target-number)
   (define first-d (d 1 6))
   (define second-d (d 1 6))
   (define roll-total (+ first-d second-d bonus))
-  (define successful? (>= roll-total target-number))
+  (define check-successful? (>= roll-total target-number))
   (define success-string
-    (if successful?
+    (if check-successful?
         ", success"
         ", failure"))
   (define results
@@ -114,7 +114,7 @@
 
   (wait-for-confirm)
 
-  successful?)
+  check-successful?)
 
 
 (define (roll-crit? sides)
@@ -125,3 +125,45 @@
                           ""))
   (notice (format "crit roll: 1d~a = ~a~a" sides crit-roll crit-string)))
 
+(define (successful? check-result)
+  (or (eq? check-result 'critical-success)
+      (eq? check-result 'success)
+      (eq? check-result 'narrow-success)))
+
+; returns (U 'critical-success 'success 'narrow-success 'failure 'critical-failure)
+(define (check formula #:title title #:target-number tn #:bonus [bonus '()])
+  (notice (format "~a [~a >= ~a]" title formula tn))
+  (wait-for-confirm)
+  (cond [(eq? formula "2d6")
+         (define first-d (d 1 6))
+         (define second-d (d 1 6))
+         (define bonus-string "")
+         (when (null? bonus) (set! bonus 0))
+         (define roll-total (+ first-d second-d bonus))
+         (define check-outcome
+           (cond
+            [(and (= first-d 6) (= second-d 6)) 'critical-success]
+            [(and (= first-d 1) (= second-d 1)) 'critical-failure]
+            [(= roll-total tn) 'narrow-success]
+            [(> roll-total tn) 'success]
+            [else 'failure]
+            ))
+         (define success-string (format "~a" check-outcome))
+
+         (for ([i roll-total])
+          (sleep 0.2)
+          (display ".")
+          (flush-output)
+          )
+         (newline)
+
+         (notice
+          (format "[~a + ~a]~a = [~a >= ~a] [~a]" first-d second-d bonus-string roll-total tn success-string))
+
+         (wait-for-confirm)
+
+         check-outcome
+         ]
+        [else
+         (dev-note (format "unknown formula ~a" formula))
+         (error "unknown formula")]))
