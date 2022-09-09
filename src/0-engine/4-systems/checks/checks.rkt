@@ -154,7 +154,41 @@
           (display ".")
           (flush-output))
          (newline)
-         (for ([i roll-total])
+         (for ([i first-d])
+           (define sleep-time
+             (cond [(>= i tn)
+                    0.2]
+                   [(= i (- first-d 2))
+                    (take-random (list 0.2 0.4 0.8 1.2))
+                    ]
+                   [(= i (- first-d 1))
+                    (take-random (list 0.4 0.8 1.2 1.6))]
+                   [else
+                    (take-random (list 0.2 0.4 0.8))]))
+          (sleep sleep-time)
+          (if (= i 0)
+            (display ":")
+            (display "."))
+          (flush-output)
+          )
+         (for ([i second-d])
+           (define sleep-time
+             (cond [(>= i tn)
+                    0.2]
+                   [(= i (- second-d 2))
+                    (take-random (list 0.2 0.4 0.8 1.2))
+                    ]
+                   [(= i (- second-d 1))
+                    (take-random (list 0.4 0.8 1.2 1.6))]
+                   [else
+                    (take-random (list 0.2 0.4 0.8))]))
+          (sleep sleep-time)
+          (if (= i 0)
+            (display ":")
+            (display "."))
+          (flush-output)
+          )
+         (for ([i bonus])
            (define sleep-time
              (cond [(>= i tn)
                     0.2]
@@ -166,7 +200,9 @@
                    [else
                     (take-random (list 0.2 0.4 0.8))]))
           (sleep sleep-time)
-          (display ".")
+          (if (= i 0)
+            (display ":")
+            (display "."))
           (flush-output)
           )
          (define sleep-time
