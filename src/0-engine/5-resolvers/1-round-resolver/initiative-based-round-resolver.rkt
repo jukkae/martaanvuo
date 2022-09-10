@@ -66,6 +66,9 @@
                                  (notice "Critical failure, lose fast and gain fallen!")
                                  (actor-remove-status-of-type! actor 'fast)
                                  (actor-add-status! actor (status 'fallen 1))])
+                          (cond [(eq? 'narrow-success check-result)
+                                 (notice "Narrow success, gain slow!")
+                                 (actor-add-status! actor (status 'slow 1))])
                           (cond [(successful? check-result)
                                  (notice "Enemy movements discarded.")
                                  (discard-actions! enemy-movement-actions)]
@@ -92,6 +95,9 @@
                                  (notice "Critical failure, lose fast and gain fallen!")
                                  (actor-remove-status-of-type! actor 'fast)
                                  (actor-add-status! (status 'fallen 1))])
+                          (cond [(eq? 'narrow-success check-result)
+                                 (notice "Narrow success, gain slow!")
+                                 (actor-add-status! actor (status 'slow 1))])
                           (cond [(successful? check-result)
                                  (notice "Otava's movement discarded.")
                                  (discard-actions! pc-movement-actions)]
