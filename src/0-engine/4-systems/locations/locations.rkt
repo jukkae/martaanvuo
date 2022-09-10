@@ -6,13 +6,14 @@
     "routes.rkt"
     ))
 
-(require racket/lazy-require)
+(require
+  racket/lazy-require
+  "../../3-types/action.rkt"
+  "../../3-types/item.rkt"
+  )
 
 (lazy-require ["../world/world.rkt"
   (remove-actor-from-its-current-location!
-   )])
-(lazy-require ["../../3-types/action.rkt"
-  (action-details
    )])
 (lazy-require ["../../6-combat/combat.rkt"
   (begin-combat!
@@ -130,3 +131,11 @@
       (Place-choices (current-location))
       '())
     ))
+
+(define (location-has-item-of-id? location id)
+  (define items (location-items items))
+  (findf (λ (an-item)
+           (cond ([symbol? an-item] (eq? an-item id))
+                 ([item? an-item] (eq? (item-id an-item) id))
+              ))
+         items))
