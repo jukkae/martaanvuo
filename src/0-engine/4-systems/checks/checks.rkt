@@ -135,7 +135,6 @@
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
   (notice (format "~a [~a >= ~a]" title formula tn))
   (wait-for-confirm)
-  (displayln formula)
   (cond [(string=? formula "2d6")
          (define n 2)
          (define sides 6)
@@ -171,36 +170,35 @@
          (newline)
 
          (define total-printed 0)
+         (sleep 0.4)
          (for ([dice results])
-          (for ([i dice])
-           (define sleep-time
-             (cond [(>= total-printed tn)
-                    0.2]
-                   [(= i (- sides 2))
-                    (take-random (list 0.2 0.4 0.8 1.2))
-                    ]
-                   [(= i (- sides 1))
-                    (take-random (list 0.4 0.8 1.2 1.6))]
-                   [else
-                    (take-random (list 0.2 0.4 0.8))]))
-          (sleep sleep-time)
-          (if (= i 0)
-            (display ":")
-            (display "."))
-          (set! total-printed (add1 total-printed))
-          (flush-output)
-          )
-           )
+           (for ([i dice])
+             (if (= i 0)
+                 (display ":")
+                 (display "."))
+             (set! total-printed (add1 total-printed))
+             (flush-output)
+             (define sleep-time
+               (cond [(>= total-printed tn)
+                      0.2]
+                     [(= i (- sides 2))
+                      (take-random (list 0.2 0.4 0.8 1.2))
+                      ]
+                     [(= i (- sides 1))
+                      (take-random (list 0.4 0.8 1.2 1.6))]
+                     [else
+                      (take-random (list 0.2 0.4 0.8))]))
+             (sleep sleep-time)
+             ))
          (for ([i bonus])
+           (if (= i 0)
+               (display ":")
+               (display "."))
+           (set! total-printed (add1 total-printed))
+           (flush-output)
            (define sleep-time 0.2)
-          (sleep sleep-time)
-          (if (= i 0)
-            (display ":")
-            (display "."))
-          (set! total-printed (add1 total-printed))
-          (flush-output)
-          )
-         (define sleep-time 0.2)
+           (sleep sleep-time)
+           )
          (newline)
          (newline)
 
