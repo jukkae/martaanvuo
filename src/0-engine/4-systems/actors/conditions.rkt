@@ -33,6 +33,11 @@
 (define (condition-on-end-round! condition owner-id)
   (define owner (get-actor owner-id))
   (case (condition-type condition)
+    ['bleeding-profusely
+     (define bleed-damage-roll (d 1 2))
+     (notice (format "Profusely bleeding: [dmg: 1d2]: [~a]" bleed-damage-roll))
+     (take-damage owner bleed-damage-roll 'bleed)
+     ]
     ['bleeding
      (define bleed-damage-roll (d 1 6)) ; could give bonus from constitution here? say, 1d6?
      (cond ((= 1 bleed-damage-roll)

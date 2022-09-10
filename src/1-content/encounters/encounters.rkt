@@ -47,8 +47,14 @@
   (define range (take-random (list 'nearby 'close)))
   (notice (format "A voidfloater appears ~a." range))
   (spawn 'voidfloater 1 range)
-  (notice (format "A limbtearer appears nearby."))
-  (spawn 'limbtearer 1 'nearby)
+  (begin-combat!)
+  )
+
+(define (spawn-limbtearer-encounter!)
+
+  (define range (take-random (list 'nearby 'close)))
+  (notice (format "A limbtearer appears ~a." range))
+  (spawn 'limbtearer 1 range)
   (begin-combat!)
   )
 

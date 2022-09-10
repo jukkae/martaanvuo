@@ -224,7 +224,18 @@
     ['envenomed
      (actor-add-condition! target a-condition)]
     ['dislocated-shoulder (actor-add-condition! target a-condition)]
-    [else (dev-note (format "Unknown condition ~a" a-condition))]))
+    ['arm-missing
+     (when (actor-has-condition-of-type? target 'dislocated-shoulder)
+       (actor-remove-condition-of-type! target 'dislocated-shoulder))
+     (actor-add-condition! target a-condition)]
+    ['bleeding-profusely
+     (when (actor-has-condition-of-type? target 'bleeding)
+       (actor-remove-condition-of-type! target 'bleeding))
+     (when (not (actor-has-condition-of-type? target 'bleeding-profusely))
+       (actor-add-condition! target a-condition))
+     ]
+    [else (dev-note (format "Unknown condition ~a" a-condition))]
+    ))
 
 ; TODO: this belongs to content
 (define (actor-process-condition-tick actor condition)

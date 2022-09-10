@@ -89,12 +89,28 @@
             ; check *current* range, at time of resolving action
             (case (stance-range (actor-stance (get-actor ,subject-id)))
               ['engaged
-               (notice "The limbtearer's grabs Otava's arm and wrangles it behind her back. There's a wet, cracking, tearing sound.")
-               (inflict-condition!
-                (pc)
-                (condition 'dislocated-shoulder
-                           (current-elapsed-time)
-                           "hand unusable"))
+               (cond [(actor-has-condition-of-type? (pc) 'dislocated-shoulder)
+                      (notice "The limbtearer rips out Otava's arm.")
+                      (take-damage (pc) 2 'major-trauma)
+                      (inflict-condition!
+                       (pc)
+                       (condition 'arm-missing
+                                  (current-elapsed-time)
+                                  "missing arm"))
+                      (inflict-condition!
+                       (pc)
+                       (condition 'bleeding-profusely
+                                  (current-elapsed-time)
+                                  "bleeding profusely"))]
+                     [else
+                      (notice "The limbtearer's grabs Otava's arm and wrangles it behind her back. There's a wet, cracking, tearing sound.")
+                      (inflict-condition!
+                       (pc)
+                       (condition 'dislocated-shoulder
+                                  (current-elapsed-time)
+                                  "dislocated shoulder"))
+                      ]
+                     )
                ]
               [else
                (notice "The limbtearer is too far to reach Otava.")

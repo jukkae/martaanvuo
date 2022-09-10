@@ -112,7 +112,7 @@
     #:id 'the-maw
     #:type 'int
     #:shortname "The Maw"
-    #:encounter-types '(voidfloater)
+    #:encounter-types '(limbtearer)
     #:light-level 'dark
     #:choices (list
                (make-choice

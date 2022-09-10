@@ -36,6 +36,7 @@
    spawn-two-blindscrapers-encounter!
    spawn-grabberkin-and-blindscraper-encounter!
    spawn-voidfloater-encounter!
+   spawn-limbtearer-encounter!
    )])
 
 (require
@@ -89,6 +90,7 @@
     ['two-blindscrapers (spawn-two-blindscrapers-encounter!)]
     ['grabberkin-and-blindscraper (spawn-grabberkin-and-blindscraper-encounter!)]
     ['voidfloater (spawn-voidfloater-encounter!)]
+    ['limbtearer (spawn-limbtearer-encounter!)]
     [else (dev-note (format "Unknown encounter type: ~a" encounter-type))]))
 
 (define (spawn-encounter)
