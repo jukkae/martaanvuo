@@ -7,6 +7,7 @@
 
   "../../1-index/state.rkt"
 
+  "../../2-core/maybe.rkt" ; TODO: for all-fulfill-predicate
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
@@ -134,16 +135,30 @@
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
   (notice (format "~a [~a >= ~a]" title formula tn))
   (wait-for-confirm)
-  (cond [(eq? formula "2d6")
-         (define first-d (d 1 6))
-         (define second-d (d 1 6))
+  (displayln formula)
+  (cond [(string=? formula "2d6")
+         (define n 2)
+         (define sides 6)
+         (define results (for/list ([i n])
+           (d 1 sides)))
          (define bonus-string "")
-         (when (null? bonus) (set! bonus 0))
-         (define roll-total (+ first-d second-d bonus))
+         (cond [(null? bonus) (set! bonus 0)]
+               [else
+                (set! bonus-string
+                      (if (< bonus 0)
+                          (format "- ~a" (abs bonus))
+                          (format "+ ~a" bonus)))])
+         (define roll-total (+ (apply + results) bonus))
          (define check-outcome
            (cond
-            [(and (= first-d 6) (= second-d 6)) 'critical-success]
-            [(and (= first-d 1) (= second-d 1)) 'critical-failure]
+            [(all-fulfill-predicate?
+              results
+              (λ (r) (= r sides)))
+             'critical-success]
+            [(all-fulfill-predicate?
+              results
+              (λ (r) (= r 1)))
+             'critical-failure]
             [(= roll-total tn) 'narrow-success]
             [(> roll-total tn) 'success]
             [else 'failure]
@@ -154,14 +169,17 @@
           (display ".")
           (flush-output))
          (newline)
-         (for ([i first-d])
+
+         (define total-printed 0)
+         (for ([dice results])
+          (for ([i dice])
            (define sleep-time
-             (cond [(>= i tn)
+             (cond [(>= total-printed tn)
                     0.2]
-                   [(= i (- first-d 2))
+                   [(= i (- sides 2))
                     (take-random (list 0.2 0.4 0.8 1.2))
                     ]
-                   [(= i (- first-d 1))
+                   [(= i (- sides 1))
                     (take-random (list 0.4 0.8 1.2 1.6))]
                    [else
                     (take-random (list 0.2 0.4 0.8))]))
@@ -169,52 +187,24 @@
           (if (= i 0)
             (display ":")
             (display "."))
+          (set! total-printed (add1 total-printed))
           (flush-output)
           )
-         (for ([i second-d])
-           (define sleep-time
-             (cond [(>= i tn)
-                    0.2]
-                   [(= i (- second-d 2))
-                    (take-random (list 0.2 0.4 0.8 1.2))
-                    ]
-                   [(= i (- second-d 1))
-                    (take-random (list 0.4 0.8 1.2 1.6))]
-                   [else
-                    (take-random (list 0.2 0.4 0.8))]))
-          (sleep sleep-time)
-          (if (= i 0)
-            (display ":")
-            (display "."))
-          (flush-output)
-          )
+           )
          (for ([i bonus])
-           (define sleep-time
-             (cond [(>= i tn)
-                    0.2]
-                   [(= i (- tn 2))
-                    (take-random (list 0.2 0.4 0.8 1.2))
-                    ]
-                   [(= i (- tn 1))
-                    (take-random (list 0.4 0.8 1.2 1.6))]
-                   [else
-                    (take-random (list 0.2 0.4 0.8))]))
+           (define sleep-time 0.2)
           (sleep sleep-time)
           (if (= i 0)
             (display ":")
             (display "."))
+          (set! total-printed (add1 total-printed))
           (flush-output)
           )
-         (define sleep-time
-           (cond
-            [(> roll-total tn) 0.2]
-            [else (take-random (list 0.4 0.8))]))
-         (sleep sleep-time)
+         (define sleep-time 0.2)
          (newline)
          (newline)
 
-         (notice
-          (format "[~a + ~a]~a = [~a >= ~a] [~a]" first-d second-d bonus-string roll-total tn success-string))
+         (notice (format "[~a]~a = [~a >= ~a] [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total tn success-string))
 
          (wait-for-confirm)
 

@@ -172,15 +172,6 @@
         ((eq? (action-actor-id action1) 'pc) #t)
         ((eq? (action-actor-id action2) 'pc) #f)))
 
-
-(: all-fulfill-predicate? (∀ (A) (-> (Listof A) (-> A Boolean) Boolean)))
-(define (all-fulfill-predicate? lst predicate)
-  (define result #t)
-  (for ([element lst])
-    (when (not (predicate element))
-      (set! result #f)))
-  result)
-
 (define (all-actions-of-type? [actions : (Listof action)] [type : Symbol])
   (define predicate
     (λ ([action : action]) (eq? (action-symbol action) type)))
