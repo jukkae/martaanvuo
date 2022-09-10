@@ -90,3 +90,13 @@
   (when (not (null? actor))
     (notice (format "~a: Status [~a] removed" (actor-name actor) (status-type status))))
   (set-actor-statuses! actor (remove status (actor-statuses actor))))
+
+(define (actor-remove-status-of-type! actor type)
+  (when (not (null? actor))
+    (when (actor-has-status-of-type? actor type)
+      (set-actor-statuses! actor (filter
+                                (λ (other) (not (eq? type
+                                                     (status-type other))))
+                                (actor-statuses actor)))
+      (notice (format "~a: Status [~a] removed" (actor-name actor) type))
+      )))

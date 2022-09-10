@@ -13,8 +13,10 @@
 
   "../../3-types/action.rkt"
   "../../3-types/actor.rkt"
+  "../../3-types/status.rkt"
 
   "../../4-systems/actors/actor.rkt"
+  "../../4-systems/actors/statuses.rkt"
   "../../4-systems/checks/checks.rkt"
   "../../4-systems/pc/pc.rkt"
   "../../4-systems/world/world.rkt"
@@ -57,13 +59,21 @@
                             (check "2d6"
                                    #:title (format "[~a] Contested roll" (get-combatant-name actor))
                                     #:target-number 6))
+                          (cond [(eq? 'critical-success check-result)
+                                 (notice "Critical success, gain fast!")
+                                 (actor-add-status! actor (status 'fast 1))])
+                          (cond [(eq? 'critical-failure check-result)
+                                 (notice "Critical failure, lose fast and gain fallen!")
+                                 (actor-remove-status-of-type! actor 'fast)
+                                 (actor-add-status! actor (status 'fallen 1))])
                           (cond [(successful? check-result)
                                  (notice "Enemy movements discarded.")
                                  (discard-actions! enemy-movement-actions)]
                                 [else
                                  (notice "Otava's movement discarded.")
                                  (discard-action! action)
-                                 ])
+                                 ]
+                                )
                           '()]
                          )
                    ]
@@ -75,6 +85,13 @@
                             (check "2d6"
                                    #:title (format "[~a] Contested roll" (get-combatant-name actor))
                                     #:target-number 8))
+                          (cond [(eq? 'critical-success check-result)
+                                 (notice "Critical success, gain fast!")
+                                 (actor-add-status! (status 'fast 1))])
+                          (cond [(eq? 'critical-failure check-result)
+                                 (notice "Critical failure, lose fast and gain fallen!")
+                                 (actor-remove-status-of-type! actor 'fast)
+                                 (actor-add-status! (status 'fallen 1))])
                           (cond [(successful? check-result)
                                  (notice "Otava's movement discarded.")
                                  (discard-actions! pc-movement-actions)]
