@@ -11,6 +11,11 @@
 (define (setup-world! scenario)
   (current-world (make-new-world))
   (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
+  (define the-maw (get-location-by-id 'the-maw))
+  (when (not (flag-set? 'entomologists-journal-added))
+    (add-item-to-location! the-maw 'entomologists-journal)
+    (set-flag 'entomologists-journal-added)
+    )
   )
 
 ; Main entrypoint of campaign
@@ -42,50 +47,66 @@
 ; recursions mess with reality -> change world state, give bonuses, open new doors
 ; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
+  (when (flag-set? 'scenario-entomology)
+    (wait-for-confirm)
+    )
+
   (display-title)
+
+  (p ", reads on the location field of the notebook.")
+  (p "It's a research diary of an unnamed scientist, detailing the evolution and growth of a colony of invertebrates.")
   (current-recursion-depth (add1 (current-recursion-depth)))
 
-  ; (current-round 0)
-  (move-pc-to-location! (get-place-by-id 'perimeter))
-  (case (current-recursion-depth)
-    [(1)
-     @p{
-      Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
+  (wait-for-confirm)
 
-      So, after getting rid of the bracelet (3 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
-      }
-     (create-task 'the-debt)
-     (wait-for-confirm)
-     ]
-    ; [(2)
-    ;  (p @~a{
-    ;   Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
-    ;   })
-    ;  (create-task 'storm-the-facility)
-    ;  (wait-for-confirm)
-    ;  ]
-    ; [(3)
-    ;  (p @~a{
-    ;   The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
-
-    ;   A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
-    ;   })
-    ;  (create-task 'defuse-the-hartman-device)
-    ;  (wait-for-confirm)
-    ;  ]
+  (when (flag-set? 'scenario-entomology)
+    ; (remove-all-sense-organs!)
+    (set-pc-actor-sense-organs! (pc) '())
+    (set-pc-actor-manipulators! (pc) '())
+    (create-task 'evolve)
     )
-  (when (not (pc-has-sense-organ? 'eyes))
-    (p "There's a dim flat array of amorphous shapes. Fuzzy forms turn more solid. Otava begins to see.")
-    (add-sense-organ! (SenseOrgan 'eyes "eyes"))
-    (wait-for-confirm))
-  (when (pc-has-sense-organ? 'sonar)
-    (p "The afterimages of the shadowy outline of the world fade. Otava feels untethered.")
-    (remove-sense-organ! 'sonar)
-    (wait-for-confirm))
-  (when (pc-has-sense-organ? 'ears)
-    (p "Noise of the world fades into silence.")
-    (remove-sense-organ! 'ears)
-    (wait-for-confirm))
+
+  ; (current-round 0)
+  ; (move-pc-to-location! (get-place-by-id 'perimeter))
+  ; (case (current-recursion-depth)
+  ;   [(1)
+  ;    @p{
+  ;     Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
+
+  ;     So, after getting rid of the bracelet (3 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
+  ;     }
+  ;    (create-task 'the-debt)
+  ;    (wait-for-confirm)
+  ;    ]
+  ;   ; [(2)
+  ;   ;  (p @~a{
+  ;   ;   Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
+  ;   ;   })
+  ;   ;  (create-task 'storm-the-facility)
+  ;   ;  (wait-for-confirm)
+  ;   ;  ]
+  ;   ; [(3)
+  ;   ;  (p @~a{
+  ;   ;   The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
+
+  ;   ;   A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
+  ;   ;   })
+  ;   ;  (create-task 'defuse-the-hartman-device)
+  ;   ;  (wait-for-confirm)
+  ;   ;  ]
+  ;   )
+  ; (when (not (pc-has-sense-organ? 'eyes))
+  ;   (p "There's a dim flat array of amorphous shapes. Fuzzy forms turn more solid. Otava begins to see.")
+  ;   (add-sense-organ! (SenseOrgan 'eyes "eyes"))
+  ;   (wait-for-confirm))
+  ; (when (pc-has-sense-organ? 'sonar)
+  ;   (p "The afterimages of the shadowy outline of the world fade. Otava feels untethered.")
+  ;   (remove-sense-organ! 'sonar)
+  ;   (wait-for-confirm))
+  ; (when (pc-has-sense-organ? 'ears)
+  ;   (p "Noise of the world fades into silence.")
+  ;   (remove-sense-organ! 'ears)
+  ;   (wait-for-confirm))
   )
 
 (define (on-end-run exit-status)

@@ -134,7 +134,9 @@
             (begin
               (remove-item-from-location! (current-location) item)
               (add-item! item)
-              (notice (format "Picked up: ~a" (item-name item)))
+              (notice (format "Picked up: ~a"
+                              (cond [(item? item) (item-name item)]
+                                    [else (format "~a" item)])))
               (make-action
                #:symbol 'pick-up
                #:actor (pc)
@@ -236,10 +238,16 @@
 
   (for ([item items]
         [i (in-naturals 1)])
-    (if (= (item-quantity item) 1)
-        (prln (format "[~a] ~a" i (item-name item)))
-        (prln (format "[~a] ~a (~a)" i (item-name item) (item-quantity item))) ; TODO: pluralized
-        )
+    (define name
+      (cond [(item? item) (item-name item)]
+            [else (format "~a" item)]))
+    (cond [(item? item)
+           (if (= (item-quantity item) 1)
+               (prln (format "[~a] ~a" i name))
+               (prln (format "[~a] ~a (~a)" i name (item-quantity item))) ; TODO: pluralized
+               )
+           ]
+          [else (prln (format "[~a] ~a" i name))])
     )
   (br)
   (define input (string->number (wait-for-input)))

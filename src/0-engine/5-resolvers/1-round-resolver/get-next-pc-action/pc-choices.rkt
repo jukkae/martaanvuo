@@ -205,8 +205,33 @@
          (list
           (make-forage-choice)))
 
+       (when (and (pc-has-item? 'entomologists-journal))
+        (make-read-book-choice))
+
        (get-current-location-choices)
        ))))
 
   (define condensed (condense all-actions))
   condensed)
+
+
+(define (make-read-book-choice)
+  (make-choice
+   'read-book
+   "Read the book"
+   (λ () (make-action
+          #:symbol 'read
+          #:actor (pc)
+          #:duration 100
+          #:tags '(downtime)
+          #:resolution-rules
+          `(
+            @p{
+"Field notes of an entomologist", the cover of the book says. Otava flips the book open.
+              }
+            (wait-for-confirm)
+            (set-flag 'scenario-entomology)
+            'recurse
+            )
+
+          ))))

@@ -114,6 +114,7 @@
            (else
             (define pc-action-result (resolve-action! pc-action))
             (when (equal? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+            (when (equal? 'recurse pc-action-result) (set! round-exit-status 'recurse))
             (when (equal? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
 
      (on-end-round)

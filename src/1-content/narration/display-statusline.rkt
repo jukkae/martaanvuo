@@ -45,7 +45,9 @@
     (case (length items)
       [(1)
        (define item (car items))
-       (define name (item-name item))
+       (define name (cond
+                      [(item? item) (item-name item)]
+                      [else (format "~a" item)]))
        (notice (format "There is ~a here." (string-downcase (format "~a" name))))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
       [else
        (notice "There are multiple items here.")]))

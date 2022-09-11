@@ -89,6 +89,18 @@
         '()
         )]
 
+      ['evolve
+       (task
+        'evolve
+        "Evolve"
+        'in-progress
+        ""
+        ""
+        '()
+        '()
+        '()
+        )]
+
       ['the-message
        (task
         'the-message
