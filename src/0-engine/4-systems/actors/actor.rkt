@@ -80,7 +80,7 @@
 (define (get-trait actor trait-name)
   (cond (actor
          (define result (hash-ref (actor-traits actor) trait-name 'not-found))
-         (when (eq? result 'not-found)
+         (when (equal? result 'not-found)
            (dev-note (format
                       "-- get-trait: trait [~a] not found on actor [~a]"
                       trait-name
@@ -102,7 +102,7 @@
         'dead
         'hit))
 
-  (when (eq? result 'dead)
+  (when (equal? result 'dead)
     (kill actor))
 
   ; should be moved to grabberkin.rkt
@@ -156,7 +156,7 @@
   i)
 
 (define (inventory-contains-item-id inventory id)
-  (findf (λ (i) (eq? (item-id i) id))
+  (findf (λ (i) (equal? (item-id i) id))
          inventory)
   )
 
@@ -175,9 +175,9 @@
   (define inventory (actor-inventory actor))
   (findf (λ (inventory-item)
            (cond ((symbol? inventory-item)
-                  (eq? id inventory-item))
+                  (equal? id inventory-item))
                  (else
-                  (eq? (item-id inventory-item) id))))
+                  (equal? (item-id inventory-item) id))))
          inventory))
 
 
@@ -370,8 +370,8 @@
 ; the action might be initiated by the pc
 (define (set-actor-stance-range! moving-actor new-range [pc? #f])
   (define old-stance (actor-stance moving-actor))
-  (when (and (not (eq? (stance-range (actor-stance moving-actor)) new-range))
-             (not (and (eq? new-range 'engaged)
+  (when (and (not (equal? (stance-range (actor-stance moving-actor)) new-range))
+             (not (and (equal? new-range 'engaged)
                        (not (null? (get-enemies-at-range 'engaged))))))
     (set-stance-range! (actor-stance moving-actor) new-range)
     (notice

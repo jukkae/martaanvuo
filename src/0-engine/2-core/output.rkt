@@ -92,7 +92,7 @@ M A R T A A N V U O
 
 (define (paragraph #:suppress-logging? [suppress-logging? #f] . args)
   (define previous-output-type *most-recent-output-type*)
-  (when (not (eq? 'paragraph previous-output-type))
+  (when (not (equal? 'paragraph previous-output-type))
     (newline))
   (cond ((not (equal? paragraph ""))
          (define str (string-append* args))

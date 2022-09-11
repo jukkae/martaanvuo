@@ -127,9 +127,9 @@
   (notice (format "crit roll: 1d~a = ~a~a" sides crit-roll crit-string)))
 
 (define (successful? check-result)
-  (or (eq? check-result 'critical-success)
-      (eq? check-result 'success)
-      (eq? check-result 'narrow-success)))
+  (or (equal? check-result 'critical-success)
+      (equal? check-result 'success)
+      (equal? check-result 'narrow-success)))
 
 ; returns (U 'critical-success 'success 'narrow-success 'failure 'critical-failure)
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])

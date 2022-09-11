@@ -113,7 +113,7 @@
               (item-name item)
               (~v (item-quantity item))
               (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
-            ((eq? (item-id item) 'bolt-cutters)
+            ((equal? (item-id item) 'bolt-cutters)
              (tr
               (item-name item)
               (~v (item-quantity item))
@@ -167,11 +167,11 @@
         (else '()#;(p "Nevermind.")))
   (when (not (null? selected-item))
     (dev-note (format "Item: ~a" selected-item))
-    (when (eq? (item-id selected-item) 'lucky-charm-slot-machine)
-      (cond [(eq? (item-details selected-item) 'active)
+    (when (equal? (item-id selected-item) 'lucky-charm-slot-machine)
+      (cond [(equal? (item-details selected-item) 'active)
              (set-item-details! selected-item 'passive)
              (notice "Slot machine is now passive.")]
-            [(eq? (item-details selected-item) 'passive)
+            [(equal? (item-details selected-item) 'passive)
              (set-item-details! selected-item 'active)
              (notice "Slot machine is now active.")]
             [else

@@ -91,7 +91,7 @@
     ; remove own actions from queue
     (for ([actor npcs])
       (define actions (filter
-                       (λ (action) (eq? (actor-id actor) (action-actor-id action)))
+                       (λ (action) (equal? (actor-id actor) (action-actor-id action)))
                        action-queue))
       (discard-actions! actions)
       ; blam blam

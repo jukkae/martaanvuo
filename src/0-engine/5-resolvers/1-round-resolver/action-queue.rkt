@@ -57,13 +57,13 @@
   action-queue)
 
 (define (movement-action? action)
-  (if (or (eq? (action-symbol action) 'get-closer)
-          (eq? (action-symbol action) 'get-further))
+  (if (or (equal? (action-symbol action) 'get-closer)
+          (equal? (action-symbol action) 'get-further))
       #t
       #f))
 
 (define (non-pc-action? action)
-  (if (eq? (action-actor-id action) 'pc)
+  (if (equal? (action-actor-id action) 'pc)
     #f
     #t))
 

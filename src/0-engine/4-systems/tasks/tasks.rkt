@@ -26,7 +26,7 @@
   (define tasks (current-tasks))
   (if (null? tasks)
       #f
-      (findf (λ (task) (eq? id (task-id task))) tasks)))
+      (findf (λ (task) (equal? id (task-id task))) tasks)))
 
 
 (define (complete-task! id)

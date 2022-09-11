@@ -111,7 +111,7 @@
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
     (display (car v))
-    (cond [(eq? k "0")
+    (cond [(equal? k "0")
            (displayln "") (displayln "")]
           [else
            (display " ")])

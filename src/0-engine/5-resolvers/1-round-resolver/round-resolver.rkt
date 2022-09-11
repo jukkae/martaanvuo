@@ -46,12 +46,12 @@
   (save) ; save before describing situation -> no double-logged paragraphs
 
   (when (current-show-round-summary?)
-    (if (eq? mode 'continue)
+    (if (equal? mode 'continue)
         '()#;(describe-situation #t)
         '()#;(describe-situation #f)))
 
   (when (and (pc-has-item? 'lucky-charm-slot-machine)
-             (eq? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'active))
+             (equal? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'active))
     (define n (ephemeral-random-in-range 111 999))
     (p (format "\"Bu-di-du-duh.\" The slot machine sings a little melody, and then bloinks and whirrs. Chunk-chunk-chunk, the numbers lock into place. ~a." n))
     (for ([i n])
@@ -62,7 +62,7 @@
     (set! round-begin-status 'pc-dead)
 
     ; This "reprints" the "Otava is dead" notice
-    (when (eq? mode 'continue)
+    (when (equal? mode 'continue)
       (define cause-of-death (pc-actor-cause-of-death (pc)))
       (notice (format "Otava is dead. Cause of death: ~a"
                       (cond
@@ -86,19 +86,19 @@
 
 (define (resolve-pc-action pc-action end-round-early-with-round-status)
   (cond
-    ((eq? pc-action 'end-round-early)
+    ((equal? pc-action 'end-round-early)
      (on-end-round)
      (end-round-early-with-round-status 'ok))
-    ((eq? pc-action 'pc-dead)
+    ((equal? pc-action 'pc-dead)
      (on-end-round)
      (end-round-early-with-round-status 'pc-dead))
-    ((eq? pc-action 'restart)
+    ((equal? pc-action 'restart)
      (on-end-round)
      (end-round-early-with-round-status 'restart))
-    ((eq? pc-action 'recurse)
+    ((equal? pc-action 'recurse)
      (on-end-round)
      (end-round-early-with-round-status 'recurse))
-    ((eq? pc-action 'end-chapter)
+    ((equal? pc-action 'end-chapter)
      (on-end-round)
      (next-chapter!)
      (end-round-early-with-round-status 'ok))
@@ -113,8 +113,8 @@
             (resolve-turns!))
            (else
             (define pc-action-result (resolve-action! pc-action))
-            (when (eq? 'end-run pc-action-result) (set! round-exit-status 'end-run))
-            (when (eq? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
+            (when (equal? 'end-run pc-action-result) (set! round-exit-status 'end-run))
+            (when (equal? 'win-game pc-action-result) (set! round-exit-status 'win-game))))
 
      (on-end-round)
      (when (not (pc-actor-alive? (pc))) (set! round-exit-status 'pc-dead))

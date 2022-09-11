@@ -21,10 +21,10 @@
           [else (get-location-by-id route-or-id)]))
   (when (location? startpoint-id) (set! startpoint-id (location-id startpoint-id)))
   (define start
-    (cond ((eq? startpoint-id
+    (cond ((equal? startpoint-id
                 (route-a route))
            'a)
-          ((eq? startpoint-id
+          ((equal? startpoint-id
                 (route-b route))
            'b)))
   (define endpoint-id
@@ -40,10 +40,10 @@
            route-or-id]
           [else (get-location-by-id route-or-id)]))
   (define endpoint
-    (cond ((eq? endpoint-id
+    (cond ((equal? endpoint-id
                 (route-a route))
            'a)
-          ((eq? endpoint-id
+          ((equal? endpoint-id
                 (route-b route))
            'b)))
   (case endpoint
@@ -57,10 +57,10 @@
            route-or-id]
           [else (get-location-by-id route-or-id)]))
   (define endpoint
-    (cond ((eq? (location-id place)
+    (cond ((equal? (location-id place)
                 (route-a route))
            'a)
-          ((eq? (location-id place)
+          ((equal? (location-id place)
                 (route-b route))
            'b)))
   (case endpoint

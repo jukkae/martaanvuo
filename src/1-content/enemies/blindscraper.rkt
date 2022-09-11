@@ -223,7 +223,7 @@
                (define stance (actor-stance (get-actor ,id)))
                (define value (stance-range stance))
                (define target-number
-                 (if (eq? value 'engaged)
+                 (if (equal? value 'engaged)
                      10
                      8))
 

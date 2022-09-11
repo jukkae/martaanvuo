@@ -86,7 +86,7 @@
                                      (timeline-duration result)))
       (set! result 'interrupted))
 
-    (when (not (eq? result 'interrupted))
+    (when (not (equal? result 'interrupted))
 
       (define rules (action-resolution-rules action))
 
@@ -110,7 +110,7 @@
 
 
     (when (and (pc-actor? (get-actor (action-actor-id action)))
-               (not (eq? result 'interrupted)))
+               (not (equal? result 'interrupted)))
 
       (define on-after-rules (action-on-after-rules action))
       (when (not (empty? on-after-rules))
@@ -140,7 +140,7 @@
     (filter
      (λ (event) (event-interrupting? event))
      (timeline-events timeline)))
-  (cond ((eq? (length interrupting-events) 1)
+  (cond ((equal? (length interrupting-events) 1)
          (define event (car interrupting-events))
          (handle-interrupting-event! event)
          )

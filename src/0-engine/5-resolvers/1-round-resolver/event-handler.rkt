@@ -11,7 +11,7 @@
   )
 
 (define (handle-interrupting-event! event)
-  (cond ((eq? (event-type event) 'spawn-encounter)
+  (cond ((equal? (event-type event) 'spawn-encounter)
          (spawn-encounter))
 
         (else

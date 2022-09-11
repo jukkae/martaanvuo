@@ -46,14 +46,14 @@
         ((symbol? next-fragment)
          (cond
            ; it can either be a special symbol...
-           ((eq? 'exit next-fragment)
+           ((equal? 'exit next-fragment)
             (clear-current-fragment!))
 
-           ((eq? 'recurse next-fragment)
+           ((equal? 'recurse next-fragment)
             (clear-current-fragment!)
             'recurse) ; !! important
 
-           ((eq? 'pc-dead next-fragment)
+           ((equal? 'pc-dead next-fragment)
             (dev-note "PC DEAD NEXT FRAG")
             (clear-current-fragment!)
             'pc-dead)

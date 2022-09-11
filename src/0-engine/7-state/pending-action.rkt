@@ -20,7 +20,7 @@
   (define pending-action (current-pending-action))
 
   (cond
-    ((eq? (action-symbol pending-action) 'traverse)
+    ((equal? (action-symbol pending-action) 'traverse)
      (define target (action-target pending-action))
 
      (define details (action-details pending-action))

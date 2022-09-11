@@ -182,7 +182,7 @@
                      [else 1])
                    )
                  (decrease-pc-hunger-level food-tier)
-                 (when (eq? id 'decaying-berries)
+                 (when (equal? id 'decaying-berries)
                    (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
                    )
 

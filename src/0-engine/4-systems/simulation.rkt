@@ -41,7 +41,7 @@
   (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
   (define new-pc-hunger-level (pc-hunger-level))
 
-  (if (not (eq? old-pc-hunger-level new-pc-hunger-level))
+  (if (not (equal? old-pc-hunger-level new-pc-hunger-level))
       (make-event
        new-pc-hunger-level
        (time-of-day-from-iotas (world-elapsed-time (current-world)))

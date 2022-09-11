@@ -62,7 +62,7 @@
 
 (: location-has-detail? (-> location Symbol Boolean))
 (define (location-has-detail? location detail)
-  (if (findf (λ (location-detail) (eq? detail location-detail))
+  (if (findf (λ (location-detail) (equal? detail location-detail))
              (location-details location))
       #t
       #f))

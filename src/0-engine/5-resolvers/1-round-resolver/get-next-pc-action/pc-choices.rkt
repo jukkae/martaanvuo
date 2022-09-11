@@ -57,9 +57,9 @@
          (define world-choices '())
          (when (not (null? (location-items (current-location))))
                            (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
-         (cond [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
+         (cond [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
                 (set! world-choices (append world-choices (get-evening-choices world actor)))]
-               [(eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
+               [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
                 (set! world-choices (append world-choices (get-nighttime-choices world actor)))]
                [else (set! world-choices (append world-choices (get-downtime-choices world actor)))])
          world-choices
@@ -94,7 +94,7 @@
             ; don't show actions that have same symbol as pending action
             ; (note: this may or may not lead to intended results, see how it works)
             ; plot twist: it is shit and has to be fixed
-            ((eq? (choice-id choice) (action-symbol (current-pending-action)))
+            ((equal? (choice-id choice) (action-symbol (current-pending-action)))
              #f)
 
             ; show anything else
@@ -130,10 +130,10 @@
            (for/list ([route-id (Place-routes (current-location))])
              (define route (get-route-by-id route-id))
              (define direction
-               (cond ((eq? (location-id (current-location))
+               (cond ((equal? (location-id (current-location))
                            (route-a route))
                       'a-to-b)
-                     ((eq? (location-id (current-location))
+                     ((equal? (location-id (current-location))
                            (route-b route))
                       'b-to-a)))
 
@@ -178,7 +178,7 @@
                             ))
              )))
 
-       (when (and (not (eq? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
+       (when (and (not (equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
                   (Place? (current-location)))
          (list (choice-factory 'rest)))
 
@@ -200,7 +200,7 @@
                        `((treat-injuries!))
                        )))))
 
-       (when (and (eq? (location-type (current-location)) 'swamp)
+       (when (and (equal? (location-type (current-location)) 'swamp)
                   (not (once-per-day-action-done? 'forage)))
          (list
           (make-forage-choice)))

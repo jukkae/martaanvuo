@@ -30,7 +30,7 @@
             (set-route-traversed! (get-route-by-id ',(location-id route)))
 
             (define next-location-id
-              ',(if (eq? direction 'a-to-b)
+              ',(if (equal? direction 'a-to-b)
                     (route-b route)
                     (route-a route)))
             (define next-location (get-location-by-id next-location-id))

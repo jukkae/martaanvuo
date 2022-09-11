@@ -49,7 +49,7 @@
         (define meta-command-with-key (hash-ref meta-commands-with-keys input '()))
         (define meta-command (cdr meta-command-with-key))
         (define meta-command-result (meta-command))
-        (when (eq? meta-command-result 'restart) (return 'restart))
+        (when (equal? meta-command-result 'restart) (return 'restart))
 
         (what-do-you-do #t))
 
@@ -87,7 +87,7 @@
       (display-statusline)
       (newline)
 
-      (when (not (eq? "" (current-prompt)))
+      (when (not (equal? "" (current-prompt)))
         (display-prompt))
 
       (print-choices-and-meta-commands-with-keys choices-with-keys decisions-with-keys meta-commands-with-keys)
@@ -104,16 +104,16 @@
                (define fragment-decision-result (handle-fragment-decision decisions-with-keys input))
 
                (define result 'end-round-early)
-               (when (eq? fragment-decision-result 'recurse)
+               (when (equal? fragment-decision-result 'recurse)
                  (set! result 'recurse))
-               (when (eq? fragment-decision-result 'pc-dead)
+               (when (equal? fragment-decision-result 'pc-dead)
                 ;  (dev-note "fragment-decision-result: PC DEAD")
                  (set! result 'pc-dead))
                return result))
 
             ((choice-valid? choices-with-keys input)
              (define action (resolve-choice-and-produce-action! choices-with-keys input))
-             (cond ((eq? 'cancel action) (what-do-you-do #f))
+             (cond ((equal? 'cancel action) (what-do-you-do #f))
                    (else (return action))))
 
             (else

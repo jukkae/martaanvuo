@@ -82,12 +82,12 @@
 (define (remove-modification! id)
   (define modifications (pc-actor-modifications (pc)))
   (define it
-    (findf (λ (modification) (eq? (Modification-id modification) id))
+    (findf (λ (modification) (equal? (Modification-id modification) id))
            modifications))
   (cond (it
          (set-pc-actor-modifications!
             (pc)
-            (filter (λ (modification) (not (eq? (Modification-id modification) id)))
+            (filter (λ (modification) (not (equal? (Modification-id modification) id)))
                     (actor-inventory (pc))
                     ))
          (dev-note "modification removed, show info about removed/remaining modifications"))
@@ -108,19 +108,19 @@
 (define (remove-item! id #:quantity-to-remove [quantity-to-remove 1])
   (define items (actor-inventory (pc)))
   (define it
-    (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+    (findf (λ (inventory-item) (equal? (item-id inventory-item) id))
            items))
   (cond (it
-         (cond [(eq? quantity-to-remove 'all)
+         (cond [(equal? quantity-to-remove 'all)
                 (set-actor-inventory! (pc)
-                                      (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                      (filter (λ (inventory-item ) (not (equal? (item-id inventory-item) id)))
                                               (actor-inventory (pc))
                                               ))]
                [else
                 (if (> (item-quantity it) 1)
                     (set-item-quantity! it (- (item-quantity it) 1))
                     (set-actor-inventory! (pc)
-                                          (filter (λ (inventory-item ) (not (eq? (item-id inventory-item) id)))
+                                          (filter (λ (inventory-item ) (not (equal? (item-id inventory-item) id)))
                                                   (actor-inventory (pc))
                                                   ))
                     )
@@ -132,25 +132,25 @@
 
 (define (add-ammo! amount)
   (define items (actor-inventory (pc)))
-  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+  (define revolver (findf (λ (inventory-item) (equal? (item-id inventory-item) 'revolver))
                           items))
   (increase-ammo! revolver))
 
 (define (consume-ammo! amount)
   (define items (actor-inventory (pc)))
-  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+  (define revolver (findf (λ (inventory-item) (equal? (item-id inventory-item) 'revolver))
                           items))
   (cond (revolver
          (set-ranged-weapon-ammo-left! revolver (sub1 (ranged-weapon-ammo-left revolver))))))
 
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
-  (findf (λ (inventory-item) (eq? (item-id inventory-item) id))
+  (findf (λ (inventory-item) (equal? (item-id inventory-item) id))
          items))
 
 (define (pc-has-sense-organ? id)
   (define sense-organs (pc-actor-sense-organs (pc)))
-  (findf (λ (sense-organ) (eq? (SenseOrgan-id sense-organ) id))
+  (findf (λ (sense-organ) (equal? (SenseOrgan-id sense-organ) id))
          sense-organs))
 
 ; (: -> SenseOrgan '())
@@ -163,12 +163,12 @@
 (define (remove-sense-organ! id)
   (define sense-organs (pc-actor-sense-organs (pc)))
   (define it
-    (findf (λ (sense-organ) (eq? (SenseOrgan-id sense-organ) id))
+    (findf (λ (sense-organ) (equal? (SenseOrgan-id sense-organ) id))
            sense-organs))
   (cond (it
          (set-pc-actor-sense-organs!
             (pc)
-            (filter (λ (sense-organ) (not (eq? (SenseOrgan-id sense-organ) id)))
+            (filter (λ (sense-organ) (not (equal? (SenseOrgan-id sense-organ) id)))
                     (pc-actor-sense-organs (pc))
                     ))
          (notice (format "Sense organ removed: ~a" (SenseOrgan-name it))))
@@ -182,12 +182,12 @@
 
 (define (pc-has-manipulator? id)
   (define manipulators (pc-actor-manipulators (pc)))
-  (findf (λ (manipulator) (eq? (Manipulator-id manipulator) id))
+  (findf (λ (manipulator) (equal? (Manipulator-id manipulator) id))
          manipulators))
 
 (define (pc-gold-amount)
   (define items (actor-inventory (pc)))
-  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+  (define gold? (findf (λ (inventory-item) (equal? (item-id inventory-item) 'gold))
                        items))
   (if gold?
       (item-quantity gold?)
@@ -198,7 +198,7 @@
 
 (define (decrease-pc-money! quantity)
   (define items (actor-inventory (pc)))
-  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+  (define gold? (findf (λ (inventory-item) (equal? (item-id inventory-item) 'gold))
                        items))
   (cond [gold?
          (set-item-quantity! gold? (- (item-quantity gold?) quantity))])
@@ -208,7 +208,7 @@
 ; TODO: combine
 (define (increase-pc-money! quantity)
   (define items (actor-inventory (pc)))
-  (define gold? (findf (λ (inventory-item) (eq? (item-id inventory-item) 'gold))
+  (define gold? (findf (λ (inventory-item) (equal? (item-id inventory-item) 'gold))
                        items))
   (cond [(not gold?)
          (add-item! 'gold #:amount quantity)
@@ -220,7 +220,7 @@
 
 (define (pc-has-ammo-left?)
   (define items (actor-inventory (pc)))
-  (define revolver (findf (λ (inventory-item) (eq? (item-id inventory-item) 'revolver))
+  (define revolver (findf (λ (inventory-item) (equal? (item-id inventory-item) 'revolver))
                           items))
   (cond (revolver
          (define ammo-left (ranged-weapon-ammo-left revolver))
@@ -228,9 +228,9 @@
         (else #f)))
 
 (define (pc-hungry?)
-  (or (eq? (pc-hunger-level) 'hungry)
-      (eq? (pc-hunger-level) 'very-hungry)
-      (eq? (pc-hunger-level) 'starving)))
+  (or (equal? (pc-hunger-level) 'hungry)
+      (equal? (pc-hunger-level) 'very-hungry)
+      (equal? (pc-hunger-level) 'starving)))
 
 (define hunger-level-hungry 400)
 (define hunger-level-very-hungry 800)
@@ -258,9 +258,9 @@
          [(1) (set-pc-actor-hunger! (pc) hunger-level-very-hungry)]
          [(2) (set-pc-actor-hunger! (pc) hunger-level-hungry)])])
 
-    (when (and (or (eq? current-hunger 'hungry)
-                   (eq? current-hunger 'very-hungry)
-                   (eq? current-hunger 'starving))
+    (when (and (or (equal? current-hunger 'hungry)
+                   (equal? current-hunger 'very-hungry)
+                   (equal? current-hunger 'starving))
                (= levels 2))
       (p "Damn that tastes good.")
       (award-xp! 50)

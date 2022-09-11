@@ -95,20 +95,20 @@
   (when (not (null? actor))
     (notice (format "~a: Condition of type [~a] removed" (actor-name actor) type)))
   (set-actor-conditions! actor (filter
-                                (λ (other) (not (eq? type
+                                (λ (other) (not (equal? type
                                                      (condition-type other))))
                                 (actor-conditions actor))))
 
 (define (actor-has-condition-of-type? actor type)
   (if (memf (λ (condition)
-              (eq? (condition-type condition) type))
+              (equal? (condition-type condition) type))
             (actor-conditions actor))
       #t
       #f))
 
 (define (actor-get-condition-of-type actor type)
   (findf (λ (condition)
-           (eq? (condition-type condition) type))
+           (equal? (condition-type condition) type))
          (actor-conditions actor)))
 
 (define (condition-age condition)

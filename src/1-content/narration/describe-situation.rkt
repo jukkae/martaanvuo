@@ -119,7 +119,7 @@
 
 (define (describe-non-combat-situation repeated?)
   (cond ((null? (current-fragment-id))
-         #;(cond ((eq? (location-id (current-location)) 'magpie-hill)
+         #;(cond ((equal? (location-id (current-location)) 'magpie-hill)
                 (p #:suppress-logging? repeated? "Natural rock stairs lead back to Perimeter. There's a small, decrepit industrial-looking building further ahead on the plateau. A small trail leads along the edge of the plateau.")))
          (describe-location repeated?)
                 ))
@@ -130,7 +130,7 @@
   ; (when (location-has-feature? (current-location) 'locked-door)
   ;   (p "The door in the brick wall is locked with a heavy padlock."))
   (cond
-    ((current-in-combat?) (describe-combat-situation))
+    ((current-in-combat?) (describe-combat-situation repeated?))
     (else
       (describe-non-combat-situation repeated?)))
   ; (if (flag-set? 'perspective-switched)

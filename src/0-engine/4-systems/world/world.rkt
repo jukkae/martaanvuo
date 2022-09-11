@@ -26,7 +26,7 @@
 (provide get-actor)
 (define (get-actor id)
   (define actors (get-current-actors))
-  (findf (λ (a) (eq? (actor-id a) id))
+  (findf (λ (a) (equal? (actor-id a) id))
          actors)
   )
 
@@ -143,7 +143,7 @@
 (define (get-route-by-id id)
   (define w (current-world))
   (define routes (world-routes w))
-  (define r (findf (λ (route) (eq? id (location-id route)))
+  (define r (findf (λ (route) (equal? id (location-id route)))
                    routes))
   (if r r '()))
 
@@ -151,7 +151,7 @@
 (define (get-place-by-id id)
   (define w (current-world))
   (define places (world-places w))
-  (define r (findf (λ (place) (eq? (location-id place) id))
+  (define r (findf (λ (place) (equal? (location-id place) id))
                    places))
   (if r r '()))
 
@@ -207,7 +207,7 @@
 (provide connect-places-and-routes!)
 (define (connect-places-and-routes! places routes)
   (define (find-place Place-id)
-    (findf (λ (place) (eq? (location-id place) Place-id))
+    (findf (λ (place) (equal? (location-id place) Place-id))
            places))
   (for ([route routes])
     (define route-id (location-id route))

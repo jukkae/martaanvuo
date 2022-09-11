@@ -45,7 +45,7 @@
 
   (for ([enemy (get-current-enemies)])
     (let ([stance (actor-stance enemy)])
-      (when (eq? (stance-range stance) 'engaged)
+      (when (equal? (stance-range stance) 'engaged)
         (set! any-enemy-engaged? #t))))
 
   any-enemy-engaged?)
@@ -56,7 +56,7 @@
   (define enemy-in-range '())
   (for ([enemy enemies-shuffled])
     (define stance (actor-stance enemy))
-    (when (eq? (stance-range stance) range)
+    (when (equal? (stance-range stance) range)
       (set! enemy-in-range enemy)))
   enemy-in-range)
 
@@ -65,12 +65,12 @@
   (define enemies-in-range '())
   (for ([enemy current-enemies])
     (define stance (actor-stance enemy))
-    (when (eq? (stance-range stance) range)
+    (when (equal? (stance-range stance) range)
       (set! enemies-in-range (append-element enemies-in-range enemy))))
   enemies-in-range)
 
 (define (includes-enemy-of-type enemies type)
-  (findf (λ (enemy) (eq? (actor-type enemy) type))
+  (findf (λ (enemy) (equal? (actor-type enemy) type))
          enemies))
 
 (define (current-location)
@@ -125,7 +125,7 @@
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (actor-stance enemy))
-  (eq? (stance-range stance) range))
+  (equal? (stance-range stance) range))
 
 
 (define (increment-achievement! achievement)

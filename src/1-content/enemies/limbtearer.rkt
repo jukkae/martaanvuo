@@ -75,7 +75,7 @@
    #:details '(slow)))
 
 (define (fight-behavior actor)
-  (cond [(eq? (stance-range (actor-stance actor)) 'engaged)
+  (cond [(equal? (stance-range (actor-stance actor)) 'engaged)
          (define target-id (actor-id (pc)))
          (define subject-id (actor-id actor))
          (make-action
@@ -124,7 +124,7 @@
 
 (define (flee-behavior actor)
   (cond [else
-         (cond [(eq? (stance-range (actor-stance actor)) 'far)
+         (cond [(equal? (stance-range (actor-stance actor)) 'far)
                 (define id (actor-id actor))
 
                 (make-action
@@ -141,7 +141,7 @@
                    (define stance (actor-stance (get-actor ,id)))
                    (define value (stance-range stance))
                    (define target-number
-                     (if (eq? value 'engaged)
+                     (if (equal? value 'engaged)
                          10
                          8))
 

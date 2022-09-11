@@ -80,8 +80,8 @@
       (format "Melee attack, ~a vs ~a"
               (get-combatant-name actor)
               (get-combatant-name target)))
-    (define pc-attack? (eq? (actor-id actor) 'pc))
-    (define target-originally-at-full-health? (eq? (actor-hp target) (actor-max-hp target)))
+    (define pc-attack? (equal? (actor-id actor) 'pc))
+    (define target-originally-at-full-health? (equal? (actor-hp target) (actor-max-hp target)))
     ; #;(define success? (skill-check title skill action-target-number))
     (define success? #t)
 
@@ -105,7 +105,7 @@
 
     (define action-result 'ok)
     (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-    (when (eq? action-result 'dead)
+    (when (equal? action-result 'dead)
       ; move this to Actor
       (case (actor-name target)
         [("Blindscraper") (award-xp! 7)]))
@@ -114,7 +114,7 @@
     (newline)
 
     ; Urgh, refactor!
-    (when (eq? action-result 'dead)
+    (when (equal? action-result 'dead)
       (if (not (pc-actor? target))
           (p "The " (actor-name target) " is dead.")
           (begin
@@ -159,7 +159,7 @@
 
   (define action-result 'ok)
   (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-  (when (eq? action-result 'dead)
+  (when (equal? action-result 'dead)
 
     (case (actor-name (action-target action))
       [("Blindscraper") (award-xp! 3)]))
@@ -168,7 +168,7 @@
   (newline)
 
   ; Urgh, refactor!
-  (when (eq? action-result 'dead)
+  (when (equal? action-result 'dead)
     (cond ((not (pc-actor? (action-target action)))
            (define text
              (take-random
@@ -209,7 +209,7 @@
   (when (not statuses)
     (set! statuses '()))
   (define actor-bound-status
-    (findf (λ (status) (eq? (status-type status) 'bound))
+    (findf (λ (status) (equal? (status-type status) 'bound))
            statuses))
 
   (cond (actor-bound-status
@@ -244,7 +244,7 @@
                 (p "Otava pulls her ankle free and stumbles back, just far enough to be out of reach of the writhing, searching hands.")
                 (award-xp! 4)
                 (define enemies (get-current-enemies))
-                (define grabberkin (findf (λ (enemy) (eq? (actor-type enemy) 'grabberkin)) enemies))
+                (define grabberkin (findf (λ (enemy) (equal? (actor-type enemy) 'grabberkin)) enemies))
                 (remove-actor-from-its-current-location! grabberkin)
                 (actor-remove-status! actor actor-bound-status)
                 'ok)

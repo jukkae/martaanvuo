@@ -290,7 +290,7 @@
             ))
      (define damage-bonus 0)
      (define damage-bonus-text "+0")
-     (when (eq? (stance-range (actor-stance target)) 'engaged)
+     (when (equal? (stance-range (actor-stance target)) 'engaged)
       (set! damage-bonus -1)
       (set! damage-bonus-text "-1 (engaged)"))
      (when (pc-envenomed-peaking?)
@@ -351,14 +351,14 @@
 
            (define action-result 'ok) ; TODO: likely not useful anymore
            (when success? (set! action-result (take-damage target damage-roll-result 'melee)))
-           (when (and (eq? (stance-range (actor-stance target)) 'engaged)
+           (when (and (equal? (stance-range (actor-stance target)) 'engaged)
                       success?
-                      (eq? (actor-size target) 'small)
+                      (equal? (actor-size target) 'small)
                       (not (pc-envenomed-peaking?)))
              (notice (format "The ~a is pushed back." (actor-name target)))
              (set-actor-stance-range! target 'adjacent #f) ; #f reads better here
              )
-           (when (eq? action-result 'dead)
+           (when (equal? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
                [("Blindscraper") (award-xp! 7)]))
@@ -366,7 +366,7 @@
            (display-combatant-info target)
            (newline)
 
-           (when (eq? action-result 'dead)
+           (when (equal? action-result 'dead)
              (p "The " (actor-name target) " is dead."))
 
            (define descr
@@ -405,7 +405,7 @@
              (format "Strangle, ~a vs ~a"
                      (get-combatant-name actor)
                      (get-combatant-name target)))
-           (when (not (eq? (stance-range (actor-stance target)) 'engaged))
+           (when (not (equal? (stance-range (actor-stance target)) 'engaged))
              (notice (format "Otava has to engage the ~a" (get-combatant-name target)))
              (set-actor-stance-range! target 'engaged #t))
            (define attack-roll (d 1 4))
@@ -438,7 +438,7 @@
               (kill target 'strangled)
               (set! action-result 'dead)])
 
-           (when (eq? action-result 'dead)
+           (when (equal? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
                [("Voidfloater") (award-xp! 3)]
@@ -447,7 +447,7 @@
            (display-combatant-info target)
            (newline)
 
-           (when (eq? action-result 'dead)
+           (when (equal? action-result 'dead)
              (notice "The " (actor-name target) " is dead."))
 
            (define descr
@@ -488,15 +488,15 @@
   (for ([i (in-range 0 (length targets))])
     (define target (list-ref targets i))
     (define stance (actor-stance target))
-    (cond ((or (eq? (stance-range stance) 'engaged) ; TODO: in-melee-range?
-               (eq? (stance-range stance) 'adjacent))
+    (cond ((or (equal? (stance-range stance) 'engaged) ; TODO: in-melee-range?
+               (equal? (stance-range stance) 'adjacent))
            (for ([action-name (list #;'smash #;'bludgeon 'strike)])
              (define choice (make-named-attack action-name target))
              (set! combat-choices (append-element combat-choices choice))
              ))
           )
-    (cond ((or (eq? (stance-range stance) 'engaged)
-               (eq? (stance-range stance) 'adjacent))
+    (cond ((or (equal? (stance-range stance) 'engaged)
+               (equal? (stance-range stance) 'adjacent))
            (for ([action-name (list 'choke)])
              (define choice (make-named-attack action-name target))
              (set! combat-choices (append-element combat-choices choice))
@@ -561,11 +561,11 @@
 
       (list
        (when (and (not (flag-set? 'aware-of-being-out-of-ammo))
-                  (or (eq? (stance-range stance) 'far) ; always require roll
-                      (eq? (stance-range stance) 'nearby) ; require roll if no proficiency
-                      (eq? (stance-range stance) 'close) ; never require roll
-                      (eq? (stance-range stance) 'adjacent)
-                      (eq? (stance-range stance) 'engaged)))
+                  (or (equal? (stance-range stance) 'far) ; always require roll
+                      (equal? (stance-range stance) 'nearby) ; require roll if no proficiency
+                      (equal? (stance-range stance) 'close) ; never require roll
+                      (equal? (stance-range stance) 'adjacent)
+                      (equal? (stance-range stance) 'engaged)))
          (define damage-roll (λ () (d 2 2)))
          (define details
            (list
@@ -588,9 +588,9 @@
              #:resolution-rules
              '(resolve-as-shoot-action)))))
 
-       (when (or (eq? (stance-range stance) 'engaged)
-                 (eq? (stance-range stance) 'adjacent)
-                 (eq? (stance-range stance) 'close))
+       (when (or (equal? (stance-range stance) 'engaged)
+                 (equal? (stance-range stance) 'adjacent)
+                 (equal? (stance-range stance) 'close))
 
          (make-choice
           'attack

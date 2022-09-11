@@ -7,7 +7,7 @@
   (define id (location-id location))
   (define body
     (prune (tbody
-            (when (not (eq? (Place-shortname location) ""))
+            (when (not (equal? (Place-shortname location) ""))
               (tr (Place-shortname location)
                   " "))
             (when (not (null? (location-id location)))

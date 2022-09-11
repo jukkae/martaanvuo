@@ -11,10 +11,10 @@
 
 ; TODO: these should be moved to content!
 (define (describe-begin-traverse-action route direction)
-  (define from (if (eq? direction 'a-to-b)
+  (define from (if (equal? direction 'a-to-b)
                    (route-a route)
                    (route-b route)))
-  (define to (if (eq? direction 'a-to-b)
+  (define to (if (equal? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
   (define key (list from to))
@@ -84,10 +84,10 @@
   )
 
 (define (describe-finish-traverse-action route direction)
-  (define from (if (eq? direction 'a-to-b)
+  (define from (if (equal? direction 'a-to-b)
                    (route-a route)
                    (route-b route)))
-  (define to (if (eq? direction 'a-to-b)
+  (define to (if (equal? direction 'a-to-b)
                  (route-b route)
                  (route-a route)))
   (define key (list from to))
@@ -197,10 +197,10 @@
 
 (define (get-traverse-text route start-location)
   (define direction
-    (cond ((eq? (location-id start-location)
+    (cond ((equal? (location-id start-location)
                 (route-a route))
            'a-to-b)
-          ((eq? (location-id start-location)
+          ((equal? (location-id start-location)
                 (route-b route))
            'b-to-a)))
 

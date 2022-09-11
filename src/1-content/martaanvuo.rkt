@@ -90,8 +90,8 @@
 
 (define (on-end-run exit-status)
   (reset-pending-action!)
-  (when (and (not (eq? exit-status 'restart))
-             (not (eq? exit-status 'recurse)))
+  (when (and (not (equal? exit-status 'restart))
+             (not (equal? exit-status 'recurse)))
     (cond ((> (pc-gold-amount) 0)
            (define debt-task (task-exists? 'the-debt))
 
@@ -129,7 +129,7 @@
     [else
      (dev-note (format "on-end-run: unhandled exit status: ~a" exit-status))])
 
-  (when (not (eq? exit-status 'pc-dead))
+  (when (not (equal? exit-status 'pc-dead))
     (wait-for-confirm)))
 
 

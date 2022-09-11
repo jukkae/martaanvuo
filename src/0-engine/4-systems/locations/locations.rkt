@@ -102,7 +102,7 @@
 
 (define (get-location-short-description location)
   (cond [(Place? location)
-         (if (eq? (Place-shortname location) "")
+         (if (equal? (Place-shortname location) "")
              (capitalize-first-letter (string-replace (~a (location-id location)) "-" " "))
              (Place-shortname location))]
         [(route? location)
@@ -135,7 +135,7 @@
 (define (location-has-item-of-id? location id)
   (define items (location-items items))
   (findf (λ (an-item)
-           (cond ([symbol? an-item] (eq? an-item id))
-                 ([item? an-item] (eq? (item-id an-item) id))
+           (cond ([symbol? an-item] (equal? an-item id))
+                 ([item? an-item] (equal? (item-id an-item) id))
               ))
          items))

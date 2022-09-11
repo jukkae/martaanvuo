@@ -66,7 +66,7 @@
 
         #;(narrate-timeline timeline)
 
-        (when (eq? (timeline-metadata timeline) 'interrupted)
+        (when (equal? (timeline-metadata timeline) 'interrupted)
           (return timeline))
 
 

@@ -112,15 +112,15 @@
                              (tr
                               (item-name item)
                               (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
-                            ((eq? (item-id item) 'bolt-cutters)
+                            ((equal? (item-id item) 'bolt-cutters)
                              (tr
                               (item-name item)
                               "Cuts, breaks, crushes and cracks."))
-                            ((eq? (item-id item) 'ration)
+                            ((equal? (item-id item) 'ration)
                              (tr
                               (item-name item)
                               (~v (item-details item))))
-                            ((eq? (item-id item) 'fresh-berries)
+                            ((equal? (item-id item) 'fresh-berries)
                              (define quantity-text (if (= (item-quantity item) 1)
                                                        "handful"
                                                        "handfuls"))

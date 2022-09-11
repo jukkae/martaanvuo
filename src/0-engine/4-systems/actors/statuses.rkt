@@ -32,14 +32,14 @@
 
 (define (actor-has-status-of-type? actor type)
   (if (memf (λ (status)
-              (eq? (status-type status) type))
+              (equal? (status-type status) type))
             (actor-statuses actor))
       #t
       #f))
 
 (define (actor-lifetime-of-status-of-type? actor type)
   (define s (findf (λ (status)
-                     (eq? (status-type status) type))
+                     (equal? (status-type status) type))
                    (actor-statuses actor)))
   (if s
       (status-lifetime s)
@@ -63,7 +63,7 @@
 ; and much of combat control is based on manipulating statuses?
 (define (modify-actor-status-lifetime actor type modify-amount)
   (for ([status (actor-statuses actor)])
-    (when (eq? (status-type status) type)
+    (when (equal? (status-type status) type)
       ; (notice (format "~a: Status [~a] modified" (actor-name actor) (status-type status)))
       (set-status-lifetime! status (+ (status-lifetime status) modify-amount))))
   (define new-statuses '())
@@ -82,7 +82,7 @@
 
   (if (actor-has-status-of-type? actor type)
       (for ([status (actor-statuses actor)])
-        (when (eq? (status-type status) type)
+        (when (equal? (status-type status) type)
           (set-status-lifetime! status value)))
       (actor-add-status! actor (status type value))))
 
@@ -95,7 +95,7 @@
   (when (not (null? actor))
     (when (actor-has-status-of-type? actor type)
       (set-actor-statuses! actor (filter
-                                (λ (other) (not (eq? type
+                                (λ (other) (not (equal? type
                                                      (status-type other))))
                                 (actor-statuses actor)))
       (notice (format "~a: Status [~a] removed" (actor-name actor) type))

@@ -157,8 +157,8 @@
            )
          ]
         [(actor-has-condition-of-type? (pc) 'envenomed)
-         (cond [(or (eq? (stance-range (actor-stance actor)) 'far)
-                    (eq? (stance-range (actor-stance actor)) 'nearby))
+         (cond [(or (equal? (stance-range (actor-stance actor)) 'far)
+                    (equal? (stance-range (actor-stance actor)) 'nearby))
                 (notice "The voidfloater lurks, waiting.")
                 (get-skip-action actor)
                 ]
@@ -166,7 +166,7 @@
                 (get-further-action actor)])
          ]
         [else
-         (cond [(eq? (stance-range (actor-stance actor)) 'far)
+         (cond [(equal? (stance-range (actor-stance actor)) 'far)
                 (define id (actor-id actor))
 
                 (make-action
@@ -183,7 +183,7 @@
                    (define stance (actor-stance (get-actor ,id)))
                    (define value (stance-range stance))
                    (define target-number
-                     (if (eq? value 'engaged)
+                     (if (equal? value 'engaged)
                          10
                          8))
 

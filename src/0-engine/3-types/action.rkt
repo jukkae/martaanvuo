@@ -127,7 +127,7 @@
       #f))
 
 (define (pending? [action : action])
-  (if (or (eq? 'pending (action-details action))
+  (if (or (equal? 'pending (action-details action))
           (if (list? (action-details action))
               (member 'pending (action-details action))
               #f
@@ -151,8 +151,8 @@
       #f))
 
 (define (aggressive? [action : action])
-  (cond ((eq? (action-symbol action) 'shoot) #t)
-        ((eq? (action-symbol action) 'melee) #t)
+  (cond ((equal? (action-symbol action) 'shoot) #t)
+        ((equal? (action-symbol action) 'melee) #t)
         ((has-tag? action 'aggressive) #t)
         (else #f)))
 
@@ -169,14 +169,14 @@
         ((has-tag? action2 'slow) #t)
         ((has-tag? action1 'fast) #t)
         ((has-tag? action2 'fast) #f)
-        ((eq? (action-actor-id action1) 'pc) #t)
-        ((eq? (action-actor-id action2) 'pc) #f)))
+        ((equal? (action-actor-id action1) 'pc) #t)
+        ((equal? (action-actor-id action2) 'pc) #f)))
 
 (define (all-actions-of-type? [actions : (Listof action)] [type : Symbol])
   (define predicate
-    (λ ([action : action]) (eq? (action-symbol action) type)))
+    (λ ([action : action]) (equal? (action-symbol action) type)))
   (all-fulfill-predicate? actions predicate))
 
 
 (define (pc-action? [a : action])
-  (eq? (action-actor-id a) 'pc))
+  (equal? (action-actor-id a) 'pc))

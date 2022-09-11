@@ -28,7 +28,7 @@
     )
 
   (when (and (pc-has-sense-organ? 'eyes)
-             (not (eq? (get-current-light-level) 'pitch-black)))
+             (not (equal? (get-current-light-level) 'pitch-black)))
     (define percept
       (cond [(= (actor-hp actor) (actor-max-hp actor))
              "Perfect"]
@@ -87,13 +87,16 @@
       (when (actor-alive? actor)
         (display-non-pc-combatant-info actor))))
 
-(define (describe-combat-situation)
-  ; show cards
+(define (describe-combat-situation [repeated? #f])
   (newline)
   (notice "Otava is in combat.")
+  (when (not repeated?) (wait-for-confirm))
+
+  ; show cards
   (for ([enemy (get-current-enemies)])
     (display-combatant-info enemy))
   (display-pc-combatant-info (pc))
+  (when (not repeated?) (wait-for-confirm))
 
   ; narrate
   #;(define enemy-names
@@ -122,7 +125,7 @@
                   (if stance
                       (stance-sign stance)
                       ""))
-                (cond ((eq? "" sign)
+                (cond ((equal? "" sign)
                        name)
                       (else (format "~a ~a" name sign)))))))))
 
@@ -151,10 +154,10 @@
                             (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))]
          ['dark
           (append-element! body
-                           (cond [(or (eq? (stance-range stance) 'engaged)
-                                      (eq? (stance-range stance) 'adjacent)
-                                      (eq? (stance-range stance) 'close)
-                                      (eq? (stance-range stance) 'nearby))
+                           (cond [(or (equal? (stance-range stance) 'engaged)
+                                      (equal? (stance-range stance) 'adjacent)
+                                      (equal? (stance-range stance) 'close)
+                                      (equal? (stance-range stance) 'nearby))
                                   (tr
                                    eyes-text
                                    "HP"
@@ -175,9 +178,9 @@
        ]
       ['sonar
        (append-element! body
-                        (cond [(or (eq? (stance-range stance) 'engaged)
-                                          (eq? (stance-range stance) 'adjacent)
-                                          (eq? (stance-range stance) 'close))
+                        (cond [(or (equal? (stance-range stance) 'engaged)
+                                          (equal? (stance-range stance) 'adjacent)
+                                          (equal? (stance-range stance) 'close))
                                  (tr
                                     "sonar"
                                     "range"
