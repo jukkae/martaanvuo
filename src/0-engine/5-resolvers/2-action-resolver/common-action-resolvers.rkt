@@ -5,9 +5,6 @@
 (require racket/lazy-require)
 
 (require
-  "../round-resolver/event.rkt"
-  "../round-resolver/timeline.rkt"
-
   "../../1-index/content.rkt"
 
   "../../2-core/io.rkt"
@@ -16,6 +13,9 @@
   "../../3-types/action.rkt"
   "../../3-types/location.rkt"
   "../../3-types/place.rkt"
+  "../../3-types/route.rkt"
+  "../../3-types/event.rkt"
+  "../../3-types/timeline.rkt"
 
   "../../4-systems/actors/actor.rkt"
   "../../4-systems/locations/locations.rkt"
@@ -75,9 +75,6 @@
         (location-on-enter! (current-location))
 
         (describe-finish-traverse-action from to)
-
-        (when (not (null? (location-items (action-target action))))
-          (pick-up-items!))
 
         'ok)
       ))

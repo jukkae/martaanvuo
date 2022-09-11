@@ -1,9 +1,11 @@
 #lang at-exp racket
 
 (require
-  "../3-types/action.rkt"
   "../pc-choices/choice.rkt"
-  "../pc/pc.rkt")
+  "../pc/pc.rkt"
+
+  "../../3-types/action.rkt"
+  )
 
 (define (choice-from-symbol world pc symbol)
   (case symbol
