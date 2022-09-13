@@ -49,6 +49,8 @@
 
       (cond
         [(not actor-removed?)
+         (define turn-result 'ok)
+
          (cond
            [(or (equal? (action-symbol action) 'get-closer)
                 (equal? (action-symbol action) 'get-further))
@@ -67,17 +69,26 @@
               (append-element! results
                                (cons a
                                      (just-roll "2d6"
-                                                #:title (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
-                                                            #:min-width max-name-width
-                                                            ))
+                                                #:title
+                                                (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
+                                                    #:min-width max-name-width
+                                                    )
+                                                #:on-critical-success
+                                                (λ ()
+                                                  (notice "Critical success, gain fast!")
+                                                  (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fast 1)))
+                                                #:on-critical-failure
+                                                (λ ()
+                                                  (notice "Critical failure, lose fast and gain fallen!")
+                                                  (actor-remove-status-of-type! (get-actor (action-actor-id (car a))) 'fast)
+                                                  (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fallen 1))
+                                                  )
+                                                )
                                      )))
 
             (define sorted
               (sort results
                     (λ (x y) (> (cdr x) (cdr y)))))
-
-            ; (for ([a sorted])
-            ;   (displayln (format "~a: ~a" (get-combatant-name (get-actor (action-actor-id (car a)))) (cdr a))))
 
             (cond [(equal? (action-actor-id (car (car sorted))) 'pc)
                    (notice "Enemy movements discarded.")
@@ -85,73 +96,7 @@
                   [else
                    (notice "Otava's movement discarded.")
                    (discard-actions! (find-pc-movement-actions))])
-
-            #;(cond [(pc-action? action)
-                   (define pc-movement-actions (find-pc-movement-actions))
-                   (define enemy-movement-actions (find-all-enemy-movement-actions))
-                   (cond [(not (null? enemy-movement-actions))
-
-                          (define names (list "Otava"))
-                          (for ([a enemy-movement-actions])
-                            (append-element! names (get-combatant-name (get-actor (action-actor-id a)))))
-
-
-
-                          ; (define check-result
-                          ;   (check "2d6"
-                          ;          #:title (format "[~a] Contested roll" (get-combatant-name actor))
-                          ;           #:target-number 6))
-                          ; (cond [(equal? 'critical-success check-result)
-                          ;        (notice "Critical success, gain fast!")
-                          ;        (actor-add-status! actor (status 'fast 1))])
-                          ; (cond [(equal? 'critical-failure check-result)
-                          ;        (notice "Critical failure, lose fast and gain fallen!")
-                          ;        (actor-remove-status-of-type! actor 'fast)
-                          ;        (actor-add-status! actor (status 'fallen 1))])
-                          ; (cond [(equal? 'narrow-success check-result)
-                          ;        (notice "Narrow success, gain slow!")
-                          ;        (actor-add-status! actor (status 'slow 1))])
-                          ; (cond [(successful? check-result)
-                          ;        (notice "Enemy movements discarded.")
-                          ;        (discard-actions! enemy-movement-actions)]
-                          ;       [else
-                          ;        (notice "Otava's movement discarded.")
-                          ;        (discard-action! action)
-                          ;        ]
-                          ;       )
-                          '()]
-                         )
-                   ]
-                  [(non-pc-action? action)
-                   ; list!
-                   (define pc-movement-actions (find-pc-movement-actions))
-                   (cond [(not (null? pc-movement-actions))
-                          (define check-result
-                            (check "2d6"
-                                   #:title (format "[~a] Contested roll" (get-combatant-name actor))
-                                    #:target-number 9))
-                          (cond [(equal? 'critical-success check-result)
-                                 (notice "Critical success, gain fast!")
-                                 (actor-add-status! actor (status 'fast 1))])
-                          (cond [(equal? 'critical-failure check-result)
-                                 (notice "Critical failure, lose fast and gain fallen!")
-                                 (actor-remove-status-of-type! actor 'fast)
-                                 (actor-add-status! actor (status 'fallen 1))])
-                          (cond [(equal? 'narrow-success check-result)
-                                 (notice "Narrow success, gain slow!")
-                                 (actor-add-status! actor (status 'slow 1))])
-                          (cond [(successful? check-result)
-                                 (notice "Otava's movement discarded.")
-                                 (discard-actions! pc-movement-actions)]
-                                [else
-                                 (notice "Enemy's movement discarded.")
-                                 (discard-action! action)
-                                 ])
-                          '()]
-                         )
-                   ])])
-
-         (define turn-result 'ok)
+            ])
 
          (define pre-action-reaction? (get-pre-action-reaction action))
          (when (not (null? pre-action-reaction?))

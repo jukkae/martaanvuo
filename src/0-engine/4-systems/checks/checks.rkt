@@ -131,7 +131,7 @@
       (equal? check-result 'success)
       (equal? check-result 'narrow-success)))
 
-(define (just-roll formula #:title title #:bonus [bonus '()])
+(define (just-roll formula #:title title #:bonus [bonus '()] #:on-critical-success [on-crit-success '()] #:on-critical-failure [on-crit-failure '()])
   (cond [(string=? formula "2d6")
          (define n 2)
          (define sides 6)
@@ -182,6 +182,17 @@
            (flush-output)
            (define sleep-time (* 2 base-sleep-time))
            (sleep sleep-time)
+           )
+
+         (cond
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r sides)))
+            (when (not (null? on-crit-success)) (on-crit-success))]
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r 1)))
+            (when (not (null? on-crit-failure)) (on-crit-failure))]
            )
          (newline)
 
