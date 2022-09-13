@@ -46,12 +46,13 @@
     )
     (newline)))
 
-(define (display-title)
-  (define title-string
+(define title-string
     @~a{
 M A R T A A N V U O
 ===================
     })
+
+(define (display-title)
   (define s (format-for-printing title-string #:width 84 #:indent 4))
   (print-paragraph s))
 

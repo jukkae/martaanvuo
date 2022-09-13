@@ -205,7 +205,7 @@
          (list
           (make-forage-choice)))
 
-       (when (and (pc-has-item? 'entomologists-journal))
+       (when (and (pc-has-item? 'the-journal))
         (make-read-book-choice))
 
        (get-current-location-choices)
@@ -218,7 +218,7 @@
 (define (make-read-book-choice)
   (make-choice
    'read-book
-   "Read the book"
+   "Read the notebook"
    (λ () (make-action
           #:symbol 'read
           #:actor (pc)
@@ -227,10 +227,17 @@
           #:resolution-rules
           `(
             @p{
-"Field notes of an entomologist", the cover of the book says. Otava flips the book open.
+===================
+NOTES ON PROTOZOAN-
+INVERTEBRATE EVOLUTION
+AND EVIDENCE OF PATH-
+OLOGICAL SELF-ORGANIZATION IN
+===================
+,
+the cover of the notebook says, handwritten. The full title didn't fit in the small white area. Otava flips the book open.
               }
             (wait-for-confirm)
-            (set-flag 'scenario-entomology)
+            (set-flag 'scenario-evolution)
             'recurse
             )
 

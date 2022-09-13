@@ -92,7 +92,7 @@
       ['evolve
        (task
         'evolve
-        "Evolve"
+        "Understand the Lamarck process"
         'in-progress
         ""
         ""

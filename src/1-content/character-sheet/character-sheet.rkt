@@ -29,10 +29,8 @@
   (display-character-sheet)
   (when (not (empty? (pc-actor-modifications (pc))))
     (display-modifications))
-  (when (not (empty? (pc-actor-sense-organs (pc))))
-    (display-sense-organs))
-  (when (not (empty? (pc-actor-manipulators (pc))))
-    (display-manipulators))
+  (display-sense-organs)
+  (display-manipulators)
   (display-inventory)
   ; TODO: until interaction-result is == go-back-to-game loop: select-interaction-target
   (define interaction-target (select-interaction-target))
@@ -213,6 +211,9 @@
       (tr
         (SenseOrgan-name sense-organ))))
 
+  (when (empty? sense-organs-list)
+    (set! sense-organs-list (tr "No sense organs")))
+
   (info-card
    sense-organs-list
    "Sense organs"
@@ -226,6 +227,9 @@
     (for/list ([manipulator manipulators])
       (tr
         (Manipulator-name manipulator))))
+
+  (when (empty? manipulators-list)
+    (set! manipulators-list (tr "No manipulators")))
 
   (info-card
    manipulators-list

@@ -12,9 +12,9 @@
   (current-world (make-new-world))
   (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   (define the-maw (get-location-by-id 'the-maw))
-  (when (not (flag-set? 'entomologists-journal-added))
-    (add-item-to-location! the-maw 'entomologists-journal)
-    (set-flag 'entomologists-journal-added)
+  (when (not (flag-set? 'the-journal-added))
+    (add-item-to-location! the-maw 'the-journal)
+    (set-flag 'the-journal-added)
     )
   )
 
@@ -47,22 +47,25 @@
 ; recursions mess with reality -> change world state, give bonuses, open new doors
 ; but PC / instance / incarnation / 'life' continues
 (define (on-begin-recurse-run)
-  (when (flag-set? 'scenario-entomology)
+  (when (flag-set? 'scenario-evolution)
     (wait-for-confirm)
     )
 
-  (display-title)
+  (p title-string)
 
-  (p ", reads on the location field of the notebook.")
-  (p "It's a research diary of an unnamed scientist, detailing the evolution and growth of a colony of invertebrates.")
+  (p ", the title concludes.")
   (current-recursion-depth (add1 (current-recursion-depth)))
 
   (wait-for-confirm)
 
-  (when (flag-set? 'scenario-entomology)
+  (when (flag-set? 'scenario-evolution)
     ; (remove-all-sense-organs!)
     (set-pc-actor-sense-organs! (pc) '())
     (set-pc-actor-manipulators! (pc) '())
+
+    @p{
+There's something called the Lamarck process, which is what drives the changes in organisms in Martaanvuo. To control the Lamarck process is to control the changes. And to control the changes is to control life. But to control it, it must be understood.
+    }
     (create-task 'evolve)
     )
 
