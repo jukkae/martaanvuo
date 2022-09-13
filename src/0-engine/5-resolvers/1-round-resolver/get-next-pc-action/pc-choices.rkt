@@ -46,6 +46,42 @@
 
 (provide get-world-choices)
 (define (get-world-choices world actor)
+  (define feature-choices '())
+  (when (location-has-feature? (current-location) 'the-bell)
+    (append-element! feature-choices
+                     (make-choice
+                      'ring-new-enemy-bell
+                      "Ring the bell"
+                      `(
+                        (spawn-encounter)
+                        '()
+                        )))
+    )
+  (when (location-has-feature? (current-location) 'light-switch)
+    (append-element! feature-choices
+                     (make-choice
+                      'toggle-lights
+                      "Toggle lights"
+                      `(
+                        (case (get-current-light-level)
+                          ['bright
+                           (p "There's a click. The background hum quiets down a bit, and lights go dim. Dark, sharp, obscuring shadows cut through space.")
+                           (set-location-light-level! (current-location) 'dark)
+                           ]
+                          ['dark
+                           (p "There's a click and the background hum is gone. Pitch black darkness swallows everything.")
+                           (set-location-light-level! (current-location) 'pitch-black)
+                           ]
+                          ['pitch-black
+                           (p "There's an echoing clank, then an electric hum. Spotlights turn on, aimed at the stage.")
+                           (set-location-light-level! (current-location) 'bright)
+                           ]
+                          )
+                        (notice (format "Light level is now ~a." (get-current-light-level)))
+                        )
+                      #:available-in-combat? #t
+                      ))
+    )
   (cond ((in-combat?)
          (append
           (get-combat-choices)
@@ -205,7 +241,8 @@
          (list
           (make-forage-choice)))
 
-       (when (and (pc-has-item? 'the-journal))
+       (when (and (pc-has-item? 'the-journal)
+                  (pc-has-sense-organ? 'eyes))
         (make-read-book-choice))
 
        (get-current-location-choices)

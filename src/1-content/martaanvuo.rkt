@@ -56,17 +56,25 @@
   (p ", the title concludes.")
   (current-recursion-depth (add1 (current-recursion-depth)))
 
+  (remove-feature-from-location! (current-location) 'the-bell)
+  (remove-feature-from-location! (current-location) 'light-switch)
+
   (wait-for-confirm)
 
   (when (flag-set? 'scenario-evolution)
-    ; (remove-all-sense-organs!)
-    (set-pc-actor-sense-organs! (pc) '())
-    (set-pc-actor-manipulators! (pc) '())
 
     @p{
 There's something called the Lamarck process, which is what drives the changes in organisms in Martaanvuo. To control the Lamarck process is to control the changes. And to control the changes is to control life. But to control it, it must be understood.
     }
     (create-task 'evolve)
+
+    @p{
+The test subject in the notes is given the codename Otava.
+    }
+
+    (set-pc-actor-sense-organs! (pc) '())
+    (set-pc-actor-manipulators! (pc) '())
+    (set-actor-size! (pc) 'small)
     )
 
   ; (current-round 0)
