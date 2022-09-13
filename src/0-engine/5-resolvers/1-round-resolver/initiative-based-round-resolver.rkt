@@ -55,9 +55,20 @@
             (cond [(pc-action? action)
                    (define enemy-movement-actions (find-all-enemy-movement-actions))
                    (cond [(not (null? enemy-movement-actions))
-                          (just-roll "2d6" #:title "Otava")
+
+                          (define names (list "Otava"))
                           (for ([a enemy-movement-actions])
-                            (just-roll "2d6" #:title (get-combatant-name (get-actor (action-actor-id a)))))
+                            (append-element! names (get-combatant-name (get-actor (action-actor-id a)))))
+
+                          (define longest (find-longest names))
+                          (define max-name-width (string-length longest))
+                          (dev-note (format "~a" max-name-width))
+
+                          (just-roll "2d6" #:title (~a "Otava" #:min-width max-name-width #:align 'right))
+
+                          (for ([a enemy-movement-actions])
+                            (just-roll "2d6" #:title (~a (get-combatant-name (get-actor (action-actor-id a))) #:min-width max-name-width #:align 'right)))
+
                           (define check-result
                             (check "2d6"
                                    #:title (format "[~a] Contested roll" (get-combatant-name actor))

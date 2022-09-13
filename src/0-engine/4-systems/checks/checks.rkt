@@ -174,6 +174,7 @@
              (sleep sleep-time)
              ))
          (for ([i bonus])
+           ; TODO: display + for positive, - for negative bonuses
            (if (= i 0)
                (display ":")
                (display "."))

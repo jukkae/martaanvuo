@@ -66,3 +66,16 @@
             (hash-update ht key add1 0))
           '#hash()
           lst)))
+
+; list of STRINGS
+(define (find-longest lst)
+  (cond
+    [(empty? lst)
+     #f] ; 0 elements
+    [(empty? (cdr lst))
+     (car lst)] ; 1 element
+    [(>= (string-length (car lst)) (string-length (find-longest (cdr lst))))
+     (car lst)]
+    [else
+     (find-longest (cdr lst))]
+  ))
