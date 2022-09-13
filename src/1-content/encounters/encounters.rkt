@@ -45,7 +45,6 @@
 (define (spawn-voidfloater-encounter!)
 
   (define range (take-random (list 'nearby 'close)))
-  (notice (format "A voidfloater appears ~a." range))
   (spawn 'voidfloater 1 range)
   (begin-combat!)
   )
@@ -53,7 +52,6 @@
 (define (spawn-limbtearer-encounter!)
 
   (define range (take-random (list 'nearby 'close)))
-  (notice (format "A limbtearer appears ~a." range))
   (spawn 'limbtearer 1 range)
   (begin-combat!)
   )
@@ -78,7 +76,8 @@
 (define (spawn-two-blindscrapers-encounter!)
   (begin-combat!)
 
-  (spawn 'blindscraper 2))
+  (define range (take-random (list 'nearby 'close)))
+  (spawn 'blindscraper 2 range))
 
 (define (spawn-grabberkin-and-blindscraper-encounter!)
   ; grabberkin

@@ -112,9 +112,9 @@
     #:id 'the-maw
     #:type 'int
     #:shortname "The Maw"
-    #:encounter-types '(limbtearer)
+    #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
     #:light-level 'dark
-    #:features '(the-bell light-switch)
+    #:features (list 'the-bell 'light-switch)
     )
 
    (place

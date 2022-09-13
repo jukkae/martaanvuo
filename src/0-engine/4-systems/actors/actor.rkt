@@ -361,7 +361,9 @@
       (stance sign range description))
     (set-actor-stance! enemy enemy-stance)
 
-    (move-actor-to-location! enemy (current-location)))
+    (move-actor-to-location! enemy (current-location))
+    (notice (format "A ~a appears ~a." (string-downcase (actor-name enemy)) range))
+    )
 
   (current-times-species-encountered++ type)
 )

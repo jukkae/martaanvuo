@@ -12,9 +12,9 @@
   (current-world (make-new-world))
   (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   (define the-maw (get-location-by-id 'the-maw))
-  (when (not (flag-set? 'the-journal-added))
-    (add-item-to-location! the-maw 'the-journal)
-    (set-flag 'the-journal-added)
+  (when (not (flag-set? 'noteboo-added))
+    (add-item-to-location! the-maw 'notebook)
+    (set-flag 'notebook-added)
     )
   )
 

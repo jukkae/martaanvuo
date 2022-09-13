@@ -36,7 +36,7 @@
   ; (wait-for-confirm)
   ; (next-chapter!)
   (current-in-combat? #t)
-  (notice "Otava is now in combat.")
+
   (wait-for-confirm)
 
   ; TODO: move this kind of stuff to content

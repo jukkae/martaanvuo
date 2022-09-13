@@ -82,24 +82,28 @@
                       #:available-in-combat? #t
                       ))
     )
-  (cond ((in-combat?)
-         (append
-          (get-combat-choices)
-          (filter (lambda (c) (choice-available-in-combat? c))
-                  (get-current-location-choices))
-         )
-         )
-        [else
-         (define world-choices '())
-         (when (not (null? (location-items (current-location))))
-                           (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
-         (cond [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
-                (set! world-choices (append world-choices (get-evening-choices world actor)))]
-               [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
-                (set! world-choices (append world-choices (get-nighttime-choices world actor)))]
-               [else (set! world-choices (append world-choices (get-downtime-choices world actor)))])
-         world-choices
-        ]))
+  (append (filter (lambda (c) (choice-available-in-combat? c))
+                          feature-choices)
+          (cond ((in-combat?)
+                 (append
+                  (get-combat-choices)
+                  (filter (lambda (c) (choice-available-in-combat? c))
+                          (get-current-location-choices))
+                  )
+                 )
+                [else
+                 (define world-choices '())
+                 (when (not (null? (location-items (current-location))))
+                   (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
+                 (cond [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
+                        (set! world-choices (append world-choices (get-evening-choices world actor)))]
+                       [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)
+                        (set! world-choices (append world-choices (get-nighttime-choices world actor)))]
+                       [else (set! world-choices (append world-choices (get-downtime-choices world actor)))])
+                 world-choices
+                 ])
+          )
+  )
 
 
 (define (get-nighttime-choices world actor)
@@ -241,7 +245,7 @@
          (list
           (make-forage-choice)))
 
-       (when (and (pc-has-item? 'the-journal)
+       (when (and (pc-has-item? 'notebook)
                   (pc-has-sense-organ? 'eyes))
         (make-read-book-choice))
 
