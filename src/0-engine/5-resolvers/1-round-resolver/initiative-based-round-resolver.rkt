@@ -48,55 +48,67 @@
             (empty? (actor-location-id actor))))
 
       (cond
-        [(not actor-removed?)
+        [(and (not actor-removed?)
+              (not (equal? (action-symbol action) 'discarded)))
          (define turn-result 'ok)
 
          (cond
            [(or (equal? (action-symbol action) 'get-closer)
                 (equal? (action-symbol action) 'get-further))
 
-            (define all-movement-actions (append (find-pc-movement-actions) (find-all-enemy-movement-actions)))
+            (define opposing-actions
+              (cond [(pc-action? action)
+                     (find-all-enemy-movement-actions)]
+                    [else
+                     (find-pc-movement-actions)]))
 
-            (define names (for/list ([mvmt-action all-movement-actions])
-              (get-combatant-name (get-actor (action-actor-id mvmt-action)))
-            ))
-            (define longest (find-longest names))
-            (define max-name-width (+ 2 (string-length longest))) ; []
+            (when (not (empty? opposing-actions))
+              (define all-mvmt-actions (append (list action) opposing-actions))
 
-            (notice "Contested movement roll")
-            (define results '())
-            (for ([a all-movement-actions])
-              (append-element! results
-                               (cons a
-                                     (just-roll "2d6"
-                                                #:title
-                                                (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
-                                                    #:min-width max-name-width
+              ; (define all-movement-actions (append (find-pc-movement-actions) (find-all-enemy-movement-actions)))
+
+              (define names (for/list ([mvmt-action all-mvmt-actions])
+                              (get-combatant-name (get-actor (action-actor-id mvmt-action)))
+                              ))
+              (define longest (find-longest names))
+              (define max-name-width (+ 2 (string-length longest))) ; []
+
+              (notice "Contested movement roll")
+              (define results '())
+              (for ([a all-mvmt-actions])
+                (append-element! results
+                                 (cons a
+                                       (just-roll "2d6"
+                                                  #:title
+                                                  (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
+                                                      #:min-width max-name-width
+                                                      )
+                                                  #:on-critical-success
+                                                  (λ ()
+                                                    (notice "Critical success, gain fast!")
+                                                    (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fast 1)))
+                                                  #:on-critical-failure
+                                                  (λ ()
+                                                    (notice "Critical failure, lose fast and gain fallen!")
+                                                    (actor-remove-status-of-type! (get-actor (action-actor-id (car a))) 'fast)
+                                                    (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fallen 1))
                                                     )
-                                                #:on-critical-success
-                                                (λ ()
-                                                  (notice "Critical success, gain fast!")
-                                                  (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fast 1)))
-                                                #:on-critical-failure
-                                                (λ ()
-                                                  (notice "Critical failure, lose fast and gain fallen!")
-                                                  (actor-remove-status-of-type! (get-actor (action-actor-id (car a))) 'fast)
-                                                  (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fallen 1))
                                                   )
-                                                )
-                                     )))
+                                       )))
 
-            (define sorted
-              (sort results
-                    (λ (x y) (> (cdr x) (cdr y)))))
+              (define sorted
+                (sort results
+                      (λ (x y) (> (cdr x) (cdr y)))))
 
-            (cond [(equal? (action-actor-id (car (car sorted))) 'pc)
-                   (notice "Enemy movements discarded.")
-                   (discard-actions! (find-all-enemy-movement-actions))]
-                  [else
-                   (notice "Otava's movement discarded.")
-                   (discard-actions! (find-pc-movement-actions))])
-            ])
+              (cond [(equal? (action-actor-id (car (car sorted))) 'pc)
+                     (notice "Enemy movements discarded.")
+                     (discard-actions! (find-all-enemy-movement-actions))]
+                    [else
+                     (notice "Otava's movement discarded.")
+                     (discard-actions! (find-pc-movement-actions))])
+              )
+            ]
+           )
 
          (define pre-action-reaction? (get-pre-action-reaction action))
          (when (not (null? pre-action-reaction?))
