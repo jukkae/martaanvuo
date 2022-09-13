@@ -170,7 +170,9 @@
          (newline)
 
          (define total-printed 0)
-         (sleep 0.4)
+
+         (define base-sleep-time 0.05)
+         (sleep (* 2 base-sleep-time))
          (for ([dice results])
            (for ([i dice])
              (if (= i 0)
@@ -180,14 +182,19 @@
              (flush-output)
              (define sleep-time
                (cond [(>= total-printed tn)
-                      0.2]
+                      (* 2 base-sleep-time)]
                      [(= i (- sides 2))
-                      (take-random (list 0.2 0.4 0.8 1.2))
+                      (define multiplier (take-random (list 2 4 8 12)))
+                      (* multiplier base-sleep-time)
                       ]
                      [(= i (- sides 1))
-                      (take-random (list 0.4 0.8 1.2 1.6))]
+                      (define multiplier (take-random (list 4 8 12 16)))
+                      (* multiplier base-sleep-time)
+                      ]
                      [else
-                      (take-random (list 0.2 0.4 0.8))]))
+                      (define multiplier (take-random (list 2 4 8)))
+                      (* multiplier base-sleep-time)
+                      ]))
              (sleep sleep-time)
              ))
          (for ([i bonus])
@@ -196,7 +203,7 @@
                (display "."))
            (set! total-printed (add1 total-printed))
            (flush-output)
-           (define sleep-time 0.2)
+           (define sleep-time (* 2 base-sleep-time))
            (sleep sleep-time)
            )
          (newline)

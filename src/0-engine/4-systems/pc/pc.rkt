@@ -154,10 +154,10 @@
          sense-organs))
 
 ; (: -> SenseOrgan '())
-(define (add-sense-organ! sense-organ)
+(define (add-sense-organ! sense-organ [silent? #f])
   (define old-sense-organs (pc-actor-sense-organs (pc)))
   (set-pc-actor-sense-organs! (pc) (append-element old-sense-organs sense-organ))
-  (notice (format "Sense organ added: ~a" (SenseOrgan-name sense-organ))))
+  (when (not silent?) (notice (format "Sense organ added: ~a" (SenseOrgan-name sense-organ)))))
 
 ; (: -> SenseOrgan-id '())
 (define (remove-sense-organ! id)
@@ -184,6 +184,12 @@
   (define manipulators (pc-actor-manipulators (pc)))
   (findf (λ (manipulator) (equal? (Manipulator-id manipulator) id))
          manipulators))
+
+; (: -> Manipulator '())
+(define (add-manipulator! manipulator [silent? #f])
+  (define old-manipulators (pc-actor-manipulators (pc)))
+  (set-pc-actor-manipulators! (pc) (append-element old-manipulators manipulator))
+  (when (not silent?) (notice (format "Manipulator added: ~a" (Manipulator-name manipulator)))))
 
 (define (pc-gold-amount)
   (define items (actor-inventory (pc)))

@@ -75,6 +75,9 @@ The test subject in the notes is given the codename Otava.
     (set-pc-actor-sense-organs! (pc) '())
     (set-pc-actor-manipulators! (pc) '())
     (set-actor-size! (pc) 'small)
+    (define silent? #t)
+    (add-sense-organ! (SenseOrgan 'chemical-gradient-detector "chemical gradient detector") silent?)
+    (add-manipulator! (Manipulator 'pseudopodia "cytoplasmic pseudopodia") silent?)
     )
 
   ; (current-round 0)
