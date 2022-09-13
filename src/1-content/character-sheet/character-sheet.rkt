@@ -49,7 +49,8 @@
      (tr "" "")
      #;(tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
      (tr "HP" "[unknown]") ; TODO: acquire nociception
-     (tr "Size" (format "~a" (actor-size actor)))
+     (tr "Size" "the size of Otava")
+    ;  (tr "Size" (format "~a" (actor-size actor)))
      ))
 
   (when (not (= 0 (pc-actor-xp actor)))

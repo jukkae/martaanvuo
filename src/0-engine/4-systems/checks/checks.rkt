@@ -131,6 +131,70 @@
       (equal? check-result 'success)
       (equal? check-result 'narrow-success)))
 
+(define (just-roll formula #:title title #:bonus [bonus '()])
+  (cond [(string=? formula "2d6")
+         (define n 2)
+         (define sides 6)
+         (define results (for/list ([i n])
+           (d 1 sides)))
+         (define bonus-string "")
+         (cond [(null? bonus) (set! bonus 0)]
+               [else
+                (set! bonus-string
+                      (if (< bonus 0)
+                          (format "- ~a" (abs bonus))
+                          (format "+ ~a" bonus)))])
+         (define roll-total (+ (apply + results) bonus))
+
+         (define total-printed 0)
+
+         (define base-sleep-time 0.05)
+         (display (format "[~a] ~a " title formula))
+         (sleep (* 2 base-sleep-time))
+         (for ([dice results])
+           (for ([i dice])
+             (if (= i 0)
+                 (display ":")
+                 (display "."))
+             (set! total-printed (add1 total-printed))
+             (flush-output)
+             (define sleep-time
+               (cond [(= i (- sides 2))
+                      (define multiplier (take-random (list 2 4 8 12)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [(= i (- sides 1))
+                      (define multiplier (take-random (list 4 8 12 16)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [else
+                      (define multiplier (take-random (list 2 4 8)))
+                      (* multiplier base-sleep-time)
+                      ]))
+             (sleep sleep-time)
+             ))
+         (for ([i bonus])
+           (if (= i 0)
+               (display ":")
+               (display "."))
+           (set! total-printed (add1 total-printed))
+           (flush-output)
+           (define sleep-time (* 2 base-sleep-time))
+           (sleep sleep-time)
+           )
+         (newline)
+
+        ;  (notice (format "[~a]~a = [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total))
+
+        ;  (wait-for-confirm)
+
+         roll-total
+         ]
+        [else
+         (dev-note (format "unknown formula ~a" formula))
+         (error "unknown formula")])
+)
+
 ; returns (U 'critical-success 'success 'narrow-success 'failure 'critical-failure)
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
   (notice (format "~a [~a >= ~a]" title formula tn))
