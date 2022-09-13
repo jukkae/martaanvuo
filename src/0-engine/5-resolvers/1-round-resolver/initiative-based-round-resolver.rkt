@@ -52,7 +52,42 @@
          (cond
            [(or (equal? (action-symbol action) 'get-closer)
                 (equal? (action-symbol action) 'get-further))
-            (cond [(pc-action? action)
+
+            (define all-movement-actions (append (find-pc-movement-actions) (find-all-enemy-movement-actions)))
+
+            (define names (for/list ([mvmt-action all-movement-actions])
+              (get-combatant-name (get-actor (action-actor-id mvmt-action)))
+            ))
+            (define longest (find-longest names))
+            (define max-name-width (+ 2 (string-length longest))) ; []
+
+            (notice "Contested movement roll")
+            (define results '())
+            (for ([a all-movement-actions])
+              (append-element! results
+                               (cons a
+                                     (just-roll "2d6"
+                                                #:title (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
+                                                            #:min-width max-name-width
+                                                            ))
+                                     )))
+
+            (define sorted
+              (sort results
+                    (λ (x y) (> (cdr x) (cdr y)))))
+
+            ; (for ([a sorted])
+            ;   (displayln (format "~a: ~a" (get-combatant-name (get-actor (action-actor-id (car a)))) (cdr a))))
+
+            (cond [(equal? (action-actor-id (car (car sorted))) 'pc)
+                   (notice "Enemy movements discarded.")
+                   (discard-actions! (find-all-enemy-movement-actions))]
+                  [else
+                   (notice "Otava's movement discarded.")
+                   (discard-actions! (find-pc-movement-actions))])
+
+            #;(cond [(pc-action? action)
+                   (define pc-movement-actions (find-pc-movement-actions))
                    (define enemy-movement-actions (find-all-enemy-movement-actions))
                    (cond [(not (null? enemy-movement-actions))
 
@@ -60,56 +95,30 @@
                           (for ([a enemy-movement-actions])
                             (append-element! names (get-combatant-name (get-actor (action-actor-id a)))))
 
-                          (define longest (find-longest names))
-                          (define max-name-width (+ 2 (string-length longest))) ; []
 
-                          (notice "Contested movement roll")
-                          (define results '())
-                          (append-element! results
-                                           (cons (just-roll "2d6"
-                                                            #:title (~a "[Otava]"
-                                                                        #:min-width max-name-width
-                                                                        ))
-                                                 'pc))
 
-                          (for ([a enemy-movement-actions])
-                            (append-element! results
-                                             (cons (just-roll "2d6"
-                                                              #:title (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
-                                                                          #:min-width max-name-width
-                                                                          ))
-                                                   (action-actor-id a))))
-
-                          (define sorted
-                            (sort results
-                                  (λ (x y) (> (car x) (car y)))))
-
-                          (displayln "SORTED:")
-                          (for ([a sorted])
-                            (displayln (format "~a: ~a" (car a) (get-combatant-name (get-actor (cdr a))))))
-
-                          (define check-result
-                            (check "2d6"
-                                   #:title (format "[~a] Contested roll" (get-combatant-name actor))
-                                    #:target-number 6))
-                          (cond [(equal? 'critical-success check-result)
-                                 (notice "Critical success, gain fast!")
-                                 (actor-add-status! actor (status 'fast 1))])
-                          (cond [(equal? 'critical-failure check-result)
-                                 (notice "Critical failure, lose fast and gain fallen!")
-                                 (actor-remove-status-of-type! actor 'fast)
-                                 (actor-add-status! actor (status 'fallen 1))])
-                          (cond [(equal? 'narrow-success check-result)
-                                 (notice "Narrow success, gain slow!")
-                                 (actor-add-status! actor (status 'slow 1))])
-                          (cond [(successful? check-result)
-                                 (notice "Enemy movements discarded.")
-                                 (discard-actions! enemy-movement-actions)]
-                                [else
-                                 (notice "Otava's movement discarded.")
-                                 (discard-action! action)
-                                 ]
-                                )
+                          ; (define check-result
+                          ;   (check "2d6"
+                          ;          #:title (format "[~a] Contested roll" (get-combatant-name actor))
+                          ;           #:target-number 6))
+                          ; (cond [(equal? 'critical-success check-result)
+                          ;        (notice "Critical success, gain fast!")
+                          ;        (actor-add-status! actor (status 'fast 1))])
+                          ; (cond [(equal? 'critical-failure check-result)
+                          ;        (notice "Critical failure, lose fast and gain fallen!")
+                          ;        (actor-remove-status-of-type! actor 'fast)
+                          ;        (actor-add-status! actor (status 'fallen 1))])
+                          ; (cond [(equal? 'narrow-success check-result)
+                          ;        (notice "Narrow success, gain slow!")
+                          ;        (actor-add-status! actor (status 'slow 1))])
+                          ; (cond [(successful? check-result)
+                          ;        (notice "Enemy movements discarded.")
+                          ;        (discard-actions! enemy-movement-actions)]
+                          ;       [else
+                          ;        (notice "Otava's movement discarded.")
+                          ;        (discard-action! action)
+                          ;        ]
+                          ;       )
                           '()]
                          )
                    ]
