@@ -149,7 +149,7 @@
          (define total-printed 0)
 
          (define base-sleep-time 0.05)
-         (display (format "[~a] ~a " title formula))
+         (display (format "~a ~a " title formula))
          (sleep (* 2 base-sleep-time))
          (for ([dice results])
            (for ([i dice])

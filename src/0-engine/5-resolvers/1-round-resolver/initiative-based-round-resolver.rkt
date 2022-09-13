@@ -61,13 +61,32 @@
                             (append-element! names (get-combatant-name (get-actor (action-actor-id a)))))
 
                           (define longest (find-longest names))
-                          (define max-name-width (string-length longest))
-                          (dev-note (format "~a" max-name-width))
+                          (define max-name-width (+ 2 (string-length longest))) ; []
 
-                          (just-roll "2d6" #:title (~a "Otava" #:min-width max-name-width #:align 'right))
+                          (notice "Contested movement roll")
+                          (define results '())
+                          (append-element! results
+                                           (cons (just-roll "2d6"
+                                                            #:title (~a "[Otava]"
+                                                                        #:min-width max-name-width
+                                                                        ))
+                                                 'pc))
 
                           (for ([a enemy-movement-actions])
-                            (just-roll "2d6" #:title (~a (get-combatant-name (get-actor (action-actor-id a))) #:min-width max-name-width #:align 'right)))
+                            (append-element! results
+                                             (cons (just-roll "2d6"
+                                                              #:title (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
+                                                                          #:min-width max-name-width
+                                                                          ))
+                                                   (action-actor-id a))))
+
+                          (define sorted
+                            (sort results
+                                  (λ (x y) (> (car x) (car y)))))
+
+                          (displayln "SORTED:")
+                          (for ([a sorted])
+                            (displayln (format "~a: ~a" (car a) (get-combatant-name (get-actor (cdr a))))))
 
                           (define check-result
                             (check "2d6"
