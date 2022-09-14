@@ -3,18 +3,7 @@
 (provide make-limbtearer get-limbtearer-action get-limbtearer-reaction)
 
 (require
-  "../../0-engine/2-core/io.rkt"
-  "../../0-engine/2-core/core.rkt"
-
-  "../../0-engine/3-types/action.rkt"
-  "../../0-engine/3-types/actor.rkt"
-
-  "../../0-engine/4-systems/actors/actor.rkt"
-  "../../0-engine/4-systems/pc/pc.rkt"
-
-  "../../0-engine/3-types/stance.rkt"
-
-  "../../0-engine/7-state/state.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (define (make-limbtearer)
@@ -163,7 +152,10 @@
 (define (get-limbtearer-action actor)
   (cond
     [(> (actor-hp actor) (/ (actor-max-hp actor) 3))
-     (fight-behavior actor)]
+     (case (get-current-light-level)
+      ['pitch-black (get-skip-action actor)]
+      [else (fight-behavior actor)])
+     ]
     [else (flee-behavior actor)])
   )
 
