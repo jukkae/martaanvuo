@@ -193,16 +193,16 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      }
      (create-task 'anthead-monograph)
      (wait-for-confirm)
-     (move-pc-to-location! (get-place-by-id 'the-maw))
      (advance-time-by-iotas! (d 6 12))
      (notice "Some time passes.")
+     (move-pc-to-location! (get-place-by-id 'the-maw))
      (next-chapter!)
      (spawn-encounter)
      ]
     [else
-     (move-pc-to-location! (get-place-by-id 'the-maw))
      (advance-time-by-iotas! (d 6 12))
      (notice "Some time passes.")
+     (move-pc-to-location! (get-place-by-id 'the-maw))
      (spawn-encounter)
      ]
   ;   [(2)

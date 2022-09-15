@@ -114,7 +114,9 @@
   (reset-pending-action!)
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location-id! (pc) (location-id location))
-  (add-actor-to-location! location (pc)))
+  (add-actor-to-location! location (pc))
+  (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-short-description location)))
+  )
 
 
 (define (location-neighbors location)

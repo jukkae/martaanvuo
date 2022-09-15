@@ -65,9 +65,10 @@
   (when (not (null? new-hunger-level?))
     (set! events (append-element events new-hunger-level?)))
 
-  (for ([actor (location-actors (current-location))])
-    (for ([condition (actor-conditions actor)])
-      (actor-process-condition-tick actor condition)))
+  (when (not (null? (current-location)))
+    (for ([actor (location-actors (current-location))])
+      (for ([condition (actor-conditions actor)])
+        (actor-process-condition-tick actor condition))))
 
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
   events)
