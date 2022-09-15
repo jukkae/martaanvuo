@@ -13,7 +13,11 @@
   (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   (define the-maw (get-location-by-id 'the-maw))
   (when (not (flag-set? 'notebook-added))
-    (add-item-to-location! the-maw 'notebook)
+    (add-item-to-location!
+      the-maw
+      (new-item
+        (Name "notebook" "a" "'s" "notebooks")
+        #:id 'notebook))
     (set-flag 'notebook-added)
     )
   )

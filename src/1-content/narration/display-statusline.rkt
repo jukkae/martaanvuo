@@ -48,7 +48,17 @@
        (define name (cond
                       [(item? item) (item-name item)]
                       [else (format "~a" item)]))
-       (notice (format "There is ~a here." (string-downcase (format "~a" name))))] ; TODO: all such strings should appear with article prefixed ("*a* blindscraper corpse")
+       (notice
+        (format
+         "There is ~a here."
+         (cond
+          [(Name? name)
+           (format "~a ~a" (Name-indefinite-article name) (Name-singular name))
+           ]
+          [else ; TODO: *SHOULD* be string
+           (string-downcase (format "~a" name))
+           ])
+         ))]
       [else
        (notice "There are multiple items here.")]))
 

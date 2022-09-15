@@ -239,15 +239,20 @@
   (for ([item items]
         [i (in-naturals 1)])
     (define name
-      (cond [(item? item) (item-name item)]
+      (cond [(item? item)
+             (cond [(Name? (item-name item))
+                    (format "The ~a" (Name-singular (item-name item)))
+                   ]
+                   [(string? (item-name item))
+                    (item-name item)])]
             [else (format "~a" item)]))
     (cond [(item? item)
            (if (= (item-quantity item) 1)
-               (prln (format "[~a] ~a" i name))
-               (prln (format "[~a] ~a (~a)" i name (item-quantity item))) ; TODO: pluralized
+               (prln (format "[~a] ~a." i name))
+               (prln (format "[~a] ~a (~a)." i name (item-quantity item))) ; TODO: pluralized
                )
            ]
-          [else (prln (format "[~a] ~a" i name))])
+          [else (prln (format "[~a] ~a." i name))])
     )
   (br)
   (define input (string->number (wait-for-input)))
