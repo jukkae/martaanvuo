@@ -3,6 +3,7 @@
 (provide (all-defined-out))
 
 (require
+  anaphoric
   "../../0-engine/2-core/io.rkt"
   "../../0-engine/2-core/core.rkt"
 
@@ -151,6 +152,7 @@
      (error (format "make-blindscraper-action: unknown action: ~a" action-flag))]))
 
 (define (get-blindscraper-action actor)
+  ; TODO: hunt by sound/sonar + smell; approach/retreat (collectively called "reposition actions")
   (cond ((in-combat?)
          (cond
            ((> (actor-hp actor) 1)
