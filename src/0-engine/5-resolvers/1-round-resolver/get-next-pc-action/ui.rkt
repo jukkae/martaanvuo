@@ -44,10 +44,7 @@
            (prln quit-message)
            (newline))
 
-         (define (print-version)
-           (prln (format "[Martaanvuo v~a]" martaanvuo-version)))
-
-         (print-version)
+         (prln (format "[Martaanvuo v~a, seed ~a]" martaanvuo-version (current-rng-seed)))
 
          (exit))
         (else
