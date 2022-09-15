@@ -15,6 +15,7 @@
 
   "../../0-engine/4-systems/actors/actor.rkt"
   "../../0-engine/4-systems/checks/checks.rkt"
+  "../../0-engine/4-systems/pc/pc.rkt"
 
   "../../0-engine/3-types/stance.rkt"
 
@@ -117,42 +118,40 @@
         ))]
 
     ['blindscrape
-     (define target-id (actor-id (pc)))
-     (make-action
-      #:symbol 'inflict-condition
-      #:actor actor
-      #:duration 1
-      #:target target-id
-      #:tags '(initiative-based-resolution)
-      #:resolution-rules
-      `(
-        (define target (pc))
-        (p "The blindscraper swings its claw through an opening between Otava's arms. The claw tears diagonally across Otava's face, cutting its way through flesh, scraping bone.")
-         (wait-for-confirm)
-         (cond [(pc-has-sense-organ? 'eyes)
-                (remove-sense-organ! 'eyes)
-                ])
-         #;(case (d 1 2)
-           [(1)
-            ; -> next generation: scars where there were wounds, then next: tattoos -> with both giving changes to the build - "the ghost that lived through" (it's often possible to name a reason)
-            (p "A searing pain cuts through her left eye. Blood and intraocular fluid gush down her face.")
-            (inflict-condition! (pc)
-                                (current-elapsed-time)
-                                (condition 'one-eye-blind
-                                           "One eye blind."))
-            ]
-           [(2)
-            (p "A searing pain cuts through her eyes as her vision goes black.")
-            (inflict-condition! (pc)
-                                (current-elapsed-time)
-                                (condition 'both-eyes-blind
-                                           "Blind."))
-            ])
-        )
-      )]
+     (make-blindscrape-action actor)]
 
     [else
      (error (format "make-blindscraper-action: unknown action: ~a" action-flag))]))
+
+(define (make-blindscrape-action actor)
+  (define target-id (actor-id (pc)))
+  (make-action
+   #:symbol 'inflict-condition
+   #:actor actor
+   #:duration 1
+   #:target target-id
+   #:tags '(initiative-based-resolution)
+   #:resolution-rules
+   `(
+     (define target (pc))
+     (notice "The blindscraper swings its claw through an opening between Otava's arms. The claw tears across Otava's face, cutting its way through flesh, scraping bone.")
+     (wait-for-confirm)
+     (cond [(pc-has-sense-organ? 'eyes)
+            (remove-sense-organ! 'eyes)
+            ])
+     )
+   ))
+
+(define (make-melee-action actor)
+  (make-melee-attack-action
+   #:actor actor
+   #:duration 1
+   #:target 'pc
+   #:n 1
+   #:x 2
+   #:bonus -1
+   )
+  )
 
 (define (get-blindscraper-action actor)
   ; TODO: hunt by sound/sonar + smell; approach/retreat (collectively called "reposition actions")
@@ -160,57 +159,24 @@
          (cond
            ((> (actor-hp actor) 1)
 
-            (cond
-              ((actor-in-range? actor 'engaged)
-               (define options
-                 (list
-                  (cons 1 'blindscrape)
-                  (cons 2 'blindscrape)
-                  (cons 3 'blindscrape)
-                  (cons 4 'blindscrape)
-                  ; (cons 2 'attack)
-                  ; (cons 3 'attack)
-                  ; (cons 4 'attack)
-                  ))
-               (define roll (d 1 4))
-               (define index (- roll 1))
-               #;(displayln "Action")
-               (define action-flag-with-index (list-ref options index))
-               #;(displayln action-flag-with-index)
-               (define action-flag (cdr action-flag-with-index))
-               (make-blindscraper-action actor action-flag))
+            (case (actor-stance-range actor)
+              [(engaged adjacent)
+               (cond [(pc-has-sense-organ? 'eyes)
+                      ((take-random (list
+                                     make-blindscrape-action
+                                     ))
+                       actor)
+                      ]
+                     [else
+                      ((take-random (list
+                                     make-melee-action
+                                     ))
+                       actor)])
+               ]
+              [else
+               (approach-action actor)])
 
-              ((actor-in-range? actor 'close)
-               (define options
-                 (list
-                  (cons 1 'attack)
-                  (cons 2 'attack)
-                  (cons 3 'go-to-engaged)
-                  (cons 4 'go-to-engaged)
-                  ))
-               (define roll (d 1 4))
-               (define index (- roll 1))
-               #;(displayln "Action")
-               (define action-flag-with-index (list-ref options index))
-               #;(displayln action-flag-with-index)
-               (define action-flag (cdr action-flag-with-index))
-               (make-blindscraper-action actor action-flag))
-
-              (else
-               (define options
-                 (list
-                  (cons 1 'attack)
-                  (cons 2 'attack)
-                  (cons 3 'go-to-engaged)
-                  (cons 4 'go-to-engaged)
-                  ))
-               (define roll (d 1 4))
-               (define index (- roll 1))
-               #;(displayln "Action")
-               (define action-flag-with-index (list-ref options index))
-               #;(displayln action-flag-with-index)
-               (define action-flag 'go-to-close)
-               (make-blindscraper-action actor action-flag))))
+            )
 
            ((= (actor-hp actor) 1)
             (define id (actor-id actor))
@@ -244,9 +210,10 @@
                      (actor-add-status! (get-actor ,(actor-id actor)) (status 'fallen 1))
                      (display-combatant-info (get-actor ,(actor-id actor)))
                      'failure))
-               )))))
-        (else
-         (begin (dev-note "Blindscraper AI, not in combat")))))
+               )))
+
+           ))
+        ))
 
 (define (get-blindscraper-reaction actor)
   '())

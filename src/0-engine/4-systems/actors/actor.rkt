@@ -375,6 +375,9 @@
   (current-times-species-encountered++ type)
 )
 
+(define (actor-stance-range actor)
+  (stance-range (actor-stance actor)))
+
 ; it's always the enemy's stance that's modified, but
 ; the action might be initiated by the pc
 (define (set-actor-stance-range! moving-actor new-range [pc? #f])

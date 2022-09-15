@@ -85,11 +85,9 @@
     ; #;(define success? (skill-check title skill action-target-number))
     (define success? #t)
 
-    (define damage-roll (standard-damage-roll 1 2 0))
-    (define damage-roll-result (d
-                                1
-                                2
-                                ))
+    ; (define damage-roll (standard-damage-roll 1 2 0))
+    (define damage-roll (melee-attack-action-damage-roll action))
+    (define damage-roll-result (+ (d (standard-damage-roll-n damage-roll) (standard-damage-roll-x damage-roll)) (standard-damage-roll-bonus damage-roll)))
     (define body
       (tbody
        (tr "damage"
