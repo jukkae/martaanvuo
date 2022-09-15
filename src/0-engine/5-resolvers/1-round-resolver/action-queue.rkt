@@ -38,14 +38,19 @@
     (for/list ([action-with-initiative sorted])
       (define action (cdr action-with-initiative))
       (define initiative (car action-with-initiative))
-      (define action-description
-
+      (define actor-description
         (format "~a~a"
           (capitalize-first-letter (actor-name (get-actor (action-actor-id action))))
           (if (actor-has-status-of-type? (get-actor (action-actor-id action)) 'fast)
             " [fast: +4]"
             "")))
-      (tr action-description (format "~a" initiative))))
+
+      (define action-description
+        (format "~a"
+          (capitalize-first-letter (string-replace (symbol->string (action-symbol action)) "-" " ")) ; TODO: actions will need to have Names too
+          ))
+
+      (tr actor-description action-description (format "~a" initiative))))
 
   (info-card actions "Action initiatives [higher is faster]")
   (wait-for-confirm)
@@ -57,8 +62,8 @@
   action-queue)
 
 (define (movement-action? action)
-  (if (or (equal? (action-symbol action) 'get-closer)
-          (equal? (action-symbol action) 'get-further))
+  (if (or (equal? (action-symbol action) 'get-closer) ; TODO: 'get-closer -> 'approach
+          (equal? (action-symbol action) 'get-further)) ; TODO: 'get-further -> 'retreat
       #t
       #f))
 

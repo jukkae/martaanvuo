@@ -57,10 +57,13 @@
                 (equal? (action-symbol action) 'get-further))
 
             (define opposing-actions
-              (cond [(pc-action? action)
-                     (find-all-enemy-movement-actions)]
-                    [else
-                     (find-pc-movement-actions)]))
+              (filter
+               (λ (x) (not (eq? (action-symbol x) (action-symbol action))))
+               (cond [(pc-action? action)
+                      (find-all-enemy-movement-actions)]
+                     [else
+                      (find-pc-movement-actions)]))
+              )
 
             (when (not (empty? opposing-actions))
               (define all-mvmt-actions (append (list action) opposing-actions))
