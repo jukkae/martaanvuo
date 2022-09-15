@@ -86,12 +86,12 @@
                                                   #:on-critical-success
                                                   (λ ()
                                                     (notice "Critical success, gain fast!")
-                                                    (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fast 1)))
+                                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fast 1)))
                                                   #:on-critical-failure
                                                   (λ ()
                                                     (notice "Critical failure, lose fast and gain fallen!")
-                                                    (actor-remove-status-of-type! (get-actor (action-actor-id (car a))) 'fast)
-                                                    (actor-add-status! (get-actor (action-actor-id (car a))) (status 'fallen 1))
+                                                    (actor-remove-status-of-type! (get-actor (action-actor-id a)) 'fast)
+                                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fallen 1))
                                                     )
                                                   )
                                        )))
