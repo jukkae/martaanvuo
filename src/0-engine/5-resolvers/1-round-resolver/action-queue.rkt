@@ -41,7 +41,7 @@
       (define action-description
 
         (format "~a~a"
-          (actor-name (get-actor (action-actor-id action)))
+          (capitalize-first-letter (actor-name (get-actor (action-actor-id action))))
           (if (actor-has-status-of-type? (get-actor (action-actor-id action)) 'fast)
             " [fast: +4]"
             "")))

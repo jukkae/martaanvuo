@@ -20,8 +20,9 @@
 
   "../../3-types/condition.rkt"
   "../../3-types/actor.rkt"
-  "../../3-types/pc-actor.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/name.rkt"
+  "../../3-types/pc-actor.rkt"
 
   "../../3-types/stance.rkt"
   )

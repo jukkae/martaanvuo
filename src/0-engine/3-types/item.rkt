@@ -2,18 +2,12 @@
 
 (provide (struct-out item)
          (struct-out ranged-weapon)
-         (struct-out Name)
          )
 
-(require "../2-core/maybe.rkt")
-
-(struct Name
-  ([singular : String]
-   [indefinite-article : String]
-   [possessive-suffix : String]
-   [plural : String])
-  #:prefab
-  #:mutable)
+(require
+  "name.rkt"
+  "../2-core/maybe.rkt"
+  )
 
 (struct item
   ([id : Symbol]
