@@ -4,6 +4,9 @@
 
 (require
   anaphoric
+
+  "common.rkt"
+
   "../../0-engine/2-core/io.rkt"
   "../../0-engine/2-core/core.rkt"
 

@@ -121,13 +121,13 @@
                   ['nearby 'close]
                   ['far 'nearby]))
               (define target-id (actor-id target))
-              (define get-closer-choice
+              (define approach-choice
                 (make-choice
-                 'get-closer
+                 'approach
                  (format "Get closer to ~a." (get-combatant-name target))
                  (λ ()
                    (make-action
-                    #:symbol 'get-closer
+                    #:symbol 'approach
                     #:actor (pc)
                     #:duration 1
                     #:tags '(initiative-based-resolution fast)
@@ -136,7 +136,7 @@
                       (set-actor-stance-range! (get-actor ,target-id) ',target-stance-range #t)
                       )
                     ))))
-              (set! combat-choices (append-element combat-choices get-closer-choice))
+              (set! combat-choices (append-element combat-choices approach-choice))
               )
 
             ])
@@ -144,13 +144,13 @@
            [(or (not (empty? adjacent-enemies))
                 (not (empty? close-enemies))
                 (not (empty? nearby-enemies)))
-            (define get-further-choice
+            (define retreat-choice
               (make-choice
-               'get-further
+               'retreat
                "Get away."
                (λ ()
                  (make-action
-                  #:symbol 'get-further
+                  #:symbol 'retreat
                   #:actor (pc)
                   #:duration 1
                   #:tags '(initiative-based-resolution fast)
@@ -184,7 +184,7 @@
                          ]))
                     )
                   ))))
-            (set! combat-choices (append-element combat-choices get-further-choice))
+            (set! combat-choices (append-element combat-choices retreat-choice))
             ])
 
          ])

@@ -62,8 +62,8 @@
   action-queue)
 
 (define (movement-action? action)
-  (if (or (equal? (action-symbol action) 'get-closer) ; TODO: 'get-closer -> 'approach
-          (equal? (action-symbol action) 'get-further)) ; TODO: 'get-further -> 'retreat
+  (if (or (equal? (action-symbol action) 'approach)
+          (equal? (action-symbol action) 'retreat))
       #t
       #f))
 

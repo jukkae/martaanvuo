@@ -61,7 +61,7 @@
             )
           )
          ]
-        [else (get-closer-action actor)]
+        [else (approach-action actor)]
         ))
 
 (define (flee-behavior actor)
@@ -99,7 +99,7 @@
                          'failure))
                    ))]
                [else
-                (get-further-action actor)])
+                (retreat-action actor)])
          ]))
 
 (define (get-limbtearer-action actor)

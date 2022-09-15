@@ -1,12 +1,12 @@
 #lang at-exp racket
 
-(provide get-closer-action get-skip-action get-further-action)
+(provide approach-action get-skip-action retreat-action)
 
 (require
   "../../0-engine/0-api/api.rkt"
   )
 
-(define (get-closer-action actor)
+(define (approach-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
       ['adjacent 'engaged]
@@ -15,7 +15,7 @@
       ['far 'nearby]))
   (define subject (actor-id actor))
   (make-action
-   #:symbol 'get-closer
+   #:symbol 'approach
    #:actor actor
    #:duration 0
    #:target '()
@@ -35,7 +35,7 @@
    #:tags '(initiative-based-resolution)
    #:details '(slow silent)))
 
-(define (get-further-action actor)
+(define (retreat-action actor)
   (define next-range
     (case (stance-range (actor-stance actor))
       ['engaged 'adjacent]
@@ -44,7 +44,7 @@
       ['nearby 'far]))
   (define subject (actor-id actor))
   (make-action
-   #:symbol 'get-further
+   #:symbol 'retreat
    #:actor actor
    #:duration 0
    #:target '()

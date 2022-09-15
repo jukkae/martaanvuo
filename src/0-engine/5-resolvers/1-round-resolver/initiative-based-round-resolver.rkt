@@ -53,8 +53,8 @@
          (define turn-result 'ok)
 
          (cond
-           [(or (equal? (action-symbol action) 'get-closer)
-                (equal? (action-symbol action) 'get-further))
+           [(or (equal? (action-symbol action) 'approach)
+                (equal? (action-symbol action) 'retreat))
 
             (define opposing-actions
               (filter

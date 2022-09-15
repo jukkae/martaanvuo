@@ -39,12 +39,12 @@
              #:x 2
              #:bonus 0
              )]
-           [else (get-closer-action actor)]
+           [else (approach-action actor)]
            )]
         [(actor-has-condition-of-type? (pc) 'envenomed) ; envenomed, but not yet peaking
          (case (stance-range (actor-stance actor))
            [(engaged adjacent close)
-            (get-further-action actor)]
+            (retreat-action actor)]
            [else (get-skip-action actor)]
            )]
         [else
@@ -89,7 +89,7 @@
                '()
                )
              )]
-           [else (get-closer-action actor)]
+           [else (approach-action actor)]
            )]
         ))
 
@@ -106,7 +106,7 @@
              #:x 2
              #:bonus 0
              )]
-           [else (get-closer-action actor)]
+           [else (approach-action actor)]
            )
          ]
         [(actor-has-condition-of-type? (pc) 'envenomed)
@@ -116,7 +116,7 @@
                 (get-skip-action actor)
                 ]
                [else
-                (get-further-action actor)])
+                (retreat-action actor)])
          ]
         [else
          (cond [(equal? (stance-range (actor-stance actor)) 'far)
@@ -152,7 +152,7 @@
                          'failure))
                    ))]
                [else
-                (get-further-action actor)])
+                (retreat-action actor)])
          ]))
 
 (define (get-voidfloater-action actor)
