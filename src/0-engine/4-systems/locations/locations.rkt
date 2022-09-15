@@ -95,6 +95,7 @@
     [else (dev-note (format "Unknown encounter type: ~a" encounter-type))]))
 
 (define (spawn-encounter)
+  (notice (format "~a ι: An encounter in ~a." (current-elapsed-time) (get-location-short-description (current-location))))
   (current-counters++ 'enemy-encounters)
 
   (when (not (null? (location-encounter-types (current-location))))

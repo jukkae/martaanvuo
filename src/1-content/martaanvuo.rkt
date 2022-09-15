@@ -12,7 +12,7 @@
   (current-world (make-new-world))
   (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   (define the-maw (get-location-by-id 'the-maw))
-  (when (not (flag-set? 'noteboo-added))
+  (when (not (flag-set? 'notebook-added))
     (add-item-to-location! the-maw 'notebook)
     (set-flag 'notebook-added)
     )
@@ -25,7 +25,7 @@
 
   ; housekeeping – TODO: semantically different from post-pc-death
   (on-begin-life)
-  (on-begin-run))
+  (on-begin-run #:suppress-new-chapter? #t))
 
 
 (define (on-begin-nth-run n)
@@ -69,7 +69,7 @@ There's something called the Lamarck process, which is what drives the changes i
     (create-task 'evolve)
 
     @p{
-The test subject in the notes is given the codename Otava.
+The first test subject the notebook follows is an "organic tissue adaptive-volitional amoeboid" #1.
     }
 
     (set-pc-actor-sense-organs! (pc) '())
@@ -195,12 +195,16 @@ The test subject in the notes is given the codename Otava.
      (wait-for-confirm)
      (move-pc-to-location! (get-place-by-id 'the-maw))
      (advance-time-by-iotas! (d 6 12))
+     (notice "Some time passes.")
+     (next-chapter!)
      (spawn-encounter)
      ]
     [else
      (move-pc-to-location! (get-place-by-id 'the-maw))
      (advance-time-by-iotas! (d 6 12))
-     (spawn-encounter)]
+     (notice "Some time passes.")
+     (spawn-encounter)
+     ]
   ;   [(2)
   ;    @p{
   ;     Otava is riding a roaring beast through the desolate wastelands of Martaanvuo. Dried up riverbeds, starving cattle, starving people.
