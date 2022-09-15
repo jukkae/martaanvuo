@@ -441,7 +441,7 @@
            (when (equal? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
-               [("Voidfloater") (award-xp! 3)]
+               [("voidfloater") (award-xp! 3)]
                [("Limbtearer") (award-xp! 4)]))
 
            (display-combatant-info target)

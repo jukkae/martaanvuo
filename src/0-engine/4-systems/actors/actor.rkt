@@ -149,10 +149,16 @@
          (add-item-to-location! (current-location) (make-corpse actor)))))
 
 (define (make-corpse actor)
+  (define corpse-name
+    (Name
+     (string-append (actor-name actor) " corpse")
+     "a"
+     "'s"
+     (string-append (actor-name actor) " corpses")))
   (define i (new-item
-   (string-append (actor-name actor) " corpse")
+   corpse-name
    #:id (string->symbol (string-append (string-downcase (actor-name actor)) "-corpse"))))
-  (notice (format "~a dropped." (string-append (actor-name actor) " corpse")))
+  (notice (format "A ~a dropped." (string-append (actor-name actor) " corpse")))
   i)
 
 (define (inventory-contains-item-id inventory id)

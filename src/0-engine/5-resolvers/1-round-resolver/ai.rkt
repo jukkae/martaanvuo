@@ -54,7 +54,7 @@
     (["Blindscraper"] (get-blindscraper-action actor))
     (["Grabberkin"] (get-grabberkin-action actor))
     (["Human fighter"] (get-human-fighter-action actor))
-    (["Voidfloater"] (get-voidfloater-action actor))
+    (["voidfloater"] (get-voidfloater-action actor))
     (["Limbtearer"] (get-limbtearer-action actor))
     (else (dev-note (format "get-next-npc-action: unknown actor ~a" (actor-name actor))))))
 

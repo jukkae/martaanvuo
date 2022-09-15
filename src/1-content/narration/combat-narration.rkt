@@ -131,7 +131,7 @@
 
 (define (display-non-pc-combatant-info actor)
   (define stance (actor-stance actor))
-  (define name (get-combatant-name actor))
+  (define name (capitalize-first-letter (get-combatant-name actor)))
   (define body '())
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)

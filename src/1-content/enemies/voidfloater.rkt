@@ -18,7 +18,7 @@
   )
 
 (define (make-voidfloater)
-  (define enemy (make-actor "Voidfloater" 'voidfloater #:max-hp 3 #:size 'small))
+  (define enemy (make-actor "voidfloater" 'voidfloater #:max-hp 3 #:size 'small))
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)
   (set-trait! enemy "melee-attack-skill" 1)
