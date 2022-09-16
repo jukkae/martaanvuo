@@ -1,6 +1,6 @@
 #lang at-exp racket
 
-(provide approach-action get-skip-action retreat-action)
+(provide approach-action get-skip-action retreat-action try-to-escape)
 
 (require
   "../../0-engine/0-api/api.rkt"
@@ -54,3 +54,32 @@
      (set-actor-stance-range! (get-actor ,subject) ',next-range)
      'ok)
    #:details '(slow)))
+
+(define (escape-action actor)
+  (define id (actor-id actor))
+  (make-action
+   #:symbol 'escape
+   #:actor actor
+   #:duration 1
+   #:target '()
+   #:tags '(initiative-based-resolution fast)
+   #:details '()
+   #:resolution-rules
+   `(
+     (notice (format "The ~a escapes" (get-combatant-name (get-actor ,id))))
+     (award-xp! 1)
+     (remove-actor-from-its-current-location! (get-actor ,(actor-id actor)))
+    'ok
+     ))
+  )
+
+(define (try-to-escape actor)
+  (cond [(or (equal? (actor-stance-range actor) 'engaged)
+             (equal? (actor-stance-range actor) 'adjacent)
+             (equal? (actor-stance-range actor) 'close))
+         (retreat-action actor)]
+        [(equal? (actor-stance-range actor) 'nearby)
+         (retreat-action actor)]
+        [(equal? (actor-stance-range actor) 'far)
+         (escape-action actor)])
+  )
