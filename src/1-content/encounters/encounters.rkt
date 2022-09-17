@@ -68,9 +68,7 @@
 
 (define (spawn-blindscraper-encounter!)
   #;(p (blindscraper-spawn-text))
-
   (begin-combat!)
-
   (spawn 'blindscraper 1 'nearby))
 
 (define (spawn-two-blindscrapers-encounter!)

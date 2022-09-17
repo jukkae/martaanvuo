@@ -33,15 +33,9 @@
   (current-combat-timeline (append-element (current-combat-timeline) (make-combat-event text))))
 
 (define (begin-combat!)
-  ; (wait-for-confirm)
-  ; (next-chapter!)
   (current-in-combat? #t)
-
-  (wait-for-confirm)
-
   ; TODO: move this kind of stuff to content
   (current-session-times-in-combat++)
-
   (current-session-score-dice++ (if (= (current-session-times-in-combat) 1) "Got in combat." '()))
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started"))

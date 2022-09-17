@@ -38,7 +38,7 @@
 (define (make-blindscrape-action actor)
   (define target-id (actor-id (pc)))
   (make-action
-   #:symbol 'inflict-condition
+   #:symbol 'emblinden
    #:actor actor
    #:duration 1
    #:target target-id
@@ -46,10 +46,24 @@
    #:resolution-rules
    `(
      (define target (pc))
-     (notice "The blindscraper swings its claw through an opening between Otava's arms. The claw tears across Otava's face, cutting its way through flesh, scraping bone.")
-     (wait-for-confirm)
      (cond [(pc-has-sense-organ? 'eyes)
+            ; TODO: SenseOrgans-to-Descriptions-map? (ordering is case-by-case - order of notices affects dramaturgy!)
+            (when (pc-has-sense-organ? 'ears)
+              (notice "There's a sharp whoosh. A claw cuts through the air.")
+              )
+            (when (pc-has-sense-organ? 'nociception)
+              (notice "A sharp, burning pain cuts across Otava's eyes.")
+              )
+            (when (pc-has-sense-organ? 'haptics)
+              (notice "Warm blood and intraocular fluid gush on her face.")
+              )
+            (when (pc-has-sense-organ? 'eyes)
+              (when (not (equal? (get-current-light-level) 'pitch-black))
+                (notice "A flurry of claws, and then Otava's vision goes black.")
+                )
+              )
             (remove-sense-organ! 'eyes)
+            (wait-for-confirm)
             ])
      )
    ))
