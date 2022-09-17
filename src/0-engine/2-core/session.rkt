@@ -7,10 +7,10 @@
   )
 
 (define current-session-score-dice (make-parameter 0))
-(define (current-session-score-dice++ . reason)
+(define (current-session-score-dice++ [reason '()])
   (current-session-score-dice (add1 (current-session-score-dice)))
   (when (not (null? reason))
-    (current-session-score-reasons (cons reason (current-session-score-reasons)))))
+    (current-session-score-reasons (append-element (current-session-score-reasons) reason))))
 
 (define current-session-score-reasons (make-parameter '()))
 

@@ -23,7 +23,11 @@
     (tbody
      (tr (format "Total score: ~a" session-score))
      (tr "")
-     (tr (format "~a" (current-session-score-reasons)))))
+     (tr "Reasons include:")
+     ))
+  (append! body
+    (for/list ([reason (current-session-score-reasons)])
+      (tr (format "~a" reason))))
   (info-card body "Session stats")
   (newline))
 

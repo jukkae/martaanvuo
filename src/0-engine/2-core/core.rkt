@@ -25,3 +25,7 @@
 (define-syntax append-element!
   (syntax-rules ()
     ((_ lst elem) (begin (set! lst (append-element lst elem)) lst))))
+
+(define-syntax append!
+  (syntax-rules ()
+    ((_ lst1 lst2) (begin (set! lst1 (append lst1 lst2)) lst1))))
