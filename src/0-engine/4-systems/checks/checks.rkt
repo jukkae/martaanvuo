@@ -7,7 +7,7 @@
 
   "../../1-index/state.rkt"
 
-  "../../2-core/maybe.rkt" ; TODO: for all-fulfill-predicate
+  "../../2-core/typed-utils.rkt"
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 

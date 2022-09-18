@@ -4,6 +4,7 @@
 
 (require
   "../2-core/maybe.rkt"
+  "../2-core/typed-utils.rkt"
   "../3-types/actor.rkt"
   "../3-types/location-ids.rkt"
   "../3-types/status.rkt"
