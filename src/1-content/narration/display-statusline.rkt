@@ -55,8 +55,12 @@
           [(Name? name)
            (format "~a ~a" (Name-indefinite-article name) (Name-singular name))
            ]
-          [else ; TODO: *SHOULD* be string
+          [(string? name)
            (string-downcase (format "~a" name))
+           ]
+          [else
+           (displayln name)
+           (error "Unknown type for name!")
            ])
          ))]
       [else
