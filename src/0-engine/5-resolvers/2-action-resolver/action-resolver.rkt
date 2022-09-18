@@ -82,8 +82,11 @@
 
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
-      (set-pending-action! action (- (action-duration action)
-                                     (timeline-duration result)))
+
+      (when (not (equal? (action-symbol) 'rest))
+        (set-pending-action! action (- (action-duration action)
+                                       (timeline-duration result))))
+
       (set! result 'interrupted))
 
     (when (not (equal? result 'interrupted))

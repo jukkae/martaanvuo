@@ -35,7 +35,6 @@
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))
   (case (action-symbol pending-action)
-    ['rest (format "[continue] Rest.")] ; TODO: fix: this should only elapse until the next time-of-day!
     ['go-to-location
       (define target (action-target pending-action))
       (when (symbol? target) (set! target (get-location-by-id target)))
