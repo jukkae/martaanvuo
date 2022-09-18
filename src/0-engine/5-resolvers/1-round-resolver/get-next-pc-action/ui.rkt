@@ -7,7 +7,6 @@
 
   "../../../2-core/io.rkt"
   "../../../2-core/core.rkt"
-  "../../../2-core/session.rkt"
 
   "../../../3-types/task.rkt"
 
@@ -27,7 +26,7 @@
      ))
   (append! body
     (for/list ([reason (current-session-score-reasons)])
-      (tr (format "~a" reason))))
+      (tr (format "- ~a" reason))))
   (info-card body "Session stats")
   (newline))
 

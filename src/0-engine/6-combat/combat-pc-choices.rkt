@@ -367,6 +367,10 @@
            (newline)
 
            (when (equal? action-result 'dead)
+             (when (not (session-flag-set? 'killed-an-enemy))
+              (set-session-flag 'killed-an-enemy)
+              (current-session-score-dice++ "Killed some evil fucks.")
+              )
              (p "The " (actor-name target) " is dead."))
 
            (define descr
@@ -442,7 +446,12 @@
              ; TODO: move this to Actor
              (case (actor-name target)
                [("voidfloater") (award-xp! 3)]
-               [("Limbtearer") (award-xp! 4)]))
+               [("Limbtearer") (award-xp! 4)])
+
+             (when (not (session-flag-set? 'killed-an-enemy))
+               (set-session-flag 'killed-an-enemy)
+               (current-session-score-dice++ "killed some evil fucks")
+               ))
 
            (display-combatant-info target)
            (newline)

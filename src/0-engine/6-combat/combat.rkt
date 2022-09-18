@@ -10,7 +10,6 @@
 
   "../2-core/io.rkt"
   "../2-core/core.rkt"
-  "../2-core/session.rkt"
 
   "../3-types/actor.rkt"
   "../3-types/combat-event.rkt"
@@ -36,7 +35,7 @@
   (current-in-combat? #t)
   ; TODO: move this kind of stuff to content
   (current-session-times-in-combat++)
-  (current-session-score-dice++ (if (= (current-session-times-in-combat) 1) "Got in combat." '()))
+  (current-session-score-dice++ (if (= (current-session-times-in-combat) 1) "got in combat" '()))
   ;   (notice "Attainment: Fighter"))
   (add-combat-event "combat started"))
 
