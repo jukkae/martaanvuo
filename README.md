@@ -10,6 +10,10 @@
 
 To update packages, `raco pkg update --all`.
 
+### Profiling
+
+To run profiler, start the game with `raco profile src/martaanvuo.rkt` and press `Ctrl + C` to end profiling.
+
 ## Recommended packages for DrRacket
 
 - `files-viewer`
