@@ -3,15 +3,7 @@
 (provide (all-defined-out))
 
 (require
-  "../../0-engine/0-api/types.rkt"
-
-  "../../0-engine/2-core/io.rkt"
-
-  "../../0-engine/4-systems/locations/locations.rkt"
-  "../../0-engine/4-systems/pc/pc.rkt"
-  "../../0-engine/4-systems/world/time.rkt"
-
-  "../../0-engine/7-state/state.rkt"
+  "../../0-engine/0-api/api.rkt"
   )
 
 (define (display-statusline)
@@ -39,6 +31,23 @@
            ))
         (notice (format
            "Waiting room.")))
+
+  (notice (format "~a~a~a"
+    (cond
+    [(pc-has-sense-organ? 'eyes)
+     (format "[current light level: ~a]" (get-current-light-level))]
+    [else ""])
+    (cond
+    [(and (pc-has-sense-organ? 'eyes)
+          (or (pc-has-sense-organ? 'ears)
+              (pc-has-sense-organ? 'sonar)))
+     " "]
+    [else ""])
+    (cond
+    [(or (pc-has-sense-organ? 'ears)
+         (pc-has-sense-organ? 'sonar))
+     (format "[current noise level: ~a]" (get-current-noise-level))]
+    [else ""])))
 
   (when (not (empty? (location-items (current-location))))
     (define items (location-items (current-location)))
