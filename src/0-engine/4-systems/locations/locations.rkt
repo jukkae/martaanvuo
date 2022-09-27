@@ -9,6 +9,7 @@
 (require
   racket/lazy-require
   "../pc/pc.rkt"
+  "../world/time.rkt"
   "../../3-types/action.rkt"
   "../../3-types/item.rkt"
   )
@@ -125,7 +126,6 @@
           )
   )
 
-
 (define (move-pc-to-location! location)
   (reset-pending-action!)
   (define old-location-id (location-id (current-location)))
@@ -133,13 +133,13 @@
   (set-actor-location-id! (pc) (location-id location))
   (add-actor-to-location! location (pc))
   (cond [(Place? location)
-         (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-name location)))]
+         (notice (format "~a: Otava is now in ~a." (format-timestamp (current-elapsed-time)) (get-location-name location)))]
         [else
          (cond [(and (not (= (route-traverse-time location) 1))
                      (not (null? location-encounter-types))) ; TODO: "Trivial" route or something?
                 (define name (route-shortname-from location old-location-id))
                 (string-set! name 0 #\e)
-                (notice (format "~a ι: Otava is now ~a" (current-elapsed-time) name))])
+                (notice (format "~a: Otava is now ~a" (format-timestamp (current-elapsed-time)) name))])
          ])
   )
 

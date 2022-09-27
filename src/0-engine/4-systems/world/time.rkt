@@ -17,3 +17,6 @@
   time-of-day)
 
 (define day-length 600)
+
+(define (format-timestamp (timestamp : Integer))
+  (format "Day ~a, ~a ι" (add1 (quotient timestamp day-length)) (remainder timestamp day-length)))
