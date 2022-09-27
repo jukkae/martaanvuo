@@ -36,7 +36,7 @@
            time-today))
       (tr (if (and (not (null? (current-location)))
                     (not (void? (current-location))))
-              (get-location-short-description (current-location))
+              (get-location-name (current-location))
               "N/A"))
 
       (tr "")

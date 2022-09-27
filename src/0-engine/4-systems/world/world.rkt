@@ -177,6 +177,7 @@
 (define (place
          #:id [id *number-of-places*]
          #:type [type '()]
+         #:size [size '()]
          #:details [details '()]
          #:actors [actors '()]
          #:items [items '()]
@@ -199,6 +200,7 @@
 
   (Place* id-symbol
           type
+          size
           details
           actors
           items

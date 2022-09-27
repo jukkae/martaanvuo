@@ -111,6 +111,8 @@
    (place
     #:id 'the-maw
     #:type 'int
+    #:size 'small
+    #:tags '(cluttered)
     #:shortname "The Maw"
     #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
     #:light-level 'dark

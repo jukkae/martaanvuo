@@ -8,6 +8,7 @@
 
 (require
   racket/lazy-require
+  "../pc/pc.rkt"
   "../../3-types/action.rkt"
   "../../3-types/item.rkt"
   )
@@ -101,13 +102,28 @@
   (when (not (null? (location-encounter-types (current-location))))
     (spawn-enemies (take-random (location-encounter-types (current-location))))))
 
+(define (get-location-name location)
+  (format "~a"
+          (cond [(Place? location)
+                 (if (equal? (Place-shortname location) "")
+                     (capitalize-first-letter (string-replace (~a (location-id location)) "-" " "))
+                     (Place-shortname location))]
+                [(route? location)
+                 (route-shortname (location-id location))])
+          )
+  )
+
 (define (get-location-short-description location)
-  (cond [(Place? location)
-         (if (equal? (Place-shortname location) "")
-             (capitalize-first-letter (string-replace (~a (location-id location)) "-" " "))
-             (Place-shortname location))]
-        [(route? location)
-         (route-shortname (location-id location))]))
+  (format "~a~a"
+          (get-location-name location)
+          (cond [(and (or (pc-has-sense-organ? 'eyes)
+                          (pc-has-sense-organ? 'echolocation))
+                      (not (null? (location-size (current-location)))))
+                 (format " [~a space]" (location-size (current-location)))]
+                [else ""]
+                )
+          )
+  )
 
 
 (define (move-pc-to-location! location)
@@ -115,7 +131,7 @@
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location-id! (pc) (location-id location))
   (add-actor-to-location! location (pc))
-  (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-short-description location)))
+  (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-name location)))
   )
 
 

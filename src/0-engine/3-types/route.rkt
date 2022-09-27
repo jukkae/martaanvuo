@@ -28,6 +28,7 @@
                    (Boolean
                     #:id RouteId
                     #:type (Maybe LocationType)
+                    #:size (Maybe LocationSize)
                     #:details (Listof Symbol)
                     #:actors (Listof actor)
                     #:items (Listof item)
@@ -42,6 +43,7 @@
                     (one-directional? #f)
                     #:id [id *number-of-routes*]
                     #:type [type '()]
+                    #:size [size '()]
                     #:details [details '()]
                     #:actors [actors '()]
                     #:items [items '()]
@@ -60,6 +62,7 @@
 
   (route* id-symbol
           type
+          size
           details
           actors
           items

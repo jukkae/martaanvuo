@@ -14,11 +14,13 @@
   )
 
 (define-type LocationType (U 'int 'ext))
+(define-type LocationSize (U 'small 'large))
 
 (struct
   location
   ([id : LocationId]
    [type : (Maybe LocationType)]
+   [size : (Maybe LocationSize)]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
    [items : (Listof (U item Symbol))]
