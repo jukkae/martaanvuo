@@ -169,12 +169,14 @@
 
 (define (get-evening-choices world actor)
   #;(dev-note "get-evening-choices: not implemented yet")
-  (list
+  (prune (list
   ;  (choice-factory 'tent)
   ;  (choice-factory 'campfire)
-   (choice-factory 'eat)
+   (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
+                  (pc-has-item? 'ration)) ; TODO: should check for all comestibles
+         (choice-factory 'eat))
    (choice-factory 'rest)
-   ))
+   )))
 
 
 (define (get-downtime-choices world actor)
@@ -283,7 +285,8 @@
          (list
           (choice-factory 'eat)))
 
-       (when (or (equal? (Place-explored (current-location)) '())
+       (when (Place? (current-location))
+        (when (or (equal? (Place-explored (current-location)) '())
                  (equal? (Place-explored (current-location)) 'not-explored))
          (list (make-choice
                 'explore
@@ -334,7 +337,7 @@
                            (notice "Otava doesn't find anything interesting.")])
                          (wait-for-confirm)
                          )
-                       )))))
+                       ))))))
 
        (when (not (null? (actor-conditions (pc))))
          (list (make-choice

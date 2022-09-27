@@ -49,7 +49,8 @@
      (format "noise level: ~a" (get-current-noise-level))]
     [else ""])))
 
-  (cond [(not (null? (Place-explored (current-location))))
+  (cond [(and (Place? (current-location))
+              (not (null? (Place-explored (current-location)))))
          (notice (format "The place is ~a." (Place-explored (current-location))))
          ])
 

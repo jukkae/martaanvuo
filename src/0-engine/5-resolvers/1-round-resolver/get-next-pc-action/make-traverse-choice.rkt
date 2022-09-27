@@ -50,8 +50,8 @@
               (define elapsed-time 0)
 
               (when (not (null? (location-encounter-types (current-location))))
-                (define bonus 6)
-                (define bonus-str "+6")
+                (define bonus 0)
+                (define bonus-str "+0")
                 (define encounter-roll (+ (d 1 6) bonus))
                 (define tn 5)
                 (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
