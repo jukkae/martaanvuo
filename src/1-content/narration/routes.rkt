@@ -292,7 +292,6 @@
          [else (format "[go to: ~a]" (route-other-end-from route start-location))])]
 
       [else (format "[go to: ~a]" (route-other-end-from route start-location))]))
-
   #;(cond ((route-fully-known? route)
            ; Currently, "fully known" implies having been at the other end, fix as needed
            (case direction

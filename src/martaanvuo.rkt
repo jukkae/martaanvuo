@@ -1,4 +1,4 @@
-#lang at-exp racket
+#lang racket/base
 
 (require "0-engine/5-resolvers/0-game-resolver/game-resolver.rkt")
 (require "1-content/fragments/fragments.rkt")

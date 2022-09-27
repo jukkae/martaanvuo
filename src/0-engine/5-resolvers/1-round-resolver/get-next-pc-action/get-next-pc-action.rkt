@@ -141,6 +141,7 @@
 (define (resolve-choice-and-produce-action! choices-with-keys input)
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
+
   (define action
     (cond ((procedure? resolution-effect)
            (resolution-effect))

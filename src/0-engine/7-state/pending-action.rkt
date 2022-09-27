@@ -16,9 +16,9 @@
 (define (reset-pending-action!)
   (current-pending-action '()))
 
+; Assumes that pending action exists
 (define (get-pending-traverse-direction)
   (define pending-action (current-pending-action))
-
   (cond
     ((equal? (action-symbol pending-action) 'traverse)
      (define target (action-target pending-action))
@@ -30,7 +30,8 @@
            'a-to-b
            'b-to-a))
 
-     direction)))
+     direction))
+  )
 
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))

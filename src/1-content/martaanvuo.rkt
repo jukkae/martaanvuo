@@ -1,8 +1,9 @@
-#lang at-exp racket
+#lang at-exp racket/base
 
 (provide (all-defined-out))
 
 (require
+  racket/match
   "../0-engine/0-api/api.rkt"
   "narration/gameplay-transitions.rkt"
   "world/world.rkt"

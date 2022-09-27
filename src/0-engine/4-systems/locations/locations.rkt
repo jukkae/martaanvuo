@@ -128,10 +128,17 @@
 
 (define (move-pc-to-location! location)
   (reset-pending-action!)
+  (define old-location-id (location-id (current-location)))
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location-id! (pc) (location-id location))
   (add-actor-to-location! location (pc))
-  (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-name location)))
+  (cond [(Place? location)
+         (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-name location)))]
+
+        [else
+         (define name (route-shortname-from location old-location-id))
+         (string-set! name 0 #\e)
+         (notice (format "~a ι: Otava is now ~a" (current-elapsed-time) name))])
   )
 
 

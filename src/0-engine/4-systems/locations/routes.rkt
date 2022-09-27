@@ -2,6 +2,7 @@
 
 (provide route-other-end-from
          route-shortname
+         route-shortname-from
          set-route-endpoint-visited!)
 
 (require
@@ -66,6 +67,34 @@
   (case endpoint
     ['a (Place-visited? (route-a route))]
     ['b (Place-visited? (route-b route))])
+  )
+
+(define (route-shortname-from route-or-id startpoint)
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
+
+  (define direction (if (equal? (route-a route) startpoint)
+                        'a-to-b
+                        'b-to-a))
+
+  (define endpoint
+    (case direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+
+  (when (symbol? startpoint)
+    (set! startpoint (get-location-by-id startpoint)))
+  (when (symbol? endpoint)
+    (set! endpoint (get-location-by-id endpoint)))
+
+  (cond ((route-fully-known? route)
+         (format "En route: ~a – ~a"
+                 (Place-shortname startpoint)
+                 (Place-shortname endpoint)))
+        (else
+         (format "En route: ~a – ???" (Place-shortname startpoint))))
   )
 
 (define (route-shortname route-or-id)
