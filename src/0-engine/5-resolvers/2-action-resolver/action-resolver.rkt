@@ -81,10 +81,11 @@
          (dev-note (format "Empty rules for action ~a" (action-symbol action)))]
       )
 
-
-      (define duration (action-duration action))
-      (define tl (advance-time-until-next-interesting-event! duration #f))
-      (process-timeline! tl))
+      (when (not (equal? result 'time-passing-handled))
+        (define duration (action-duration action))
+        (define tl (advance-time-until-next-interesting-event! duration #f))
+        (process-timeline! tl))
+      )
 
 
 

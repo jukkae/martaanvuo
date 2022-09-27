@@ -134,11 +134,13 @@
   (add-actor-to-location! location (pc))
   (cond [(Place? location)
          (notice (format "~a ι: Otava is now in ~a." (current-elapsed-time) (get-location-name location)))]
-
         [else
-         (define name (route-shortname-from location old-location-id))
-         (string-set! name 0 #\e)
-         (notice (format "~a ι: Otava is now ~a" (current-elapsed-time) name))])
+         (cond [(and (not (= (route-traverse-time location) 1))
+                     (not (null? location-encounter-types))) ; TODO: "Trivial" route or something?
+                (define name (route-shortname-from location old-location-id))
+                (string-set! name 0 #\e)
+                (notice (format "~a ι: Otava is now ~a" (current-elapsed-time) name))])
+         ])
   )
 
 

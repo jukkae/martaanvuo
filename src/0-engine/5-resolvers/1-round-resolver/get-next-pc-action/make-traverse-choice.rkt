@@ -34,8 +34,11 @@
                     (route-b route)
                     (route-a route)))
             (define next-location (get-location-by-id next-location-id))
+            (define tl (advance-time-until-next-interesting-event! ,traverse-duration #f))
+            (process-timeline! tl)
+
             (move-pc-to-location! next-location)
-            'ok
+            'time-passing-handled
             )
           #:on-before-rules
           `(
