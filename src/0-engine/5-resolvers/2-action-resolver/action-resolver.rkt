@@ -5,30 +5,18 @@
 (require racket/lazy-require)
 
 (require
+  "../../0-api/rules-resolution-runtime.rkt"
+
   "../../0-api/types.rkt"
-  "../../1-index/content.rkt"
   "../../1-index/state.rkt"
 
-  "../../2-core/io.rkt"
   "../../2-core/core.rkt"
 
-  "../../4-systems/events.rkt"
   "../../4-systems/timelines.rkt"
   "../../4-systems/actors/actor.rkt"
-  "../../4-systems/actors/statuses.rkt"
-  "../../4-systems/blurbs/blurbs.rkt"
-  "../../4-systems/checks/checks.rkt"
-  "../../4-systems/items/item.rkt"
-  "../../4-systems/locations/locations.rkt"
-  "../../4-systems/locations/routes.rkt"
-  "../../4-systems/pc/pc.rkt"
   "../../4-systems/world/world.rkt"
   "../../4-systems/simulation.rkt"
 
-  "../../6-combat/combat.rkt"
-  "../../6-combat/combat-action-resolver.rkt"
-
-  "../../../1-content/narration/combat-narration.rkt"
   )
 
 (lazy-require ["../1-round-resolver/event-handler.rkt"
