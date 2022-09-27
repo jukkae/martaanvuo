@@ -35,19 +35,23 @@
   (notice (format "~a~a~a"
     (cond
     [(pc-has-sense-organ? 'eyes)
-     (format "[current light level: ~a]" (get-current-light-level))]
+     (format "light level: ~a" (get-current-light-level))]
     [else ""])
     (cond
     [(and (pc-has-sense-organ? 'eyes)
           (or (pc-has-sense-organ? 'ears)
               (pc-has-sense-organ? 'sonar)))
-     " "]
+     ", "]
     [else ""])
     (cond
     [(or (pc-has-sense-organ? 'ears)
          (pc-has-sense-organ? 'sonar))
-     (format "[current noise level: ~a]" (get-current-noise-level))]
+     (format "noise level: ~a" (get-current-noise-level))]
     [else ""])))
+
+  (cond [(not (null? (Place-explored (current-location))))
+         (notice (format "The place is ~a." (Place-explored (current-location))))
+         ])
 
   (when (not (empty? (location-items (current-location))))
     (define items (location-items (current-location)))

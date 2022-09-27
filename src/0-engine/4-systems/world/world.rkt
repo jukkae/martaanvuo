@@ -188,6 +188,7 @@
          #:choices [choices '()]
          #:routes [routes '()]
          #:visited? [visited? #f]
+         #:explored [explored 'not-explored]
          #:shortname [shortname ""])
 
   (set! *number-of-places* (add1 *number-of-places*))
@@ -210,6 +211,7 @@
           encounter-types
           routes
           visited?
+          explored
           choices
           shortname))
 

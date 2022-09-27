@@ -18,6 +18,7 @@
   location
   ([routes : (Listof RouteId)]
    [visited? : Boolean]
+   [explored : (U '() 'not-explored 'partially-explored 'explored 'exhaustively-explored)]
    [choices : (Listof choice)]
    [shortname : String])
 

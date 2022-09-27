@@ -283,6 +283,51 @@
          (list
           (choice-factory 'eat)))
 
+       (when (or (equal? (Place-explored (current-location)) '())
+                 (equal? (Place-explored (current-location)) 'not-explored))
+         (list (make-choice
+                'explore
+                "Explore."
+                (λ () (make-action
+                       #:symbol 'explore
+                       #:actor (pc)
+                       #:duration 5
+                       #:tags '(downtime)
+                       #:resolution-rules
+                       `(
+                         (set-Place-explored! (current-location) 'partially-explored)
+                         )
+                       )))))
+       (when (equal? (Place-explored (current-location)) 'partially-explored)
+         (list (make-choice
+                'explore-more
+                "Explore more."
+                (λ () (make-action
+                       #:symbol 'explore-more
+                       #:actor (pc)
+                       #:duration 10
+                       #:tags '(downtime)
+                       #:resolution-rules
+                       `(
+                         (set-Place-explored! (current-location) 'explored)
+                         )
+                       )))))
+
+       (when (equal? (Place-explored (current-location)) 'explored)
+         (list (make-choice
+                'explore-even-more
+                "Explore even more."
+                (λ () (make-action
+                       #:symbol 'explore-even-more
+                       #:actor (pc)
+                       #:duration 100
+                       #:tags '(downtime)
+                       #:resolution-rules
+                       `(
+                         (set-Place-explored! (current-location) 'exhaustively-explored)
+                         )
+                       )))))
+
        (when (not (null? (actor-conditions (pc))))
          (list (make-choice
                 'treat-injuries
