@@ -202,6 +202,103 @@
 
          roll-total
          ]
+        [(string=? formula "d100")
+         (define n 2)
+         (define sides 10)
+         (define results (for/list ([i n])
+           (d 1 sides)))
+         (define bonus-string "")
+         (cond [(null? bonus) (set! bonus 0)]
+               [else
+                (set! bonus-string
+                      (if (< bonus 0)
+                          (format "- ~a" (abs bonus))
+                          (format "+ ~a" bonus)))])
+
+         (define base-sleep-time 0.05)
+         (display (format "~a ~a " title formula))
+         (newline)
+         (sleep (* 2 base-sleep-time))
+         (for ([dice results]
+               [nth (in-range 0 n)])
+           (define multiplier (expt 10 nth))
+           (display "x")
+           (display multiplier)
+           (for ([i (- (- n nth) 0)])
+             (display " "))
+          ;  (display ": ")
+           (define total-printed 0)
+           (for ([i dice])
+             (cond [(= i 0)
+                    (display ":")]
+                   [(= i (- sides 1))
+                    (display "x")]
+                   [else
+                    (display ".")]
+                   )
+             (set! total-printed (add1 total-printed))
+             (flush-output)
+             (define sleep-time
+               (cond [(= i (- sides 2))
+                      (define multiplier (take-random (list 2 4 8 12)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [(= i (- sides 1))
+                      (define multiplier (take-random (list 4 8 12 16)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [else
+                      (define multiplier (take-random (list 2 4 8)))
+                      (* multiplier base-sleep-time)
+                      ]))
+             (sleep sleep-time)
+             )
+           (for ([i (- 10 total-printed)])
+            (display " "))
+           (display " ")
+           (display "[")
+           (display (number->string (if (= 10 dice)
+                                        0
+                                        dice)))
+           (display "]")
+           (newline))
+         (define total-printed 0)
+         (for ([i bonus])
+           ; TODO: display + for positive, - for negative bonuses
+           (if (= i 0)
+               (display ":")
+               (display "."))
+           (set! total-printed (add1 total-printed))
+           (flush-output)
+           (define sleep-time (* 2 base-sleep-time))
+           (sleep sleep-time)
+           )
+
+         (cond
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r sides)))
+            (when (not (null? on-crit-success)) (on-crit-success))]
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r 1)))
+            (when (not (null? on-crit-failure)) (on-crit-failure))]
+           )
+        ;  (newline)
+
+        ;  (notice (format "[~a]~a = [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total))
+
+        ;  (wait-for-confirm)
+
+         (define roll-total
+           (+ (if (= (first results) 10)
+                  0
+                  (* 1 (first results)))
+              (if (= (second results) 10)
+                  0
+                  (* 10 (second results)))))
+         roll-total
+         ]
         [else
          (dev-note (format "unknown formula ~a" formula))
          (error "unknown formula")])

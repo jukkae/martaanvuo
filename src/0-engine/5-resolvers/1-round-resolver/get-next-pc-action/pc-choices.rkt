@@ -320,11 +320,19 @@
                 (λ () (make-action
                        #:symbol 'explore-even-more
                        #:actor (pc)
-                       #:duration 100
+                       #:duration 10
                        #:tags '(downtime)
                        #:resolution-rules
                        `(
-                         (set-Place-explored! (current-location) 'exhaustively-explored)
+                         (define result (just-roll "d100" #:title "Exploration"))
+                         (notice (format "Total: ~a" result))
+                         (cond
+                          [(= result 99)
+                           (notice "The place is now exhaustively explored.")
+                           (set-Place-explored! (current-location) 'exhaustively-explored)]
+                          [else
+                           (notice "Otava doesn't find anything interesting.")])
+                         (wait-for-confirm)
                          )
                        )))))
 
