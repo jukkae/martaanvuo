@@ -73,15 +73,12 @@
                          #:resolution-rules `(
                                               (case (get-current-light-level)
                                                 ['bright
-                                                 (p "There's a click. The background hum quiets down a bit, and lights go dim. Dark, sharp, obscuring shadows cut through space.")
                                                  (set-location-light-level! (current-location) 'dark)
                                                  ]
                                                 ['dark
-                                                 (p "There's a click and the background hum is gone. Pitch black darkness swallows everything.")
                                                  (set-location-light-level! (current-location) 'pitch-black)
                                                  ]
                                                 ['pitch-black
-                                                 (p "There's an echoing clank, then an electric hum. Spotlights turn on, aimed at the stage.")
                                                  (set-location-light-level! (current-location) 'bright)
                                                  ]
                                                 )

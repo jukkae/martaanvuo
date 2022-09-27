@@ -69,11 +69,12 @@ M A R T A A N V U O
   (newline)
   (prln (current-prompt)))
 
-(define (print-heading)
+(define (print-heading title)
   (define heading
-    (format "\nPART ~a, CHAPTER ~a"
+    (format "\nPART ~a, CHAPTER ~a~a"
             (number->string (current-part))
-            (number->string (current-chapter))))
+            (number->string (current-chapter))
+            title))
   (p heading))
 
 ; implementation detail

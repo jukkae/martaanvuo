@@ -17,11 +17,11 @@
 (define (append-to-log paragraph)
   (current-log (append-element (current-log) paragraph)))
 
-(define (next-chapter!)
+(define (next-chapter! [title ""])
   (when (= (current-part) 0)
     (current-part 1))
   (current-chapter (add1 (current-chapter)))
-  (print-heading))
+  (print-heading title))
 
 (define (next-part!)
   (current-part (add1 (current-part)))
