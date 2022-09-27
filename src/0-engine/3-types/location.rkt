@@ -43,6 +43,14 @@
 (define (remove-item-from-location! [location : location] [item : (U item Symbol)])
   (set-location-items! location (remove item (location-items location))))
 
+(define (find-item [location : location] [id : Symbol])
+  (define items (location-items location))
+  (findf (λ ([a : (U item Symbol)])
+           (if (item? a)
+               (equal? (item-id a) id)
+               (equal? a id)))
+         items))
+
 (define (add-feature-to-location! [location : location] [feature : Symbol])
   (set-location-features! location (cons feature (location-features location))))
 

@@ -10,7 +10,7 @@
   )
 
 (struct item
-  ([id : Symbol]
+  ([id : Symbol] ; this is more of a "title" currently – TODO: add an unique id to be used for searching and comparisons
    [name : (U String Name)]
    [details : (Maybe (U Number Symbol (Listof Symbol)))]
    [quantity : (U Nonnegative-Integer Nonnegative-Float)])

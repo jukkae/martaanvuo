@@ -133,19 +133,31 @@
         (if (or (void? item) (null? item))
             'cancel
             (begin
-              (remove-item-from-location! (current-location) item)
-              (add-item! item)
-              (notice (format "Picked up: ~a"
-                              (cond [(item? item) (item-name item)]
-                                    [else (format "~a" item)])))
               (make-action
                #:symbol 'pick-up
                #:actor (pc)
-               #:duration 1 ; should be "negligible" when not in combat, aka 0.1 iota
-               #:resolution-rules '()
+               #:duration 1
+               #:tags (if (current-in-combat?)
+                          '(initiative-based-resolution)
+                          '())
+               #:resolution-rules
+               `(
+                ;  (define the-item ,item)
+                ;  (define id ',(item-id item))
+                 (define item-id ',(item-id item))
+                 (define the-item (find-item (current-location) item-id))
+                 (remove-item-from-location! (current-location) the-item)
+                 (add-item! the-item)
+                 (notice (format "Picked up: ~a"
+                                 (cond [(item? the-item) (item-name the-item)]
+                                       [else (format "~a" the-item)])))
+                ;  (displayln the-item)
+                ;  (notice (format "Picking up: ~a" "foo"))
+                 )
                )
               ))
-        ))
+        )
+      #:available-in-combat? #t)
      ]
 
     ; This opens a submenu

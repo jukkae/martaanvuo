@@ -98,7 +98,11 @@
                   (get-combat-choices)
                   (filter (lambda (c) (choice-available-in-combat? c))
                           (get-current-location-choices))
+                  (cond [(not (null? (location-items (current-location))))
+                         (list (choice-factory 'pick-up-item))]
+                        [else '()])
                   )
+                 
                  )
                 [else
                  (define world-choices '())

@@ -5,24 +5,12 @@
 (require racket/lazy-require)
 
 (require
+  "../../0-api/types.rkt"
   "../../1-index/content.rkt"
   "../../1-index/state.rkt"
 
   "../../2-core/io.rkt"
   "../../2-core/core.rkt"
-
-  "../../3-types/action.rkt"
-  "../../3-types/actor.rkt"
-  "../../3-types/condition.rkt"
-  "../../3-types/event.rkt"
-  "../../3-types/location.rkt"
-  "../../3-types/pc-actor.rkt"
-  "../../3-types/place.rkt"
-  "../../3-types/route.rkt"
-  "../../3-types/stance.rkt"
-  "../../3-types/status.rkt"
-  "../../3-types/timeline.rkt"
-  "../../3-types/timeline.rkt"
 
   "../../4-systems/events.rkt"
   "../../4-systems/timelines.rkt"
