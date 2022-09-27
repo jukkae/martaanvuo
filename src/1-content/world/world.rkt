@@ -114,7 +114,7 @@
     #:shortname "The Maw"
     #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
     #:light-level 'dark
-    #:features (list 'the-bell 'light-switch)
+    #:features (list 'the-bell 'light-switch 'running-centrifuge)
     )
 
    (place

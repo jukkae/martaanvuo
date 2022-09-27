@@ -47,7 +47,7 @@
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (define feature-choices '())
-  (when (location-has-feature? (current-location) 'the-bell)
+  #;(when (location-has-feature? (current-location) 'the-bell)
     (append-element! feature-choices
                      (make-choice
                       'ring-new-enemy-bell
@@ -56,6 +56,52 @@
                         (spawn-encounter)
                         '()
                         )))
+    )
+  (when (location-has-feature? (current-location) 'running-centrifuge)
+    (append-element! feature-choices
+                     (make-choice
+                      'shut-down-centrifuge
+                      "Shut down the centrifuge."
+                      (λ ()
+                        (make-action
+                         #:symbol 'shut-down-centrifuge
+                         #:actor (pc)
+                         #:duration 1
+                         #:target '()
+                         #:tags (list 'initiative-based-resolution)
+                         #:details (list 'fast)
+                         #:resolution-rules
+                         `(
+                           (remove-feature-from-location! (current-location) 'running-centrifuge)
+                           (add-feature-to-location! (current-location) 'inactive-centrifuge)
+                           (notice (format "Noise level is now ~a." (get-current-noise-level)))
+                           )
+                         ))
+                      #:available-in-combat? #t
+                      ))
+    )
+  (when (location-has-feature? (current-location) 'inactive-centrifuge)
+    (append-element! feature-choices
+                     (make-choice
+                      'start-centrifuge
+                      "Start the centrifuge."
+                      (λ ()
+                        (make-action
+                         #:symbol 'start-centrifuge
+                         #:actor (pc)
+                         #:duration 1
+                         #:target '()
+                         #:tags (list 'initiative-based-resolution)
+                         #:details (list 'fast)
+                         #:resolution-rules
+                         `(
+                           (remove-feature-from-location! (current-location) 'inactive-centrifuge)
+                           (add-feature-to-location! (current-location) 'running-centrifuge)
+                           (notice (format "Noise level is now ~a." (get-current-noise-level)))
+                           )
+                         ))
+                      #:available-in-combat? #t
+                      ))
     )
   (when (location-has-feature? (current-location) 'light-switch)
     (append-element! feature-choices

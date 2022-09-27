@@ -46,6 +46,13 @@
     [else (location-light-level (current-location))])
   )
 
+(provide get-current-noise-level)
+(define (get-current-noise-level)
+  (cond
+    [(location-has-feature? (current-location) 'running-centrifuge)
+      'noisy]
+    [else 'silent]))
+
 ; world-as-simulation / scripting API
 (provide remove-actor-from-its-current-location!)
 (define (remove-actor-from-its-current-location! actor)
