@@ -47,15 +47,16 @@
 (provide get-world-choices)
 (define (get-world-choices world actor)
   (define feature-choices '())
-  #;(when (location-has-feature? (current-location) 'the-bell)
+  (when (location-has-feature? (current-location) 'the-button)
     (append-element! feature-choices
                      (make-choice
-                      'ring-new-enemy-bell
-                      "Ring the bell"
+                      'push-the-release-the-subject-button
+                      "Release the subject."
                       `(
                         (spawn-encounter)
                         '()
-                        )))
+                        )
+                      ))
     )
   (when (location-has-feature? (current-location) 'running-centrifuge)
     (append-element! feature-choices
@@ -135,8 +136,12 @@
                       #:available-in-combat? #t
                       ))
     )
-  (append (filter (lambda (c) (choice-available-in-combat? c))
-                          feature-choices)
+  (append (filter (lambda (c)
+                    (if (current-in-combat?)
+                        (choice-available-in-combat? c)
+                        #t)
+                    )
+                  feature-choices)
           (cond ((in-combat?)
                  (append
                   (get-combat-choices)

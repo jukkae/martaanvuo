@@ -61,7 +61,7 @@
   (p ", the title concludes.")
   (current-recursion-depth (add1 (current-recursion-depth)))
 
-  (remove-feature-from-location! (current-location) 'the-bell)
+  (remove-feature-from-location! (current-location) 'the-button)
   (remove-feature-from-location! (current-location) 'light-switch)
 
   (wait-for-confirm)
