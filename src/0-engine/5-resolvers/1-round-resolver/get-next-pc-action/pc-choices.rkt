@@ -104,6 +104,7 @@
                       ))
     )
   (when (location-has-feature? (current-location) 'light-switch)
+    (define tags (if (current-in-combat?) (list 'initiative-based-resolution) '()))
     (append-element! feature-choices
                      (make-choice
                       'toggle-lights
@@ -114,7 +115,7 @@
                          #:actor (pc)
                          #:duration 1
                          #:target '()
-                         #:tags (list 'initiative-based-resolution)
+                         #:tags tags
                          #:details (list 'fast)
                          #:resolution-rules `(
                                               (case (get-current-light-level)
@@ -285,9 +286,9 @@
          (list
           (choice-factory 'eat)))
 
-       (when (Place? (current-location))
-        (when (or (equal? (Place-explored (current-location)) '())
-                 (equal? (Place-explored (current-location)) 'not-explored))
+       (when (and (Place? (current-location))
+                  (or (equal? (Place-explored (current-location)) '())
+                      (equal? (Place-explored (current-location)) 'not-explored)))
          (list (make-choice
                 'explore
                 "Explore."
@@ -301,7 +302,9 @@
                          (set-Place-explored! (current-location) 'partially-explored)
                          )
                        )))))
-       (when (equal? (Place-explored (current-location)) 'partially-explored)
+
+       (when (and (Place? (current-location))
+                  (equal? (Place-explored (current-location)) 'partially-explored))
          (list (make-choice
                 'explore-more
                 "Explore more."
@@ -316,7 +319,8 @@
                          )
                        )))))
 
-       (when (equal? (Place-explored (current-location)) 'explored)
+       (when (and (Place? (current-location))
+                  (equal? (Place-explored (current-location)) 'explored))
          (list (make-choice
                 'explore-even-more
                 "Explore even more."
@@ -330,14 +334,14 @@
                          (define result (just-roll "d100" #:title "Exploration"))
                          (notice (format "Total: ~a" result))
                          (cond
-                          [(= result 99)
-                           (notice "The place is now exhaustively explored.")
-                           (set-Place-explored! (current-location) 'exhaustively-explored)]
-                          [else
-                           (notice "Otava doesn't find anything interesting.")])
+                           [(= result 99)
+                            (notice "The place is now exhaustively explored.")
+                            (set-Place-explored! (current-location) 'exhaustively-explored)]
+                           [else
+                            (notice "Otava doesn't find anything interesting.")])
                          (wait-for-confirm)
                          )
-                       ))))))
+                       )))))
 
        (when (not (null? (actor-conditions (pc))))
          (list (make-choice

@@ -209,7 +209,7 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
                             "some lessons are learned"
                             "lessons are learned"))))
      (move-pc-to-location! (get-place-by-id 'the-maw))
-     (spawn-encounter)
+    ;  (spawn-encounter)
      ]
     [else
      (advance-time-by-iotas! (d 6 12))
