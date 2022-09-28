@@ -58,7 +58,9 @@
 
   (p title-string)
 
-  (p ", the title concludes.")
+  (when (flag-set? 'scenario-evolution)
+    (p ", the title concludes.")
+    )
   (current-recursion-depth (add1 (current-recursion-depth)))
 
   (remove-feature-from-location! (current-location) 'the-button)
@@ -66,66 +68,69 @@
 
   (wait-for-confirm)
 
-  (when (flag-set? 'scenario-evolution)
+  (cond [(flag-set? 'scenario-evolution)
 
-    @p{
-There's something called the Lamarck process, which is what drives the changes in organisms in Martaanvuo. To control the Lamarck process is to control the changes. And to control the changes is to control life. But to control it, it must be understood.
-    }
-    (create-task 'evolve)
+         @p{
+          There's something called the Lamarck process, which is what drives the changes in organisms in Martaanvuo. To control the Lamarck process is to control the changes. And to control the changes is to control life. But to control it, it must be understood.
+         }
+         (create-task 'evolve)
 
-    @p{
-The first test subject the notebook follows is an "organic tissue adaptive-volitional amoeboid" #1.
-    }
+         @p{
+          The first test subject the notebook follows is an "organic tissue adaptive-volitional amoeboid" #1.
+         }
 
-    (set-pc-actor-sense-organs! (pc) '())
-    (set-pc-actor-manipulators! (pc) '())
-    (set-actor-size! (pc) 'small)
-    (define silent? #t)
-    (add-sense-organ! (SenseOrgan 'chemical-gradient-detector "chemical gradient detector") silent?)
-    (add-manipulator! (Manipulator 'pseudopodia "cytoplasmic pseudopodia") silent?)
-    )
+         (set-pc-actor-sense-organs! (pc) '())
+         (set-pc-actor-manipulators! (pc) '())
+         (set-actor-size! (pc) 'small)
+         (define silent? #t)
+         (add-sense-organ! (SenseOrgan 'chemical-gradient-detector "chemical gradient detector") silent?)
+         (add-manipulator! (Manipulator 'pseudopodia "cytoplasmic pseudopodia") silent?)]
+        [else
+         (current-round 0)
+         (move-pc-to-location! (get-place-by-id 'perimeter))
+         @p{
+          Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
 
-  ; (current-round 0)
-  ; (move-pc-to-location! (get-place-by-id 'perimeter))
-  ; (case (current-recursion-depth)
-  ;   [(1)
-  ;    @p{
-  ;     Otava is at the perimeter of Martaanvuo wasteland. Her plan is a dumb fucking one for sure, but the bill has come due. "Fifteen days", he had said, "two weeks and a one day extra as an act of goodwill".
+          So, after getting rid of the bracelet (3 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
+         }
+         (create-task 'the-debt)
+         (wait-for-confirm)
+         (when (not (pc-has-sense-organ? 'eyes))
+           (p "There's a dim flat array of amorphous shapes. Fuzzy forms turn more solid. Otava begins to see.")
+           (add-sense-organ! (SenseOrgan 'eyes "eyes"))
+           (wait-for-confirm))
+         (when (pc-has-sense-organ? 'sonar)
+           (p "The afterimages of the shadowy outline of the world fade. Otava feels untethered.")
+           (remove-sense-organ! 'sonar)
+           (wait-for-confirm))
+         (when (pc-has-sense-organ? 'ears)
+           (p "Noise of the world fades into silence.")
+           (remove-sense-organ! 'ears)
+           (wait-for-confirm))
+        ;  (case (current-recursion-depth)
+        ;    [(1)
+        ;     ]
+        ;    ; [(2)
+        ;    ;  (p @~a{
+        ;    ;   Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
+        ;    ;   })
+        ;    ;  (create-task 'storm-the-facility)
+        ;    ;  (wait-for-confirm)
+        ;    ;  ]
+        ;    ; [(3)
+        ;    ;  (p @~a{
+        ;    ;   The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
 
-  ;     So, after getting rid of the bracelet (3 grams), Otava is now chasing the rumor of a [cache] of valuables in Martaanvuo wasteland, somewhere near the dam.
-  ;     }
-  ;    (create-task 'the-debt)
-  ;    (wait-for-confirm)
-  ;    ]
-  ;   ; [(2)
-  ;   ;  (p @~a{
-  ;   ;   Murkwater guards should be out, time to storm the facility at Martaanvuo Dam. Break in, find the gold, find the armory, grab the guns. Useful for the Ant Legion – the Resistance of the Wasteland. Find the reactor chamber, set the charges, get the fuck out. Some automated resistance is expected, but other than that, should be easy.
-  ;   ;   })
-  ;   ;  (create-task 'storm-the-facility)
-  ;   ;  (wait-for-confirm)
-  ;   ;  ]
-  ;   ; [(3)
-  ;   ;  (p @~a{
-  ;   ;   The Hartman Device, the ultimate weapon of mass destruction: When activated, it initiates a null-field vacuum collapse, smoothing out the crinkled fabric of reality. The reaction will proceed outwards, destroying the very structure of space itself, and all reality will be permanently reduced to nothing – an ultimate kind of nothing, a void in which nothing *could* exist.
+        ;    ;   A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
+        ;    ;   })
+        ;    ;  (create-task 'defuse-the-hartman-device)
+        ;    ;  (wait-for-confirm)
+        ;    ;  ]
+        ;    )
+         
+          ]
+        )
 
-  ;   ;   A terrorist group, led by the Magpie King, is operating from the Maw of Martaanvuo. It is believed that they are turning a transporter machine into a Hartman Device. The terrorist group must be neutralized, and the device defused and kept intact.
-  ;   ;   })
-  ;   ;  (create-task 'defuse-the-hartman-device)
-  ;   ;  (wait-for-confirm)
-  ;   ;  ]
-  ;   )
-  ; (when (not (pc-has-sense-organ? 'eyes))
-  ;   (p "There's a dim flat array of amorphous shapes. Fuzzy forms turn more solid. Otava begins to see.")
-  ;   (add-sense-organ! (SenseOrgan 'eyes "eyes"))
-  ;   (wait-for-confirm))
-  ; (when (pc-has-sense-organ? 'sonar)
-  ;   (p "The afterimages of the shadowy outline of the world fade. Otava feels untethered.")
-  ;   (remove-sense-organ! 'sonar)
-  ;   (wait-for-confirm))
-  ; (when (pc-has-sense-organ? 'ears)
-  ;   (p "Noise of the world fades into silence.")
-  ;   (remove-sense-organ! 'ears)
-  ;   (wait-for-confirm))
   )
 
 (define (on-end-run exit-status)
