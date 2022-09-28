@@ -142,8 +142,8 @@
   (list
     ; (route-between perimeter martaanvuo-swamp 'hidden)
     (route-between 'perimeter 'magpie-hill 110 'ext)
-    (route-between 'perimeter 'martaanvuo-docks 90 'ext #:encounter-types '(human-fighter))
-    (route-between 'martaanvuo-swamp 'burnt-tree 70 'ext #:encounter-types '(human-fighter))
+    (route-between 'perimeter 'martaanvuo-docks 90 'ext #:encounter-types '(voidfloater))
+    (route-between 'martaanvuo-swamp 'burnt-tree 70 'ext #:encounter-types '(voidfloater))
     #;(route-between 'martaanvuo-swamp 'martaanvuo-docks 60 'ext #:no-encounters? #t)
     #;(route-between 'martaanvuo-docks 'carnival 250 'ext #:no-encounters? #t) ; water transport
     #;(route-between 'martaanvuo-docks 'forge 5 'ext #:no-encounters? #t)

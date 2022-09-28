@@ -88,9 +88,9 @@
         (display-non-pc-combatant-info actor))))
 
 (define (describe-combat-situation [repeated? #f])
-  (newline)
-  (notice "Otava is in combat.")
-  (when (not repeated?) (wait-for-confirm))
+  ; (newline)
+  ; (notice "Otava is in combat.")
+  ; (when (not repeated?) (wait-for-confirm))
 
   ; show cards
   (for ([enemy (get-current-enemies)])
