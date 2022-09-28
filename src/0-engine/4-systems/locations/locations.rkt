@@ -128,7 +128,10 @@
 
 (define (move-pc-to-location! location)
   (reset-pending-action!)
-  (define old-location-id (location-id (current-location)))
+  (define old-location-id
+    (if (not (null? (current-location)))
+        (location-id (current-location))
+        '()))
   (remove-actor-from-its-current-location! (pc))
   (set-actor-location-id! (pc) (location-id location))
   (add-actor-to-location! location (pc))

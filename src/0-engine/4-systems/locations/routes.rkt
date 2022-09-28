@@ -8,6 +8,7 @@
 (require
   "../world/world.rkt"
 
+  "../../2-core/dev-note.rkt"
   "../../3-types/location.rkt"
   "../../3-types/place.rkt"
   "../../3-types/route.rkt"
@@ -70,6 +71,9 @@
   )
 
 (define (route-shortname-from route-or-id startpoint)
+  (when (null? startpoint)
+    (dev-note (format "route-or-id: ~a" route-or-id))
+    (error "route-shortname-from requires a non-null startpoint!"))
   (define route
     (cond [(route? route-or-id)
            route-or-id]
