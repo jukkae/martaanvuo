@@ -6,107 +6,62 @@
   "../../0-engine/0-api/api.rkt"
   )
 
+; See scenario.rkt for map overview
 (define places
   (list
    (place
     #:id 'perimeter
     #:type 'ext
     #:encounter-types '(voidfloater)
-    #:shortname "Perimeter")
-
-   (place
-    #:id 'martaanvuo-swamp
-    #:type 'ext
-    #:features '(anthill)
-    #:shortname "Martaanvuo swamp")
+    #:shortname "perimeter")
 
    (place
     #:id 'magpie-hill
     #:features '(magpie-effigy)
-    #:items (list (make-item 'revolver))
     #:type 'ext
     #:shortname "Magpie hill")
 
    (place
-    #:id 'luminous-precipice
-    #:features '(precipice)
-    #:type 'ext
-    #:shortname "Precipice")
+    #:id 'shack
+    #:features '()
+    #:items (list (make-item 'revolver))
+    #:type 'int)
 
    (place
-    #:id 'burnt-tree
+    #:id 'pond-of-drowning
+    #:features '()
+    #:items (list (make-item 'gold #:amount 7) (make-item 'human-remains))
     #:type 'ext
-    #:shortname "Burnt tree")
+    #:shortname "pond")
+
 
    (place
-    #:id 'martaanvuo-docks
+    #:id 'martaanvuo-dam
+    #:features '()
+    #:type 'ext
+    #:shortname "Martaanvuo dam")
+
+   (place
+    #:id 'martaanvuo-river
+    #:features '()
+    #:type 'ext
+    #:shortname "Martaanvuo river")
+
+   (place
+    #:id 'village
     #:choices
     (list
      (make-choice
       'buy-mods
-      "Visit the Forge of Master Seppo"
+      "Visit the village forge"
       `(
         (go-to-fragment 'seppo)
         '()
         ))
     )
     #:type 'ext
-    #:shortname "Martaanvuo docks")
+    #:shortname "Village")
 
-   (place
-    #:id 'outpost
-    #:type 'int
-    #:shortname "Scientific outpost")
-
-   (place
-    #:id 'tunnels-1
-    #:type 'int
-    #:items (list (make-item 'ammo)))
-
-   (place
-    #:id 'tunnels-2
-    #:type 'int
-    #:items (list (make-item 'ammo)))
-
-   (place
-    #:id 'cache
-    #:items (list (make-item 'gold #:amount 7))
-    #:type 'int)
-
-   (place
-    #:id 'workshop
-    #:shortname "Workshop"
-    #:features '(martaanvuo-terminal)
-    #:type 'int)
-
-   (place
-    #:id 'compound-entrance
-    #:type 'int)
-
-   (place
-    #:id 'murkwater-docks
-    #:type 'ext
-    )
-
-   (place
-    #:id 'storage-closet
-    #:type 'int
-    #:features '(martaanvuo-book))
-
-   (place
-    #:id 'control-room
-    #:type 'int
-    #:features '(hartmann-device)
-    )
-
-   (place
-    #:id 'reactor-room
-    #:type 'int
-    #:features '(teleporter))
-
-   (place
-    #:id 'martaanvuo-source
-    #:type 'ext)
 
    (place
     #:id 'the-maw
@@ -116,61 +71,55 @@
     #:shortname "The Maw"
     #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
     #:light-level 'dark
-    #:features (list 'the-button 'light-switch 'running-centrifuge)
+    #:features (list 'light-switch 'martaanvuo-terminal)
     )
 
-   (place
-    #:id 'slaughterhouse
-    #:type 'int)
-
-   (place
-    #:id 'waiting-room
+  (place
+    #:id 'reactor-room
     #:type 'int
-    #:features '(waiting-room-begin))
+    #:size 'small
+    #:tags '(cluttered)
+    #:shortname "reactor room"
+    #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
+    #:light-level 'dark
+    #:features (list 'the-button 'running-centrifuge)
+    )
 
-   (place
-    #:id 'palsat
-    #:type 'ext)
+  (place
+    #:id 'bioreactor
+    #:type 'int
+    #:size 'container
+    #:tags '()
+    #:shortname "bioreactor"
+    #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
+    #:light-level 'dark
+    #:features (list 'the-button)
+    )
 
-   (place
-    #:id 'carnival
-    #:type 'ext
-    #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)) ; not the same merchant, not literally at least
+  ;  (place
+  ;   #:id 'waiting-room
+  ;   #:type 'int
+  ;   #:features '(waiting-room-begin))
+
+  ;  (place
+  ;   #:id 'carnival
+  ;   #:type 'ext
+  ;   #:features '(the-endless-staircase bobo-the-clown the-merchant fortune-teller)
   ))
 
 (define routes
   (list
-    ; (route-between perimeter martaanvuo-swamp 'hidden)
-    (route-between 'perimeter 'magpie-hill 110 'ext)
-    (route-between 'perimeter 'martaanvuo-docks 90 'ext #:encounter-types '(voidfloater))
-    (route-between 'martaanvuo-swamp 'burnt-tree 70 'ext #:encounter-types '(voidfloater))
-    #;(route-between 'martaanvuo-swamp 'martaanvuo-docks 60 'ext #:no-encounters? #t)
-    #;(route-between 'martaanvuo-docks 'carnival 250 'ext #:no-encounters? #t) ; water transport
-    #;(route-between 'martaanvuo-docks 'forge 5 'ext #:no-encounters? #t)
-    ; (route-between 'martaanvuo-docks 'the-ring-of-surut 5 #:no-encounters? #t)
-    ; (route-between places 'martaanvuo-docks 'murkwater-docks 230 #:no-encounters? #t) ; temporary: this should require water transport!
-    ; (route-between places 'martaanvuo-docks 'palsat 240 #:no-encounters? #t)
-    ; (route-between places 'martaanvuo-swamp 'luminous-precipice 120)
-    (route-between 'burnt-tree 'the-maw 1 'int #:no-encounters? #t)
-    (route-between 'martaanvuo-docks 'the-maw 5 'int #:light-level 'dark)
-    ; (route-between 'the-maw 'waiting-room 1 'int #:no-encounters? #t #:one-directional? #t)
-    (route-between 'magpie-hill 'outpost 30 'ext #:no-encounters? #t)
-    #;(route-between 'magpie-hill 'luminous-precipice 60 'ext #:no-encounters? #t)
-    (route-between 'outpost 'cache 2 'int #:no-encounters? #t #:details '(locked))
-    (route-between 'outpost 'workshop 2 'int #:no-encounters? #t)
-    #;(route-between 'outpost 'tunnels-1 5 'int #:no-encounters? #t)
-    (route-between 'tunnels-1 'tunnels-2 10 'int)
-    #;(route-between 'tunnels-1 'workshop 10 'int)
-    (route-between 'tunnels-1 'compound-entrance 10 'int)
-    (route-between 'compound-entrance 'murkwater-docks 2 'int)
-    #;(route-between 'compound-entrance 'workshop 2 'int)
-    #;(route-between 'murkwater-docks 'workshop 2 'ext #:no-encounters? #t)
-    (route-between 'murkwater-docks 'palsat 130 'ext #:no-encounters? #t)
-    (route-between 'tunnels-2 'storage-closet 1 'ext)
-    #;(route-between 'storage-closet 'workshop 1 'int #:no-encounters? #t)
-    #;(route-between 'workshop 'control-room 2 'int #:no-encounters? #t)
-    #;(route-between 'workshop 'martaanvuo-source 2 'int)
-    (route-between 'control-room 'reactor-room 1 'int)
+    (route-between 'perimeter 'magpie-hill 130 'ext)
+    (route-between 'magpie-hill 'shack 60 'ext)
+    (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
+
+    (route-between 'perimeter 'martaanvuo-dam 140 'ext)
+    (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext)
+    (route-between 'martaanvuo-river 'village 140 'ext)
+
+    (route-between 'martaanvuo-dam 'the-maw 10 'ext)
+    (route-between 'the-maw 'reactor-room 1 'int)
+    (route-between 'reactor-room 'bioreactor 1 'int)
   ))
 
 (provide make-new-world)

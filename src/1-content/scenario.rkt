@@ -9,9 +9,21 @@
   "world/world.rkt"
 )
 
+; map v0.1.0:
+;
+;      v
+; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)
+;      |                       \____ pond of drowning (explore)
+;      |
+;    Martaanvuo dam –––––––––– Martaanvuo river –––– village (explore)
+;     |
+;    The Maw ––––––––––––– reactor room –––– bioreactor
+;
+
 (define (setup-world! scenario)
   (current-world (make-new-world))
-  (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
+  ; to load additional locations:
+  ; (dynamic-require "src/1-content/world/locations/arena.rkt" #f)
   (define the-maw (get-location-by-id 'the-maw))
   (when (not (flag-set? 'notebook-added))
     (add-item-to-location!
@@ -204,7 +216,8 @@
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))
-     (notice "Some time passes.")
+    ;  (notice "Some time passes.")
+     (move-pc-to-location! (get-place-by-id 'perimeter))
      (next-chapter!
        (string-append
          (take-random (list " – " ": " " "))
@@ -213,7 +226,7 @@
                             "a lesson is learned"
                             "some lessons are learned"
                             "lessons are learned"))))
-     (move-pc-to-location! (get-place-by-id 'the-maw))
+    ;  (move-pc-to-location! (get-place-by-id 'the-maw))
     ;  (spawn-encounter)
      ]
     [else

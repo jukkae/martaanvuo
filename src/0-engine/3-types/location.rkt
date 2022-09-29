@@ -14,7 +14,7 @@
   )
 
 (define-type LocationType (U 'int 'ext))
-(define-type LocationSize (U 'small 'large))
+(define-type LocationSize (U 'container 'small 'large))
 
 (struct
   location

@@ -67,14 +67,6 @@
   (condense (list
 
              ; definition / content goes to -> features, or world, or something
-             (when (location-has-feature? location 'martaanvuo-book)
-               (make-decision
-                #:title "Pick up the book."
-                #:next-fragment (thunk
-                                 (p "Otava takes the book in her hands. Bound in supple leather, heavier than you'd expect. The book fills her with apprehension and dread.")
-                                 'read-the-book
-                                 )
-                ))
              (when (location-has-feature? location 'martaanvuo-terminal)
                (make-decision
                 #:title "Turn on the terminal."
