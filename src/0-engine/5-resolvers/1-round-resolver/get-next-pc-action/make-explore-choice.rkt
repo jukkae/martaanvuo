@@ -17,7 +17,7 @@
 (define (make-explore-choice)
   (define explore-cost
     (cond [(equal? (location-size (current-location)) 'large)
-           20]
+           30]
           [else
            5]))
   (make-choice
@@ -34,9 +34,11 @@
               (define discovery (first (location-hidden-features (current-location))))
               (cond
                     [(equal? discovery 'route-to-shack)
-                     (add-route-between! 'magpie-hill 'shack 60 'ext)]
+                     (add-route-between! 'magpie-hill 'shack 40 'ext)
+                     (notice "Otava finds a route to a shack.")]
                     [(equal? discovery 'route-to-pond-of-drowning)
-                     (add-route-between! 'magpie-hill 'pond-of-drowning 80 'ext)]
+                     (add-route-between! 'magpie-hill 'pond-of-drowning 60 'ext)
+                     (notice "Otava finds a route to a small pond.")]
                     [else
                      (add-feature-to-location! (current-location) discovery)
                      (notice (format "New discovery: ~a" discovery))
@@ -44,7 +46,7 @@
 
               (remove-hidden-feature-from-location! (current-location) discovery)
               )
-            (cond [empty? (location-hidden-features (current-location))
+            (cond [(empty? (location-hidden-features (current-location)))
                    (set-Place-explored! (current-location) 'explored)
                    ]
                   [else

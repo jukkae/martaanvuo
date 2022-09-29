@@ -318,64 +318,9 @@
           (choice-factory 'eat)))
 
        (when (and (Place? (current-location))
-                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
+                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored))
+                  (not (equal? (Place-explored (current-location)) 'explored)))
         (list (make-explore-choice)))
-      ;  (when (and (Place? (current-location))
-      ;             (or (equal? (Place-explored (current-location)) '())
-      ;                 (equal? (Place-explored (current-location)) 'not-explored)))
-      ;    (list (make-choice
-      ;           'explore
-      ;           "Explore."
-      ;           (λ () (make-action
-      ;                  #:symbol 'explore
-      ;                  #:actor (pc)
-      ;                  #:duration 5
-      ;                  #:tags '(downtime)
-      ;                  #:resolution-rules
-      ;                  `(
-      ;                    (set-Place-explored! (current-location) 'partially-explored)
-      ;                    )
-      ;                  )))))
-
-      ;  (when (and (Place? (current-location))
-      ;             (equal? (Place-explored (current-location)) 'partially-explored))
-      ;    (list (make-choice
-      ;           'explore-more
-      ;           "Explore more."
-      ;           (λ () (make-action
-      ;                  #:symbol 'explore-more
-      ;                  #:actor (pc)
-      ;                  #:duration 10
-      ;                  #:tags '(downtime)
-      ;                  #:resolution-rules
-      ;                  `(
-      ;                    (set-Place-explored! (current-location) 'explored)
-      ;                    )
-      ;                  )))))
-
-      ;  (when (and (Place? (current-location))
-      ;             (equal? (Place-explored (current-location)) 'explored))
-      ;    (list (make-choice
-      ;           'explore-even-more
-      ;           "Explore even more."
-      ;           (λ () (make-action
-      ;                  #:symbol 'explore-even-more
-      ;                  #:actor (pc)
-      ;                  #:duration 10
-      ;                  #:tags '(downtime)
-      ;                  #:resolution-rules
-      ;                  `(
-      ;                    (define result (just-roll "d100" #:title "Exploration"))
-      ;                    (notice (format "Total: ~a" result))
-      ;                    (cond
-      ;                      [(= result 99)
-      ;                       (notice "The place is now exhaustively explored.")
-      ;                       (set-Place-explored! (current-location) 'exhaustively-explored)]
-      ;                      [else
-      ;                       (notice "Otava doesn't find anything interesting.")])
-      ;                    (wait-for-confirm)
-      ;                    )
-      ;                  )))))
 
        (when (or (actor-has-condition-of-type? (pc) 'bleeding)
                  (actor-has-condition-of-type? (pc) 'broken-bones)
