@@ -5,6 +5,7 @@
 (require
   "choice-factory.rkt"
   "make-cancel-traverse-choice.rkt"
+  "make-explore-choice.rkt"
   "make-forage-choice.rkt"
   "make-traverse-choice.rkt"
 
@@ -98,7 +99,7 @@
                 [else
                  (make-unavailable-choice
                   "Make an offering to the cocoon effigy."
-                  "Effigy demands a voidfloater corpse.")]
+                  "The effigy demands a voidfloater corpse.")]
                  )))
   (when (location-has-feature? (current-location) 'inactive-centrifuge)
     (append-element! feature-choices
@@ -318,35 +319,7 @@
 
        (when (and (Place? (current-location))
                   (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
-        (define explore-cost
-          (cond [(equal? (location-size (current-location)) 'large)
-                 50]
-                [else
-                 5]))
-        (list (make-choice
-                'explore
-                (format "Explore. [~a ι]" explore-cost)
-                (λ () (make-action
-                       #:symbol 'explore
-                       #:actor (pc)
-                       #:duration explore-cost
-                       #:tags '(downtime)
-                       #:resolution-rules
-                       `(
-                         (when (not (empty? (location-hidden-features (current-location))))
-                           (define discovery (first (location-hidden-features (current-location))))
-                           (add-feature-to-location! (current-location) discovery)
-                           (notice (format "New discovery: ~a" discovery))
-                           (remove-hidden-feature-from-location! (current-location) discovery)
-                           )
-                         (cond [empty? (location-hidden-features (current-location))
-                                (set-Place-explored! (current-location) 'explored)
-                                ]
-                               [else
-                                (set-Place-explored! (current-location) 'partially-explored)])
-                         (wait-for-confirm)
-                         )
-                       )))))
+        (list (make-explore-choice)))
       ;  (when (and (Place? (current-location))
       ;             (or (equal? (Place-explored (current-location)) '())
       ;                 (equal? (Place-explored (current-location)) 'not-explored)))
