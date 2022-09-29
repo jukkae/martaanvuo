@@ -50,8 +50,8 @@
     [else ""])))
 
   (cond [(and (Place? (current-location))
-              (not (null? (Place-explored (current-location)))))
-         (notice (format "The place is ~a." (Place-explored (current-location))))
+              (equal? (Place-explored (current-location)) 'exhaustively-explored))
+         (notice (format "The place is exhaustively explored."))
          ])
 
   (when (not (empty? (location-items (current-location))))

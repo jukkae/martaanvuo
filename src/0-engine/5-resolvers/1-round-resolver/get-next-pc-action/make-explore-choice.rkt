@@ -30,27 +30,31 @@
           #:tags '(downtime)
           #:resolution-rules
           `(
-            (when (not (empty? (location-hidden-features (current-location))))
-              (define discovery (first (location-hidden-features (current-location))))
-              (cond
-                    [(equal? discovery 'route-to-shack)
-                     (add-route-between! 'magpie-hill 'shack 40 'ext)
-                     (notice "Otava finds a route to a shack.")]
-                    [(equal? discovery 'route-to-pond-of-drowning)
-                     (add-route-between! 'magpie-hill 'pond-of-drowning 60 'ext)
-                     (notice "Otava finds a route to a small pond.")]
-                    [else
-                     (add-feature-to-location! (current-location) discovery)
-                     (notice (format "New discovery: ~a" discovery))
-                     ])
+            (cond [(not (empty? (location-hidden-features (current-location))))
+                   (define discovery (first (location-hidden-features (current-location))))
+                   (cond
+                     [(equal? discovery 'route-to-shack)
+                      (add-route-between! 'magpie-hill 'shack 40 'ext)
+                      (notice "Otava finds a route to a shack.")]
+                     [(equal? discovery 'route-to-pond-of-drowning)
+                      (add-route-between! 'magpie-hill 'pond-of-drowning 60 'ext)
+                      (notice "Otava finds a route to a small pond.")]
+                     [else
+                      (add-feature-to-location! (current-location) discovery)
+                      (notice (format "New discovery: ~a" discovery))
+                      ])
 
-              (remove-hidden-feature-from-location! (current-location) discovery)
-              )
-            (cond [(empty? (location-hidden-features (current-location)))
-                   (set-Place-explored! (current-location) 'explored)
-                   ]
+                   (remove-hidden-feature-from-location! (current-location) discovery)
+                   (cond [(empty? (location-hidden-features (current-location)))
+                          (set-Place-explored! (current-location) 'explored)
+                          ]
+                         [else
+                          (set-Place-explored! (current-location) 'partially-explored)])]
                   [else
-                   (set-Place-explored! (current-location) 'partially-explored)])
+                   (notice "Otava can't find anything interesting.")
+                   (set-Place-explored! (current-location) 'exhaustively-explored)
+                   ]
+                  )
             (wait-for-confirm)
             )
           ))))

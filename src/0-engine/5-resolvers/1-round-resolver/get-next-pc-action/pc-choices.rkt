@@ -318,8 +318,7 @@
           (choice-factory 'eat)))
 
        (when (and (Place? (current-location))
-                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored))
-                  (not (equal? (Place-explored (current-location)) 'explored)))
+                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
         (list (make-explore-choice)))
 
        (when (or (actor-has-condition-of-type? (pc) 'bleeding)
