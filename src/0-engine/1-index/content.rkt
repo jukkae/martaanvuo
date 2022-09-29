@@ -31,7 +31,7 @@
   on-end-run
   on-begin-life
   on-end-life)
-(lazy-require ["../../1-content/martaanvuo.rkt" (
+(lazy-require ["../../1-content/scenario.rkt" (
   on-begin-playthrough!
   on-begin-run
   on-begin-recurse-run
