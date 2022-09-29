@@ -29,21 +29,6 @@
     (case (location-id (current-location))
       ['perimeter
         (define unpruned-rows '())
-        (when (pc-has-sense-organ? 'eyes)
-          (set! unpruned-rows
-                  (append-element unpruned-rows
-                                  (tr
-                                    "Connections [perceived with eyes]"
-                                    "A rocky climb uphill, a path through dry prickly bushes")))
-          )
-       (when (pc-has-sense-organ? 'sonar)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "Connections [perceived with sonar]"
-                                "A climb uphill, a path through vegetation")))
-         )
-
        (when (pc-has-sense-organ? 'nose)
          (set! unpruned-rows
                (append-element unpruned-rows
@@ -62,28 +47,6 @@
         ]
       ['magpie-hill
        (define unpruned-rows '())
-       (when (pc-has-sense-organ? 'eyes)
-         (set! unpruned-rows
-               (append unpruned-rows
-                       (list
-                        (tr
-                         "Connections [perceived with eyes]"
-                         "Rocky stairs down")
-                        ; (tr
-                        ;  ""
-                        ;  "Industrial building on further on plateau")
-                        ; (tr
-                        ;  ""
-                        ;  "Small path along the edge of the plateau")
-                        )))
-         )
-       (when (pc-has-sense-organ? 'sonar)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "Connections [perceived with sonar]"
-                                "Rocky stairs down")))
-         )
 
        (when (pc-has-sense-organ? 'nose)
          (set! unpruned-rows

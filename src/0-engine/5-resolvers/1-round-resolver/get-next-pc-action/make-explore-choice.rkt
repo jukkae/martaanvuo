@@ -30,15 +30,24 @@
           #:tags '(downtime)
           #:resolution-rules
           `(
-            (cond [(not (empty? (location-hidden-features (current-location))))
-                   (define discovery (first (location-hidden-features (current-location))))
+            (define discoverables
+              (append (location-hidden-features (current-location))
+                      (Place-hidden-routes (current-location))))
+            (cond [(not (empty? discoverables))
+                   (define discovery (first discoverables))
                    (cond
+                     [(equal? discovery 'nothing)
+                      (notice "Otava finds nothing interesting, but there might still be something.")]
                      [(equal? discovery 'route-to-shack)
                       (add-route-between! 'magpie-hill 'shack 40 'ext)
                       (notice "Otava finds a route to a shack.")]
                      [(equal? discovery 'route-to-pond-of-drowning)
                       (add-route-between! 'magpie-hill 'pond-of-drowning 60 'ext)
                       (notice "Otava finds a route to a small pond.")]
+                     [(symbol? discovery)
+                      (set-route-hidden?! (get-route-by-id discovery) #f)
+                      (notice "Otava finds a route.")
+                      ]
                      [else
                       (add-feature-to-location! (current-location) discovery)
                       (notice (format "New discovery: ~a" discovery))
@@ -51,7 +60,7 @@
                          [else
                           (set-Place-explored! (current-location) 'partially-explored)])]
                   [else
-                   (notice "Otava can't find anything interesting.")
+                   (notice "Otava can't find anything interesting anymore and she's explored everywhere.")
                    (set-Place-explored! (current-location) 'exhaustively-explored)
                    ]
                   )

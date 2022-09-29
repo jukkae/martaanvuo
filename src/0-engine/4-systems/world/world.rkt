@@ -95,12 +95,12 @@
   #:one-directional? [one-directional? #f]
   #:details [details '()])
 
-  (when hidden? (error "Implement hidden paths"))
-
   (make-route
     id-a
     id-b
     traverse-time
+    one-directional?
+    hidden?
     #:details details
     #:type type
     #:light-level light-level

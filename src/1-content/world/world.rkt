@@ -6,10 +6,6 @@
   "../../0-engine/0-api/api.rkt"
   )
 
-; TODO: Magpie hill-specific content
-    ; (route-between 'magpie-hill 'shack 60 'ext)
-    ; (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
-
 ; See scenario.rkt for map overview
 (define places
   (list
@@ -24,7 +20,7 @@
     #:id 'magpie-hill
     #:size 'large
     #:features '()
-    #:hidden-features (list 'cocoon-effigy 'route-to-shack 'route-to-pond-of-drowning)
+    #:hidden-features (list 'cocoon-effigy 'route-to-shack 'route-to-pond-of-drowning 'nothing)
     #:type 'ext
     #:shortname "Magpie hill")
 
@@ -123,15 +119,15 @@
 
 (define routes
   (list
-    (route-between 'perimeter 'magpie-hill 130 'ext)
-    ; (route-between 'magpie-hill 'shack 60 'ext)
-    ; (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
+    (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #t)
+    (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t)
+    (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t)
 
-    (route-between 'perimeter 'martaanvuo-dam 140 'ext)
+    (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t)
     (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext)
     (route-between 'martaanvuo-river 'village 140 'ext)
 
-    (route-between 'martaanvuo-dam 'the-maw 10 'ext)
+    (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t)
     (route-between 'the-maw 'reactor-room 1 'int)
     (route-between 'reactor-room 'bioreactor 1 'int #:details (list 'only-when-small))
   ))

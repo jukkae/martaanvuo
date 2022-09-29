@@ -16,6 +16,7 @@
 
 (lazy-require ["../world/world.rkt"
   (remove-actor-from-its-current-location!
+   get-route-by-id
    )])
 (lazy-require ["../../6-combat/combat.rkt"
   (begin-combat!
@@ -162,3 +163,8 @@
                  ([item? an-item] (equal? (item-id an-item) id))
               ))
          items))
+
+(define (Place-hidden-routes place)
+  (filter (λ (route-id) (route-hidden? (get-route-by-id route-id)))
+          (Place-routes place))
+  )

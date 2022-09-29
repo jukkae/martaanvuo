@@ -171,7 +171,7 @@
                          (list (choice-factory 'pick-up-item))]
                         [else '()])
                   )
-                 
+
                  )
                 [else
                  (define world-choices '())
@@ -298,13 +298,15 @@
                     )
 
                    (else ; route is traversable
-                    (if (and (location-has-detail? route 'only-when-small)
-                             (location-has-detail? route 'only-when-small))
-                        (make-unavailable-choice
-                          (get-traverse-text route (current-location))
-                          "Otava is too large to fit through.")
-                        (make-traverse-choice route direction)
-                        )
+                    (when (not (route-hidden? route))
+                      (if (and (location-has-detail? route 'only-when-small)
+                               (location-has-detail? route 'only-when-small))
+                          (make-unavailable-choice
+                           (get-traverse-text route (current-location))
+                           "Otava is too large to fit through.")
+                          (make-traverse-choice route direction)
+                          )
+                      )
                     ))
              )))
 
