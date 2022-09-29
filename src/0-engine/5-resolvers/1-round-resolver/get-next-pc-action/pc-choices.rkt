@@ -389,7 +389,7 @@
    (λ () (make-action
           #:symbol 'read
           #:actor (pc)
-          #:duration 100
+          #:duration 5
           #:tags '(downtime)
           #:resolution-rules
           `(
