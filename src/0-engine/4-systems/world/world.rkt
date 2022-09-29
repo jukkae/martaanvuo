@@ -185,6 +185,7 @@
          #:routes [routes '()]
          #:visited? [visited? #f]
          #:explored [explored 'not-explored]
+         #:on-explore-rules! [on-explore-rules! '()]
          #:shortname [shortname ""])
 
   (set! *number-of-places* (add1 *number-of-places*))
@@ -208,6 +209,7 @@
           routes
           visited?
           explored
+          on-explore-rules!
           choices
           shortname))
 
