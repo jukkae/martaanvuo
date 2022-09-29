@@ -24,6 +24,11 @@
     #:type 'ext
     #:shortname "Magpie hill")
 
+  (place
+    #:id 'lookout
+    #:features '()
+    #:type 'int)
+
    (place
     #:id 'shack
     #:features '()
@@ -120,6 +125,7 @@
 (define routes
   (list
     (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #t)
+    (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f)
     (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t)
     (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t)
 

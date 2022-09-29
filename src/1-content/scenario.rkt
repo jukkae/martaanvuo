@@ -10,8 +10,8 @@
 )
 
 ; map v0.1.0:
-;
-;      v
+;                            ____ lookout
+;      v                    /
 ; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)
 ;      |                       \____ pond of drowning (explore)
 ;      |
