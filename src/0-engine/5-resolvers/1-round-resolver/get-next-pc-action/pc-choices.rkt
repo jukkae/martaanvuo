@@ -354,7 +354,9 @@
                          )
                        )))))
 
-       (when (not (null? (actor-conditions (pc))))
+       (when (or (actor-has-condition-of-type? (pc) 'bleeding)
+                 (actor-has-condition-of-type? (pc) 'broken-bones)
+                 (actor-has-condition-of-type? (pc) 'strains))
          (list (make-choice
                 'treat-injuries
                 "Treat injuries."
