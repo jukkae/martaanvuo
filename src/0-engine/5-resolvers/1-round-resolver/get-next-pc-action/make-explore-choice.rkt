@@ -34,7 +34,7 @@
               (append (location-hidden-features (current-location))
                       (Place-hidden-routes (current-location))))
             (cond [(not (empty? discoverables))
-                   (define discovery (first discoverables))
+                   (define discovery (take-random discoverables))
                    (cond
                      [(equal? discovery 'nothing)
                       (notice "Otava finds nothing interesting, but there might still be something.")]
@@ -60,7 +60,7 @@
                          [else
                           (set-Place-explored! (current-location) 'partially-explored)])]
                   [else
-                   (notice "Otava can't find anything interesting anymore and she's explored everywhere.")
+                   (notice "Otava can't find anything. She thinks there's nothing to be found anymore.")
                    (set-Place-explored! (current-location) 'exhaustively-explored)
                    ]
                   )
