@@ -38,15 +38,12 @@
                    (cond
                      [(equal? discovery 'nothing)
                       (notice "Otava finds nothing interesting, but there might still be something.")]
-                     [(equal? discovery 'route-to-shack)
-                      (add-route-between! 'magpie-hill 'shack 40 'ext)
-                      (notice "Otava finds a route to a shack.")]
-                     [(equal? discovery 'route-to-pond-of-drowning)
-                      (add-route-between! 'magpie-hill 'pond-of-drowning 60 'ext)
-                      (notice "Otava finds a route to a small pond.")]
-                     [(symbol? discovery)
+                     [(not (null? (get-route-by-id discovery)))
+                      (define discovered-route (get-route-by-id discovery))
                       (set-route-hidden?! (get-route-by-id discovery) #f)
-                      (notice "Otava finds a route.")
+                      (notice (format "Otava finds a route: ~a"
+                        ; drop prefix TODO: clean this up (where to use "en route" and where not)
+                        (substring (route-shortname-from discovered-route (current-location)) 10)))
                       ]
                      [else
                       (add-feature-to-location! (current-location) discovery)

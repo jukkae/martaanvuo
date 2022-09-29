@@ -20,7 +20,7 @@
     #:id 'magpie-hill
     #:size 'large
     #:features '()
-    #:hidden-features (list 'cocoon-effigy 'route-to-shack 'route-to-pond-of-drowning 'nothing)
+    #:hidden-features (list 'cocoon-effigy 'nothing)
     #:type 'ext
     #:shortname "Magpie hill")
 

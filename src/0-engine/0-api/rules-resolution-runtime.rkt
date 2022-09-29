@@ -8,10 +8,10 @@
 
   "../2-core/io.rkt"
 
-
   "../3-types/decision.rkt"
   "../3-types/item.rkt"
   "../3-types/location.rkt"
+  "../3-types/location-ids.rkt"
   "../3-types/place.rkt"
   "../3-types/pc-actor.rkt"
   "../3-types/world.rkt"
