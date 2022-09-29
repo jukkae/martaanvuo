@@ -94,6 +94,44 @@ Seppo the Blacksmith buys and sells sense organs. Prices are as follows:
        )
  )
 
+
+(fragment
+ 'shaman
+ @~a{
+SHAMAN:
+"Ah. I've been expecting you."
+
+OTAVA:
+}
+
+ #:time-taken-by-fragment 2
+ #:decisions
+ (list (make-decision
+        #:title "\"Can you tell me...\""
+        #:next-fragment 'shaman-1
+        )
+       )
+ )
+
+ (fragment 'shaman-1
+ @~a{
+OTAVA:
+Can you tell me –
+
+SHAMAN:
+– the secret to immortality? Yes, I can, but I am going to need you to do something for me.
+
+OTAVA:
+That wasn't what I was going to ask.
+
+SHAMAN:
+Not straight away, no, but that's why you're here, right?
+
+OTAVA:
+...yes.
+ }
+  )
+
 (fragment
  'spontaneous-brain
  @~a{

@@ -52,10 +52,17 @@
     #:choices
     (list
      (make-choice
-      'buy-mods
+      'visit-forge
       "Visit the village forge"
       `(
         (go-to-fragment 'seppo)
+        '()
+        ))
+     (make-choice
+      'visit-shaman
+      "Visit the village shaman"
+      `(
+        (go-to-fragment 'shaman)
         '()
         ))
     )

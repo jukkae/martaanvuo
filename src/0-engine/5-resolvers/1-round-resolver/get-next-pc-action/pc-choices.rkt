@@ -394,6 +394,7 @@
           #:resolution-rules
           `(
             @p{
+!!! WARNING: DO NOT READ !!!
 ===================
 NOTES ON PROTOZOAN-
 INVERTEBRATE EVOLUTION
@@ -401,7 +402,7 @@ AND EVIDENCE OF PATH-
 OLOGICAL SELF-ORGANIZATION IN
 ===================
 ,
-the cover of the notebook says, handwritten. The full title didn't fit in the small white area. Otava flips the book open.
+the cover of the notebook says, handwritten. The full title didn't fit in the small white area provided. The warning is scribbled on top. Otava flips the cover open.
               }
             (wait-for-confirm)
             (set-flag 'scenario-evolution)
