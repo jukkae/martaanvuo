@@ -81,6 +81,25 @@
                       #:available-in-combat? #t
                       ))
     )
+  (when (location-has-feature? (current-location) 'cocoon-effigy)
+    (append-element! feature-choices
+      (cond [(pc-has-item? 'voidfloater-corpse)
+                 (make-choice
+                  'make-an-offering
+                  "Make an offering to the cocoon effigy."
+                  (λ ()
+                    (p "Otava offers a voidfloater corpse to the cocoon effigy and kneels to receive the Gift.")
+                    (remove-item! 'voidfloater-corpse)
+                    (randomize-pc-senses!)
+                    (wait-for-confirm)
+                    '()
+                    ))
+                 ]
+                [else
+                 (make-unavailable-choice
+                  "Make an offering to the cocoon effigy."
+                  "Effigy demands a voidfloater corpse.")]
+                 )))
   (when (location-has-feature? (current-location) 'inactive-centrifuge)
     (append-element! feature-choices
                      (make-choice
@@ -298,61 +317,92 @@
           (choice-factory 'eat)))
 
        (when (and (Place? (current-location))
-                  (or (equal? (Place-explored (current-location)) '())
-                      (equal? (Place-explored (current-location)) 'not-explored)))
-         (list (make-choice
+                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
+        (define explore-cost
+          (cond [(equal? (location-size (current-location)) 'large)
+                 50]
+                [else
+                 5]))
+        (list (make-choice
                 'explore
-                "Explore."
+                (format "Explore. [~a ι]" explore-cost)
                 (λ () (make-action
                        #:symbol 'explore
                        #:actor (pc)
-                       #:duration 5
+                       #:duration explore-cost
                        #:tags '(downtime)
                        #:resolution-rules
                        `(
-                         (set-Place-explored! (current-location) 'partially-explored)
-                         )
-                       )))))
-
-       (when (and (Place? (current-location))
-                  (equal? (Place-explored (current-location)) 'partially-explored))
-         (list (make-choice
-                'explore-more
-                "Explore more."
-                (λ () (make-action
-                       #:symbol 'explore-more
-                       #:actor (pc)
-                       #:duration 10
-                       #:tags '(downtime)
-                       #:resolution-rules
-                       `(
-                         (set-Place-explored! (current-location) 'explored)
-                         )
-                       )))))
-
-       (when (and (Place? (current-location))
-                  (equal? (Place-explored (current-location)) 'explored))
-         (list (make-choice
-                'explore-even-more
-                "Explore even more."
-                (λ () (make-action
-                       #:symbol 'explore-even-more
-                       #:actor (pc)
-                       #:duration 10
-                       #:tags '(downtime)
-                       #:resolution-rules
-                       `(
-                         (define result (just-roll "d100" #:title "Exploration"))
-                         (notice (format "Total: ~a" result))
-                         (cond
-                           [(= result 99)
-                            (notice "The place is now exhaustively explored.")
-                            (set-Place-explored! (current-location) 'exhaustively-explored)]
-                           [else
-                            (notice "Otava doesn't find anything interesting.")])
+                         (when (not (empty? (location-hidden-features (current-location))))
+                           (define discovery (first (location-hidden-features (current-location))))
+                           (add-feature-to-location! (current-location) discovery)
+                           (notice (format "New discovery: ~a" discovery))
+                           (remove-hidden-feature-from-location! (current-location) discovery)
+                           )
+                         (cond [empty? (location-hidden-features (current-location))
+                                (set-Place-explored! (current-location) 'explored)
+                                ]
+                               [else
+                                (set-Place-explored! (current-location) 'partially-explored)])
                          (wait-for-confirm)
                          )
                        )))))
+      ;  (when (and (Place? (current-location))
+      ;             (or (equal? (Place-explored (current-location)) '())
+      ;                 (equal? (Place-explored (current-location)) 'not-explored)))
+      ;    (list (make-choice
+      ;           'explore
+      ;           "Explore."
+      ;           (λ () (make-action
+      ;                  #:symbol 'explore
+      ;                  #:actor (pc)
+      ;                  #:duration 5
+      ;                  #:tags '(downtime)
+      ;                  #:resolution-rules
+      ;                  `(
+      ;                    (set-Place-explored! (current-location) 'partially-explored)
+      ;                    )
+      ;                  )))))
+
+      ;  (when (and (Place? (current-location))
+      ;             (equal? (Place-explored (current-location)) 'partially-explored))
+      ;    (list (make-choice
+      ;           'explore-more
+      ;           "Explore more."
+      ;           (λ () (make-action
+      ;                  #:symbol 'explore-more
+      ;                  #:actor (pc)
+      ;                  #:duration 10
+      ;                  #:tags '(downtime)
+      ;                  #:resolution-rules
+      ;                  `(
+      ;                    (set-Place-explored! (current-location) 'explored)
+      ;                    )
+      ;                  )))))
+
+      ;  (when (and (Place? (current-location))
+      ;             (equal? (Place-explored (current-location)) 'explored))
+      ;    (list (make-choice
+      ;           'explore-even-more
+      ;           "Explore even more."
+      ;           (λ () (make-action
+      ;                  #:symbol 'explore-even-more
+      ;                  #:actor (pc)
+      ;                  #:duration 10
+      ;                  #:tags '(downtime)
+      ;                  #:resolution-rules
+      ;                  `(
+      ;                    (define result (just-roll "d100" #:title "Exploration"))
+      ;                    (notice (format "Total: ~a" result))
+      ;                    (cond
+      ;                      [(= result 99)
+      ;                       (notice "The place is now exhaustively explored.")
+      ;                       (set-Place-explored! (current-location) 'exhaustively-explored)]
+      ;                      [else
+      ;                       (notice "Otava doesn't find anything interesting.")])
+      ;                    (wait-for-confirm)
+      ;                    )
+      ;                  )))))
 
        (when (or (actor-has-condition-of-type? (pc) 'bleeding)
                  (actor-has-condition-of-type? (pc) 'broken-bones)

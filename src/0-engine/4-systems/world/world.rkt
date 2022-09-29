@@ -178,6 +178,7 @@
          #:actors [actors '()]
          #:items [items '()]
          #:features [features '()]
+         #:hidden-features [hidden-features '()]
          #:tags [tags '()]
          #:light-level [light-level 'natural]
          #:encounter-types [encounter-types '()]
@@ -203,6 +204,7 @@
           actors
           items
           features
+          hidden-features
           tags
           light-level
           encounter-types

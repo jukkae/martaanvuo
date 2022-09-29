@@ -25,6 +25,7 @@
    [actors : (Listof actor)]
    [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
+   [hidden-features : (Listof Symbol)]
    [tags : (Listof Symbol)]
    [light-level : (U LightLevel 'natural)]
    [encounter-types : (Listof Symbol)]
@@ -61,6 +62,15 @@
 
 (define (location-has-feature? [location : location] [feature : Symbol])
   (memq feature (location-features location)))
+
+(define (add-hidden-feature-to-location! [location : location] [hidden-feature : Symbol])
+  (set-location-hidden-features! location (cons hidden-feature (location-hidden-features location))))
+
+(define (remove-hidden-feature-from-location! [location : location] [hidden-feature : Symbol])
+  (set-location-hidden-features! location (remove hidden-feature (location-hidden-features location))))
+
+(define (location-has-hidden-feature? [location : location] [hidden-feature : Symbol])
+  (memq hidden-feature (location-hidden-features location)))
 
 (define (add-detail-to-location! [location : location] [detail : Symbol])
   (when (not (location-has-detail? location detail))

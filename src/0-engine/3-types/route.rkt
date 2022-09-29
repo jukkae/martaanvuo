@@ -33,6 +33,7 @@
                     #:actors (Listof actor)
                     #:items (Listof item)
                     #:features (Listof Symbol)
+                    #:hidden-features (Listof Symbol)
                     #:tags (Listof Symbol)
                     #:light-level (U LightLevel 'natural)
                     #:encounter-types (Listof Symbol))
@@ -48,6 +49,7 @@
                     #:actors [actors '()]
                     #:items [items '()]
                     #:features [features '()]
+                    #:hidden-features [hidden-features '()]
                     #:tags [tags '()]
                     #:light-level (light-level 'natural)
                     #:encounter-types [encounter-types '()])
@@ -67,6 +69,7 @@
           actors
           items
           features
+          hidden-features
           tags
           light-level
           encounter-types

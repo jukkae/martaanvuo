@@ -6,18 +6,25 @@
   "../../0-engine/0-api/api.rkt"
   )
 
+; TODO: Magpie hill-specific content
+    ; (route-between 'magpie-hill 'shack 60 'ext)
+    ; (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
+
 ; See scenario.rkt for map overview
 (define places
   (list
    (place
     #:id 'perimeter
+    #:size 'large
     #:type 'ext
     #:encounter-types '(voidfloater)
     #:shortname "perimeter")
 
    (place
     #:id 'magpie-hill
-    #:features '(caterpillar-effigy)
+    #:size 'large
+    #:features '()
+    #:hidden-features (list 'cocoon-effigy 'route-to-shack 'route-to-pond-of-drowning)
     #:type 'ext
     #:shortname "Magpie hill")
 
@@ -117,8 +124,8 @@
 (define routes
   (list
     (route-between 'perimeter 'magpie-hill 130 'ext)
-    (route-between 'magpie-hill 'shack 60 'ext)
-    (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
+    ; (route-between 'magpie-hill 'shack 60 'ext)
+    ; (route-between 'magpie-hill 'pond-of-drowning 80 'ext)
 
     (route-between 'perimeter 'martaanvuo-dam 140 'ext)
     (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext)

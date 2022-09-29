@@ -10,29 +10,6 @@
   "perimeter.rkt"
   )
 
-; TODO: location-specific
-(define (get-magpie-hill-choices)
-  (prune (list
-          (cond [(pc-has-item? 'voidfloater-corpse)
-                 (make-choice
-                  'make-an-offering
-                  "Make an offering to the caterpillar effigy."
-                  (λ ()
-                    (p "Otava offers a voidfloater corpse to the caterpillar effigy and kneels to receive the Gift.")
-                    (remove-item! 'voidfloater-corpse)
-                    (randomize-pc-senses!)
-                    (wait-for-confirm)
-                    '()
-                    ))
-                 ]
-                [else
-                 (make-unavailable-choice
-                  "Make an offering to the caterpillar effigy."
-                  "Effigy demands a voidfloater corpse.")]
-                 )
-          ))
-  )
-
 (define (get-precipice-choices)
   (make-choice
     'fall-down
@@ -48,7 +25,6 @@
 (define (get-location-choices location)
   (case (location-id location)
    ['perimeter (get-perimeter-choices)]
-   ['magpie-hill (get-magpie-hill-choices)]
    ['luminous-precipice (get-precipice-choices)]
    ['carnival (get-carnival-choices)]
    [else
