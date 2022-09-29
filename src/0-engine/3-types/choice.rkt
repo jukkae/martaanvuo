@@ -15,6 +15,7 @@
                            (->* () (U '() action))
                            Sexp)]
    [available-in-combat? : Boolean]
+   [unavailable? : Boolean]
    )
   #:mutable
   #:prefab
@@ -26,12 +27,14 @@
                         Symbol ; things like 'recurse
                         (->* () (U '() action))
                         Sexp)
-                     #:available-in-combat? Boolean)
+                     #:available-in-combat? Boolean
+                     #:unavailable? Boolean)
                     choice))
 (define (make-choice
          id
          name
          [resolution-effect '()]
-         #:available-in-combat? [available-in-combat? #f])
-  (choice* id name resolution-effect available-in-combat?)
+         #:available-in-combat? [available-in-combat? #f]
+         #:unavailable? [unavailable? #f])
+  (choice* id name resolution-effect available-in-combat? unavailable?)
   )

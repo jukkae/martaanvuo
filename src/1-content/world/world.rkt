@@ -119,7 +119,7 @@
 
     (route-between 'martaanvuo-dam 'the-maw 10 'ext)
     (route-between 'the-maw 'reactor-room 1 'int)
-    (route-between 'reactor-room 'bioreactor 1 'int)
+    (route-between 'reactor-room 'bioreactor 1 'int #:details (list 'only-when-small))
   ))
 
 (provide make-new-world)

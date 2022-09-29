@@ -47,9 +47,13 @@
 
 (define (build-keys-to-choices-map choices first-index)
   (define choices-with-keys (make-hash))
-  (for ([i (in-range (length choices))])
-    (define key (+ first-index i))
-    (hash-set! choices-with-keys key (list-ref choices i)))
+
+  (for ([c choices]
+        [i (in-naturals)])
+    (hash-set! choices-with-keys
+               (+ first-index i)
+               (list-ref choices i)))
+
   choices-with-keys)
 
 (define (menu)
@@ -104,7 +108,10 @@
               (λ (c1 c2) (< (car c1) (car c2)))))
 
   (for ([choice choices])
-    (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice))))
+    (if (choice-unavailable? (cdr choice))
+        (displayln (format "[ ]: ~a" (choice-name (cdr choice))))
+        (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice))))
+      )
     )
   (newline))
 

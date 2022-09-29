@@ -122,7 +122,8 @@
 
 (define (choice-valid? choices-with-keys input)
   (define choice (hash-ref choices-with-keys (string->number input) '()))
-  (if (not (null? choice))
+  (if (and (not (null? choice))
+           (not (choice-unavailable? choice)))
       choice
       #f))
 

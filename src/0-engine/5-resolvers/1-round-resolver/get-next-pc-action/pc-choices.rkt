@@ -278,8 +278,14 @@
                     )
 
                    (else ; route is traversable
-                    (make-traverse-choice route direction)
-                            ))
+                    (if (and (location-has-detail? route 'only-when-small)
+                             (location-has-detail? route 'only-when-small))
+                        (make-unavailable-choice
+                          (get-traverse-text route (current-location))
+                          "Otava is too large to fit through.")
+                        (make-traverse-choice route direction)
+                        )
+                    ))
              )))
 
        (when (and (not (equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night))
@@ -375,6 +381,14 @@
 
   (define condensed (condense all-actions))
   condensed)
+
+
+(define (make-unavailable-choice name reason)
+  (make-choice
+   'unavailable
+   (format "(~a) – ~a" name reason)
+   #:unavailable? #t
+   ))
 
 
 (define (make-read-book-choice)

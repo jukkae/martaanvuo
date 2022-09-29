@@ -90,14 +90,12 @@
   traverse-time
   type
   #:hidden? [hidden? #f]
-  #:no-encounters? [no-encounters? #f] ; TODO: this is redundant, combine with types
   #:light-level [light-level 'natural]
   #:encounter-types [encounter-types '()]
   #:one-directional? [one-directional? #f]
   #:details [details '()])
 
   (when hidden? (error "Implement hidden paths"))
-  (when no-encounters? (set! details (append-element details 'no-encounters)))
 
   (make-route
     id-a
@@ -115,7 +113,6 @@
   traverse-time
   type
   #:hidden? [hidden? #f]
-  #:no-encounters? [no-encounters? #f]
   #:light-level [light-level 'natural]
   #:encounter-types [encounter-types '()]
   #:one-directional? [one-directional? #f]
@@ -128,7 +125,6 @@
       traverse-time
       type
       #:hidden? hidden?
-      #:no-encounters? no-encounters?
       #:light-level light-level
       #:encounter-types encounter-types
       #:one-directional? one-directional?
