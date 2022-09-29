@@ -17,7 +17,7 @@
 
    (place
     #:id 'magpie-hill
-    #:features '(magpie-effigy)
+    #:features '(caterpillar-effigy)
     #:type 'ext
     #:shortname "Magpie hill")
 

@@ -38,3 +38,10 @@
          #:unavailable? [unavailable? #f])
   (choice* id name resolution-effect available-in-combat? unavailable?)
   )
+
+(define (make-unavailable-choice name reason)
+  (make-choice
+   'unavailable
+   (format "(~a) – ~a" name reason)
+   #:unavailable? #t
+   ))

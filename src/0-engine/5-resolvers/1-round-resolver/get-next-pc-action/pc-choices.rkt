@@ -382,15 +382,6 @@
   (define condensed (condense all-actions))
   condensed)
 
-
-(define (make-unavailable-choice name reason)
-  (make-choice
-   'unavailable
-   (format "(~a) – ~a" name reason)
-   #:unavailable? #t
-   ))
-
-
 (define (make-read-book-choice)
   (make-choice
    'read-book

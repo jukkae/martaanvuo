@@ -16,9 +16,9 @@
           (cond [(pc-has-item? 'voidfloater-corpse)
                  (make-choice
                   'make-an-offering
-                  "Make an offering to the Magpie Effigy."
+                  "Make an offering to the caterpillar effigy."
                   (λ ()
-                    (p "Otava offers a voidfloater corpse to the Magpie Effigy and kneels to receive the Gift.")
+                    (p "Otava offers a voidfloater corpse to the caterpillar effigy and kneels to receive the Gift.")
                     (remove-item! 'voidfloater-corpse)
                     (randomize-pc-senses!)
                     (wait-for-confirm)
@@ -26,9 +26,9 @@
                     ))
                  ]
                 [else
-                 (notice "The Magpie Effigy demands an offering of voidfloater corpse!")
-                 (wait-for-confirm)
-                 '()]
+                 (make-unavailable-choice
+                  "Make an offering to the caterpillar effigy."
+                  "Effigy demands a voidfloater corpse.")]
                  )
           ))
   )

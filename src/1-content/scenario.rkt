@@ -15,7 +15,7 @@
 ; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)
 ;      |                       \____ pond of drowning (explore)
 ;      |
-;    Martaanvuo dam –––––––––– Martaanvuo river –––– village (explore)
+;    Martaanvuo dam –––––––––– Martaanvuo river –––– village
 ;     |
 ;    The Maw ––––––––––––– reactor room –––– bioreactor
 ;
