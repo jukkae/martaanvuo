@@ -204,7 +204,7 @@
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))
-     (notice "Some time passes.")
+    ;  (notice "Some time passes.")
      (next-chapter!
        (string-append
          (take-random (list " – " ": " " "))
@@ -213,7 +213,7 @@
                             "a lesson is learned"
                             "some lessons are learned"
                             "lessons are learned"))))
-     (move-pc-to-location! (get-place-by-id 'the-maw))
+     (move-pc-to-location! (get-place-by-id 'perimeter))
     ;  (spawn-encounter)
      ]
     [else
