@@ -202,6 +202,76 @@
 
          roll-total
          ]
+        [(string=? formula "3d20")
+         (define n 3)
+         (define sides 20)
+         (define results (for/list ([i n])
+           (d 1 sides)))
+         (define bonus-string "")
+         (cond [(null? bonus) (set! bonus 0)]
+               [else
+                (set! bonus-string
+                      (if (< bonus 0)
+                          (format "- ~a" (abs bonus))
+                          (format "+ ~a" bonus)))])
+         (define roll-total (+ (apply + results) bonus))
+
+         (define total-printed 0)
+
+         (define base-sleep-time 0.01)
+         (display (format "~a ~a " title formula))
+         (sleep (* 2 base-sleep-time))
+         (for ([dice results])
+           (for ([i dice])
+             (if (= i 0)
+                 (display "\n:")
+                 (display "."))
+             (set! total-printed (add1 total-printed))
+             (flush-output)
+             (define sleep-time
+               (cond [(= i (- sides 2))
+                      (define multiplier (take-random (list 2 4 8 12)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [(= i (- sides 1))
+                      (define multiplier (take-random (list 4 8 12 16)))
+                      (* multiplier base-sleep-time)
+                      ]
+                     [else
+                      (define multiplier (take-random (list 2 4 8)))
+                      (* multiplier base-sleep-time)
+                      ]))
+             (sleep sleep-time)
+             ))
+         (for ([i bonus])
+           ; TODO: display + for positive, - for negative bonuses
+           (if (= i 0)
+               (display "\n:")
+               (display "."))
+           (set! total-printed (add1 total-printed))
+           (flush-output)
+           (define sleep-time (* 2 base-sleep-time))
+           (sleep sleep-time)
+           )
+
+         (cond
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r sides)))
+            (when (not (null? on-crit-success)) (on-crit-success))]
+           [(all-fulfill-predicate?
+             results
+             (λ (r) (= r 1)))
+            (when (not (null? on-crit-failure)) (on-crit-failure))]
+           )
+         (newline)
+
+        ;  (notice (format "[~a]~a = [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total))
+
+        ;  (wait-for-confirm)
+         (displayln (format "[~a]" roll-total))
+         roll-total
+         ]
         [(string=? formula "d100")
          (define n 2)
          (define sides 10)

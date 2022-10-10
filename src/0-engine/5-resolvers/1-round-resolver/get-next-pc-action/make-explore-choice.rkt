@@ -9,6 +9,8 @@
   "../../../3-types/place.rkt"
   "../../../3-types/route.rkt"
 
+  "../../../4-systems/checks/checks.rkt"
+
   "../../../7-state/state.rkt"
   )
 
@@ -17,16 +19,19 @@
 (define (make-explore-choice)
   (define explore-cost
     (cond [(equal? (location-size (current-location)) 'large)
-           30]
+           "3d20"]
           [else
-           5]))
+           "1d10"]))
   (make-choice
    'explore
    (format "Explore. [~a ι]" explore-cost)
-   (λ () (make-action
+   (λ ()
+    (define actual-explore-cost
+      (just-roll explore-cost #:title "explore cost"))
+    (make-action
           #:symbol 'explore
           #:actor (pc)
-          #:duration explore-cost
+          #:duration actual-explore-cost
           #:tags '(downtime)
           #:resolution-rules
           `(
