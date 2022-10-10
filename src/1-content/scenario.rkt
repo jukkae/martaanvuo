@@ -192,8 +192,8 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))
-    ;  (notice "Some time passes.")
      (move-pc-to-location! (get-place-by-id 'perimeter))
+    ;  (notice "Some time passes.")
      (next-chapter!
        (string-append
          (take-random (list " – " ": " " "))
@@ -202,7 +202,6 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
                             "a lesson is learned"
                             "some lessons are learned"
                             "lessons are learned"))))
-    ;  (move-pc-to-location! (get-place-by-id 'the-maw))
     ;  (spawn-encounter)
      ]
     [else

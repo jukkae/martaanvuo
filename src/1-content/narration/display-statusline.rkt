@@ -50,8 +50,14 @@
     [else ""])))
 
   (cond [(and (Place? (current-location))
-              (equal? (Place-explored (current-location)) 'exhaustively-explored))
-         (notice (format "The place is exhaustively explored."))
+              (not (null? (Place-explored (current-location)))))
+         (define exploration-string
+          (case (Place-explored (current-location))
+            ['not-explored "not explored"]
+            ['partially-explored "partially explored"]
+            ['explored "explored"]
+            ['exhaustively-explored "exhaustively explored"]))
+         (notice (format "The place is ~a." exploration-string))
          ])
 
   (when (not (empty? (location-items (current-location))))
