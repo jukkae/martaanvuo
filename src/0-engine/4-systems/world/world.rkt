@@ -51,6 +51,8 @@
   (cond
     [(location-has-feature? (current-location) 'running-centrifuge)
       'noisy]
+    [(equal? (location-type (current-location)) 'ext)
+     'quiet]
     [else 'silent]))
 
 ; world-as-simulation / scripting API
@@ -82,7 +84,7 @@
   (- 100 (remainder (world-elapsed-time (current-world)) 100)))
 
 
-; Uniqueness constraints(?), unidirectional paths(?), yada yada
+; Uniqueness constraints(?)
 (provide route-between)
 (define (route-between
   id-a
