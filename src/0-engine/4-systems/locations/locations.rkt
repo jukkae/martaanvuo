@@ -176,7 +176,7 @@
                (append-element unpruned-rows
                                (tr
                                 "Smells      [perceived with nose]"
-                                "Noxisfdous smell of rotting flesh")))
+                                "Noxious smell of rotting flesh")))
          )
        (when (pc-has-sense-organ? 'ears)
          (set! unpruned-rows

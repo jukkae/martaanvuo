@@ -77,6 +77,16 @@
 (define (create-task id)
   (define t
     (case id
+      ['shaman-bag
+       (task
+        'shaman-bag
+        "Shaman bag"
+        'in-progress
+        "Should be in the tunnels"
+        ""
+        '()
+        '()
+        '())]
       ['the-debt
        (task
         'the-debt

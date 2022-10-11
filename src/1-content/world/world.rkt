@@ -63,6 +63,7 @@
 
    (place #:id 'tunnels
     #:features '()
+    #:items (list 'shaman-bag)
     #:type 'int
     #:light-level 'pitch-black
     #:shortname "Mining tunnels")

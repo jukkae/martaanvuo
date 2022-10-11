@@ -125,11 +125,39 @@ OTAVA:
 That wasn't what I was going to ask.
 
 SHAMAN:
-Not straight away, no, but that's why you're here, right?
+No, but that's why you're here, right?
 
 OTAVA:
-...yes.
  }
+ #:decisions
+ (list
+  (make-decision
+   #:title "\"Yes.\""
+   #:description "\"Yes.\""
+   #:next-fragment 'shaman-2a
+   )
+   (make-decision
+    #:title "\"No.\""
+    #:description "\"No.\""
+    #:next-fragment 'shaman-2b
+    )
+  )
+  )
+
+(fragment 'shaman-2a
+ @~a{
+SHAMAN:
+Good. You shall find the [Abandoned village] upriver, descend to the old [Mining shafts], and fetch me my shaman bag from there. I left it there when I left there, and my feet are too old and sore to do it myself.
+ }
+ #:time-taken-by-fragment 1
+ #:decisions
+ (list
+   (make-decision
+    #:title "\"What's a shaman bag?\""
+    #:description "\"What's a shaman bag?\", Otava asks. The shaman just sends her out."
+    #:next-fragment (λ () (create-task 'shaman-bag) 'exit)
+    )
+  )
   )
 
 (fragment

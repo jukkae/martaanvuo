@@ -11,10 +11,10 @@
 
 ; map v0.1.0:
 ;                            ____ lookout
-;      v                    /
-; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)
-;      |                       \____ pond of drowning (explore)     gas station
-;      |                                                           /
+;      v                    /                                         highway –––– highway to nowhere
+; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)           /
+;       /                      \____ pond of drowning (explore)     gas station
+;      /                                                           /
 ;    Martaanvuo dam –––– Martaanvuo river –––––––– abandoned village –––– village
 ;     |                            _______ tunnels ____________/
 ;     |                           /
