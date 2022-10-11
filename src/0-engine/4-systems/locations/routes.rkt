@@ -3,6 +3,7 @@
 (provide route-other-end-from
          route-shortname
          route-shortname-from
+         route-description-from
          set-route-endpoint-visited!)
 
 (require
@@ -68,6 +69,37 @@
   (case endpoint
     ['a (Place-visited? (route-a route))]
     ['b (Place-visited? (route-b route))])
+  )
+
+(define (route-description-from route-or-id startpoint)
+  (when (null? startpoint)
+    (dev-note (format "route-or-id: ~a" route-or-id))
+    (error "route-description-from requires a non-null startpoint!"))
+  (define route
+    (cond [(route? route-or-id)
+           route-or-id]
+          [else (get-location-by-id route-or-id)]))
+
+  (define direction (if (equal? (route-a route) startpoint)
+                        'a-to-b
+                        'b-to-a))
+
+  (define endpoint
+    (case direction
+      ['a-to-b (route-b route)]
+      ['b-to-a (route-a route)]))
+
+  (when (symbol? startpoint)
+    (set! startpoint (get-location-by-id startpoint)))
+  (when (symbol? endpoint)
+    (set! endpoint (get-location-by-id endpoint)))
+
+  (cond ((route-fully-known? route)
+         (format "~a – ~a"
+                 (Place-shortname startpoint)
+                 (Place-shortname endpoint)))
+        (else
+         (format "~a – ???" (Place-shortname startpoint))))
   )
 
 (define (route-shortname-from route-or-id startpoint)

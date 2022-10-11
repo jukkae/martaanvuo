@@ -41,7 +41,7 @@
                (append-element unpruned-rows
                                (tr
                                 "Sounds      [perceived with ears]"
-                                "A magpie calls high up the hill")))
+                                "A magpie cries somewhere above.")))
          )
         unpruned-rows
         ]

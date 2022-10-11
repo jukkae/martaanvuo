@@ -205,11 +205,14 @@
            'b-to-a)))
 
   (define (get-route-short-description)
-
+    (dev-note "FIXME: TODO: continue the refactor (line 214)")
     (case (location-id start-location)
 
       ['perimeter
-       (case (route-other-end-from route start-location)
+       (if (not (null? (route-descr-from-a route)))
+        (route-descr-from-a route)
+        "BAR")
+       #;(case (route-other-end-from route start-location)
          ['magpie-hill
           (if (route-fully-known? route)
               "Magpie Hill."

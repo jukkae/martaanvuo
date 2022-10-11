@@ -47,8 +47,7 @@
                       (define discovered-route (get-route-by-id discovery))
                       (set-route-hidden?! (get-route-by-id discovery) #f)
                       (notice (format "Otava finds a route: ~a"
-                        ; drop prefix TODO: clean this up (where to use "en route" and where not)
-                        (substring (route-shortname-from discovered-route (current-location)) 10)))
+                        (route-description-from discovered-route (current-location))))
                       ]
                      [else
                       (add-feature-to-location! (current-location) discovery)

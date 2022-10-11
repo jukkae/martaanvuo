@@ -18,7 +18,10 @@
    [b : PlaceId]
    [traverse-time : Natural]
    [one-directional? : Boolean]
-   [hidden? : Boolean])
+   [hidden? : Boolean]
+   [descr-from-a : (Maybe String)]
+   [descr-from-b : (Maybe String)]
+   )
   #:mutable
   #:prefab
   #:constructor-name route*)
@@ -39,6 +42,8 @@
                     #:tags (Listof Symbol)
                     #:light-level (U LightLevel 'natural)
                     #:encounter-types (Listof Symbol)
+                    #:descr-from-a (Maybe String)
+                    #:descr-from-b (Maybe String)
                     )
                    route))
 (define (make-route a
@@ -57,6 +62,8 @@
                     #:tags [tags '()]
                     #:light-level (light-level 'natural)
                     #:encounter-types [encounter-types '()]
+                    #:descr-from-a [descr-from-a ""]
+                    #:descr-from-b [descr-from-b ""]
                     )
 
   (set! *number-of-routes* (add1 *number-of-routes*))
@@ -83,6 +90,8 @@
           traverse-time
           one-directional?
           hidden?
+          descr-from-a
+          descr-from-b
           ))
 
 (: route-traversed? (->* (route) () Boolean))

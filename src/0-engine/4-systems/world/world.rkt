@@ -95,7 +95,10 @@
   #:light-level [light-level 'natural]
   #:encounter-types [encounter-types '()]
   #:one-directional? [one-directional? #f]
-  #:details [details '()])
+  #:details [details '()]
+  #:descr-from-a [descr-from-a '()]
+  #:descr-from-b [descr-from-b '()]
+  )
 
   (make-route
     id-a
@@ -106,7 +109,10 @@
     #:details details
     #:type type
     #:light-level light-level
-    #:encounter-types encounter-types))
+    #:encounter-types encounter-types
+    #:descr-from-a descr-from-a
+    #:descr-from-b descr-from-b
+    ))
 
 (provide add-route-between!)
 (define (add-route-between!
