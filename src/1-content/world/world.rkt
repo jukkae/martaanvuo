@@ -126,9 +126,9 @@
 (define routes
   (list
     (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #t #:descr-from-a "steep, rocky ascent" #:descr-from-b "steep, rocky descent")
-    (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "narrow footpath" #:descr-from-b "narrow footpath")
-    (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t)
-    (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t)
+    (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "path to the ledge" #:descr-from-b "path back to the plateau")
+    (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t #:descr-from-a "rocky path" #:descr-from-b "rocky path")
+    (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t #:descr-from-a "footsteps leading away in mud" #:descr-from-b "muddy path")
 
     (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
     (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext)
