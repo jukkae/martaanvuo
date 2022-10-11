@@ -75,6 +75,8 @@
   (when (null? startpoint)
     (dev-note (format "route-or-id: ~a" route-or-id))
     (error "route-description-from requires a non-null startpoint!"))
+  (when (symbol? startpoint)
+    (set! startpoint (get-location-by-id startpoint)))
   (define route
     (cond [(route? route-or-id)
            route-or-id]

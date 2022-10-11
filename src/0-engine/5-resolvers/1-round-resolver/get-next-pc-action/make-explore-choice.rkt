@@ -42,7 +42,7 @@
                    (define discovery (take-random discoverables))
                    (cond
                      [(equal? discovery 'nothing)
-                      (notice "Otava finds nothing interesting, but there might still be something.")]
+                      (notice "Otava finds nothing interesting. Maybe she should explore more.")]
                      [(not (null? (get-route-by-id discovery)))
                       (define discovered-route (get-route-by-id discovery))
                       (set-route-hidden?! (get-route-by-id discovery) #f)

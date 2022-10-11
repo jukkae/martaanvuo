@@ -210,7 +210,7 @@
 
       ['perimeter
        (if (not (null? (route-descr-from-a route)))
-        (route-descr-from-a route)
+        (route-description-from route (location-id start-location))
         "BAR")
        #;(case (route-other-end-from route start-location)
          ['magpie-hill

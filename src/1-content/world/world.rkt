@@ -14,6 +14,7 @@
     #:size 'large
     #:type 'ext
     #:encounter-types '(voidfloater)
+    #:hidden-features (list 'nothing)
     #:shortname "perimeter")
 
    (place
