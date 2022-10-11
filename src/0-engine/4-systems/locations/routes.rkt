@@ -80,7 +80,7 @@
            route-or-id]
           [else (get-location-by-id route-or-id)]))
 
-  (define direction (if (equal? (route-a route) startpoint)
+  (define direction (if (equal? (route-a route) (location-id startpoint))
                         'a-to-b
                         'b-to-a))
 
@@ -94,12 +94,21 @@
   (when (symbol? endpoint)
     (set! endpoint (get-location-by-id endpoint)))
 
-  (cond ((route-fully-known? route)
-         (format "~a – ~a"
+  (format "~a [~a]"
+          (cond ((route-fully-known? route)
+                 (format "~a – ~a"
                  (Place-shortname startpoint)
                  (Place-shortname endpoint)))
-        (else
-         (format "~a – ???" (Place-shortname startpoint))))
+                (else
+                 (format "~a – ???" (Place-shortname startpoint))))
+          (cond ((equal? direction 'a-to-b)
+                 (if (not (null? (route-descr-from-a route)))
+                     (route-descr-from-a route)
+                     ""))
+                (else (if (not (null? (route-descr-from-b route)))
+                 (route-descr-from-b route)
+                 "")))
+          )
   )
 
 (define (route-shortname-from route-or-id startpoint)
