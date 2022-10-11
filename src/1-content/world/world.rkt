@@ -128,15 +128,15 @@
     (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #t #:descr-from-a "steep, rocky ascent" #:descr-from-b "steep, rocky descent")
     (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "path to the ledge" #:descr-from-b "path back to the plateau")
     (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t #:descr-from-a "rocky path" #:descr-from-b "rocky path")
-    (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t #:descr-from-a "footsteps leading away in mud" #:descr-from-b "muddy path")
+    (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t #:descr-from-a "footsteps through trampled underbrush" #:descr-from-b "path through prickly underbrush")
 
     (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
-    (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext)
-    (route-between 'martaanvuo-river 'village 140 'ext)
+    (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext #:descr-from-a "crumbling stairs downriver" #:descr-from-b "crumbling stairs back to the dam")
+    (route-between 'martaanvuo-river 'village 140 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
 
-    (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t)
-    (route-between 'the-maw 'reactor-room 1 'int)
-    (route-between 'reactor-room 'bioreactor 1 'int #:details (list 'only-when-small))
+    (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t #:descr-from-a "a hole in concrete wall behind corrugated iron" #:descr-from-b "a hole in concrete wall")
+    (route-between 'the-maw 'reactor-room 1 'int #:descr-from-a "corridor" #:descr-from-b "corridor")
+    (route-between 'reactor-room 'bioreactor 1 'int #:details (list 'only-when-small) #:descr-from-a "reactor door" #:descr-from-b "reactor door")
   ))
 
 (provide make-new-world)
