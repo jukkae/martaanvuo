@@ -13,10 +13,11 @@
 ;                            ____ lookout
 ;      v                    /
 ; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)
-;      |                       \____ pond of drowning (explore)
-;      |
-;    Martaanvuo dam –––––––––– Martaanvuo river –––– village
-;     |
+;      |                       \____ pond of drowning (explore)     gas station
+;      |                                                           /
+;    Martaanvuo dam –––– Martaanvuo river –––––––– abandoned village –––– village
+;     |                            _______ tunnels ____________/
+;     |                           /
 ;    The Maw ––––––––––––– reactor room –––– bioreactor
 ;
 
