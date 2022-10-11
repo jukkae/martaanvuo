@@ -168,3 +168,22 @@
   (filter (λ (route-id) (route-hidden? (get-route-by-id route-id)))
           (Place-routes place))
   )
+
+(define (Place-get-perceptions place)
+  (define unpruned-rows '())
+       (when (pc-has-sense-organ? 'nose)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Smells      [perceived with nose]"
+                                "Noxisfdous smell of rotting flesh")))
+         )
+       (when (pc-has-sense-organ? 'ears)
+         (set! unpruned-rows
+               (append-element unpruned-rows
+                               (tr
+                                "Sounds      [perceived with ears]"
+                                "A magpie cries somewhere above.")))
+         )
+        unpruned-rows
+  )

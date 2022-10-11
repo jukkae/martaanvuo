@@ -56,6 +56,11 @@
     #:type 'ext
     #:shortname "Martaanvuo river")
 
+   (place #:id 'abandoned-village
+    #:features (list 'baseball-bat 'fuel-can)
+    #:type 'ext
+    #:shortname "Abandoned village")
+
    (place
     #:id 'village
     #:choices
@@ -132,7 +137,8 @@
 
     (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
     (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext #:descr-from-a "crumbling stairs downriver" #:descr-from-b "crumbling stairs back to the dam")
-    (route-between 'martaanvuo-river 'village 140 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
+    (route-between 'martaanvuo-river 'abandoned-village 130 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
+    (route-between 'abandoned-village 'village 60 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
 
     (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t #:descr-from-a "a hole in concrete wall behind corrugated iron" #:descr-from-b "a hole in concrete wall")
     (route-between 'the-maw 'reactor-room 1 'int #:descr-from-a "corridor" #:descr-from-b "corridor")

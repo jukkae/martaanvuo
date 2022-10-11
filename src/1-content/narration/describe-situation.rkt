@@ -28,22 +28,7 @@
   (define body
     (case (location-id (current-location))
       ['perimeter
-        (define unpruned-rows '())
-       (when (pc-has-sense-organ? 'nose)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "Smells      [perceived with nose]"
-                                "Noxious smell of rotting flesh")))
-         )
-       (when (pc-has-sense-organ? 'ears)
-         (set! unpruned-rows
-               (append-element unpruned-rows
-                               (tr
-                                "Sounds      [perceived with ears]"
-                                "A magpie cries somewhere above.")))
-         )
-        unpruned-rows
+        (Place-get-perceptions (current-location))
         ]
       ['magpie-hill
        (define unpruned-rows '())

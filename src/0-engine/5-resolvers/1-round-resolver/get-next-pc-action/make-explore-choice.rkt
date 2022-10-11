@@ -21,7 +21,7 @@
     (cond [(equal? (location-size (current-location)) 'large)
            "3d20"]
           [else
-           "1d10"]))
+           "1d20"]))
   (make-choice
    'explore
    (format "Explore. [~a ι]" explore-cost)
