@@ -73,6 +73,19 @@
     #:type 'ext
     #:shortname "Gas station")
 
+   (place #:id 'highway-1
+    #:type 'ext
+    #:shortname "Highway")
+
+   (place #:id 'highway-2
+    #:type 'ext
+    #:shortname "Highway")
+
+   (place #:id 'highway-3
+    #:type 'ext
+    #:shortname "Highway")
+
+
    (place
     #:id 'village
     #:choices
@@ -140,8 +153,16 @@
     (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
     (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext #:descr-from-a "crumbling stairs downriver" #:descr-from-b "crumbling stairs back to the dam")
     (route-between 'martaanvuo-river 'abandoned-village 130 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
+
     (route-between 'abandoned-village 'village 60 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
     (route-between 'abandoned-village 'gas-station 5 'ext #:hidden? #t #:descr-from-a "beaten tarmac track" #:descr-from-b "beaten tarmac track")
+
+    (route-between 'gas-station 'highway-1  45 'ext #:descr-from-a "highway" #:descr-from-b "tarmac")
+    (route-between 'highway-1 'highway-2 45 'ext #:descr-from-a "highway (west)" #:descr-from-b "highway (east)")
+    (route-between 'highway-2 'highway-2 45 #:one-directional? #t 'ext #:descr-from-a "highway (west)" #:descr-from-b "highway (east)")
+    (route-between 'highway-1 'highway-3 45 'ext #:descr-from-a "highway (east)" #:descr-from-b "highway (west)")
+    (route-between 'highway-3 'highway-3 45 #:one-directional? #t 'ext #:descr-from-a "highway (east)" #:descr-from-b "highway (west)")
+
     (route-between 'abandoned-village 'tunnels 25 'int #:hidden? #t #:descr-from-a "rundown mining shaft ladders" #:descr-from-b "rundown mining shaft ladders")
 
     (route-between 'tunnels 'the-maw 25 'int #:hidden? #t #:descr-from-a "tunnels" #:descr-from-b "a hole to a tunnel")

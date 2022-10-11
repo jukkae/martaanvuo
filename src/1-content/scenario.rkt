@@ -10,8 +10,8 @@
 )
 
 ; map v0.1.0:
-;                            ____ lookout
-;      v                    /                                         highway –––– highway to nowhere
+;                            ____ lookout                   highway
+;      v                    /                                  \_____highway –––– highway to nowhere
 ; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)           /
 ;       /                      \____ pond of drowning (explore)     gas station
 ;      /                                                           /
