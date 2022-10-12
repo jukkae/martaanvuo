@@ -49,6 +49,11 @@
 (provide get-current-noise-level)
 (define (get-current-noise-level)
   (cond
+    [(and (or (equal? (location-id (current-location)) 'tunnels-3)
+              (equal? (location-id (current-location)) 'tunnels-4)
+              (equal? (location-id (current-location)) 'the-maw)) ; TODO: FIXME: proper "neighboring locations" type of thing
+          (location-has-feature? (get-location-by-id 'reactor-room) 'running-centrifuge))
+     'moderately-noisy]
     [(location-has-feature? (current-location) 'running-centrifuge)
       'noisy]
     [(equal? (location-type (current-location)) 'ext)
