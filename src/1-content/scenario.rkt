@@ -16,8 +16,8 @@
 ;       /                      \____ pond of drowning (explore)     gas station
 ;      /                                                           /
 ;    Martaanvuo dam –––– Martaanvuo river –––––––– abandoned village –––– village
-;     |                            _______ tunnels ____________/
-;     |                           /
+;     |      tunnels-4  ___tunnels-3 _ tunnels-2 ___ tunnels-1 __/
+;     |                         /
 ;    The Maw ––––––––––––– reactor room –––– bioreactor
 ;
 

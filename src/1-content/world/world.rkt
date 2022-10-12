@@ -61,9 +61,27 @@
     #:type 'ext
     #:shortname "Abandoned village")
 
-   (place #:id 'tunnels
+   (place #:id 'tunnels-1
     #:features '()
     #:items (list 'shaman-bag)
+    #:type 'int
+    #:light-level 'pitch-black
+    #:shortname "Mining tunnels")
+
+   (place #:id 'tunnels-2
+    #:features '()
+    #:type 'int
+    #:light-level 'pitch-black
+    #:shortname "Mining tunnels")
+
+   (place #:id 'tunnels-3
+    #:features '()
+    #:type 'int
+    #:light-level 'pitch-black
+    #:shortname "Mining tunnels")
+
+   (place #:id 'tunnels-4
+    #:features '()
     #:type 'int
     #:light-level 'pitch-black
     #:shortname "Mining tunnels")
@@ -163,9 +181,12 @@
     (route-between 'highway-1 'highway-3 45 'ext #:descr-from-a "highway (east)" #:descr-from-b "highway (west)")
     (route-between 'highway-3 'highway-3 45 #:one-directional? #t 'ext #:descr-from-a "highway (east)" #:descr-from-b "highway (west)")
 
-    (route-between 'abandoned-village 'tunnels 25 'int #:hidden? #t #:descr-from-a "rundown mining shaft ladders" #:descr-from-b "rundown mining shaft ladders")
+    (route-between 'abandoned-village 'tunnels-1 25 'int #:hidden? #t #:descr-from-a "rundown mining shaft ladders" #:descr-from-b "rundown mining shaft ladders")
 
-    (route-between 'tunnels 'the-maw 25 'int #:hidden? #t #:descr-from-a "tunnels" #:descr-from-b "a hole to a tunnel")
+    (route-between 'tunnels-1 'tunnels-2 26 'int)
+    (route-between 'tunnels-2 'tunnels-3 27 'int)
+    (route-between 'tunnels-3 'tunnels-4 24 'int)
+    (route-between 'tunnels-3 'the-maw 25 'int #:hidden? #t #:descr-from-a "tunnels" #:descr-from-b "a hole to a tunnel")
 
     (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t #:descr-from-a "a hole in concrete wall behind corrugated iron" #:descr-from-b "a hole in concrete wall")
     (route-between 'the-maw 'reactor-room 1 'int #:descr-from-a "corridor" #:descr-from-b "corridor")

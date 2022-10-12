@@ -6,6 +6,8 @@
   "action.rkt")
 
 ; conceptually speaking, non-action-containing resolution-effects would have some overlap with fragments and decisions?
+; TODO: Shaman questline, and similar, would benefit from Place-choices having conditions, similar to decisions!
+; (If conditions empty, then availability according to other modifications)
 (struct choice
   ([id : Symbol]
    [name : String]

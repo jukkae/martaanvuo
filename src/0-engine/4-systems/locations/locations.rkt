@@ -11,6 +11,7 @@
   "../pc/pc.rkt"
   "../world/time.rkt"
   "../../3-types/action.rkt"
+  "../../3-types/choice.rkt"
   "../../3-types/item.rkt"
   )
 
@@ -187,3 +188,18 @@
          )
         unpruned-rows
   )
+
+
+(define (Place-remove-choice! place target-choice-id)
+  (set-Place-choices! place
+    (filter (λ (c)
+              (not (equal? target-choice-id
+                      (choice-id c))))
+            (Place-choices place)
+            )))
+
+(define (Place-add-choice! place choice)
+  (set-Place-choices!
+    place
+    (append (Place-choices place) (list choice))
+    ))

@@ -119,7 +119,7 @@ OTAVA:
 Can you tell me –
 
 SHAMAN:
-– the secret to immortality? Yes, I can, but I am going to need you to do something for me.
+– the secret of immortality? Yes, I can, but I am going to need you to do something for me.
 
 OTAVA:
 That wasn't what I was going to ask.
@@ -136,26 +136,65 @@ OTAVA:
    #:description "\"Yes.\""
    #:next-fragment 'shaman-2a
    )
-   (make-decision
-    #:title "\"No.\""
-    #:description "\"No.\""
-    #:next-fragment 'shaman-2b
-    )
   )
   )
 
 (fragment 'shaman-2a
  @~a{
 SHAMAN:
-Good. You shall find the [Abandoned village] upriver, descend to the old [Mining shafts], and fetch me my shaman bag from there. I left it there when I left there, and my feet are too old and sore to do it myself.
+Good. You will find an [Abandoned village] upriver. Descend to the old [Mining shafts], and get my shaman bag. Bring it to me, and I will then tell you what I know of immortality.
+
+To help you on your voyage into the dark, I give you this: a bottle of [Drink of the Sacred Spirit of the Bat]. In the evening, upon the coming of the dark, you shall make a fire and dance around it thrice – once sunwise, twice against. You shall drink the drink and think the think. You shall put out the fire and kill the last light of the world.
+
+When you go to sleep that night, do so repeating this out loud: "I shall become one with the dark and dark shall become me."
+
+When you do so, you will transform into an Incarnation of the Spirit of the Bat, acquiring the Gift of Sonar!
  }
  #:time-taken-by-fragment 1
  #:decisions
  (list
    (make-decision
-    #:title "\"What's a shaman bag?\""
-    #:description "\"What's a shaman bag?\", Otava asks. The shaman just sends her out."
+    #:title "\"Got it.\""
+    #:description "OTAVA: \"Fire, once around sunwise, twice widdershins. Got it.\""
+    #:next-fragment (λ ()
+      (create-task 'shaman-bag)
+      (Place-remove-choice! (current-location) 'visit-shaman)
+      (Place-add-choice! (current-location)
+        (make-unavailable-choice "Visit the village shaman." "Don't have her shaman bag."))
+      'exit
+      )
+    )
+   (make-decision
+    #:title "\"Go again.\""
+    #:description "OTAVA: \"Let's go over the details once again.\""
+    #:next-fragment 'shaman-go-again
+    )
+  )
+  )
+
+(fragment 'shaman-go-again
+ @~a{
+SHAMAN:
+You will find an [Abandoned village] upriver. Descend to the old [Mining shafts], and get my shaman bag. Bring it to me, and I will then tell you what I know of immortality.
+
+To help you on your voyage into the dark, I give you this: a bottle of [Drink of the Sacred Spirit of the Bat]. In the evening, upon the coming of the dark, you shall make a fire and dance around it thrice – once sunwise, twice against. You shall drink the drink and think the think. You shall put out the fire and kill the last light of the world.
+
+When you go to sleep that night, do so repeating this out loud: "I shall become one with the dark and dark shall become me."
+
+When you do so, you will transform into an Incarnation of the Spirit of the Bat, acquiring the Gift of Sonar!
+ }
+ #:time-taken-by-fragment 1
+ #:decisions
+ (list
+   (make-decision
+    #:title "\"Got it.\""
+    #:description "OTAVA: \"Fire, once around sunwise, twice widdershins. Got it.\""
     #:next-fragment (λ () (create-task 'shaman-bag) 'exit)
+    )
+   (make-decision
+    #:title "\"Go again.\""
+    #:description "OTAVA: \"Let's go over the details once again.\""
+    #:next-fragment 'shaman-go-again
     )
   )
   )
