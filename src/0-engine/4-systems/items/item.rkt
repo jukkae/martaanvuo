@@ -30,6 +30,11 @@
          #:amount [amount 1])
 
   (case id
+    ['shaman-bag
+     (new-item
+      "Shaman bag"
+      #:id id)]
+
     ['bolt-cutters
      (new-item
       "Bolt cutters"

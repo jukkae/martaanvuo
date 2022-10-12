@@ -144,11 +144,11 @@ OTAVA:
 SHAMAN:
 Good. You will find an [Abandoned village] upriver. Descend to the old [Mining shafts], and get my shaman bag. Bring it to me, and I will then tell you what I know of immortality.
 
-To help you on your voyage into the dark, I give you this: a bottle of [Drink of the Sacred Spirit of the Bat]. In the evening, upon the coming of the dark, you shall make a fire and dance around it thrice – once sunwise, twice against. You shall drink the drink and think the think. You shall put out the fire and kill the last light of the world.
+To help you on your voyage into the dark, I give you this: a vial of [Drink of the Bat-Spirit]. In the evening, upon the coming of the dark, you shall make a fire and dance around it thrice – once sunwise, twice against. You shall drink the drink and think the think. You shall put out the fire and kill the last light of the world.
 
 When you go to sleep that night, do so repeating this out loud: "I shall become one with the dark and dark shall become me."
 
-When you do so, you will transform into an Incarnation of the Spirit of the Bat, acquiring the Gift of Sonar!
+When you do so, you will transform into an Incarnation of the Bat-Spirit, acquiring the Gift of Sonar!
  }
  #:time-taken-by-fragment 1
  #:decisions
@@ -158,6 +158,7 @@ When you do so, you will transform into an Incarnation of the Spirit of the Bat,
     #:description "OTAVA: \"Fire, once around sunwise, twice widdershins. Got it.\""
     #:next-fragment (λ ()
       (create-task 'shaman-bag)
+      (add-item! (new-item "Drink of the Bat-Spirit" #:id 'drink-of-the-bat-spirit))
       (Place-remove-choice! (current-location) 'visit-shaman)
       (Place-add-choice! (current-location)
         (make-unavailable-choice "Visit the village shaman." "Don't have her shaman bag."))

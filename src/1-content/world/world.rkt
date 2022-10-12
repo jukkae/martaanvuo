@@ -63,7 +63,7 @@
 
    (place #:id 'tunnels-1
     #:features '()
-    #:items (list 'shaman-bag)
+    #:items (list (make-item 'shaman-bag))
     #:type 'int
     #:light-level 'pitch-black
     #:shortname "Mining tunnels")
@@ -183,9 +183,9 @@
 
     (route-between 'abandoned-village 'tunnels-1 25 'int #:hidden? #t #:descr-from-a "rundown mining shaft ladders" #:descr-from-b "rundown mining shaft ladders")
 
-    (route-between 'tunnels-1 'tunnels-2 26 'int)
-    (route-between 'tunnels-2 'tunnels-3 27 'int)
-    (route-between 'tunnels-3 'tunnels-4 24 'int)
+    (route-between 'tunnels-1 'tunnels-2 26 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
+    (route-between 'tunnels-2 'tunnels-3 27 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
+    (route-between 'tunnels-3 'tunnels-4 24 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
     (route-between 'tunnels-3 'the-maw 25 'int #:hidden? #t #:descr-from-a "tunnels" #:descr-from-b "a hole to a tunnel")
 
     (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t #:descr-from-a "a hole in concrete wall behind corrugated iron" #:descr-from-b "a hole in concrete wall")
