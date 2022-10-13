@@ -23,6 +23,7 @@
       #:on-resolve-rules
       `(
         (displayln "clue resolved")
+        '()
         )
       )
      (clue
@@ -31,6 +32,7 @@
       #:on-resolve-rules
       `(
         (displayln "clue resolved")
+        '()
         )
       )
      )

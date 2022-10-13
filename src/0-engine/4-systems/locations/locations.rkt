@@ -156,7 +156,11 @@
     (if (Place? (current-location))
       (Place-choices (current-location))
       '())
-    ))
+    (if (Place? (current-location))
+      (get-clue-choices (current-location))
+      '())
+    )
+    )
 
 (define (location-has-item-of-id? location id)
   (define items (location-items items))
@@ -222,3 +226,12 @@
   requires
   description
   on-resolve-rules))
+
+(define (get-clue-choices place)
+ (define clues (Place-clues place))
+ (for/list ([clue clues])
+  (make-choice
+   'resolve-clue
+   (format "Resolve clue: ~a" (Clue-description clue))
+   (Clue-resolution-rules clue)
+   )))
