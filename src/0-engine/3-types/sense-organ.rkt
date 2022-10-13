@@ -4,6 +4,8 @@
 
 (struct SenseOrgan
   ([id : Symbol]
-   [name : String])
+   [level : Integer]
+   [name : String]
+   )
   #:prefab
   #:mutable)

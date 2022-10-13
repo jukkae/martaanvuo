@@ -11,7 +11,7 @@
 
 (struct Clue
   (
-   [requires : (Maybe (U SenseOrgan Symbol))]
+   [requires : (Maybe SenseOrgan)]
    [description : String]
    [resolution-rules : (Maybe Sexp)]
    )

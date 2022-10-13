@@ -195,7 +195,7 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      (advance-time-by-iotas! (d 6 12))
      (move-pc-to-location! (get-place-by-id 'perimeter))
     ;  (notice "Some time passes.")
-     (next-chapter!
+     #;(next-chapter!
        (string-append
          (take-random (list " – " ": " " "))
          (take-random (list "in which lessons are learned"

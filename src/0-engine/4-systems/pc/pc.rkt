@@ -29,13 +29,13 @@
    #:max-lp 4
    #:size 'large
    #:sense-organs (list
-    (SenseOrgan 'basic-homeostasis "basic homeostasis")
-    (SenseOrgan 'nociception "nociception")
-    (SenseOrgan 'nose "nose")
-    (SenseOrgan 'eyes "eyes")
-    (SenseOrgan 'ears "ears")
-    (SenseOrgan 'sonar "sonar")
-    (SenseOrgan 'haptics "haptics")
+    (SenseOrgan 'basic-homeostasis 1 "basic homeostasis")
+    (SenseOrgan 'nociception 1 "nociception")
+    (SenseOrgan 'nose 1 "nose")
+    (SenseOrgan 'eyes 1 "eyes")
+    (SenseOrgan 'ears 1 "ears")
+    (SenseOrgan 'sonar 1 "sonar")
+    (SenseOrgan 'haptics 1 "haptics")
     )
    #:manipulators (list
     (Manipulator 'human-hands "hands at end of arms")
@@ -148,10 +148,18 @@
   (findf (λ (inventory-item) (equal? (item-id inventory-item) id))
          items))
 
-(define (pc-has-sense-organ? id)
+(define (pc-has-sense-organ? id [level '()])
   (define sense-organs (pc-actor-sense-organs (pc)))
-  (findf (λ (sense-organ) (equal? (SenseOrgan-id sense-organ) id))
-         sense-organs))
+  (cond [(not (null? level))
+         (findf (λ (sense-organ)
+                  (and (equal? (SenseOrgan-id sense-organ) id)
+                       (>= (SenseOrgan-level sense-organ) level)))
+                sense-organs)
+         ]
+        [else
+         (findf (λ (sense-organ) (equal? (SenseOrgan-id sense-organ) id))
+         sense-organs)])
+  )
 
 ; (: -> SenseOrgan '())
 (define (add-sense-organ! sense-organ [silent? #f])
@@ -333,13 +341,13 @@
 
 (define sense-organs
   (list
-    (SenseOrgan 'basic-homeostasis "basic homeostasis")
-    (SenseOrgan 'nociception "nociception")
-    (SenseOrgan 'nose "nose")
-    (SenseOrgan 'eyes "eyes")
-    (SenseOrgan 'ears "ears")
-    (SenseOrgan 'sonar "sonar")
-    (SenseOrgan 'haptics "haptics")
+    (SenseOrgan 'basic-homeostasis 1 "basic homeostasis")
+    (SenseOrgan 'nociception 1 "nociception")
+    (SenseOrgan 'nose 1 "nose")
+    (SenseOrgan 'eyes 1 "eyes")
+    (SenseOrgan 'ears 1 "ears")
+    (SenseOrgan 'sonar 1 "sonar")
+    (SenseOrgan 'haptics 1 "haptics")
     ))
 
 (define (randomize-pc-senses!)

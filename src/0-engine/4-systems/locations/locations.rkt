@@ -13,6 +13,7 @@
   "../../3-types/action.rkt"
   "../../3-types/choice.rkt"
   "../../3-types/clue.rkt"
+  "../../3-types/sense-organ.rkt"
   "../../3-types/item.rkt"
   )
 
@@ -178,18 +179,18 @@
 (define (Place-get-perceptions place)
   (define unpruned-rows '())
   (for ([clue (Place-clues place)])
-    (cond [(pc-has-sense-organ? (Clue-requires clue))
+    (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
             (set! unpruned-rows
                   (append-element unpruned-rows
                                   (tr
-                                  (format "~a" (Clue-requires clue))
+                                  (format "~a [lv ~a]" (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
                                   (format "~a" (Clue-description clue)))))
            ]
           [else
            (set! unpruned-rows
                   (append-element unpruned-rows
                                   (tr
-                                  (format "~a" (Clue-requires clue))
+                                  (format "~a [lv ~a]" (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
                                   (format "[unknown - missing sense organ]"))))
            ])
             )

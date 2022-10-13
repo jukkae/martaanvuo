@@ -18,7 +18,7 @@
     #:clues
     (list
      (clue
-      #:requires 'nose
+      #:requires (SenseOrgan 'nose 1 "")
       #:description "smell of rotting flesh. human?"
       #:on-resolve-rules
       `(
@@ -27,7 +27,7 @@
         )
       )
      (clue
-      #:requires 'nose-level-2
+      #:requires (SenseOrgan 'nose 2 "")
       #:description "buried treasure"
       #:on-resolve-rules
       `(
@@ -36,7 +36,7 @@
         )
       )
      (clue
-      #:requires 'nose-level-2
+      #:requires (SenseOrgan 'nose 2 "")
       #:description "buried treasure"
       #:on-resolve-rules
       `(
@@ -45,7 +45,7 @@
         )
       )
      (clue
-      #:requires 'ears
+      #:requires (SenseOrgan 'ears 1 "")
       #:description "sound of running water"
       #:on-resolve-rules
       `(
