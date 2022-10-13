@@ -178,25 +178,21 @@
 (define (Place-get-perceptions place)
   (define unpruned-rows '())
   (for ([clue (Place-clues place)])
-    (set! unpruned-rows
-          (append-element unpruned-rows
-                          (tr
-                           (format "~a" (Clue-requires clue))
-                           (format "~a" (Clue-description clue))))))
-  ; (when (pc-has-sense-organ? 'nose)
-  ;   (set! unpruned-rows
-  ;         (append-element unpruned-rows
-  ;                         (tr
-  ;                         "Smells      [perceived with nose]"
-  ;                         "Noxious smell of rotting flesh")))
-  ;   )
-  ; (when (pc-has-sense-organ? 'ears)
-  ;   (set! unpruned-rows
-  ;         (append-element unpruned-rows
-  ;                         (tr
-  ;                         "Sounds      [perceived with ears]"
-  ;                         "A magpie cries somewhere above.")))
-  ;   )
+    (cond [(pc-has-sense-organ? (Clue-requires clue))
+            (set! unpruned-rows
+                  (append-element unpruned-rows
+                                  (tr
+                                  (format "~a" (Clue-requires clue))
+                                  (format "~a" (Clue-description clue)))))
+           ]
+          [else
+           (set! unpruned-rows
+                  (append-element unpruned-rows
+                                  (tr
+                                  (format "~a" (Clue-requires clue))
+                                  (format "[unknown - missing sense organ]"))))
+           ])
+            )
   unpruned-rows
   )
 
@@ -230,8 +226,11 @@
 (define (get-clue-choices place)
  (define clues (Place-clues place))
  (for/list ([clue clues])
-  (make-choice
-   'resolve-clue
-   (format "Resolve clue: ~a" (Clue-description clue))
-   (Clue-resolution-rules clue)
-   )))
+  (cond [(pc-has-sense-organ? (Clue-requires clue))
+         (make-choice
+          'resolve-clue
+          (format "Resolve clue: ~a" (Clue-description clue))
+          (Clue-resolution-rules clue)
+          )
+         ])
+  ))

@@ -27,6 +27,24 @@
         )
       )
      (clue
+      #:requires 'nose-level-2
+      #:description "buried treasure"
+      #:on-resolve-rules
+      `(
+        (displayln "clue resolved")
+        '()
+        )
+      )
+     (clue
+      #:requires 'nose-level-2
+      #:description "buried treasure"
+      #:on-resolve-rules
+      `(
+        (displayln "clue resolved")
+        '()
+        )
+      )
+     (clue
       #:requires 'ears
       #:description "sound of running water"
       #:on-resolve-rules
