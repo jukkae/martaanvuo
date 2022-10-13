@@ -12,6 +12,7 @@
   "../2-core/maybe.rkt"
   "../2-core/list-utils.rkt"
   "../3-types/light-levels.rkt"
+  "../3-types/clue.rkt"
   "../4-systems/actors/actor.rkt"
   )
 
@@ -22,7 +23,9 @@
    [on-explore-rules! : Sexp]
    [explored : (U '() 'not-explored 'partially-explored 'explored 'exhaustively-explored)]
    [choices : (Listof choice)]
-   [shortname : String])
+   [clues : (Listof Clue)]
+   [shortname : String]
+   )
 
   #:constructor-name Place*
   #:mutable

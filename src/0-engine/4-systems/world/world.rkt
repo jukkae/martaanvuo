@@ -196,6 +196,7 @@
          #:light-level [light-level 'natural]
          #:encounter-types [encounter-types '()]
          #:choices [choices '()]
+         #:clues [clues '()]
          #:routes [routes '()]
          #:visited? [visited? #f]
          #:explored [explored 'not-explored]
@@ -226,6 +227,7 @@
           explored
           on-explore-rules!
           choices
+          clues
           shortname))
 
 (provide connect-places-and-routes!)

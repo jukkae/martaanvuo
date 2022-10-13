@@ -15,6 +15,25 @@
     #:type 'ext
     #:encounter-types '(voidfloater)
     #:hidden-features (list 'nothing)
+    #:clues
+    (list
+     (clue
+      #:requires 'nose
+      #:description "smell of rotting flesh. human?"
+      #:on-resolve-rules
+      `(
+        (displayln "clue resolved")
+        )
+      )
+     (clue
+      #:requires 'ears
+      #:description "sound of running water"
+      #:on-resolve-rules
+      `(
+        (displayln "clue resolved")
+        )
+      )
+     )
     #:shortname "perimeter")
 
    (place

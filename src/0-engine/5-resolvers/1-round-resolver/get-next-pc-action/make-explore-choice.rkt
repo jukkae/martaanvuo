@@ -19,19 +19,19 @@
 (define (make-explore-choice)
   (define explore-cost
     (cond [(equal? (location-size (current-location)) 'large)
-           "3d20"]
+           30]
           [else
-           "1d20"]))
+           10]))
   (make-choice
    'explore
    (format "Explore. [~a ι]" explore-cost)
    (λ ()
-    (define actual-explore-cost
-      (just-roll explore-cost #:title "explore cost"))
+    (define exploration-roll
+      (just-roll "2d6" #:title "exploration roll"))
     (make-action
           #:symbol 'explore
           #:actor (pc)
-          #:duration actual-explore-cost
+          #:duration explore-cost
           #:tags '(downtime)
           #:resolution-rules
           `(
