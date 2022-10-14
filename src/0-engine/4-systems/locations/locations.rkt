@@ -248,15 +248,19 @@
 ;   )
   )
 
+(define (zone interactibles)
+  (Zone* interactibles #f '()))
+
 (define (get-zone-choices location)
- (for/list ([zone (location-zones location)])
+ (for/list ([z (location-zones location)])
   (make-choice
    'resolve-zone
-   (format "Zone ~a" (car zone))
+   (format "Zone ~a (found? ~a)" (car (Zone-interactibles z)) (Zone-found? z))
    (λ ()
-    (dev-note "REMOVING ZONE")
-    (set-location-zones!
-      location
-      (remove zone (location-zones location)))
+    (set-Zone-found?! z #t)
+    ; (dev-note "REMOVING ZONE")
+    ; (set-location-zones!
+    ;   location
+    ;   (remove zone (location-zones location)))
     '())))
  )

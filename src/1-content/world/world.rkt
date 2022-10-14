@@ -17,8 +17,9 @@
     #:hidden-features (list 'nothing)
     #:zones
     (list
-      (list 'foo 'bar 'baz 'xyzzy)
-      (list 'fnord 'fborb 'florb))
+      (zone (list 'foo 'bar 'baz 'xyzzy))
+      (zone (list 'fnord 'fborb 'florb))
+      )
     #:clues
     '()
     ; (list

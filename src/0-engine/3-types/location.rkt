@@ -9,6 +9,7 @@
 
   "../2-core/maybe.rkt"
   "../3-types/choice.rkt"
+  "../3-types/clue.rkt"
   "../3-types/light-levels.rkt"
   "../4-systems/actors/actor.rkt"
   )
@@ -16,7 +17,15 @@
 (define-type LocationType (U 'int 'ext))
 (define-type LocationSize (U 'container 'small 'large))
 
-(define-type Zone (Listof Symbol))
+(struct Zone
+  ([interactibles : (Listof Symbol)]
+   [found? : Boolean]
+   [clue? : (Maybe Clue)]
+   )
+  #:prefab
+  #:mutable
+  #:constructor-name Zone*
+  )
 
 (struct
   location
