@@ -37,7 +37,7 @@
        #:clue
        (clue
         #:requires (SenseOrgan 'ears 1 "")
-        #:description "babbling of a brook"
+        #:description "running water"
         )
        #:interactibles (list 'baz)
        )
@@ -46,45 +46,6 @@
       )
     #:clues
     '()
-    ; (list
-    ;  (clue
-    ;   #:requires (SenseOrgan 'nose 1 "")
-    ;   #:description "smell of rotting flesh. human?"
-    ;   #:on-resolve-rules
-    ;   `(
-    ;     (add-item! 'bandages)
-    ;     (displayln "clue resolved")
-    ;     '()
-    ;     )
-    ;   )
-    ;  (clue
-    ;   #:requires (SenseOrgan 'nose 2 "")
-    ;   #:description "buried treasure"
-    ;   #:on-resolve-rules
-    ;   `(
-    ;     (displayln "clue resolved")
-    ;     '()
-    ;     )
-    ;   )
-    ;  (clue
-    ;   #:requires (SenseOrgan 'nose 2 "")
-    ;   #:description "buried treasure"
-    ;   #:on-resolve-rules
-    ;   `(
-    ;     (displayln "clue resolved")
-    ;     '()
-    ;     )
-    ;   )
-    ;  (clue
-    ;   #:requires (SenseOrgan 'ears 1 "")
-    ;   #:description "sound of running water"
-    ;   #:on-resolve-rules
-    ;   `(
-    ;     (displayln "clue resolved")
-    ;     '()
-    ;     )
-    ;   )
-    ;  )
     #:shortname "perimeter")
 
    (place

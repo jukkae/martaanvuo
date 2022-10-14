@@ -277,12 +277,16 @@
         ))
   (make-choice
    'resolve-zone
-   choice-title
+   (if (Zone-pc-here? z) (format "* ~a" choice-title) choice-title)
    (λ ()
     (define iotas 5)
     (define encounters? #f)
     (advance-time-until-next-interesting-event! iotas encounters?)
+    (dev-note "TODO: clean up!")
+    (for ([z_ (location-zones (current-location))])
+      (set-Zone-pc-here?! z_ #f))
     (set-Zone-found?! z #t)
     (set-Zone-clue?! z '())
+    (set-Zone-pc-here?! z #t)
     '())))
  )
