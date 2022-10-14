@@ -160,6 +160,9 @@
     (if (Place? (current-location))
       (get-clue-choices (current-location))
       '())
+    (if (Place? (current-location))
+      (get-zone-choices (current-location))
+      '())
     )
     )
 
@@ -222,16 +225,38 @@
  (Clue*
   requires
   description
-  on-resolve-rules))
+  on-resolve-rules
+  #f
+  ))
 
 (define (get-clue-choices place)
- (define clues (Place-clues place))
- (for/list ([clue clues])
-  (cond [(pc-has-sense-organ? (Clue-requires clue))
-         (make-choice
-          'resolve-clue
-          (format "Resolve clue: ~a" (Clue-description clue))
-          (Clue-resolution-rules clue)
-          )
-         ])
-  ))
+'()
+;  (define clues (Place-clues place))
+;  (for/list ([clue clues])
+;   (define with-discard (append (Clue-resolution-rules clue)
+;                                `(
+;                                 ;  ,(set-Clue-resolved! clue #t)
+;                                  '()
+;                                  )))
+;   (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)))
+;          (make-choice
+;           'resolve-clue
+;           (format "Resolve clue: ~a" (Clue-description clue))
+;           with-discard
+;           )
+;          ])
+;   )
+  )
+
+(define (get-zone-choices location)
+ (for/list ([zone (location-zones location)])
+  (make-choice
+   'resolve-zone
+   (format "Zone ~a" (car zone))
+   (λ ()
+    (dev-note "REMOVING ZONE")
+    (set-location-zones!
+      location
+      (remove zone (location-zones location)))
+    '())))
+ )

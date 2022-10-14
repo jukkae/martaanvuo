@@ -192,6 +192,7 @@
          #:items [items '()]
          #:features [features '()]
          #:hidden-features [hidden-features '()]
+         #:zones [zones '()]
          #:tags [tags '()]
          #:light-level [light-level 'natural]
          #:encounter-types [encounter-types '()]
@@ -219,6 +220,7 @@
           items
           features
           hidden-features
+          zones
           tags
           light-level
           encounter-types

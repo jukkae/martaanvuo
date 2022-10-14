@@ -15,45 +15,51 @@
     #:type 'ext
     #:encounter-types '(voidfloater)
     #:hidden-features (list 'nothing)
-    #:clues
+    #:zones
     (list
-     (clue
-      #:requires (SenseOrgan 'nose 1 "")
-      #:description "smell of rotting flesh. human?"
-      #:on-resolve-rules
-      `(
-        (displayln "clue resolved")
-        '()
-        )
-      )
-     (clue
-      #:requires (SenseOrgan 'nose 2 "")
-      #:description "buried treasure"
-      #:on-resolve-rules
-      `(
-        (displayln "clue resolved")
-        '()
-        )
-      )
-     (clue
-      #:requires (SenseOrgan 'nose 2 "")
-      #:description "buried treasure"
-      #:on-resolve-rules
-      `(
-        (displayln "clue resolved")
-        '()
-        )
-      )
-     (clue
-      #:requires (SenseOrgan 'ears 1 "")
-      #:description "sound of running water"
-      #:on-resolve-rules
-      `(
-        (displayln "clue resolved")
-        '()
-        )
-      )
-     )
+      (list 'foo 'bar 'baz 'xyzzy)
+      (list 'fnord 'fborb 'florb))
+    #:clues
+    '()
+    ; (list
+    ;  (clue
+    ;   #:requires (SenseOrgan 'nose 1 "")
+    ;   #:description "smell of rotting flesh. human?"
+    ;   #:on-resolve-rules
+    ;   `(
+    ;     (add-item! 'bandages)
+    ;     (displayln "clue resolved")
+    ;     '()
+    ;     )
+    ;   )
+    ;  (clue
+    ;   #:requires (SenseOrgan 'nose 2 "")
+    ;   #:description "buried treasure"
+    ;   #:on-resolve-rules
+    ;   `(
+    ;     (displayln "clue resolved")
+    ;     '()
+    ;     )
+    ;   )
+    ;  (clue
+    ;   #:requires (SenseOrgan 'nose 2 "")
+    ;   #:description "buried treasure"
+    ;   #:on-resolve-rules
+    ;   `(
+    ;     (displayln "clue resolved")
+    ;     '()
+    ;     )
+    ;   )
+    ;  (clue
+    ;   #:requires (SenseOrgan 'ears 1 "")
+    ;   #:description "sound of running water"
+    ;   #:on-resolve-rules
+    ;   `(
+    ;     (displayln "clue resolved")
+    ;     '()
+    ;     )
+    ;   )
+    ;  )
     #:shortname "perimeter")
 
    (place

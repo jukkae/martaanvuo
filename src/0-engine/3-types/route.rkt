@@ -74,6 +74,8 @@
      [Natural (string->symbol (format "route-~a" id))]
      [Symbol id]))
 
+  (define zones '())
+
   (route* id-symbol
           type
           size
@@ -82,6 +84,8 @@
           items
           features
           hidden-features
+          zones
+
           tags
           light-level
           encounter-types

@@ -210,7 +210,8 @@
   (define sense-organs-list
     (for/list ([sense-organ sense-organs])
       (tr
-        (SenseOrgan-name sense-organ))))
+        (format "~a" (SenseOrgan-name sense-organ))
+        (format "lv ~a" (SenseOrgan-level sense-organ)))))
 
   (when (empty? sense-organs-list)
     (set! sense-organs-list (tr "No sense organs")))

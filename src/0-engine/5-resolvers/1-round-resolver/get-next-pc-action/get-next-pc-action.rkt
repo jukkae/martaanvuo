@@ -143,6 +143,9 @@
   (define resolution-effect (choice-as-resolution-effect choices-with-keys input))
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
 
+  (cond [(equal? 'resolve-clue (choice-id current-choice))
+        '()])
+
   (define action
     (cond ((procedure? resolution-effect)
            (resolution-effect))
