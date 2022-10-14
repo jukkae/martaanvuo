@@ -21,6 +21,9 @@
   (remove-actor-from-its-current-location!
    get-route-by-id
    )])
+(lazy-require ["../simulation.rkt"
+  (advance-time-until-next-interesting-event!
+   )])
 (lazy-require ["../../6-combat/combat.rkt"
   (begin-combat!
    )])
@@ -276,11 +279,10 @@
    'resolve-zone
    choice-title
    (λ ()
+    (define iotas 5)
+    (define encounters? #f)
+    (advance-time-until-next-interesting-event! iotas encounters?)
     (set-Zone-found?! z #t)
     (set-Zone-clue?! z '())
-    ; (dev-note "REMOVING ZONE")
-    ; (set-location-zones!
-    ;   location
-    ;   (remove zone (location-zones location)))
     '())))
  )
