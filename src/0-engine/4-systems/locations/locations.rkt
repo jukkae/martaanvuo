@@ -277,6 +277,7 @@
    choice-title
    (λ ()
     (set-Zone-found?! z #t)
+    (set-Zone-clue?! z '())
     ; (dev-note "REMOVING ZONE")
     ; (set-location-zones!
     ;   location
