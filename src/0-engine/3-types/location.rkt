@@ -21,6 +21,7 @@
   ([interactibles : (Listof Symbol)]
    [found? : Boolean]
    [clue? : (Maybe Clue)]
+   [pc-here? : Boolean]
    )
   #:prefab
   #:mutable

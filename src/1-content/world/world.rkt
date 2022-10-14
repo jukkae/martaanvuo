@@ -17,8 +17,32 @@
     #:hidden-features (list 'nothing)
     #:zones
     (list
-      (zone (list 'foo 'bar 'baz 'xyzzy))
-      (zone (list 'fnord 'fborb 'florb))
+      (zone ; remains of an adventurer
+       #:clue
+       (clue
+        #:requires (SenseOrgan 'nose 1 "")
+        #:description "smell of rotting flesh"
+        )
+       #:interactibles (list 'foo 'bar)
+       )
+      (zone
+       #:clue
+       (clue
+        #:requires (SenseOrgan 'nose 2 "")
+        #:description "faint smell of buried coins"
+        )
+       #:interactibles (list 'baz 'xyzzy)
+       )
+      (zone
+       #:clue
+       (clue
+        #:requires (SenseOrgan 'ears 1 "")
+        #:description "babbling of a brook"
+        )
+       #:interactibles (list 'baz)
+       )
+      (zone
+       #:interactibles (list 'fnord))
       )
     #:clues
     '()

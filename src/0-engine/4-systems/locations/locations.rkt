@@ -220,7 +220,7 @@
 (define (clue
  #:requires requires
  #:description description
- #:on-resolve-rules on-resolve-rules
+ #:on-resolve-rules [on-resolve-rules '()]
  )
  (Clue*
   requires
@@ -238,24 +238,43 @@
 ;                                 ;  ,(set-Clue-resolved! clue #t)
 ;                                  '()
 ;                                  )))
-;   (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)))
-;          (make-choice
-;           'resolve-clue
-;           (format "Resolve clue: ~a" (Clue-description clue))
-;           with-discard
-;           )
-;          ])
+; (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)))
+;        (make-choice
+;         'resolve-clue
+;         (format "Resolve clue: ~a" (Clue-description clue))
+;         with-discard
+;         )
+;        ])
 ;   )
   )
 
-(define (zone interactibles)
-  (Zone* interactibles #f '()))
+(define (zone
+         #:interactibles interactibles
+         #:clue [clue '()])
+  (Zone* interactibles #f clue #f))
 
 (define (get-zone-choices location)
  (for/list ([z (location-zones location)])
+;  (displayln z)
+  (define choice-title
+    (cond
+        [(Clue? (Zone-clue? z))
+         (cond [(pc-has-sense-organ?
+                  (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                  (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+                (format "Resolve clue: ~a" (Clue-description (Zone-clue? z))
+                )
+               ]
+               [else (format "N/A [requires: ~a lv ~a]"
+                      (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                      (SenseOrgan-level (Clue-requires (Zone-clue? z))))])]
+        [else
+          (format "~a" "[empty clue]")
+        ]
+        ))
   (make-choice
    'resolve-zone
-   (format "Zone ~a (found? ~a)" (car (Zone-interactibles z)) (Zone-found? z))
+   choice-title
    (λ ()
     (set-Zone-found?! z #t)
     ; (dev-note "REMOVING ZONE")
