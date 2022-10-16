@@ -161,9 +161,6 @@
       (Place-choices (current-location))
       '())
     (if (Place? (current-location))
-      (get-clue-choices (current-location))
-      '())
-    (if (Place? (current-location))
       (get-zone-choices (current-location))
       '())
     )
@@ -232,29 +229,48 @@
   #f
   ))
 
-(define (get-clue-choices place)
-'()
-;  (define clues (Place-clues place))
-;  (for/list ([clue clues])
-;   (define with-discard (append (Clue-resolution-rules clue)
-;                                `(
-;                                 ;  ,(set-Clue-resolved! clue #t)
-;                                  '()
-;                                  )))
-; (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)))
-;        (make-choice
-;         'resolve-clue
-;         (format "Resolve clue: ~a" (Clue-description clue))
-;         with-discard
-;         )
-;        ])
-;   )
-  )
-
 (define (zone
          #:interactibles interactibles
          #:clue [clue '()])
   (Zone* interactibles #f clue #f))
+
+
+(define (current-zone)
+  (define location (current-location))
+  (findf (λ (z) (Zone-pc-here? z)) (location-zones location))
+  )
+
+(define (current-zone-items location)
+  (define items '())
+  (when (not (eq? location #f))
+    (when (not (eq? (current-zone) #f))
+      (for ([interactible (Zone-interactibles (current-zone))])
+        (cond
+          [(item? interactible)
+          (append-element! items interactible)]
+          )
+        )
+      )
+    )
+  items
+  )
+
+(define (find-item-in-current-zone id)
+  (define items (current-zone-items (current-location)))
+  (findf (λ (a)
+           (if (item? a)
+               (equal? (item-id a) id)
+               (equal? a id)))
+         items))
+
+(define (add-interactible-to-zone! zone interactible)
+  (set-Zone-interactibles! zone (cons interactible (Zone-interactibles zone))))
+
+(define (remove-interactible-from-zone! zone interactible)
+  (set-Zone-interactibles! zone (remove interactible (Zone-interactibles zone))))
+
+(define (remove-interactible-from-current-zone! interactible)
+  (remove-interactible-from-zone! (current-zone) interactible))
 
 (define (get-zone-choices location)
  (for/list ([z (location-zones location)])

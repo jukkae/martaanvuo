@@ -24,7 +24,7 @@
   (ranged-weapon* id name details 1 ammo-left))
 
 
-; API
+; TODO: items = "content cards"
 (define (make-item
          id
          #:amount [amount 1])
@@ -33,6 +33,16 @@
     ['shaman-bag
      (new-item
       "Shaman bag"
+      #:id id)]
+
+    ['knife
+     (new-item
+      "Knife"
+      #:id id)]
+
+    ['lighter
+     (new-item
+      "Lighter"
       #:id id)]
 
     ['bolt-cutters
@@ -85,6 +95,12 @@
       "Flashlight"
       #:id id
       #:details 34)] ; charge percentage
+
+    ['empty-flashlight
+     (new-item
+      "Flashlight (no batteries)"
+      #:id id
+      #:details 0)] ; charge percentage
 
     ['gold
      (new-item

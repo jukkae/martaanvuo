@@ -167,7 +167,7 @@
                   (get-combat-choices)
                   (filter (lambda (c) (choice-available-in-combat? c))
                           (get-current-location-choices))
-                  (cond [(not (null? (location-items (current-location))))
+                  (cond [(not (null? (current-zone-items (current-location))))
                          (list (choice-factory 'pick-up-item))]
                         [else '()])
                   )
@@ -175,7 +175,7 @@
                  )
                 [else
                  (define world-choices '())
-                 (when (not (null? (location-items (current-location))))
+                 (when (not (null? (current-zone-items (current-location))))
                    (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
                  (cond [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
                         (set! world-choices (append world-choices (get-evening-choices world actor)))]

@@ -22,8 +22,13 @@
        (clue
         #:requires (SenseOrgan 'nose 1 "")
         #:description "smell of rotting flesh"
+        #:on-resolve-rules
+        `(
+          (notice "Source of the smell: remains of an adventurer.")
+          (notice "Otava rummages through their gear.")
         )
-       #:interactibles (list 'foo 'bar)
+        )
+       #:interactibles (list (make-item 'knife) (make-item 'lighter))
        )
       (zone
        #:clue

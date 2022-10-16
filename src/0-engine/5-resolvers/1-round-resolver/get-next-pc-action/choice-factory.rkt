@@ -145,8 +145,8 @@
                 ;  (define the-item ,item)
                 ;  (define id ',(item-id item))
                  (define item-id ',(item-id item))
-                 (define the-item (find-item (current-location) item-id))
-                 (remove-item-from-location! (current-location) the-item)
+                 (define the-item (find-item-in-current-zone item-id))
+                 (remove-interactible-from-current-zone! the-item)
                  (add-item! the-item)
                  (notice (format "Picked up: ~a"
                                  (cond [(item? the-item) (item-name the-item)]
@@ -244,7 +244,7 @@
   )
 
 (define (select-item-to-pick-up)
-  (define items (location-items (current-location)))
+  (define items (current-zone-items (current-location)))
 
   (prln (format "Pick up what? [1-~a], anything else to cancel." (length items)))
   (br)

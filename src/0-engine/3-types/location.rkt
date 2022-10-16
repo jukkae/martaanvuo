@@ -18,7 +18,7 @@
 (define-type LocationSize (U 'container 'small 'large))
 
 (struct Zone
-  ([interactibles : (Listof Symbol)]
+  ([interactibles : (Listof (U Symbol item))]
    [found? : Boolean]
    [clue? : (Maybe Clue)]
    [pc-here? : Boolean]
