@@ -273,7 +273,8 @@
   (remove-interactible-from-zone! (current-zone) interactible))
 
 (define (get-zone-choices location)
- (for/list ([z (location-zones location)])
+ (define zone-choices '())
+(for ([z (location-zones location)])
 ;  (displayln z)
   (define choice-title
     (cond
@@ -291,18 +292,21 @@
           (format "~a" "[empty clue]")
         ]
         ))
-  (make-choice
-   'resolve-zone
-   (if (Zone-pc-here? z) (format "* ~a" choice-title) choice-title)
-   (λ ()
-    (define iotas 5)
-    (define encounters? #f)
-    (advance-time-until-next-interesting-event! iotas encounters?)
-    (dev-note "TODO: clean up!")
-    (for ([z_ (location-zones (current-location))])
-      (set-Zone-pc-here?! z_ #f))
-    (set-Zone-found?! z #t)
-    (set-Zone-clue?! z '())
-    (set-Zone-pc-here?! z #t)
-    '())))
+  (when (not (Zone-pc-here? z))
+    (append-element! zone-choices (make-choice
+      'resolve-zone
+      choice-title
+      (λ ()
+        (define iotas 5)
+        (define encounters? #f)
+        (advance-time-until-next-interesting-event! iotas encounters?)
+        (dev-note "TODO: clean up!")
+        (for ([z_ (location-zones (current-location))])
+          (set-Zone-pc-here?! z_ #f))
+        (set-Zone-found?! z #t)
+        (set-Zone-clue?! z '())
+        (set-Zone-pc-here?! z #t)
+        '()))))
+  )
+ zone-choices
  )
