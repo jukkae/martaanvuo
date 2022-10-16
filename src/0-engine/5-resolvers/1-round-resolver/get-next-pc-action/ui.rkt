@@ -21,9 +21,11 @@
   (define body
     (tbody
      (tr (format "Total score: ~a" session-score))
-     (tr "")
-     (tr "Reasons include:")
      ))
+  (when (not (empty? (current-session-score-reasons)))
+    (tr "")
+    (tr "Reasons include:")
+    )
   (append! body
     (for/list ([reason (current-session-score-reasons)])
       (tr (format "- ~a" reason))))
