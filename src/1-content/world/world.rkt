@@ -29,6 +29,7 @@
         )
         )
        #:interactibles (list (make-item 'knife) (make-item 'lighter))
+       #:description "at the body of a dead adventurer"
        )
       (zone
        #:clue
@@ -37,6 +38,7 @@
         #:description "faint smell of buried coins"
         )
        #:interactibles (list 'baz 'xyzzy)
+       #:description "at an underground cache"
        )
       (zone
        #:clue
@@ -45,9 +47,11 @@
         #:description "running water"
         )
        #:interactibles (list 'baz)
+       #:description "at a river"
        )
       (zone
-       #:interactibles (list 'fnord))
+       #:interactibles (list 'fnord)
+       #:description "")
       )
     #:clues
     '()

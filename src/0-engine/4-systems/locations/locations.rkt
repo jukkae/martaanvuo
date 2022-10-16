@@ -115,8 +115,11 @@
   )
 
 (define (get-location-short-description location)
-  (format "~a~a"
+  (format "~a~a~a"
           (get-location-name location)
+          (cond [(current-zone)
+                 (format ", ~a" (Zone-description (current-zone)))]
+                [else ""])
           (cond [(and (or (pc-has-sense-organ? 'eyes)
                           (pc-has-sense-organ? 'echolocation))
                       (not (null? (location-size (current-location)))))
@@ -232,8 +235,10 @@
 
 (define (zone
          #:interactibles interactibles
-         #:clue [clue '()])
-  (Zone* interactibles #f clue #f))
+         #:description description
+         #:clue [clue '()]
+         )
+  (Zone* interactibles #f clue #f description))
 
 
 (define (current-zone)

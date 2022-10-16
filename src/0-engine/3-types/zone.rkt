@@ -15,6 +15,7 @@
    [found? : Boolean]
    [clue? : (Maybe Clue)]
    [pc-here? : Boolean]
+   [description : String]
    )
   #:prefab
   #:mutable
