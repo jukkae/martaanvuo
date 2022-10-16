@@ -6,6 +6,7 @@
   "location-ids.rkt"
   "actor.rkt"
   "item.rkt"
+  "zone.rkt"
 
   "../2-core/maybe.rkt"
   "../3-types/choice.rkt"
@@ -16,17 +17,6 @@
 
 (define-type LocationType (U 'int 'ext))
 (define-type LocationSize (U 'container 'small 'large))
-
-(struct Zone
-  ([interactibles : (Listof (U Symbol item))]
-   [found? : Boolean]
-   [clue? : (Maybe Clue)]
-   [pc-here? : Boolean]
-   )
-  #:prefab
-  #:mutable
-  #:constructor-name Zone*
-  )
 
 (struct
   location

@@ -15,6 +15,7 @@
   "../../3-types/clue.rkt"
   "../../3-types/sense-organ.rkt"
   "../../3-types/item.rkt"
+  "../../3-types/zone.rkt"
   )
 
 (lazy-require ["../world/world.rkt"
