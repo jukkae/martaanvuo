@@ -96,13 +96,13 @@
   (when (symbol? endpoint)
     (set! endpoint (get-location-by-id endpoint)))
 
-  (format "~a [~a]"
+  (format "~a~a"
           (cond ((route-fully-known? route)
-                 (format "~a – ~a"
+                 (format "~a – ~a – "
                  (Place-shortname startpoint)
                  (Place-shortname endpoint)))
                 (else
-                 (format "~a – ???" (Place-shortname startpoint))))
+                 ""))
           (cond ((equal? direction 'a-to-b)
                  (if (not (null? (route-descr-from-a route)))
                      (route-descr-from-a route)

@@ -47,7 +47,7 @@
         #:requires (SenseOrgan 'ears 1 "")
         #:description "sound of running water"
         )
-       #:interactibles (list 'baz)
+       #:interactibles '()
        #:description "at a brook"
        #:name "The brook"
        )
