@@ -29,6 +29,7 @@
         )
         )
        #:interactibles (list (make-item 'knife) (make-item 'lighter))
+       #:name "The body of a dead adventurer"
        #:description "at the body of a dead adventurer"
        )
       (zone
@@ -47,11 +48,9 @@
         #:description "sound of running water"
         )
        #:interactibles (list 'baz)
-       #:description "at a river"
+       #:description "at a brook"
+       #:name "The brook"
        )
-      (zone
-       #:interactibles (list 'fnord)
-       #:description "")
       )
     #:clues
     '()

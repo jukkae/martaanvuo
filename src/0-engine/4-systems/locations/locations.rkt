@@ -236,9 +236,10 @@
 (define (zone
          #:interactibles interactibles
          #:description description
+         #:name [name ""]
          #:clue [clue '()]
          )
-  (Zone* interactibles #f clue #f description))
+  (Zone* interactibles #f clue #f description name))
 
 
 (define (current-zone)
@@ -314,7 +315,7 @@
         (append-element! zone-choices
                 (make-choice
                  'resolve-zone
-                 (format "Resolve clue: ~a" "empty clue")
+                 (format "Go to: ~a" (Zone-name z))
                  (λ ()
                    (define iotas 5)
                    (define encounters? #f)
