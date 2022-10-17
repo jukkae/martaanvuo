@@ -25,7 +25,7 @@
         #:on-resolve-rules
         `(
           (notice "Source of the smell: remains of an adventurer.")
-          (notice "Otava rummages through their gear.")
+          (notice "They've still got some gear on them.")
         )
         )
        #:interactibles (list (make-item 'knife) (make-item 'lighter))
@@ -35,11 +35,26 @@
       (zone
        #:clue
        (clue
+        #:requires (SenseOrgan 'eyes 1 "")
+        #:description "old vehicle tracks"
+        #:on-resolve-rules
+        `(
+          (notice "The tracks lead to an abandoned car, a rigged SUV made from leftover parts.")
+        )
+        )
+       #:interactibles (list (make-item 'can-of-gas))
+       #:name "Abandoned car"
+       #:description "at the abandoned car"
+       )
+      (zone
+       #:clue
+       (clue
         #:requires (SenseOrgan 'nose 2 "")
         #:description "faint smell of buried coins"
         )
        #:interactibles (list 'baz 'xyzzy)
-       #:description "at an underground cache"
+       #:name "Buried loot"
+       #:description "at a buried loot site"
        )
       (zone
        #:clue
