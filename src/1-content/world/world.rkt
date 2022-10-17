@@ -44,7 +44,7 @@
        #:clue
        (clue
         #:requires (SenseOrgan 'ears 1 "")
-        #:description "running water"
+        #:description "sound of running water"
         )
        #:interactibles (list 'baz)
        #:description "at a river"

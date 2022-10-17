@@ -281,38 +281,53 @@
 (define (get-zone-choices location)
  (define zone-choices '())
 (for ([z (location-zones location)])
-;  (displayln z)
-  (define choice-title
-    (cond
-        [(Clue? (Zone-clue? z))
-         (cond [(pc-has-sense-organ?
-                  (SenseOrgan-id (Clue-requires (Zone-clue? z)))
-                  (SenseOrgan-level (Clue-requires (Zone-clue? z))))
-                (format "Resolve clue: ~a" (Clue-description (Zone-clue? z))
-                )
-               ]
-               [else (format "N/A [requires: ~a lv ~a]"
-                      (SenseOrgan-id (Clue-requires (Zone-clue? z)))
-                      (SenseOrgan-level (Clue-requires (Zone-clue? z))))])]
-        [else
-          (format "~a" "[empty clue]")
-        ]
-        ))
   (when (not (Zone-pc-here? z))
-    (append-element! zone-choices (make-choice
-      'resolve-zone
-      choice-title
-      (λ ()
-        (define iotas 5)
-        (define encounters? #f)
-        (advance-time-until-next-interesting-event! iotas encounters?)
-        (dev-note "TODO: clean up!")
-        (for ([z_ (location-zones (current-location))])
-          (set-Zone-pc-here?! z_ #f))
-        (set-Zone-found?! z #t)
-        (set-Zone-clue?! z '())
-        (set-Zone-pc-here?! z #t)
-        '()))))
+    (cond
+      [(Clue? (Zone-clue? z))
+       (cond [(pc-has-sense-organ?
+                (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+              (append-element! zone-choices
+                (make-choice
+                 'resolve-zone
+                 (format "Resolve clue: ~a" (Clue-description (Zone-clue? z)))
+                 (λ ()
+                   (define iotas 5)
+                   (define encounters? #f)
+                   (advance-time-until-next-interesting-event! iotas encounters?)
+                   (for ([z_ (location-zones (current-location))])
+                    (set-Zone-pc-here?! z_ #f))
+                   (set-Zone-found?! z #t)
+                   (set-Zone-clue?! z '())
+                   (set-Zone-pc-here?! z #t)
+                   '())))
+           ]
+          [else
+            (append-element! zone-choices (make-unavailable-choice
+              "Unknown clue"
+              (format "requires: ~a lv ~a"
+                      (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                      (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+              ))])
+        ]
+      [else ; empty clue
+        (append-element! zone-choices
+                (make-choice
+                 'resolve-zone
+                 (format "Resolve clue: ~a" "empty clue")
+                 (λ ()
+                   (define iotas 5)
+                   (define encounters? #f)
+                   (advance-time-until-next-interesting-event! iotas encounters?)
+                   (for ([z_ (location-zones (current-location))])
+                    (set-Zone-pc-here?! z_ #f))
+                   (set-Zone-found?! z #t)
+                   (set-Zone-clue?! z '())
+                   (set-Zone-pc-here?! z #t)
+                   '())))
+        ]
+      )
+    )
   )
- zone-choices
- )
+  zone-choices
+  )
