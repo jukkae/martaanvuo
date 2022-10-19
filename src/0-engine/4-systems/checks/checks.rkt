@@ -154,7 +154,8 @@
 
          (define total-printed 0)
 
-         (define base-sleep-time 0.05)
+         ; (define base-sleep-time 0.05)
+         (define base-sleep-time 0)
          (display (format "~a ~a " title formula))
          (sleep (* 2 base-sleep-time))
          (for ([dice results])
@@ -224,7 +225,8 @@
 
          (define total-printed 0)
 
-         (define base-sleep-time 0.01)
+         ;(define base-sleep-time 0.01)
+         (define base-sleep-time 0)
          (display (format "~a ~a " title formula))
          (sleep (* 2 base-sleep-time))
          (for ([dice results])
@@ -291,7 +293,8 @@
                           (format "- ~a" (abs bonus))
                           (format "+ ~a" bonus)))])
 
-         (define base-sleep-time 0.05)
+         ; (define base-sleep-time 0.05)
+         (define base-sleep-time 0)
          (display (format "~a ~a " title formula))
          (newline)
          (sleep (* 2 base-sleep-time))
@@ -391,7 +394,8 @@
 
          (define total-printed 0)
 
-         (define base-sleep-time 0.05)
+         ; (define base-sleep-time 0.05)
+         (define base-sleep-time 0)
          (display (format "~a ~a " title formula))
          (sleep (* 2 base-sleep-time))
          (for ([dice results])
@@ -491,7 +495,8 @@
 
          (define total-printed 0)
 
-         (define base-sleep-time 0.05)
+         ; (define base-sleep-time 0.05)
+         (define base-sleep-time 0)
          (sleep (* 2 base-sleep-time))
          (for ([dice results])
            (for ([i dice])

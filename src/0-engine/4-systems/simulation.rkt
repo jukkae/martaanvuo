@@ -73,15 +73,16 @@
 
   (set! events (append events (get-daily-events-for-time new-world-elapsed-time)))
 
-  (define encounter-roll (d 1 300))
-  (cond
-    [(<= encounter-roll 1)
-     (notice (format "~a [~a] Random encounter!" (timestamp) "1d300 = 1"))
-     (append-element! events
-      (make-event 'spawn-encounter
-                  '()
-                  #:interrupting? #t))
-     ])
+  (when allow-interrupting-events?
+    (define encounter-roll (d 1 300))
+    (cond
+      [(<= encounter-roll 1)
+       (notice (format "~a [~a] Random encounter!" (timestamp) "1d300 = 1"))
+       (append-element! events
+         (make-event 'spawn-encounter
+                     '()
+                     #:interrupting? #t))
+      ]))
 
   events)
 
