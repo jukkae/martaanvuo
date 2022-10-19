@@ -3,6 +3,8 @@
 (provide (all-defined-out))
 
 (require
+  racket/lazy-require
+
   "../actors/actor.rkt"
 
   "../../1-index/state.rkt"
@@ -13,6 +15,10 @@
 
   "../../3-types/actor.rkt"
   )
+
+(lazy-require ["../world/time.rkt"
+  (timestamp
+   )])
 
 (define (luck-check [target-number 7] [bonus 0])
   (define d1 (d 1 6))
@@ -447,7 +453,7 @@
 ; TODO: elevate this to an actual type / enum
 ; returns (U 'critical-success 'success 'narrow-success 'failure 'serious-failure 'critical-failure)
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
-  (notice (format "~a [~a >= ~a]" title formula tn))
+  (notice (format "~a ~a [~a >= ~a]" (timestamp) title formula tn))
   (cond [(string=? formula "2d6")
          (define n 2)
          (define sides 6)

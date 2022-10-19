@@ -57,17 +57,16 @@
         (set! result resolution-result)))
 
 
+    ; interrupted in on-before-rules
     (when (timeline? result)
       (handle-pc-action-interrupted! result)
 
       (when (not (equal? (action-symbol action) 'rest))
         (set-pending-action! action (- (action-duration action)
                                        (timeline-duration result))))
-
       (set! result 'interrupted))
 
     (when (not (equal? result 'interrupted))
-
       ; ACTION-RESOLUTION-RULES
       (define rules (action-resolution-rules action))
 

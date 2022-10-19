@@ -79,25 +79,28 @@
               (notice "Contested movement roll")
               (define results '())
               (for ([a all-mvmt-actions])
-                (append-element! results
-                                 (cons a
-                                       (just-roll "2d6"
-                                                  #:title
-                                                  (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
-                                                      #:min-width max-name-width
-                                                      )
-                                                  #:on-critical-success
-                                                  (λ ()
-                                                    (notice "Critical success, gain fast!")
-                                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fast 1)))
-                                                  #:on-critical-failure
-                                                  (λ ()
-                                                    (notice "Critical failure, lose fast and gain fallen!")
-                                                    (actor-remove-status-of-type! (get-actor (action-actor-id a)) 'fast)
-                                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fallen 1))
-                                                    )
-                                                  )
-                                       )))
+                (define bonus (if (pc-action? a) 2 '()))
+                (append-element!
+                  results
+                  (cons a
+                        (just-roll "2d6"
+                                  #:bonus bonus
+                                  #:title
+                                  (~a (format "[~a]" (get-combatant-name (get-actor (action-actor-id a))))
+                                      #:min-width max-name-width
+                                      )
+                                  #:on-critical-success
+                                  (λ ()
+                                    (notice "Critical success, gain fast!")
+                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fast 1)))
+                                  #:on-critical-failure
+                                  (λ ()
+                                    (notice "Critical failure, lose fast and gain fallen!")
+                                    (actor-remove-status-of-type! (get-actor (action-actor-id a)) 'fast)
+                                    (actor-add-status! (get-actor (action-actor-id a)) (status 'fallen 1))
+                                    )
+                                  )
+                        )))
 
               (define sorted
                 (sort results
