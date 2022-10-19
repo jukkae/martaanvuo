@@ -63,7 +63,9 @@
                               ['a-to-b (route-b target)]
                               ['b-to-a (route-a target)])))
 
-      (format "[continue] Continue towards ~a." (Place-shortname endpoint))
+      (define known? (route-fully-known? (current-location)))
+
+      (format "[continue] Continue towards ~a." (if known? (Place-shortname endpoint) "???"))
       ]
     ['explore "[continue] explore"]
     [else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action))])
