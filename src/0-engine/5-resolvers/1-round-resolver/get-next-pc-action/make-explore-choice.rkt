@@ -47,27 +47,26 @@
        [(,'critical-failure)
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
         (inflict-condition!
-          target
+          (pc)
           (current-elapsed-time)
           (FreshInjury 'ankle-broken ""
             (current-elapsed-time)
             ))]
        [(,'serious-failure)
         (p "Instead of finding anything, Otava gets lost. Finding her way back takes longer than expected.")
+        (notice (format "Action duration: ~a" ,duration))
         ]
        [(,'failure)
         (p "Otava finds nothing of interest.")]
        [(,'success)
-        (p "Otava finds something.")]
-       )
-      (define discoverables
+        (p "Otava finds something.")
+
+        (define discoverables
         (append (location-hidden-features (current-location))
                 (Place-hidden-routes (current-location))))
-      (cond [(not (empty? discoverables))
+        (cond [(not (empty? discoverables))
               (define discovery (take-random discoverables))
               (cond
-                [(equal? discovery 'nothing)
-                (notice "Otava finds nothing interesting. Maybe she should explore more.")]
                 [(not (null? (get-route-by-id discovery)))
                 (define discovered-route (get-route-by-id discovery))
                 (set-route-hidden?! (get-route-by-id discovery) #f)
@@ -86,11 +85,13 @@
                     [else
                     (set-Place-explored! (current-location) 'partially-explored)])]
             [else
-              (notice "Otava can't find anything. She thinks there's nothing to be found anymore.")
+              (notice "Otava can't find anything, and she's looked *everywhere*.")
               (set-Place-explored! (current-location) 'exhaustively-explored)
               ]
             )
-      (wait-for-confirm)
+          (wait-for-confirm)
+        ]
+       )
       )
     )
   )

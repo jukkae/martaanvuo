@@ -14,7 +14,7 @@
     #:size 'large
     #:type 'ext
     #:encounter-types '(voidfloater)
-    #:hidden-features (list 'nothing)
+    #:hidden-features (list 'cocoon-effigy)
     #:zones
     (list
       (zone ; remains of an adventurer
@@ -74,8 +74,6 @@
    (place
     #:id 'magpie-hill
     #:size 'large
-    #:features '()
-    #:hidden-features (list 'cocoon-effigy 'nothing)
     #:type 'ext
     #:shortname "Magpie hill")
 
@@ -92,7 +90,7 @@
 
    (place
     #:id 'pond-of-drowning
-    #:features '()
+    #:features (list 'caterpillar-effigy)
     #:items (list (make-item 'gold #:amount 7) (make-item 'human-remains))
     #:type 'ext
     #:shortname "pond")

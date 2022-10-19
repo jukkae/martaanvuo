@@ -69,6 +69,9 @@
        (br)
        (prln "Progress loaded."))])
 
+  (br)
+  (prln (format "Seed: ~a" (current-rng-seed)))
+
   (title)
 
   (case game-mode
