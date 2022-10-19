@@ -21,7 +21,7 @@
      (set! traverse-duration (* 3 traverse-duration)))
   (make-choice
    'traverse
-   (get-traverse-text route (current-location))
+   (format "~a [~a ι]" (get-traverse-text route (current-location)) traverse-duration)
    (λ () (make-action
           #:symbol 'traverse
           #:actor (pc)

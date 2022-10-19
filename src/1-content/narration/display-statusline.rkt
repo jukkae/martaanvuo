@@ -10,7 +10,8 @@
   (define current-day (add1 (exact-floor (/ (world-elapsed-time (current-world)) day-length))))
   (if (not (equal? (location-id (current-location)) 'waiting-room))
       (notice (format
-           "~a~a, day ~a, ~a [~a ι].~a"
+           "~a ~a~a, day ~a, ~a [~a ι].~a"
+           (timestamp)
            (if (current-in-combat?)
                "[In combat] "
                "")

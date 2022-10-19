@@ -29,11 +29,11 @@
     #:tags '(downtime)
     #:on-before-rules
     `(
-      (advance-time-until-next-interesting-event! ,duration #t)
+      (advance-time-until-next-interesting-event! (/ ,duration 2) #t)
     )
     #:on-after-rules
     `(
-      (notice (format "~a" (timestamp)))
+      (advance-time-until-next-interesting-event! (/ ,duration 2) #t)
     )
     #:resolution-rules
     `(

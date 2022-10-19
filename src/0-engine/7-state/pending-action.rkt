@@ -64,6 +64,7 @@
 
       (format "[continue] Continue towards ~a." (Place-shortname endpoint))
       ]
+    ['explore "[continue] explore"]
     [else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action))])
   )
 
