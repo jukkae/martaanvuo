@@ -202,6 +202,8 @@
                   (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (choice-factory 'eat))
    (choice-factory 'rest)
+   (when (route? (current-location))
+         (make-cancel-traverse-choice))
    (when (not (null? (current-pending-action)))
          (make-choice
           (action-symbol (current-pending-action))

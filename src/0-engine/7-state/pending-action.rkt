@@ -20,7 +20,10 @@
 (define (get-pending-traverse-direction)
   (define pending-action (current-pending-action))
   (cond
-    ((equal? (action-symbol pending-action) 'traverse)
+    ((or
+       (equal? (action-symbol pending-action) 'traverse)
+       (equal? (action-symbol pending-action) 'cancel-traverse)
+       )
      (define target (action-target pending-action))
 
      (define details (action-details pending-action))
@@ -68,6 +71,9 @@
       (format "[continue] Continue towards ~a." (if known? (Place-shortname endpoint) "???"))
       ]
     ['explore "[continue] explore"]
+    ['cancel-traverse
+     (define target (action-target pending-action))
+     (format "[continue] back to ~a" target)]
     [else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action))])
     (action-duration pending-action)
     )

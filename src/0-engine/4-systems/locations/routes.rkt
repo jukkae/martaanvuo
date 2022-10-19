@@ -146,7 +146,8 @@
   (define route
     (cond [(route? route-or-id)
            route-or-id]
-          [else (get-location-by-id route-or-id)]))
+          [else (get-location-by-id route-or-id)]
+          ))
   (define direction (get-pending-traverse-direction))
 
   (define startpoint
@@ -168,4 +169,14 @@
                  (Place-shortname startpoint)
                  (Place-shortname endpoint)))
         (else
-         (format "En route: ~a – ???" (Place-shortname startpoint)))))
+         (cond
+          [(not (Place-visited? startpoint))
+           (format "En route: ??? – ~a" (Place-shortname endpoint))
+           ]
+          [(not (Place-visited? endpoint))
+           (format "En route: ~a – ???" (Place-shortname startpoint))
+           ]
+          [else "????"]
+          ))
+         )
+  )
