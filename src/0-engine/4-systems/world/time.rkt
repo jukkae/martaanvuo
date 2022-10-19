@@ -26,4 +26,10 @@
   (format "Day ~a, ~a ι" (add1 (quotient timestamp day-length)) (remainder timestamp day-length)))
 
 (define (timestamp)
-  (format "~a ι:" (current-elapsed-time)))
+  (define current-day (add1 (quotient (current-elapsed-time) day-length)))
+  (cond
+    [(= 1 current-day)
+     (format "~a ι:" (current-elapsed-time))]
+    [else
+     (format "~a/~a ι:" current-day (remainder (current-elapsed-time) day-length))])
+  )
