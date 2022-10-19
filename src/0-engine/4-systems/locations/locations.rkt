@@ -224,12 +224,10 @@
 (define (clue
  #:requires requires
  #:description description
- #:on-resolve-rules [on-resolve-rules '()]
  )
  (Clue*
   requires
   description
-  on-resolve-rules
   #f
   ))
 

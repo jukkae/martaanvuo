@@ -33,8 +33,9 @@
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
         (inflict-condition!
           (pc)
-          (current-elapsed-time)
-          (FreshInjury 'ankle-broken ""
+          (FreshInjury 'ankle-broken
+            (current-elapsed-time)
+            ""
             (current-elapsed-time)
             ))
         (award-xp! 1)]
@@ -72,7 +73,6 @@
          (wait-for-confirm)
         ]
         [(,'critical-success)
-         (p "A lucky strike! Otava chances upon something she wouldn't have!")
          (define crit-features '())
          (for ([z (location-zones (current-location))])
            (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires (Zone-clue? z)))
@@ -87,8 +87,10 @@
          (cond [(empty? crit-features)]
           (displayln "TODO: add more features"))
          (define f (take-random crit-features))
+
          (cond
           [(Zone? f)
+            (p (format "A lucky strike! Otava chances upon something she wouldn't have: ~a" (Zone-name f)))
             ; TODO: "move-pc-to-zone"
             (for ([z_ (location-zones (current-location))])
               (set-Zone-pc-here?! z_ #f))

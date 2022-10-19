@@ -13,7 +13,6 @@
   (
    [requires : (Maybe SenseOrgan)]
    [description : String]
-   [resolution-rules : (Maybe Sexp)]
    [resolved : Boolean]
    )
    #:constructor-name Clue*

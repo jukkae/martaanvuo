@@ -21,12 +21,7 @@
        #:clue
        (clue
         #:requires (SenseOrgan 'nose 2 "")
-        #:description "smell of rotting flesh"
-        #:on-resolve-rules
-        `(
-          (notice "Source of the smell: remains of an adventurer.")
-          (notice "They've still got some gear on them.")
-        )
+        #:description "smell of decaying flesh"
         )
        #:interactibles (list (make-item 'knife) (make-item 'lighter))
        #:name "The body of a dead adventurer"
@@ -37,10 +32,6 @@
        (clue
         #:requires (SenseOrgan 'eyes 1 "")
         #:description "old vehicle tracks"
-        #:on-resolve-rules
-        `(
-          (notice "The tracks lead to an abandoned car, a rigged SUV made from leftover parts.")
-        )
         )
        #:interactibles (list (make-item 'can-of-gas))
        #:name "Abandoned car"
@@ -61,13 +52,9 @@
        (clue
         #:requires (SenseOrgan 'ears 1 "")
         #:description "sound of running water"
-        #:on-resolve-rules
-        `(
-          (notice "Otava comes to a brook. Very nice.")
-        )
         )
        #:interactibles '(brook)
-       #:name "The brook"
+       #:name "a brook"
        #:description "at a brook"
        )
       )
