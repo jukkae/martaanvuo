@@ -56,9 +56,9 @@
         (define resolution-result ((eval on-before-rules ns)))
         (set! result resolution-result)))
 
-
     ; interrupted in on-before-rules
-    (when (timeline? result)
+    (when (and (timeline? result)
+               (timeline-interrupted? result))
       (handle-pc-action-interrupted! result)
 
       (when (not (equal? (action-symbol action) 'rest))

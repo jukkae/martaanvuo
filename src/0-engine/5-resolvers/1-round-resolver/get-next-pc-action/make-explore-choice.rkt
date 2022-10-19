@@ -19,7 +19,7 @@
 
 (provide make-explore-choice)
 
-(define (explore-action base-duration roll-result
+(define (explore-action base-duration
          )
   (define duration base-duration)
   (make-action
@@ -27,9 +27,19 @@
     #:actor (pc)
     #:duration duration
     #:tags '(downtime)
+    #:on-before-rules
+    `(
+      (advance-time-until-next-interesting-event! ,duration #t)
+    )
+    #:on-after-rules
+    `(
+      (notice (format "~a" (timestamp)))
+    )
     #:resolution-rules
     `(
-      (case ',roll-result
+      (define roll-result
+      (check "2d6" #:title "exploration roll" #:target-number 6 #:bonus '()))
+      (case roll-result
        [(,'critical-failure)
         (award-xp! 1)
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
@@ -92,7 +102,7 @@
 
          (cond
           [(Zone? f)
-            (p (format "A lucky strike! Otava chances upon something she wouldn't have: ~a" (Zone-name f)))
+            (notice (format "~a A lucky strike! Otava chances upon something she wouldn't have: ~a" (timestamp) (Zone-name f)))
             ; TODO: "move-pc-to-zone"
             (for ([z_ (location-zones (current-location))])
               (set-Zone-pc-here?! z_ #f))
@@ -102,6 +112,7 @@
             ])
          ]
        )
+      'time-passing-handled
       )
     )
   )
@@ -122,7 +133,5 @@
    'explore
    (format "Explore. [~a ι]" explore-cost)
    (λ ()
-    (define roll-result
-      (check "2d6" #:title "exploration roll" #:target-number 6 #:bonus '()))
-    (explore-action explore-cost roll-result)
+    (explore-action explore-cost)
     )))

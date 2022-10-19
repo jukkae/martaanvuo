@@ -70,7 +70,7 @@
        (prln "Progress loaded."))])
 
   (br)
-  (prln (format "Seed: ~a" (current-rng-seed)))
+  (prln (format "--seed ~a" (current-rng-seed)))
 
   (title)
 
