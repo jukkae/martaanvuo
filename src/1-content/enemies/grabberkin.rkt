@@ -114,7 +114,7 @@
                   (inflict-condition!
                    target
                    (current-elapsed-time)
-                   (FreshInjury 'ankle-broken "Can't walk, too painful."
+                   (FreshInjury 'ankle-broken "movement 3x slower"
                      (current-elapsed-time)
                      ))
                   (when critical?

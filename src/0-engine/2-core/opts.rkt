@@ -1,8 +1,8 @@
 #lang at-exp racket
 
 (require
-  "../2-core/list-utils.rkt"
-  "../2-core/io.rkt"
+  "io.rkt"
+  "list-utils.rkt"
   )
 
 ; shit implementation

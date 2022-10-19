@@ -11,6 +11,7 @@
   "../../../3-types/place.rkt"
   "../../../3-types/route.rkt"
 
+  "../../../4-systems/actors/conditions.rkt"
   "../../../4-systems/checks/checks.rkt"
 
   "../../../7-state/state.rkt"
@@ -30,15 +31,16 @@
     `(
       (case ',roll-result
        [(,'critical-failure)
+        (award-xp! 1)
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
         (inflict-condition!
           (pc)
           (FreshInjury 'ankle-broken
             (current-elapsed-time)
-            ""
+            "movement 3x slower"
             (current-elapsed-time)
             ))
-        (award-xp! 1)]
+        ]
        [(,'serious-failure)
         (p "Instead of finding anything, Otava gets lost. Finding her way back takes longer than expected.")
         (notice (format "Action duration: ~a" ,duration))
@@ -110,6 +112,12 @@
            30]
           [else
            10]))
+  (cond
+    [; (pc-has-condition? 'ankle-broken) ; TODO: more ergonomic
+     (actor-has-condition-of-type? (pc) 'ankle-broken)
+     (set! explore-cost (* 3 explore-cost))
+     ]
+    )
   (make-choice
    'explore
    (format "Explore. [~a ι]" explore-cost)

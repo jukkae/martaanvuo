@@ -286,14 +286,16 @@
        (cond [(pc-has-sense-organ?
                 (SenseOrgan-id (Clue-requires (Zone-clue? z)))
                 (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+              (define duration 10)
+              (when (actor-has-condition-of-type? (pc) 'ankle-broken)
+                (set! duration (* 3 duration)))
               (append-element! zone-choices
                 (make-choice
                  'resolve-clue
-                 (format "Pursue: ~a [10 ι]" (Clue-description (Zone-clue? z)))
+                 (format "pursue: ~a [~a ι]" (Clue-description (Zone-clue? z)) duration)
                  (λ ()
-                   (define iotas 10)
                    (define encounters? #f)
-                   (advance-time-until-next-interesting-event! iotas encounters?)
+                   (advance-time-until-next-interesting-event! duration encounters?)
                    (for ([z_ (location-zones (current-location))])
                     (set-Zone-pc-here?! z_ #f))
                    (set-Zone-found?! z #t)
