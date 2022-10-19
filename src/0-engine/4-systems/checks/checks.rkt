@@ -448,7 +448,6 @@
 ; returns (U 'critical-success 'success 'narrow-success 'failure 'serious-failure 'critical-failure)
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
   (notice (format "~a [~a >= ~a]" title formula tn))
-  (wait-for-confirm)
   (cond [(string=? formula "2d6")
          (define n 2)
          (define sides 6)

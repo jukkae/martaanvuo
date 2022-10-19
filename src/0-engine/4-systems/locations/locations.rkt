@@ -290,7 +290,7 @@
                 (SenseOrgan-level (Clue-requires (Zone-clue? z))))
               (append-element! zone-choices
                 (make-choice
-                 'resolve-zone
+                 'resolve-clue
                  (format "Pursue: ~a [10 ι]" (Clue-description (Zone-clue? z)))
                  (λ ()
                    (define iotas 10)

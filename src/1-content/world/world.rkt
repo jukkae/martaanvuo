@@ -20,7 +20,7 @@
       (zone ; remains of an adventurer
        #:clue
        (clue
-        #:requires (SenseOrgan 'nose 1 "")
+        #:requires (SenseOrgan 'nose 2 "")
         #:description "smell of rotting flesh"
         #:on-resolve-rules
         `(
@@ -50,17 +50,21 @@
        #:clue
        (clue
         #:requires (SenseOrgan 'nose 2 "")
-        #:description "faint noxious smell of a Stealerbird nest"
+        #:description "faint noxious smell of a thiefbird nest"
         )
        #:interactibles (list (make-item 'revolver) (make-item 'gold #:amount 3))
-       #:name "Stealerbird nest"
-       #:description "at a Stealerbird nest"
+       #:name "thiefbird nest"
+       #:description "at a thiefbird nest"
        )
       (zone
        #:clue
        (clue
         #:requires (SenseOrgan 'ears 1 "")
         #:description "sound of running water"
+        #:on-resolve-rules
+        `(
+          (notice "Otava comes to a brook. Very nice.")
+        )
         )
        #:interactibles '(brook)
        #:name "The brook"

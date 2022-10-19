@@ -73,7 +73,7 @@
          (wait-for-confirm)
         ]
         [(,'critical-success)
-         (displayln "TODO: if clues exist, resolve")
+         (p "A lucky strike! Otava chances upon something she wouldn't have!")
          (define crit-features '())
          (for ([z (location-zones (current-location))])
            (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires (Zone-clue? z)))

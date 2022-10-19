@@ -144,7 +144,7 @@
   (define current-choice (hash-ref choices-with-keys (string->number input) '()))
 
   (cond [(equal? 'resolve-clue (choice-id current-choice))
-        '()])
+         '()])
 
   (define action
     (cond ((procedure? resolution-effect)
