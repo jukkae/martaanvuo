@@ -206,7 +206,7 @@
 
 (define routes
   (list
-    (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #t #:descr-from-a "steep, rocky ascent" #:descr-from-b "steep, rocky descent")
+    (route-between 'perimeter 'magpie-hill 130 'ext #:hidden? #f #:descr-from-a "steep, rocky ascent" #:descr-from-b "steep, rocky descent")
     (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "path to the ledge" #:descr-from-b "path back to the plateau")
     (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t #:descr-from-a "rocky path" #:descr-from-b "rocky path")
     (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t #:descr-from-a "footsteps through trampled underbrush" #:descr-from-b "path through prickly underbrush")

@@ -280,6 +280,7 @@
 (define (get-zone-choices location)
  (define zone-choices '())
 (for ([z (location-zones location)])
+  (define encounters? #t)
   (when (not (Zone-pc-here? z))
     (cond
       [(Clue? (Zone-clue? z))
@@ -294,7 +295,6 @@
                  'resolve-clue
                  (format "pursue: ~a [~a ι]" (Clue-description (Zone-clue? z)) duration)
                  (λ ()
-                   (define encounters? #f)
                    (advance-time-until-next-interesting-event! duration encounters?)
                    (for ([z_ (location-zones (current-location))])
                     (set-Zone-pc-here?! z_ #f))
@@ -318,7 +318,6 @@
                  (format "Go to: ~a" (Zone-name z))
                  (λ ()
                    (define iotas 5)
-                   (define encounters? #f)
                    (advance-time-until-next-interesting-event! iotas encounters?)
                    (for ([z_ (location-zones (current-location))])
                     (set-Zone-pc-here?! z_ #f))

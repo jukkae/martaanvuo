@@ -14,11 +14,14 @@
   "../../1-content/narration/narrate-timeline.rkt"
   )
 
+(define (timeline-interrupted? tl)
+  (findf (λ (event) (event-interrupting? event)) (timeline-events tl)))
+
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
       ['new-time-of-day
-       '()]
+       (notice (format "It is now ~a." (event-details event)))]
       ['not-hungry '()]
       ['hungry '()]
       ['very-hungry '()]

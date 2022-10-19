@@ -10,12 +10,7 @@
 
 (define (narrate-event event)
   (case (event-type event)
-    ['new-time-of-day
-     (define event-text
-       (format "It is now ~a." (event-details event))
-     )
-     (format "~a ι: ~a" (event-at event) event-text)
-     ]
+    ['new-time-of-day '()]
 
     ; spawn-ecounter is complicated to narrate outside of the event itself, so this is faster
     ['spawn-encounter '()]

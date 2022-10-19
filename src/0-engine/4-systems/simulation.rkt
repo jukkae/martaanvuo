@@ -120,7 +120,14 @@
   (define time-today (remainder time day-length))
 
   (when (= (modulo time-today 100) 0)
-    (define ev (make-event 'new-time-of-day (time-of-day-from-iotas (world-elapsed-time (current-world))) #:interrupting? #f))
+    (define new-time-of-day (time-of-day-from-iotas (world-elapsed-time (current-world))))
+    (define interrupting?
+      (cond
+        [(equal? new-time-of-day 'night) #t]
+        [(equal? new-time-of-day 'evening) #t]
+        [else #f]
+        ))
+    (define ev (make-event 'new-time-of-day new-time-of-day #:interrupting? interrupting?))
     (set! events (append-element events ev)))
 
   (when (= time-today 0)
@@ -159,7 +166,7 @@
 
       ; early-exit
       (when contains-action-suspending-event?
-        (set! metadata 'interrupted)
+        (append-element! metadata 'interrupted)
         (break))))
 
   (timeline metadata events counter))

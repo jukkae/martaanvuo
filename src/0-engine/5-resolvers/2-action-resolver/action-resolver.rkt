@@ -48,6 +48,7 @@
                (not (pending? action)))
 
 
+      ; ON-BEFORE-RULES
       (define on-before-rules (action-on-before-rules action))
       (when (not (empty? on-before-rules))
         (when (not (procedure? on-before-rules))
@@ -67,6 +68,7 @@
 
     (when (not (equal? result 'interrupted))
 
+      ; ACTION-RESOLUTION-RULES
       (define rules (action-resolution-rules action))
 
       (cond
@@ -74,7 +76,6 @@
          (when (not (procedure? rules))
            (set! rules (rules-to-lambda rules)))
          (define resolution-result ((eval rules ns)))
-
          (when (not (or (void? resolution-result) (empty? resolution-result)))
            (set! result resolution-result))]
         #; [else ; TODO:
@@ -92,6 +93,7 @@
     (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (equal? result 'interrupted)))
 
+      ; ON-AFTER-RULES
       (define on-after-rules (action-on-after-rules action))
       (when (not (empty? on-after-rules))
         (when (not (procedure? on-after-rules))

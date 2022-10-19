@@ -50,13 +50,15 @@
     [else ""])))
 
   (cond [(and (Place? (current-location))
-              (not (null? (Place-explored (current-location)))))
+              )
          (define exploration-string
           (case (Place-explored (current-location))
             ['not-explored "not explored"]
+            ['() "not explored"]
             ['partially-explored "partially explored"]
             ['explored "explored"]
-            ['exhaustively-explored "exhaustively explored"]))
+            ['exhaustively-explored "exhaustively explored"]
+            [else (format "~a" (Place-explored (current-location)))]))
          (notice (format "The place is ~a." exploration-string))
          ])
 

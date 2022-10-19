@@ -194,6 +194,14 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))
      (move-pc-to-location! (get-place-by-id 'perimeter))
+    (dev-note "Out of a malicious god's spite, Otava breaks her ankle.")
+    (inflict-condition!
+      (pc)
+      (FreshInjury 'ankle-broken
+        (current-elapsed-time)
+        "movement 3x slower"
+        (current-elapsed-time)
+        ))
     ;  (notice "Some time passes.")
      #;(next-chapter!
        (string-append

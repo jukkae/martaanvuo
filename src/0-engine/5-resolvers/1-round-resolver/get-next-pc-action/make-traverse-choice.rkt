@@ -29,21 +29,6 @@
           #:target (location-id route)
           #:tags '(downtime)
           #:details (list direction)
-          #:resolution-rules
-          `(
-            (set-route-traversed! (get-route-by-id ',(location-id route)))
-
-            (define next-location-id
-              ',(if (equal? direction 'a-to-b)
-                    (route-b route)
-                    (route-a route)))
-            (define next-location (get-location-by-id next-location-id))
-            (define tl (advance-time-until-next-interesting-event! ,traverse-duration #f))
-            (process-timeline! tl)
-
-            (move-pc-to-location! next-location)
-            'time-passing-handled
-            )
           #:on-before-rules
           `(
             (let/ec return
@@ -94,6 +79,30 @@
 
               'before-action-ok
               ))
+          #:resolution-rules
+          `(
+            (set-route-traversed! (get-route-by-id ',(location-id route)))
+
+            (define next-location-id
+              ',(if (equal? direction 'a-to-b)
+                    (route-b route)
+                    (route-a route)))
+            (define next-location (get-location-by-id next-location-id))
+            (define tl (advance-time-until-next-interesting-event! ,traverse-duration #f))
+            (process-timeline! tl)
+
+            (cond
+              [(timeline-interrupted? tl)
+               (displayln "TIMELINE INTERRUPTED")
+               'time-passing-handled
+               ]
+              [else
+               (move-pc-to-location! next-location)
+               'time-passing-handled
+               ]
+              )
+
+            )
           #:on-after-rules
           `(
             (describe-finish-traverse-action (get-route-by-id ',(location-id route)) ',direction)
