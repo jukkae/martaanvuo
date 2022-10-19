@@ -26,15 +26,18 @@
     [(2)
      (set! success-level 'critical-failure)]
     [(3)
-    (set! duration (* 3 base-duration))
-    (set! success-level 'serious-failure) ; TODO: type?
-    ]
-    [(4 5 6)
-    (set! success-level 'failure)
-    ]
-    [(7 8 9 10 11 12)
-    (set! success-level 'success)
-    ]
+     (set! duration (* 3 base-duration))
+     (set! success-level 'serious-failure) ; TODO: type?
+     ]
+    [(4 5)
+     (set! success-level 'failure)
+     ]
+    [(6 7 8 9 10 11)
+     (set! success-level 'success)
+     ]
+    [(12)
+     (set! success-level 'critical-success)
+     ]
     )
   (make-action
     #:symbol 'explore
@@ -80,18 +83,44 @@
 
               (remove-hidden-feature-from-location! (current-location) discovery)
               (cond [(empty? (location-hidden-features (current-location)))
-                    (set-Place-explored! (current-location) 'explored)
+                    '()#;(set-Place-explored! (current-location) 'explored)
                     ]
                     [else
                     (set-Place-explored! (current-location) 'partially-explored)])]
-            [else
-              (notice "Otava can't find anything, and she's looked *everywhere*.")
-              (set-Place-explored! (current-location) 'exhaustively-explored)
-              ]
-            )
-          (wait-for-confirm)
+            [else (notice "Otava can't find anything.")])
+         (wait-for-confirm)
         ]
+        [(,'critical-success)
+         (displayln "TODO: if clues exist, resolve")
+         (define crit-features '())
+         (for ([z (location-zones (current-location))])
+           (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                                       (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+                  ; TODO: ie., "pc-fulfills-requirements"
+                  ]
+                 [
+                  (append-element! crit-features z)
+                  ]
+            )
+           )
+         (for ([f crit-features])
+          (displayln "CF:")
+          (displayln f))
+         (cond [(empty? crit-features)]
+          (displayln "TODO: add more features"))
+         (define f (take-random crit-features))
+         (cond
+          [(Zone? f)
+            ; TODO: "move-pc-to-zone"
+            (for ([z_ (location-zones (current-location))])
+              (set-Zone-pc-here?! z_ #f))
+            (set-Zone-found?! f #t)
+            (set-Zone-clue?! f '())
+            (set-Zone-pc-here?! f #t)
+            ])
+         ]
        )
+      (notice "Some time passes.")
       )
     )
   )
@@ -108,10 +137,7 @@
    (λ ()
     (define exploration-roll
       (just-roll "2d6"
-       #:title "exploration roll [2d6 >= 7] "
-       #:on-critical-failure
-       (λ () (displayln "crit failure!"))
-       #:on-critical-success (λ () (displayln "crit success!"))
+       #:title "exploration roll [2d6 >= 6] "
        ))
     (explore-action explore-cost exploration-roll)
     )))
