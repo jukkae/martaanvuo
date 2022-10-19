@@ -82,9 +82,21 @@
       )
 
       (when (not (equal? result 'time-passing-handled))
-        (define duration (action-duration action))
-        (define tl (advance-time-until-next-interesting-event! duration #f))
-        (process-timeline! tl))
+        (cond
+          [(and (timeline? result)
+                (timeline-interrupted? result))
+           (when (not (equal? (action-symbol action) 'rest))
+            (set-pending-action!
+              action
+              (- (action-duration action) (timeline-duration result))))
+           (set! result 'interrupted)]
+          [else
+           (define duration (action-duration action))
+           (define tl (advance-time-until-next-interesting-event! duration #f))
+           (process-timeline! tl)
+           ]
+          )
+        )
       )
 
 

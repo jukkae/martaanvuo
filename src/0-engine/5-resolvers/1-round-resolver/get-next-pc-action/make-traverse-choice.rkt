@@ -95,7 +95,7 @@
 
             (cond
               [(timeline-interrupted? tl)
-               (displayln "TIMELINE INTERRUPTED")
+               #;(notice (format "~a TIMELINE INTERRUPTED" (timestamp)))
                'time-passing-handled
                ]
               [else
@@ -103,7 +103,7 @@
                'time-passing-handled
                ]
               )
-
+            tl
             )
           #:on-after-rules
           `(

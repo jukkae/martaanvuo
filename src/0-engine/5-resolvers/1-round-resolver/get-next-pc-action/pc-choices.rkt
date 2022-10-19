@@ -202,6 +202,16 @@
                   (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (choice-factory 'eat))
    (choice-factory 'rest)
+   (when (not (null? (current-pending-action)))
+         (make-choice
+          (action-symbol (current-pending-action))
+          (get-continue-pending-action-name)
+
+          (λ ()
+            (begin0
+              (current-pending-action)
+              ; continue and reset
+              (reset-pending-action!)))))
    )))
 
 

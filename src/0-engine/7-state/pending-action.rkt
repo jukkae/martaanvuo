@@ -35,7 +35,8 @@
 
 (define (get-continue-pending-action-name)
   (define pending-action (current-pending-action))
-  (case (action-symbol pending-action)
+  (format "~a [~a ι]"
+   (case (action-symbol pending-action)
     ['go-to-location
       (define target (action-target pending-action))
       (when (symbol? target) (set! target (get-location-by-id target)))
@@ -66,6 +67,8 @@
       ]
     ['explore "[continue] explore"]
     [else (format "[continue] unknown action symbol: ~a" (action-symbol pending-action))])
+    (action-duration pending-action)
+    )
   )
 
 (define (get-cancel-pending-action-and-go-back-name
