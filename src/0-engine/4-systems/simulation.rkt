@@ -132,7 +132,8 @@
   (define day (add1 (quotient time day-length)))
   (define time-today (remainder time day-length))
 
-  (when (= (modulo time-today 100) 0)
+  (when (and (= (modulo time-today 100) 0)
+             (not (= 500 time-today)))
     (define new-time-of-day (time-of-day-from-iotas (world-elapsed-time (current-world))))
     (define interrupting?
       (cond
@@ -141,6 +142,7 @@
         [else #f]
         ))
     (notice (format "~a It is now ~a."(timestamp) new-time-of-day))
+
     (define ev (make-event 'new-time-of-day new-time-of-day #:interrupting? interrupting?))
     (set! events (append-element events ev)))
 

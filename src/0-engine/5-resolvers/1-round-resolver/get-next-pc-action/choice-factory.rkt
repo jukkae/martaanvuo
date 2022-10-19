@@ -40,7 +40,7 @@
     ['sleep
      (make-choice
       'sleep
-      "Sleep."
+      (format "Sleep. [until morning]" (time-until-next-morning))
       (λ () (make-action
              #:symbol 'sleep
              #:actor (pc)

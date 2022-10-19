@@ -43,6 +43,7 @@
 (define (resolve-action! action)
   (when (actor-alive? (get-actor (action-actor-id action)))
     (define result 'not-resolved)
+    (define resolution-started-at (current-elapsed-time))
 
     (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (pending? action)))
@@ -83,12 +84,15 @@
 
       (when (not (equal? result 'time-passing-handled))
         (cond
+          ; interrupted in action-rules
           [(and (timeline? result)
                 (timeline-interrupted? result))
            (when (not (equal? (action-symbol action) 'rest))
+            (define time-now (current-elapsed-time))
+            (define time-taken (- time-now resolution-started-at))
             (set-pending-action!
               action
-              (- (action-duration action) (timeline-duration result))))
+              (- (action-duration action) time-taken)))
            (set! result 'interrupted)]
           [else
            (define duration (action-duration action))

@@ -13,7 +13,7 @@
                   "Sleep."
                   (λ () (make-action #:symbol 'sleep
                                      #:actor 'pc
-                                     #:duration 100
+                                     #:duration 200
                                      #:target null
                                      #:tags '(wilderness downtime))))]
     ['craft
