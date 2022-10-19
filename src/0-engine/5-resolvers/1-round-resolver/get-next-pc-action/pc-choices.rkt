@@ -196,8 +196,7 @@
 (define (get-evening-choices world actor)
   #;(dev-note "get-evening-choices: not implemented yet")
   (prune (list
-  ;  (choice-factory 'tent)
-  ;  (choice-factory 'campfire)
+   (choice-factory 'camp)
    (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
                   (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (choice-factory 'eat))

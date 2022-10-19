@@ -38,25 +38,47 @@
 (define (choice-factory action-symbol)
   (case action-symbol
     ['sleep
-     (make-choice
-      'sleep
-      (format "Sleep. [until morning]")
-      (λ () (make-action
+     (cond
+      [(flag-set? 'camp-set-up)
+       (make-choice
+        'sleep
+        (format "Sleep. [until morning]")
+        (λ () (make-action
              #:symbol 'sleep
              #:actor (pc)
              #:duration (time-until-next-morning)
              )))]
-    #;['tent
+      [else
+       (make-choice
+        'sleep-rough
+        (format "Sleep rough. [until morning]")
+        (λ () (make-action
+             #:symbol 'sleep-rough
+             #:actor (pc)
+             #:duration (time-until-next-morning)
+             #:resolution-rules
+             `(
+               (define roll (d 1 4))
+               (notice (format "[1d4]: ~a" roll))
+               (cond ([= 1 roll]
+                (notice "Otava feels weak after sleeping rough.")
+                (pc-take-damage! (pc) 1 'sickness)))
+              'ok
+              )
+             )))
+       ])
+     ]
+    ['camp
      (make-choice
       'camp
-      "Set up a tent."
+      "set up camp"
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
-             #:duration 20
+             #:duration 40
              #:resolution-rules
              `(
-               (displayln "Camp action TODO")
+               (set-flag 'camp-set-up)
                'ok))))]
 
     #;['campfire

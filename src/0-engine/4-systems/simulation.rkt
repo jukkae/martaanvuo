@@ -87,6 +87,8 @@
   events)
 
 (define (at-morning!)
+  (when (flag-set? 'camp-set-up)
+    (remove-flag 'camp-set-up))
   (define events '())
 
   (when (not (null? (current-once-per-day-actions-done)))
