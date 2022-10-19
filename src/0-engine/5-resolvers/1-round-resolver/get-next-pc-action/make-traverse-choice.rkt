@@ -33,22 +33,20 @@
           `(
             (let/ec return
               (describe-begin-traverse-action (get-route-by-id ',(location-id route)) ',direction)
-              (define next-location (get-route-by-id ',(location-id route)))
-              (move-pc-to-location! next-location)
-
-              (define elapsed-time 0)
+              (define en-route-location (get-route-by-id ',(location-id route)))
+              (move-pc-to-location! en-route-location)
 
               (when (not (null? (location-encounter-types (current-location))))
-                (define duration
-                  (exact-floor (/
-                                ,traverse-duration
-                                3)))
+                (define duration (exact-floor (/ ,traverse-duration 2)))
 
-                (set! elapsed-time duration)
 
-                (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                (define world-events (timeline-events world-tl))
+                (define tl (advance-time-until-next-interesting-event! duration #f))
+                (define events (timeline-events tl))
 
+                (cond [(timeline-interrupted? tl)
+                  return tl])
+
+                ; now halfway through
                 (define bonus 0)
                 (define bonus-str "+0")
                 (define encounter-roll (+ (d 1 6) bonus))
@@ -62,6 +60,7 @@
                                     "fail"
                                     "success")))
 
+                ; fail encounter check
                 (when (< encounter-roll tn)
                   (define resolve-events
                     (list
@@ -70,13 +69,21 @@
                                  #:interrupting? #t)))
                   (define metadata '(interrupted))
 
-                  (define all-events (append world-events resolve-events))
-                  (define all-metadata (append (timeline-metadata world-tl) metadata))
-
-                  (define tl (timeline all-metadata all-events duration))
+                  (set-timeline-events! tl (append (timeline-events tl) resolve-events))
+                  (set-timeline-metadata! tl (append (timeline-emetadata tl) metadata))
 
                   (process-timeline! tl)
                   (return tl))
+
+                ; encounter check successful
+
+                (define second-world-tl (advance-time-until-next-interesting-event! duration #f))
+
+                (set-timeline-events! tl (append (timeline-events tl) (timeline-events second-world-tl)))
+                (set-timeline-metadata! tl (append (timeline-metadata tl) (timeline-metadata second-world-tl)))
+                (set-timeline-duration! tl (+ (timeline-duration tl) (timeline-duration second-world-tl)))
+
+                (return tl)
                 )
 
               'before-action-ok
@@ -90,9 +97,9 @@
                     (route-b route)
                     (route-a route)))
             (define next-location (get-location-by-id next-location-id))
-            (define tl (advance-time-until-next-interesting-event! ,traverse-duration #f))
+            #; (define tl (advance-time-until-next-interesting-event! ,traverse-duration #f))
+            (define tl (timeline '() '() 0))
             (process-timeline! tl)
-
             (cond
               [(timeline-interrupted? tl)
                #;(notice (format "~a TIMELINE INTERRUPTED" (timestamp)))
@@ -100,7 +107,7 @@
                ]
               [else
                (move-pc-to-location! next-location)
-               'time-passing-handled
+               (set! tl 'time-passing-handled) ; TODO: HACKY!!
                ]
               )
             tl

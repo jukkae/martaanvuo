@@ -57,6 +57,13 @@
         (define resolution-result ((eval on-before-rules ns)))
         (set! result resolution-result)))
 
+    ; pending actions have their on-before-rules' already resolved, but they still need to take some time
+    (cond
+      [(pending? action)
+       (define tl (advance-time-until-next-interesting-event! (action-duration action) #f)) ; TODO: now, pending actions never have encounters turned on - fix this! (property of the action?)
+       (when (timeline-interrupted? tl)
+        (set! result tl))])
+
     ; interrupted in on-before-rules
     (when (and (timeline? result)
                (timeline-interrupted? result))
@@ -68,9 +75,9 @@
       (set! result 'interrupted))
 
     (when (not (equal? result 'interrupted))
+
       ; ACTION-RESOLUTION-RULES
       (define rules (action-resolution-rules action))
-
       (cond
         [(not (empty? rules))
          (when (not (procedure? rules))
@@ -80,19 +87,20 @@
            (set! result resolution-result))]
         #; [else ; TODO:
          (dev-note (format "Empty rules for action ~a" (action-symbol action)))]
-      )
-
+        )
       (when (not (equal? result 'time-passing-handled))
         (cond
           ; interrupted in action-rules
           [(and (timeline? result)
                 (timeline-interrupted? result))
+           (notice (format "~a DONE b" (timestamp)))
            (when (not (equal? (action-symbol action) 'rest))
             (define time-now (current-elapsed-time))
             (define time-taken (- time-now resolution-started-at))
+            (define time-left (- (action-duration action) time-taken))
             (set-pending-action!
               action
-              (- (action-duration action) time-taken)))
+              time-left))
            (set! result 'interrupted)]
           [else
            (define duration (action-duration action))
@@ -103,11 +111,8 @@
         )
       )
 
-
-
     (when (and (pc-actor? (get-actor (action-actor-id action)))
                (not (equal? result 'interrupted)))
-
       ; ON-AFTER-RULES
       (define on-after-rules (action-on-after-rules action))
       (when (not (empty? on-after-rules))

@@ -15,5 +15,5 @@
          (spawn-encounter))
 
         (else
-         (dev-note (format "unknown event type ~a" (event-type event)))))
+         '() #;(dev-note (format "unknown event type ~a" (event-type event)))))
   '())
