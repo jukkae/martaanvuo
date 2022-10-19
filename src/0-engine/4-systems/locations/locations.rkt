@@ -291,9 +291,9 @@
               (append-element! zone-choices
                 (make-choice
                  'resolve-zone
-                 (format "Pursue: ~a" (Clue-description (Zone-clue? z)))
+                 (format "Pursue: ~a [10 ι]" (Clue-description (Zone-clue? z)))
                  (λ ()
-                   (define iotas 5)
+                   (define iotas 10)
                    (define encounters? #f)
                    (advance-time-until-next-interesting-event! iotas encounters?)
                    (for ([z_ (location-zones (current-location))])

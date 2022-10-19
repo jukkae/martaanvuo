@@ -18,27 +18,9 @@
 
 (provide make-explore-choice)
 
-(define (explore-action base-duration exploration-roll
+(define (explore-action base-duration roll-result
          )
   (define duration base-duration)
-  (define success-level '())
-  (case exploration-roll
-    [(2)
-     (set! success-level 'critical-failure)]
-    [(3)
-     (set! duration (* 3 base-duration))
-     (set! success-level 'serious-failure) ; TODO: type?
-     ]
-    [(4 5)
-     (set! success-level 'failure)
-     ]
-    [(6 7 8 9 10 11)
-     (set! success-level 'success)
-     ]
-    [(12)
-     (set! success-level 'critical-success)
-     ]
-    )
   (make-action
     #:symbol 'explore
     #:actor (pc)
@@ -46,7 +28,7 @@
     #:tags '(downtime)
     #:resolution-rules
     `(
-      (case ',success-level
+      (case ',roll-result
        [(,'critical-failure)
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
         (inflict-condition!
@@ -135,9 +117,7 @@
    'explore
    (format "Explore. [~a ι]" explore-cost)
    (λ ()
-    (define exploration-roll
-      (just-roll "2d6"
-       #:title "exploration roll [2d6 >= 6] "
-       ))
-    (explore-action explore-cost exploration-roll)
+    (define roll-result
+      (check "2d6" #:title "exploration roll" #:target-number 6 #:bonus '()))
+    (explore-action explore-cost roll-result)
     )))

@@ -444,7 +444,8 @@
          (error "unknown formula")])
 )
 
-; returns (U 'critical-success 'success 'narrow-success 'failure 'critical-failure)
+; TODO: elevate this to an actual type / enum
+; returns (U 'critical-success 'success 'narrow-success 'failure 'serious-failure 'critical-failure)
 (define (check formula #:title title #:target-number tn #:bonus [bonus '()])
   (notice (format "~a [~a >= ~a]" title formula tn))
   (wait-for-confirm)
@@ -473,6 +474,7 @@
              'critical-failure]
             [(= roll-total tn) 'narrow-success]
             [(> roll-total tn) 'success]
+            [(= roll-total 3) 'serious-failure]
             [else 'failure]
             ))
          (define success-string (format "~a" check-outcome))
