@@ -50,11 +50,11 @@
        #:clue
        (clue
         #:requires (SenseOrgan 'nose 2 "")
-        #:description "faint smell of buried coins"
+        #:description "faint noxious smell of a Stealerbird nest"
         )
-       #:interactibles (list 'baz 'xyzzy)
-       #:name "Buried loot"
-       #:description "at a buried loot site"
+       #:interactibles (list (make-item 'revolver) (make-item 'gold #:amount 3))
+       #:name "Stealerbird nest"
+       #:description "at a Stealerbird nest"
        )
       (zone
        #:clue
@@ -62,9 +62,9 @@
         #:requires (SenseOrgan 'ears 1 "")
         #:description "sound of running water"
         )
-       #:interactibles '()
-       #:description "at a brook"
+       #:interactibles '(brook)
        #:name "The brook"
+       #:description "at a brook"
        )
       )
     #:clues
@@ -87,7 +87,7 @@
    (place
     #:id 'shack
     #:features '()
-    #:items (list (make-item 'revolver))
+    #:items (list (make-item 'shovel) (make-item 'shotgun))
     #:type 'int)
 
    (place

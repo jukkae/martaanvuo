@@ -25,7 +25,7 @@
    [size : (Maybe LocationSize)]
    [details : (Listof Symbol)]
    [actors : (Listof actor)]
-   ; TODO: FIXME: items and features – interactibles – should be in 'stacks' or 'zones', the player can be 'at' one of the stacks or at none of them, but is not 'in' any
+
    [items : (Listof (U item Symbol))]
    [features : (Listof Symbol)]
    [hidden-features : (Listof Symbol)]

@@ -196,7 +196,7 @@
            )
          (newline)
 
-        ;  (notice (format "[~a]~a = [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total))
+         (notice (format "[~a]~a = [~a]" (string-append* (add-between (map number->string results) " + ")) bonus-string roll-total))
 
         ;  (wait-for-confirm)
 

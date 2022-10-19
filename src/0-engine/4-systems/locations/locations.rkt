@@ -291,7 +291,7 @@
               (append-element! zone-choices
                 (make-choice
                  'resolve-zone
-                 (format "Resolve clue: ~a" (Clue-description (Zone-clue? z)))
+                 (format "Pursue: ~a" (Clue-description (Zone-clue? z)))
                  (λ ()
                    (define iotas 5)
                    (define encounters? #f)
