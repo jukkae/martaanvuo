@@ -36,16 +36,15 @@
           (current-elapsed-time)
           (FreshInjury 'ankle-broken ""
             (current-elapsed-time)
-            ))]
+            ))
+        (award-xp! 1)]
        [(,'serious-failure)
         (p "Instead of finding anything, Otava gets lost. Finding her way back takes longer than expected.")
         (notice (format "Action duration: ~a" ,duration))
         ]
        [(,'failure)
         (p "Otava finds nothing of interest.")]
-       [(,'success)
-        (p "Otava finds something.")
-
+       [(,'narrow-success ,'success)
         (define discoverables
         (append (location-hidden-features (current-location))
                 (Place-hidden-routes (current-location))))
@@ -85,9 +84,6 @@
                   ]
             )
            )
-         (for ([f crit-features])
-          (displayln "CF:")
-          (displayln f))
          (cond [(empty? crit-features)]
           (displayln "TODO: add more features"))
          (define f (take-random crit-features))
@@ -102,7 +98,6 @@
             ])
          ]
        )
-      (notice "Some time passes.")
       )
     )
   )
