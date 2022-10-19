@@ -71,7 +71,7 @@
     ['camp
      (make-choice
       'camp
-      "set up camp"
+      "set up camp [40 ι]"
       (λ () (make-action
              #:symbol 'camp
              #:actor (pc)
@@ -79,19 +79,6 @@
              #:resolution-rules
              `(
                (set-flag 'camp-set-up)
-               'ok))))]
-
-    #;['campfire
-     (make-choice
-      'campfire
-      "Build campfire."
-      (λ () (make-action
-             #:symbol 'camp
-             #:actor (pc)
-             #:duration 10
-             #:resolution-rules
-             `(
-               (displayln "Campfire action TODO")
                'ok))))]
 
     ['rest

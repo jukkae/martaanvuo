@@ -145,6 +145,10 @@
         ))
     (notice (format "~a It is now ~a."(timestamp) new-time-of-day))
 
+    (cond
+        [(equal? new-time-of-day 'evening) (notice "Otava should think about how she'll spend the night.")]
+        )
+
     (define ev (make-event 'new-time-of-day new-time-of-day #:interrupting? interrupting?))
     (set! events (append-element events ev)))
 

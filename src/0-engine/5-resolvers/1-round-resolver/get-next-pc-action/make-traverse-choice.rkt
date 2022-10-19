@@ -50,7 +50,7 @@
                 (define bonus 0)
                 (define bonus-str "+0")
                 (define encounter-roll (+ (d 1 6) bonus))
-                (define tn 5)
+                (define tn 3)
                 (notice (format "~a Encounter roll: 1d6~a >= ~a: [~a] – ~a"
                                 (timestamp)
                                 bonus-str
