@@ -39,34 +39,36 @@
               (define elapsed-time 0)
 
               (when (not (null? (location-encounter-types (current-location))))
+                (define duration
+                  (exact-floor (/
+                                ,traverse-duration
+                                3)))
+
+                (set! elapsed-time duration)
+
+                (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                (define world-events (timeline-events world-tl))
+
                 (define bonus 0)
                 (define bonus-str "+0")
                 (define encounter-roll (+ (d 1 6) bonus))
                 (define tn 5)
-                (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
+                (notice (format "~a Encounter roll: 1d6~a >= ~a: [~a] – ~a"
+                                (timestamp)
                                 bonus-str
                                 tn
                                 encounter-roll
                                 (if (< encounter-roll tn)
                                     "fail"
                                     "success")))
-                (when (< encounter-roll tn)
 
+                (when (< encounter-roll tn)
                   (define resolve-events
                     (list
                      (make-event ,''spawn-encounter
                                  '() ; pack info about enemies / event here
                                  #:interrupting? #t)))
                   (define metadata '(interrupted))
-                  (define duration
-                    (exact-floor (/
-                                  ,traverse-duration
-                                  3)))
-
-                  (set! elapsed-time duration)
-
-                  (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                  (define world-events (timeline-events world-tl))
 
                   (define all-events (append world-events resolve-events))
                   (define all-metadata (append (timeline-metadata world-tl) metadata))

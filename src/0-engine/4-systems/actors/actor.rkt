@@ -31,6 +31,9 @@
   (remove-actor-from-its-current-location!
    move-actor-to-location!
    )])
+(lazy-require ["../world/time.rkt"
+  (timestamp
+   )])
 (lazy-require ["../../3-types/location.rkt"
   (add-feature-to-location!
    add-item-to-location!
@@ -369,7 +372,7 @@
     (set-actor-stance! enemy enemy-stance)
 
     (move-actor-to-location! enemy (current-location))
-    (notice (format "A ~a appears ~a." (string-downcase (actor-name enemy)) range))
+    (notice (format "~a A ~a appears ~a." (timestamp) (string-downcase (actor-name enemy)) range))
     )
 
   (current-times-species-encountered++ type)

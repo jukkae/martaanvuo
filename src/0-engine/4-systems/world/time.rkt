@@ -2,6 +2,10 @@
 
 (provide (all-defined-out))
 
+(require/typed "../../1-index/state.rkt"
+               [current-elapsed-time (-> Integer)]
+               )
+
 (define-type TimeOfDay (U 'morning 'midday 'afternoon 'evening 'night))
 
 (: time-of-day-from-iotas (-> Integer TimeOfDay))
@@ -20,3 +24,6 @@
 
 (define (format-timestamp (timestamp : Integer))
   (format "Day ~a, ~a ι" (add1 (quotient timestamp day-length)) (remainder timestamp day-length)))
+
+(define (timestamp)
+  (format "~a ι:" (current-elapsed-time)))

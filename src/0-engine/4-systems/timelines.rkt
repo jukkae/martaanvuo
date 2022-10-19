@@ -20,8 +20,7 @@
 (define (process-timeline! tl)
   (for ([event (timeline-events tl)])
     (case (event-type event)
-      ['new-time-of-day
-       (notice (format "It is now ~a." (event-details event)))]
+      ['new-time-of-day '()]
       ['not-hungry '()]
       ['hungry '()]
       ['very-hungry '()]

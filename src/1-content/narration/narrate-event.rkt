@@ -9,7 +9,7 @@
   )
 
 (define (narrate-event event)
-  (case (event-type event)
+  '()#;(case (event-type event)
     ['new-time-of-day '()]
 
     ; spawn-ecounter is complicated to narrate outside of the event itself, so this is faster

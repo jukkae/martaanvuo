@@ -41,13 +41,14 @@
   (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
   (define new-pc-hunger-level (pc-hunger-level))
 
-  (if (not (equal? old-pc-hunger-level new-pc-hunger-level))
-      (make-event
-       new-pc-hunger-level
-       (time-of-day-from-iotas (world-elapsed-time (current-world)))
-       #:interrupting? #f)
-
-      '()))
+  (cond
+    [(not (equal? old-pc-hunger-level new-pc-hunger-level))
+     (notice (format "~a Otava is now ~a."(timestamp) new-pc-hunger-level))
+     (make-event
+      new-pc-hunger-level
+      (time-of-day-from-iotas (world-elapsed-time (current-world)))
+      #:interrupting? #f)]
+    [else '()]))
 
 ; increment world time
 ; return a list of events that occur at new timestamp
@@ -127,6 +128,7 @@
         [(equal? new-time-of-day 'evening) #t]
         [else #f]
         ))
+    (notice (format "~a It is now ~a."(timestamp) new-time-of-day))
     (define ev (make-event 'new-time-of-day new-time-of-day #:interrupting? interrupting?))
     (set! events (append-element events ev)))
 
