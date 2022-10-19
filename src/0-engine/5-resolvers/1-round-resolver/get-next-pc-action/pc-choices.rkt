@@ -202,7 +202,10 @@
                   (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (choice-factory 'eat))
    (choice-factory 'rest)
-   (when (route? (current-location))
+   (when (and (route? (current-location))
+              (not (null? current-pending-action))
+              (not (equal? (action-symbol (current-pending-action)) 'cancel-traverse))
+              )
          (make-cancel-traverse-choice))
    (when (not (null? (current-pending-action)))
          (make-choice
@@ -256,7 +259,8 @@
               (reset-pending-action!)))))
 
        ; route traversal can be canceled
-       (when (route? (current-location))
+       (when (and (route? (current-location))
+                  )
          (make-cancel-traverse-choice))
 
        (when (and (not (in-combat?))
