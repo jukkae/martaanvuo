@@ -65,6 +65,13 @@
          (set-route-endpoint-visited! (get-route-by-id route-id) (location-id location))
          ))
      ))
+
+  ; mark location itself as visited, as opposed to its routes
+  (let ([location (current-location)])
+    (when (Place? location)
+      (set-Place-visited?! location #t)
+      ))
+
  #;(case round-begin-status
      ['ok 'ok]
      ['pc-dead 'pc-dead])
@@ -121,12 +128,6 @@
   (for ([enemy (get-current-enemies)])
     (for ([condition (actor-conditions enemy)])
       (condition-on-end-round! condition (actor-id enemy))))
-
-  ; mark location itself as visited, as opposed to its routes
-  (let ([location (current-location)])
-    (when (Place? location)
-      (set-Place-visited?! location #t)
-      ))
 
   (if #f
       (newline) ; This is the "extra" newline that separates rounds

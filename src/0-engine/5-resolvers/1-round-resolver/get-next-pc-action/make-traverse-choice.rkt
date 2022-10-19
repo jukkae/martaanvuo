@@ -70,7 +70,7 @@
                   (define metadata '(interrupted))
 
                   (set-timeline-events! tl (append (timeline-events tl) resolve-events))
-                  (set-timeline-metadata! tl (append (timeline-emetadata tl) metadata))
+                  (set-timeline-metadata! tl (append (timeline-metadata tl) metadata))
 
                   (process-timeline! tl)
                   (return tl))

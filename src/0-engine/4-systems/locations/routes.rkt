@@ -139,7 +139,16 @@
                  (Place-shortname startpoint)
                  (Place-shortname endpoint)))
         (else
-         (format "En route: ~a – ???" (Place-shortname startpoint))))
+        (cond
+          [(not (Place-visited? startpoint))
+           (format "En route: ??? – ~a" (Place-shortname endpoint))
+           ]
+          [(not (Place-visited? endpoint))
+           (format "En route: ~a – ???" (Place-shortname startpoint))
+           ]
+          [else "????"]
+          )
+         ))
   )
 
 (define (route-shortname route-or-id)
@@ -164,19 +173,15 @@
   (when (symbol? endpoint)
     (set! endpoint (get-location-by-id endpoint)))
 
-  (cond ((route-fully-known? route)
-         (format "En route: ~a – ~a"
-                 (Place-shortname startpoint)
-                 (Place-shortname endpoint)))
-        (else
-         (cond
-          [(not (Place-visited? startpoint))
-           (format "En route: ??? – ~a" (Place-shortname endpoint))
-           ]
-          [(not (Place-visited? endpoint))
-           (format "En route: ~a – ???" (Place-shortname startpoint))
-           ]
-          [else "????"]
-          ))
-         )
+  (define startpoint-name
+    (if (Place-visited? startpoint)
+        (Place-shortname startpoint)
+        "???"))
+
+  (define endpoint-name
+    (if (Place-visited? endpoint)
+        (Place-shortname endpoint)
+        "???"))
+
+  (format "En route: ~a – ~a" startpoint-name endpoint-name)
   )

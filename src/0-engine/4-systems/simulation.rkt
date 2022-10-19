@@ -43,7 +43,7 @@
 
   (cond
     [(not (equal? old-pc-hunger-level new-pc-hunger-level))
-     (notice (format "~a Otava is now ~a."(timestamp) new-pc-hunger-level))
+     (notice (format "~a Otava is now ~a." (timestamp) new-pc-hunger-level))
      (make-event
       new-pc-hunger-level
       (time-of-day-from-iotas (world-elapsed-time (current-world)))
