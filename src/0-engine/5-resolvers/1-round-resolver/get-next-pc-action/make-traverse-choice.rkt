@@ -9,12 +9,16 @@
   "../../../3-types/place.rkt"
   "../../../3-types/route.rkt"
 
+  "../../../4-systems/actors/conditions.rkt"
+
   "../../../7-state/state.rkt"
   )
 
 (provide make-traverse-choice)
 (define (make-traverse-choice route direction)
   (define traverse-duration (route-traverse-time route))
+  (when (actor-has-condition-of-type? (pc) 'ankle-broken)
+     (set! traverse-duration (* 3 traverse-duration)))
   (make-choice
    'traverse
    (get-traverse-text route (current-location))
