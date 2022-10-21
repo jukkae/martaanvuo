@@ -190,8 +190,15 @@
 
 (define (get-nighttime-choices world actor)
   #;(dev-note "get-night-time-choices: not implemented yet")
-  (list
-   (choice-factory 'sleep)))
+  (define r '())
+  (append-element! r
+    (choice-factory 'sleep))
+  (cond
+    [(pc-has-sense-organ? 'sonar)
+     (append-element! r
+       (make-explore-choice))])
+
+  r)
 
 (define (get-evening-choices world actor)
   #;(dev-note "get-evening-choices: not implemented yet")
@@ -216,6 +223,9 @@
               (current-pending-action)
               ; continue and reset
               (reset-pending-action!)))))
+   (cond
+    [(pc-has-sense-organ? 'sonar)
+     (make-explore-choice)])
    )))
 
 
