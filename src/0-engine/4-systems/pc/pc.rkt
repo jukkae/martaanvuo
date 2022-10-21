@@ -59,6 +59,7 @@
   (set-pc-actor-max-lp! (pc) 1)
   (set-pc-actor-lp! (pc) 1)
   (set-pc-actor-hunger! (pc) 350)
+  (set-pc-actor-fatigue! (pc) 0)
 
   ; (set-trait! (pc) "athletics-skill" 1)
   (set-trait! (pc) "melee-attack-skill" 3)
@@ -250,6 +251,7 @@
 (define hunger-level-very-hungry 800)
 (define hunger-level-starving 1600)
 
+
 ; a day is 600 ticks -> if you eat always when you get hungry, once a day is not enough
 (define (decrease-pc-hunger-level levels)
   (let ([current-hunger (pc-hunger-level)])
@@ -304,6 +306,18 @@
      'very-hungry)
     (else
      'starving)
+    ))
+
+(define (pc-fatigue-level)
+  (cond
+    ((<= (pc-actor-fatigue (pc)) 500)
+     'not-tired)
+    ((< (pc-actor-fatigue (pc)) 1000)
+     'tired)
+    ((< (pc-actor-hunger (pc) 1500))
+     'drained)
+    (else
+     'exhausted)
     ))
 
 (define (pc-is-alive?)

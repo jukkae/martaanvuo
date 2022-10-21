@@ -25,6 +25,9 @@
       ['hungry '()]
       ['very-hungry '()]
       ['starving '()]
+      ['tired '()]
+      ['drained '()]
+      ['exhausted '()]
       ['spawn-encounter '()]
       ['notice '()]
       [else

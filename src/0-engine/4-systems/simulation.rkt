@@ -31,6 +31,7 @@
 
 (lazy-require ["pc/pc.rkt"
   (pc-hunger-level
+   pc-fatigue-level
    )])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry
@@ -50,9 +51,26 @@
       #:interrupting? #f)]
     [else '()]))
 
+
+(define (fatigue++)
+  (define events '())
+
+  (define old-pc-fatigue-level (pc-fatigue-level))
+  (set-pc-actor-fatigue! (current-pc) (+ (pc-actor-fatigue (current-pc)) 1))
+  (define new-pc-fatigue-level (pc-fatigue-level))
+
+  (cond
+    [(not (equal? old-pc-fatigue-level new-pc-fatigue-level))
+     (notice (format "~a Otava is now ~a." (timestamp) new-pc-fatigue-level))
+     (make-event
+      new-pc-fatigue-level
+      (time-of-day-from-iotas (world-elapsed-time (current-world)))
+      #:interrupting? #f)]
+    [else '()]))
+
 ; increment world time
 ; return a list of events that occur at new timestamp
-(define (time++ [allow-interrupting-events? #f])
+(define (time++ [allow-interrupting-events? #f] [resting? #f])
   (define events '())
 
   (define new-world-elapsed-time (add1 (world-elapsed-time (current-world))))
@@ -65,6 +83,15 @@
   (define new-hunger-level? (hunger++))
   (when (not (null? new-hunger-level?))
     (set! events (append-element events new-hunger-level?)))
+
+  (cond [(not resting?)
+         (define new-fatigue-level? (fatigue++))
+         (when (not (null? new-fatigue-level?))
+           (set! events (append-element events new-fatigue-level?)))]
+        [else
+         (when (= (modulo (current-elapsed-time) 10) 0)
+          (when (> (pc-actor-fatigue (pc)) 200)
+            (set-pc-actor-fatigue! (pc) (- (pc-actor-fatigue (pc)) 5))))])
 
   (when (not (null? (current-location)))
     (for ([actor (location-actors (current-location))])
@@ -171,14 +198,14 @@
 ; breaks on first action-suspending event
 ; and finishes after duration of iotas,
 ; returns a timeline of events that occurred with metadata
-(define (advance-time-until-next-interesting-event! iotas [encounters? #f])
+(define (advance-time-until-next-interesting-event! iotas [encounters? #f] #:resting? [resting? #f])
   (define metadata '())
   (define events '())
   (define counter 0)
   (let/ec break
     (for ([t iotas])
       (set! counter (add1 counter))
-      (define events-at-t (time++ encounters?))
+      (define events-at-t (time++ encounters? resting?))
 
       (set! events (append events events-at-t))
 

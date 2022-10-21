@@ -82,7 +82,9 @@
     (list
      (tr "" "")
      (tr "hunger"
-         (number->string (pc-actor-hunger actor)))))
+         (number->string (pc-actor-hunger actor)))
+     (tr "fatigue"
+         (number->string (pc-actor-fatigue actor)))))
 
   (set! sheet (append sheet #;attributes-list traits-list conditions-list hunger-list))
 

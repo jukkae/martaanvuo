@@ -20,6 +20,7 @@
   [cause-of-death : (Maybe (U Symbol String))]
   [xp : Natural]
   [hunger : Integer]
+  [fatigue : Integer]
   [modifications : (Listof Modification)]
   [sense-organs : (Listof SenseOrgan)]
   [manipulators : (Listof Manipulator)]

@@ -280,6 +280,7 @@
          )
   (current-last-numeric-actor-id++)
   (define hunger 200)
+  (define fatigue 70)
   (pc-actor*
    'pc name 'pc
    max-hp max-hp size
@@ -291,6 +292,7 @@
    ; pc-actor-fields
    max-lp max-lp 6 #t '() 0
    hunger
+   fatigue
    modifications
    sense-organs
    manipulators
