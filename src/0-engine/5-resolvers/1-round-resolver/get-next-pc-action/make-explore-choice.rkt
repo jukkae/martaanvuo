@@ -29,6 +29,8 @@
     #:tags '(downtime)
     #:on-before-rules
     `(
+      (for ([z_ (location-zones (current-location))])
+              (set-Zone-pc-here?! z_ #f)) ; TODO: this should also be done when leaving the location!
       (advance-time-until-next-interesting-event! (/ ,duration 2) #t)
     )
     #:on-after-rules
@@ -69,8 +71,6 @@
         (for/list ([z (location-zones (current-location))])
           (when (null? (Zone-clue? z))
             (append-element! hidden-zones z)))
-        (displayln "HDZ")
-        (displayln hidden-zones)
 
         (cond [(not (empty? discoverables))
                (define discovery (take-random discoverables))
@@ -130,11 +130,10 @@
           [(Zone? f)
             (notice (format "~a A lucky strike! Otava chances upon something she wouldn't have: ~a" (timestamp) (Zone-name f)))
             ; TODO: "move-pc-to-zone"
-            (for ([z_ (location-zones (current-location))])
-              (set-Zone-pc-here?! z_ #f))
             (set-Zone-found?! f #t)
             (set-Zone-clue?! f '())
             (set-Zone-pc-here?! f #t)
+            (set-Place-explored! (current-location) 'partially-explored)
             ])
          ]
        )

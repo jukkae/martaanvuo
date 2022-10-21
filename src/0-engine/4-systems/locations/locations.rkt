@@ -245,6 +245,23 @@
   items
   )
 
+(define (zone-features zone)
+  (define interactibles '())
+  (for ([interactible (Zone-interactibles (current-zone))])
+        (cond
+          [(symbol? interactible) ; TODO: Feature
+           (append-element! interactibles interactible)]
+          )
+        )
+  interactibles
+  )
+
+(define (zone-has-feature? zone feature)
+  (if (not (equal? (member feature (zone-features zone)) #f))
+    #t
+    #f
+  ))
+
 (define (find-item-in-current-zone id)
   (define items (current-zone-items (current-location)))
   (findf (λ (a)

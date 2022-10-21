@@ -82,7 +82,9 @@
                       #:available-in-combat? #t
                       ))
     )
-  (when (location-has-feature? (current-location) 'cocoon-effigy)
+  (when
+    (and (not (false? (current-zone)))
+      (zone-has-feature? (current-zone) 'cocoon-effigy))
     (append-element! feature-choices
       (cond [(pc-has-item? 'voidfloater-corpse)
                  (make-choice

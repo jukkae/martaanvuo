@@ -19,8 +19,8 @@
     (list
       (zone ;
        #:interactibles (list 'cocoon-effigy)
-       #:name "Test feature zone"
-       #:description "at a test feature"
+       #:name "a small altar with a cocoon effigy"
+       #:description "at a cocoon effigy"
        )
       (zone ; remains of an adventurer
        #:clue
