@@ -23,7 +23,6 @@
    [on-explore-rules! : Sexp]
    [explored : (U '() 'not-explored 'partially-explored 'explored 'exhaustively-explored)]
    [choices : (Listof choice)]
-   [clues : (Listof Clue)]
    [shortname : String]
    )
 

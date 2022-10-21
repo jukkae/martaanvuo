@@ -40,6 +40,7 @@
       (define roll-result
       (check "2d6" #:title "exploration roll" #:target-number 6 #:bonus '()))
       (case roll-result
+
        [(,'critical-failure)
         (award-xp! 1)
         (p "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
@@ -51,16 +52,26 @@
             (current-elapsed-time)
             ))
         ]
+
        [(,'serious-failure)
         (p "Instead of finding anything, Otava gets lost. Finding her way back takes longer than expected.")
         (notice (format "Action duration: ~a" ,duration))
         ]
+
        [(,'failure)
         (p "Otava finds nothing of interest.")]
+
        [(,'narrow-success ,'success)
         (define discoverables
-        (append (location-hidden-features (current-location))
-                (Place-hidden-routes (current-location))))
+          (append (location-hidden-features (current-location))
+                  (Place-hidden-routes (current-location))))
+        (define hidden-zones '())
+        (for/list ([z (location-zones (current-location))])
+          (when (null? (Zone-clue? z))
+            (append-element! hidden-zones z)))
+        (displayln "HDZ")
+        (displayln hidden-zones)
+
         (cond [(not (empty? discoverables))
                (define discovery (take-random discoverables))
                (cond
@@ -89,16 +100,26 @@
              ])
          (wait-for-confirm)
         ]
+
         [(,'critical-success)
          (define crit-features '())
          (for ([z (location-zones (current-location))])
-           (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires (Zone-clue? z)))
-                                       (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+           (cond
+            [(not (null? (Zone-clue? z)))
+             (cond
+              [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                                    (SenseOrgan-level (Clue-requires (Zone-clue? z))))
                   ; TODO: ie., "pc-fulfills-requirements"
-                  ]
-                 [
+                '()
+                ]
+              [else
                   (append-element! crit-features z)
-                  ]
+                ]
+              )]
+            [else
+             (cond
+              [(not (Zone-found? z))
+               (append-element! crit-features z)])]
             )
            )
          (cond [(empty? crit-features)]

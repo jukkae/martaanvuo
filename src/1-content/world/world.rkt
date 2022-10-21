@@ -14,9 +14,14 @@
     #:size 'large
     #:type 'ext
     #:encounter-types '(voidfloater)
-    #:hidden-features (list 'cocoon-effigy)
+    ; #:hidden-features (list 'cocoon-effigy)
     #:zones
     (list
+      (zone ;
+       #:interactibles (list 'cocoon-effigy)
+       #:name "Test feature zone"
+       #:description "at a test feature"
+       )
       (zone ; remains of an adventurer
        #:clue
        (clue
@@ -58,8 +63,6 @@
        #:description "at a brook"
        )
       )
-    #:clues
-    '()
     #:shortname "perimeter")
 
    (place

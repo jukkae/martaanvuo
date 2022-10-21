@@ -185,22 +185,7 @@
 
 (define (Place-get-perceptions place)
   (define unpruned-rows '())
-  (for ([clue (Place-clues place)])
-    (cond [(pc-has-sense-organ? (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
-            (set! unpruned-rows
-                  (append-element unpruned-rows
-                                  (tr
-                                  (format "~a [lv ~a]" (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
-                                  (format "~a" (Clue-description clue)))))
-           ]
-          [else
-           (set! unpruned-rows
-                  (append-element unpruned-rows
-                                  (tr
-                                  (format "~a [lv ~a]" (SenseOrgan-id (Clue-requires clue)) (SenseOrgan-level (Clue-requires clue)))
-                                  (format "[unknown - missing sense organ]"))))
-           ])
-            )
+  ; TODO: based on clues and other things
   unpruned-rows
   )
 
@@ -312,19 +297,28 @@
               ))])
         ]
       [else ; empty clue
-        (append-element! zone-choices
-                (make-choice
-                 'resolve-zone
-                 (format "Go to: ~a" (Zone-name z))
-                 (λ ()
-                   (define iotas 5)
-                   (advance-time-until-next-interesting-event! iotas encounters?)
-                   (for ([z_ (location-zones (current-location))])
-                    (set-Zone-pc-here?! z_ #f))
-                   (set-Zone-found?! z #t)
-                   (set-Zone-clue?! z '())
-                   (set-Zone-pc-here?! z #t)
-                   '())))
+        (cond
+         [(Zone-found? z)
+          (append-element! zone-choices
+                  (make-choice
+                  'resolve-zone
+                  (format "Go to: ~a" (Zone-name z))
+                  (λ ()
+                    (define iotas 5)
+                    (advance-time-until-next-interesting-event! iotas encounters?)
+                    (for ([z_ (location-zones (current-location))])
+                      (set-Zone-pc-here?! z_ #f))
+                    (set-Zone-found?! z #t)
+                    (set-Zone-clue?! z '())
+                    (set-Zone-pc-here?! z #t)
+                    '())))
+           ]
+          [else
+           ; empty clue, but zone not found either
+           ; -> hidden zone (think about this)
+           '()
+           ]
+          )
         ]
       )
     )

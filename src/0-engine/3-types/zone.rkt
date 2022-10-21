@@ -9,9 +9,10 @@
   "../3-types/clue.rkt"
   )
 
+(define-type Feature Symbol)
 
 (struct Zone
-  ([interactibles : (Listof (U Symbol item))]
+  ([interactibles : (Listof (U Feature item))]
    [found? : Boolean]
    [clue? : (Maybe Clue)]
    [pc-here? : Boolean]
