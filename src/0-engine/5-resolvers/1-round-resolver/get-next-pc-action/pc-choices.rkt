@@ -196,7 +196,9 @@
   (cond
     [(pc-has-sense-organ? 'sonar)
      (append-element! r
-       (make-explore-choice))])
+       (when (and (Place? (current-location))
+                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
+        (make-explore-choice)))])
 
   r)
 
@@ -225,7 +227,9 @@
               (reset-pending-action!)))))
    (cond
     [(pc-has-sense-organ? 'sonar)
-     (make-explore-choice)])
+     (when (and (Place? (current-location))
+                (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
+        (make-explore-choice))])
    )))
 
 

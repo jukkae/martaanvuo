@@ -62,18 +62,20 @@
         (append (location-hidden-features (current-location))
                 (Place-hidden-routes (current-location))))
         (cond [(not (empty? discoverables))
-              (define discovery (take-random discoverables))
-              (cond
+               (define discovery (take-random discoverables))
+               (cond
                 [(not (null? (get-route-by-id discovery)))
-                (define discovered-route (get-route-by-id discovery))
-                (set-route-hidden?! (get-route-by-id discovery) #f)
-                (notice (format "Otava finds a route: ~a"
+                 (define discovered-route (get-route-by-id discovery))
+                 (set-route-hidden?! (get-route-by-id discovery) #f)
+                 (notice (format "Otava finds a route: ~a"
                   (route-description-from discovered-route (current-location))))
-                ]
+                 ]
                 [else
-                (add-feature-to-location! (current-location) discovery)
-                (notice (format "New discovery: ~a" discovery))
-                ])
+                 (add-feature-to-location! (current-location) discovery)
+                 (notice (format "New discovery: ~a" discovery))
+                 ]
+                )
+              (set-Place-explored! (current-location) 'partially-explored)
 
               (remove-hidden-feature-from-location! (current-location) discovery)
               (cond [(empty? (location-hidden-features (current-location)))
@@ -81,7 +83,10 @@
                     ]
                     [else
                     (set-Place-explored! (current-location) 'partially-explored)])]
-            [else (notice "Otava can't find anything.")])
+            [else
+             (notice "Otava can't find anything. Otava is pretty sure there's no more secrets.")
+             (set-Place-explored! (current-location) 'explored)
+             ])
          (wait-for-confirm)
         ]
         [(,'critical-success)
