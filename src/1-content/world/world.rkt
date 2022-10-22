@@ -14,7 +14,6 @@
     #:size 'large
     #:type 'ext
     #:encounter-types '(human-fighter)
-    ; #:hidden-features (list 'cocoon-effigy)
     #:zones
     (list
       (zone ;
@@ -132,6 +131,19 @@
     #:light-level 'pitch-black
     #:shortname "Mining tunnels")
 
+   (place #:id 'tunnels-5
+    #:features '()
+    #:type 'int
+    #:light-level 'pitch-black
+    #:shortname "a cave"
+    #:zones
+    (list
+     (zone
+      #:interactibles (list 'remains-of-a-campfire)
+      #:name "remains of a campfire"
+      #:description "at a fireplace"))
+    )
+
    (place #:id 'gas-station
     #:features (list 'hostile-gang)
     #:type 'ext
@@ -240,6 +252,9 @@
     (route-between 'tunnels-2 'tunnels-3 27 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
     (route-between 'tunnels-3 'tunnels-4 24 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
     (route-between 'tunnels-3 'the-maw 25 'int #:hidden? #t #:descr-from-a "tunnels" #:descr-from-b "a hole to a tunnel")
+
+    (route-between 'perimeter 'tunnels-5 15 'ext #:hidden? #t #:descr-from-a "narrow entrance into a cave" #:descr-from-b "narrow exit from the cave")
+    (route-between 'tunnels-5 'tunnels-4 78 'int #:descr-from-a "cave tunnel" #:descr-from-b "tunnels")
 
     (route-between 'martaanvuo-dam 'the-maw 10 'ext #:hidden? #t #:descr-from-a "a hole in concrete wall behind corrugated iron" #:descr-from-b "a hole in concrete wall")
     (route-between 'the-maw 'reactor-room 1 'int #:descr-from-a "corridor" #:descr-from-b "corridor")

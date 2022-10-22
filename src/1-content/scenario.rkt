@@ -13,7 +13,7 @@
 ;                            ____ lookout                   highway
 ;      v                    /                                  \_____highway –––– highway to nowhere
 ; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)           /
-;       /                      \____ pond of drowning (explore)     gas station
+;       /  \___ tunnels-5      \____ pond of drowning (explore)     gas station
 ;      /                                                           /
 ;    Martaanvuo dam –––– Martaanvuo river –––––––– abandoned village –––– village
 ;     |      tunnels-4  ___tunnels-3 _ tunnels-2 ___ tunnels-1 __/
