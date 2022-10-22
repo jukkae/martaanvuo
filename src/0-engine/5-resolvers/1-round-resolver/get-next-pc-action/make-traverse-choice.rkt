@@ -17,11 +17,14 @@
 (provide make-traverse-choice)
 (define (make-traverse-choice route direction)
   (define traverse-duration (route-traverse-time route))
+  (define duration-reason "")
   (when (actor-has-condition-of-type? (pc) 'ankle-broken)
-     (set! traverse-duration (* 3 traverse-duration)))
+     (set! traverse-duration (* 3 traverse-duration))
+     (set! duration-reason " – ankle broken (3x)")
+     )
   (make-choice
    'traverse
-   (format "~a [~a ι]" (get-traverse-text route (current-location)) traverse-duration)
+   (format "~a [~a ι~a]" (get-traverse-text route (current-location)) traverse-duration duration-reason)
    (λ () (make-action
           #:symbol 'traverse
           #:actor (pc)

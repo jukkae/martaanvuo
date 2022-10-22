@@ -68,17 +68,6 @@
      )
    ))
 
-(define (make-melee-action actor)
-  (make-melee-attack-action
-   #:actor actor
-   #:duration 1
-   #:target 'pc
-   #:n 1
-   #:x 2
-   #:bonus -1
-   )
-  )
-
 (define (get-blindscraper-action actor)
   ; TODO: hunt by sound/sonar + smell; approach/retreat (collectively called "reposition actions")
   (cond ((in-combat?)

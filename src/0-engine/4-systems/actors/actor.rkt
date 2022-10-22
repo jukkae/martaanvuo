@@ -279,7 +279,7 @@
          #:manipulators (manipulators '())
          )
   (current-last-numeric-actor-id++)
-  (define hunger 200)
+  (define hunger 30)
   (define fatigue 70)
   (pc-actor*
    'pc name 'pc

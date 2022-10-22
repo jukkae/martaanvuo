@@ -3,6 +3,8 @@
 (provide (all-defined-out))
 
 (require
+  "common.rkt"
+
   "../../0-engine/2-core/io.rkt"
   "../../0-engine/2-core/core.rkt"
 
@@ -25,13 +27,26 @@
   enemy)
 
 (define (get-human-fighter-action actor)
-  (make-action
-    #:symbol 'skip
-    #:actor actor
-    #:duration 0
-    #:target '()
-    #:tags '(initiative-based-resolution)
-    #:details '(slow silent)))
+  (cond
+   [(> (actor-hp actor) 2)
+    (case (actor-stance-range actor)
+     [(engaged adjacent)
+      (cond [#f
+             '()
+             ]
+            [else
+             ((take-random (list
+                            make-melee-action
+                            ))
+              actor)])
+       ]
+     [else
+      (approach-action actor)])
+    ]
+   [else
+    (try-to-escape actor)
+    ])
+  )
 
 (define (get-human-fighter-reaction actor)
   '())

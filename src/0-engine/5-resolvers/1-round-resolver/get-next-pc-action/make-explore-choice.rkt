@@ -95,7 +95,7 @@
                     [else
                     (set-Place-explored! (current-location) 'partially-explored)])]
             [else
-             (notice "Otava can't find anything. Otava is pretty sure there's no more secrets.")
+             (notice "Otava can't find anything, and she's searched pretty much everywhere, she thinks.")
              (set-Place-explored! (current-location) 'explored)
              ])
          (wait-for-confirm)

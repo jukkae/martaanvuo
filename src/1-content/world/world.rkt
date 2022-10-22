@@ -13,7 +13,7 @@
     #:id 'perimeter
     #:size 'large
     #:type 'ext
-    #:encounter-types '(voidfloater)
+    #:encounter-types '(human-fighter)
     ; #:hidden-features (list 'cocoon-effigy)
     #:zones
     (list
@@ -215,7 +215,7 @@
       #:hidden? #f
       #:descr-from-a "steep, rocky ascent"
       #:descr-from-b "steep, rocky descent"
-      #:encounter-types '(voidfloater)
+      #:encounter-types '(human-fighter)
       )
     (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "path to the ledge" #:descr-from-b "path back to the plateau")
     (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t #:descr-from-a "rocky path" #:descr-from-b "rocky path")

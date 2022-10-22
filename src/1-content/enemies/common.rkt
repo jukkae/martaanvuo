@@ -1,9 +1,20 @@
 #lang at-exp racket
 
-(provide approach-action get-skip-action retreat-action try-to-escape)
+(provide make-melee-action approach-action get-skip-action retreat-action try-to-escape)
 
 (require
   "../../0-engine/0-api/api.rkt"
+  )
+
+(define (make-melee-action actor)
+  (make-melee-attack-action
+   #:actor actor
+   #:duration 1
+   #:target 'pc
+   #:n 1
+   #:x 2
+   #:bonus -1
+   )
   )
 
 (define (approach-action actor)
