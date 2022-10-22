@@ -83,10 +83,17 @@
                        actor)
                       ]
                      [else
-                      ((take-random (list
-                                     make-melee-action
-                                     ))
-                       actor)])
+                      ; Idea: random branch executor:
+                      ; (amb
+                      ;   [(statements A)]
+                      ;   [(statements B)]
+                      ;   ...)
+                      (define n-of-choices 6)
+                      (define choice (- (d 1 n-of-choices) 1))
+                      (case choice
+                       [(1 2 3 4 5 6) (make-melee-action actor #:n 1 #:x 2 #:bonus -1)
+                       ]
+                      )])
                ]
               [else
                (approach-action actor)])

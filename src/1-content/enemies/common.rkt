@@ -6,14 +6,14 @@
   "../../0-engine/0-api/api.rkt"
   )
 
-(define (make-melee-action actor)
+(define (make-melee-action actor #:n n #:x x #:bonus bonus)
   (make-melee-attack-action
    #:actor actor
    #:duration 1
    #:target 'pc
-   #:n 1
-   #:x 2
-   #:bonus -1
+   #:n n
+   #:x x
+   #:bonus bonus
    )
   )
 
