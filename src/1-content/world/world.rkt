@@ -139,9 +139,13 @@
     #:zones
     (list
      (zone
-      #:interactibles (list 'remains-of-a-campfire)
+      #:interactibles (list 'remains-of-a-campfire (make-item 'torch))
       #:name "remains of a campfire"
-      #:description "at a fireplace"))
+      #:description "at a fireplace")
+     (zone
+      #:interactibles (list 'trap (make-item 'ration #:amount 2) (make-item 'battery))
+      #:name "survival cache"
+      #:description "at a survival cache"))
     )
 
    (place #:id 'gas-station

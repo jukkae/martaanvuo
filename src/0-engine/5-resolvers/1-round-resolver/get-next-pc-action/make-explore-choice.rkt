@@ -95,7 +95,8 @@
                     [else
                     (set-Place-explored! (current-location) 'partially-explored)])]
             [else
-             (notice "Otava can't find anything, and she's searched pretty much everywhere, she thinks.")
+             (notice "Otava can't find anything.")
+             ; TODO: this logic is not correct (w.r.t hidden zones etc - all should be consolidated!)
              (set-Place-explored! (current-location) 'explored)
              ])
          (wait-for-confirm)
