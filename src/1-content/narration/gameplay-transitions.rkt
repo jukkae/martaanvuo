@@ -17,8 +17,8 @@
   )
 
 (define (narrate-begin-run #:suppress-new-chapter? [suppress-new-chapter? #f])
-  (when (not suppress-new-chapter?)
-    (next-chapter!))
+  #;(when (not suppress-new-chapter?)
+    #;(next-chapter!))
 
   #;(case (current-run)
    [(1)

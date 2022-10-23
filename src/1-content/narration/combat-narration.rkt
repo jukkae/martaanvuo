@@ -133,6 +133,7 @@
   (define stance (actor-stance actor))
   (define name (capitalize-first-letter (get-combatant-name actor)))
   (define body '())
+
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)
       ['eyes
@@ -215,8 +216,15 @@
   (when (not (null? (actor-statuses actor)))
     (define statuses (actor-statuses actor))
     (define statuses-list
-      (tr "statuses" (~s statuses)))
+      (tr "statuses" (~s statuses) ""))
+    (append-element! body (tr "" "" ""))
     (append-element! body statuses-list))
+  (when (not (null? (actor-conditions actor)))
+    (define conditions (actor-conditions actor))
+    (define conditions-list
+      (tr "conditions" (~s conditions) ""))
+    (append-element! body (tr "" "" ""))
+    (append-element! body conditions-list))
   (info-card
    body
    name)

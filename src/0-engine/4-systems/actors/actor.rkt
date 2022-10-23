@@ -130,7 +130,7 @@
     ['fell-to-death "Concussion and internal bleeding."]
     [else (symbol->string cause-of-death)]))
 
-(define (kill actor [cause-of-death '()])
+(define (kill actor [cause-of-death '()] #:no-corpse? [no-corpse? #f])
   (set-actor-hp! actor 0)
   (notice
    (if (null? cause-of-death)
@@ -150,7 +150,9 @@
          )
         (else
          (remove-actor-from-its-current-location! actor)
-         (add-item-to-location! (current-location) (make-corpse actor)))))
+         (when (not no-corpse?)
+           (add-item-to-location! (current-location) (make-corpse actor)))
+         )))
 
 (define (make-corpse actor)
   (define corpse-name
@@ -224,10 +226,10 @@
          (actor-add-condition! target a-condition)
          (notice "Already bleeding."))
      ]
-    ['windpipe-broken
-     (if (not (actor-has-condition-of-type? target 'windpipe-broken))
+    ['trachea-fractured
+     (if (not (actor-has-condition-of-type? target 'trachea-fractured))
          (actor-add-condition! target a-condition)
-         (notice "Windpipe already broken."))
+         (notice "Trachea already fractured."))
      ]
     ['one-eye-blind '()]
     ['both-eyes-blind '()]

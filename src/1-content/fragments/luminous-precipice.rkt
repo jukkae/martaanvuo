@@ -35,7 +35,7 @@
               (kill-pc! 'fell-to-death)
               'pc-dead]
              [(2 3 4)
-              (next-chapter!)
+              #;(next-chapter!)
               (p "Otava comes to.")
               (wait-for-confirm)
               (p "Then, the pain.")

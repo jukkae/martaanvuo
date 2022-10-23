@@ -275,8 +275,8 @@
       ['strike "Strike"]
       ['smash "Smash"]
       ['bludgeon "Bludgeon"]
-      ['choke "Choke"]
-      [else (symbol->string attack-name)]))
+      ['strangle "Strangle"]
+      [else (symbol->string action-name)]))
   (case action-name
     ['strike
      (define b (get-to-hit-bonus target))
@@ -386,7 +386,8 @@
            action-result
            )
          )))]
-    ['choke
+
+    ['strangle
      (make-choice
       'attack
       (format "Strangle the ~a."
@@ -396,7 +397,7 @@
         (define target-id (actor-id target))
         (make-action
          #:actor (pc)
-         #:symbol 'choke
+         #:symbol 'strangle
          #:duration 1
          #:target target-id
          #:tags '(initiative-based-resolution)
@@ -409,44 +410,47 @@
              (format "Strangle, ~a vs ~a"
                      (get-combatant-name actor)
                      (get-combatant-name target)))
+
            (when (not (equal? (stance-range (actor-stance target)) 'engaged))
              (notice (format "Otava has to engage the ~a" (get-combatant-name target)))
              (set-actor-stance-range! target 'engaged #t))
-           (define attack-roll (d 1 4))
-           (when (pc-envenomed-peaking?)
-            (notice "Envenomed, -1")
-            (set! attack-roll (- attack-roll 1))
-            )
-           (notice (format "[1d4: ~a]" attack-roll))
+
            (define action-result 'ok) ; TODO: likely not useful anymore
-           (case attack-roll
-             [(1 2) (notice (format "Otava can't get a good grip on the ~a's windpipe." (get-combatant-name target)))]
-             [(3)
-              (cond [(not (actor-has-condition-of-type? target 'windpipe-broken))
+           (cond [(not (actor-has-condition-of-type? target 'trachea-fractured))
+                  (define attack-roll (d 1 6))
+                  (when (pc-envenomed-peaking?)
+                    (notice "Envenomed, -1")
+                    (set! attack-roll (- attack-roll 1))
+                    )
+                  (notice (format "[1d6: ~a]" attack-roll))
+                  (case attack-roll
+                    [(1) (notice (format "Otava can't get a good grip on the ~a's neck." (get-combatant-name target)))]
+                    [(2 3 4 5)
                      (notice (format "There's a crack as the ~a's windpipe breaks." (get-combatant-name target)))
                      (inflict-condition! target
-                                         (condition 'windpipe-broken
+                                         (condition 'trachea-fractured
                                                     (current-elapsed-time)
                                                     "Broken windpipe."))
                      (set! action-result (take-damage target 1 'strangling))
                      ]
-                    [else ; has 'windpipe-broken
-                     (notice (format "Otava easily strangles the ~a to death." (get-combatant-name target)))
-                     (kill target 'strangled)
-                     (set! action-result 'dead)
-                     ]
-                    )
-              ]
-             [(4)
-              (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
-              (kill target 'strangled)
-              (set! action-result 'dead)])
+                    [(6)
+                      (notice (format "Otava strangles the ~a to death." (get-combatant-name target)))
+                      (kill target 'strangled)
+                      (set! action-result 'dead)])
+                  ]
+                [else ; has 'windpipe-broken
+                  (notice (format "Otava finishes the job."))
+                  (kill target 'strangled)
+                  (set! action-result 'dead)
+                  ]
+                )
 
            (when (equal? action-result 'dead)
              ; TODO: move this to Actor
              (case (actor-name target)
                [("voidfloater") (award-xp! 3)]
-               [("Limbtearer") (award-xp! 4)])
+               [("Limbtearer") (award-xp! 4)]
+               [("Human fighter") (award-xp! 4)])
 
              (when (not (session-flag-set? 'killed-an-enemy))
                (set-session-flag 'killed-an-enemy)
@@ -473,6 +477,95 @@
            )
          )))
      ]
+
+    ; 'throw-off-the-cliff
+    ['throw-off-the-cliff
+     (make-choice
+      'attack
+      (format "Throw the ~a off the cliff."
+              (get-combatant-name target)
+              )
+      (λ ()
+        (define target-id (actor-id target))
+        (make-action
+         #:actor (pc)
+         #:symbol 'throw-off-the-cliff
+         #:duration 1
+         #:target target-id
+         #:tags '(initiative-based-resolution)
+         #:resolution-rules
+         `(
+           (define actor (pc))
+           (define target (get-actor ,target-id))
+
+           (define title
+             (format "Throw off the cliff, ~a vs ~a"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)))
+
+           (when (not (equal? (stance-range (actor-stance target)) 'engaged))
+             (notice (format "Otava has to engage the ~a" (get-combatant-name target)))
+             (set-actor-stance-range! target 'engaged #t))
+
+           (define action-result 'ok) ; TODO: likely not useful anymore
+
+            (define attack-roll (d 1 6))
+            (when (pc-envenomed-peaking?)
+              (notice "Envenomed, -1")
+              (set! attack-roll (- attack-roll 1))
+              )
+            (notice (format "[1d6: ~a]" attack-roll))
+            (case attack-roll
+              [(1)
+               (notice (format "Otava throws the ~a, and herself, off the cliff." (get-combatant-name target)))
+               (kill target 'laws-of-gravity)
+               (set! action-result 'dead)
+               (kill (pc) 'laws-of-gravity)
+               (set! action-result 'pc-dead)
+               ]
+              [(2 )
+                (notice (format "Otava almost throws herself off the cliff by accident before regaining her balance."))
+                (notice "They're still grappling.")
+                'ok
+                ]
+              [(3 4 5 6)
+                (notice (format "Otava throws the ~a off the cliff." (get-combatant-name target)))
+                (kill target 'laws-of-gravity #:no-corpse? #t)
+                (set! action-result 'dead)])
+
+           (when (equal? action-result 'dead)
+             ; TODO: move this to Actor
+             (case (actor-name target)
+               [("voidfloater") (award-xp! 3)]
+               [("Limbtearer") (award-xp! 4)]
+               [("Human fighter") (award-xp! 4)])
+
+             (when (not (session-flag-set? 'killed-an-enemy))
+               (set-session-flag 'killed-an-enemy)
+               (current-session-score-dice++ "killed some evil fucks")
+               ))
+
+           (display-combatant-info target)
+           (newline)
+
+           (when (equal? action-result 'dead)
+             (notice "The " (actor-name target) " is dead."))
+
+           (define descr
+             (format "strangulation, ~a vs ~a (~a)"
+                     (get-combatant-name actor)
+                     (get-combatant-name target)
+                     (case action-result
+                       ['ok "successful"]
+                       ['dead "strangled to death"]
+                       [else action-result])))
+           (add-combat-event descr)
+
+           action-result
+           )
+         )))
+     ] ; 'throw-off-the-cliff
+
     [else
      (make-choice
       'attack
@@ -506,7 +599,13 @@
           )
     (cond ((or (equal? (stance-range stance) 'engaged)
                (equal? (stance-range stance) 'adjacent))
-           (for ([action-name (list 'choke)])
+           (for ([action-name (list 'strangle)])
+             (define choice (make-named-attack action-name target))
+             (set! combat-choices (append-element combat-choices choice))
+             )))
+    (cond ((or (equal? (stance-range stance) 'engaged)
+               (equal? (stance-range stance) 'adjacent))
+           (for ([action-name (list 'throw-off-the-cliff)])
              (define choice (make-named-attack action-name target))
              (set! combat-choices (append-element combat-choices choice))
              )))

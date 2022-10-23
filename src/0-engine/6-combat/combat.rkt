@@ -47,6 +47,6 @@
   (current-in-combat? #f)
   (current-combat-timeline '())
   (wait-for-confirm)
-  (when (pc-is-alive?)
+  #;(when (pc-is-alive?)
     #;(go-to-fragment 'post-combat)
-    (next-chapter!)))
+    #;(next-chapter!)))

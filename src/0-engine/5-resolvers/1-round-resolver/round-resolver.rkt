@@ -100,7 +100,7 @@
      (end-round-early-with-round-status 'recurse))
     ((equal? pc-action 'end-chapter)
      (on-end-round)
-     (next-chapter!)
+     #;(next-chapter!)
      (end-round-early-with-round-status 'ok))
 
     (else
