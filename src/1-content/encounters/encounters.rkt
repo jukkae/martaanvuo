@@ -93,4 +93,4 @@
 
   (begin-combat!)
 
-  (spawn 'human-fighter 2 'close))
+  (spawn 'human-fighter 1 'close))

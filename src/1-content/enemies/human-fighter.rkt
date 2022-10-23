@@ -38,9 +38,14 @@
              (define n-of-choices 6)
              (define choice (- (d 1 n-of-choices) 1))
              (case choice
-              [(1 2 3 4 5 6) (make-melee-action actor #:n 1 #:x 1 #:bonus 0)
-              ]
-             )])
+              [(0 1)
+               (make-skip-action actor)
+               ]
+              [else
+               (make-melee-action actor #:n 1 #:x 1 #:bonus 0)
+               ]
+              )
+             ])
        ]
      [else
       (approach-action actor)])

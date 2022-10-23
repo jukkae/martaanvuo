@@ -1,6 +1,6 @@
 #lang at-exp racket
 
-(provide make-melee-action approach-action get-skip-action retreat-action try-to-escape)
+(provide (all-defined-out))
 
 (require
   "../../0-engine/0-api/api.rkt"
@@ -16,6 +16,20 @@
    #:bonus bonus
    )
   )
+
+(define (make-skip-action actor)
+  (define subject (actor-id actor))
+  (make-action
+    #:symbol 'skip
+    #:actor actor
+    #:duration 1
+    #:tags '(initiative-based-resolution)
+    #:details '(slow silent)
+    #:resolution-rules `(
+    (actor-add-status! (get-actor ,subject) (status 'fast 1))
+    'ok
+    )
+    ))
 
 (define (approach-action actor)
   (define next-range
