@@ -199,6 +199,8 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
 
      (p "Otava has two possible ways through Perimeter and into the Maw, the Shaman in her dreams has told her. Either the uphigh mountainwall rockypeak way, or throughdark tunnelblack underground way. The third way, the way-by-the-water, is inaccessible because of the fucking dam.")
 
+     (p "The tunnel entrance ought to be somewhere around here. Climbing Magpie hill looks arduous.")
+
      (wait-for-confirm)
 
     ;  (notice "Some time passes.")

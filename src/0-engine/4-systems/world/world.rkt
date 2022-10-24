@@ -103,6 +103,7 @@
   #:details [details '()]
   #:descr-from-a [descr-from-a '()]
   #:descr-from-b [descr-from-b '()]
+  #:tags [tags '()]
   )
 
   (make-route
@@ -117,6 +118,7 @@
     #:encounter-types encounter-types
     #:descr-from-a descr-from-a
     #:descr-from-b descr-from-b
+    #:tags tags
     ))
 
 (provide add-route-between!)

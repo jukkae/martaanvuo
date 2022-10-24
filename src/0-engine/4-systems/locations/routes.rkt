@@ -104,7 +104,8 @@
                 (else (if (not (null? (route-descr-from-b route)))
                  (route-descr-from-b route)
                  "")))
-          (cond ((route-fully-known? route)
+          (cond ((or (route-fully-known? route)
+                     (location-has-tag? route 'known))
                  (format "~a" (Place-shortname endpoint)))
                 (else
                  "???"))
@@ -134,7 +135,8 @@
   (when (symbol? endpoint)
     (set! endpoint (get-location-by-id endpoint)))
 
-  (cond ((route-fully-known? route)
+  (cond ((or (route-fully-known? route)
+             (location-has-tag? route 'known))
          (format "En route: ~a – ~a"
                  (Place-shortname startpoint)
                  (Place-shortname endpoint)))
@@ -179,7 +181,8 @@
         "???"))
 
   (define endpoint-name
-    (if (Place-visited? endpoint)
+    (if (or (Place-visited? endpoint)
+            (location-has-tag? route 'known))
         (Place-shortname endpoint)
         "???"))
 

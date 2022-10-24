@@ -241,6 +241,7 @@
       130
       'ext
       #:hidden? #f
+      #:tags (list 'known)
       #:descr-from-a "steep, rocky ascent"
       #:descr-from-b "steep, rocky descent"
       #:encounter-types '(markbearer)
