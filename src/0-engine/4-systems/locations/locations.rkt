@@ -68,7 +68,14 @@
   )
 
 (define (location-on-enter! location)
-  (dev-note (format "location-on-enter! tbd for location ~a" location)))
+  #;(dev-note (format "location-on-enter! tbd for location ~a" (location-id location)))
+  (case (location-id location)
+   ['magpie-hill
+    (when (not (flag-set? 'magpie-hill-climbed))
+      (set-flag 'magpie-hill-climbed)
+      (p "Up on Magpie Hill there is a plateau, and on that plateau, there is a ritual circle. In the ritual circle, one can perform the Ritual of Translocation and enter the Maw.")
+      (wait-for-confirm))])
+  )
 
 
 (define (get-location-decisions location)
@@ -147,6 +154,7 @@
                 (string-set! name 0 #\e)
                 (notice (format "~a: Otava is now ~a" (format-timestamp (current-elapsed-time)) name))])
          ])
+  (location-on-enter! (current-location))
   )
 
 
