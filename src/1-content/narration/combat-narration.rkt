@@ -152,7 +152,15 @@
                            (tr
                             eyes-text
                             "HP"
-                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))]
+                            (format "~a/~a" (actor-hp actor) (actor-max-hp actor))))
+          (when (not (equal? (get-trait actor "visual description") 'not-found))
+            (append-element! body
+                           (tr
+                            eyes-text
+                            "description: "
+                            (format "~a" (get-trait actor "visual description"))))
+            )
+          ]
          ['dark
           (append-element! body
                            (cond [(or (equal? (stance-range stance) 'engaged)
