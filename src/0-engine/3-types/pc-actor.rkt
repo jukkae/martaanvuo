@@ -24,6 +24,7 @@
   [modifications : (Listof Modification)]
   [sense-organs : (Listof SenseOrgan)]
   [manipulators : (Listof Manipulator)]
+  [epithets : (Listof String)]
   )
  #:constructor-name pc-actor*
  #:prefab

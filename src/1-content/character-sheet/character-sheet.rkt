@@ -45,7 +45,13 @@
 
   (define sheet
     (tbody
-     (tr (actor-name actor) "" )
+     (tr (format "~a ~a~a"
+          (actor-name actor)
+          (first (pc-actor-epithets actor))
+          (if (not (empty? (cdr (pc-actor-epithets actor)))) "," "")
+          )
+         "" )
+     (tr (string-append* (add-between (cdr (pc-actor-epithets actor)) ", ")) "" )
      (tr "" "")
      #;(tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
      (tr "HP" "[unknown]") ; TODO: acquire nociception

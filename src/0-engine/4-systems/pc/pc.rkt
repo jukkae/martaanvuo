@@ -47,6 +47,7 @@
     ; (Manipulator 'prehensile-feet "prehensile feet")
     ; (Manipulator 'sharp-incisors "sharp incisors")
     )
+   #:epithets (list "the Seeker")
    ))
 
 ; TODO: refactor!
@@ -71,6 +72,7 @@
     ; (Manipulator 'prehensile-feet "prehensile feet")
     ; (Manipulator 'sharp-incisors "sharp incisors")
     )
+   #:epithets (list "Markbearer" "the Seeker")
    ))
 
 (define (set-base-build!)
