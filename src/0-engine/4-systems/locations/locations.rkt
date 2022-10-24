@@ -73,7 +73,7 @@
    ['magpie-hill
     (when (not (flag-set? 'magpie-hill-climbed))
       (set-flag 'magpie-hill-climbed)
-      (p "Up on Magpie Hill there is a plateau, and on that plateau, there is a ritual circle. In the ritual circle, one can perform the Ritual of Translocation and enter the Maw.")
+      (p "Up on Magpie Hill there is a plateau, and on that plateau, there is a [ritual circle]. In the ritual circle, one can perform the Ritual of Translocation and enter the Maw.")
       (wait-for-confirm))])
   )
 

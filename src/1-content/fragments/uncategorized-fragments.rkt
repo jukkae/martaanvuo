@@ -107,7 +107,7 @@ OTAVA:
  #:time-taken-by-fragment 2
  #:decisions
  (list (make-decision
-        #:title "\"Can you tell me...\""
+        #:title "\"Are you the Shaman of my dreams?\""
         #:next-fragment 'shaman-1
         )
        )
@@ -115,6 +115,11 @@ OTAVA:
 
  (fragment 'shaman-1
  @~a{
+Are you the Shaman of my dreams?
+
+SHAMAN:
+I know nothing of your dreams, young foolish one.
+
 OTAVA:
 Can you tell me –
 
@@ -155,7 +160,7 @@ When you do so, you will transform into an Incarnation of the Bat-Spirit, acquir
  (list
    (make-decision
     #:title "\"Got it.\""
-    #:description "OTAVA: \"Fire, once around sunwise, twice widdershins. Got it.\""
+    #:description "OTAVA: \"Fire, once around sunwise, twice widdershins, 'I shall become one with the dark and dark shall become me'. Got it.\""
     #:next-fragment (λ ()
       (create-task 'shaman-bag)
       (add-item! (new-item "Drink of the Bat-Spirit" #:id 'drink-of-the-bat-spirit))
