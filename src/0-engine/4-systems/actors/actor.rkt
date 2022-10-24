@@ -380,6 +380,16 @@
     )
 
   (current-times-species-encountered++ type)
+  (cond [(= (hash-ref (current-times-species-encountered) type) 1)
+    (case type
+     ['markbearer
+      (newline)
+      (info-card
+        (list
+          (tr "\"Look like human but with a scaly mark on their face,\ntheir eyes slit-like, like those of a lizard, evil\nbranch-like growths on their body, like extra limbs\",\nthe Shaman in her dreams had told her."))
+        "New species encountered: Markbearer")
+      (wait-for-confirm)
+      ])])
 )
 
 (define (actor-stance-range actor)
