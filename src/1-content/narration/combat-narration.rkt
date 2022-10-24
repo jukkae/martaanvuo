@@ -137,7 +137,7 @@
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)
       ['eyes
-       (define eyes-text (format "vision [~a]" (get-current-light-level)))
+       (define eyes-text (format "vision [light level: ~a]" (get-current-light-level)))
        (append-element! body (tr
                               eyes-text
                               "range"

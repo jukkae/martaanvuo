@@ -41,7 +41,7 @@
   )])
 
 (lazy-require ["../../../1-content/encounters/encounters.rkt"
-  (spawn-human-fighter-encounter!
+  (spawn-markbearer-encounter!
    spawn-grabberkin-encounter!
    spawn-blindscraper-encounter!
    spawn-two-blindscrapers-encounter!
@@ -87,7 +87,7 @@
 (define (spawn-enemies encounter-type)
   ; TODO: move to encounter-specific content
   (case encounter-type
-    ['human-fighter (spawn-human-fighter-encounter!)]
+    ['markbearer (spawn-markbearer-encounter!)]
     ['grabberkin (spawn-grabberkin-encounter!)]
     ['blindscraper (spawn-blindscraper-encounter!)]
     ['two-blindscrapers (spawn-two-blindscrapers-encounter!)]

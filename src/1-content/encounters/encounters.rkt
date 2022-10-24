@@ -89,8 +89,11 @@
   (spawn 'blindscraper 1)
   )
 
-(define (spawn-human-fighter-encounter!)
+(define (spawn-markbearer-encounter!)
 
   (begin-combat!)
 
-  (spawn 'human-fighter 1 'close))
+  (spawn 'markbearer 1 'close)
+  (cond
+   ([pc-has-sense-organ? 'eyes]))
+  )

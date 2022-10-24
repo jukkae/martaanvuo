@@ -52,8 +52,8 @@
 (lazy-require ["../../../1-content/enemies/blindscraper.rkt"
   (make-blindscraper
    )])
-(lazy-require ["../../../1-content/enemies/human-fighter.rkt"
-  (make-human-fighter
+(lazy-require ["../../../1-content/enemies/markbearer.rkt"
+  (make-markbearer
    )])
 (lazy-require ["../../../1-content/enemies/voidfloater.rkt"
   (make-voidfloater
@@ -345,7 +345,7 @@
   (case type
     ['grabberkin (make-grabberkin)]
     ['blindscraper (make-blindscraper)]
-    ['human-fighter (make-human-fighter)]
+    ['markbearer (make-markbearer)]
     ['voidfloater (make-voidfloater)]
     ['limbtearer (make-limbtearer)]
     [else (dev-note (format "Unknown enemy type: ~a" type))]))

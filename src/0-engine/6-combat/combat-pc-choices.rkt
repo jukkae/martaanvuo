@@ -450,7 +450,7 @@
              (case (actor-name target)
                [("voidfloater") (award-xp! 3)]
                [("Limbtearer") (award-xp! 4)]
-               [("Human fighter") (award-xp! 4)])
+               [("markbearer") (award-xp! 4)])
 
              (when (not (session-flag-set? 'killed-an-enemy))
                (set-session-flag 'killed-an-enemy)
@@ -533,7 +533,7 @@
              (case (actor-name target)
                [("voidfloater") (award-xp! 3)]
                [("Limbtearer") (award-xp! 4)]
-               [("Human fighter") (award-xp! 4)])
+               [("markbearer") (award-xp! 4)])
 
              (when (not (session-flag-set? 'killed-an-enemy))
                (set-session-flag 'killed-an-enemy)
@@ -621,7 +621,7 @@
              (case (actor-name target)
                [("voidfloater") (award-xp! 3)]
                [("Limbtearer") (award-xp! 4)]
-               [("Human fighter") (award-xp! 4)])
+               [("markbearer") (award-xp! 4)])
 
              (when (not (session-flag-set? 'killed-an-enemy))
                (set-session-flag 'killed-an-enemy)

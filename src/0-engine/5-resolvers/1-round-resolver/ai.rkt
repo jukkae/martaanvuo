@@ -35,9 +35,9 @@
   (get-blindscraper-action
    get-blindscraper-reaction
    )])
-(lazy-require ["../../../1-content/enemies/human-fighter.rkt"
-  (get-human-fighter-action
-   get-human-fighter-reaction
+(lazy-require ["../../../1-content/enemies/markbearer.rkt"
+  (get-markbearer-action
+   get-markbearer-reaction
    )])
 (lazy-require ["../../../1-content/enemies/voidfloater.rkt"
   (get-voidfloater-action
@@ -53,7 +53,7 @@
   (case (actor-name actor)
     (["Blindscraper"] (get-blindscraper-action actor))
     (["Grabberkin"] (get-grabberkin-action actor))
-    (["Human fighter"] (get-human-fighter-action actor))
+    (["markbearer"] (get-markbearer-action actor))
     (["voidfloater"] (get-voidfloater-action actor))
     (["Limbtearer"] (get-limbtearer-action actor))
     (else (dev-note (format "get-next-npc-action: unknown actor ~a" (actor-name actor))))))
@@ -70,8 +70,8 @@
                 (get-grabberkin-reaction actor))
                ((equal? (actor-name actor) "Blindscraper")
                 (get-blindscraper-reaction actor))
-               ((equal? (actor-name actor) "Human fighter")
-                (get-human-fighter-reaction actor))
+               ((equal? (actor-name actor) "markbearer")
+                (get-markbearer-reaction actor))
                (else
                 #;(displayln "unknown non-pc-actor type for reaction")
                 '())))
