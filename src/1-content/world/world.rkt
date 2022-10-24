@@ -102,6 +102,12 @@
     #:shortname "Martaanvuo dam")
 
    (place
+    #:id 'martaanvuo-basin
+    #:features '()
+    #:type 'ext
+    #:shortname "Martaanvuo basin")
+
+   (place
     #:id 'martaanvuo-river
     #:features '()
     #:type 'ext
@@ -243,8 +249,9 @@
     (route-between 'magpie-hill 'shack 40 'ext #:hidden? #t #:descr-from-a "rocky path" #:descr-from-b "rocky path")
     (route-between 'magpie-hill 'pond-of-drowning 30 'ext #:hidden? #t #:descr-from-a "footsteps through trampled underbrush" #:descr-from-b "path through prickly underbrush")
 
-    (route-between 'perimeter 'martaanvuo-dam 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
-    (route-between 'martaanvuo-dam 'martaanvuo-river 40 'ext #:descr-from-a "crumbling stairs downriver" #:descr-from-b "crumbling stairs back to the dam")
+    (route-between 'perimeter 'martaanvuo-river 140 'ext #:hidden? #t #:descr-from-a "winding path downhill" #:descr-from-b "winding path uphill")
+    (route-between 'martaanvuo-dam 'martaanvuo-basin 40 'ext #:descr-from-a "crumbling stairs down to the dry basin" #:descr-from-b "crumbling stairs back to the dam")
+    (route-between 'martaanvuo-basin 'martaanvuo-river 40 'ext #:descr-from-a "follow the sad dry stream" #:descr-from-b "back to the dry basin")
     (route-between 'martaanvuo-river 'abandoned-village 130 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")
 
     (route-between 'abandoned-village 'village 60 'ext #:descr-from-a "downriver the dry riverbank" #:descr-from-b "upriver the dry riverbank")

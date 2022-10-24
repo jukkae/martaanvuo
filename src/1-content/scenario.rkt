@@ -9,17 +9,6 @@
   "world/world.rkt"
 )
 
-; map v0.1.0:
-;                            ____ lookout                   highway
-;      v                    /                                  \_____highway –––– highway to nowhere
-; Perimeter ––––––– Magpie hill ––––––––––– shack (explore)           /
-;       /  \___ tunnels-5      \____ pond of drowning (explore)     gas station
-;      /                                                           /
-;    Martaanvuo dam –––– Martaanvuo river –––––––– abandoned village –––– village
-;     |      tunnels-4  ___tunnels-3 _ tunnels-2 ___ tunnels-1 __/
-;     |                         /
-;    The Maw ––––––––––––– reactor room –––– bioreactor
-;
 
 (define (setup-world! scenario)
   (current-world (make-new-world))
