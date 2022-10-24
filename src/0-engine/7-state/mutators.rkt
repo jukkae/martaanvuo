@@ -30,6 +30,7 @@
   current-life
   current-pc
   current-tasks
+  current-epithets
   current-run
   current-once-per-day-actions-done
   )])

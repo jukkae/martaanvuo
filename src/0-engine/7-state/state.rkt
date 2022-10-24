@@ -80,6 +80,7 @@
 (define current-in-combat? (make-parameter #f))
 
 (define current-tasks (make-parameter '()))
+(define current-epithets (make-parameter '()))
 
 (define current-pc (make-parameter '()))
 (define current-once-per-day-actions-done (make-parameter '()))
@@ -113,6 +114,7 @@
   (current-elapsed-time 0)
   (current-in-combat? #f)
   (current-tasks '())
+  (current-epithets '())
   (current-pc (make-new-pc))
   (current-once-per-day-actions-done '())
   (current-life 0)
@@ -166,6 +168,7 @@
      (current-elapsed-time) ; Natural, should be in-world timestamp
      (current-in-combat?) ; Boolean
      (current-tasks) ; (Listof task)
+     (current-epithets) ; (Listof String)
      (current-pc) ; pc-actor
      (current-once-per-day-actions-done)
      (current-life) ; Natural
@@ -210,6 +213,7 @@
   (current-elapsed-time (State-elapsed-time s))
   (current-in-combat? (State-in-combat? s))
   (current-tasks (State-tasks s))
+  (current-epithets (State-epithets s))
   (current-pc (State-pc s))
   (current-once-per-day-actions-done (State-once-per-day-actions-done s))
   (current-life (State-life s))

@@ -47,11 +47,11 @@
     (tbody
      (tr (format "~a ~a~a"
           (actor-name actor)
-          (first (pc-actor-epithets actor))
-          (if (not (empty? (cdr (pc-actor-epithets actor)))) "," "")
+          (first (current-epithets))
+          (if (not (empty? (cdr (current-epithets)))) "," "")
           )
          "" )
-     (tr (string-append* (add-between (cdr (pc-actor-epithets actor)) ", ")) "" )
+     (tr (string-append* (add-between (cdr (current-epithets)) ", ")) "" )
      (tr "" "")
      #;(tr "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))
      (tr "HP" "[unknown]") ; TODO: acquire nociception

@@ -24,6 +24,7 @@
   current-pending-action
   current-prompt
   current-tasks
+  current-epithets
   current-world
 
   get-current-enemies
@@ -74,6 +75,7 @@
   current-pending-action
   current-prompt
   current-tasks
+  current-epithets
   current-world
 
   get-current-enemies

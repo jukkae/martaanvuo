@@ -181,7 +181,9 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
    [(flag-set? 'markbearer-killed)
     (notice "Otava having killed a markbearer, the deed carries over.")
     (current-pc (make-new-mb-pc))
-    (set-markbearer-build!)]
+    (set-markbearer-build!)
+    (current-epithets (cons "Markbearer" (current-epithets)))
+    ]
    [else
     (current-pc (make-new-pc))
     (set-base-build!)
@@ -198,6 +200,7 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
 
       Otava the Seeker, become Otava the Deathless!
      }
+     (current-epithets (cons "the Seeker" (current-epithets)))
      (create-task 'anthead-monograph)
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))

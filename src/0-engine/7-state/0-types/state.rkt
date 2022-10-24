@@ -51,6 +51,7 @@
    [elapsed-time : Natural] ; should be in-world time
    [in-combat? : Boolean]
    [tasks : (Listof task)]
+   [epithets : (Listof String)]
    [pc : pc-actor]
    [once-per-day-actions-done : (Listof Symbol)]
    [life : Natural]

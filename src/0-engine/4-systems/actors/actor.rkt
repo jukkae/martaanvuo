@@ -281,7 +281,6 @@
          #:modifications (modifications '())
          #:sense-organs (sense-organs '())
          #:manipulators (manipulators '())
-         #:epithets (epithets (list "the Seeker"))
          )
   (current-last-numeric-actor-id++)
   (define hunger 30)
@@ -301,7 +300,6 @@
    modifications
    sense-organs
    manipulators
-   epithets
    ))
 
 (define (pc-take-damage! actor damage damage-type)
