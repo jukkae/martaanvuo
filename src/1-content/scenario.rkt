@@ -183,6 +183,8 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
     (current-pc (make-new-mb-pc))
     (set-markbearer-build!)
     (current-epithets (cons "Markbearer" (current-epithets)))
+    (display-pc-title)
+    (wait-for-confirm)
     ]
    [else
     (current-pc (make-new-pc))

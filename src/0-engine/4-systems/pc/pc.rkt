@@ -418,3 +418,6 @@
   (remove-all-sense-organs!)
   (for ([sense-organ (take-n-random sense-organs roll)])
     (add-sense-organ! sense-organ)))
+
+(define (display-pc-title)
+  (notice (format "Otava ~a" (string-append* (add-between (current-epithets) ", ")))))
