@@ -149,6 +149,8 @@
          (set-pc-actor-cause-of-death! actor cause-of-death)
          )
         (else
+         (when (equal? (actor-name actor) "markbearer")
+           (set-flag 'markbearer-killed))
          (remove-actor-from-its-current-location! actor)
          (when (not no-corpse?)
            (add-item-to-location! (current-location) (make-corpse actor)))

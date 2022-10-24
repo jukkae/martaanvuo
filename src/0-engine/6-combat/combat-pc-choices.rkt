@@ -635,7 +635,7 @@
              (notice "The " (actor-name target) " is dead."))
 
            (define descr
-             (format "strangulation, ~a vs ~a (~a)"
+             (format "throw off the cliff, ~a vs ~a (~a)"
                      (get-combatant-name actor)
                      (get-combatant-name target)
                      (case action-result

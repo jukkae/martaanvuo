@@ -175,9 +175,17 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
     (current-session-score-dice++)
     )
 
+
   (current-life (add1 (current-life)))
-  (current-pc (make-new-pc))
-  (set-base-build!)
+  (cond
+   [(flag-set? 'markbearer-killed)
+    (notice "Otava having killed a markbearer, the deed carries over.")
+    (current-pc (make-new-mb-pc))
+    (set-markbearer-build!)]
+   [else
+    (current-pc (make-new-pc))
+    (set-base-build!)
+    ])
   (when (not (= 1 (current-life)))
     (dev-note "Show life info"))
 

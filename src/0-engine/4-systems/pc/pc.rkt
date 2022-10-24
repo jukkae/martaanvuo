@@ -49,7 +49,55 @@
     )
    ))
 
+; TODO: refactor!
+(define (make-new-mb-pc)
+  (make-pc-actor
+   "Otava"
+   #:max-hp 6
+   #:max-lp 4
+   #:size 'large
+   #:sense-organs (list
+    (SenseOrgan 'basic-homeostasis 1 "basic homeostasis")
+    (SenseOrgan 'nociception 1 "nociception")
+    (SenseOrgan 'eyes 1 "eyes")
+    (SenseOrgan 'haptics 1 "haptics")
+    )
+   #:manipulators (list
+    (Manipulator 'human-hands "hands at end of arms")
+    (Manipulator 'legs "feet at end of legs")
+    ; (Manipulator 'nimble-hands "nimble hands")
+    ; (Manipulator 'legs "legs")
+    ; (Manipulator 'wings "wings")
+    ; (Manipulator 'prehensile-feet "prehensile feet")
+    ; (Manipulator 'sharp-incisors "sharp incisors")
+    )
+   ))
+
 (define (set-base-build!)
+  (set-actor-strength! (pc) 7)
+  (set-actor-dexterity! (pc) 10)
+  (set-actor-constitution! (pc) 10)
+  (set-actor-intelligence! (pc) 7)
+  (set-actor-charisma! (pc) 7)
+
+  (set-pc-actor-max-lp! (pc) 1)
+  (set-pc-actor-lp! (pc) 1)
+  (set-pc-actor-hunger! (pc) 350)
+  (set-pc-actor-fatigue! (pc) 0)
+
+  ; (set-trait! (pc) "athletics-skill" 1)
+  (set-trait! (pc) "melee-attack-skill" 3)
+  ; (set-trait! (pc) "wrestle-attack-skill" -1)
+  (set-trait! (pc) "defense" 1)
+  ; (set-trait! (pc) "exploration-skill" 1)
+
+  ; (add-item! 'knife #:amount 2 #:silent? #t)
+  ; (add-item! 'ration #:amount 2 #:silent? #t)
+  (add-item! 'bolt-cutters #:silent? #t)
+  (add-item! 'lucky-charm-slot-machine #:silent? #t)
+  )
+
+(define (set-markbearer-build!)
   (set-actor-strength! (pc) 7)
   (set-actor-dexterity! (pc) 10)
   (set-actor-constitution! (pc) 10)
