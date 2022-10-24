@@ -143,7 +143,7 @@
       #:name "remains of a campfire"
       #:description "at a fireplace")
      (zone
-      #:interactibles (list 'trap (make-item 'ration #:amount 2) (make-item 'battery))
+      #:interactibles (list 'trap (make-item 'ration #:amount 2) (make-item 'battery) (make-item 'explosives))
       #:name "survival cache"
       #:description "at a survival cache"))
     )

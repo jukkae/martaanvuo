@@ -208,6 +208,10 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      (advance-time-by-iotas! (d 6 12))
      (move-pc-to-location! (get-place-by-id 'perimeter))
 
+     (p "Otava has two possible ways through Perimeter and into the Maw, the Shaman in her dreams has told her. Either the uphigh mountainwall rockypeak way, or throughdark tunnelblack underground way. The third way, the way-by-the-water, is inaccessible because of the fucking dam.")
+
+     (wait-for-confirm)
+
     ;  (notice "Some time passes.")
      #;(next-chapter!
        (string-append

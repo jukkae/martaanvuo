@@ -25,6 +25,7 @@
   "../4-systems/locations/locations.rkt"
   "../4-systems/locations/routes.rkt"
   "../4-systems/pc/pc.rkt"
+  "../4-systems/tasks/tasks.rkt"
   "../4-systems/world/time.rkt"
   "../4-systems/world/world.rkt"
 

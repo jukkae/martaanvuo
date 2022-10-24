@@ -168,6 +168,21 @@
                  (notice (format "Picked up: ~a"
                                  (cond [(item? the-item) (item-name the-item)]
                                        [else (format "~a" the-item)])))
+                 (when (and (equal? item-id 'explosives)
+                            (not (task-exists? 'destroy-the-dam)))
+                   (p "Hold on. Explosives. She could destroy the dam, open up the Third Way, the way-by-the-water.")
+                   (add-new-task!
+                    (task
+                    'destroy-the-dam
+                    "Destroy the Dam"
+                    'in-progress
+                    "to open the 3rd Way!"
+                    "status: Dam is not destroyed."
+                    '()
+                    '()
+                    '()
+                    ))
+                   )
                 ;  (displayln the-item)
                 ;  (notice (format "Picking up: ~a" "foo"))
                  )

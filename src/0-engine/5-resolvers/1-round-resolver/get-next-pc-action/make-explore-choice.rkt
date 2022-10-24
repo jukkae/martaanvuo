@@ -71,10 +71,19 @@
         (for/list ([z (location-zones (current-location))])
           (when (null? (Zone-clue? z))
             (append-element! hidden-zones z)))
+        (set! discoverables (append discoverables hidden-zones))
 
         (cond [(not (empty? discoverables))
                (define discovery (take-random discoverables))
                (cond
+                [(Zone? discovery)
+                 (notice (format "~a A discovery: ~a" (timestamp) (Zone-name discovery)))
+                 ; TODO: "move-pc-to-zone"
+                 (set-Zone-found?! discovery #t)
+                 (set-Zone-clue?! discovery '())
+                 (set-Zone-pc-here?! discovery #t)
+                 (set-Place-explored! (current-location) 'partially-explored)
+                 ]
                 [(not (null? (get-route-by-id discovery)))
                  (define discovered-route (get-route-by-id discovery))
                  (set-route-hidden?! (get-route-by-id discovery) #f)
@@ -88,7 +97,8 @@
                 )
               (set-Place-explored! (current-location) 'partially-explored)
 
-              (remove-hidden-feature-from-location! (current-location) discovery)
+              (when (symbol? discovery)
+                (remove-hidden-feature-from-location! (current-location) discovery))
               (cond [(empty? (location-hidden-features (current-location)))
                     '()#;(set-Place-explored! (current-location) 'explored)
                     ]
