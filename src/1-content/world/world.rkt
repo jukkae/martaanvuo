@@ -68,7 +68,13 @@
     #:id 'magpie-hill
     #:size 'large
     #:type 'ext
-    #:shortname "Magpie hill")
+    #:shortname "Magpie hill"
+    #:zones
+    (list
+     (zone
+      #:interactibles (list 'ritual-circle)
+      #:name "ritual circle"
+      #:description "at the ritual circle")))
 
   (place
     #:id 'lookout

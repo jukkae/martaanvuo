@@ -103,6 +103,19 @@
                   "Make an offering to the cocoon effigy."
                   "The effigy demands a voidfloater corpse.")]
                  )))
+  (when
+    (and (not (false? (current-zone)))
+      (zone-has-feature? (current-zone) 'ritual-circle))
+    (append-element! feature-choices
+      (make-choice
+        'ritual-of-translocation
+        "Perform the Ritual of Translocation to enter the Maw."
+        (λ ()
+          (move-pc-to-location! (get-location-by-id 'the-maw))
+          (p "Otava is now in the Maw.")
+          (wait-for-confirm)
+          '()
+          ))))
   (when (location-has-feature? (current-location) 'inactive-centrifuge)
     (append-element! feature-choices
                      (make-choice
