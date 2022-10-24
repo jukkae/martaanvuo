@@ -603,6 +603,10 @@
                (notice (format "Otava throws the ~a, and herself, off the cliff." (get-combatant-name target)))
                (kill target 'laws-of-gravity)
                (set! action-result 'dead)
+               (case (actor-name target)
+                [("voidfloater") (award-xp! 3)]
+                [("Limbtearer") (award-xp! 4)]
+                [("markbearer") (award-xp! 4)])
                (kill (pc) 'laws-of-gravity)
                (set! action-result 'pc-dead)
                ]
