@@ -21,6 +21,7 @@
 (lazy-require ["../world/world.rkt"
   (remove-actor-from-its-current-location!
    get-route-by-id
+   get-current-light-level
    )])
 (lazy-require ["../simulation.rkt"
   (advance-time-until-next-interesting-event!
@@ -193,7 +194,27 @@
 
 (define (Place-get-perceptions place)
   (define unpruned-rows '())
-  ; TODO: based on clues and other things
+  (case (location-id place)
+   ['perimeter
+    (when (and (pc-has-sense-organ? 'eyes)
+               (or (equal? (get-current-light-level) 'bright)
+                   (equal? (get-current-light-level) 'dark)))
+      (append-element! unpruned-rows (tr "location type" "badlands"))
+      (append-element! unpruned-rows (tr "perceived with eyes" "mutated, bonelike scraggly trees"))
+      (append-element! unpruned-rows (tr "perceived with eyes" "a path leading to the ascent to Magpie hill"))
+      (for ([z (location-zones place)])
+        (cond [(Clue? (Zone-clue? z))
+          (cond [(pc-has-sense-organ?
+                (SenseOrgan-id (Clue-requires (Zone-clue? z)))
+                (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+
+                (append-element! unpruned-rows (tr (format "perceived with ~a (lv ~a)" (SenseOrgan-id (Clue-requires (Zone-clue? z))) (SenseOrgan-level (Clue-requires (Zone-clue? z))))
+                (Clue-description (Zone-clue? z))))]
+
+
+                )]))
+      )
+      ])
   unpruned-rows
   )
 

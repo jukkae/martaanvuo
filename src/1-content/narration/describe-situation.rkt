@@ -59,7 +59,7 @@
 
   (info-card
    body
-   '()#;(cond
+  (cond
     [(Place? (current-location)) (format "Otava is in ~a." (Place-shortname (current-location)))]
     [else (format "Otava is in ~a." (route-shortname (current-location)))])
    )
