@@ -140,16 +140,16 @@
                   'ext
                   #:hidden? #f
                   #:tags (list 'known)
-                  #:descr-from-a "steep ascent"
-                  #:descr-from-b "steep descent"
+                  #:descr-from-a "ascent"
+                  #:descr-from-b "descent"
                   #:encounter-types '(markbearer))
    (route-between 'magpie-hill
                   'lookout
                   10
                   'ext
                   #:hidden? #f
-                  #:descr-from-a "path to the ledge"
-                  #:descr-from-b "path back to the plateau")
+                  #:descr-from-a "follow the ledge"
+                  #:descr-from-b "follow the ledge")
    (route-between 'magpie-hill
                   'shack
                   40

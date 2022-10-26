@@ -14,7 +14,7 @@
          "../../3-types/zone.rkt")
 
 (lazy-require ["../world/world.rkt"
-               (remove-actor-from-its-current-location! get-route-by-id get-current-light-level)])
+               (remove-actor-from-its-current-location! get-place-by-id get-route-by-id get-route-between get-current-light-level)])
 (lazy-require ["../simulation.rkt" (advance-time-until-next-interesting-event!)])
 (lazy-require ["../../6-combat/combat.rkt" (begin-combat!)])
 (lazy-require ["../../7-state/mutators.rkt" (current-location pc)])
@@ -63,9 +63,21 @@
           [(not (equal? (get-current-light-level) 'pitch-black))
            (when (not (flag-set? 'lookout-visited))
              (set-flag 'lookout-visited)
-             (p "The view from the lookout is impressive. The massive dam looks like a miniature from here. She also sees some small villages along the dried Martaanvuo river, and a bunch of paths and routes connecting the patchwork geography. Far in the distance, a stretch of highway stretches in the distance.")
+             (p "The view from the lookout is impressive. The massive dam looks like a miniature from here. She also sees some small villages along the dried Martaanvuo river, and a bunch of paths and routes connecting the rough-hewn geography. Far in the distance a stretch of highway stretches in the distance.")
+
+
+             (define (reveal-route route)
+              (cond [(not (null? route))
+                     (set-route-hidden?! route #f)
+                     (notice (format "Route revealed: [~a] – [~a] – [~a]" (Place-shortname (get-place-by-id (route-a route))) (route-descr-from-a route) (Place-shortname (get-place-by-id (route-b route)))))
+                     ]))
+
+             (reveal-route (get-route-between 'perimeter 'martaanvuo-dam))
+             (reveal-route (get-route-between 'martaanvuo-dam 'martaanvuo-basin))(reveal-route (get-route-between 'martaanvuo-basin 'martaanvuo-river))
+             (reveal-route (get-route-between 'martaanvuo-river 'abandoned-village))
+             (reveal-route (get-route-between 'abandoned-village 'village))
              (award-xp! 2 "for gaining some perspective")
-             (dev-note "TODO: unhide some paths")
+
              (wait-for-confirm))]
           [else
            (p "It's too fucking dark to see anything.")])]

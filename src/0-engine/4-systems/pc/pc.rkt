@@ -330,7 +330,7 @@
       "Otava's mangled body hangs limp against the rock wall, a feast for carrioneaters, torn apart, sustenance for new generations, possessions strewn in the underbrush.")]))
 
 (provide award-xp!)
-(define (award-xp! amount . reason)
+(define (award-xp! amount [reason '()])
   (if (null? reason) (notice (format "+~a xp" amount)) (notice (format "+~a xp ~a" amount reason)))
   (set-pc-actor-xp! (pc) (+ (pc-actor-xp (pc)) amount)))
 

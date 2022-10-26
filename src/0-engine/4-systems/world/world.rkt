@@ -145,6 +145,18 @@
   (define r (findf (λ (route) (equal? id (location-id route))) routes))
   (if r r '()))
 
+(provide get-route-between)
+(define (get-route-between a b)
+  (define w (current-world))
+  (define routes (world-routes w))
+  (define r (findf (λ (route)
+                     (or (and (equal? a (route-a route))
+                              (equal? b (route-b route)))
+                         (and (equal? b (route-a route))
+                              (equal? a (route-b route)))))
+                   routes))
+  (if r r '()))
+
 (provide get-place-by-id)
 (define (get-place-by-id id)
   (define w (current-world))
