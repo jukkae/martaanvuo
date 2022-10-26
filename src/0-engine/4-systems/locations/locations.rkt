@@ -63,8 +63,7 @@
           [(not (equal? (get-current-light-level) 'pitch-black))
            (when (not (flag-set? 'lookout-visited))
              (set-flag 'lookout-visited)
-             (p "The view from the lookout is impressive. The massive dam looks like a miniature from here. She also sees some small villages along the dried Martaanvuo river, and a bunch of paths and routes connecting the rough-hewn geography. Far in the distance a stretch of highway stretches in the distance.")
-
+             (p "The view from the lookout is impressive. The massive [dam] looks like a miniature, keeping back the waters from the [dried basin]. There's also two small [villages] along the mostly dried Martaanvuo riverbed, maybe a half-day walk from the dam. Far in the distance a stretch of highway stretches in the distance.")
 
              (define (reveal-route route)
               (cond [(not (null? route))

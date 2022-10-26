@@ -102,6 +102,29 @@
         (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice))))))
   (newline))
 
+(define (print-static-choices-with-keys static-choices-with-keys)
+  (for ([(k v) (in-hash static-choices-with-keys)])
+    (display (car v))
+    (cond
+      [(equal? k "0")
+       (displayln "")
+       (displayln "")]
+      [else (display " ")]))
+  (newline)
+  (newline)
+  ; (define choices
+  ;   (for/list ([(k v) (in-hash static-choices-with-keys)])
+  ;     (cons k v)))
+
+  ; (set! choices (sort choices (λ (c1 c2) (< (car c1) (car c2)))))
+
+  ; (for ([choice choices])
+  ;   (if (choice-unavailable? (cdr choice))
+  ;       (displayln (format "[ ]: ~a" (choice-name (cdr choice))))
+  ;       (displayln (format "[~a]: ~a" (car choice) (choice-name (cdr choice))))))
+  ; (newline)
+  )
+
 (define (print-meta-commands-with-keys meta-commands-with-keys)
   (for ([(k v) (in-hash meta-commands-with-keys)])
     (display (car v))
@@ -114,10 +137,12 @@
   (newline))
 
 (define (print-choices-and-meta-commands-with-keys choices-with-keys
+                                                   static-choices-with-keys
                                                    fragment-decisions-with-keys
                                                    meta-commands-with-keys)
   (print-decisions-with-keys fragment-decisions-with-keys)
   (print-choices-with-keys choices-with-keys)
+  (print-static-choices-with-keys static-choices-with-keys)
   (print-meta-commands-with-keys meta-commands-with-keys))
 
 (define (meta-command-valid? meta-commands-with-keys input)

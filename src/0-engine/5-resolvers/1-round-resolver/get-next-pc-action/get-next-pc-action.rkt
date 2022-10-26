@@ -4,6 +4,7 @@
 
 (require "menu.rkt"
          "pc-choices.rkt"
+         "make-explore-choice.rkt"
 
          "../fragment-handler.rkt"
 
@@ -63,6 +64,9 @@
        (build-keys-to-choices-map
         choices
         first-free-index)) ; should check for pending actions and name choices accordingly
+     (define static-choices-with-keys (make-hash))
+     ; todo smarter logic
+     (hash-set! static-choices-with-keys "E" (cons "[E]: Explore." (make-explore-choice)))
      (define meta-commands-with-keys (get-meta-commands-with-keys))
 
      (if question-repeated? (describe-situation #t) (describe-situation #f))
@@ -75,6 +79,7 @@
        (display-prompt))
 
      (print-choices-and-meta-commands-with-keys choices-with-keys
+                                                static-choices-with-keys
                                                 decisions-with-keys
                                                 meta-commands-with-keys)
 
@@ -104,6 +109,12 @@
         (cond
           [(equal? 'cancel action) (what-do-you-do #f)]
           [else (return action)])]
+       [(static-choice-valid? static-choices-with-keys input)
+        ; THIS RESOLVES THE CHOICE
+        (define action ((choice-resolution-effect (static-choice-valid? static-choices-with-keys input))))
+        (cond
+          [(equal? 'cancel action) (what-do-you-do #f)]
+          [else (return action)])]
 
        [else
         ; if whitespace only
@@ -112,6 +123,12 @@
                     (format "Unknown command: [~a]" input)))
         (newline)
         (what-do-you-do #t)]))))
+
+(define (static-choice-valid? static-choices-with-keys input)
+  (set! input (string-upcase input))
+  (define choice (hash-ref static-choices-with-keys input '()))
+  (define c (cdr choice))
+  (if (and (not (null? c)) (not (choice-unavailable? c))) c #f))
 
 (define (choice-valid? choices-with-keys input)
   (define choice (hash-ref choices-with-keys (string->number input) '()))
