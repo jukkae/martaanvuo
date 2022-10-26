@@ -206,17 +206,9 @@
 
 
 (define (get-nighttime-choices world actor)
-  #;(dev-note "get-night-time-choices: not implemented yet")
   (define r '())
   (append-element! r
     (choice-factory 'sleep))
-  (cond
-    [(pc-has-sense-organ? 'sonar)
-     (append-element! r
-       (when (and (Place? (current-location))
-                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
-        (make-explore-choice)))])
-
   r)
 
 (define (get-evening-choices world actor)
@@ -232,7 +224,8 @@
               (not (equal? (action-symbol (current-pending-action)) 'cancel-traverse))
               )
          (make-cancel-traverse-choice))
-   (when (not (null? (current-pending-action)))
+   (when (and (not (null? (current-pending-action)))
+              (not (equal? (action-symbol (current-pending-action)) 'explore)))
          (make-choice
           (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
@@ -242,11 +235,6 @@
               (current-pending-action)
               ; continue and reset
               (reset-pending-action!)))))
-   (cond
-    [(pc-has-sense-organ? 'sonar)
-     (when (and (Place? (current-location))
-                (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
-        (make-explore-choice))])
    )))
 
 
@@ -256,13 +244,12 @@
         #t
         (begin
           (cond
-            ; show pending action
-            ((string-prefix? (choice-name choice) "[continue]")
-             #t)
+            ; show pending action, except for the ones provided as static
+            [(string-prefix? (choice-name choice)
+                              "[continue]")
+             (if (equal? (action-symbol choice) 'explore) #f #t)]
 
             ; don't show actions that have same symbol as pending action
-            ; (note: this may or may not lead to intended results, see how it works)
-            ; plot twist: it is shit and has to be fixed
             ((equal? (choice-id choice) (action-symbol (current-pending-action)))
              #f)
 
@@ -277,7 +264,7 @@
      (condense
       (list
 
-       (when (not (null? (current-pending-action)))
+       (when (and (not (null? (current-pending-action))))
          (make-choice
           (action-symbol (current-pending-action))
           (get-continue-pending-action-name)
@@ -364,10 +351,6 @@
                   (pc-has-item? 'ration)) ; TODO: should check for all comestibles
          (list
           (choice-factory 'eat)))
-
-       (when (and (Place? (current-location))
-                  (not (equal? (Place-explored (current-location)) 'exhaustively-explored)))
-        (list (make-explore-choice)))
 
        (when (or (actor-has-condition-of-type? (pc) 'bleeding)
                  (actor-has-condition-of-type? (pc) 'broken-bones)

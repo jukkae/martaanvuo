@@ -12,6 +12,8 @@
 
          "../../../4-systems/actors/conditions.rkt"
          "../../../4-systems/checks/checks.rkt"
+         "../../../4-systems/pc/pc.rkt"
+         "../../../4-systems/world/world.rkt"
 
          "../../../7-state/state.rkt")
 
@@ -127,11 +129,39 @@
      'time-passing-handled)))
 
 (define (make-explore-choice)
-  (define explore-cost
-    (cond
-      [(equal? (location-size (current-location)) 'large) 30]
-      [else 10]))
   (cond
-    ; (pc-has-condition? 'ankle-broken) ; TODO: more ergonomic
-    [(actor-has-condition-of-type? (pc) 'ankle-broken) (set! explore-cost (* 3 explore-cost))])
-  (make-choice 'explore (format "Explore. [~a ι]" explore-cost) (λ () (explore-action explore-cost))))
+   [(and (not (null? (current-pending-action)))
+         (equal? (action-symbol (current-pending-action)) 'explore))
+
+    (displayln "FOO")
+
+    (make-choice
+         (action-symbol (current-pending-action))
+         (get-continue-pending-action-name)
+
+         (λ ()
+           (begin0
+             (current-pending-action)
+             ; continue and reset
+             (reset-pending-action!))))
+    ]
+   [else
+    (define explore-cost
+      (cond
+        [(equal? (location-size (current-location)) 'large) 30]
+        [else 10]))
+
+    (cond
+      ; (pc-has-condition? 'ankle-broken) ; TODO: more ergonomic
+      [(actor-has-condition-of-type? (pc) 'ankle-broken) (set! explore-cost (* 3 explore-cost))])
+
+    (cond [(and (Place? (current-location))
+                (not (equal? (Place-explored (current-location)) 'exhaustively-explored))
+                ;
+                (or (and (pc-has-sense-organ? 'eyes)
+                         (not (equal? (get-current-light-level) 'pitch-black)))
+                    (pc-has-sense-organ? 'sonar)))
+           (make-choice 'explore (format "Explore. [~a ι]" explore-cost) (λ () (explore-action explore-cost)))]
+          [else
+           (make-unavailable-choice "Explore." "Too dark.")])
+    ]))

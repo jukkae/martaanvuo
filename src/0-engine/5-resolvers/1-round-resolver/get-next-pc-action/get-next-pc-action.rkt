@@ -128,7 +128,7 @@
 (define (static-choice-valid? static-choices-with-keys input)
   (set! input (string-upcase input))
   (define choice (hash-ref static-choices-with-keys input '()))
-  (define c (cdr choice))
+  (define c (if (not (null? choice)) (cdr choice) '()))
   (if (and (not (null? c)) (not (choice-unavailable? c))) c #f))
 
 (define (choice-valid? choices-with-keys input)

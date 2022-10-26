@@ -61,28 +61,8 @@
                                  #:target null
                                  #:tags '(always free))))]))
 
-(define (get-downtime-choices world pc)
-  (define choices '())
-  (cond
-    [(not (get-field in-combat world))
-     (set! choices (cons (choice-from-symbol world pc 'forage) choices)) ; eurgh
-     (set! choices (cons (choice-from-symbol world pc 'search) choices))
-     (cond
-       [(and (pc-hungry?) (memq 'food (get-field inventory pc)))
-        (set! choices (cons (choice-from-symbol world pc 'eat) choices))])
-     (cond
-       [(not (equal? (get-field time-of-day world) 'night))
-        (set! choices (cons (choice-from-symbol world pc 'craft) choices))])
-     (cond
-       [(or (equal? (get-field time-of-day world) 'night)
-            (equal? (get-field time-of-day world) 'evening))
-        (set! choices (cons (choice-from-symbol world pc 'sleep) choices))])])
-  choices)
-
 (define (get-free-choices world pc)
   (list (choice-from-symbol world pc 'inventory)))
 
-(define (get-choices world pc)
-  (append (get-downtime-choices world pc) (get-free-choices world pc)))
 
 (provide (all-defined-out))

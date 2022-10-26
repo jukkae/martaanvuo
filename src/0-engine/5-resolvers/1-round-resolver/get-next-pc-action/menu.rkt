@@ -104,7 +104,13 @@
 
 (define (print-static-choices-with-keys static-choices-with-keys)
   (for ([(k v) (in-hash static-choices-with-keys)])
-    (display (car v))
+    (define c (hash-ref static-choices-with-keys k '()))
+
+    (cond [(and (not (null? c))
+                (not (choice-unavailable? (cdr c))))
+           (display (car v))]
+          [else
+           (display "[ ]")])
     (cond
       [(equal? k "0")
        (displayln "")
