@@ -6,8 +6,8 @@
 (require "name.rkt"
          "../2-core/maybe.rkt")
 
+; this is more of a "title" currently – TODO: add an unique id to be used for searching and comparisons
 (struct item
-        ; this is more of a "title" currently – TODO: add an unique id to be used for searching and comparisons
         ([id : Symbol] [name : (U String Name)]
                        [details : (Maybe (U Number Symbol (Listof Symbol)))]
                        [quantity : (U Nonnegative-Integer Nonnegative-Float)])

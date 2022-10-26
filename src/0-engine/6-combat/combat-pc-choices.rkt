@@ -558,9 +558,9 @@
     (cond
       [(or (equal? (stance-range stance) 'engaged) ; TODO: in-melee-range?
            (equal? (stance-range stance) 'adjacent))
-       (for ([action-name #;'smash
-                          #;'bludgeon
-                          (list 'strike)])
+       (for (#;'smash
+             #;'bludgeon
+             [action-name (list 'strike)])
          (define choice (make-named-attack action-name target))
          (set! combat-choices (append-element combat-choices choice)))])
     (cond

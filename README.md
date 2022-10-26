@@ -3,7 +3,7 @@
 ## Requirements
 
 - Download https://download.racket-lang.org/ or install cli Racket (`brew install racket`)
-- Install Racket packages: `text-table`, `rebellion`, `reprovide-lang-lib`, `rackjure`, `anaphoric`,  and `mred-designer`: `raco pkg install --auto text-table rebellion reprovide-lang-lib rackjure anaphoric mred-designer`. When installing new packages, also install them for cross-compilation: `raco cross --target --x86_64-win pkg install package-name`.
+- Install Racket packages: `text-table`, `rebellion`, `reprovide-lang-lib`, `rackjure`, `anaphoric`, `fmt`,  and `mred-designer`: `raco pkg install --auto text-table rebellion reprovide-lang-lib rackjure anaphoric fmt mred-designer`. When installing new packages, also install them for cross-compilation: `raco cross --target --x86_64-win pkg install package-name`.
 - VS Code might require `racket-langserver`.
 
 ## Development

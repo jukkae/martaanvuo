@@ -63,9 +63,9 @@
   (current-completed-fragments (append-element (current-completed-fragments) (current-fragment-id)))
 
   (define tl
-    (advance-time-by-iotas!
-     ; TODO: This is broken, should happen on exiting from fragment, or on enter, or something
-     (story-fragment-time-taken-by-fragment (get-fragment (current-fragment-id)))))
+    ; TODO: This is broken, should happen on exiting from fragment, or on enter, or something
+    (advance-time-by-iotas! (story-fragment-time-taken-by-fragment
+                             (get-fragment (current-fragment-id)))))
   (process-timeline! tl)
   '())
 

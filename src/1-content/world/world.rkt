@@ -44,7 +44,7 @@
           #:zones (list (zone #:interactibles (list 'ritual-circle)
                               #:name "ritual circle"
                               #:description "at the ritual circle")))
-   (place #:id 'lookout #:features '() #:type 'int)
+   (place #:id 'lookout #:features '() #:type 'ext #:shortname "lookout")
    (place #:id 'shack
           #:features '()
           #:items (list (make-item 'shovel) (make-item 'shotgun))

@@ -9,13 +9,13 @@
           #:decisions #;(make-decision
                          #:title "HVAC and service access to reactor."
                          #:description "Otava takes a glance at the familiar-looking systems."
-                         #:next-fragment 'exit)
-                      (list (make-decision #:title "Launch Martaanvuo."
-                                           #:description "The terminal greets her:"
-                                           #:next-fragment 'recurse)
-                            (make-decision #:title "Close the terminal."
-                                           #:description "Otava closes the terminal."
-                                           #:next-fragment 'exit)))
+                         #:next-fragment
+                         'exit) (list (make-decision #:title "Launch Martaanvuo."
+                                                     #:description "The terminal greets her:"
+                                                     #:next-fragment 'recurse)
+                                      (make-decision #:title "Close the terminal."
+                                                     #:description "Otava closes the terminal."
+                                                     #:next-fragment 'exit)))
 
 (fragment 'read-the-book
           '()

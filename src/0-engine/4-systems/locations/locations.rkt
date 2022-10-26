@@ -55,7 +55,22 @@
        (set-flag 'magpie-hill-climbed)
        (p
         "Up on Magpie Hill there is a plateau, and on that plateau, there is a [ritual circle]. In the ritual circle, one can perform the Ritual of Translocation and enter the Maw.")
-       (wait-for-confirm))]))
+       (wait-for-confirm))]
+    ['lookout
+     (cond
+       [(pc-has-sense-organ? 'eyes)
+        (cond
+          [(not (equal? (get-current-light-level) 'pitch-black))
+           (when (not (flag-set? 'lookout-visited))
+             (set-flag 'lookout-visited)
+             (p "The view from the lookout is impressive. The massive dam looks like a miniature from here. She also sees some small villages along the dried Martaanvuo river, and a bunch of paths and routes connecting the patchwork geography. Far in the distance, a stretch of highway stretches in the distance.")
+             (award-xp! 2 "for gaining some perspective")
+             (dev-note "TODO: unhide some paths")
+             (wait-for-confirm))]
+          [else
+           (p "It's too fucking dark to see anything.")])]
+       [else
+        (p "Man, she should come back when she's got eyes, the view must be great from here.")])]))
 
 (define (get-location-decisions location)
   (condense
@@ -157,8 +172,6 @@
                     (equal? (get-current-light-level) 'dark)))
        (append-element! unpruned-rows (tr "location type" "badlands"))
        (append-element! unpruned-rows (tr "perceived with eyes" "mutated, bonelike scraggly trees"))
-       (append-element! unpruned-rows
-                        (tr "perceived with eyes" "a path leading to the ascent to Magpie hill"))
 
        (for ([z (location-zones place)])
          (cond
