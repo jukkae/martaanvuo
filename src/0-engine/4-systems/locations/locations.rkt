@@ -41,6 +41,10 @@
   (get-location-choices
   )])
 
+(lazy-require ["../../../1-content/narration/routes.rkt"
+  (get-traverse-text
+  )])
+
 (lazy-require ["../../../1-content/encounters/encounters.rkt"
   (spawn-markbearer-encounter!
    spawn-grabberkin-encounter!
@@ -202,6 +206,7 @@
       (append-element! unpruned-rows (tr "location type" "badlands"))
       (append-element! unpruned-rows (tr "perceived with eyes" "mutated, bonelike scraggly trees"))
       (append-element! unpruned-rows (tr "perceived with eyes" "a path leading to the ascent to Magpie hill"))
+
       (for ([z (location-zones place)])
         (cond [(Clue? (Zone-clue? z))
           (cond [(pc-has-sense-organ?
@@ -213,6 +218,17 @@
 
 
                 )]))
+
+      (when (Place? place)
+        (for ([route-id (Place-routes place)])
+          (define route (get-route-by-id route-id))
+          (when (not (route-hidden? route))
+            (append-element! unpruned-rows
+              (tr
+               (format "known route")
+               (format "~a" (get-traverse-text route (current-location)))))
+             )
+          ))
       )
       ])
   unpruned-rows

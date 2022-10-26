@@ -242,8 +242,8 @@
       'ext
       #:hidden? #f
       #:tags (list 'known)
-      #:descr-from-a "steep, rocky ascent"
-      #:descr-from-b "steep, rocky descent"
+      #:descr-from-a "steep ascent"
+      #:descr-from-b "steep descent"
       #:encounter-types '(markbearer)
       )
     (route-between 'magpie-hill 'lookout 10 'ext #:hidden? #f #:descr-from-a "path to the ledge" #:descr-from-b "path back to the plateau")
