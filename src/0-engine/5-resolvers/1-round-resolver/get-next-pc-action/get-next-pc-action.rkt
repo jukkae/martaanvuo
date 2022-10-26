@@ -66,7 +66,8 @@
         first-free-index)) ; should check for pending actions and name choices accordingly
      (define static-choices-with-keys (make-hash))
      ; todo smarter logic
-     (hash-set! static-choices-with-keys "E" (cons "[E]: Explore." (make-explore-choice)))
+     (define explore-choice (make-explore-choice))
+     (hash-set! static-choices-with-keys "E" (cons (format "[E]: ~a" (choice-name explore-choice)) explore-choice))
      (define meta-commands-with-keys (get-meta-commands-with-keys))
 
      (if question-repeated? (describe-situation #t) (describe-situation #f))
