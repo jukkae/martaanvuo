@@ -18,4 +18,6 @@
 (define (wait-for-input)
   (define input (string-trim (read-line)))
   (newline)
+  (hr)
+  (newline)
   input)
