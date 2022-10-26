@@ -2,6 +2,4 @@
 
 (require reprovide/reprovide)
 
-(reprovide
-  "input.rkt"
-  "output.rkt")
+(reprovide "input.rkt" "output.rkt")

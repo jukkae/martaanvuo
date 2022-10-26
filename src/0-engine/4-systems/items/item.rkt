@@ -2,168 +2,75 @@
 
 (provide (all-defined-out))
 
+(require "../../2-core/io.rkt"
+         "../../2-core/core.rkt"
+         "../../3-types/item.rkt")
 
-(require
-  "../../2-core/io.rkt"
-  "../../2-core/core.rkt"
-  "../../3-types/item.rkt")
-
-
-(define (new-item
-         name
-         #:id id
-         #:details (details '())
-         #:quantity (quantity 1))
+(define (new-item name #:id id #:details (details '()) #:quantity (quantity 1))
   (item* id name details quantity))
 
-(define (new-ranged-weapon
-         name
-         #:id id
-         #:details (details '())
-         #:ammo-left ammo-left)
+(define (new-ranged-weapon name #:id id #:details (details '()) #:ammo-left ammo-left)
   (ranged-weapon* id name details 1 ammo-left))
 
-
 ; TODO: items = "content cards"
-(define (make-item
-         id
-         #:amount [amount 1])
+(define (make-item id #:amount [amount 1])
 
   (case id
-    ['shaman-bag
-     (new-item
-      "Shaman bag"
-      #:id id)]
+    ['shaman-bag (new-item "Shaman bag" #:id id)]
 
-    ['knife
-     (new-item
-      "Knife"
-      #:id id)]
+    ['knife (new-item "Knife" #:id id)]
 
-    ['lighter
-     (new-item
-      "Lighter"
-      #:id id)]
+    ['lighter (new-item "Lighter" #:id id)]
 
-    ['bolt-cutters
-     (new-item
-      "Bolt cutters"
-      #:id id)]
+    ['bolt-cutters (new-item "Bolt cutters" #:id id)]
 
-    ['revolver
-     (new-ranged-weapon
-      "Revolver"
-      #:id 'revolver
-      #:ammo-left 3)]
+    ['revolver (new-ranged-weapon "Revolver" #:id 'revolver #:ammo-left 3)]
 
-    ['ammo
-     (new-item
-      "Ammo"
-      #:id id
-      #:quantity 2)]
+    ['ammo (new-item "Ammo" #:id id #:quantity 2)]
 
-    ['ration
-     (new-item
-      "Food rations"
-      #:id id
-      #:quantity amount)]
+    ['ration (new-item "Food rations" #:id id #:quantity amount)]
 
-    ['fresh-berries
-     (new-item
-      "Berries, fresh"
-      #:id id
-      #:quantity amount)]
+    ['fresh-berries (new-item "Berries, fresh" #:id id #:quantity amount)]
 
-    ['vatruska
-     (new-item
-      "Vatruska"
-      #:id id
-      #:quantity amount)]
+    ['vatruska (new-item "Vatruska" #:id id #:quantity amount)]
 
-    ['knife
-     (new-item
-      "Knife"
-      #:id id)]
+    ['knife (new-item "Knife" #:id id)]
 
-    ['rope
-     (new-item
-      "Rope"
-      #:id id)]
+    ['rope (new-item "Rope" #:id id)]
 
-    ['flashlight
-     (new-item
-      "Flashlight"
-      #:id id
-      #:details 34)] ; charge percentage
+    ['flashlight (new-item "Flashlight" #:id id #:details 34)] ; charge percentage
 
-    ['empty-flashlight
-     (new-item
-      "Flashlight (no batteries)"
-      #:id id
-      #:details 0)] ; charge percentage
+    ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0)] ; charge percentage
 
-    ['gold
-     (new-item
-      "gold"
-      #:id id
-      #:quantity amount)]
+    ['gold (new-item "gold" #:id id #:quantity amount)]
 
     ['lucky-charm-slot-machine
-     (new-item
-      "Lucky charm (slot machine)"
-      #:id 'lucky-charm-slot-machine
-      #:details 'passive
-      )
-      ]
+     (new-item "Lucky charm (slot machine)" #:id 'lucky-charm-slot-machine #:details 'passive)]
 
-    [else
-     (new-item
-      (capitalize-first-letter (symbol->string id))
-      #:id id
-      #:quantity amount)]))
+    [else (new-item (capitalize-first-letter (symbol->string id)) #:id id #:quantity amount)]))
 
 (define (increase-ammo! gun)
   (set-ranged-weapon-ammo-left! gun (add1 (ranged-weapon-ammo-left gun))))
 
-(define (item-info-card
-         item
-         #:title [title "Item"])
+(define (item-info-card item #:title [title "Item"])
 
-  (define body (tbody (cond ((ranged-weapon? item)
-                             (tr
-                              (item-name item)
-                              (format "ammo left: ~a" (ranged-weapon-ammo-left item))))
-                            ((equal? (item-id item) 'bolt-cutters)
-                             (tr
-                              (item-name item)
-                              "Cuts, breaks, crushes and cracks."))
-                            ((equal? (item-id item) 'ration)
-                             (tr
-                              (item-name item)
-                              (~v (item-details item))))
-                            ((equal? (item-id item) 'fresh-berries)
-                             (define quantity-text (if (= (item-quantity item) 1)
-                                                       "handful"
-                                                       "handfuls"))
-                             (tr
-                              (item-name item)
-                              (format "~a ~a" (item-quantity item) quantity-text)))
-                            ((item? item)
-                             (tr
-                              (item-name item)
-                              (~v (item-details item))))
-                            (else
-                             (tr
-                              (symbol->string item)
-                              "NA")))))
+  (define body
+    (tbody (cond
+             [(ranged-weapon? item)
+              (tr (item-name item) (format "ammo left: ~a" (ranged-weapon-ammo-left item)))]
+             [(equal? (item-id item) 'bolt-cutters)
+              (tr (item-name item) "Cuts, breaks, crushes and cracks.")]
+             [(equal? (item-id item) 'ration) (tr (item-name item) (~v (item-details item)))]
+             [(equal? (item-id item) 'fresh-berries)
+              (define quantity-text (if (= (item-quantity item) 1) "handful" "handfuls"))
+              (tr (item-name item) (format "~a ~a" (item-quantity item) quantity-text))]
+             [(item? item) (tr (item-name item) (~v (item-details item)))]
+             [else (tr (symbol->string item) "NA")])))
   (info-card body title))
 
 (define (weapon-info gun)
   (define body
-    (append-element
-     (for/list ([item-detail (item-details gun)])
-       (tr (car item-detail)
-           (~s (cdr item-detail))))
-     (tr "Ammo left"
-         (number->string (ranged-weapon-ammo-left gun)))))
+    (append-element (for/list ([item-detail (item-details gun)])
+                      (tr (car item-detail) (~s (cdr item-detail))))
+                    (tr "Ammo left" (number->string (ranged-weapon-ammo-left gun)))))
   (info-card body (item-name gun)))

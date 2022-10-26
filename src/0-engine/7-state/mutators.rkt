@@ -1,45 +1,39 @@
 #lang at-exp racket
 
-
 (provide (all-defined-out))
 
 (require racket/lazy-require)
 
-(require
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
+(require "../2-core/io.rkt"
+         "../2-core/core.rkt"
 
-  "../3-types/actor.rkt"
-  "../3-types/location.rkt"
-  "../3-types/pc-actor.rkt"
-  "../3-types/place.rkt"
-  "../3-types/task.rkt"
+         "../3-types/actor.rkt"
+         "../3-types/location.rkt"
+         "../3-types/pc-actor.rkt"
+         "../3-types/place.rkt"
+         "../3-types/task.rkt"
 
-  "../4-systems/actors/actor.rkt"
-  ;;; "../4-systems/pc/character-sheet.rkt"
-  "../4-systems/world/world.rkt"
+         "../4-systems/actors/actor.rkt"
+         ;;; "../4-systems/pc/character-sheet.rkt"
+         "../4-systems/world/world.rkt"
 
-  "../3-types/stance.rkt"
-  )
+         "../3-types/stance.rkt")
 
-(lazy-require ["state.rkt" (
-  current-flags
-  current-completed-fragments
-  current-fragment-id
-  current-in-combat?
-  current-life
-  current-pc
-  current-tasks
-  current-epithets
-  current-run
-  current-once-per-day-actions-done
-  )])
+(lazy-require ["state.rkt"
+               (current-flags current-completed-fragments
+                              current-fragment-id
+                              current-in-combat?
+                              current-life
+                              current-pc
+                              current-tasks
+                              current-epithets
+                              current-run
+                              current-once-per-day-actions-done)])
 
-(lazy-require ["../6-combat/combat.rkt" (
-  end-combat!
-  )])
+(lazy-require ["../6-combat/combat.rkt" (end-combat!)])
 
-(define (in-combat?) (current-in-combat?))
+(define (in-combat?)
+  (current-in-combat?))
 
 (define (engaged?)
   (define any-enemy-engaged? #f)
@@ -71,40 +65,31 @@
   enemies-in-range)
 
 (define (includes-enemy-of-type enemies type)
-  (findf (λ (enemy) (equal? (actor-type enemy) type))
-         enemies))
+  (findf (λ (enemy) (equal? (actor-type enemy) type)) enemies))
 
 (define (current-location)
   (get-location-by-id (actor-location-id (pc))))
 
 (define (get-current-enemies)
-  (filter
-   (λ (actor) (and (actor-alive? actor)
-                   (not (pc-actor? actor))))
-   (location-actors (current-location))))
+  (filter (λ (actor) (and (actor-alive? actor) (not (pc-actor? actor))))
+          (location-actors (current-location))))
 
 (define (get-current-enemy)
- (define enemies (get-current-enemies))
- (cond ((null? enemies)
-        #f)
-       ((> 1 (length enemies))
-        (dev-note "get-current-enemy: Multiple enemies present!")
-        (car enemies))
-       (else
-        (car enemies)))
-)
+  (define enemies (get-current-enemies))
+  (cond
+    [(null? enemies) #f]
+    [(> 1 (length enemies))
+     (dev-note "get-current-enemy: Multiple enemies present!")
+     (car enemies)]
+    [else (car enemies)]))
 
 (define (once-per-day-action-done? action-symbol)
-  (if (member action-symbol (current-once-per-day-actions-done))
-      #t
-      #f))
+  (if (member action-symbol (current-once-per-day-actions-done)) #t #f))
 
 (define (mark-once-per-day-action-done! action-symbol)
   (when (not (once-per-day-action-done? action-symbol))
     (current-once-per-day-actions-done
-      (append-element (current-once-per-day-actions-done)
-                      action-symbol))))
-
+     (append-element (current-once-per-day-actions-done) action-symbol))))
 
 ; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
 (define (pc)
@@ -117,17 +102,16 @@
   (set-actor-statuses! (pc) '())
   (end-combat!))
 
-
 ; actor or ActorId
 (define (remove-enemy enemy)
-  (when (or (symbol? enemy) (number? enemy)) (set! enemy (get-actor enemy)))
+  (when (or (symbol? enemy) (number? enemy))
+    (set! enemy (get-actor enemy)))
   (remove-actor-from-location! (get-location-by-id (actor-location-id enemy)) enemy))
 
 (provide actor-in-range?)
 (define (actor-in-range? enemy range)
   (define stance (actor-stance enemy))
   (equal? (stance-range stance) range))
-
 
 (define (increment-achievement! achievement)
   (case achievement
@@ -140,5 +124,4 @@
   (current-fragment-id '()))
 
 (define (fragment-completed? id)
-  (memq id (current-completed-fragments))
-)
+  (memq id (current-completed-fragments)))

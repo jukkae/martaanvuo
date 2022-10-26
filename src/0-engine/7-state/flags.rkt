@@ -1,18 +1,13 @@
 #lang at-exp racket
 
-
 (provide (all-defined-out))
 
 (require racket/lazy-require)
 
-(require
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
-  )
+(require "../2-core/io.rkt"
+         "../2-core/core.rkt")
 
-(lazy-require ["state.rkt" (
-  current-flags
-  )])
+(lazy-require ["state.rkt" (current-flags)])
 
 (define (set-flag flag)
   (when (not (flag-set? flag))
@@ -26,9 +21,7 @@
   (memq flag (current-flags)))
 
 (define (toggle-flag flag)
-  (if (flag-set? flag)
-      (remove-flag flag)
-      (set-flag flag)))
+  (if (flag-set? flag) (remove-flag flag) (set-flag flag)))
 
 (define (print-flags)
   (dev-note (format "flags: ~a" (current-flags))))

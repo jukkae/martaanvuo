@@ -2,12 +2,10 @@
 
 (provide resolve-action-initiative)
 
-(require
-  "../../2-core/core.rkt"
-  "../../3-types/action.rkt"
-  "../../3-types/actor.rkt"
-  "../../4-systems/actors/statuses.rkt"
-  )
+(require "../../2-core/core.rkt"
+         "../../3-types/action.rkt"
+         "../../3-types/actor.rkt"
+         "../../4-systems/actors/statuses.rkt")
 
 ; (: -> Action Actor Natural) ; or maybe Initiative instead of Natural
 (define (resolve-action-initiative action actor)
@@ -15,10 +13,9 @@
 
   (define action-mod 0)
 
-  (cond ((has-tag? action 'fast)
-         (set! action-mod 2))
-        ((has-tag? action 'slow)
-         (set! action-mod -4)))
+  (cond
+    [(has-tag? action 'fast) (set! action-mod 2)]
+    [(has-tag? action 'slow) (set! action-mod -4)])
 
   (when (actor-has-status-of-type? actor 'fast)
     (set! action-mod (+ action-mod 4)))

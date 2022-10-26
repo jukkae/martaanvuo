@@ -2,14 +2,12 @@
 
 (provide (all-defined-out))
 
-(require
-  "dev-note.rkt"
-  "dice.rkt"
-  "list-utils.rkt"
-  "menu-utils.rkt"
-  "output.rkt"
-  "string-utils.rkt"
-  )
+(require "dev-note.rkt"
+         "dice.rkt"
+         "list-utils.rkt"
+         "menu-utils.rkt"
+         "output.rkt"
+         "string-utils.rkt")
 
 (define current-session-score-dice (make-parameter 0))
 (define (current-session-score-dice++ [reason '()])

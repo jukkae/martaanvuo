@@ -4,26 +4,23 @@
 
 (require racket/lazy-require)
 
-(require
+(require "../1-index/state.rkt"
 
-  "../1-index/state.rkt"
+         "../2-core/io.rkt"
+         "../2-core/core.rkt"
 
-  "../2-core/io.rkt"
-  "../2-core/core.rkt"
+         "../3-types/actor.rkt"
+         "../3-types/combat-event.rkt"
+         "../3-types/condition.rkt"
+         "../3-types/pc-actor.rkt"
+         "../3-types/stance.rkt"
+         "../3-types/status.rkt"
+         "../3-types/world.rkt"
 
-  "../3-types/actor.rkt"
-  "../3-types/combat-event.rkt"
-  "../3-types/condition.rkt"
-  "../3-types/pc-actor.rkt"
-  "../3-types/stance.rkt"
-  "../3-types/status.rkt"
-  "../3-types/world.rkt"
+         "../4-systems/actors/actor.rkt"
+         "../4-systems/pc/pc.rkt"
 
-  "../4-systems/actors/actor.rkt"
-  "../4-systems/pc/pc.rkt"
-
-  "../../1-content/narration/combat-narration.rkt"
-  )
+         "../../1-content/narration/combat-narration.rkt")
 
 (define (make-combat-event details)
   (combat-event* details (world-elapsed-time (current-world))))
@@ -48,5 +45,5 @@
   (current-combat-timeline '())
   (wait-for-confirm)
   #;(when (pc-is-alive?)
-    #;(go-to-fragment 'post-combat)
-    #;(next-chapter!)))
+      #;(go-to-fragment 'post-combat)
+      #;(next-chapter!)))

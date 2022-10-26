@@ -2,34 +2,19 @@
 
 (provide (all-defined-out))
 
-(require
-  "../../0-engine/0-api/api.rkt"
-  )
+(require "../../0-engine/0-api/api.rkt")
 
 (define (make-melee-action actor #:n n #:x x #:bonus bonus)
-  (make-melee-attack-action
-   #:actor actor
-   #:duration 1
-   #:target 'pc
-   #:n n
-   #:x x
-   #:bonus bonus
-   )
-  )
+  (make-melee-attack-action #:actor actor #:duration 1 #:target 'pc #:n n #:x x #:bonus bonus))
 
 (define (make-skip-action actor)
   (define subject (actor-id actor))
-  (make-action
-    #:symbol 'skip
-    #:actor actor
-    #:duration 1
-    #:tags '(initiative-based-resolution)
-    #:details '(slow silent)
-    #:resolution-rules `(
-    (actor-add-status! (get-actor ,subject) (status 'fast 1))
-    'ok
-    )
-    ))
+  (make-action #:symbol 'skip
+               #:actor actor
+               #:duration 1
+               #:tags '(initiative-based-resolution)
+               #:details '(slow silent)
+               #:resolution-rules `((actor-add-status! (get-actor ,subject) (status 'fast 1)) 'ok)))
 
 (define (approach-action actor)
   (define next-range
@@ -45,20 +30,16 @@
    #:duration 0
    #:target '()
    #:tags '(initiative-based-resolution)
-   #:resolution-rules
-   `(
-     (set-actor-stance-range! (get-actor ,subject) ',next-range #f)
-     'ok)
+   #:resolution-rules `((set-actor-stance-range! (get-actor ,subject) ',next-range #f) 'ok)
    #:details '(slow)))
 
 (define (get-skip-action actor)
-  (make-action
-   #:symbol 'skip
-   #:actor actor
-   #:duration 0
-   #:target '()
-   #:tags '(initiative-based-resolution)
-   #:details '(slow silent)))
+  (make-action #:symbol 'skip
+               #:actor actor
+               #:duration 0
+               #:target '()
+               #:tags '(initiative-based-resolution)
+               #:details '(slow silent)))
 
 (define (retreat-action actor)
   (define next-range
@@ -68,43 +49,33 @@
       ['close 'nearby]
       ['nearby 'far]))
   (define subject (actor-id actor))
-  (make-action
-   #:symbol 'retreat
-   #:actor actor
-   #:duration 0
-   #:target '()
-   #:tags '(initiative-based-resolution)
-   #:resolution-rules
-   `(
-     (set-actor-stance-range! (get-actor ,subject) ',next-range)
-     'ok)
-   #:details '(slow)))
+  (make-action #:symbol 'retreat
+               #:actor actor
+               #:duration 0
+               #:target '()
+               #:tags '(initiative-based-resolution)
+               #:resolution-rules `((set-actor-stance-range! (get-actor ,subject) ',next-range) 'ok)
+               #:details '(slow)))
 
 (define (escape-action actor)
   (define id (actor-id actor))
-  (make-action
-   #:symbol 'escape
-   #:actor actor
-   #:duration 1
-   #:target '()
-   #:tags '(initiative-based-resolution fast)
-   #:details '()
-   #:resolution-rules
-   `(
-     (notice (format "The ~a escapes" (get-combatant-name (get-actor ,id))))
-     (award-xp! 1)
-     (remove-actor-from-its-current-location! (get-actor ,(actor-id actor)))
-    'ok
-     ))
-  )
+  (make-action #:symbol 'escape
+               #:actor actor
+               #:duration 1
+               #:target '()
+               #:tags '(initiative-based-resolution fast)
+               #:details '()
+               #:resolution-rules
+               `((notice (format "The ~a escapes" (get-combatant-name (get-actor ,id))))
+                 (award-xp! 1)
+                 (remove-actor-from-its-current-location! (get-actor ,(actor-id actor)))
+                 'ok)))
 
 (define (try-to-escape actor)
-  (cond [(or (equal? (actor-stance-range actor) 'engaged)
-             (equal? (actor-stance-range actor) 'adjacent)
-             (equal? (actor-stance-range actor) 'close))
-         (retreat-action actor)]
-        [(equal? (actor-stance-range actor) 'nearby)
-         (retreat-action actor)]
-        [(equal? (actor-stance-range actor) 'far)
-         (escape-action actor)])
-  )
+  (cond
+    [(or (equal? (actor-stance-range actor) 'engaged)
+         (equal? (actor-stance-range actor) 'adjacent)
+         (equal? (actor-stance-range actor) 'close))
+     (retreat-action actor)]
+    [(equal? (actor-stance-range actor) 'nearby) (retreat-action actor)]
+    [(equal? (actor-stance-range actor) 'far) (escape-action actor)]))

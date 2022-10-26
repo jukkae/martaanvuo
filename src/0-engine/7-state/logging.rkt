@@ -7,12 +7,7 @@
 (require "../2-core/io.rkt"
          "../2-core/core.rkt")
 
-(lazy-require ["state.rkt"
- (current-log
-  current-part
-  current-chapter
-  current-prompt
-  )])
+(lazy-require ["state.rkt" (current-log current-part current-chapter current-prompt)])
 
 (define (append-to-log paragraph)
   (current-log (append-element (current-log) paragraph)))

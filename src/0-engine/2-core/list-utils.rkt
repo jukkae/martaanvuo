@@ -16,66 +16,47 @@
 ; 'golden-ratio: every value phi times less likely as the previous one
 (define (take-random l #:distribution [distribution 'constant])
   (case distribution
-   ['constant
-    (list-ref l (random (length l)))]
-   ['quadratic
-    (define n (length l))
-    (define max_roll (- (expt 2 n) 1))
-    (define roll (d 1 max_roll))
-    (define index (- (- n (exact-floor (log roll 2))) 1))
-    (list-ref l index)
-    ]
-   ['golden-ratio
-    (define base 1.618033) ; phi to some precision
-    (define n (length l))
-    (define max_roll (exact-floor (expt base n)))
-    (define roll (d 1 max_roll))
-    (define index (- (- n (exact-floor (log roll base))) 1))
-    (list-ref l index)]
-   [else (error (format "Unknown distribution ~a" distribution))])
-  )
+    ['constant (list-ref l (random (length l)))]
+    ['quadratic
+     (define n (length l))
+     (define max_roll (- (expt 2 n) 1))
+     (define roll (d 1 max_roll))
+     (define index (- (- n (exact-floor (log roll 2))) 1))
+     (list-ref l index)]
+    ['golden-ratio
+     (define base 1.618033) ; phi to some precision
+     (define n (length l))
+     (define max_roll (exact-floor (expt base n)))
+     (define roll (d 1 max_roll))
+     (define index (- (- n (exact-floor (log roll base))) 1))
+     (list-ref l index)]
+    [else (error (format "Unknown distribution ~a" distribution))]))
 
 (define (append-element lst elem)
   (append lst (list elem)))
 
 (define (reduce lst func)
-  (when (null? lst) (error "reduce: lst cannot be '()"))
-  (if (null? (cdr lst))
-      (car lst)
-      (func (car lst) (reduce (cdr lst) func))))
+  (when (null? lst)
+    (error "reduce: lst cannot be '()"))
+  (if (null? (cdr lst)) (car lst) (func (car lst) (reduce (cdr lst) func))))
 
 (define (prune lst)
-  (filter
-   (λ (x) (and (not (null? x))
-               (not (void? x))))
-   lst))
+  (filter (λ (x) (and (not (null? x)) (not (void? x)))) lst))
 
 (define (condense lst)
-  (filter
-   (λ (x) (and (not (null? x))
-               (not (void? x))))
-   (flatten lst)))
+  (filter (λ (x) (and (not (null? x)) (not (void? x)))) (flatten lst)))
 
 (define (insert-at lst pos x)
   (define-values (before after) (split-at lst pos))
   (append before (cons x after)))
 
 (define (collect-similar lst)
-  (hash->list
-   (foldl (lambda (key ht)
-            (hash-update ht key add1 0))
-          '#hash()
-          lst)))
+  (hash->list (foldl (lambda (key ht) (hash-update ht key add1 0)) '#hash() lst)))
 
 ; list of STRINGS
 (define (find-longest lst)
   (cond
-    [(empty? lst)
-     #f] ; 0 elements
-    [(empty? (cdr lst))
-     (car lst)] ; 1 element
-    [(>= (string-length (car lst)) (string-length (find-longest (cdr lst))))
-     (car lst)]
-    [else
-     (find-longest (cdr lst))]
-  ))
+    [(empty? lst) #f] ; 0 elements
+    [(empty? (cdr lst)) (car lst)] ; 1 element
+    [(>= (string-length (car lst)) (string-length (find-longest (cdr lst)))) (car lst)]
+    [else (find-longest (cdr lst))]))

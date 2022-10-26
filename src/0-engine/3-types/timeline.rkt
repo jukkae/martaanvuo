@@ -5,9 +5,6 @@
 (require "../2-core/maybe.rkt"
          "event.rkt")
 
-(struct timeline
- ([metadata : (Listof Symbol)]
-  [events : (Listof event)]
-  [duration : Natural])
+(struct timeline ([metadata : (Listof Symbol)] [events : (Listof event)] [duration : Natural])
   #:prefab
   #:mutable)

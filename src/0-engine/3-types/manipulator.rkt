@@ -2,8 +2,4 @@
 
 (provide (struct-out Manipulator))
 
-(struct Manipulator
-  ([id : Symbol]
-   [name : String])
-  #:prefab
-  #:mutable)
+(struct Manipulator ([id : Symbol] [name : String]) #:prefab #:mutable)

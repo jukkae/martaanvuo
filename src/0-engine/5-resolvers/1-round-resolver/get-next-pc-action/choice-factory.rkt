@@ -1,37 +1,34 @@
 #lang at-exp racket
 
-(require
-  "../../../1-index/content.rkt"
+(require "../../../1-index/content.rkt"
 
-  "../../../2-core/io.rkt"
-  "../../../2-core/core.rkt"
+         "../../../2-core/io.rkt"
+         "../../../2-core/core.rkt"
 
-  "../../../3-types/action.rkt"
-  "../../../3-types/actor.rkt"
-  "../../../3-types/choice.rkt"
-  "../../../3-types/item.rkt"
-  "../../../3-types/location.rkt"
-  "../../../3-types/name.rkt"
-  "../../../3-types/place.rkt"
-  "../../../3-types/pc-actor.rkt"
-  "../../../3-types/route.rkt"
-  "../../../3-types/world.rkt"
+         "../../../3-types/action.rkt"
+         "../../../3-types/actor.rkt"
+         "../../../3-types/choice.rkt"
+         "../../../3-types/item.rkt"
+         "../../../3-types/location.rkt"
+         "../../../3-types/name.rkt"
+         "../../../3-types/place.rkt"
+         "../../../3-types/pc-actor.rkt"
+         "../../../3-types/route.rkt"
+         "../../../3-types/world.rkt"
 
+         "../../../4-systems/actors/actor.rkt"
+         "../../../4-systems/blurbs/blurbs.rkt"
+         "../../../4-systems/checks/checks.rkt"
+         "../../../4-systems/items/item.rkt"
+         "../../../4-systems/locations/locations.rkt"
+         "../../../4-systems/pc/pc.rkt"
+         "../../../4-systems/world/time.rkt"
+         "../../../4-systems/world/world.rkt"
 
-  "../../../4-systems/actors/actor.rkt"
-  "../../../4-systems/blurbs/blurbs.rkt"
-  "../../../4-systems/checks/checks.rkt"
-  "../../../4-systems/items/item.rkt"
-  "../../../4-systems/locations/locations.rkt"
-  "../../../4-systems/pc/pc.rkt"
-  "../../../4-systems/world/time.rkt"
-  "../../../4-systems/world/world.rkt"
+         "../../../6-combat/combat-pc-choices.rkt"
 
-  "../../../6-combat/combat-pc-choices.rkt"
-
-  "../../../7-state/logging.rkt"
-  "../../../7-state/state.rkt"
-  )
+         "../../../7-state/logging.rkt"
+         "../../../7-state/state.rkt")
 
 ; TODO: action-symbol to choice mapping belongs to content
 (provide choice-factory)
@@ -39,106 +36,88 @@
   (case action-symbol
     ['sleep
      (cond
-      [(flag-set? 'camp-set-up)
-       (make-choice
-        'sleep
-        (format "Sleep. [until morning]")
-        (λ () (make-action
-             #:symbol 'sleep
-             #:actor (pc)
-             #:duration (time-until-next-morning)
-             #:on-after-rules
-             `(
-              (set-pc-actor-fatigue! (pc) 0)
-             )
-             )))]
-      [else
-       (make-choice
-        'sleep-rough
-        (format "Sleep rough. [until morning]")
-        (λ () (make-action
-             #:symbol 'sleep-rough
-             #:actor (pc)
-             #:duration (time-until-next-morning)
-             #:on-after-rules ; TODO: more properly, "late" resolve
-             `(
-               (define roll (d 1 4))
-               (notice (format "[1d4]: ~a" roll))
-               (cond ([= 1 roll]
-                (notice "Otava feels weak after sleeping rough.")
-                (pc-take-damage! (pc) 1 'sickness)))
-               (notice "Not as refreshing as it could've been.")
-               (set-pc-actor-fatigue! (pc) (exact-floor (/ (* 1 (pc-actor-fatigue (pc))) 3)))
-              'ok
-              )
-             )))
-       ])
-     ]
+       [(flag-set? 'camp-set-up)
+        (make-choice 'sleep
+                     (format "Sleep. [until morning]")
+                     (λ ()
+                       (make-action #:symbol 'sleep
+                                    #:actor (pc)
+                                    #:duration (time-until-next-morning)
+                                    #:on-after-rules `((set-pc-actor-fatigue! (pc) 0)))))]
+       [else
+        (make-choice 'sleep-rough
+                     (format "Sleep rough. [until morning]")
+                     (λ ()
+                       (make-action #:symbol 'sleep-rough
+                                    #:actor (pc)
+                                    #:duration (time-until-next-morning)
+                                    #:on-after-rules ; TODO: more properly, "late" resolve
+                                    `((define roll (d 1 4))
+                                      (notice (format "[1d4]: ~a" roll))
+                                      (cond
+                                        [[= 1 roll]
+                                         (notice "Otava feels weak after sleeping rough.")
+                                         (pc-take-damage! (pc) 1 'sickness)])
+                                      (notice "Not as refreshing as it could've been.")
+                                      (set-pc-actor-fatigue!
+                                       (pc)
+                                       (exact-floor (/ (* 1 (pc-actor-fatigue (pc))) 3)))
+                                      'ok))))])]
     ['camp
-     (make-choice
-      'camp
-      "set up camp [40 ι]"
-      (λ () (make-action
-             #:symbol 'camp
-             #:actor (pc)
-             #:duration 40
-             #:resolution-rules
-             `(
-               (set-flag 'camp-set-up)
-               'ok))))]
+     (make-choice 'camp
+                  "set up camp [40 ι]"
+                  (λ ()
+                    (make-action #:symbol 'camp
+                                 #:actor (pc)
+                                 #:duration 40
+                                 #:resolution-rules `((set-flag 'camp-set-up) 'ok))))]
 
     ['rest
-     (define next-time-of-day
-       (time-of-day-from-iotas (+ (world-elapsed-time (current-world))
-                                  100)))
+     (define next-time-of-day (time-of-day-from-iotas (+ (world-elapsed-time (current-world)) 100)))
      (make-choice
       'rest
       (format "Rest. [until ~a]" next-time-of-day)
-      (λ () (make-action
-             #:symbol 'rest
-             #:actor (pc)
-             #:duration (time-until-next-time-of-day)
-             #:on-before-rules
-             `(
-               (blurb 'rest-action)
-               (define bonus 4)
-               (define bonus-str " + 4")
-               (define encounter-roll (+ (d 1 6) bonus))
-               (define tn 5)
-               (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
-                               bonus-str
-                               tn
-                               encounter-roll
-                               (if (>= encounter-roll tn)
-                                   "success"
-                                   "fail")))
-               (cond [(< encounter-roll tn)
-                      (define resolve-events
-                        (list
-                         (make-event ,''spawn-encounter
-                                     '() ; pack info about enemies / event here
-                                     #:interrupting? #t)))
-                      (define metadata '(interrupted))
-                      (define duration
-                        (exact-floor (/
-                                      (time-until-next-time-of-day)
-                                      3)))
+      (λ ()
+        (make-action #:symbol 'rest
+                     #:actor (pc)
+                     #:duration (time-until-next-time-of-day)
+                     #:on-before-rules
+                     `((blurb 'rest-action)
+                       (define bonus 4)
+                       (define bonus-str " + 4")
+                       (define encounter-roll (+ (d 1 6) bonus))
+                       (define tn 5)
+                       (notice (format "Encounter roll: 1d6~a >= ~a: [~a] – ~a"
+                                       bonus-str
+                                       tn
+                                       encounter-roll
+                                       (if (>= encounter-roll tn) "success" "fail")))
+                       (cond
+                         [(< encounter-roll tn)
+                          (define resolve-events
+                            (list (make-event ,''spawn-encounter
+                                              '() ; pack info about enemies / event here
+                                              #:interrupting? #t)))
+                          (define metadata '(interrupted))
+                          (define duration (exact-floor (/ (time-until-next-time-of-day) 3)))
 
-                      (define world-tl (advance-time-until-next-interesting-event! duration #f))
-                      (define world-events (timeline-events world-tl))
+                          (define world-tl (advance-time-until-next-interesting-event! duration #f))
+                          (define world-events (timeline-events world-tl))
 
-                      (define all-events (append world-events resolve-events))
-                      (define all-metadata (append (timeline-metadata world-tl) metadata))
+                          (define all-events (append world-events resolve-events))
+                          (define all-metadata (append (timeline-metadata world-tl) metadata))
 
-                      (define tl (timeline all-metadata all-events duration))
+                          (define tl (timeline all-metadata all-events duration))
 
-                      (process-timeline! tl)
-                      tl]
-                     [else
-                     (define tl (advance-time-until-next-interesting-event! (time-until-next-time-of-day) #f #:resting? #t))
-                     (process-timeline! tl) 'time-passing-handled])
-               )
-             )))]
+                          (process-timeline! tl)
+                          tl]
+                         [else
+                          (define tl
+                            (advance-time-until-next-interesting-event! (time-until-next-time-of-day)
+                                                                        #f
+                                                                        #:resting? #t))
+                          (process-timeline! tl)
+                          'time-passing-handled])))))]
 
     ; submenu
     ['pick-up-item
@@ -154,43 +133,33 @@
                #:symbol 'pick-up
                #:actor (pc)
                #:duration 1
-               #:tags (if (current-in-combat?)
-                          '(initiative-based-resolution)
-                          '())
+               #:tags (if (current-in-combat?) '(initiative-based-resolution) '())
                #:resolution-rules
-               `(
-                ;  (define the-item ,item)
-                ;  (define id ',(item-id item))
-                 (define item-id ',(item-id item))
+               ;  (define the-item ,item)
+               ;  (define id ',(item-id item))
+               `((define item-id ',(item-id item))
                  (define the-item (find-item-in-current-zone item-id))
                  (remove-interactible-from-current-zone! the-item)
                  (add-item! the-item)
                  (notice (format "Picked up: ~a"
-                                 (cond [(item? the-item) (item-name the-item)]
-                                       [else (format "~a" the-item)])))
-                 (when (and (equal? item-id 'explosives)
-                            (not (task-exists? 'destroy-the-dam)))
-                   (p "Hold on. Explosives. She could destroy the dam, open up the Third Way, the way-by-the-water.")
-                   (add-new-task!
-                    (task
-                    'destroy-the-dam
-                    "Destroy the Dam"
-                    'in-progress
-                    "to open the 3rd Way!"
-                    "status: Dam is not destroyed."
-                    '()
-                    '()
-                    '()
-                    ))
-                   )
-                ;  (displayln the-item)
-                ;  (notice (format "Picking up: ~a" "foo"))
-                 )
-               )
-              ))
-        )
-      #:available-in-combat? #t)
-     ]
+                                 (cond
+                                   [(item? the-item) (item-name the-item)]
+                                   [else (format "~a" the-item)])))
+                 (when (and (equal? item-id 'explosives) (not (task-exists? 'destroy-the-dam)))
+                   (p
+                    "Hold on. Explosives. She could destroy the dam, open up the Third Way, the way-by-the-water.")
+                   (add-new-task! (task 'destroy-the-dam
+                                        "Destroy the Dam"
+                                        'in-progress
+                                        "to open the 3rd Way!"
+                                        "status: Dam is not destroyed."
+                                        '()
+                                        '()
+                                        '())))
+                 ;  (displayln the-item)
+                 ;  (notice (format "Picking up: ~a" "foo"))
+                 )))))
+      #:available-in-combat? #t)]
 
     ; This opens a submenu
     ['eat
@@ -200,8 +169,7 @@
          ['not-hungry "Not really hungry but she could eat."]
          ['hungry "Eat."]
          ['very-hungry "Eat, she's very hungry."]
-         ['starving "Eat. She's starving, eat. Eat now."]
-         ))
+         ['starving "Eat. She's starving, eat. Eat now."]))
      (make-choice
       'eat
       "Eat."
@@ -217,8 +185,7 @@
                #:target food
                #:tags '(downtime)
                #:resolution-rules
-               `(
-                 (define id ',(item-id food))
+               `((define id ',(item-id food))
                  (define food-tier
                    (case id
                      ['fresh-berries 0]
@@ -226,24 +193,15 @@
                      ['decaying-berries 0]
                      ['ration 1]
                      ['vatruska 2]
-                     [else 1])
-                   )
+                     [else 1]))
                  (decrease-pc-hunger-level food-tier)
                  (when (equal? id 'decaying-berries)
-                   (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '()))
-                   )
-
+                   (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '())))
                  ;  (case ',food-id
                  ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
                  ;    ['ration (p "The ration's dry and bland, but filling.")]
                  ;    ['vatruska (p "The vatruska tastes heavenly.")])
-                 (remove-item! id)
-
-                 ))))
-
-        ))
-     ]
-    ))
+                 (remove-item! id)))))))]))
 
 (define (select-food-to-eat)
   (define items (actor-inventory (pc)))
@@ -261,19 +219,17 @@
   (prln (format "Eat what? [1-~a], anything else to cancel." (length comestibles)))
   (br)
 
-  (for ([food comestibles]
-        [i (in-naturals 1)])
+  (for ([food comestibles] [i (in-naturals 1)])
     (prln (format "[~a] ~a (~a)" i (item-name food) (item-quantity food))))
   (br)
   (define input (string->number (wait-for-input)))
-  (cond ((and (number? input)
-              (> input 0)
-              (<= input (length comestibles)))
-         (define index (- input 1))
-         (list-ref comestibles index)
-         )
-        (else '()#;(p "Nevermind.")))
-  )
+  (cond
+    [(and (number? input) (> input 0) (<= input (length comestibles)))
+     (define index (- input 1))
+     (list-ref comestibles index)]
+    [else
+     '()
+     #;(p "Nevermind.")]))
 
 (define (select-item-to-pick-up)
   (define items (current-zone-items (current-location)))
@@ -281,31 +237,27 @@
   (prln (format "Pick up what? [1-~a], anything else to cancel." (length items)))
   (br)
 
-  (for ([item items]
-        [i (in-naturals 1)])
+  (for ([item items] [i (in-naturals 1)])
     (define name
-      (cond [(item? item)
-             (cond [(Name? (item-name item))
-                    (format "The ~a" (Name-singular (item-name item)))
-                   ]
-                   [(string? (item-name item))
-                    (item-name item)])]
-            [else (format "~a" item)]))
-    (cond [(item? item)
-           (if (= (item-quantity item) 1)
-               (prln (format "[~a] ~a." i name))
-               (prln (format "[~a] ~a (~a)." i name (item-quantity item))) ; TODO: pluralized
-               )
-           ]
-          [else (prln (format "[~a] ~a." i name))])
-    )
+      (cond
+        [(item? item)
+         (cond
+           [(Name? (item-name item)) (format "The ~a" (Name-singular (item-name item)))]
+           [(string? (item-name item)) (item-name item)])]
+        [else (format "~a" item)]))
+    (cond
+      [(item? item)
+       (if (= (item-quantity item) 1)
+           (prln (format "[~a] ~a." i name))
+           (prln (format "[~a] ~a (~a)." i name (item-quantity item))) ; TODO: pluralized
+           )]
+      [else (prln (format "[~a] ~a." i name))]))
   (br)
   (define input (string->number (wait-for-input)))
-  (cond ((and (number? input)
-              (> input 0)
-              (<= input (length items)))
-         (define index (- input 1))
-         (list-ref items index)
-         )
-        (else '()#;(p "Nevermind.")))
-  )
+  (cond
+    [(and (number? input) (> input 0) (<= input (length items)))
+     (define index (- input 1))
+     (list-ref items index)]
+    [else
+     '()
+     #;(p "Nevermind.")]))

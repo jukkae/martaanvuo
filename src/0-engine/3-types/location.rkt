@@ -2,39 +2,32 @@
 
 (provide (all-defined-out))
 
-(require
-  "location-ids.rkt"
-  "actor.rkt"
-  "item.rkt"
-  "zone.rkt"
+(require "location-ids.rkt"
+         "actor.rkt"
+         "item.rkt"
+         "zone.rkt"
 
-  "../2-core/maybe.rkt"
-  "../3-types/choice.rkt"
-  "../3-types/clue.rkt"
-  "../3-types/light-levels.rkt"
-  "../4-systems/actors/actor.rkt"
-  )
+         "../2-core/maybe.rkt"
+         "../3-types/choice.rkt"
+         "../3-types/clue.rkt"
+         "../3-types/light-levels.rkt"
+         "../4-systems/actors/actor.rkt")
 
 (define-type LocationType (U 'int 'ext))
 (define-type LocationSize (U 'container 'small 'large))
 
-(struct
-  location
-  ([id : LocationId]
-   [type : (Maybe LocationType)]
-   [size : (Maybe LocationSize)]
-   [details : (Listof Symbol)]
-   [actors : (Listof actor)]
-
-   [items : (Listof (U item Symbol))]
-   [features : (Listof Symbol)]
-   [hidden-features : (Listof Symbol)]
-   [zones : (Listof Zone)]
-
-   [tags : (Listof Symbol)]
-   [light-level : (U LightLevel 'natural)]
-   [encounter-types : (Listof Symbol)]
-   )
+(struct location
+        ([id : LocationId] [type : (Maybe LocationType)]
+                           [size : (Maybe LocationSize)]
+                           [details : (Listof Symbol)]
+                           [actors : (Listof actor)]
+                           [items : (Listof (U item Symbol))]
+                           [features : (Listof Symbol)]
+                           [hidden-features : (Listof Symbol)]
+                           [zones : (Listof Zone)]
+                           [tags : (Listof Symbol)]
+                           [light-level : (U LightLevel 'natural)]
+                           [encounter-types : (Listof Symbol)])
   #:prefab
   #:mutable
   #:constructor-name location*)
@@ -53,11 +46,7 @@
 
 (define (find-item [location : location] [id : Symbol])
   (define items (location-items location))
-  (findf (λ ([a : (U item Symbol)])
-           (if (item? a)
-               (equal? (item-id a) id)
-               (equal? a id)))
-         items))
+  (findf (λ ([a : (U item Symbol)]) (if (item? a) (equal? (item-id a) id) (equal? a id))) items))
 
 (define (add-feature-to-location! [location : location] [feature : Symbol])
   (set-location-features! location (cons feature (location-features location))))
@@ -72,7 +61,8 @@
   (set-location-hidden-features! location (cons hidden-feature (location-hidden-features location))))
 
 (define (remove-hidden-feature-from-location! [location : location] [hidden-feature : Symbol])
-  (set-location-hidden-features! location (remove hidden-feature (location-hidden-features location))))
+  (set-location-hidden-features! location
+                                 (remove hidden-feature (location-hidden-features location))))
 
 (define (location-has-hidden-feature? [location : location] [hidden-feature : Symbol])
   (memq hidden-feature (location-hidden-features location)))
@@ -87,11 +77,9 @@
 
 (: location-has-detail? (-> location Symbol Boolean))
 (define (location-has-detail? location detail)
-  (if (findf (λ (location-detail) (equal? detail location-detail))
-             (location-details location))
+  (if (findf (λ (location-detail) (equal? detail location-detail)) (location-details location))
       #t
       #f))
 
 (define (location-has-tag? [location : location] [tag : Symbol])
   (memq tag (location-tags location)))
-

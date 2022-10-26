@@ -2,33 +2,27 @@
 
 (provide (all-defined-out))
 
-(provide (all-from-out
-          "0-types/state.rkt"
-          "flags.rkt"
-          "mutators.rkt"
-          "pending-action.rkt"
-          "resolve-counts.rkt"
-          ))
+(provide (all-from-out "0-types/state.rkt"
+                       "flags.rkt"
+                       "mutators.rkt"
+                       "pending-action.rkt"
+                       "resolve-counts.rkt"))
 
 (require racket/serialize)
 
-(require
-  "0-types/state.rkt"
+(require "0-types/state.rkt"
 
-  "../1-index/content.rkt"
-  "../2-core/core.rkt"
-  "../3-types/fragment.rkt"
+         "../1-index/content.rkt"
+         "../2-core/core.rkt"
+         "../3-types/fragment.rkt"
 
-  "../4-systems/pc/pc.rkt"
-  "../4-systems/world/world.rkt"
-  )
+         "../4-systems/pc/pc.rkt"
+         "../4-systems/world/world.rkt")
 
-(require
-  "flags.rkt"
-  "mutators.rkt"
-  "pending-action.rkt"
-  "resolve-counts.rkt"
-  )
+(require "flags.rkt"
+         "mutators.rkt"
+         "pending-action.rkt"
+         "resolve-counts.rkt")
 
 (define current-rng-seed (make-parameter 0))
 
@@ -58,19 +52,13 @@
 (define (current-times-species-encountered++ species)
   (hash-set! (current-times-species-encountered)
              species
-             (add1 (hash-ref (current-times-species-encountered)
-                             species
-                             0))))
+             (add1 (hash-ref (current-times-species-encountered) species 0))))
 
 (define current-flags (make-parameter '()))
 
 (define current-counters (make-parameter (make-hash)))
 (define (current-counters++ tag)
-  (hash-set! (current-counters)
-             tag
-             (add1 (hash-ref (current-counters)
-                             tag
-                             0))))
+  (hash-set! (current-counters) tag (add1 (hash-ref (current-counters) tag 0))))
 
 (define current-round (make-parameter 0))
 (define current-run (make-parameter 0))
@@ -88,7 +76,8 @@
 
 (define current-fragment-id (make-parameter '()))
 (define current-completed-fragments (make-parameter '()))
-(define (current-fragment) (get-fragment (current-fragment-id)))
+(define (current-fragment)
+  (get-fragment (current-fragment-id)))
 
 (define current-combat-timeline (make-parameter '()))
 
@@ -121,69 +110,62 @@
   (current-fragment-id '())
   (current-completed-fragments '())
   (current-combat-timeline '())
-  (current-show-round-summary? #f)
-  )
+  (current-show-round-summary? #f))
 
 (define rng-max-seed (sub1 (expt 2 31)))
 
 (define (seed-rng! seed)
   (current-rng-seed seed)
-  (random-seed seed)
-  )
+  (random-seed seed))
 
 (define (reset-rng!)
   (current-pseudo-random-generator (make-pseudo-random-generator)) ; based on current-milliseconds
   (define seed (random rng-max-seed))
-  (seed-rng! seed)
-  )
+  (seed-rng! seed))
 
 (define (ephemeral-random-in-range min max)
   (define generator (make-pseudo-random-generator))
   (random min max generator))
 
-
 (define (save)
   (define st
-    (State
-     (current-rng-seed)
-     (pseudo-random-generator->vector (current-pseudo-random-generator))
-
-     (current-world) ; world
-     (current-last-numeric-actor-id) ; Natural
-     (current-log) ; String?
-     (current-last-paragraph) ; String?
-     (current-part) ; Natural
-     (current-chapter) ; Natural
-     (current-prompt) ; String?
-     (current-pending-action) ; action
-     (current-times-begin-traverse-narrated) ; Natural
-     (current-times-finish-traverse-narrated) ; Natural
-     (current-times-cancel-traverse-narrated) ; Natural
-     (current-times-species-encountered) ; Natural
-     (current-flags) ; (Listof Symbol)
-     (current-counters) ; (Hash Symbol Natural)
-     (current-round) ; Natural
-     (current-run) ; Natural
-     (current-recursion-depth)
-     (current-elapsed-time) ; Natural, should be in-world timestamp
-     (current-in-combat?) ; Boolean
-     (current-tasks) ; (Listof task)
-     (current-epithets) ; (Listof String)
-     (current-pc) ; pc-actor
-     (current-once-per-day-actions-done)
-     (current-life) ; Natural
-     (current-fragment-id) ; Symbol
-     (current-completed-fragments) ; (Listof Symbol)
-     (current-combat-timeline) ; timeline
-     (current-show-round-summary?) ; Boolean
-     ))
+    (State (current-rng-seed)
+           (pseudo-random-generator->vector (current-pseudo-random-generator))
+           (current-world) ; world
+           (current-last-numeric-actor-id) ; Natural
+           (current-log) ; String?
+           (current-last-paragraph) ; String?
+           (current-part) ; Natural
+           (current-chapter) ; Natural
+           (current-prompt) ; String?
+           (current-pending-action) ; action
+           (current-times-begin-traverse-narrated) ; Natural
+           (current-times-finish-traverse-narrated) ; Natural
+           (current-times-cancel-traverse-narrated) ; Natural
+           (current-times-species-encountered) ; Natural
+           (current-flags) ; (Listof Symbol)
+           (current-counters) ; (Hash Symbol Natural)
+           (current-round) ; Natural
+           (current-run) ; Natural
+           (current-recursion-depth)
+           (current-elapsed-time) ; Natural, should be in-world timestamp
+           (current-in-combat?) ; Boolean
+           (current-tasks) ; (Listof task)
+           (current-epithets) ; (Listof String)
+           (current-pc) ; pc-actor
+           (current-once-per-day-actions-done)
+           (current-life) ; Natural
+           (current-fragment-id) ; Symbol
+           (current-completed-fragments) ; (Listof Symbol)
+           (current-combat-timeline) ; timeline
+           (current-show-round-summary?) ; Boolean
+           ))
 
   (define serialized-state (serialize st))
 
   (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
   (write serialized-state output-file)
   (close-output-port output-file))
-
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
 ; - https://docs.racket-lang.org/reference/serialization.html

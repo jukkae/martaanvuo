@@ -2,50 +2,45 @@
 
 (provide (all-defined-out))
 
-(require
-  "location.rkt"
+(require "location.rkt"
 
-  "../2-core/maybe.rkt"
-  "../3-types/actor.rkt"
-  "../3-types/item.rkt"
-  "../3-types/light-levels.rkt"
-  "../3-types/location-ids.rkt"
-  )
+         "../2-core/maybe.rkt"
+         "../3-types/actor.rkt"
+         "../3-types/item.rkt"
+         "../3-types/light-levels.rkt"
+         "../3-types/location-ids.rkt")
 
 (struct route
-  location
-  ([a : PlaceId]
-   [b : PlaceId]
-   [traverse-time : Natural]
-   [one-directional? : Boolean]
-   [hidden? : Boolean]
-   [descr-from-a : (Maybe String)]
-   [descr-from-b : (Maybe String)]
-   )
+        location
+        ([a : PlaceId] [b : PlaceId]
+                       [traverse-time : Natural]
+                       [one-directional? : Boolean]
+                       [hidden? : Boolean]
+                       [descr-from-a : (Maybe String)]
+                       [descr-from-b : (Maybe String)])
   #:mutable
   #:prefab
   #:constructor-name route*)
 
 (define *number-of-routes* 0)
 
-(: make-route (->* (PlaceId PlaceId Natural)
-                   (Boolean
-                    Boolean
-                    #:id RouteId
-                    #:type (Maybe LocationType)
-                    #:size (Maybe LocationSize)
-                    #:details (Listof Symbol)
-                    #:actors (Listof actor)
-                    #:items (Listof item)
-                    #:features (Listof Symbol)
-                    #:hidden-features (Listof Symbol)
-                    #:tags (Listof Symbol)
-                    #:light-level (U LightLevel 'natural)
-                    #:encounter-types (Listof Symbol)
-                    #:descr-from-a (Maybe String)
-                    #:descr-from-b (Maybe String)
-                    )
-                   route))
+(: make-route
+   (->* (PlaceId PlaceId Natural)
+        (Boolean Boolean
+                 #:id RouteId
+                 #:type (Maybe LocationType)
+                 #:size (Maybe LocationSize)
+                 #:details (Listof Symbol)
+                 #:actors (Listof actor)
+                 #:items (Listof item)
+                 #:features (Listof Symbol)
+                 #:hidden-features (Listof Symbol)
+                 #:tags (Listof Symbol)
+                 #:light-level (U LightLevel 'natural)
+                 #:encounter-types (Listof Symbol)
+                 #:descr-from-a (Maybe String)
+                 #:descr-from-b (Maybe String))
+        route))
 (define (make-route a
                     b
                     traverse-time
@@ -63,16 +58,15 @@
                     #:light-level (light-level 'natural)
                     #:encounter-types [encounter-types '()]
                     #:descr-from-a [descr-from-a ""]
-                    #:descr-from-b [descr-from-b ""]
-                    )
+                    #:descr-from-b [descr-from-b ""])
 
   (set! *number-of-routes* (add1 *number-of-routes*))
 
   (: id-symbol Symbol)
   (define id-symbol
     (match id
-     [Natural (string->symbol (format "route-~a" id))]
-     [Symbol id]))
+      [Natural (string->symbol (format "route-~a" id))]
+      [Symbol id]))
 
   (define zones '())
 
@@ -85,7 +79,6 @@
           features
           hidden-features
           zones
-
           tags
           light-level
           encounter-types
@@ -95,8 +88,7 @@
           one-directional?
           hidden?
           descr-from-a
-          descr-from-b
-          ))
+          descr-from-b))
 
 (: route-traversed? (->* (route) () Boolean))
 (define (route-traversed? route)
@@ -116,6 +108,4 @@
 
 (: route-fully-known? (->* (route) () Boolean))
 (define (route-fully-known? route)
-  (and (route-a-visited? route)
-       (route-b-visited? route)
-       (route-traversed? route)))
+  (and (route-a-visited? route) (route-b-visited? route) (route-traversed? route)))
