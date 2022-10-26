@@ -43,7 +43,7 @@
        (prln quit-message)
        (newline))
 
-     (prln (format "[Martaanvuo v~a, seed ~a]" martaanvuo-version (current-rng-seed)))
+     (prln (format "[Martaanvuo v~a, --seed ~a]" martaanvuo-version (current-rng-seed)))
 
      (exit)]
     [else

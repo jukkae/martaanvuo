@@ -192,6 +192,8 @@
                  (define world-choices '())
                  (when (not (null? (current-zone-items (current-location))))
                    (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
+                  (when (not (null? (location-items (current-location))))
+                   (set! world-choices (append-element world-choices (choice-factory 'pick-up-item))))
                  (cond [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'evening)
                         (set! world-choices (append world-choices (get-evening-choices world actor)))]
                        [(equal? (time-of-day-from-iotas (world-elapsed-time (current-world))) 'night)

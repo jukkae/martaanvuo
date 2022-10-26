@@ -67,7 +67,7 @@
              (notice "Contested movement roll")
              (define results '())
              (for ([a all-mvmt-actions])
-               (define bonus (if (pc-action? a) 2 '()))
+               (define bonus (if (pc-action? a) 3 '()))
                (append-element!
                 results
                 (cons

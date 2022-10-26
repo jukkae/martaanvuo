@@ -75,13 +75,13 @@
                 (notice "Otava escapes from combat.")
                 'end-combat]
                [else
-                (define escape-roll (d 1 2))
+                (define escape-roll (d 1 4))
                 (case escape-roll
                   [(1)
-                   (notice "[1d2: 1] Otava fails to escape.")
+                   (notice "[1d4: 1] Otava fails to escape.")
                    '()]
-                  [(2)
-                   (notice "[1d2: 2] Otava escapes from combat.")
+                  [(2 3 4)
+                   (notice "[1d4: 2] Otava escapes from combat.")
                    'end-combat])]))))))
      (set! combat-choices (append-element combat-choices escape-choice))])
 
@@ -319,7 +319,7 @@
     ['strangle
      (make-choice
       'attack
-      (format "Strangle the ~a." (get-combatant-name target))
+      (format "Strangle the ~a. [1d6]" (get-combatant-name target))
       (λ ()
         (define target-id (actor-id target))
         (make-action
@@ -462,7 +462,7 @@
     ['throw-off-the-cliff
      (make-choice
       'attack
-      (format "Throw the ~a off the cliff." (get-combatant-name target))
+      (format "Throw the ~a off the cliff. [1d6]" (get-combatant-name target))
       (λ ()
         (define target-id (actor-id target))
         (make-action
@@ -529,7 +529,7 @@
                      (get-combatant-name target)
                      (case action-result
                        ['ok "successful"]
-                       ['dead "strangled to death"]
+                       ['dead "killed by laws of gravity"]
                        [else action-result])))
            (add-combat-event descr)
            action-result))))] ; 'throw-off-the-cliff

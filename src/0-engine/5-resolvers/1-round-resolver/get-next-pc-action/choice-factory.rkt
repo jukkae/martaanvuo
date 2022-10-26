@@ -232,7 +232,9 @@
      #;(p "Nevermind.")]))
 
 (define (select-item-to-pick-up)
-  (define items (current-zone-items (current-location)))
+  (define items
+    (append (current-zone-items (current-location))
+            (location-items (current-location))))
 
   (prln (format "Pick up what? [1-~a], anything else to cancel." (length items)))
   (br)

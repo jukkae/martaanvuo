@@ -56,7 +56,8 @@
                   (Place-hidden-routes (current-location))))
         (define hidden-zones '())
         (for/list ([z (location-zones (current-location))])
-          (when (null? (Zone-clue? z))
+          (when (and (null? (Zone-clue? z))
+                     (not (Zone-found? z)))
             (append-element! hidden-zones z)))
         (set! discoverables (append discoverables hidden-zones))
 
