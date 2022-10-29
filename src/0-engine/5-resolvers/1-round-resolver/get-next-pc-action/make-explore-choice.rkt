@@ -131,9 +131,12 @@
 (define (make-explore-choice)
   (cond
    [(and (not (null? (current-pending-action)))
-         (equal? (action-symbol (current-pending-action)) 'explore))
-
-    (displayln "FOO")
+         (equal? (action-symbol (current-pending-action)) 'explore)
+         ;
+         (or (and (pc-has-sense-organ? 'eyes)
+                  (not (equal? (get-current-light-level) 'pitch-black)))
+             (pc-has-sense-organ? 'sonar))
+    )
 
     (make-choice
          (action-symbol (current-pending-action))

@@ -82,7 +82,9 @@
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   ; (add-item! 'ration #:amount 2 #:silent? #t)
   (add-item! 'bolt-cutters #:silent? #t)
-  (add-item! 'lucky-charm-slot-machine #:silent? #t))
+  (add-item! 'lucky-charm-slot-machine #:silent? #t)
+  (add-item! 'revolver #:silent? #t)
+  )
 
 (define (set-markbearer-build!)
   (set-actor-strength! (pc) 7)

@@ -632,11 +632,12 @@
                            (equal? (stance-range stance) 'adjacent)
                            (equal? (stance-range stance) 'engaged)))
               (define damage-roll (λ () (d 2 2)))
-              (define details
-                (list (cons 'damage-roll damage-roll)
-                      (cons 'damage-roll-formula "2d2")
-                      (cons 'damage-type 'gunshot) ; we're assuming firearms here
-                      ))
+              ; (define details
+              ;   (list (cons 'damage-roll damage-roll)
+              ;         (cons 'damage-roll-formula "2d2")
+              ;         (cons 'damage-type 'gunshot) ; we're assuming firearms here
+              ;         ))
+              (define details '())
 
               (make-choice 'attack
                            (format "Shoot ~a [with revolver]." (get-combatant-name target))
@@ -647,7 +648,7 @@
                                           #:target target-id
                                           #:tags '(initiative-based-resolution)
                                           #:details details
-                                          #:resolution-rules '(resolve-as-shoot-action)))))
+                                          ))))
             (when (or (equal? (stance-range stance) 'engaged)
                       (equal? (stance-range stance) 'adjacent)
                       (equal? (stance-range stance) 'close))

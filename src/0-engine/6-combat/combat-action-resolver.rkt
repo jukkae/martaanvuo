@@ -110,14 +110,16 @@
 
   (define details (action-details action))
 
-  (define damage-roll (assoc 'damage-roll details))
-  (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
-  (define damage-roll-result ((cdr damage-roll)))
+  (displayln details)
+  (define damage-roll-result 2)
+  ; (define damage-roll (assoc 'damage-roll details))
+  ; (define damage-roll-formula (cdr (assoc 'damage-roll-formula details)))
+  ; (define damage-roll-result ((cdr damage-roll)))
 
-  (when success?
-    [notice (format "dmg: [~a] = [~a]" damage-roll-formula damage-roll-result)]
-    (p
-     "Otava pulls the trigger. The gun belts out a thunderous roar, and blood gushes out of the creature."))
+  ; (when success?
+  ;   [notice (format "dmg: [~a] = [~a]" damage-roll-formula damage-roll-result)]
+  ;   (p
+  ;    "Otava pulls the trigger. The gun belts out a thunderous roar, and blood gushes out of the creature."))
 
   (define action-result 'ok)
   (when success?
@@ -137,7 +139,7 @@
        (define text
          (take-random
           (list (format "The ~a collapses on the ground." (actor-name (action-target action)))
-                (format "The ~a crumbles in a heap and twitches a few times, then goes still."
+                (format "The ~a crumbles in a heap and twitches before going still."
                         (actor-name (action-target action))))))
        (p text)]
       [else

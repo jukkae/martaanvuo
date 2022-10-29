@@ -127,6 +127,11 @@
 
        [else 'skipped]))))
 
+(define (ranged-attack-action? action)
+  (if (equal? (action-symbol action) 'shoot)
+    #t
+    #f))
+
 ; (: -> Action TurnResult)
 (define (resolve-turn! action)
   (let/ec return
@@ -140,6 +145,8 @@
           (define turn-result
             (cond
               [(melee-attack-action? action) (resolve-melee-action! action)]
+              [(equal? (action-symbol action) 'shoot)
+               (resolve-shoot-action! action)]
               [else (resolve-action! action)]))
           (when (not (pc-is-alive?))
             return
