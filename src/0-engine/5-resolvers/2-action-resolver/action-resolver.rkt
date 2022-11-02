@@ -111,7 +111,8 @@
   (define pending-action action)
   (set-action-duration! pending-action time-left)
   (set-action-details! pending-action (append-element (action-details pending-action) 'pending))
-  (current-pending-action pending-action))
+  (current-pending-action pending-action)
+  )
 
 (define (handle-pc-action-interrupted! timeline)
   (define interrupting-events

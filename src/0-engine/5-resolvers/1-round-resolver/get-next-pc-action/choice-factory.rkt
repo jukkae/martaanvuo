@@ -43,7 +43,11 @@
                        (make-action #:symbol 'sleep
                                     #:actor (pc)
                                     #:duration (time-until-next-morning)
-                                    #:on-after-rules `((set-pc-actor-fatigue! (pc) 0)))))]
+                                    #:on-after-rules
+                                    `(
+                                      (set-pc-actor-fatigue! (pc) 0)
+                                      (notice (format "Otava is not tired anymore. [fatigue: ~a]" (pc-actor-fatigue (pc))))
+                                      ))))]
        [else
         (make-choice 'sleep-rough
                      (format "Sleep rough. [until morning]")
@@ -52,16 +56,11 @@
                                     #:actor (pc)
                                     #:duration (time-until-next-morning)
                                     #:on-after-rules ; TODO: more properly, "late" resolve
-                                    `((define roll (d 1 4))
-                                      (notice (format "[1d4]: ~a" roll))
-                                      (cond
-                                        [[= 1 roll]
-                                         (notice "Otava feels weak after sleeping rough.")
-                                         (pc-take-damage! (pc) 1 'sickness)])
-                                      (notice "Not as refreshing as it could've been.")
+                                    `((notice "Not as refreshing as it could've been.")
                                       (set-pc-actor-fatigue!
                                        (pc)
                                        (exact-floor (/ (* 1 (pc-actor-fatigue (pc))) 3)))
+                                      (notice (format "Otava is not as tired anymore. [fatigue: ~a]" (pc-actor-fatigue (pc))))
                                       'ok))))])]
     ['camp
      (make-choice 'camp

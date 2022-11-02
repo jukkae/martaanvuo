@@ -159,9 +159,12 @@
     [(Place? location) (Place-routes location)]))
 
 (define (get-current-location-choices)
-  (append (get-location-choices (current-location))
+  (define r
+    (append (get-location-choices (current-location))
           (if (Place? (current-location)) (Place-choices (current-location)) '())
           (if (Place? (current-location)) (get-zone-choices (current-location)) '())))
+  r
+  )
 
 (define (location-has-item-of-id? location id)
   (define items (location-items items))

@@ -220,7 +220,7 @@
          (choice-factory 'eat))
    (choice-factory 'rest)
    (when (and (route? (current-location))
-              (not (null? current-pending-action))
+              (not (null? (current-pending-action)))
               (not (equal? (action-symbol (current-pending-action)) 'cancel-traverse))
               )
          (make-cancel-traverse-choice))
@@ -247,7 +247,7 @@
             ; show pending action, except for the ones provided as static
             [(string-prefix? (choice-name choice)
                               "[continue]")
-             (if (equal? (action-symbol choice) 'explore) #f #t)]
+             (if (equal? (choice-id choice) 'explore) #f #t)]
 
             ; don't show actions that have same symbol as pending action
             ((equal? (choice-id choice) (action-symbol (current-pending-action)))
@@ -257,7 +257,7 @@
             (else
              #t)))))
 
-  (define all-actions
+  (define all-actions ; actions or choices?
 
     (filter
      (λ (x) (show-based-on-pending-choice? x))
@@ -371,7 +371,6 @@
                   (not (once-per-day-action-done? 'forage)))
          (list
           (make-forage-choice)))
-
        (when (and (pc-has-item? 'notebook)
                   (pc-has-sense-organ? 'eyes))
         (make-read-book-choice))

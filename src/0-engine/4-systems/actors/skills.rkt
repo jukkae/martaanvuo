@@ -6,15 +6,6 @@
 
 (define (choice-from-symbol world pc symbol)
   (case symbol
-    ['sleep
-     (make-choice 'sleep
-                  "Sleep."
-                  (λ ()
-                    (make-action #:symbol 'sleep
-                                 #:actor 'pc
-                                 #:duration 200
-                                 #:target null
-                                 #:tags '(wilderness downtime))))]
     ['craft
      (make-choice 'craft
                   "Craft."

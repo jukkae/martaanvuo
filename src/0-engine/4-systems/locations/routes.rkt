@@ -6,13 +6,18 @@
          route-description-from
          set-route-endpoint-visited!)
 
-(require "../world/world.rkt"
+(require racket/lazy-require
+
+         "../world/world.rkt"
 
          "../../2-core/dev-note.rkt"
          "../../3-types/location.rkt"
          "../../3-types/place.rkt"
          "../../3-types/route.rkt"
          "../../7-state/pending-action.rkt")
+
+(lazy-require ["../../7-state/state.rkt" (current-pending-action)])
+
 
 ; returns id
 (define (route-other-end-from route-or-id startpoint-id)
@@ -127,6 +132,7 @@
     (cond
       [(route? route-or-id) route-or-id]
       [else (get-location-by-id route-or-id)]))
+
   (define direction (get-pending-traverse-direction))
 
   (define startpoint
