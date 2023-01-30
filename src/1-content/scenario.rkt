@@ -197,9 +197,9 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
      (advance-time-by-iotas! (d 6 12))
      (move-pc-to-location! (get-place-by-id 'perimeter))
 
-     (p "Otava has two possible ways through Perimeter and into the Maw, the Shaman in her dreams has told her. Either the uphigh mountainwall rockypeak way thru Magpie hill, or throughdark tunnelblack underground way. The third way, the way-by-the-water, is inaccessible because of the fucking dam.")
+     (p "Otava has two possible ways through Perimeter and into the Maw, the Shaman in her dreams has told her. Either the uphigh mountainwall rockypeak way thru Magpie hill, or throughdark tunnelblack underground way. The third way, the way-by-the-water, is inaccessible because of the dam.")
 
-     (p "The Shaman in her dreams told her that there's evil fucking brutes guarding the hill, Markbearers, twisted human-like creatures of endless malice and greed and hunger. To scale the hill, the Shaman had said, one must kill a Markbearer to show their worth.")
+     (p "The Shaman in her dreams told her that there's evil brutes guarding the hill, Markbearers, twisted human-like creatures of endless malice and greed and hunger. To scale the hill, the Shaman had said, one must kill a Markbearer to show their worth.")
 
      (p "The tunnel entrance ought to be somewhere around here. Climbing Magpie hill looks pretty arduous: The steep hill turns into an almost vertical cliff at times, though there should be sort of stairs, at least most of the way.")
 
