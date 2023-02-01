@@ -112,13 +112,21 @@
 
 (define (display-non-pc-combatant-info actor)
   (define stance (actor-stance actor))
-  (define name (capitalize-first-letter (get-combatant-name actor)))
+  ; (define name (capitalize-first-letter (get-combatant-name actor)))
+  (define name "???")
   (define body '())
+
+  (append-element! body (tr "[perceived with]" "" ""))
 
   (for ([sense-organ (pc-actor-sense-organs (pc))])
     (case (SenseOrgan-id sense-organ)
       ['eyes
-       (define eyes-text (format "vision [light level: ~a]" (get-current-light-level)))
+       (case (get-current-light-level)
+        ['pitch-black
+         (append-element! body (tr "vision [light level: pitch black]" "nothing" "nothing"))
+         ]
+        [else
+         (define eyes-text (format "vision [light level: ~a]" (get-current-light-level)))
        (append-element! body (tr eyes-text "range" (symbol->string (stance-range stance))))
        (append-element! body (tr eyes-text "size" (format "~a" (actor-size actor))))
        (case (get-current-light-level)
@@ -139,7 +147,9 @@
                   (equal? (stance-range stance) 'nearby))
               (tr eyes-text "HP" (format "~a/~a" (actor-hp actor) (actor-max-hp actor)))]
              [else (tr eyes-text "HP" (format "too dark to see this far"))]))]
-         ['pitch-black (append-element! body (tr eyes-text "HP" (format "too dark to see")))])]
+         )
+         ])
+       ]
       ['sonar
        (append-element! body
                         (cond
@@ -148,6 +158,8 @@
                                (equal? (stance-range stance) 'close))
                            (tr "sonar" "range" (symbol->string (stance-range stance)))]
                           [else (tr "sonar" "range" "???")]))]
+      ['ears
+       (append-element! body (tr "hearing" "range" (symbol->string (stance-range stance))))]
       ['nose
        (append-element! body (tr "olfaction" "range" (symbol->string (stance-range stance))))
        (when (< (actor-hp actor) (actor-max-hp actor))

@@ -37,7 +37,8 @@
        ['afternoon 'bright]
        ['evening 'dark]
        ['night 'pitch-black])]
-    [else (location-light-level (current-location))]))
+    [else (location-light-level (current-location))])
+    'pitch-black)
 
 (provide get-current-noise-level)
 (define (get-current-noise-level)

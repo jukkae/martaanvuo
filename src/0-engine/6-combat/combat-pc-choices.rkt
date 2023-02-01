@@ -24,7 +24,7 @@
 
   (define combat-choices
     (list (make-choice 'skip
-                       "Skip. [gain fast for next round]"
+                       "Skip."#;" [gain fast for next round]"
                        (λ ()
                          (make-action #:symbol 'skip
                                       #:actor (pc)
@@ -107,7 +107,7 @@
           (define target-id (actor-id target))
           (define approach-choice
             (make-choice 'approach
-                         (format "Get closer to ~a." (get-combatant-name target))
+                         (format "Get closer to ~a." "???"#;(get-combatant-name target))
                          (λ ()
                            (make-action #:symbol 'approach
                                         #:actor (pc)
@@ -640,7 +640,7 @@
               (define details '())
 
               (make-choice 'attack
-                           (format "Shoot ~a [with revolver]." (get-combatant-name target))
+                           (format "Shoot at ??? [with revolver]." #;(get-combatant-name target))
                            (λ ()
                              (make-action #:symbol 'shoot
                                           #:actor (pc)

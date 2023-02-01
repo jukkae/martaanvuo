@@ -22,7 +22,7 @@
   (set-actor-dexterity! enemy 13)
   (set-trait! enemy "defense" 1)
   (set-trait! enemy "melee-attack-skill" 1)
-  (set-trait! enemy "visual description" "Looks almost like a human, sneaky, scaly")
+  #;(set-trait! enemy "visual description" "Looks almost like a human, sneaky, scaly")
   enemy)
 
 (define (make-poke-out-eyes-action actor)

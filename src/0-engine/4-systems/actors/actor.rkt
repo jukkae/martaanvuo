@@ -69,7 +69,7 @@
   (cond
     [actor
      (define result (hash-ref (actor-traits actor) trait-name 'not-found))
-     (when (equal? result 'not-found)
+     #;(when (equal? result 'not-found)
        (dev-note
         (format "-- get-trait: trait [~a] not found on actor [~a]" trait-name (actor-name actor))))
      result]

@@ -236,24 +236,51 @@
                   #:hidden? #t
                   #:descr-from-a "rundown mining shaft ladders"
                   #:descr-from-b "rundown mining shaft ladders")
-   (route-between 'tunnels-1 'tunnels-2 26 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
-   (route-between 'tunnels-2 'tunnels-3 27 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
-   (route-between 'tunnels-3 'tunnels-4 24 'int #:descr-from-a "tunnels" #:descr-from-b "tunnels")
+   (route-between 'tunnels-1 'tunnels-2
+                  26
+                  'int
+                  #:descr-from-a "tunnels"
+                  #:descr-from-b "tunnels"
+                  #:encounter-types '(limbtearer)
+                  )
+   (route-between 'tunnels-2 'tunnels-3
+                  27
+                  'int
+                  #:descr-from-a "tunnels"
+                  #:descr-from-b "tunnels"
+                  #:encounter-types '(limbtearer)
+                  )
+   (route-between 'tunnels-3 'tunnels-4
+                  24
+                  'int
+                  #:descr-from-a "tunnels"
+                  #:descr-from-b "tunnels"
+                  #:encounter-types '(limbtearer)
+                  )
    (route-between 'tunnels-3
                   'the-maw
                   25
                   'int
                   #:hidden? #t
                   #:descr-from-a "tunnels"
-                  #:descr-from-b "a hole to a tunnel")
+                  #:descr-from-b "a hole to a tunnel"
+                  #:encounter-types '(limbtearer)
+                  )
    (route-between 'perimeter
                   'tunnels-5
                   15
                   'ext
                   #:hidden? #t
                   #:descr-from-a "narrow entrance into a cave"
-                  #:descr-from-b "narrow exit from the cave")
-   (route-between 'tunnels-5 'tunnels-4 78 'int #:descr-from-a "cave tunnel" #:descr-from-b "tunnels")
+                  #:descr-from-b "narrow exit from the cave"
+                  )
+   (route-between 'tunnels-5 'tunnels-4
+                  78
+                  'int
+                  #:descr-from-a "cave tunnel"
+                  #:descr-from-b "tunnels"
+                  #:encounter-types '(limbtearer)
+                  )
    (route-between 'martaanvuo-dam
                   'the-maw
                   10
