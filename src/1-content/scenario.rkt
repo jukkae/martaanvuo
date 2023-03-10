@@ -71,8 +71,9 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
   (set-pc-actor-manipulators! (pc) '())
   (set-actor-size! (pc) 'small)
   (define silent? #t)
-  (add-sense-organ! (SenseOrgan 'chemical-gradient-detector "chemical gradient detector") silent?)
+  (add-sense-organ! (SenseOrgan 'chemical-gradient-detector 1 "chemical gradient detector") silent?)
   (add-manipulator! (Manipulator 'pseudopodia "cytoplasmic pseudopodia") silent?)
+  (remove-manipulator! 'human-hands)
   (notice "OTAVA is a microscopic organism that evolves remarkably fast.")
 
   (create-task 'evolve)

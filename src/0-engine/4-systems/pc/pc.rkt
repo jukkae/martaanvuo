@@ -235,6 +235,18 @@
   (when (not silent?)
     (notice (format "Manipulator added: ~a" (Manipulator-name manipulator)))))
 
+; (: -> Manipulator-id '())
+(define (remove-manipulator! id)
+  (define manipulators (pc-actor-manipulators (pc)))
+  (define it (findf (λ (manipulator) (equal? (Manipulator-id manipulator) id)) manipulators))
+  (cond
+    [it
+     (set-pc-actor-manipulators!
+      (pc)
+      (filter (λ (manipulator) (not (equal? (Manipulator-id manipulator) id)))
+              (pc-actor-manipulators (pc))))
+     (notice (format "Manipulator removed: ~a" (Manipulator-name it)))]))
+
 (define (pc-gold-amount)
   (define items (actor-inventory (pc)))
   (define gold? (findf (λ (inventory-item) (equal? (item-id inventory-item) 'gold)) items))
