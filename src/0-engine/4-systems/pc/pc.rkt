@@ -354,6 +354,9 @@
   (if (null? reason) (notice (format "+~a xp" amount)) (notice (format "+~a xp ~a" amount reason)))
   (set-pc-actor-xp! (pc) (+ (pc-actor-xp (pc)) amount)))
 
+(define (pc-has-condition-of-type? t)
+  (actor-has-condition-of-type? (pc) t))
+
 (define (pc-envenomed-peaking?)
   (and (actor-has-condition-of-type? (pc) 'envenomed)
        (>= (condition-age (actor-get-condition-of-type (pc) 'envenomed)) 5)

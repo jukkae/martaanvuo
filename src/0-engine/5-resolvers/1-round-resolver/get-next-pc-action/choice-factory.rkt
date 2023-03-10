@@ -56,7 +56,7 @@
                                     #:actor (pc)
                                     #:duration (time-until-next-morning)
                                     #:on-after-rules ; TODO: more properly, "late" resolve
-                                    `((notice "Not as refreshing as it could've been.")
+                                    `((notice "Sleep wasn't refreshing as it could've been.")
                                       (set-pc-actor-fatigue!
                                        (pc)
                                        (exact-floor (/ (* 1 (pc-actor-fatigue (pc))) 3)))

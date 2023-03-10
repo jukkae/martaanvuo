@@ -14,6 +14,7 @@
          "world/time.rkt"
 
          "../2-core/core.rkt"
+         "../2-core/input.rkt"
          "../2-core/output.rkt"
 
          "../3-types/actor.rkt"
@@ -27,6 +28,7 @@
          "../7-state/state.rkt")
 
 (lazy-require ["pc/pc.rkt" (pc-hunger-level pc-fatigue-level)])
+(lazy-require ["checks/checks.rkt" (check)])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry
 (define (hunger++)
@@ -103,6 +105,25 @@
   (when (flag-set? 'camp-set-up)
     (remove-flag 'camp-set-up))
   (define events '())
+
+  (when (pc-has-condition-of-type? 'ankle-broken)
+    (define tn 6) ; start higher, decrease with passing days
+    (define roll-result (check "2d6" #:title "healing roll" #:target-number tn #:bonus '()))
+    (match roll-result
+      [(or 'critical-failure
+            'serious-failure
+            'failure)
+        (p "Otava's ankle is still fucked.")
+        ]
+      [(or 'narrow-success
+            'success
+            'critical-success)
+        (p "Otava's ankle is starting to feel better.")
+        (actor-remove-condition-of-type! (pc) 'ankle-broken)
+        (award-xp! 1)
+        (wait-for-confirm)
+        ]
+    ))
 
   (when (not (null? (current-once-per-day-actions-done)))
     (define ev
