@@ -29,16 +29,18 @@
 
 (provide get-current-light-level)
 (define (get-current-light-level)
-  (case (location-light-level (current-location))
-    ['natural
-     (case (get-current-time-of-day)
+  (define l (current-location))
+  (define ll
+    (if (eq? (location-type l) 'ext)
+      (case (get-current-time-of-day)
        ['morning 'bright]
        ['midday 'bright]
        ['afternoon 'bright]
        ['evening 'dark]
-       ['night 'pitch-black])]
-    [else (location-light-level (current-location))])
-    'pitch-black)
+       ['night 'pitch-black])
+      (location-light-level l)))
+  (when (null? ll) (set! ll 'pitch-black))
+  ll)
 
 (provide get-current-noise-level)
 (define (get-current-noise-level)

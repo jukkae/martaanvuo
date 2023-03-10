@@ -86,8 +86,8 @@
        (task 'find-anthead-monograph
              "Anthead Monograph"
              'in-progress
-             "The book on transcending death."
-             "In the Maw of Martaanvuo."
+             ""
+             "The book on transcending death, should be in the Maw of Martaanvuo."
              '()
              '()
              'study-anthead-monograph)]
@@ -104,6 +104,6 @@
   (when (not (task-exists? id))
     (add-task! t))
 
-  (define body (list (tr (~a (task-name t)) (~a (task-info-blurb t)) (~a (task-status-text t)))))
+  (define body (list (tr (~a (task-name t)) #;(~a (task-info-blurb t)) (~a (task-status-text t)))))
   (info-card body "New task")
   (wait-for-confirm))
