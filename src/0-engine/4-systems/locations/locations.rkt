@@ -122,12 +122,12 @@
             [(route? location) (route-shortname (location-id location))])))
 
 (define (get-location-short-description location)
-  (format "~a~a~a"
+  (format "~a~a"
           (get-location-name location)
           (cond
             [(current-zone) (format ", ~a" (Zone-description (current-zone)))]
             [else ""])
-          (cond
+          #;(cond
             [(and (or (pc-has-sense-organ? 'eyes) (pc-has-sense-organ? 'echolocation))
                   (not (null? (location-size (current-location)))))
              (format " [~a space]" (location-size (current-location)))]
@@ -186,6 +186,8 @@
                     (equal? (get-current-light-level) 'dark)))
        (append-element! unpruned-rows (tr "location type" "badlands"))
        (append-element! unpruned-rows (tr "perceived with eyes" "mutated, bonelike scraggly trees"))
+       (when (and (current-zone) (eq? (Zone-name (current-zone)) "Abandoned car"))
+        (append-element! unpruned-rows (tr "perceived with eyes" "decaying human body")))
 
        (for ([z (location-zones place)])
          (cond
@@ -280,7 +282,7 @@
             (append-element!
              zone-choices
              (make-choice 'resolve-clue
-                          (format "pursue: ~a [~a ι]" (Clue-description (Zone-clue? z)) duration)
+                          (format "follow: ~a [~a ι]" (Clue-description (Zone-clue? z)) duration)
                           (λ ()
                             (advance-time-until-next-interesting-event! duration encounters?)
                             (for ([z_ (location-zones (current-location))])

@@ -24,9 +24,9 @@
       #:name "The body of a dead adventurer"
       #:description "at the body of a dead adventurer")
      (zone #:clue (clue #:requires (SenseOrgan 'eyes 1 "") #:description "old vehicle tracks")
-           #:interactibles (list (make-item 'can-of-gas))
+           #:interactibles (list (make-item 'revolver))
            #:name "Abandoned car"
-           #:description "at the abandoned car")
+           #:description "at an abandoned car")
      (zone #:clue (clue #:requires (SenseOrgan 'nose 2 "")
                         #:description "faint noxious smell of a thiefbird nest")
            #:interactibles (list (make-item 'revolver) (make-item 'gold #:amount 3))

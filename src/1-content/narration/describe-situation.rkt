@@ -14,7 +14,7 @@
   (info-card body
              (cond
                [(Place? (current-location))
-                (format "Otava is in ~a." (Place-shortname (current-location)))]
+                (format "Otava is in ~a." (get-location-short-description (current-location)))]
                [else (format "Otava is ~a." (route-shortname (current-location)))])))
 
 (define (describe-non-combat-situation repeated?)

@@ -51,8 +51,10 @@
          [else (format "~a" (Place-explored (current-location)))]))
      (notice (format "The place is ~a." exploration-string))])
 
-  (when (not (empty? (location-items (current-location))))
-    (define items (location-items (current-location)))
+  (define items (append
+                  (location-items (current-location))
+                  (current-zone-items (current-location))))
+  (when (not (empty? items))
     (case (length items)
       [(1)
        (define item (car items))
@@ -60,7 +62,7 @@
          (cond
            [(item? item) (item-name item)]
            [else (format "~a" item)]))
-       (notice (format "There is ~a here."
+       (notice (format "There is: ~a here."
                        (cond
                          [(Name? name)
                           (format "~a ~a" (Name-indefinite-article name) (Name-singular name))]
