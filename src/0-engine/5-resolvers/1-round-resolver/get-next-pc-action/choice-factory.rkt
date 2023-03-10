@@ -192,6 +192,7 @@
                      ['decaying-berries 0]
                      ['ration 1]
                      ['vatruska 2]
+                     ['salmon 1]
                      [else 1]))
                  (decrease-pc-hunger-level food-tier)
                  (when (equal? id 'decaying-berries)
@@ -212,6 +213,7 @@
                 ['decaying-berries #t]
                 ['ration #t]
                 ['vatruska #t]
+                ['salmon #t]
                 [else #f]))
             items))
 

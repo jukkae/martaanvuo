@@ -168,6 +168,23 @@
   (cond
     [revolver (set-ranged-weapon-ammo-left! revolver (sub1 (ranged-weapon-ammo-left revolver)))]))
 
+(define (pc-has-comestibles?)
+  (define items (actor-inventory (pc)))
+  (define comestibles
+    (filter (λ (item) ; likely this should be stored as data on the item itself
+              (case (item-id item)
+                ['fresh-berries #t]
+                ['berries #t]
+                ['decaying-berries #t]
+                ['ration #t]
+                ['vatruska #t]
+                ['salmon #t]
+                [else #f]))
+            items))
+  (if (not (null? comestibles))
+    #t
+    #f))
+
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
   (findf (λ (inventory-item) (equal? (item-id inventory-item) id)) items))

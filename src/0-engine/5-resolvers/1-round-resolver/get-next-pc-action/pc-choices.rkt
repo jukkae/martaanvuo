@@ -216,7 +216,7 @@
   (prune (list
    (choice-factory 'camp)
    (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
-                  (pc-has-item? 'ration)) ; TODO: should check for all comestibles
+                  (pc-has-comestibles?))
          (choice-factory 'eat))
    (choice-factory 'rest)
    (when (and (route? (current-location))
@@ -348,7 +348,7 @@
          (list (choice-factory 'rest)))
 
        (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
-                  (pc-has-item? 'ration)) ; TODO: should check for all comestibles
+                  (pc-has-comestibles?))
          (list
           (choice-factory 'eat)))
 

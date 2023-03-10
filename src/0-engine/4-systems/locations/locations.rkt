@@ -16,6 +16,8 @@
 (lazy-require ["../world/world.rkt"
                (remove-actor-from-its-current-location! get-place-by-id get-route-by-id get-route-between get-current-light-level)])
 (lazy-require ["../simulation.rkt" (advance-time-until-next-interesting-event!)])
+(lazy-require ["../checks/checks.rkt" (check)])
+(lazy-require ["../items/item.rkt" (make-item)])
 (lazy-require ["../../6-combat/combat.rkt" (begin-combat!)])
 (lazy-require ["../../7-state/mutators.rkt" (current-location pc)])
 (lazy-require ["../../7-state/pending-action.rkt" (reset-pending-action!)])
@@ -162,7 +164,8 @@
   (define r
     (append (get-location-choices (current-location))
           (if (Place? (current-location)) (Place-choices (current-location)) '())
-          (if (Place? (current-location)) (get-zone-choices (current-location)) '())))
+          (if (Place? (current-location)) (get-zone-choices (current-location)) '())
+          (if (Place? (current-location)) (get-current-zone-choices) '())))
   r
   )
 
@@ -253,6 +256,9 @@
 (define (zone-has-feature? zone feature)
   (if (not (equal? (member feature (zone-features zone)) #f)) #t #f))
 
+(define (current-zone-has-feature? feature)
+  (zone-has-feature? (current-zone) feature))
+
 (define (find-item-in-current-zone id)
   (define items (current-zone-items (current-location)))
   (findf (λ (a) (if (item? a) (equal? (item-id a) id) (equal? a id))) items))
@@ -266,6 +272,35 @@
 (define (remove-interactible-from-current-zone! interactible)
   (remove-interactible-from-zone! (current-zone) interactible))
 
+(define (get-current-zone-choices)
+  (define duration 80)
+  (define encounters? (if (location-encounter-types (current-location))
+                          #t
+                          #f))
+  (if (and (current-zone) (eq? (Zone-name (current-zone)) "a brook"))
+    (make-choice 'fish
+                  (format "fish [~a ι]" duration)
+                  (λ ()
+                    (advance-time-until-next-interesting-event! duration encounters?)
+                    (define roll-result (check "2d6" #:title "fishing roll" #:target-number 8 #:bonus '()))
+                    (match roll-result
+                      [(or 'critical-failure
+                           'serious-failure
+                           'failure)
+                       (p "Otava catches no fish.")]
+                      [(or 'narrow-success
+                           'success
+                           'critical-success)
+                       (p "Otava waits a bit. A fat salmon swims upriver. Otava catches it.")
+                       (add-item! (make-item 'salmon))]
+                    )
+                    (wait-for-confirm)
+                    '())
+                  )
+    '()))
+
+; poor name: this is "choices that lead to zones"
+; ie., -> "clue-choices" + "known zones"
 (define (get-zone-choices location)
   (define zone-choices '())
   (for ([z (location-zones location)])
