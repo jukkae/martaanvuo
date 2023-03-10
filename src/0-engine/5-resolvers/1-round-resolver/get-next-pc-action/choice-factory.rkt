@@ -192,11 +192,13 @@
                      ['decaying-berries 0]
                      ['ration 1]
                      ['vatruska 2]
-                     ['salmon 1]
+                     ['salmon 2]
+                     ['decaying-salmon 2]
                      [else 1]))
                  (decrease-pc-hunger-level food-tier)
-                 (when (equal? id 'decaying-berries)
-                   (actor-add-condition! (pc) (condition 'food-poisoning "Food poisoning" '())))
+                 (when (or (equal? id 'decaying-berries)
+                           (equal? id 'decaying-salmon))
+                   (actor-add-condition! (pc) (condition 'food-poisoning (current-elapsed-time) "Food poisoning")))
                  ;  (case ',food-id
                  ;    ['fresh-berries (p "The berries are invigoratingly sweet.")]
                  ;    ['ration (p "The ration's dry and bland, but filling.")]
@@ -214,6 +216,7 @@
                 ['ration #t]
                 ['vatruska #t]
                 ['salmon #t]
+                ['decaying-salmon #t]
                 [else #f]))
             items))
 

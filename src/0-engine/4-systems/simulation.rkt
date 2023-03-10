@@ -112,6 +112,13 @@
     (current-once-per-day-actions-done '())
     (set! events (append-element events ev)))
 
+  (when (pc-has-item? 'salmon)
+    (define item (pc-has-item? 'salmon))
+    (set-item-id! item 'decaying-salmon)
+    (set-item-name! item "decaying salmon")
+    (define ev (make-event 'notice "The salmon's going bad." #:interrupting? #f))
+    (set! events (append-element events ev)))
+
   (when (pc-has-item? 'decaying-berries)
     ; TODO: Collapsing & stacking items in general should be done in inventory itself
     (cond

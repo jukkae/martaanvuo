@@ -214,7 +214,7 @@
 (define (get-evening-choices world actor)
   #;(dev-note "get-evening-choices: not implemented yet")
   (prune (list
-   (choice-factory 'camp)
+   (when (not (flag-set? 'camp-set-up)) (choice-factory 'camp))
    (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
                   (pc-has-comestibles?))
          (choice-factory 'eat))

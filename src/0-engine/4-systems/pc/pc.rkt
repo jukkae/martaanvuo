@@ -179,6 +179,7 @@
                 ['ration #t]
                 ['vatruska #t]
                 ['salmon #t]
+                ['decaying-salmon #t]
                 [else #f]))
             items))
   (if (not (null? comestibles))
@@ -306,11 +307,11 @@
                    (equal? current-hunger 'starving))
                (= levels 2))
       (p "Damn that tastes good.")
-      (award-xp! 50))
+      (award-xp! 3))
 
     (define hunger-string
       (case (pc-hunger-level)
-        ['satiated "now satiated"]
+        ['satiated "satiated"]
         ['not-hungry "not hungry anymore"]
         ['hungry "less hungry"]
         ['very-hungry "still very hungry"]
