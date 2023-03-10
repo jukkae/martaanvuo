@@ -112,8 +112,7 @@
 
 (define (display-non-pc-combatant-info actor)
   (define stance (actor-stance actor))
-  ; (define name (capitalize-first-letter (get-combatant-name actor)))
-  (define name "???")
+  (define name (capitalize-first-letter (get-combatant-name actor)))
   (define body '())
 
   (append-element! body (tr "[perceived with]" "" ""))

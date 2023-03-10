@@ -51,8 +51,8 @@
               tl])
 
            ; now halfway through
-           (define bonus 0)
-           (define bonus-str "+0")
+           (define bonus -2)
+           (define bonus-str "-2")
            (define encounter-roll (+ (d 1 6) bonus))
            (define tn 3)
            (notice (format "~a Encounter roll: 1d6~a >= ~a: [~a] – ~a"

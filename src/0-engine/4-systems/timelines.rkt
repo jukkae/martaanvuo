@@ -19,7 +19,6 @@
   (for ([event (timeline-events tl)])
     (case (event-type event)
       ['new-time-of-day '()
-       #;'()(displayln event)
        ]
       ['not-hungry '()]
       ['hungry '()]

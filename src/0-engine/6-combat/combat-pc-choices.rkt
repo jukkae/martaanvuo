@@ -107,7 +107,7 @@
           (define target-id (actor-id target))
           (define approach-choice
             (make-choice 'approach
-                         (format "Get closer to ~a." "???"#;(get-combatant-name target))
+                         (format "Get closer to ~a." (get-combatant-name target))
                          (λ ()
                            (make-action #:symbol 'approach
                                         #:actor (pc)
@@ -125,7 +125,7 @@
         (define retreat-choice
           (make-choice
            'retreat
-           "Get away."
+           "Retreat."
            (λ ()
              (make-action
               #:symbol 'retreat
@@ -483,6 +483,7 @@
              (set-actor-stance-range! target 'engaged #t))
            (define action-result 'ok) ; TODO: likely not useful anymore
            (define attack-roll (d 1 6))
+           (wait-for-confirm)
            (when (pc-envenomed-peaking?)
              (notice "Envenomed, -1")
              (set! attack-roll (- attack-roll 1)))
@@ -640,7 +641,7 @@
               (define details '())
 
               (make-choice 'attack
-                           (format "Shoot at ??? [with revolver]." #;(get-combatant-name target))
+                           (format "Shoot at ~a [with revolver]." (get-combatant-name target))
                            (λ ()
                              (make-action #:symbol 'shoot
                                           #:actor (pc)

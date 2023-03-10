@@ -20,12 +20,14 @@
          "../../3-types/item.rkt"
          "../../3-types/name.rkt"
          "../../3-types/pc-actor.rkt"
-
-         "../../3-types/stance.rkt")
+         "../../3-types/stance.rkt"
+         "../../3-types/task.rkt"
+         )
 
 (lazy-require ["../world/world.rkt"
                (remove-actor-from-its-current-location! move-actor-to-location!)])
 (lazy-require ["../world/time.rkt" (timestamp)])
+(lazy-require ["../tasks/tasks.rkt" (add-new-task!)])
 (lazy-require ["../../3-types/location.rkt" (add-feature-to-location! add-item-to-location!)])
 (lazy-require ["../../7-state/state.rkt"
                (current-times-species-encountered current-times-species-encountered++)])
@@ -125,7 +127,11 @@
      (set-pc-actor-cause-of-death! actor cause-of-death)]
     [else
      (when (equal? (actor-name actor) "markbearer")
-       (set-flag 'markbearer-killed))
+       (when (not (flag-set? 'markbearer-killed))
+        (set-flag 'markbearer-killed)
+        (p "There we go, Otava thinks to herself, nice work.")
+        (add-new-task! (task 'kill-a-markbearer "Kill a markbearer" 'completed "Done!" "" '() '() '()))
+        ))
      (remove-actor-from-its-current-location! actor)
      (when (not no-corpse?)
        (add-item-to-location! (current-location) (make-corpse actor)))]))
