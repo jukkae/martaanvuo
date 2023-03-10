@@ -138,7 +138,12 @@
                ;  (define id ',(item-id item))
                `((define item-id ',(item-id item))
                  (define the-item (find-item-in-current-zone item-id))
-                 (remove-interactible-from-current-zone! the-item)
+                 (when (not the-item)
+                  (set! the-item (find-item (current-location) item-id)))
+                 (if (current-zone)
+                  (remove-interactible-from-current-zone! the-item)
+                  (remove-item-from-location! (current-location) the-item)
+                 )
                  (add-item! the-item)
                  (notice (format "Picked up: ~a"
                                  (cond

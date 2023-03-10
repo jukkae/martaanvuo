@@ -247,10 +247,12 @@
 
 (define (zone-features zone)
   (define interactibles '())
-  (for ([interactible (Zone-interactibles (current-zone))])
-    (cond
-      [(symbol? interactible) ; TODO: Feature
-       (append-element! interactibles interactible)]))
+  (when (not (null? (current-zone)))
+    (for ([interactible (Zone-interactibles (current-zone))])
+      (cond
+        [(symbol? interactible) ; TODO: Feature
+        (append-element! interactibles interactible)]))
+    )
   interactibles)
 
 (define (zone-has-feature? zone feature)
