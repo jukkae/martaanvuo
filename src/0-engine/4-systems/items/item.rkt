@@ -6,11 +6,11 @@
          "../../2-core/core.rkt"
          "../../3-types/item.rkt")
 
-(define (new-item name #:id id #:details (details '()) #:quantity (quantity 1))
-  (item* id name details quantity))
+(define (new-item name #:id id #:details (details '()) #:quantity (quantity 1) #:interaction-verbs [interaction-verbs '()])
+  (item* id name details quantity interaction-verbs))
 
-(define (new-ranged-weapon name #:id id #:details (details '()) #:ammo-left ammo-left)
-  (ranged-weapon* id name details 1 ammo-left))
+(define (new-ranged-weapon name #:id id #:details (details '()) #:ammo-left ammo-left #:interaction-verbs [interaction-verbs '()])
+  (ranged-weapon* id name details 1 interaction-verbs ammo-left))
 
 ; TODO: items = "content cards"
 (define (make-item id #:amount [amount 1] #:details [details '()])
@@ -40,7 +40,7 @@
 
     ['flashlight (new-item "Flashlight" #:id id #:details 34)] ; charge percentage
 
-    ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0)] ; charge percentage
+    ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0 #:interaction-verbs (list "Turn on"))] ; charge percentage
 
     ['gold (new-item "gold" #:id id #:quantity amount)]
 
@@ -78,5 +78,7 @@
 (define (inspect-item the-item)
   (displayln (format "it is: ~a" the-item)))
 
-(define (interact-with-item the-item)
-  (displayln "FIXME:"))
+(define (interact-with-item the-verb the-item)
+  (p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
+  (match the-verb
+   ["Turn on" (notice "It has no batteries.")]))

@@ -136,7 +136,9 @@
     (item-submenu selected-item)))
 
 (define (item-submenu selected-item)
-  (define targets (list (cons "inspect" (λ () (inspect-item selected-item))) (cons "Use" (λ () (interact-with-item selected-item)))))
+  (define targets (list (cons "Inspect" (λ () (inspect-item selected-item)))))
+  (for ([verb (item-interaction-verbs selected-item)])
+    (set! targets (append-element targets (cons (format "~a" verb) (λ () (interact-with-item verb selected-item))))))
 
   (for ([target targets] [i (in-naturals 1)])
     (prln (format "[~a] ~a" i (car target))))

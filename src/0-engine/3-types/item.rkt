@@ -10,7 +10,8 @@
 (struct item
         ([id : Symbol] [name : (U String Name)]
                        [details : (Maybe (U Number Symbol (Listof Symbol)))]
-                       [quantity : (U Nonnegative-Integer Nonnegative-Float)])
+                       [quantity : (U Nonnegative-Integer Nonnegative-Float)]
+                       [interaction-verbs : (Listof String)])
   #:prefab
   #:mutable
   #:constructor-name item*)
