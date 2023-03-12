@@ -26,7 +26,6 @@
                            [hidden-features : (Listof Symbol)]
                            [zones : (Listof Zone)]
                            [tags : (Listof Symbol)]
-                           [light-level : (U LightLevel 'natural)]
                            [encounter-types : (Listof Symbol)])
   #:prefab
   #:mutable

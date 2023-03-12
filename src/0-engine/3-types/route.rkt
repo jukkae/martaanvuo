@@ -36,7 +36,6 @@
                  #:features (Listof Symbol)
                  #:hidden-features (Listof Symbol)
                  #:tags (Listof Symbol)
-                 #:light-level (U LightLevel 'natural)
                  #:encounter-types (Listof Symbol)
                  #:descr-from-a (Maybe String)
                  #:descr-from-b (Maybe String))
@@ -55,7 +54,6 @@
                     #:features [features '()]
                     #:hidden-features [hidden-features '()]
                     #:tags [tags '()]
-                    #:light-level (light-level 'natural)
                     #:encounter-types [encounter-types '()]
                     #:descr-from-a [descr-from-a ""]
                     #:descr-from-b [descr-from-b ""])
@@ -80,7 +78,6 @@
           hidden-features
           zones
           tags
-          light-level
           encounter-types
           a
           b

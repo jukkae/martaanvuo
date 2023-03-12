@@ -27,20 +27,28 @@
 (define (get-current-time-of-day)
   (time-of-day-from-iotas (current-elapsed-time)))
 
+(define (get-current-natural-light-level)
+  (case (get-current-time-of-day)
+    ['morning 'bright]
+    ['midday 'bright]
+    ['afternoon 'bright]
+    ['evening 'dark]
+    ['night 'pitch-black]))
+
+(define (get-light-level-in-an-interior-location location)
+  (let/ec return
+    (when (location-has-feature? 'lights-on)
+      (return 'bright))
+    (when (location-has-feature? 'windows)
+      (return (get-current-natural-light-level)))
+    (return 'pitch-black)))
+
 (provide get-current-light-level)
 (define (get-current-light-level)
-  (define l (current-location))
-  (define ll
-    (if (eq? (location-type l) 'ext)
-      (case (get-current-time-of-day)
-       ['morning 'bright]
-       ['midday 'bright]
-       ['afternoon 'bright]
-       ['evening 'dark]
-       ['night 'pitch-black])
-      (location-light-level l)))
-  (when (null? ll) (set! ll 'pitch-black))
-  ll)
+  (match (location-type (current-location))
+     ['ext (get-current-natural-light-level)]
+     ['int (get-current-natural-light-level (current-location))])
+  )
 
 (provide get-current-noise-level)
 (define (get-current-noise-level)
@@ -88,7 +96,6 @@
                        traverse-time
                        type
                        #:hidden? [hidden? #f]
-                       #:light-level [light-level 'natural]
                        #:encounter-types [encounter-types '()]
                        #:one-directional? [one-directional? #f]
                        #:details [details '()]
@@ -103,7 +110,6 @@
               hidden?
               #:details details
               #:type type
-              #:light-level light-level
               #:encounter-types encounter-types
               #:descr-from-a descr-from-a
               #:descr-from-b descr-from-b
@@ -115,7 +121,6 @@
                             traverse-time
                             type
                             #:hidden? [hidden? #f]
-                            #:light-level [light-level 'natural]
                             #:encounter-types [encounter-types '()]
                             #:one-directional? [one-directional? #f]
                             #:details [details '()])
@@ -126,7 +131,6 @@
                    traverse-time
                    type
                    #:hidden? hidden?
-                   #:light-level light-level
                    #:encounter-types encounter-types
                    #:one-directional? one-directional?
                    #:details details))
@@ -187,7 +191,6 @@
                #:hidden-features [hidden-features '()]
                #:zones [zones '()]
                #:tags [tags '()]
-               #:light-level [light-level 'natural]
                #:encounter-types [encounter-types '()]
                #:choices [choices '()]
                #:routes [routes '()]
@@ -213,7 +216,6 @@
           hidden-features
           zones
           tags
-          light-level
           encounter-types
           routes
           visited?

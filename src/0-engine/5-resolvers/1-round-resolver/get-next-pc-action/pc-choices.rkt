@@ -156,9 +156,6 @@
                          #:resolution-rules `(
                                               (case (get-current-light-level)
                                                 ['bright
-                                                 (set-location-light-level! (current-location) 'dark)
-                                                 ]
-                                                ['dark
                                                  (set-location-light-level! (current-location) 'pitch-black)
                                                  ]
                                                 ['pitch-black

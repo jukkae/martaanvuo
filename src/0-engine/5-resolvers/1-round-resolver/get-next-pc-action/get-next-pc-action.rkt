@@ -65,9 +65,15 @@
         choices
         first-free-index)) ; should check for pending actions and name choices accordingly
      (define static-choices-with-keys (make-hash))
-     ; todo smarter logic
-     (define explore-choice (make-explore-choice))
-     (hash-set! static-choices-with-keys "E" (cons (format "[E]: ~a" (choice-name explore-choice)) explore-choice))
+     ; TODO: smarter logic
+     (cond [(not (in-combat?))
+            (define explore-choice (make-explore-choice))
+            (hash-set! static-choices-with-keys "E" (cons (format "[E]: ~a" (choice-name explore-choice)) explore-choice))]
+           [else
+            (define explore-choice (make-unavailable-choice "Explore" "Can't explore when in combat"))
+            (hash-set! static-choices-with-keys " " (cons (format "[ ]: ~a" (choice-name explore-choice)) explore-choice))
+            ]
+       )
      (define meta-commands-with-keys (get-meta-commands-with-keys))
 
      (if question-repeated? (describe-situation #t) (describe-situation #f))

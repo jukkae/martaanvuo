@@ -65,27 +65,22 @@
           #:features '()
           #:items (list (make-item 'shaman-bag))
           #:type 'int
-          #:light-level 'pitch-black
           #:shortname "Mining tunnels")
    (place #:id 'tunnels-2
           #:features '()
           #:type 'int
-          #:light-level 'pitch-black
           #:shortname "Mining tunnels")
    (place #:id 'tunnels-3
           #:features '()
           #:type 'int
-          #:light-level 'pitch-black
           #:shortname "Mining tunnels")
    (place #:id 'tunnels-4
           #:features '()
           #:type 'int
-          #:light-level 'pitch-black
           #:shortname "Mining tunnels")
    (place #:id 'tunnels-5
           #:features '()
           #:type 'int
-          #:light-level 'pitch-black
           #:shortname "a cave"
           #:zones (list (zone #:interactibles (list 'remains-of-a-campfire (make-item 'torch))
                               #:name "remains of a campfire"
@@ -113,7 +108,6 @@
           #:tags '(cluttered)
           #:shortname "The Maw"
           #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
-          #:light-level 'dark
           #:features (list 'light-switch 'martaanvuo-terminal))
    (place #:id 'reactor-room
           #:type 'int
@@ -121,7 +115,6 @@
           #:tags '(cluttered)
           #:shortname "reactor room"
           #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
-          #:light-level 'dark
           #:features (list 'the-button 'running-centrifuge))
    (place #:id 'bioreactor
           #:type 'int
@@ -129,7 +122,6 @@
           #:tags '()
           #:shortname "bioreactor"
           #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
-          #:light-level 'dark
           #:features (list 'the-button))))
 
 (define routes
