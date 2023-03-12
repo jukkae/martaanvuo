@@ -16,7 +16,10 @@
          "../../0-engine/3-types/manipulator.rkt"
          "../../0-engine/3-types/modification.rkt"
          "../../0-engine/3-types/pc-actor.rkt"
-         "../../0-engine/3-types/sense-organ.rkt")
+         "../../0-engine/3-types/sense-organ.rkt"
+
+         "../../0-engine/4-systems/items/item.rkt"
+         )
 
 ; Eventually, maybe lift this to the same "level" as numbered options. Then:
 ; Character sheet could be a treelike menu, where also letters are used.
@@ -111,7 +114,7 @@
 (define (select-item)
   (define items (actor-inventory (pc)))
 
-  (prln (format "Select item [1-~a], anything else to cancel." (length items)))
+  (prln (format "Select item [1-~a] to inspect or use, anything else to cancel." (length items)))
   (br)
 
   (for ([item items] [i (in-naturals 1)])
@@ -130,18 +133,39 @@
      '()
      (notice "Nevermind.")])
   (when (not (null? selected-item))
-    #;(dev-note (format "Item: ~a" selected-item))
-    (when (equal? (item-id selected-item) 'lucky-charm-slot-machine)
-      (cond
-        [(equal? (item-details selected-item) 'active)
-         (set-item-details! selected-item 'passive)
-         (p "Otava sets the little switch on the slot machine charm to 'off'. Not surprisingly, nothing seems to happen.")
-         (wait-for-confirm)]
-        [(equal? (item-details selected-item) 'passive)
-         (set-item-details! selected-item 'active)
-         (p "Otava sets the little switch on the slot machine talisman to 'on'. Nothing seems to happen.")
-         (wait-for-confirm)]
-        [else (notice (format "Unknown state: ~a" (item-details selected-item)))]))))
+    (item-submenu selected-item)))
+
+(define (item-submenu selected-item)
+  (define targets (list (cons "inspect" (λ () (inspect-item selected-item))) (cons "Use" (λ () (interact-with-item selected-item)))))
+
+  (for ([target targets] [i (in-naturals 1)])
+    (prln (format "[~a] ~a" i (car target))))
+  (br)
+
+  (define input (string->number (wait-for-input)))
+  (cond
+    [(and (number? input) (> input 0) (<= input (length targets)))
+     (define index (- input 1))
+     ((cdr (list-ref targets index)))]
+    [else
+     '()
+     #;(p "Nevermind.")])
+
+
+  #;(dev-note (format "Item: ~a" selected-item))
+
+  (when (equal? (item-id selected-item) 'lucky-charm-slot-machine)
+    (cond
+      [(equal? (item-details selected-item) 'active)
+        (set-item-details! selected-item 'passive)
+        (p "Otava sets the little switch on the slot machine charm to 'off'. Not surprisingly, nothing seems to happen.")
+        (wait-for-confirm)]
+      [(equal? (item-details selected-item) 'passive)
+        (set-item-details! selected-item 'active)
+        (p "Otava sets the little switch on the slot machine talisman to 'on'. Nothing seems to happen.")
+        (wait-for-confirm)]
+      [else (notice (format "Unknown state: ~a" (item-details selected-item)))]))
+  (wait-for-confirm))
 
 (define (display-modifications)
   (define actor (pc))
@@ -211,7 +235,7 @@
 
 ; TODO: These must be filtered w.r.t combat
 (define (select-interaction-target)
-  (define targets (list (cons "Select item" select-item) (cons "Use skill" use-skill)))
+  (define targets (list (cons "Select item to inspect or interact with" select-item) (cons "Use skill" use-skill)))
 
   (prln (format "Select [1-~a], or anything else to go back to game." (length targets)))
   (br)

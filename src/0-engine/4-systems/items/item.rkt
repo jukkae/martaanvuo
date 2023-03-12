@@ -74,3 +74,9 @@
                       (tr (car item-detail) (~s (cdr item-detail))))
                     (tr "Ammo left" (number->string (ranged-weapon-ammo-left gun)))))
   (info-card body (item-name gun)))
+
+(define (inspect-item the-item)
+  (displayln (format "it is: ~a" the-item)))
+
+(define (interact-with-item the-item)
+  (displayln "FIXME:"))
