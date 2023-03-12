@@ -2,9 +2,14 @@
 
 (provide (all-defined-out))
 
+(require racket/lazy-require)
+
 (require "../../2-core/io.rkt"
          "../../2-core/core.rkt"
-         "../../3-types/item.rkt")
+         "../../3-types/item.rkt"
+         )
+
+(lazy-require ["../pc/pc.rkt" (pc-has-item?)])
 
 (define (new-item name #:id id #:details (details '()) #:quantity (quantity 1) #:interaction-verbs [interaction-verbs '()])
   (item* id name details quantity interaction-verbs))
@@ -45,7 +50,7 @@
     ['gold (new-item "gold" #:id id #:quantity amount)]
 
     ['lucky-charm-slot-machine
-     (new-item "Lucky charm (slot machine)" #:id 'lucky-charm-slot-machine #:details 'passive)]
+     (new-item "Lucky charm (slot machine)" #:id 'lucky-charm-slot-machine #:details 'switched-off)]
 
     [else (new-item (capitalize-first-letter (symbol->string id)) #:id id #:quantity amount)]))
 
@@ -80,5 +85,13 @@
 
 (define (interact-with-item the-verb the-item)
   (p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
-  (match the-verb
-   ["Turn on" (notice "It has no batteries.")]))
+  (match (item-id the-item)
+    ['empty-flashlight
+     (match the-verb
+      ["Turn on"
+        (cond
+         [(pc-has-item? 'battery) (notice "It flickers, and the light's on.")]
+         [else (notice "It has no batteries.")])]
+     )]
+    )
+  )
