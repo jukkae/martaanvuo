@@ -110,7 +110,7 @@
                 (not (choice-unavailable? (cdr c))))
            (display (car v))]
           [else
-           (display "[ ]")])
+           (display (format "[ ]: ~a" (choice-name (cdr c))))])
     (cond
       [(equal? k "0")
        (displayln "")

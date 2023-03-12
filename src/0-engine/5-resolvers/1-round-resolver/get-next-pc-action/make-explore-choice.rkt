@@ -158,6 +158,7 @@
       ; (pc-has-condition? 'ankle-broken) ; TODO: more ergonomic
       [(actor-has-condition-of-type? (pc) 'ankle-broken) (set! explore-cost (* 3 explore-cost))])
 
+
     (cond [(and (Place? (current-location))
                 (not (equal? (Place-explored (current-location)) 'exhaustively-explored))
                 ;
