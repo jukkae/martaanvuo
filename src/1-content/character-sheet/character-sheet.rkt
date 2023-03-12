@@ -128,17 +128,19 @@
      (set! selected-item (list-ref items index))]
     [else
      '()
-     #;(p "Nevermind.")])
+     (notice "Nevermind.")])
   (when (not (null? selected-item))
-    (dev-note (format "Item: ~a" selected-item))
+    #;(dev-note (format "Item: ~a" selected-item))
     (when (equal? (item-id selected-item) 'lucky-charm-slot-machine)
       (cond
         [(equal? (item-details selected-item) 'active)
          (set-item-details! selected-item 'passive)
-         (notice "Slot machine is now passive.")]
+         (p "Otava sets the little switch on the slot machine charm to 'off'. Not surprisingly, nothing seems to happen.")
+         (wait-for-confirm)]
         [(equal? (item-details selected-item) 'passive)
          (set-item-details! selected-item 'active)
-         (notice "Slot machine is now active.")]
+         (p "Otava sets the little switch on the slot machine talisman to 'on'. Nothing seems to happen.")
+         (wait-for-confirm)]
         [else (notice (format "Unknown state: ~a" (item-details selected-item)))]))))
 
 (define (display-modifications)

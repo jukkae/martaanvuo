@@ -82,7 +82,8 @@
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   ; (add-item! 'ration #:amount 2 #:silent? #t)
   (add-item! 'bolt-cutters #:silent? #t)
-  ; (add-item! 'lucky-charm-slot-machine #:silent? #t)
+  (add-item! 'empty-flashlight #:silent? #t)
+  (add-item! 'lucky-charm-slot-machine #:silent? #t)
   ; (add-item! 'revolver #:silent? #t)
   )
 
@@ -392,3 +393,8 @@
 
 (define (display-pc-title)
   (notice (format "Otava ~a" (string-append* (add-between (current-epithets) ", ")))))
+
+(define (pc-has-light-source?)
+  (pc-has-item? 'flashlight-on)
+  (pc-has-item? 'torch)
+  (pc-has-manipulator? 'bioluminescence))

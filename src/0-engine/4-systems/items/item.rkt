@@ -13,7 +13,7 @@
   (ranged-weapon* id name details 1 ammo-left))
 
 ; TODO: items = "content cards"
-(define (make-item id #:amount [amount 1])
+(define (make-item id #:amount [amount 1] #:details [details '()])
 
   (case id
     ['shaman-bag (new-item "Shaman bag" #:id id)]

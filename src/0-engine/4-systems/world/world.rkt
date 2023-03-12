@@ -15,6 +15,8 @@
          "../../3-types/route.rkt"
          "../../3-types/world.rkt")
 
+(lazy-require ["../../4-systems/pc/pc.rkt" (pc-has-light-source?)])
+
 (define (get-current-actors)
   (define actors (location-actors (current-location)))
   actors)
@@ -43,11 +45,20 @@
       (return (get-current-natural-light-level)))
     (return 'pitch-black)))
 
+(define (add-pc-contribution-to-light ambient-light)
+  (if (pc-has-light-source?)
+    (match ambient-light
+     ['pitch-black 'dark]
+     ['dark 'bright])
+    ambient-light)
+  )
+
 (provide get-current-light-level)
 (define (get-current-light-level)
-  (match (location-type (current-location))
+  (add-pc-contribution-to-light
+    (match (location-type (current-location))
      ['ext (get-current-natural-light-level)]
-     ['int (get-light-level-in-an-interior-location (current-location))])
+     ['int (get-light-level-in-an-interior-location (current-location))]))
   )
 
 (provide get-current-noise-level)
