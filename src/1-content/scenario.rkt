@@ -59,7 +59,6 @@
   (p ", the title concludes.")
 
   (remove-feature-from-location! (current-location) 'the-button)
-  (remove-feature-from-location! (current-location) 'light-switch)
 
   (wait-for-confirm)
 

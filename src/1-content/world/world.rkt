@@ -108,7 +108,7 @@
           #:tags '(cluttered)
           #:shortname "The Maw"
           #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
-          #:features (list 'light-switch 'martaanvuo-terminal))
+          #:features (list 'lights-off 'martaanvuo-terminal))
    (place #:id 'reactor-room
           #:type 'int
           #:size 'small

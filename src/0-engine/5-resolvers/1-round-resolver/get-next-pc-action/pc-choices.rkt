@@ -139,29 +139,46 @@
                       #:available-in-combat? #t
                       ))
     )
-  (when (location-has-feature? (current-location) 'light-switch)
+  (when (location-has-feature? (current-location) 'lights-off)
     (define tags (if (current-in-combat?) (list 'initiative-based-resolution) '()))
     (append-element! feature-choices
                      (make-choice
-                      'toggle-lights
-                      "Toggle lights"
+                      'turn-on-lights
+                      "Turn on lights"
                       (λ ()
                         (make-action
-                         #:symbol 'toggle-lights
+                         #:symbol 'turn-on-lights
                          #:actor (pc)
                          #:duration 1
                          #:target '()
                          #:tags tags
                          #:details (list 'fast)
                          #:resolution-rules `(
-                                              (case (get-current-light-level)
-                                                ['bright
-                                                 (set-location-light-level! (current-location) 'pitch-black)
-                                                 ]
-                                                ['pitch-black
-                                                 (set-location-light-level! (current-location) 'bright)
-                                                 ]
-                                                )
+                                              (remove-feature-from-location! (current-location) 'lights-off)
+                                              (add-feature-to-location! (current-location) 'lights-on)
+                                              (notice (format "Light level is now ~a." (get-current-light-level)))
+                                              )
+                         ))
+                      #:available-in-combat? #t
+                      ))
+    )
+  (when (location-has-feature? (current-location) 'lights-on)
+    (define tags (if (current-in-combat?) (list 'initiative-based-resolution) '()))
+    (append-element! feature-choices
+                     (make-choice
+                      'turn-off-lights
+                      "Turn off lights"
+                      (λ ()
+                        (make-action
+                         #:symbol 'turn-off-lights
+                         #:actor (pc)
+                         #:duration 1
+                         #:target '()
+                         #:tags tags
+                         #:details (list 'fast)
+                         #:resolution-rules `(
+                                              (remove-feature-from-location! (current-location) 'lights-on)
+                                              (add-feature-to-location! (current-location) 'lights-off)
                                               (notice (format "Light level is now ~a." (get-current-light-level)))
                                               )
                          ))

@@ -37,9 +37,9 @@
 
 (define (get-light-level-in-an-interior-location location)
   (let/ec return
-    (when (location-has-feature? 'lights-on)
+    (when (location-has-feature? (current-location) 'lights-on)
       (return 'bright))
-    (when (location-has-feature? 'windows)
+    (when (location-has-feature? (current-location) 'windows)
       (return (get-current-natural-light-level)))
     (return 'pitch-black)))
 
@@ -47,7 +47,7 @@
 (define (get-current-light-level)
   (match (location-type (current-location))
      ['ext (get-current-natural-light-level)]
-     ['int (get-current-natural-light-level (current-location))])
+     ['int (get-light-level-in-an-interior-location (current-location))])
   )
 
 (provide get-current-noise-level)
