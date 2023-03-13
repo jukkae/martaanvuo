@@ -9,7 +9,7 @@
          "../../3-types/item.rkt"
          )
 
-(lazy-require ["../pc/pc.rkt" (pc-has-item?)])
+(lazy-require ["../pc/pc.rkt" (pc-has-item? remove-item!)])
 
 (define (new-item name #:id id #:details (details '()) #:quantity (quantity 1) #:interaction-verbs [interaction-verbs '()])
   (item* id name details quantity interaction-verbs))
@@ -45,7 +45,7 @@
 
     ['flashlight (new-item "Flashlight" #:id id #:details 34)] ; charge percentage
 
-    ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0 #:interaction-verbs (list "Turn on"))] ; charge percentage
+    ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0 #:interaction-verbs (list "Turn on" "Change battery"))] ; charge percentage
 
     ['gold (new-item "gold" #:id id #:quantity amount)]
 
@@ -90,8 +90,18 @@
      (match the-verb
       ["Turn on"
         (cond
-         [(pc-has-item? 'battery) (notice "It flickers, and the light's on.")]
-         [else (notice "It has no batteries.")])]
+         [else (notice "It has no batteries.")]
+         )]
+      ["Change battery"
+        (cond
+         [(pc-has-item? 'battery)
+          (notice "Otava changes the battery of the flashlight.")
+          (remove-item! 'battery #:quantity-to-remove 1)
+          (set-item-id! the-item 'flaslight)
+          (set-item-name! the-item "Flashlight")
+          (set-item-details! the-item 43) ; percent
+          ]
+         [else (notice "Otava has no batteries.")])]
      )]
     )
   )

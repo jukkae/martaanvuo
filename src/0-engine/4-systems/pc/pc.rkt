@@ -155,8 +155,7 @@
              (pc)
              (filter (λ (inventory-item) (not (equal? (item-id inventory-item) id)))
                      (actor-inventory (pc)))))])
-     #;(dev-note
-        "item removed, show info about removed/remaining items") ; TODO: re-enable and implement this
+      (notice (format "removed x~a: ~a" quantity-to-remove (item-name it)))
      ]))
 
 (define (add-ammo! amount)
