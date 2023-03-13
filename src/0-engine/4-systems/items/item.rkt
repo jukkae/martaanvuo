@@ -97,11 +97,28 @@
          [(pc-has-item? 'battery)
           (notice "Otava changes the battery of the flashlight.")
           (remove-item! 'battery #:quantity-to-remove 1)
-          (set-item-id! the-item 'flaslight)
+          (set-item-id! the-item 'flashlight-off)
           (set-item-name! the-item "Flashlight")
           (set-item-details! the-item 43) ; percent
           ]
          [else (notice "Otava has no batteries.")])]
+     )]
+    ['flashlight-off
+     (match the-verb
+      ["Turn on"
+        (notice "Otava turns on the flashlight.")
+        (set-item-id! the-item 'flashlight-on)
+        (set-item-name! the-item "Flashlight (on)")
+        ]
+     )]
+
+    ['flashlight-on
+     (match the-verb
+      ["Turn off"
+        (notice "Otava turns off the flashlight.")
+        (set-item-id! the-item 'flashlight-off)
+        (set-item-name! the-item "Flashlight (off)")
+        ]
      )]
     )
   )

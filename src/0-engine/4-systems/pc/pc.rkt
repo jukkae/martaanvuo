@@ -395,6 +395,6 @@
   (notice (format "Otava ~a" (string-append* (add-between (current-epithets) ", ")))))
 
 (define (pc-has-light-source?)
-  (pc-has-item? 'flashlight-on)
-  (pc-has-item? 'torch)
-  (pc-has-manipulator? 'bioluminescence))
+  (or (pc-has-item? 'flashlight-on)
+      (pc-has-item? 'torch)
+      (pc-has-manipulator? 'bioluminescence)))

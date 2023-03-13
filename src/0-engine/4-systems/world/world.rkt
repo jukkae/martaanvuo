@@ -49,7 +49,9 @@
   (if (pc-has-light-source?)
     (match ambient-light
      ['pitch-black 'dark]
-     ['dark 'bright])
+     ['dark 'bright]
+     ['bright 'bright]
+     )
     ambient-light)
   )
 
