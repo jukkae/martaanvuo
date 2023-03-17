@@ -169,14 +169,14 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
   (cond
    [(flag-set? 'markbearer-killed)
     (notice "Otava having killed a markbearer, the deed carries over.")
-    (current-pc (make-new-mb-pc))
+    (add-to-play! (make-new-mb-pc))
     (set-markbearer-build!)
     (current-epithets (cons "Markbearer" (current-epithets)))
     (display-pc-title)
     (wait-for-confirm)
     ]
    [else
-    (current-pc (make-new-pc))
+    (add-to-play! (make-new-pc))
     (set-base-build!)
     ])
   (when (not (= 1 (current-life)))

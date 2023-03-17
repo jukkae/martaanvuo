@@ -28,6 +28,7 @@
          "../7-state/state.rkt")
 
 (lazy-require ["pc/pc.rkt" (pc-hunger-level pc-fatigue-level)])
+(lazy-require ["world/world.rkt" (pc)])
 (lazy-require ["checks/checks.rkt" (check)])
 
 ; this should also likely have a mutator counterpart, to handle becoming less hungry
@@ -35,7 +36,7 @@
   (define events '())
 
   (define old-pc-hunger-level (pc-hunger-level))
-  (set-pc-actor-hunger! (current-pc) (+ (pc-actor-hunger (current-pc)) 1))
+  (set-pc-actor-hunger! (pc) (+ (pc-actor-hunger (pc)) 1))
   (define new-pc-hunger-level (pc-hunger-level))
 
   (cond
@@ -50,7 +51,7 @@
   (define events '())
 
   (define old-pc-fatigue-level (pc-fatigue-level))
-  (set-pc-actor-fatigue! (current-pc) (+ (pc-actor-fatigue (current-pc)) 1))
+  (set-pc-actor-fatigue! (pc) (+ (pc-actor-fatigue (pc)) 1))
   (define new-pc-fatigue-level (pc-fatigue-level))
 
   (cond

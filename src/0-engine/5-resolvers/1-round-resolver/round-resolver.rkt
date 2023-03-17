@@ -28,6 +28,7 @@
 
          "../../4-systems/actors/actor.rkt"
          "../../4-systems/pc/pc.rkt"
+         "../../4-systems/world/world.rkt"
 
          "../../7-state/logging.rkt"
          "../../7-state/state.rkt"

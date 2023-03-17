@@ -15,6 +15,7 @@
          "../../3-types/actor.rkt")
 
 (lazy-require ["../world/time.rkt" (timestamp)])
+(lazy-require ["../world/world.rkt" (pc)])
 
 (define (luck-check [target-number 7] [bonus 0])
   (define d1 (d 1 6))

@@ -50,7 +50,7 @@
     ['gold (new-item "gold" #:id id #:quantity amount)]
 
     ['lucky-charm-slot-machine
-     (new-item "Lucky charm (slot machine)" #:id 'lucky-charm-slot-machine #:details 'switched-off #:interaction-verbs (list "Flick the switch"))]
+     (new-item "Lucky charm slot machine" #:id 'lucky-charm-slot-machine #:details 'switched-off #:interaction-verbs (list "Flick the switch"))]
 
     [else (new-item (capitalize-first-letter (symbol->string id)) #:id id #:quantity amount)]))
 
@@ -87,14 +87,16 @@
   (p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
   (match (item-id the-item)
     ['lucky-charm-slot-machine
-     (when (eq? (item-details the-item) 'switched-on)
+     (define state (item-details the-item))
+     (cond [(eq? state 'switched-on)
         (set-item-details! the-item 'switched-off)
         (p "Otava sets the little switch on the slot machine charm to 'off'. Not surprisingly, nothing seems to happen.")
-        (wait-for-confirm))
-     (when (eq? (item-details the-item) 'switched-off)
+        (wait-for-confirm)]
+           [(eq? state 'switched-off)
         (set-item-details! the-item 'switched-on)
         (p "Otava sets the little switch on the slot machine talisman to 'on'. Nothing seems to happen.")
-        (wait-for-confirm))
+        (wait-for-confirm)]
+        )
      ]
     ['empty-flashlight
      (match the-verb

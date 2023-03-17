@@ -67,7 +67,7 @@
 
     ['continue
       (when (and (pc-has-item? 'lucky-charm-slot-machine)
-             #;(eq? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'switched-on))
+             (eq? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'switched-on))
     (define n (ephemeral-random-in-range 111 999))
     (p
      (format

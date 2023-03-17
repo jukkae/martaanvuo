@@ -27,7 +27,6 @@
          get-current-enemies
          get-current-enemy
          get-next-numeric-actor-id
-         pc
 
          clear-current-fragment!
 

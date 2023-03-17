@@ -229,7 +229,7 @@
   #;(dev-note "get-evening-choices: not implemented yet")
   (prune (list
    (when (not (flag-set? 'camp-set-up)) (choice-factory 'camp))
-   (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
+   (when (and (>= (pc-actor-hunger (pc)) hunger-level-hungry)
                   (pc-has-comestibles?))
          (choice-factory 'eat))
    (choice-factory 'rest)
@@ -361,7 +361,7 @@
                   (Place? (current-location)))
          (list (choice-factory 'rest)))
 
-       (when (and (>= (pc-actor-hunger (current-pc)) hunger-level-hungry)
+       (when (and (>= (pc-actor-hunger (pc)) hunger-level-hungry)
                   (pc-has-comestibles?))
          (list
           (choice-factory 'eat)))

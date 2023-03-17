@@ -8,6 +8,8 @@
 (define places
   (list
    (place
+    #:id 'unlocated)
+   (place
     #:id 'perimeter
     #:size 'large
     #:type 'ext

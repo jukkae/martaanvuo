@@ -14,12 +14,12 @@
          "../../3-types/zone.rkt")
 
 (lazy-require ["../world/world.rkt"
-               (remove-actor-from-its-current-location! get-place-by-id get-route-by-id get-route-between get-current-light-level)])
+               (remove-actor-from-its-current-location! get-place-by-id get-route-by-id get-route-between get-current-light-level pc)])
 (lazy-require ["../simulation.rkt" (advance-time-until-next-interesting-event!)])
 (lazy-require ["../checks/checks.rkt" (check)])
 (lazy-require ["../items/item.rkt" (make-item)])
 (lazy-require ["../../6-combat/combat.rkt" (begin-combat!)])
-(lazy-require ["../../7-state/mutators.rkt" (current-location pc)])
+(lazy-require ["../../7-state/mutators.rkt" (current-location)])
 (lazy-require ["../../7-state/pending-action.rkt" (reset-pending-action!)])
 
 (lazy-require ["../../../1-content/world/locations/location-choices.rkt" (get-location-choices)])

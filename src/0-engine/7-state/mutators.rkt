@@ -24,7 +24,6 @@
                               current-fragment-id
                               current-in-combat?
                               current-life
-                              current-pc
                               current-tasks
                               current-epithets
                               current-run
@@ -90,10 +89,6 @@
   (when (not (once-per-day-action-done? action-symbol))
     (current-once-per-day-actions-done
      (append-element (current-once-per-day-actions-done) action-symbol))))
-
-; this could be a macro so that raw syntax "pc" in isolation would turn into "(pc)"
-(define (pc)
-  (current-pc))
 
 ; "clean up the board"
 (define (remove-all-enemies-and-end-combat!)

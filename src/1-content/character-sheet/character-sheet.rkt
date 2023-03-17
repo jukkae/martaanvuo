@@ -19,6 +19,7 @@
          "../../0-engine/3-types/sense-organ.rkt"
 
          "../../0-engine/4-systems/items/item.rkt"
+         "../../0-engine/4-systems/world/world.rkt"
          )
 
 ; Eventually, maybe lift this to the same "level" as numbered options. Then:

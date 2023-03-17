@@ -26,6 +26,23 @@
   (define actors (get-current-actors))
   (findf (λ (a) (equal? (actor-id a) id)) actors))
 
+(provide world-locations)
+(define (world-locations w)
+  (append (world-places w)
+          (world-routes w)))
+
+(provide pc)
+(define (pc)
+  (let/ec return
+    (for ([l (world-locations (current-world))])
+      (for ([a (location-actors l)])
+        (when (eq? (actor-id a) 'pc)
+          (return a))))))
+
+(provide add-to-play!)
+(define (add-to-play! actor)
+  (add-actor-to-location! (get-location-by-id 'unlocated) actor))
+
 (define (get-current-time-of-day)
   (time-of-day-from-iotas (current-elapsed-time)))
 

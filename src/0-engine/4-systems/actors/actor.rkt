@@ -25,7 +25,7 @@
          )
 
 (lazy-require ["../world/world.rkt"
-               (remove-actor-from-its-current-location! move-actor-to-location!)])
+               (remove-actor-from-its-current-location! move-actor-to-location! pc)])
 (lazy-require ["../world/time.rkt" (timestamp)])
 (lazy-require ["../tasks/tasks.rkt" (add-new-task!)])
 (lazy-require ["../../3-types/location.rkt" (add-feature-to-location! add-item-to-location!)])

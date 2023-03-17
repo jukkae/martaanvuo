@@ -1,5 +1,7 @@
 #lang at-exp racket
 
+(require racket/lazy-require)
+
 (provide (all-defined-out))
 
 (require "../actors/actor.rkt"
@@ -16,6 +18,9 @@
          "../../3-types/sense-organ.rkt"
          "../../3-types/manipulator.rkt"
          "../../3-types/pc-actor.rkt")
+
+(lazy-require ["../world/world.rkt"
+               (pc)])
 
 ; PC hp <= 0 starts a "dying" counter of 1-2 rounds
 ; - this as an "upgrade" or talent or build thing or whatever
@@ -108,8 +113,8 @@
 
   ; (add-item! 'knife #:amount 2 #:silent? #t)
   ; (add-item! 'ration #:amount 2 #:silent? #t)
-  (add-item! 'bolt-cutters #:silent? #t)
-  (add-item! 'lucky-charm-slot-machine #:silent? #t))
+  ; (add-item! 'bolt-cutters #:silent? #t)
+  #;(add-item! 'lucky-charm-slot-machine #:silent? #t))
 
 ; (: -> Modification '())
 (define (add-modification! modification)
