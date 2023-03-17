@@ -16,7 +16,6 @@
          "../2-core/core.rkt"
          "../3-types/fragment.rkt"
 
-         "../4-systems/pc/pc.rkt"
          "../4-systems/world/world.rkt")
 
 (require "flags.rkt"

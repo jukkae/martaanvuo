@@ -76,6 +76,7 @@
 (define (get-current-light-level)
   (add-pc-contribution-to-light
     (match (location-type (current-location))
+     ['() 'pitch-black]
      ['ext (get-current-natural-light-level)]
      ['int (get-light-level-in-an-interior-location (current-location))]))
   )
