@@ -155,18 +155,6 @@
 
 
   #;(dev-note (format "Item: ~a" selected-item))
-
-  (when (equal? (item-id selected-item) 'lucky-charm-slot-machine)
-    (cond
-      [(equal? (item-details selected-item) 'switched-on)
-        (set-item-details! selected-item 'switched-off)
-        (p "Otava sets the little switch on the slot machine charm to 'off'. Not surprisingly, nothing seems to happen.")
-        (wait-for-confirm)]
-      [(equal? (item-details selected-item) 'switched-off)
-        (set-item-details! selected-item 'switched-state-on)
-        (p "Otava sets the little switch on the slot machine talisman to 'on'. Nothing seems to happen.")
-        (wait-for-confirm)]
-      [else (notice (format "Unknown state: ~a" (item-details selected-item)))]))
   (wait-for-confirm))
 
 (define (display-modifications)

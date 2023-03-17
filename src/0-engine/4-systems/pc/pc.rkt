@@ -189,7 +189,7 @@
 
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
-  (findf (λ (inventory-item) (equal? (item-id inventory-item) id)) items))
+  (findf (λ (inventory-item) (eq? (item-id inventory-item) id)) items))
 
 (define (pc-has-sense-organ? id [level '()])
   (define sense-organs (pc-actor-sense-organs (pc)))

@@ -66,6 +66,16 @@
      'ok]
 
     ['continue
+      (when (and (pc-has-item? 'lucky-charm-slot-machine)
+             #;(eq? (item-details (pc-has-item? 'lucky-charm-slot-machine)) 'switched-on))
+    (define n (ephemeral-random-in-range 111 999))
+    (p
+     (format
+      "\"Bu-di-du-duh.\" The slot machine sings a little melody, and then bloinks and whirrs. Chunk-chunk-chunk, the numbers lock into place. ~a."
+      n))
+    (for ([i n])
+      (random))
+    (wait-for-confirm))
      (when (current-show-round-summary?)
        (round-summary mode))
      (clear-action-queue!)]))
