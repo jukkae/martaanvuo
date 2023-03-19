@@ -126,6 +126,7 @@
            (set-Zone-clue?! f '())
            (set-Zone-pc-here?! f #t)
            (set-Place-explored! (current-location) 'partially-explored)])])
+     (wait-for-confirm)
      'time-passing-handled)))
 
 (define (make-explore-choice)

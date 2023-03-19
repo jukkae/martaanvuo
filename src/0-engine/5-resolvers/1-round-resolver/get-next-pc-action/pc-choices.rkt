@@ -91,7 +91,7 @@
                   'make-an-offering
                   "Make an offering to the cocoon effigy."
                   (λ ()
-                    (p "Otava offers a voidfloater corpse to the cocoon effigy and kneels to receive the Gift.")
+                    (p "Otava offers a cadaver to the cocoon effigy and kneels to receive the Gift.")
                     (remove-item! 'voidfloater-corpse)
                     (randomize-pc-senses!)
                     (wait-for-confirm)
@@ -101,7 +101,7 @@
                 [else
                  (make-unavailable-choice
                   "Make an offering to the cocoon effigy."
-                  "The effigy demands a voidfloater corpse.")]
+                  "The effigy demands a fresh cadaver.")]
                  )))
   (when
     (and (not (false? (current-zone)))

@@ -5,7 +5,7 @@
 (require "../../0-engine/0-api/api.rkt")
 
 ; See scenario.rkt for map overview
-(define places
+(define (places)
   (list
    (place
     #:id 'unlocated)
@@ -126,7 +126,7 @@
           #:encounter-types '(limbtearer voidfloater blindscraper two-blindscrapers)
           #:features (list 'the-button))))
 
-(define routes
+(define (routes)
   (list
    (route-between 'perimeter
                   'magpie-hill
@@ -293,5 +293,7 @@
 
 (provide make-new-world)
 (define (make-new-world)
-  (connect-places-and-routes! places routes)
-  (world places routes 0 0))
+  (define ps (places))
+  (define rs (routes))
+  (connect-places-and-routes! ps rs)
+  (world ps rs 0 0))

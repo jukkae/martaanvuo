@@ -85,7 +85,7 @@
   (displayln (format "it is: ~a" the-item)))
 
 (define (interact-with-item the-verb the-item)
-  (p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
+  #;(p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
   (match (item-id the-item)
     ['lucky-charm-slot-machine
      (define state (item-details the-item))
