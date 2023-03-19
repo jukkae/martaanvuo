@@ -10,6 +10,7 @@
          )
 
 (lazy-require ["../pc/pc.rkt" (pc-has-item? remove-item!)])
+(lazy-require ["../../7-state/state.rkt" (save)])
 
 (define (new-item name #:id id #:details (details '()) #:quantity (quantity 1) #:interaction-verbs [interaction-verbs '()])
   (item* id name details quantity interaction-verbs))
@@ -133,4 +134,5 @@
         ]
      )]
     )
+  (save) ; save after interactions
   )

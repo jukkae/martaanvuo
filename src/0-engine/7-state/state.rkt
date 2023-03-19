@@ -14,6 +14,7 @@
 
          "../1-index/content.rkt"
          "../2-core/core.rkt"
+         "../2-core/save-game.rkt"
          "../3-types/fragment.rkt"
 
          "../4-systems/world/world.rkt")
@@ -159,9 +160,7 @@
 
   (define serialized-state (serialize st))
 
-  (define output-file (open-output-file "save.txt" #:exists 'truncate)) ; truncate = delete if exists
-  (write serialized-state output-file)
-  (close-output-port output-file))
+  (write-save-file serialized-state))
 
 ; NOTE: "Serialization followed by deserialization produces a value with the same graph structure and mutability as the original value, but the serialized value is a plain tree (i.e., no sharing)."
 ; - https://docs.racket-lang.org/reference/serialization.html
