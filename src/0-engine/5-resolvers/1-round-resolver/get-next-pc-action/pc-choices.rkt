@@ -86,12 +86,13 @@
     (and (not (false? (current-zone)))
       (zone-has-feature? (current-zone) 'cocoon-effigy))
     (append-element! feature-choices
-      (cond [(pc-has-item? 'voidfloater-corpse)
+      (cond [(pc-has-cadavers?)
                  (make-choice
                   'make-an-offering
                   "Make an offering to the cocoon effigy."
                   (λ ()
                     (p "Otava offers a cadaver to the cocoon effigy and kneels to receive the Gift.")
+                    (dev-note "TODO: any cadaver")
                     (remove-item! 'voidfloater-corpse)
                     (randomize-pc-senses!)
                     (wait-for-confirm)

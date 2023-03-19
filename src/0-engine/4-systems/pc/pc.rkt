@@ -192,6 +192,18 @@
     #t
     #f))
 
+(define (pc-has-cadavers?)
+  (define items (actor-inventory (pc)))
+  (define comestibles
+    (filter (λ (item) ; likely this should be stored as data on the item itself
+              (case (item-id item)
+                ['voidfloater-corpse #t]
+                [else #f]))
+            items))
+  (if (not (null? comestibles))
+    #t
+    #f))
+
 (define (pc-has-item? id)
   (define items (actor-inventory (pc)))
   (findf (λ (inventory-item) (eq? (item-id inventory-item) id)) items))
