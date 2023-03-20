@@ -46,6 +46,8 @@
 
     ['flashlight (new-item "Flashlight" #:id id #:details 34)] ; charge percentage
 
+    ['battery (new-item "Battery" #:id id #:interaction-verbs (list "Insert to..."))]
+
     ['empty-flashlight (new-item "Flashlight (no batteries)" #:id id #:details 0 #:interaction-verbs (list "Turn on" "Change battery"))] ; charge percentage
 
     ['gold (new-item "gold" #:id id #:quantity amount)]
@@ -87,6 +89,8 @@
 (define (interact-with-item the-verb the-item)
   #;(p (format "Otava tries to ~a the ~a." (string-downcase the-verb) (string-downcase (item-name the-item))))
   (match (item-id the-item)
+    ['battery
+     (notice "Select the item you want to put the battery in first, instead of the battery.")]
     ['lucky-charm-slot-machine
      (define state (item-details the-item))
      (cond [(eq? state 'switched-on)
