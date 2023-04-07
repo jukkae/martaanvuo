@@ -132,28 +132,29 @@
 (define (make-explore-choice)
   (cond
    [(and (not (null? (current-pending-action)))
-         (equal? (action-symbol (current-pending-action)) 'explore)
-         ;
-         (or (and (pc-has-sense-organ? 'eyes)
-                  (not (equal? (get-current-light-level) 'pitch-black)))
-             (pc-has-sense-organ? 'sonar))
-    )
-
+         (equal? (action-symbol (current-pending-action)) 'explore))
     (make-choice
          (action-symbol (current-pending-action))
          (get-continue-pending-action-name)
-
          (λ ()
            (begin0
              (current-pending-action)
              ; continue and reset
-             (reset-pending-action!))))
-    ]
+             (reset-pending-action!))))]
    [else
     (define explore-cost
       (cond
-        [(equal? (location-size (current-location)) 'large) 30]
-        [else 10]))
+        [(equal? (location-size (current-location)) 'large) 40]
+        [else 30]))
+    (define explore-bonus-text "")
+    (when (and (pc-has-sense-organ? 'eyes)
+               (not (equal? (get-current-light-level) 'pitch-black)))
+      (set! explore-cost (- explore-cost 10))
+      (set! explore-bonus-text (format "~a~a" explore-bonus-text " -10ι (eyes)")))
+    (when (and (pc-has-sense-organ? 'sonar)
+               (not (equal? (get-current-noise-level) 'noisy)))
+      (set! explore-cost (- explore-cost 10))
+      (set! explore-bonus-text (format "~a~a" explore-bonus-text " -10ι (sonar)")))
 
     (cond
       ; (pc-has-condition? 'ankle-broken) ; TODO: more ergonomic
@@ -162,11 +163,8 @@
 
     (cond [(and (Place? (current-location))
                 (not (equal? (Place-explored (current-location)) 'exhaustively-explored))
-                ;
-                (or (and (pc-has-sense-organ? 'eyes)
-                         (not (equal? (get-current-light-level) 'pitch-black)))
-                    (pc-has-sense-organ? 'sonar)))
-           (make-choice 'explore (format "Explore. [~a ι]" explore-cost) (λ () (explore-action explore-cost)))]
+                )
+           (make-choice 'explore (format "Explore. [~a ι] [~a]" explore-cost explore-bonus-text) (λ () (explore-action explore-cost)))]
           [else
            (make-unavailable-choice "Explore." "Too dark.")])
     ]))

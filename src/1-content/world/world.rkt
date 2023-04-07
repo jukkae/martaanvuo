@@ -25,19 +25,23 @@
       #:interactibles (list (make-item 'knife) (make-item 'lighter))
       #:name "The body of a dead adventurer"
       #:description "at the body of a dead adventurer")
-     (zone #:clue (clue #:requires (SenseOrgan 'eyes 1 "") #:description "old vehicle tracks")
+     (zone #:clue (clue #:requires (SenseOrgan 'eyes 1 "") #:description "tire tracks")
            #:interactibles (list (make-item 'revolver))
-           #:name "Abandoned car"
-           #:description "at an abandoned car")
+           #:name "rusted car"
+           #:description "at a rusted car")
      (zone #:clue (clue #:requires (SenseOrgan 'nose 2 "")
                         #:description "faint noxious smell of a thiefbird nest")
            #:interactibles (list (make-item 'gold #:amount 3))
            #:name "thiefbird nest"
            #:description "at a thiefbird nest")
-     (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "sound of running water")
-           #:interactibles '(brook)
-           #:name "a brook"
-           #:description "at a brook"))
+     (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "moaning sound")
+           #:interactibles '(moaning-body)
+           #:name "graveyard"
+           #:description "at a graveyard")
+     (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "sound of dripping water")
+           #:interactibles '(faucet)
+           #:name "steel washbasin"
+           #:description "at a steel washbin with a faucet"))
     #:shortname "perimeter")
    (place #:id 'magpie-hill
           #:size 'large
