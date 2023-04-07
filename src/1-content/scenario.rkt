@@ -19,8 +19,8 @@
     (add-item-to-location!
       the-maw
       (new-item
-        (Name "notebook" "a" "'s" "notebooks")
-        #:id 'notebook))
+        (Name "book" "a" "'s" "books")
+        #:id 'book))
     (set-flag 'notebook-added)
     )
   )

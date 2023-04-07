@@ -388,6 +388,9 @@
           (make-forage-choice)))
        (when (and (pc-has-item? 'notebook)
                   (pc-has-sense-organ? 'eyes))
+        (make-read-notebook-choice))
+       (when (and (pc-has-item? 'book)
+                  (pc-has-sense-organ? 'eyes))
         (make-read-book-choice))
 
        (get-current-location-choices)
@@ -397,6 +400,24 @@
   condensed)
 
 (define (make-read-book-choice)
+  (make-choice
+   'read-book
+   "Read the book"
+   (λ () (make-action
+          #:symbol 'read
+          #:actor (pc)
+          #:duration 5
+          #:tags '(downtime)
+          #:resolution-rules
+          `(
+            (p "It's an ancient, hidebound tome. Veins on the skin of the animal it's made of form a symmetrical pattern on the cover, a swirling mass of insectoid mandibulae antennae appendices chaotic ever-shifting depends on how light glints on it.")
+            (wait-for-confirm)
+            (p "Otava flips the book open.")
+            'recurse
+            )
+          ))))
+
+(define (make-read-notebook-choice)
   (make-choice
    'read-book
    "Read the notebook"

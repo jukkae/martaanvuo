@@ -34,10 +34,6 @@
            #:interactibles (list (make-item 'gold #:amount 3))
            #:name "thiefbird nest"
            #:description "at a thiefbird nest")
-     (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "moaning sound")
-           #:interactibles '(moaning-body)
-           #:name "graveyard"
-           #:description "at a graveyard")
      (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "sound of dripping water")
            #:interactibles '(faucet)
            #:name "steel washbasin"
@@ -49,7 +45,11 @@
           #:shortname "Magpie hill"
           #:zones (list (zone #:interactibles (list 'ritual-circle)
                               #:name "ritual circle"
-                              #:description "at the ritual circle")))
+                              #:description "at the ritual circle")
+                        (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "moaning sound")
+                              #:interactibles '(moaning-body)
+                              #:name "graveyard"
+                              #:description "at a graveyard")))
    (place #:id 'lookout #:features '() #:type 'ext #:shortname "lookout")
    (place #:id 'shack
           #:features '()
