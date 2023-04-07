@@ -32,10 +32,10 @@
      (advance-time-until-next-interesting-event! (/ ,duration 2) #t))
    #:on-after-rules `((advance-time-until-next-interesting-event! (/ ,duration 2) #t))
    #:resolution-rules
-   `((define roll-result (check "2d6" #:title "exploration roll" #:target-number 6 #:bonus '()))
+   `((define roll-result (check "2d6" #:title "exploration roll" #:target-number 7 #:bonus '()))
      (case roll-result
 
-       [(,'critical-failure)
+       #;[(,'critical-failure)
         (award-xp! 1)
         (p
          "Ground gives way underneath Otava's feet at a rocky incline. She falls down and breaks her ankle.")
@@ -45,12 +45,12 @@
                                          "movement 3x slower"
                                          (current-elapsed-time)))]
 
-       [(,'serious-failure)
+       #;[(,'serious-failure)
         (p
          "Instead of finding anything, Otava gets lost. Finding her way back takes longer than expected.")
         (notice (format "Action duration: ~a" ,duration))]
 
-       [(,'failure) (p "Otava finds nothing of interest.")]
+       [(,'critical-failure ,'serious-failure ,'failure) (p "Otava finds nothing of interest.")]
 
        [(,'narrow-success ,'success)
         (define discoverables

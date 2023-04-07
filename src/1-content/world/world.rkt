@@ -156,8 +156,8 @@
                   30
                   'ext
                   #:hidden? #t
-                  #:descr-from-a "footsteps through trampled underbrush"
-                  #:descr-from-b "path through prickly underbrush")
+                  #:descr-from-a "path through underbrush"
+                  #:descr-from-b "path through underbrush")
    (route-between 'perimeter
                   'martaanvuo-river
                   140
@@ -169,26 +169,26 @@
                   'martaanvuo-basin
                   40
                   'ext
-                  #:descr-from-a "crumbling stairs down to the dry basin"
-                  #:descr-from-b "crumbling stairs back to the dam")
+                  #:descr-from-a "crumbling stairs down"
+                  #:descr-from-b "crumbling stairs up")
    (route-between 'martaanvuo-basin
                   'martaanvuo-river
                   40
                   'ext
-                  #:descr-from-a "follow the sad dry stream"
-                  #:descr-from-b "back to the dry basin")
+                  #:descr-from-a "downstream"
+                  #:descr-from-b "upstream")
    (route-between 'martaanvuo-river
                   'abandoned-village
                   130
                   'ext
-                  #:descr-from-a "downriver the dry riverbank"
-                  #:descr-from-b "upriver the dry riverbank")
+                  #:descr-from-a "downstream"
+                  #:descr-from-b "upstream")
    (route-between 'abandoned-village
                   'village
                   60
                   'ext
-                  #:descr-from-a "downriver the dry riverbank"
-                  #:descr-from-b "upriver the dry riverbank")
+                  #:descr-from-a "downstream"
+                  #:descr-from-b "upstream")
    (route-between 'abandoned-village
                   'gas-station
                   5
@@ -233,22 +233,22 @@
    (route-between 'tunnels-1 'tunnels-2
                   26
                   'int
-                  #:descr-from-a "tunnels"
-                  #:descr-from-b "tunnels"
+                  #:descr-from-a "tunnel sloping down"
+                  #:descr-from-b "tunnel sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-2 'tunnels-3
                   27
                   'int
-                  #:descr-from-a "tunnels"
-                  #:descr-from-b "tunnels"
+                  #:descr-from-a "tunnel sloping down"
+                  #:descr-from-b "tunnel sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-3 'tunnels-4
                   24
                   'int
-                  #:descr-from-a "tunnels"
-                  #:descr-from-b "tunnels"
+                  #:descr-from-a "tunnel sloping down"
+                  #:descr-from-b "tunnel sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-3
@@ -256,8 +256,8 @@
                   25
                   'int
                   #:hidden? #t
-                  #:descr-from-a "tunnels"
-                  #:descr-from-b "a hole to a tunnel"
+                  #:descr-from-a "a hole out"
+                  #:descr-from-b "a hole in"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'perimeter
@@ -265,14 +265,14 @@
                   15
                   'ext
                   #:hidden? #t
-                  #:descr-from-a "narrow entrance into a cave"
-                  #:descr-from-b "narrow exit from the cave"
+                  #:descr-from-a "a hole in"
+                  #:descr-from-b "a hole out"
                   )
    (route-between 'tunnels-5 'tunnels-4
                   78
                   'int
-                  #:descr-from-a "cave tunnel"
-                  #:descr-from-b "tunnels"
+                  #:descr-from-a "tunnel sloping down"
+                  #:descr-from-b "tunnel sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'martaanvuo-dam
