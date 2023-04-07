@@ -82,15 +82,15 @@
              '()
              '())]
 
-      ['anthead-monograph
-       (task 'find-anthead-monograph
-             "Anthead Monograph"
+      ['book-of-recombination
+       (task 'find-book-of-recombination
+             "Book of Recombination"
              'in-progress
              ""
              "The book on transcending death, should be in the Maw of Martaanvuo."
              '()
              '()
-             'study-anthead-monograph)]
+             'study-book-of-recombination)]
 
       ['hartmann-device
        (task

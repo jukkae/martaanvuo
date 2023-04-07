@@ -81,9 +81,10 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
 
 (define (on-begin-recurse-run)
   (current-recursion-depth (add1 (current-recursion-depth)))
+  (dev-note "TODO:") ; TODO: randomize body plan
 
-  (when (flag-set? 'scenario-evolution)
-    (on-begin-evolution))
+  ; (when (flag-set? 'scenario-evolution)
+  ;   (on-begin-evolution))
 
   ; (cond [(not (flag-set? 'scenario-evolution))
   ;        (current-round 0)
@@ -185,14 +186,14 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
   (case (current-life)
     [(1)
      @p{
-      Otava is at the perimeter of Martaanvuo wasteland. There's a rumor saying that upriver Martaanvuo, near the dam, there's this basement laboratory called the Maw, a fucking abandoned junkie cellar kitchen, and she'll find the [Anthead Monograph] there.
+      Otava is at the perimeter of Martaanvuo wasteland. There's a rumor saying that upriver Martaanvuo, near the dam, there's this basement laboratory called the Maw, a fucking abandoned junkie cellar kitchen, and she'll find the [Book of Recombination] there.
 
-      The Anthead Monograph, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks! Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the clockwork of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh in the divine sausage machine, and out comes something magnificent:
+      The Book of Recombination, hoo. Her heart beats faster when she just thinks about it, the final key to her Transformation. Find the book that will fill in the blanks! Oh hoh hoh, how she's understood all the pieces of the puzzle so far, how the clockwork of reality turns, the tiny little cogs in the machine, how they all fit together! Spin the handle, insert flesh in the divine sausage machine, and out comes something magnificent:
 
       Otava the Seeker, become Otava the Deathless!
      }
      (current-epithets (cons "the Seeker" (current-epithets)))
-     (create-task 'anthead-monograph)
+     (create-task 'book-of-recombination)
      (wait-for-confirm)
      (advance-time-by-iotas! (d 6 12))
      (move-pc-to-location! (get-place-by-id 'perimeter))
@@ -201,7 +202,7 @@ The first test subject the notebook follows is an "organic tissue adaptive-volit
 
      (p "The Shaman in her dreams told her that there's evil brutes guarding the hill, Markbearers, twisted human-like creatures of endless malice and greed and hunger. To scale the hill, the Shaman had said, one must kill a Markbearer to show their worth.")
 
-     (p "The tunnel entrance ought to be somewhere around here. Climbing Magpie hill looks pretty arduous: The steep hill turns into an almost vertical cliff at times, though there should be sort of stairs, at least most of the way.")
+     (p "The tunnel entrance ought to be somewhere around here. Climbing Magpie hill looks arduous: The steep slope turns into an almost a vertical cliff.")
 
      (wait-for-confirm)
 

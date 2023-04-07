@@ -390,7 +390,8 @@
                   (pc-has-sense-organ? 'eyes))
         (make-read-notebook-choice))
        (when (and (pc-has-item? 'book)
-                  (pc-has-sense-organ? 'eyes))
+                  (pc-has-sense-organ? 'eyes)
+                  (not (equal? (get-current-light-level) 'pitch-black)))
         (make-read-book-choice))
 
        (get-current-location-choices)
@@ -410,7 +411,7 @@
           #:tags '(downtime)
           #:resolution-rules
           `(
-            (p "It's an ancient, hidebound tome. Veins on the skin of the animal it's made of form a symmetrical pattern on the cover, a swirling mass of insectoid mandibulae antennae appendices chaotic ever-shifting depends on how light glints on it.")
+            (p "It's an ancient tome. On its cover there's a shifting mass of body parts limbs human parts animal parts eyes teeth ears muscles bones veins nerves tendons ligaments light glinting on the undulating ever-changing flesh")
             (wait-for-confirm)
             (p "Otava flips the book open.")
             'recurse
