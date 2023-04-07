@@ -12,6 +12,7 @@
 
          "../../0-engine/4-systems/actors/actor.rkt"
          "../../0-engine/4-systems/pc/pc.rkt"
+         "../../0-engine/4-systems/world/world.rkt"
 
          "../../0-engine/3-types/stance.rkt"
 

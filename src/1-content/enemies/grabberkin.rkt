@@ -11,6 +11,7 @@
 
          "../../0-engine/4-systems/actors/actor.rkt"
          "../../0-engine/4-systems/checks/checks.rkt"
+         "../../0-engine/4-systems/world/world.rkt"
 
          "../../0-engine/3-types/stance.rkt"
 
@@ -20,6 +21,7 @@
 
 (lazy-require ["../../0-engine/6-combat/combat.rkt"
                (get-combatant-name display-combatant-info display-pc-combatant-info add-combat-flag)])
+
 
 ; Grabberkin are greedy -> they have jewelry -> they drop loot
 

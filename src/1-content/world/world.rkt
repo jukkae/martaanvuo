@@ -237,22 +237,22 @@
    (route-between 'tunnels-1 'tunnels-2
                   26
                   'int
-                  #:descr-from-a "tunnel sloping down"
-                  #:descr-from-b "tunnel sloping up"
+                  #:descr-from-a "tunnel, sloping down"
+                  #:descr-from-b "tunnel, sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-2 'tunnels-3
                   27
                   'int
-                  #:descr-from-a "tunnel sloping down"
-                  #:descr-from-b "tunnel sloping up"
+                  #:descr-from-a "tunnel, sloping down"
+                  #:descr-from-b "tunnel, sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-3 'tunnels-4
                   24
                   'int
-                  #:descr-from-a "tunnel sloping down"
-                  #:descr-from-b "tunnel sloping up"
+                  #:descr-from-a "tunnel, sloping down"
+                  #:descr-from-b "tunnel, sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'tunnels-3
@@ -269,14 +269,15 @@
                   15
                   'ext
                   #:hidden? #t
-                  #:descr-from-a "a hole in"
+                  #:descr-from-a "a hole in the rock"
                   #:descr-from-b "a hole out"
                   )
    (route-between 'tunnels-5 'tunnels-4
                   78
                   'int
-                  #:descr-from-a "tunnel sloping down"
-                  #:descr-from-b "tunnel sloping up"
+                  #:hidden? #t
+                  #:descr-from-a "tunnel, sloping down"
+                  #:descr-from-b "tunnel, sloping up"
                   #:encounter-types '(limbtearer)
                   )
    (route-between 'martaanvuo-dam

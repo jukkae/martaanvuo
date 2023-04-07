@@ -70,7 +70,7 @@
             (define explore-choice (make-explore-choice))
             (hash-set! static-choices-with-keys "E" (cons (format "[E]: ~a" (choice-name explore-choice)) explore-choice))]
            [else
-            (define explore-choice (make-unavailable-choice "Explore" "Can't explore when in combat"))
+            (define explore-choice (make-unavailable-choice "Explore" "can't explore during combat"))
             (hash-set! static-choices-with-keys " " (cons (format "[ ]: ~a" (choice-name explore-choice)) explore-choice))
             ]
        )

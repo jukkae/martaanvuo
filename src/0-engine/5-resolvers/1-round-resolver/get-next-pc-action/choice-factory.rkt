@@ -75,7 +75,7 @@
      (define next-time-of-day (time-of-day-from-iotas (+ (world-elapsed-time (current-world)) 100)))
      (make-choice
       'rest
-      (format "Rest. [until ~a]" next-time-of-day)
+      (format "Rest. [until ~a, ~aι]" next-time-of-day (time-until-next-time-of-day))
       (λ ()
         (make-action #:symbol 'rest
                      #:actor (pc)
