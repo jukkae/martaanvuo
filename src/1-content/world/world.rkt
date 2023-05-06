@@ -37,7 +37,7 @@
      (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "sound of dripping water")
            #:interactibles '(faucet)
            #:name "steel washbasin"
-           #:description "at a steel washbin with a faucet"))
+           #:description "at a fauceted steel washbin with a faucet"))
     #:shortname "perimeter")
    (place #:id 'magpie-hill
           #:size 'large
@@ -47,9 +47,9 @@
                               #:name "ritual circle"
                               #:description "at the ritual circle")
                         (zone #:clue (clue #:requires (SenseOrgan 'ears 1 "") #:description "moaning sound")
-                              #:interactibles '(moaning-body)
-                              #:name "graveyard"
-                              #:description "at a graveyard")))
+                              #:interactibles '(moaning-body-parts)
+                              #:name "garbage dump"
+                              #:description "at the ritual circle garbage dump")))
    (place #:id 'lookout #:features '() #:type 'ext #:shortname "lookout")
    (place #:id 'shack
           #:features '()

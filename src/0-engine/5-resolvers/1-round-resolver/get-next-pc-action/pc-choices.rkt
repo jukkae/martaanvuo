@@ -112,6 +112,7 @@
         'ritual-of-translocation
         "Perform the Ritual of Translocation to enter the Maw."
         (λ ()
+          (p "To perform the Ritual of Translocation, the old body is discarded, its blood drained and led through filtering and causality extraction machinery. Otava enters the ritual circle and opens her veins. Upon first touch of her blood on the sigil, the shackles binding her body to the ground appear. There's a grinding, thumping sound as reality shifts and her body is mangled through the machinery moving the earth.")
           (move-pc-to-location! (get-location-by-id 'the-maw))
           (p "Otava is now in the Maw.")
           (wait-for-confirm)

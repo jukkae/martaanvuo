@@ -56,7 +56,9 @@
      (when (not (flag-set? 'magpie-hill-climbed))
        (set-flag 'magpie-hill-climbed)
        (p
-        "Up on Magpie Hill there is a plateau, and on that plateau, there is a [ritual circle]. In the ritual circle, one can perform the Ritual of Translocation and enter the Maw.")
+        "Up on Magpie Hill there is a plateau, and on that plateau, there is an old [ritual circle]. It's built on a slab of old, bloodstained concrete.")
+       (p "In the ritual circle, one can perform the [Ritual of Translocation] and enter the Maw.")
+       (p "The Shaman in her dreams told her that to each action there is a reaction, that causes precede their effects, and that to gain the power of Astral Travel, there is a price pay.")
        (wait-for-confirm))]
     ['lookout
      (cond
