@@ -33,6 +33,7 @@
   "../../../4-systems/pc/pc.rkt"
   "../../../4-systems/world/time.rkt"
   "../../../4-systems/world/world.rkt"
+  "../../../4-systems/simulation.rkt"
 
   "../../../6-combat/combat-pc-choices.rkt"
 
@@ -109,10 +110,39 @@
       (zone-has-feature? (current-zone) 'ritual-circle))
     (append-element! feature-choices
       (make-choice
-        'ritual-of-translocation
-        "Perform the Ritual of Translocation to enter the Maw."
+        'astral-travel
+        "Climb in the Chamber of Astral Travel."
         (λ ()
-          (p "To perform the Ritual of Translocation, the old body is discarded, its blood drained and led through filtering and causality extraction machinery. Otava enters the ritual circle and opens her veins. Upon first touch of her blood on the sigil, the shackles binding her body to the ground appear. There's a grinding, thumping sound as reality shifts and her body is mangled through the machinery moving the earth.")
+          (p "A chamber, ha. Otava will barely fit in. The edges of the box are razor fucking sharp. The inside is full of small holes.")
+          (wait-for-confirm)
+          (p "The Chamber activates and understands Otava's physical form. It consumes the body.")
+          (wait-for-confirm)
+          (define time-roll (just-roll "1d20" #:title "Use the Chamber of Astral Travel"))
+          (define travel-time (match time-roll
+            [1  '()] ; FIXME: kill player
+            [2  43250]
+            [3  4800]
+            [4  300]
+            [5  73]
+            [6  30]
+            [7  4]
+            [8  2]
+            [9  1]
+            [10 1]
+            [11 1]
+            [12 1]
+            [13 1]
+            [14 1]
+            [15 1]
+            [16 1]
+            [17 0]
+            [18 0]
+            [19 0]
+            [20 0]
+            ))
+          (wait-for-confirm)
+          (advance-time-by-iotas! travel-time)
+          (p "The Chamber activates and understands Otava's physical form. It constructs a body.")
           (move-pc-to-location! (get-location-by-id 'the-maw))
           (p "Otava is now in the Maw.")
           (wait-for-confirm)

@@ -314,7 +314,7 @@
      (define total-printed 0)
 
      (define base-sleep-time 0.025)
-    ;  (define base-sleep-time 0)
+      ;  (define base-sleep-time 0)
      (display (format "~a ~a " title formula))
      (sleep (* 2 base-sleep-time))
      (for ([dice results])
@@ -341,6 +341,11 @@
        (flush-output)
        (define sleep-time (* 2 base-sleep-time))
        (sleep sleep-time))
+
+     (display (format " [~a]" roll-total))
+     (flush-output)
+     (define sleep-time (* 2 base-sleep-time))
+     (sleep sleep-time)
 
      (cond
        [(all-fulfill-predicate? results (λ (r) (= r sides)))
