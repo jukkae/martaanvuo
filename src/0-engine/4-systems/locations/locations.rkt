@@ -188,7 +188,7 @@
                 (or (equal? (get-current-light-level) 'bright)
                     (equal? (get-current-light-level) 'dark)))
        (append-element! unpruned-rows (tr "location type" "badlands"))
-       (append-element! unpruned-rows (tr "perceived with eyes" "mutated, bonelike scraggly trees"))
+       (append-element! unpruned-rows (tr "perceived with eyes" "bonelike trees"))
        (when (and (current-zone) (eq? (Zone-name (current-zone)) "Abandoned car"))
         (append-element! unpruned-rows (tr "perceived with eyes" "decaying human body")))
 

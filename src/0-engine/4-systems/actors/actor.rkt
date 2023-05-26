@@ -351,7 +351,8 @@
     (notice (format "~a A ~a appears ~a." (timestamp) (string-downcase (actor-name enemy)) range)))
 
   (current-times-species-encountered++ type)
-  (cond
+  (wait-for-confirm)
+  #;(cond
     [(= (hash-ref (current-times-species-encountered) type) 1)
      (case type
        ['markbearer

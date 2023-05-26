@@ -53,7 +53,7 @@
 
       (tr actor-description action-description (format "~a" initiative))))
 
-  (info-card actions "Action initiatives [higher is faster]")
+  (info-card actions "Action initiatives")
   (wait-for-confirm)
 
   (set! action-queue '())
